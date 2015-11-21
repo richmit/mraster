@@ -1,0 +1,184 @@
+# -*- Mode:Makefile; Coding:us-ascii-unix; fill-column:158 -*-
+################################################################################################################################################################
+##
+# @file      makefile
+# @author    Mitch Richling <http://www.mitchr.me>
+# @brief     Makefile for ramCanvas example programs.@EOL
+# @copyright
+#  @parblock
+#  Copyright (c) 2015, Mitchell Jay Richling <http://www.mitchr.me> All rights reserved.
+#
+#  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+#
+#  1. Redistributions of source code must retain the above copyright notice, this list of conditions, and the following disclaimer.
+#
+#  2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions, and the following disclaimer in the documentation
+#     and/or other materials provided with the distribution.
+#
+#  3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without
+#     specific prior written permission.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+#  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+#  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+#  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#  @endparblock
+################################################################################################################################################################
+
+
+################################################################################################################################################################
+# Build examples with third party library dependencies
+DO_IMAGEMAGICK = NO
+DO_GLUT        = YES
+DO_CFITSIO     = NO
+
+################################################################################################################################################################
+# ramCanvas stuff
+RCHOME 	  = ../lib
+RCHPPF    = $(RCHOME)/colorData.hpp $(RCHOME)/colorTpl.hpp $(RCHOME)/ramCanvasTpl.hpp $(RCHOME)/ramConfig.hpp $(RCHOME)/mapclamp.hpp $(RCHOME)/color.hpp $(RCHOME)/ramCanvas.hpp
+RCCPPF    = $(RCHOME)/colorData.cpp
+
+################################################################################################################################################################
+# Define targets
+TCOLORS  = colorAll colorWebTriangle colorWebRectangle colorCubeGraphRamps colorIndexedPallets colorGeneralRamps colorRainbows colorInterplHLSvsRGB
+TTEST    = testDraw testDraw2 bmark testColor
+TIMGPRO  = imgProExample
+TFRACTAL = mandelbrot_c sierpinskiTriangle newton3_c newton3_c newton2_c newton newton_c distanceMandelbrot mandelbrot potMandelbrot triangleMandelbrot
+TMATHGR  = levelCCurves
+
+TGLUT    = glutImage
+TIMK     = readIMfile
+TFITS    = readFITSfile
+
+TARGETS  := $(TCOLORS) $(TTEST) $(TFRACTAL) $(TMATHGR) $(TIMGPRO)
+
+################################################################################################################################################################
+# Get platform
+UNAME_S := $(shell uname -s)
+
+################################################################################################################################################################
+# Set the compiler
+ifeq "$(UNAME_S)" 'Darwin'
+    CXX = clang++
+else
+    CXX = g++
+endif
+
+################################################################################################################################################################
+# Set the compiler options
+ifeq "$(UNAME_S)" 'Darwin'
+    CXXFLAGS = -Wstrict-overflow=0 -std=c++14 -Wall -O3 -I$(RCHOME)
+else
+    CXXFLAGS = -Wstrict-overflow=0 -ffast-math -std=c++14 -Wall -O5 -I$(RCHOME)
+endif
+
+################################################################################################################################################################
+# If we are building imagemagic executable, find the libraries
+ifeq "$(DO_IMAGEMAGICK)" 'YES'
+    IMFLAGS = `pkg-config --cflags --libs ImageMagick`
+    TARGETS += $(TIMK)
+endif
+
+################################################################################################################################################################
+# If we are building glut binaries, find the libraries
+ifeq "$(DO_GLUT)" 'YES'
+   ifeq "$(UNAME_S)" 'Darwin'
+       GLUTFLAGS = -framework AGL -framework GLUT -framework OpenGL -framework Carbon -framework ApplicationServices -lobjc -dylib_file /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib
+   else
+       GLUTFLAGS = -lglut -lGL -lGLU
+   endif
+   TARGETS += $(TGLUT)
+endif
+
+################################################################################################################################################################
+all : $(TARGETS)
+
+newton : newton.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) newton.cpp -o newton
+
+newton_c : newton_c.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) newton_c.cpp -o newton_c
+
+newton2_c : newton2_c.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) newton2_c.cpp -o newton2_c
+
+newton3_c : newton3_c.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) newton3_c.cpp -o newton3_c
+
+peterdejong : peterdejong.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) peterdejong.cpp -o peterdejong
+
+colorAll : colorAll.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) colorAll.cpp -o colorAll
+
+colorWebTriangle : colorWebTriangle.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) colorWebTriangle.cpp -o colorWebTriangle
+
+colorWebRectangle : colorWebRectangle.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) colorWebRectangle.cpp -o colorWebRectangle
+
+bmark : bmark.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) bmark.cpp -o bmark
+
+testDraw : testDraw.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) testDraw.cpp -o testDraw
+
+colorCubeGraphRamps : colorCubeGraphRamps.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) colorCubeGraphRamps.cpp -o colorCubeGraphRamps
+
+colorGeneralRamps : colorGeneralRamps.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) colorGeneralRamps.cpp -o colorGeneralRamps
+
+distanceMandelbrot : distanceMandelbrot.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) distanceMandelbrot.cpp -o distanceMandelbrot
+
+levelCCurves : levelCCurves.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) levelCCurves.cpp -lm -o levelCCurves
+
+lineTest : lineTest.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) lineTest.cpp -o lineTest
+
+mandelbrot : mandelbrot.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) mandelbrot.cpp -o mandelbrot
+
+mandelbrot_c : mandelbrot_c.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) mandelbrot_c.cpp -o mandelbrot_c
+
+potMandelbrot : potMandelbrot.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) potMandelbrot.cpp -o potMandelbrot
+
+testDraw2 : testDraw2.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) testDraw2.cpp -o testDraw2
+
+testColor : testColor.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) testColor.cpp -o testColor
+
+sierpinskiTriangle : sierpinskiTriangle.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) sierpinskiTriangle.cpp -o sierpinskiTriangle
+
+triangleMandelbrot : triangleMandelbrot.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) triangleMandelbrot.cpp -o triangleMandelbrot
+
+colorIndexedPallets : colorIndexedPallets.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) colorIndexedPallets.cpp -o colorIndexedPallets
+
+colorRainbows : colorRainbows.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) colorRainbows.cpp -o colorRainbows
+
+colorInterplHLSvsRGB : colorInterplHLSvsRGB.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) colorInterplHLSvsRGB.cpp -o colorInterplHLSvsRGB
+
+imgProExample : imgProExample.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) imgProExample.cpp -o imgProExample
+
+glutImage : glutImage.cpp  $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) glutImage.cpp -o glutImage $(GLUTFLAGS)
+
+clean :
+		rm -f *~
+		rm -f a.out
+		rm -f x.tga
+		rm -f *.o
+		rm -f *.bak
+		rm -f $(TARGETS)

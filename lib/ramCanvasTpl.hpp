@@ -1,0 +1,3070 @@
+// -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
+/**************************************************************************************************************************************************************/
+/**
+   @file      ramCanvasTpl.hpp
+   @author    Mitch Richling <http://www.mitchr.me>
+   @brief     Internal include file for ramCanvas types.@EOL
+   @copyright
+   @parblock
+   Copyright (c) 1988-2015, Mitchell Jay Richling <http://www.mitchr.me> All rights reserved.
+
+   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+   1. Redistributions of source code must retain the above copyright notice, this list of conditions, and the following disclaimer.
+
+   2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions, and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+   3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software
+   without specific prior written permission.
+
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+   DAMAGE.
+   @endparblock
+   @filedetails
+
+   Note that this file is not intended for inclusion into end user application code; however, this use is quite possible in some special cases.  For a less
+   complex interface, one is encouraged to include the ramCanvas.h include file instead.
+***************************************************************************************************************************************************************/
+
+#ifndef MJR_INCLUDE_ramCanvasTpl
+
+#include <sstream>
+#include <iomanip>
+#include <iostream>
+#include <fstream>
+#include <utility> 
+#include <vector>
+#include <type_traits>
+
+#include "ramConfig.hpp"
+
+// Put everything in the mjr namespace
+namespace mjr {
+
+  /** @brief Class providing off-screen drawing functionality.@EOL 
+
+      This class essentially manages a 2D array of pixels (represented as colorTpl objects).
+      Both integer and floating point coordinates are supported.
+
+Coordinates
+===========
+
+Traditional Mathematical Coordinate System
+------------------------------------------
+
+The traditional coordinate system used in mathematics is the Cartesian Coordinate system.  In this system the axes represent real numbers which increase as
+one moves to the right or up.
+
+
+                                  ^ y (increasing upward)
+                                  | 
+                                  . (0, 1) 
+                                  | 
+                                  | 
+                                  | 
+                         (-1,0)   | (0,0)        x (increasing to the right)
+                       <-.--------+--------.----->
+                                  |        (1,0)
+                                  |
+                                  | 
+                                  |
+                                  . (0, -1)
+                                  |
+                                  v
+        
+Traditional Computer Graphics Coordinate System
+-----------------------------------------------
+
+Unlike the Cartesian coordinate system, the traditional coordinates used in computer graphics have only positive, integer coordinates, the origin at the upper
+left, and the x and y coordinates increasing to the right and down.  This is a very natural choice given the discrete nature of digital displays and the
+typical layout of 2D arrays in RAM.
+
+                               
+                               (0,0)   +------------+ (numXpix-1, 0)
+                                       |            |
+                                       |            |
+                                       |            |
+                                       |            |
+                                       |            |
+                        (numYpix-1, 0) +------------+ (numXpix-1, numYpix-1)
+
+ramConfig Coordinate Systems
+----------------------------
+
+This library supports two sets of coordinates for each image:
+
+  - Integer -- much like traditional computer graphics coordinates
+
+  - Floating Point -- much like mathematical coordinates
+
+The integer coordinates are a generalization of the traditional integer coordinates used for computer graphics.  Like the traditional system, they are
+unsigned integers (so the coordinates start at 0), each pixel is one unit from the previous, and the maximum pixel coordinate is one minus the canvas size in
+that coordinate direction.  The generalization is that the origin of the coordinate system can be any of the four corners.  By default the origin is the
+lower, left corner.  Note that the memory layout of the image is not modified by the integer coordinate system -- i.e. the location of the origin is
+irrelevant when it comes to the layout of bits in RAM.  In RAM the layout is the same as the traditional coordinate system where the coordinates are the
+indexes of the image array.  What is the point?  The location of the origin is taken into consideration when the image is exported/imported by functions like
+writeTGAfile, writeRAWfile.
+
+@tparam intCrdT An integral type used for the integer image coordinates.  Mus be large enough to hold the value (numXpix * numYpix)
+@tparam colorT  A type for the image pixels (a color)
+@tparam fltCrdT A floating point type used for the floating point image coordinates
+*/
+  template <class colorT, class intCrdT, class fltCrdT>
+  class ramCanvasTpl {
+
+      static_assert(std::is_integral<intCrdT>::value,
+                    "ERROR: intCrdT parameter of ramCanvasTpl template must be an integral type.");
+      static_assert(std::is_signed<intCrdT>::value,
+                    "ERROR: intCrdT parameter of ramCanvasTpl template must be a signed type.");
+      static_assert(std::is_floating_point<fltCrdT>::value,
+                    "ERROR: fltCrdT parameter of ramCanvasTpl template must be a floating point type.");
+      
+    public:
+
+      typedef struct { fltCrdT x; fltCrdT y; } rcPointFlt;     //!< Real coordinate pair type
+      typedef struct { intCrdT x; intCrdT y; } rcPointInt;     //!< Integer coordinate pair type
+      typedef intCrdT rcCordInt;
+      typedef fltCrdT rcCordFlt;
+
+      enum class axisOrientation {INVERTED, NATURAL};  //!< Enum for axis orientation
+
+      //const static intCrdT intCrdMax = std::sqrt(std::numeric_limits<intCrdT>::max()) - 1; // Some compilers don't think sqrt(const) is const
+      const static intCrdT intCrdMax = (1ul << ((sizeof(intCrdT)*CHAR_BIT-1)/2)) - 3;        //!< maximum "on canvas" integer coordinate
+      const static intCrdT intCrdMin = 0;                                                    //!< maximum "on canvas" integer coordinate
+      
+    private:
+
+      const static intCrdT intCrdGrdMax = intCrdMax+1; //!< Large sentinal value (always off canvas)
+      const static intCrdT intCrdGrdMin = intCrdMin-1; //!< Samll sentinal value (always off canvas)
+      
+      /** @name Canvas integer coordinates */
+      //@{
+      intCrdT numXpix;     //!< Number of x pixels
+      intCrdT numYpix;     //!< Number of y pixels
+      intCrdT numPix;      //!< Number of pixles
+      //@}
+      
+      /** @name Canvas real coordinates */
+      //@{
+      fltCrdT minRealX;    //!< x coord of min (real coord)
+      fltCrdT maxRealX;    //!< x coord of max (real coord)
+      fltCrdT minRealY;    //!< y coord of min (real coord)
+      fltCrdT maxRealY;    //!< y coord of max (real coord)
+      //@}
+
+      /** @name Canvas real/integer coordinates conversion */
+      //@{
+      fltCrdT xPixWid;     //!< Width of a pixel (real coord)
+      fltCrdT yPixWid;     //!< Height of a pixel (real coord)
+
+      fltCrdT xWid;        //!< Width of the display (real coord)
+      fltCrdT yWid;        //!< height of the display(real coord)
+      //@}
+
+      /** @name Axis orientation */
+      //@{
+      axisOrientation xRealAxOrientation; //!< Orientation of x axis
+      axisOrientation yRealAxOrientation; //!< Orientation of y axis
+      axisOrientation xIntAxOrientation;  //!< Flip horizontally
+      axisOrientation yIntAxOrientation;  //!< Flip vertically
+      //@}
+
+      /** @name Canvas pixel store pointers */
+      //@{
+      colorT *pixels;     //!< Array to hold the color values.
+      colorT *pixelsE;    //!< Point one beyond end of pixels array.
+      //@}
+
+      /** @name Drawing defaults */
+      //@{
+      colorT dfltColor;   //!< Default color.
+      colorT drawMode;    //!< Drawing mode.
+      intCrdT dfltX;      //!< x coordinate used by default.
+      intCrdT dfltY;      //!< y coordinate used by default.
+      //@}
+
+      /** @name Coordinate System Manipulation (i) */
+      //@{
+      /** Several internal parameters are maintained within this class that make conversion between real coordinates and integer coordinate very fast.  This
+          function will update the internal parameters if the real coordinate sizes or the integer coordinate sizes have changed.  This function is intended for
+          internal use. An example of when to use this function is right after the integer coordinate axes have changed via a call to newIntCoordsNC(). */
+      void updRealCoords();
+      /** Change the logical coordinate sizes.  It is important that the specified coordinate sizes describe an image with FEWER pixels than the previous
+          sizes.  This function will NOT allocate a new pixel array, so the previous array contents will be interpreted as valid data -- just at different
+          coordinates.  This function causes no memory leaks.  This function will NOT update the internal parameters related to real coordinate systems and so
+          updRealCoords() should be called after this function in most cases.  This function is intended for internal use and provides no safety checks.  
+          @param numXpix_p The width of the new canvas
+          @param numYpix_p The height of the new canvas */
+      void newIntCoordsNC(intCrdT numXpix_p, intCrdT numYpix_p);
+      //@}
+      
+      /** @name Plane Manipulation Methods */
+      //@{
+      /** Free the pixel memory (i) */
+      void freeCanvas();
+      /** Destroy the current pixel memory and reallocate a new pixel space of the given size.  This will not clear the canvas.  IT will not reallocate the
+          canvas unless the new size is different from the current size.  It will not allocate a new canvas if either argument is zero or less.  Updates
+          coordinates.
+          @param numXpix_p The width of the new canvas
+          @param numYpix_p The height of the new canvas */
+      void reallocCanvas(intCrdT numXpix_p, intCrdT numYpix_p);
+      /** Points the pixels pointer at a new pixel store, and updates coordinates.  Pixels pointer not changed if new_pixels is NULL */
+      void rePointPixels(colorT *new_pixels, intCrdT new_numXpix, intCrdT new_numYpix);
+      //@}
+
+      /** @name Various helper functions */
+      //@{
+      /** Used to find the left and right edges of a triangle. */
+      void triangleEdger(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, bool minSide, intCrdT* pts);
+      //@}
+      
+    public:
+
+      /** @name Raster Data Import And Export. */
+      //@{
+      /** Extract raster data from the image, and pack it into a typical form used by imaging applications.  
+
+          Each pixel is packed into a 1, 2, 3, or 4 byte memory block with the location of each channel given by redChan, blueChan, greenChan, and alphaChan.
+          If one of these values is -1, then that channel is not extracted.  For example, all of them set to -1 except redChan (set to 0), an 8-bit gray scale
+          image would be extracted.  One might extract 24-bit RGB with redChan=0, greenChan=1, and blueChan=2.  Add alphaChan=3, and extract 24-bit RGB with
+          alpha -- sometimes called 24-bit RGBA or 32-bit RGBA.  Many systems expect the alpha bit to be first, so one might use alphaChan=0, redChan=1,
+          greenChan=2, and blueChan=3 to get ARGB.  As a fine example, TARGA images use BGR -- blueChan=0, greenChan=1, and redChan=2.  In summary:
+          <pre>
+          Examples of how to pack various common raster data formats
+          ..........RGB  RGBA  ARGB   BGR  ABGR  Grey
+          redChan     0     0     1     2     3     0
+          greenChan   1     1     2     1     2    -1
+          blueChan    2     2     3     0     1    -1
+          alphaChan  -1     3     0    -1     0    -1
+          </pre>
+          @param rasterData Unsigned char pointer to image data.
+          If NULL,then data will be allocated for image.
+          @param x1 First x coordinate first corner of sub-image to extract
+          @param x2 First x coordinate second corner of sub-image to extract
+          @param y1 First y coordinate first corner of sub-image to extract
+          @param y2 First y coordinate second corner of sub-image to extract
+          @param redChan    Channel index to use for red
+          @param blueChan   Channel index to use for blue
+          @param greenChan  Channel index to use for green
+          @param alphaChan  Channel index to use for alpha*/
+      int exportRasterData(void* &rasterData, intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, int redChan, int greenChan, int blueChan, int alphaChan);
+      //@}
+
+      /** @name Constructors */
+      //@{
+      /** No arg constructor.  Sets numXpix and numYpix to -1, and pixels to NULL. */
+      ramCanvasTpl();
+      /** Copy constructor */
+      ramCanvasTpl(const ramCanvasTpl &theCanvas);
+      /** Most commonly used constructor.  The real coordinates have default values with -1 as the min values and 1 used as the max values.
+          @param numXpix_p   Number of pixels in the X direction
+          @param numYpix_p   Number of pixels in the Y direction
+          @param minRealX_p  Minimum real x coordinate value
+          @param maxRealX_p  Maximum real x coordinate value
+          @param minRealY_p  Minimum real y coordinate value
+          @param maxRealY_p  Maximum real y coordinate value */
+      ramCanvasTpl(intCrdT numXpix_p, intCrdT numYpix_p, fltCrdT minRealX_p=-1, fltCrdT maxRealX_p=1, fltCrdT minRealY_p=-1, fltCrdT maxRealY_p=1);
+      //@}
+
+      /** @name Destructor */
+      //@{
+      /** Destructor deallocates memory for the canvas. */
+      ~ramCanvasTpl();
+      //@}
+
+      /** @name Canvas resize and crop */
+      //@{
+      /** Expand the current canvas.  The current image will appear within the new canvas at the specified location.  All pixels not set by the previous image
+          will be set to the given color. 
+          @param new_numXpix_p The width of the new canvas
+          @param new_numYpix_p The height of the new canvas
+          @param x1            Coord at which the left of the old image will appear in the new image
+          @param y1            Coord at which the top of the old image will appear in the new image
+          @param color         Color to use for the background of the new image. */
+      void resizeCanvas(intCrdT new_numXpix_p, intCrdT new_numYpix_p, intCrdT x1 = 0, intCrdT y1 = 0, colorT color = colorT(0,0,0));
+      /** This function will crop the canvas to the given rectangular region. 
+          @param x1 Left, or right, edge of region to keep.
+          @param x2 Right, or left, edge of region to keep.
+          @param y1 Left, or right, edge of region to keep.
+          @param y2 Right, or left, edge of region to keep. */
+      void cropCanvas(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2);
+      //@}
+
+      /** @name Coordinate System Manipulation */
+      //@{
+      /** This function provides the ability to change the real coordinate system associated with a canvas.  It updates all internal parameters are required.
+          @param minRealX_p  Minimum real x coordinate value
+          @param maxRealX_p  Maximum real x coordinate value
+          @param minRealY_p  Minimum real y coordinate value
+          @param maxRealY_p  Maximum real y coordinate value */
+      void newRealCoords(fltCrdT minRealX_p, fltCrdT maxRealX_p, fltCrdT minRealY_p, fltCrdT maxRealY_p);
+      //@}
+
+      /** @name Canvas Rotation, Scaling, and Reflection Operations */
+      //@{
+      /** Loss-less 90 degree clockwise rotation of the canvas about the center.  i.e. the top row of pixels will be on the right side after the rotation.
+          The canvas will be resized as required.  The transformation is not done "in place", so enough memory is required to duplicate the canvas.  */
+      void rotate90CW();
+      /** Loss-less 90 degree counter clockwise rotation of the canvas about the center.  i.e. the top row of pixels will be on the left side after the
+          rotation.  The canvas will be resized as required.  The transformation is not done "in place", so enough memory is required to duplicate the canvas. */
+      void rotate90CCW();
+      /** Loss-less 180 degree rotation of the canvas about the center.  i.e. the top row of pixels will be on the bottom side after the rotation.  The
+          transformation is not done "in place", so enough memory is required to duplicate the canvas.  */
+      void rotate180();
+      /** Loss-less, horizontal flip of the canvas about the center.  i.e. the top row of pixels will be on the bottom side after the flip.  The
+          transformation is done "in place" so no extra RAM is required. */
+      void flipHorz();
+      /** Loss-less, vertical flip of the canvas about the center.  i.e. the left row of pixels will be on the right side after the flip.  The transformation
+          is done "in place" so no extra RAM is required. */
+      void flipVert();
+      /** Loss-less, vertical flip of the canvas about the center.  i.e. the top row of pixels will be on the left side after the flip, and pixel (x,y) will
+          be in position (y,x).  The canvas will be resized as required.  The transformation is not done "in place", so enough memory is required to duplicate
+          the canvas.   */
+      void flipTranspose();
+      //@}
+
+      /** @name Homogeneous Pixel Transformations (point operators) */
+      //@{
+      /** Homogeneous pixel transformations don't vary based upon the coordinates of the pixel in question, but depend only upon the value of the pixel.
+          Thus, a homogeneous pixel transformation can be considered as a pixel function applied to each pixel in an image.  Many standard pixel functions are
+          defined within the colorT object.  The ramCanvasTpl object must then only apply the methods available within each colorT class to support most of
+          the standard homogeneous pixel transformations.  Additionally, new functions are automatically available to the ramCanvasTpl (both in the colorT
+          class and new functions from other sources). */
+      void applyHomoPixTfrm(colorT& (colorT::*HPT)());
+      /** @overload */
+      void applyHomoPixTfrm(colorT& (colorT::*HPT)(float),                                     float);
+      /** @overload */
+      void applyHomoPixTfrm(colorT& (colorT::*HPT)(float, float),                              float, float);
+      /** @overload */
+      void applyHomoPixTfrm(colorT& (colorT::*HPT)(float, float, float),                       float, float, float);
+      /** @overload */
+      void applyHomoPixTfrm(colorT& (colorT::*HPT)(float, float, float, float),                float, float, float, float);
+      /** @overload */
+      void applyHomoPixTfrm(colorT& (colorT::*HPT)(float, float, float, float, float),         float, float, float, float, float);
+      /** @overload */
+      void applyHomoPixTfrm(colorT& (colorT::*HPT)(float, float, float, float, float, float),  float, float, float, float, float, float);
+      /** @overload */
+      void applyHomoPixTfrm(colorT& (colorT::*HPT)(int),                 int);
+      /** @overload */
+      void applyHomoPixTfrm(colorT& (colorT::*HPT)(int, int),            int, int);
+      /** @overload */
+      void applyHomoPixTfrm(colorT& (colorT::*HPT)(int, int, int),       int, int, int);
+      /** @overload */
+      void applyHomoPixTfrm(colorT& (colorT::*HPT)(int, int, int, int),  int, int, int, int);
+      /** @overload */
+      void applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT),                          colorT);
+      /** @overload */
+      void applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT, colorT),                  colorT, colorT);
+      /** @overload */
+      void applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT, colorT, colorT),          colorT, colorT, colorT);
+      /** @overload */
+      void applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT, colorT, colorT, colorT),  colorT, colorT, colorT, colorT);
+
+      /** Computes a linear grey level scale homogeneous pixel transformation with f(c)=(c-cmin)*255/(cmax-cmin) where cmin is the lowest integer value
+          assumed by any pixel color component and cmax is the largest integer value assumed by any pixel color component.  This function is sometimes called
+          "auto contrast adjust" or "linear auto contrast adjust". */
+      void autoHistStrech();
+      /** Computes a, possibly different, linear grey level scale homogeneous pixel transformation on each channel of the image such that channel n is
+          transformed such that f_n(c)=(c-cmin_n)*255/(cmax_n-cmin_n) where cmin_n and cmax_n are the minimum and maximum values in channel n.  i.e. this is
+          the same as applying autoHistStrech independently to each channel.*/
+      void autoMaxHistStrech();
+      //@}
+
+      /** @name Canvas Combination Functions */
+      //@{
+      /** This function takes a ramCanvasTpl and combines it with the
+          current ramCanvasTpl using mean.
+          @param HPT Pointer to a binary operator.
+          @param theCanvas This is the ramCanvasTpl to combine with.
+          @param trgX Final X coordinate for the left of the combined region. Default: 0
+          @param trgY Final Y coordinate for the top of the combined region. Default: 0
+          @param srcX Left edge of the region to combine with. Default: 0
+          @param srcY Top edge of the  region to combine with. Default: 0
+          @param wide Width of the region to combine with. Default: -1 (indicates to edge of canvas)
+          @param tall Height of the region to combine with. Default: -1 (indicates to edge of canvas) */
+      void combineRamCanvasBinOp(colorT& (colorT::*HPT)(colorT),
+                                 const ramCanvasTpl &theCanvas,
+                                 intCrdT trgX =  0, intCrdT trgY =  0,
+                                 intCrdT wide = -1, intCrdT tall = -1,
+                                 intCrdT srcX =  0, intCrdT srcY =  0);
+
+      //@}
+
+      /** @name Statistical Canvas Combination Functions (useful for CCD imaging) */
+      //@{
+      /** Take a list of ramCanvasTpl objects and combine them with the current ramCanvasTpl using mean.
+          @param theCanvasList This is the array of ramCanvasTpl's to combine with.
+          @param N The number of canvas objects. */
+      void combineRamCanvasMean(ramCanvasTpl *theCanvasList, const int N);
+      //@}
+
+      /** @name Canvas Clearing Methods */
+      //@{
+      /** Clear the canvas to black.  Faster than clrCanvas(BLACK).  */
+      void clrCanvasToBlack();
+      /** Clear the canvas.   */
+      void clrCanvas();
+      /** @overload */
+      void clrCanvas(colorT color);
+      //@}
+
+      /** @name Default Point Methods */
+      //@{
+      /** Set the current default point to the given coordinates.
+          @param x The x coordinate of the point to move to.
+          @param y The y coordinate of the point to move to. */
+      void moveTo(intCrdT x, intCrdT y);
+      /** @overload */
+      void moveTo(fltCrdT x, fltCrdT y);
+      /** @overload */
+      void moveTo(rcPointInt thePoint);
+      /** @overload */
+      void moveTo(rcPointFlt thePoint);
+      //@}
+
+      /** @name Default Color Methods */
+      //@{
+      /** Set the default color
+          @param color The color to use
+          @return NONE    */
+      void setDfltColor(colorT color);
+      /** Set the default color by calling the color constructor with the given argument.    This is "syntax sugar".
+          @param colorName The name of the color
+          @return NONE    */
+      void setDfltColor(const char *colorName);
+      /** Set the default color by calling the color constructor with the given arguments.  This is "syntax sugar".
+          @param r Red component
+          @param g Green component
+          @param b Blue component
+          @return NONE    */
+      void setDfltColor(typename colorT::channelType r, typename colorT::channelType g, typename colorT::channelType b);
+      //@}
+
+      /** @name Point drawing functions */
+      //@{
+      /** Draw a point at the specified coordinates with the specified color.  Overloaded versions exist with various arguments.
+          @param x The x coordinate of the point
+          @param y The y coordinate of the point
+          @param color The color to draw the point */
+      void drawPoint(intCrdT x, intCrdT y, colorT color);
+      /** @overload */
+      void drawPoint();
+      /** @overload */
+      void drawPoint(colorT color);
+      /** @overload */
+      void drawPoint(intCrdT x, intCrdT y);
+      /** @overload */
+      void drawPoint(fltCrdT x, fltCrdT y);
+      /** @overload */
+      void drawPoint(fltCrdT x, fltCrdT y, colorT color);
+      /** @overload */
+      void drawPoint(rcPointInt thePoint, colorT color);
+      /** @overload */
+      void drawPoint(rcPointInt thePoint);
+      /** @overload */
+      void drawPoint(rcPointFlt thePoint);
+      /** @overload */
+      void drawPoint(rcPointFlt thePoint, colorT color);
+      //@}
+
+      /** @name Line Drawing Methods */
+      //@{
+      /** Draw a line.  This function is optimized for speed, and has special code for handling lines of slope 0, 1, -1, and infinity.  Line is clipped to the
+          current canvas.
+          @param x1 x coordinate of the first point
+          @param y1 y coordinate of the first point
+          @param x2 x coordinate of the second point
+          @param y2 y coordinate of the second point
+          @param color The color to use
+          @return NONE
+
+          @par Performance Note@EOL This function will perform better if (x1,y2) and (x2,y2) are in the clip region.  Further x1<x2 will save several steps in
+          the algorithm.
+
+          @par Algorithm Notes@EOL This function treats lines of slope 0, 1, -1, and infinity as special cases.  Special clipping and drawing algorithms are
+          used for each case.  All other lines are broken up into four classes by slope: 0<m<1, 1<m<infinity, -1<m<0, and -infinity<m<-1.  Separate line
+          clipping algorithms are used for positive slope lines and for negative slope lines.
+
+          @par@EOL The algorithms used to draw lines in the last four cases are related to the classic algorithm presented by Bresenham in 1965 and the
+          extensions to Bresenham's algorithm given by Pitteway in 1967 and Van Aken in 1984.  The basic algorithm described by Bresenham, Pitteway, and Van
+          Aken is known as the "Midpoint Algorithm".  For the case 0<m<1, the algorithm used is actually the midpoint algorithm, and the remaining cases are
+          obvious extensions to the midpoint algorithm.  Each case is customized and optimized for the given slope class.
+
+          @par@EOL The clipping algorithm used for the last slope classes is similar in spirit to the Cohen-Sutherland Line-Clipping algorithm, but is optimized
+          for each slope class.  Several pre-checks are made in order to avoid the slope computations in the Cohen-Sutherland algorithm -- in fact intersections
+          are only computed if absolutely required.  Note that the only floating point computations in this function are the intersection computations, and they
+          will be avoided completely if the given line need not be clipped.*/
+      void drawLine(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, colorT color);
+      /** @overload */
+      void drawLine(intCrdT x,  intCrdT y);
+      /** @overload */
+      void drawLine(fltCrdT x,  fltCrdT y);
+      /** @overload */
+      void drawLine(intCrdT x,  intCrdT y,  colorT color);
+      /** @overload */
+      void drawLine(fltCrdT x,  fltCrdT y,  colorT color);
+      /** @overload */
+      void drawLine(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2);
+      /** @overload */
+      void drawLine(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2);
+      /** @overload */
+      void drawLine(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2, colorT color);
+      /** @overload */
+      void drawLine(rcPointFlt point1);
+      /** @overload */
+      void drawLine(rcPointFlt point1, colorT color);
+      /** @overload */
+      void drawLine(rcPointInt point1);
+      /** @overload */
+      void drawLine(rcPointInt point1, colorT color);
+      /** @overload */
+      void drawLine(rcPointFlt point1, rcPointFlt point2);
+      /** @overload */
+      void drawLine(rcPointFlt point1, rcPointFlt point2, colorT color);
+      /** @overload */
+      void drawLine(rcPointInt point1, rcPointInt point2);
+      /** @overload */
+      void drawLine(rcPointInt point1, rcPointInt point2, colorT color);
+      //@}
+
+      /** @name Unfilled Triangle Drawing Methods */
+      //@{
+      /** Draw an un-filled triangle */
+      void drawTriangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3,  colorT color);
+      /** @overload */
+      void drawTriangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3);
+      /** @overload */
+      void drawTriangle(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2, fltCrdT x3, fltCrdT y3, colorT color);
+      /** @overload */
+      void drawTriangle(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2, fltCrdT x3, fltCrdT y3);
+      /** @overload */
+      void drawTriangle(rcPointInt point1, rcPointInt point2, rcPointInt point3, colorT color);
+      /** @overload */
+      void drawTriangle(rcPointInt point1, rcPointInt point2, rcPointInt point3);
+      /** @overload */
+      void drawTriangle(rcPointFlt point1, rcPointFlt point2, rcPointFlt point3, colorT color);
+      /** @overload */
+      void drawTriangle(rcPointFlt point1, rcPointFlt point2, rcPointFlt point3);
+      /** @overload */
+      void drawTriangle(rcPointInt *thePoints, colorT color);
+      /** @overload */
+      void drawTriangle(rcPointInt *thePoints);
+      /** @overload */
+      void drawTriangle(rcPointFlt *thePoints, colorT color);
+      /** @overload */
+      void drawTriangle(rcPointFlt *thePoints);
+      //@}
+
+      /** @name Filled Triangle Drawing Methods */
+      //@{
+      /** Draw a filled rectangle using a nicely optimized, horizontal scan conversion algorithm.  
+          Only triangles entirely on the canvas will be drawn -- no partial triangles clipped by an edge!
+          @param x1 The x coordinate of the first point
+          @param y1 The y coordinate of the first point
+          @param x2 The x coordinate of the second point
+          @param y2 The y coordinate of the second point
+          @param x3 The x coordinate of the third point
+          @param y3 The y coordinate of the third point
+          @param color The color to use for the triangle */
+      void drawFillTriangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3, colorT color);
+      /** @overload */
+      void drawFillTriangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3);
+      /** @overload */
+      void drawFillTriangle(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2, fltCrdT x3, fltCrdT y3, colorT color);
+      /** @overload */
+      void drawFillTriangle(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2, fltCrdT x3, fltCrdT y3);
+      /** @overload */
+      void drawFillTriangle(rcPointInt point1, rcPointInt point2, rcPointInt point3, colorT color);
+      /** @overload */
+      void drawFillTriangle(rcPointInt point1, rcPointInt point2, rcPointInt point3);
+      /** @overload */
+      void drawFillTriangle(rcPointFlt point1, rcPointFlt point2, rcPointFlt point3, colorT color);
+      /** @overload */
+      void drawFillTriangle(rcPointFlt point1, rcPointFlt point2, rcPointFlt point3);
+      /** @overload */
+      void drawFillTriangle(rcPointInt *thePoints, colorT color);
+      /** @overload */
+      void drawFillTriangle(rcPointInt *thePoints);
+      /** @overload */
+      void drawFillTriangle(rcPointFlt *thePoints, colorT color);
+      /** @overload */
+      void drawFillTriangle(rcPointFlt *thePoints);
+      //@}
+
+      /** @name Unfilled Rectangle Drawing Functions */
+      //@{
+      /** Draw an unfilled rectangle with diagonal corners located at (x1, y1) and and (x2, y2).  Best performance will be achieved if (x1, y1) is the upper
+          left corner, and (x2,y2) is the lower left corner and both (x1,y1) and (x2,y2) are within the bounds of the canvas using the specified color.
+          @param x1 The x coordinate of first corner
+          @param y1 The y coordinate of first corner
+          @param x2 The x coordinate of second corner
+          @param y2 The y coordinate of second corner
+          @param color The color to use
+          @return NONE */
+      void drawRectangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, colorT color);
+      /** @overload */
+      void drawRectangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2);
+      /** @overload */
+      void drawRectangle(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2, colorT color);
+      /** @overload */
+      void drawRectangle(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2);
+      /** @overload */
+      void drawRectangle(rcPointInt point1, rcPointInt point2, colorT color);
+      /** @overload */
+      void drawRectangle(rcPointInt point1, rcPointInt point2);
+      /** @overload */
+      void drawRectangle(rcPointFlt point1, rcPointFlt point2, colorT color);
+      /** @overload */
+      void drawRectangle(rcPointFlt point1, rcPointFlt point2);
+      /** @overload */
+      void drawRectangle(rcPointInt *thePoints, colorT color);
+      /** @overload */
+      void drawRectangle(rcPointInt *thePoints);
+      /** @overload */
+      void drawRectangle(rcPointFlt *thePoints, colorT color);
+      /** @overload */
+      void drawRectangle(rcPointFlt *thePoints);
+      //@}
+
+      /** @name Filled Rectangle Drawing Methods */
+      //@{
+      /** Draw a filled rectangle with diagonal corners located at (x1, y1) and and (x2, y2).  Best performance will be achieved if (x1, y1) is the upper left
+          corner, and (x2,y2) is the lower left corner and both (x1,y1) and (x2,y2) are within the bounds of the canvas using the specified color.
+          @param x1 The x coordinate of first corner
+          @param y1 The y coordinate of first corner
+          @param x2 The x coordinate of second corner
+          @param y2 The y coordinate of second corner
+          @param color The color to use
+          @return NONE */
+      void drawFillRectangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, colorT color);
+      /** @overload */
+      void drawFillRectangle(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2);
+      /** @overload */
+      void drawFillRectangle(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2, colorT color);
+      /** @overload */
+      void drawFillRectangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2);
+      /** @overload */
+      void drawFillRectangle(rcPointInt point1, rcPointInt point2, colorT color);
+      /** @overload */
+      void drawFillRectangle(rcPointInt point1, rcPointInt point2);
+      /** @overload */
+      void drawFillRectangle(rcPointFlt point1, rcPointFlt point2, colorT color);
+      /** @overload */
+      void drawFillRectangle(rcPointFlt point1, rcPointFlt point2);
+      /** @overload */
+      void drawFillRectangle(rcPointInt *thePoints, colorT color);
+      /** @overload */
+      void drawFillRectangle(rcPointInt *thePoints);
+      /** @overload */
+      void drawFillRectangle(rcPointFlt *thePoints, colorT color);
+      /** @overload */
+      void drawFillRectangle(rcPointFlt *thePoints);
+      //@}
+
+      /** @name Unfilled Circle Drawing Methods */
+      //@{
+      /** Draw an un-filled circle.  The algorithm used is based upon the one presented in "A Linear Algorithm for Incremental Digital Display of Circular
+          Arcs" published in the Communications of the AMC in Feb 1977 and written by J.E. Bresenham.  Bresenham's algorithm has been significantly improved
+          by using only integer arithmetic and adding second order differences to the computation -- much the way the line drawing algorithm works in this
+          package.  The algorithm is essentially a scan line conversion algorithm, so the circle is always approximately one pixel thick.  One subtle point:
+          The real X and Y axes in this package can have different scaling.  This means that one must pick a direction in which the radius will be measured in
+          real coordinate deltas.  In this function, that direction is along the X axis -- i.e. the radius of the drawn circle will be measured
+          horizontally. This function is well optimized.
+          @param centerX The x coordinate of the center
+          @param centerY The y coordinate of the center
+          @param radiusX The radius of the circle
+          @param color The color to draw the circle with */
+      void drawCircle(intCrdT centerX, intCrdT centerY, intCrdT radiusX, colorT color);
+      /** @overload */
+      void drawCircle(intCrdT centerX, intCrdT centerY, intCrdT radius);
+      /** @overload */
+      void drawCircle(intCrdT radius);
+      /** @overload */
+      void drawCircle(fltCrdT centerX, fltCrdT centerY, fltCrdT radiusX, colorT color);
+      /** @overload */
+      void drawCircle(fltCrdT centerX, fltCrdT centerY, fltCrdT radiusX);
+      /** @overload */
+      void drawCircle(fltCrdT radiusX);
+      /** @overload */
+      void drawCircle(rcPointInt centerPoint, intCrdT radiusX, colorT color);
+      /** @overload */
+      void drawCircle(rcPointInt centerPoint, intCrdT radiusX);
+      /** @overload */
+      void drawCircle(rcPointFlt centerPoint, fltCrdT radiusX, colorT color);
+      /** @overload */
+      void drawCircle(rcPointFlt centerPoint, fltCrdT radiusX);
+      //@}
+
+      /** @name Filled Circle Drawing Methods */
+      //@{
+      /** Draw an un-filled circle.  The algorithm used to compute circle edge points is the same as that used in drawCircle; however, the algorithm used to
+          fill the circle is of my own design.  I doubt that it is new, but I have never come across it in my readings -- not that I have looked too hard. The
+          algorithm has the advantage that most of the interior points are only drawn one time.  One subtle point: The real X and Y axes in this package can
+          have different scaling.  This means that one must pick a direction in which the radius will be measured in real coordinate deltas.  In this
+          function, that direction is along the X axis -- i.e. the radius of the drawn circle will be measured horizontally. This function is well optimized.
+          @param centerX The x coordinate of the center
+          @param centerY The y coordinate of the center
+          @param radiusX The radius of the circle
+          @param color The color to draw the circle with */
+      void drawFillCircle(intCrdT centerX, intCrdT centerY, intCrdT radiusX, colorT color);
+      /** @overload */
+      void drawFillCircle(intCrdT centerX, intCrdT centerY, intCrdT radiusX);
+      /** @overload */
+      void drawFillCircle(intCrdT radiusX);
+      /** @overload */
+      void drawFillCircle(fltCrdT centerX, fltCrdT centerY, fltCrdT radiusX, colorT color);
+      /** @overload */
+      void drawFillCircle(fltCrdT centerX, fltCrdT centerY, fltCrdT radiusX);
+      /** @overload */
+      void drawFillCircle(fltCrdT radiusX);
+      /** @overload */
+      void drawFillCircle(rcPointInt centerPoint, intCrdT radiusX, colorT color);
+      /** @overload */
+      void drawFillCircle(rcPointInt centerPoint, intCrdT radiusX);
+      /** @overload */
+      void drawFillCircle(rcPointFlt centerPoint, fltCrdT radiusX, colorT color);
+      /** @overload */
+      void drawFillCircle(rcPointFlt centerPoint, fltCrdT radiusX);
+      //@}
+
+      /** @name Piece-Wise Linear Curve Drawing Methods */
+      //@{
+      /** Draw Piece-Wise Linear Curves */
+      void drawPLCurve(int numPoints, intCrdT *x, intCrdT *y, colorT color);
+      /** @overload */
+      void drawPLCurve(int numPoints, intCrdT *x, intCrdT *y);
+      /** @overload */
+      void drawPLCurve(int numPoints, fltCrdT *x, fltCrdT *y, colorT color);
+      /** @overload */
+      void drawPLCurve(int numPoints, fltCrdT *x, fltCrdT *y);
+      /** @overload */
+      void drawPLCurve(int numPoints, rcPointInt *thePoints, colorT color);
+      /** @overload */
+      void drawPLCurve(int numPoints, rcPointInt *thePoints);
+      /** @overload */
+      void drawPLCurve(int numPoints, rcPointFlt *thePoints, colorT color);
+      /** @overload */
+      void drawPLCurve(int numPoints, rcPointFlt *thePoints);
+      //@}
+
+      /** @name File Reading and Writing Methods */
+      //@{
+      /** Write a TGA format graphics file. Respects integer coordinate system orientation.
+
+          If the image is greyscale with a depth greater than 8-bits, then a special (non-standard) TGA file will be written.  Greyscale of 8-bit or lower
+          depth are encoded as normal truecolor TGA files with each channel set to the same value.
+
+          Greyscale images of 24-bit depth or less will be precisely encoded as a non-standard greyscale TGA file.  If the greatest greyscale value in the
+          image is less than 2^16, then the result will be compatible with a POVRAY height file.  If the greatest greyscale value in the image is greater than
+          2^24, then the greyscale values will be scaled to a range of [0, -1+2^24].*/
+      int writeTGAfile(char const *fileName);
+      /** Read a TGA format graphics file.  This function can only read 24-bit truecolor images of type 2.  It will return various error codes.  If x or y are
+          less than zero, then the current ramCanvasTpl will be resized to the size of the image in the file. Respects integer cooridnate system orientation.
+          @todo Extend to support non-standard greyscale TGA files.
+          @param fileName The file name to read data from
+          @retval 0 The read was successful.
+          @retval 1 Could not open file.
+          @retval 2 The file was not a type 2 TGA file.
+          @retval 3 The file was not 24-bit. */
+      int readColorTGAfile(char const *fileName);
+      /** Write a MJRRAW file.
+          Respects integer cooridnate system orientation.
+          This simple file format is designed to house the more exotic images this libray supports, and be easily imported consumed by many image processing
+          tools -- usually via a feature refred to as a raw importer.  The header is ASCII, and contains two newlines -- the idea being that one can do a
+          'head -n 2 FILENAME' on the image file, and get a human readable output of basic image info.  The file format is very simple:
+          - Header: Byte  00-05: "MJRRAW"
+          - Header: Byte  06-06: Newline
+          - Header: Byte  07-25: Number of pixels on X (horizontal axis) expressed as a zero padded, decimal integer
+          - Header: Byte  26-26: "x"
+          - Header: Byte  27-45: Number of pixels on Y (vertical axis) expressed as a zero padded, decimal integer
+          - Header: Byte  46-46: "y"
+          - Header: Byte  47-73: Number of channels expressed as a zero padded, decimal integer
+          - Header: Byte  74-74: "c"
+          - Header: Byte  75-85: Number of bits per channel expressed as a zero padded, decimal integer
+          - Header: Byte  86-86: "b"
+          - Header: Byte  87-89: "SGN" for signed channels and "UNS" for unsigned channels
+          - Header: Byte  90-90: "s"
+          - Header: Byte  91-93: "INT" for integral channels and "FLT" for floating point channels
+          - Header: Byte  94-94: "t"
+          - Header: Byte  95-97: "BIG" for big indian and "LTL" for Little indian
+          - Header: Byte  98-98: "i"
+          - Header: Byte  99-99: Newline
+          - Data:   Byte 100---: Image data -- each channel dumped in order as it looks in RAM.
+          @param fileName The file name to read data from
+          @retval 0 The write was successful.
+          @retval 1 Could not open file. */
+      int writeRAWfile(char const *fileName);
+      //@}
+
+      /** @name Boolean Clip Test Methods */
+      //@{
+      /** Determine if the given point is within the bounds of the ramCanvasTpl.
+          @param x The x coordinate of the point to test
+          @param y The y coordinate of the point to test
+          @return Returns a non-zero quantity if the point would be clipped. */
+      int isCliped(fltCrdT x, fltCrdT y);
+      /** @overload */
+      int isCliped(intCrdT x, intCrdT y);
+      //@}
+
+      /** @name Coordinate Conversions. */
+      //@{
+      /** Convert real x coordinate to integral x coordinate
+          @param x The real x coordinate value to be converted.
+          @return The integer x coordinate corresponding to the given x coordinate */
+      int real2intX(fltCrdT x) const;
+      /** @param y The real y coordinate value to be converted.
+          @return The integer y coordinate corresponding to the given y coordinate */
+      int real2intY(fltCrdT y) const;
+      /** Convert integral x coordinate to real x coordinate
+          @param x The integer x coordinate value to be converted.
+          @return The real x coordinate corresponding to the given x coordinate */
+      fltCrdT int2realX(intCrdT x);
+      /** Convert integral y coordinate to real y coordinate
+          @param y The integer y coordinate value to be converted.
+          @return The real y coordinate corresponding to the given y coordinate */
+      fltCrdT int2realY(intCrdT y);
+      //@}
+
+      /** @name Orientation of Real Coordinate Systems */
+      //@{
+      /** Get the real X axis orientation
+          @return INVERTED means interted with respect to the integer axis, and NATURAL otherwise.    */
+      axisOrientation get_xRealAxisOrientation();
+      /** Set the real X axis orientation
+          @param orientation The orientation (INVERTED or NATURAL)*/
+      void set_xRealAxisOrientation(axisOrientation orientation);
+      /** Get the real Y axis orientation
+          @return INVERTED means interted with respect to the integer axis, and NATURAL otherwise.    */
+      axisOrientation get_yRealAxisOrientation();
+      /** Set the real Y axis orientation
+          @param orientation The orientation (INVERTED or NATURAL) */
+      void set_yRealAxisOrientation(axisOrientation orientation);
+      /** Set the real axis orientation to default (NATURAL for both X and Y axes) */
+      void set_realAxisDefaultOrientation();      
+      //@}
+
+      /** @name Orientation of Integer Coordinate Systems */
+      //@{
+      /** Get the integer X axis orientation
+          @return NATURAL means increaseing to the right. */
+      axisOrientation get_xIntAxisOrientation();
+      /** Set the integer X axis orientation
+          @param orientation The orientation (INVERTED or NATURAL) */
+      void set_xIntAxisOrientation(axisOrientation orientation);
+      /** Get the integer Y axis orientation
+          @return NATURAL means increaseing in the upward direction. */
+      axisOrientation get_yIntAxisOrientation();
+      /** Set the integer Y axis orientation
+          @param orientation The orientation (INVERTED or NATURAL) */
+      void set_yIntAxisOrientation(axisOrientation orientation);
+      /** Set the integer axis orientation to default (NATURAL for both X and Y axes) */
+      void set_intAxisDefaultOrientation();
+      //@}
+
+      /** @name Accessor Methods */
+      //@{
+      /** @return The number of pixels in the x direction. */
+      intCrdT get_numXpix() const;
+      /** @return The number of pixels in the y direction. */
+      intCrdT get_numYpix() const;
+      /** Returns a pointer to the raw pixel store.  This generally violates the ramCanvasTpl object interface; however, this may be required for performance.
+          @return The number a pointer to the raw pixel store. */
+      colorT *getPixels() { return pixels; }
+      /** Return a clone (a copy) of the raw pixel store.  This function copies the internal pixel store and returns a pointer to this copy.
+          @return Pointer to a copy of the raw pixel store. */
+      colorT *clonePixels();
+      /** Return iterator to start of the raw pixel store.  This generally violates the ramCanvasTpl object interface; however, this may be required for
+          performance.  Note that pixelIteratorEnd() provides an "end" iterator.  The pixels may be traversed with code like this:
+
+          for(colorT p = pixelIteratorBegin; ; Li != pixelIteratorEnd ; ++p)*/
+      colorT *pixelIteratorBegin() { return pixels;  }
+      /** Return iterator to end of the raw pixel store.  This generally violates the ramCanvasTpl object interface; however, this may be required for
+          performance.  Note that pixelIteratorBegin() provides an "start" iterator.  The pixels may be traversed with code like this:
+
+          for(colorT* p = pixelIteratorBegin(); p != pixelIteratorEnd(); ++p)*/
+      colorT *pixelIteratorEnd()   { return pixelsE; }
+      //@}
+
+      /** @name Pixel Value Accessor Methods */
+      //@{
+      /** Returns a copy of the color at the given coordinates */
+      colorT getPxColor(intCrdT x, intCrdT y) const;
+      /** @overload */
+      colorT getPxColor(fltCrdT x, fltCrdT y) const;
+      /** @param x The x coordinate of the upper left pixel to query
+          @param y The y coordinate of the upper left pixel to query
+          @param width The number of x pixels to query
+          @param height The number of y pixels to query
+          @return A ramCanvasTpl pointer that points to a new ramCanvasTpl object that is \a width pixels wide and \a height pixels tall.  The pixel values in
+          the new canvas will be the same as the selected pixels from the current ramCanvasTpl.  The returned ramCanvasTpl will have the default color
+          and points of the current ramCanvasTpl.  If the current ramCanvasTpl has a default point is outside of the selected ample, the returned
+          ramCanvasTpl will have it's default point set to (0,0).  Clipping will be performed if required. If width is zero, then the width of the
+          returned ramCanvasTpl will be from the given x coordinate to the far right edge.  If the height is zero, then the height of the returned
+          ramCanvasTpl will be from the given y coordinate to lower edge of the current ramCanvasTpl.  An argument list of all zeros will return a copy
+          of the current ramCanvasTpl in it's entirety.
+          @retval NULL If no pixels are sampled, NULL will be returned.  This will happen, for example, if the x and y coordinates given are beyond the
+          ramCanvasTpl. */
+      ramCanvasTpl *getSubCanvas(intCrdT x, intCrdT y, intCrdT width, intCrdT height);
+      //@}
+
+      /** @name NC stands for No Checks and No Clipping */
+      /** The functions here work in a similar way to the non-NC functions, but with no clipping or bounds checking.  Thus, if an argument would cause
+          something to be drawn beyond the bounds of the ramCanvasTpl, a core dump will most certainly result.  The intent is to provide less overhead for
+          very careful code that handles clipping and error checking by itself -- a good line drawing algorithm for example. */
+      //@{
+      /** Draw a point with no clipping or bounds checking.
+          @param x The x coordinate of the point to be drawn
+          @param y The y coordinate of the point to be drawn
+          @param color The color to draw the point.
+          @return NONE */
+      void drawPointNC(intCrdT x, intCrdT y, colorT color);
+      /** Set the default point to the specified coordinates with no clipping or bounds checking.
+          @param x The x coordinate of the point
+          @param y The y coordinate of the point
+          @return NONE */
+      void moveToNC(intCrdT x, intCrdT y);
+      /** Returns the color value for the given pixel with no clipping or bounds checking.
+          @param x The x coordinate of the point
+          @param y The y coordinate of the point
+          @return color of the specified point */
+      colorT getPxColorNC(intCrdT x, intCrdT y) const;
+      /** Returns a reference to the color object for the given pixel with no clipping or bounds checking.
+          @param x The x coordinate of the point
+          @param y The y coordinate of the point
+          @return Reference to the color object associated with the specified point */
+      colorT& getPxColorRefNC(intCrdT x, intCrdT y) const;
+      /** Draw a horizontal line with no clipping or bounds checking.
+          @param xMin The MINIMUM x coordinate of the line to be drawn
+          @param xMax The MAXIMUM x coordinate of the line to be drawn
+          @param yConst The y coordinate at which the line is to be drawn
+          @param color The color to draw the line
+          @return NONE */
+      void drawHorzLineNC(intCrdT xMin, intCrdT xMax, intCrdT yConst, colorT color);
+      /** Draw a vertical line with no clipping or bounds checking.
+          @param yMin The MINIMUM y coordinate of the line to be drawn
+          @param yMax The MAXIMUM y coordinate of the line to be drawn
+          @param xConst The x coordinate at which the line is to be drawn
+          @param color The color to draw the line
+          @return NONE */
+      void drawVertLineNC(intCrdT yMin, intCrdT yMax, intCrdT xConst, colorT color);
+      //@}
+
+      /** @name S stands for Simple */
+      //@{
+      /** This function supports no special drawing options.  It simply sets the pixel to the given color.  In addition, no clipping or bounds checking is
+          performed.  Thus, if an argument would cause something to be drawn beyond the bounds of the ramCanvasTpl, a core dump will most certainly result.
+          The intent is to provide a less overhead for very careful code that handles clipping and error checking and drawing options by itself -- an image
+          filter algorithm for example.  The options expected to be taken care of are: SUPPORT_ALWAYS_PRESERVE_ALPHA, and SUPPORT_CMP_MOD.  IT is conceivable
+          that the other draw pixel functions could call this one, but a good optimizing compiler must be used in this case or a performance impact will be
+          the result.
+          @param x The x coordinate of the point
+          @param y The y coordinate of the point
+          @param color The color with which to draw the point */
+      void drawPointS(intCrdT x, intCrdT y, colorT color);
+      //@}
+  };
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::ramCanvasTpl() {
+    newIntCoordsNC(-1, -1);
+    pixels = NULL;
+    pixelsE = NULL;
+    set_realAxisDefaultOrientation();
+    set_intAxisDefaultOrientation();
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::ramCanvasTpl(const ramCanvasTpl &theCanvas) {
+    newIntCoordsNC(theCanvas.numXpix, theCanvas.numYpix);
+    newRealCoords(theCanvas.minRealX, theCanvas.maxRealX, theCanvas.minRealY, theCanvas.maxRealY);
+    pixels = new colorT[theCanvas.numXpix * theCanvas.numYpix];
+    pixelsE = pixels + (theCanvas.numXpix * theCanvas.numYpix);
+    xRealAxOrientation  = theCanvas.xRealAxOrientation;
+    yRealAxOrientation  = theCanvas.yRealAxOrientation;
+    xIntAxOrientation = theCanvas.xIntAxOrientation;
+    yIntAxOrientation = theCanvas.yIntAxOrientation;
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        getPxColorRefNC(x, y) = theCanvas.getPxColorRefNC(x, y);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::ramCanvasTpl(intCrdT numXpix_p, intCrdT numYpix_p, fltCrdT minRealX_p, fltCrdT maxRealX_p, fltCrdT minRealY_p, fltCrdT maxRealY_p) {
+    newIntCoordsNC(numXpix_p, numYpix_p);
+    newRealCoords(minRealX_p, maxRealX_p, minRealY_p, maxRealY_p);
+    pixels = new colorT[numXpix * numYpix];
+    pixelsE = pixels + (numXpix * numYpix);
+    set_realAxisDefaultOrientation();
+    set_intAxisDefaultOrientation();
+    clrCanvasToBlack();
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::newIntCoordsNC(intCrdT numXpix_p, intCrdT numYpix_p) {
+    if( (numXpix_p <= intCrdMax) && (numYpix_p <= intCrdMax) ) {
+      numPix  = numXpix_p * numYpix_p;;
+      numXpix = numXpix_p;
+      numYpix = numYpix_p;
+    } else {
+      // ERROR!!!
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::~ramCanvasTpl() {
+    if(pixels != NULL) {
+      delete[] pixels;
+      pixels = NULL;
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::newRealCoords(fltCrdT minRealX_p, fltCrdT maxRealX_p, fltCrdT minRealY_p, fltCrdT maxRealY_p) {
+    if( (minRealX_p <= maxRealX_p) && (minRealY_p <= maxRealY_p) ) {
+      minRealX = minRealX_p;
+      maxRealX = maxRealX_p;
+      minRealY = minRealY_p;
+      maxRealY = maxRealY_p;
+      updRealCoords();
+    } else {
+      // This is an error.  We should do something about. ;)
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::updRealCoords() {
+    xWid = maxRealX - minRealX;
+    yWid = maxRealY - minRealY;
+    xPixWid = xWid / numXpix;
+    yPixWid = yWid / numYpix;
+  }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::clrCanvasToBlack() {
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        getPxColorRefNC(x, y).setToBlack();
+  }
+  
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::clrCanvas() {
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        drawPointNC(x, y, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::clrCanvas(colorT color) {
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        drawPointNC(x, y, color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::autoHistStrech() {
+
+    typename colorT::channelType cmin = colorT::maxChanVal;
+    typename colorT::channelType cmax = colorT::minChanVal;
+    for(intCrdT y=0;y<numYpix;y++) {
+      for(intCrdT x=0;x<numXpix;x++) {
+        colorT theColor = getPxColorNC(x, y);
+        typename colorT::channelType curMin = theColor.getMinRGB();
+        typename colorT::channelType curMax = theColor.getMaxRGB();
+
+        if(curMax > cmax)
+          cmax = curMax;
+
+        if(curMin < cmin)
+          cmin = curMin;
+      }
+    }
+
+    if(cmax-cmin > 0) {
+      float c = 1.0*(colorT::maxChanVal-colorT::minChanVal)/(cmax-cmin);
+      float b = colorT::maxChanVal - 1.0*c*cmax;
+      applyHomoPixTfrm(&colorT::tfrmLinearGreyLevelScale, c, b);
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::autoMaxHistStrech() {
+
+    colorT cmin; cmin.setAll(cmin.maxChanVal);
+    colorT cmax; cmax.setAll(cmin.minChanVal);
+    for(intCrdT y=0;y<numYpix;y++) {
+      for(intCrdT x=0;x<numXpix;x++) {
+        colorT theColor = getPxColorNC(x, y);
+        cmin.tfrmMin(theColor);
+        cmax.tfrmMax(theColor);
+      }
+    }
+
+    typename colorT::channelType absCompMin = cmin.getMinRGB();
+    typename colorT::channelType absCompMax = cmax.getMaxRGB();
+    if(absCompMax-absCompMin > 0) {
+      float rc = 1.0*(cmin.maxChanVal-cmin.minChanVal)/(cmax.getRed()-cmin.getRed());
+      float rb = cmin.maxChanVal - 1.0*rc*cmax.getRed();
+      float gc = 1.0*(cmin.maxChanVal-cmin.minChanVal)/(cmax.getGreen()-cmin.getGreen());
+      float gb = cmin.maxChanVal - 1.0*gc*cmax.getGreen();
+      float bc = 1.0*(cmin.maxChanVal-cmin.minChanVal)/(cmax.getBlue()-cmin.getBlue());
+      float bb = cmin.maxChanVal - 1.0*bc*cmax.getBlue();
+      applyHomoPixTfrm(&colorT::tfrmLinearGreyLevelScale, rc, rb, gc, gb, bc, bb);
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::applyHomoPixTfrm(colorT& (colorT::*HPT)()) {
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        (getPxColorRefNC(x, y).*HPT)();
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT), colorT arg1) {
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        (getPxColorRefNC(x, y).*HPT)(arg1);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT, colorT), colorT arg1, colorT arg2) {
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        (getPxColorRefNC(x, y).*HPT)(arg1, arg2);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT, colorT, colorT), colorT arg1, colorT arg2, colorT arg3) {
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT, colorT, colorT, colorT), colorT arg1, colorT arg2, colorT arg3, colorT arg4) {
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3, arg4);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::applyHomoPixTfrm(colorT& (colorT::*HPT)(int), int arg1) {
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        (getPxColorRefNC(x, y).*HPT)(arg1);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::applyHomoPixTfrm(colorT& (colorT::*HPT)(int, int), int arg1, int arg2) {
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        (getPxColorRefNC(x, y).*HPT)(arg1, arg2);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::applyHomoPixTfrm(colorT& (colorT::*HPT)(int, int, int), int arg1, int arg2, int arg3) {
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::applyHomoPixTfrm(colorT& (colorT::*HPT)(int, int, int, int), int arg1, int arg2, int arg3, int arg4) {
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3, arg4);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::applyHomoPixTfrm(colorT& (colorT::*HPT)(float), float arg1) {
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        (getPxColorRefNC(x, y).*HPT)(arg1);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::applyHomoPixTfrm(colorT& (colorT::*HPT)(float, float), float arg1, float arg2) {
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        (getPxColorRefNC(x, y).*HPT)(arg1, arg2);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::applyHomoPixTfrm(colorT& (colorT::*HPT)(float, float, float), float arg1, float arg2, float arg3) {
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::applyHomoPixTfrm(colorT& (colorT::*HPT)(float, float, float, float), float arg1, float arg2, float arg3, float arg4) {
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3, arg4);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::applyHomoPixTfrm(colorT& (colorT::*HPT)(float, float, float, float, float), float arg1, float arg2, float arg3, float arg4, float arg5) {
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3, arg4, arg5);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::applyHomoPixTfrm(colorT& (colorT::*HPT)(float, float, float, float, float, float), float arg1, float arg2, float arg3, float arg4, float arg5, float arg6) {
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3, arg4, arg5, arg6);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::moveTo(intCrdT x, intCrdT y) {
+    if((x >= 0) && (y >= 0) && (x<numXpix) && (y<numYpix)) {
+      moveToNC(x, y);
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::moveTo(fltCrdT x, fltCrdT y) {
+    moveTo(real2intX(x), real2intY(y));
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::moveTo(rcPointInt thePoint) {
+    moveTo(thePoint.x, thePoint.y);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::moveTo(rcPointFlt thePoint) {
+    moveTo(real2intX(thePoint.x), real2intY(thePoint.y));
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::setDfltColor(colorT color) {
+    dfltColor = color;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::setDfltColor(const char *colorName) {
+    dfltColor = colorT(colorName);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::setDfltColor(typename colorT::channelType r, typename colorT::channelType g, typename colorT::channelType b) {
+    dfltColor = colorT(r, g, b);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawPoint() {
+    drawPoint(dfltX, dfltY, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawPoint(colorT color) {
+    drawPoint(dfltX, dfltY, color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawPoint(intCrdT x, intCrdT y) {
+    drawPoint(x, y, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawPoint(fltCrdT x, fltCrdT y) {
+    drawPoint(x, y, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawPoint(fltCrdT x, fltCrdT y,
+                                                          colorT color) {
+    drawPoint(real2intX(x), real2intY(y), color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawPoint(rcPointInt thePoint, colorT color) {
+    drawPoint(thePoint.x, thePoint.y, color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawPoint(rcPointInt thePoint) {
+    drawPoint(thePoint.x, thePoint.y, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawPoint(rcPointFlt thePoint) {
+    drawPoint(real2intX(thePoint.x), real2intY(thePoint.y), dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawPoint(rcPointFlt thePoint, colorT color) {
+    drawPoint(real2intX(thePoint.x), real2intY(thePoint.y), color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawPoint(intCrdT x, intCrdT y, colorT color) {
+    if((x >= 0) && (y >= 0) && (x<numXpix) && (y<numYpix))
+      drawPointNC(x, y, color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine(rcPointFlt point1) {
+    intCrdT dfltXnew = real2intX(point1.x);
+    intCrdT dfltYnew = real2intY(point1.y);
+    drawLine(dfltX, dfltY, dfltXnew, dfltYnew, dfltColor);
+    moveToNC(dfltXnew, dfltYnew);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine(rcPointFlt point1, colorT color) {
+    intCrdT dfltXnew = real2intX(point1.x);
+    intCrdT dfltYnew = real2intY(point1.y);
+    drawLine(dfltX, dfltY, dfltXnew, dfltYnew, color);
+    moveToNC(dfltXnew, dfltYnew);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine(rcPointInt point1) {
+    drawLine(dfltX, dfltY, point1.x, point1.y, dfltColor);
+    moveToNC(point1.x, point1.y);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine(rcPointInt point1, colorT color) {
+    drawLine(dfltX, dfltY, point1.x, point1.y, color);
+    moveToNC(point1.x, point1.y);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine(rcPointFlt point1, rcPointFlt point2) {
+    drawLine(real2intX(point1.x), real2intY(point1.y), real2intX(point2.x), real2intY(point2.y), dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine(rcPointFlt point1, rcPointFlt point2, colorT color) {
+    drawLine(real2intX(point1.x), real2intY(point1.y), real2intX(point2.x), real2intY(point2.y), color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine(rcPointInt point1, rcPointInt point2) {
+    drawLine(point1.x, point1.y, point2.x, point2.y, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine(rcPointInt point1, rcPointInt point2, colorT color) {
+    drawLine(point1.x, point1.y, point2.x, point2.y, color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine(intCrdT x, intCrdT y) {
+    drawLine(dfltX, dfltY, x, y, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine(fltCrdT x, fltCrdT y) {
+    drawLine(dfltX, dfltY, real2intX(x), real2intY(y), dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine(intCrdT x, intCrdT y, colorT color) {
+    drawLine(dfltX, dfltY, x, y, color);
+    moveToNC(x, y);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine(fltCrdT x, fltCrdT y, colorT color) {
+    intCrdT dfltXnew = real2intX(x);
+    intCrdT dfltYnew = real2intY(y);
+    drawLine(dfltX, dfltY, dfltXnew, dfltYnew, color);
+    moveToNC(dfltXnew, dfltYnew);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2) {
+    drawLine(x1, y1, x2, y2, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2) {
+    drawLine(x1, y1, x2, y2, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2, colorT color) {
+    drawLine(real2intX(x1), real2intY(y1), real2intX(x2), real2intY(y2), color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, colorT color) {
+    intCrdT x, y;
+    if(y1 == y2) {                                                            // slope = 0
+      if( (y1 < 0) || (y1 >= numYpix) )                                       // Line off canvas case
+        return;
+      if(x1 > x2) {                                                           // Fix point ordering
+        std::swap(x1, x2);
+      }
+      if(x1 < 0)                                                              // Clip left
+        x1 = 0;
+      if(x2 >= numXpix)                                                       // Clip right
+        x2 = numXpix - 1;
+      for(x=x1; x<=x2; x++)                                                   // Draw PIxels: drawHorzLineNC(x1, x2, y1, color);
+        drawPointNC(x, y1, color); 
+    } else if(x1 == x2) {                                                     // slope = infinity
+      if( (x1 < 0) || (x1 >= numXpix) )                                       // Line off canvas case
+        return;
+      if(y1 > y2)                                                             // Fix point ordering
+        std::swap(y1, y2);
+      if(y1 < 0)                                                              // Clip top
+        y1 = 0;
+      if(y2 >= numYpix)                                                       // Clip bottom
+        y2 = numYpix - 1;      
+      for(y=y1; y<=y2; y++)                                                   // Draw PIxels: drawVertLineNC(y1, y2, x1, color);
+        drawPointNC(x1, y, color); 
+    } else {                                                                  // Slope is not infinity or 0...
+      int dx, dy;
+      if(x1 > x2) {                                                           // Fix point ordering
+        std::swap(x1, x2);
+        std::swap(y1, y2);
+      }
+      dx = x2 - x1;                                                           // Compute the slope
+      dy = y2 - y1;
+      if(dx == dy) {                                                          // Slope = 1
+        if( (y2 < 0) || (x2 < 0) || (x1 >= numXpix) || (y1 >= numYpix) )      // Line off canvas case
+          return;
+        if(x1 < 0) {                                                          // Clip left
+          y1 = y1 - x1;
+          x1 = 0;
+        }
+        if(y1 < 0) {                                                          // Clip top
+          x1 = x1 - y1;
+          y1 = 0;
+        }
+        if(x2 >= numXpix) {                                                   // Clip right
+          y2 = y2 - (x2 - numXpix) - 1;
+          x2 = numXpix - 1;
+        }
+        if(y2 >= numYpix) {                                                   // Clip bottom
+          x2 = x2 - (y2 - numYpix) - 1;
+          y2 = numYpix - 1;
+        }
+        for(x=x1,y=y1;x<=x2;y++,x++)                                          // Draw Pixels
+          drawPointNC(x, y, color); 
+      } else if(dx == -dy) {                                                  // Slope = -1
+        if( (x2 < 0) || (y2 >= numYpix) || (x1 >= numXpix) || (y1 < 0) )      // Line off canvas case
+          return;
+        if(x1 < 0) {                                                          // Clip left
+          y1 = y1 + x1;
+          x1 = 0;
+        }
+        if(x2 >= numXpix) {                                                   // Clip right
+          y2 = y2 + (x2 - (numXpix - 1));
+          x2 = numXpix - 1;
+        }
+        if(y2 < 0) {                                                          // Clip top
+          x2 = x2 + y2;
+          y2 = 0;
+        }
+        if(y1 >= numYpix) {                                                   // Clip bottom
+          x1 = x1 + (y1 - (numYpix - 1));
+          y1 = numYpix - 1;
+        }
+        for(x=x1,y=y1;x<=x2;y--,x++)                                          // Draw Pixels
+          drawPointNC(x, y, color);
+      } else {                                                                // Slope != 1, -1, 0, \infinity
+        int s, dx2, dy2;
+        dx2 = 2*dx;
+        dy2 = 2*dy;
+        if(dy > 0) {                                                          // Positive Slope
+          if( (y2 < 0) || (x2 < 0) || (x1 >= numXpix) || (y1 >= numYpix) )    // Line off canvas case
+            return;
+          if(x1 < 0) {                                                        // Clip left
+            y1 = (int)(1.0*y1-x1*dy/dx);
+            x1 = 0;
+          }
+          if(y1 < 0) {                                                        // Clip top
+            x1 = (int)(1.0*x1-y1*dx/dy);
+            y1 = 0;
+          }
+          if(x2 >= numXpix) {                                                 // Clip right
+            y2 = (int)((1.0*dy*(numXpix-1)+y1*dx-x1*dy)/dx);
+            x2 = numXpix - 1;
+          }
+          if(y2 >= numYpix) {                                                 // Clip bottom
+            x2 = (int)(((numYpix-1)*dx-y2*dx+x2*dy)/dy);
+            y2 = numYpix - 1;
+          }
+          if(dx > dy) {                                                       // 0 < Slope < 1
+            s = dy2 - dx;
+            x=x1;
+            y=y1;
+            while(x<=x2) {                                                    // Draw Line
+              drawPoint(x, y, color);
+              if(s < 0) {
+                s += dy2;
+              } else {
+                y++;
+                s += dy2 - dx2;
+              }
+              x++;
+            }
+          } else {                                                            // 1 < Slope < infinity
+            s = dy - dx2;
+            x=x1;
+            y=y1;
+            while(y<=y2) {                                                    // Draw Line
+              drawPoint(x, y, color);
+              if(s > 0) {
+                s -= dx2;
+              } else {
+                x++;
+                s += dy2 - dx2;
+              }
+              y++;
+            }
+          }
+        } else {                                                              // Negative Slope
+          if( (x2 < 0) || (y2 >= numYpix) || (x1 >= numXpix) || (y1 < 0) )    // Line off canvas case
+            return;
+          if(x1 < 0) {                                                        // Clip left
+            y1 = (int)(1.0*y1-x1*dy/dx);
+            x1 = 0;
+          }
+          if(y2 < 0) {                                                        // Clip top
+            x2 = (int)(1.0*x2-y2*dx/dy);
+            y2 = 0;
+          }
+          if(x2 >= numXpix) {                                                 // Clip right
+            y2 = (int)((1.0*dy*(numXpix-1)+y2*dx-x2*dy)/dx);
+            x2 = numXpix - 1;
+          }
+          if(y1 >= numYpix) {                                                 // Clip bottom
+            x1 = (int)(((numYpix-1)*dx-y1*dx+x1*dy)/dy);
+            y1 = numYpix - 1;
+          }
+          if(dx > -dy) {                                                      // 0 > Slope > -infinity
+            s = dy2 + dx;
+            x=x1;
+            y=y1;
+            while(x<=x2) {                                                    // Draw Line
+              drawPoint(x, y, color);
+              if(s > 0) {
+                s += dy2;
+              } else {
+                y--;
+                s += dy2 + dx2;
+              }
+              x++;
+            }
+          } else {                                                            // -1 > Slope > -inf
+            s = dy + dx2;
+            x=x1;
+            y=y1;
+            while(y>=y2) {                                                    // Draw Line
+              drawPoint(x, y, color);
+              if(s < 0) {
+                s += dx2;
+              } else {
+                x++;
+                s += dy2 + dx2;
+              }
+              y--;
+            }
+          }
+        }
+      }
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::freeCanvas() {
+    newIntCoordsNC(-1, -1);
+    if(pixels != NULL) {
+      delete[] pixels;
+      pixels=NULL;
+      pixelsE=NULL;
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::rePointPixels(colorT *new_pixels, intCrdT new_numXpix, intCrdT new_numYpix) {
+    freeCanvas();
+    newIntCoordsNC(new_numXpix, new_numYpix);
+    updRealCoords();
+    if(new_pixels != NULL)
+      pixels = new_pixels;
+    if(pixels == NULL)
+      pixelsE = NULL;
+    else
+      pixelsE = pixels+(new_numXpix * new_numYpix);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::reallocCanvas(intCrdT numXpix_p, intCrdT numYpix_p) {
+    if((numXpix_p<=0) || (numYpix_p<=0)) {
+      freeCanvas();
+    } else {
+      if( (numXpix_p!=numXpix) || (numYpix_p!=numYpix) ) {
+        colorT *new_pixels = new colorT[numXpix_p * numYpix_p];
+        rePointPixels(new_pixels, numXpix_p, numYpix_p);
+      } else {
+        // Don't really do anything as the new size is the same as the old size...
+      }
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::resizeCanvas(intCrdT new_numXpix_p, intCrdT new_numYpix_p, intCrdT x1, intCrdT y1, colorT color) {
+    if( (new_numXpix_p != numXpix) || (new_numYpix_p != numYpix) ) {
+      if(x1 >= new_numXpix_p)
+        x1=0;
+      if(y1 >= new_numYpix_p)
+        y1=0;
+
+      colorT *new_pixels = new colorT[new_numXpix_p * new_numYpix_p];
+
+      // Fill it up with the default color.  Should only draw the ones that need it, but computers are fast...
+      for(intCrdT y=0;y<new_numYpix_p;y++)
+        for(intCrdT x=0;x<new_numXpix_p;x++)
+          new_pixels[new_numXpix_p * (y) + (x)] = color;
+
+      intCrdT yMax = new_numYpix_p;
+      if(yMax > (new_numYpix_p-y1))
+        yMax = new_numYpix_p-y1;
+
+      intCrdT xMax = new_numXpix_p;
+      if(xMax > (new_numXpix_p-x1))
+        xMax = new_numXpix_p-x1;
+
+      // Copy the old image to the new space.
+      for(intCrdT y=y1;y<yMax;y++)
+        for(intCrdT x=0;x<xMax;x++)
+          new_pixels[new_numXpix_p * (y) + (x)] = getPxColor(x-x1, y-y1);
+
+      rePointPixels(new_pixels, new_numXpix_p, new_numYpix_p);
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::cropCanvas(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2) {
+    if( !isCliped(x1, y1) && !isCliped(x2, y2) ) {
+      if(x1 > x2)
+        std::swap(x1, x2);
+      if(y1 > y2)
+        std::swap(y1, y2);
+      intCrdT xp, yp, x, y;
+      intCrdT new_numXpix_p = x2-x1+1;
+      intCrdT new_numYpix_p = y2-y1+1;
+      colorT *new_pixels = new colorT[new_numXpix_p * new_numYpix_p];
+
+      // Copy the old image to the new space.
+      for(y=y1,yp=0;y<=y2;y++,yp++)
+        for(x=x1,xp=0;x<=x2;x++,xp++)
+          new_pixels[new_numXpix_p * yp + xp] = getPxColor(x, y);
+
+      rePointPixels(new_pixels, new_numXpix_p, new_numYpix_p);
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::flipHorz() {
+    for(intCrdT y=0; y<numYpix/2; y++)
+      for(intCrdT x=0; x<numXpix; x++) {
+        colorT aColor = getPxColor(x, numYpix-y-1);
+        drawPointNC(x, numYpix-y-1, getPxColor(x, y));
+        drawPointNC(x, y, aColor);
+      }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::flipVert() {
+    for(intCrdT x=0; x<numXpix/2; x++)
+      for(intCrdT y=0; y<numYpix; y++) {
+        colorT aColor = getPxColor(numXpix-x-1, y);
+        drawPointNC(numXpix-x-1, y, getPxColor(x, y));
+        drawPointNC(x, y, aColor);
+      }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::flipTranspose() {
+    intCrdT new_numXpix_p = numYpix;
+    intCrdT new_numYpix_p = numXpix;
+    colorT *new_pixels = new colorT[new_numXpix_p * new_numYpix_p];
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        new_pixels[new_numXpix_p * (x/*y-crd*/) + (y/*x-crd*/)] = getPxColor(x, y);
+    rePointPixels(new_pixels, new_numXpix_p, new_numYpix_p);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::rotate90CW() {
+    intCrdT new_numXpix_p = numYpix;
+    intCrdT new_numYpix_p = numXpix;
+    colorT *new_pixels = new colorT[new_numXpix_p * new_numYpix_p];
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        new_pixels[new_numXpix_p * (x/*y-crd*/) + (numYpix-y-1/*x-crd*/)] = getPxColor(x, y);
+    rePointPixels(new_pixels, new_numXpix_p, new_numYpix_p);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::rotate90CCW() {
+    intCrdT new_numXpix_p = numYpix;
+    intCrdT new_numYpix_p = numXpix;
+    colorT *new_pixels = new colorT[new_numXpix_p * new_numYpix_p];
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        new_pixels[new_numXpix_p * (numXpix-x-1/*y-crd*/) + (y/*x-crd*/)] = getPxColor(x, y);
+    rePointPixels(new_pixels, new_numXpix_p, new_numYpix_p);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::rotate180() {
+    intCrdT new_numXpix_p = numXpix;
+    intCrdT new_numYpix_p = numYpix;
+    colorT *new_pixels = new colorT[new_numXpix_p * new_numYpix_p];
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        new_pixels[new_numXpix_p * (numYpix-y-1/*y-crd*/) + (numXpix-x-1/*x-crd*/)] = getPxColor(x, y);
+    rePointPixels(new_pixels, new_numXpix_p, new_numYpix_p);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeTGAfile(char const* fileName) {
+    bool useCout = ( (fileName[0] == '-') && (fileName[1] == '\0') );
+    std::ostream* oStream;
+    std::ofstream oFileStream;
+    if(useCout) {
+      oStream = &std::cout;
+    } else {
+      oFileStream.open(fileName, std::ios::out | std::ios::binary | std::ios::trunc);
+      if (oFileStream.is_open()) {
+        oStream = &oFileStream;
+      } else {
+        return 1;
+      }
+    }
+    oStream->put(0);                 /* id length */
+    oStream->put(0);                 /* colourmaptype */
+    oStream->put(2);                 /* datatypecode: 2 == Truecolor no encodeing, 3 == Monochrome image data  no encodeing */
+    oStream->put(0);                 /* 16-bit colourmaporigin */
+    oStream->put(0);
+    oStream->put(0);                 /* colurmaplength */
+    oStream->put(0);
+    oStream->put(0);                 /* colormapdepth */
+    oStream->put(0);                 /* 16-bit x_origin */
+    oStream->put(0);
+    oStream->put(0);                 /* 16-bit y_origon */
+    oStream->put(0);
+    oStream->put(numXpix & 0x00ff);
+    oStream->put((numXpix & 0xff00) / 256);
+    oStream->put(numYpix & 0x00ff);
+    oStream->put((numYpix & 0xff00) / 256);
+    oStream->put(24);                /* bits per pixel: 8, 16, 24, 32. */
+    oStream->put(0);                 /* imagedescriptor */
+
+    typename colorT::channelType maxGreyValue = 0;
+    if( (colorT::channelTypeIsInt) && (colorT::channelCount == 1) && (colorT::bitsPerChan > 24)) {
+      for(int y=0;y<numYpix;y++) {
+        for(int x=0;x<numXpix;x++) {
+          typename colorT::channelType curGreyValue = getPxColorRefNC(x, y).getRed();
+          if(curGreyValue > maxGreyValue)
+            maxGreyValue = curGreyValue;
+        }
+      }
+    }
+    double bigGreyScale = 1;
+    if(maxGreyValue > 16777215)
+      bigGreyScale = maxGreyValue/16777215.0;
+
+    /* Normally I would not resort to such trickery; however, this is an exception.  The following for loop is equivalent to switching between the two forms
+       "for(y=(numYpix-1); y>=0; y--)" and "for(y=0; y<numYpix; y++)". */
+    intCrdT x, y;
+    for( (yIntAxOrientation==axisOrientation::NATURAL?y=0:y=(numYpix-1));
+         (yIntAxOrientation==axisOrientation::NATURAL?y<numYpix:y>=0);
+         (yIntAxOrientation==axisOrientation::NATURAL?y++:y--) ) {
+      for((xIntAxOrientation==axisOrientation::NATURAL?x=0:x=(numXpix-1));
+          (xIntAxOrientation==axisOrientation::NATURAL?x<numXpix:x>=0);
+          (xIntAxOrientation==axisOrientation::NATURAL?x++:x--) ) {
+        if(colorT::channelTypeIsInt && (colorT::channelCount == 1) && (colorT::bitsPerChan > 8)) {
+          uint64_t greyLevel = getPxColorRefNC(x, y).getRed() / bigGreyScale;
+          oStream->put((greyLevel >> 8)  & 0xff);
+          oStream->put((greyLevel)       & 0xff);
+          oStream->put((greyLevel >> 16) & 0xff);
+        } else {
+          colorT& aColor = getPxColorRefNC(x, y);
+          oStream->put(aColor.getBlue8bit());
+          oStream->put(aColor.getGreen8bit());
+          oStream->put(aColor.getRed8bit());
+        }
+      }
+    }
+    if(!useCout)
+      oFileStream.close();
+
+    return 0;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::readColorTGAfile(char const *fileName) {
+    bool useCin = ( (fileName[0] == '-') && (fileName[1] == '\0') );
+    std::istream* iStream;
+    std::ifstream oFileStream;
+    if(useCin) {
+      iStream = &std::cin;
+    } else {
+      oFileStream.open(fileName, std::ios::in | std::ios::binary);
+      if (oFileStream.is_open()) {
+        iStream = &oFileStream;
+      } else {
+        return 1;
+      }
+    }
+
+    intCrdT wide, tall;
+    int ch;
+    ch = iStream->get();       /* idlength */
+    ch = iStream->get();       /* colourmaptype */
+    ch = iStream->get();       /* datatypecode */
+    if(ch != 2) {              /* datatypecode!=2 */
+      if(!useCin)
+        oFileStream.close();
+      return 2;
+    }
+    ch = iStream->get();       /* 16-bit colourmaporigin */
+    ch = iStream->get();
+    ch = iStream->get();       /* colurmaplength */
+    ch = iStream->get();
+    ch = iStream->get();       /* colormapdepth */
+    ch = iStream->get();       /* 16-bit x_origin */
+    ch = iStream->get();
+    ch = iStream->get();       /* 16-bit y_origon */
+    ch = iStream->get();
+    ch = iStream->get();
+    wide = ch;
+    ch = iStream->get();
+    wide = wide | (ch<<8);
+    ch = iStream->get();
+    tall = ch;
+    ch = iStream->get();
+    tall = tall | (ch<<8);
+    ch = iStream->get();       /* bits per pixel. */
+    if(ch != 24) {             /* BPP not 24 */
+      if(!useCin)
+        oFileStream.close();
+      return 3;
+    }
+    ch = iStream->get();       /* imagedescriptor */
+
+    reallocCanvas(wide, tall);
+    
+    colorT aColor;
+    intCrdT x, y;
+    for( (yIntAxOrientation==axisOrientation::NATURAL?y=0:y=(tall-1));
+         (yIntAxOrientation==axisOrientation::NATURAL?y<tall:y>=0);
+         (yIntAxOrientation==axisOrientation::NATURAL?y++:y--) ) {
+      for((xIntAxOrientation==axisOrientation::NATURAL?x=0:x=(wide-1));
+          (xIntAxOrientation==axisOrientation::NATURAL?x<wide:x>=0);
+          (xIntAxOrientation==axisOrientation::NATURAL?x++:x--) ) {
+        int b = iStream->get();
+        int g = iStream->get();
+        int r = iStream->get();
+        if( (x < numXpix) && (y < numYpix) ) {
+          aColor.setColorFrom8bit((unsigned char)(r), (unsigned char)(g), (unsigned char)(b), '\0');
+          drawPointNC(x, y, aColor);
+        }
+      }
+    }
+    if(!useCin)
+      oFileStream.close();
+    return 0;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeRAWfile(char const* fileName) {
+    bool useCout = ( (fileName[0] == '-') && (fileName[1] == '\0') );
+    std::ostream* oStream;
+    std::ofstream oFileStream;
+    unsigned int endiannessProbe = 1;
+
+    if(useCout) {
+      oStream = &std::cout;
+    } else {
+      oFileStream.open(fileName, std::ios::out | std::ios::binary | std::ios::trunc);
+      if (oFileStream.is_open()) {
+        oStream = &oFileStream;
+      } else {
+        return 1;
+      }
+    }
+    
+    std::ostringstream outStringStream;
+    outStringStream << "MJRRAW\n";
+    outStringStream << std::setw(18) << std::setfill('0') << numXpix               << "x";
+    outStringStream << std::setw(18) << std::setfill('0') << numYpix               << "y";
+    outStringStream << std::setw(26) << std::setfill('0') << colorT::channelCount  << "c";
+    outStringStream << std::setw(10) << std::setfill('0') << colorT::bitsPerChan   << "b";
+    outStringStream << "UNS"                                                       << "s";
+    outStringStream << (colorT::channelTypeIsFlt ? "FLT" : "INT")                  << "t";
+    outStringStream << (((char *)&endiannessProbe)[0] ? "LTL" : "BIG")             << "i";
+    outStringStream                                                                << "\n";
+    (*oStream) << outStringStream.str();
+
+    intCrdT x, y;
+    for( (yIntAxOrientation==axisOrientation::NATURAL?y=(numYpix-1):y=0);
+         (yIntAxOrientation==axisOrientation::NATURAL?y>=0:y<numYpix);
+         (yIntAxOrientation==axisOrientation::NATURAL?y--:y++) ) {
+      for((xIntAxOrientation==axisOrientation::NATURAL?x=0:x=(numXpix-1));
+          (xIntAxOrientation==axisOrientation::NATURAL?x<numXpix:x>=0);
+          (xIntAxOrientation==axisOrientation::NATURAL?x++:x--) ) {
+        colorT& aColor = getPxColorRefNC(x, y);
+        for(int c=0; c<aColor.channelCount; c++) {
+          typename colorT::channelType aChanValue = aColor.getChan(c);
+          oStream->write((const char *)&aChanValue, sizeof(typename colorT::channelType));
+        }
+      }
+    }
+    if(!useCout)
+      oFileStream.close();
+    return 0;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  int ramCanvasTpl<colorT, intCrdT, fltCrdT>::exportRasterData(void* &rasterData,
+                                                               intCrdT x1,  intCrdT y1,
+                                                               intCrdT x2,  intCrdT y2,
+                                                               int redChan, int greenChan, int blueChan, int alphaChan) {
+    if(x1 > x2)   // Get x1 < x2
+      std::swap(x1, x2);
+    if(y1 > y2)   // Get y1 < y2
+      std::swap(y1, y2);
+
+    if(x1 <  0)        return 1; // Outside of canvas
+    if(x2 >= numXpix)  return 1; // Outside of canvas
+    if(y1 <  0)        return 1; // Outside of canvas
+    if(y2 >= numYpix)  return 1; // Outside of canvas
+    if(x2 <  x1)       return 2; // Region too small (x direction)
+    if(y2 <  y1)       return 3; // Region too small (y direction)
+
+    int bytesPerPix = (redChan<0?0:1) + (greenChan<0?0:1) + (blueChan<0?0:1) + (alphaChan<0?0:1);
+    if(bytesPerPix < 1) return 4; // Exit if no channels selected
+
+    if(rasterData == 0) // Allocate space if rasterData==NULL.  Caller must delete[] 
+      rasterData = (uint8_t *) new uint8_t[(y2-y1+1)*(x2-x1+1)*bytesPerPix];
+
+    if(rasterData == 0) return 5; // Exit if something went wrong with allocate...
+
+    uint8_t *curPixComp = (uint8_t *)rasterData;
+    for(intCrdT y=y1; y<=y2; y++) {
+      for(intCrdT x=x1; x<=x2; x++) {
+        colorT aColor = getPxColorNC(x, y);
+        if(redChan   >= 0) curPixComp[redChan]   = aColor.getRed8bit();
+        if(greenChan >= 0) curPixComp[greenChan] = aColor.getGreen8bit();
+        if(blueChan  >= 0) curPixComp[blueChan]  = aColor.getBlue8bit();
+        if(alphaChan >= 0) curPixComp[alphaChan] = aColor.getAlpha8bit();
+        curPixComp += bytesPerPix;
+      } /* end for x */
+    } /* end for y */
+
+    return 0;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::isCliped(fltCrdT x, fltCrdT y) {
+    return isCliped(real2intX(x), real2intY(y));
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::isCliped(intCrdT x, intCrdT y) {
+    if((x >= 0) && (y >= 0) && (x<numXpix) && (y<numYpix))
+      return 0;
+    else
+      return 1;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  typename ramCanvasTpl<colorT, intCrdT, fltCrdT>::axisOrientation
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::get_xRealAxisOrientation() {
+  }
+  
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::set_xRealAxisOrientation(ramCanvasTpl<colorT, intCrdT, fltCrdT>::axisOrientation orientation) {
+    xRealAxOrientation = orientation;
+  }
+  
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  typename ramCanvasTpl<colorT, intCrdT, fltCrdT>::axisOrientation
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::get_yRealAxisOrientation() {
+    return xRealAxOrientation;
+  }
+  
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::set_yRealAxisOrientation(ramCanvasTpl<colorT, intCrdT, fltCrdT>::axisOrientation orientation) {
+    yRealAxOrientation = orientation;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::set_realAxisDefaultOrientation() {
+    set_xRealAxisOrientation(axisOrientation::NATURAL);
+    set_yRealAxisOrientation(axisOrientation::NATURAL);
+  }
+  
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  typename ramCanvasTpl<colorT, intCrdT, fltCrdT>::axisOrientation
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::get_xIntAxisOrientation() {
+  }
+  
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::set_xIntAxisOrientation(ramCanvasTpl<colorT, intCrdT, fltCrdT>::axisOrientation orientation) {
+    xIntAxOrientation = orientation;
+  }
+  
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  typename ramCanvasTpl<colorT, intCrdT, fltCrdT>::axisOrientation
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::get_yIntAxisOrientation() {
+    return xIntAxOrientation;
+  }
+  
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::set_yIntAxisOrientation(ramCanvasTpl<colorT, intCrdT, fltCrdT>::axisOrientation orientation) {
+    yIntAxOrientation = orientation;
+  }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::set_intAxisDefaultOrientation() {
+    set_xIntAxisOrientation(axisOrientation::NATURAL);
+    set_yIntAxisOrientation(axisOrientation::NATURAL);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::real2intX(fltCrdT x) const {
+    if(xRealAxOrientation == axisOrientation::NATURAL)
+      return (int)((x - minRealX) / xPixWid);
+    else
+      return (int)((maxRealX - x) / xPixWid);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::real2intY(fltCrdT y) const {
+    if(yRealAxOrientation == axisOrientation::NATURAL)
+      return (int)((y - minRealY) / yPixWid);
+    else
+      return (int)((maxRealY - y) / yPixWid);
+  }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  fltCrdT  ramCanvasTpl<colorT, intCrdT, fltCrdT>::int2realX(intCrdT x) {
+    if(xRealAxOrientation == axisOrientation::NATURAL)
+      return x * xPixWid + minRealX;
+    else
+      return maxRealX - x * xPixWid;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  fltCrdT  ramCanvasTpl<colorT, intCrdT, fltCrdT>::int2realY(intCrdT y) {
+    if(yRealAxOrientation == axisOrientation::NATURAL)
+      return y * yPixWid + minRealY;
+    else
+      return maxRealY - y * yPixWid;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  intCrdT ramCanvasTpl<colorT, intCrdT, fltCrdT>::get_numXpix() const {
+    return numXpix;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  intCrdT ramCanvasTpl<colorT, intCrdT, fltCrdT>::get_numYpix() const {
+    return numYpix;
+  }
+
+  template<class colorT, class intCrdT, class fltCrdT>
+  colorT *ramCanvasTpl<colorT, intCrdT, fltCrdT>::clonePixels() {
+    colorT *pixelsCopy = new colorT[numXpix * numYpix];
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        pixelsCopy[numXpix * y + x] = getPxColorNC(x, y);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  colorT  ramCanvasTpl<colorT, intCrdT, fltCrdT>::getPxColor(intCrdT x, intCrdT y) const {
+    if((x >= 0) && (y >= 0) && (x<numXpix) && (y<numYpix)) {
+      return pixels[numXpix * y + x];
+    } else {
+      return colorT().setToBlack();
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  colorT ramCanvasTpl<colorT, intCrdT, fltCrdT>::getPxColor(fltCrdT x, fltCrdT y) const {
+    return getPxColor(real2intX(x), real2intY(y));
+  }
+  
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>*
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::getSubCanvas(intCrdT x, intCrdT y, intCrdT width, intCrdT height) {
+    ramCanvasTpl<colorT, intCrdT, fltCrdT> *subRamCanvas =
+      new ramCanvasTpl<colorT, intCrdT, fltCrdT>(width, height);
+
+    intCrdT xMax = width+x;
+    if(xMax>numXpix)
+      xMax = numXpix;
+
+    intCrdT yMax = height+y;
+    if(yMax>numYpix)
+      yMax = numYpix;
+
+    for(intCrdT yi=y; yi<yMax; yi++)
+      for(intCrdT xi=x; xi<xMax; xi++)
+        subRamCanvas->drawPointNC(xi-x, yi-y, getPxColor(xi, yi));
+
+    return subRamCanvas;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillTriangle(rcPointInt *thePoints, colorT color) {
+    drawFillTriangle(thePoints[0].x, thePoints[0].y, thePoints[1].x, thePoints[1].y, thePoints[2].x, thePoints[2].y, color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillTriangle(rcPointFlt *thePoints) {
+    drawFillTriangle(real2intX(thePoints[0].x), real2intY(thePoints[0].y),
+                     real2intX(thePoints[1].x), real2intY(thePoints[1].y),
+                     real2intX(thePoints[2].x), real2intY(thePoints[2].y), dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillTriangle(rcPointFlt *thePoints, colorT color) {
+    drawFillTriangle(real2intX(thePoints[0].x), real2intY(thePoints[0].y),
+                     real2intX(thePoints[1].x), real2intY(thePoints[1].y),
+                     real2intX(thePoints[2].x), real2intY(thePoints[2].y), color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillTriangle(rcPointInt *thePoints) {
+    drawFillTriangle(thePoints[0].x, thePoints[0].y, thePoints[1].x, thePoints[1].y, thePoints[2].x, thePoints[2].y, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillTriangle(rcPointInt point1, rcPointInt point2, rcPointInt point3) {
+    drawFillTriangle(point1.x, point1.y, point2.x, point2.y, point3.x, point3.y, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillTriangle(rcPointFlt point1, rcPointFlt point2, rcPointFlt point3) {
+    drawFillTriangle(real2intX(point1.x), real2intY(point1.y), real2intX(point2.x), real2intY(point2.y), real2intX(point3.x), real2intY(point3.y), dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillTriangle(rcPointFlt point1, rcPointFlt point2, rcPointFlt point3, colorT color) {
+    drawFillTriangle(real2intX(point1.x), real2intY(point1.y), real2intX(point2.x), real2intY(point2.y), real2intX(point3.x), real2intY(point3.y), color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillTriangle(rcPointInt point1, rcPointInt point2, rcPointInt point3, colorT color) {
+    drawFillTriangle(point1.x, point1.y, point2.x, point2.y, point3.x, point3.y, color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillTriangle(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2, fltCrdT x3, fltCrdT y3) {
+    drawFillTriangle(real2intX(x1), real2intY(y1), real2intX(x2), real2intY(y2), real2intX(x3), real2intY(y3), dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillTriangle(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2, fltCrdT x3, fltCrdT y3, colorT color) {
+    drawFillTriangle(real2intX(x1), real2intY(y1), real2intX(x2), real2intY(y2), real2intX(x3), real2intY(y3), color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillTriangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3) {
+    drawFillTriangle(x1, y1, x2, y2, x3, y3, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::triangleEdger(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, bool minSide, intCrdT* pts) {
+    // This code is essentially the line drawing code with some simplifications.
+    intCrdT x, y;
+    if(x1 == x2) {                                                            // slope = infinity
+      if(y1 > y2)                                                             // Fix point ordering
+        std::swap(y1, y2);
+      for(y=y1; y<=y2; y++)                                                   // Draw PIxels: drawVertLineNC(y1, y2, x1, color);
+        if(minSide) { if(x1<pts[y]) pts[y]=x1; } else { if(x1>pts[y]) pts[y]=x1; }; 
+    } else {                                                                  // Slope is not infinity or 0...
+      int dx, dy;
+      if(x1 > x2) {                                                           // Fix point ordering
+        std::swap(x1, x2);
+        std::swap(y1, y2);
+      }
+      dx = x2 - x1;                                                           // Compute the slope
+      dy = y2 - y1;
+      if(dx == dy) {                                                          // Slope = 1
+        for(x=x1,y=y1;x<=x2;y++,x++)                                          // Draw Pixels
+          if(minSide) { if(x<pts[y]) pts[y]=x; } else { if(x>pts[y]) pts[y]=x; }; 
+      } else if(dx == -dy) {                                                  // Slope = -1
+        for(x=x1,y=y1;x<=x2;y--,x++)                                          // Draw Pixels
+          if(minSide) { if(x<pts[y]) pts[y]=x; } else { if(x>pts[y]) pts[y]=x; };
+      } else {                                                                // Slope != 1, -1, 0, \infinity
+        int s, dx2, dy2;
+        dx2 = 2*dx;
+        dy2 = 2*dy;
+        if(dy > 0) {                                                          // Positive Slope
+          if(dx > dy) {                                                       // 0 < Slope < 1
+            s = dy2 - dx;
+            x=x1;
+            y=y1;
+            while(x<=x2) {                                                    // Draw Line
+              if(minSide) { if(x<pts[y]) pts[y]=x; } else { if(x>pts[y]) pts[y]=x; }
+              if(s < 0) {
+                s += dy2;
+              } else {
+                y++;
+                s += dy2 - dx2;
+              }
+              x++;
+            }
+          } else {                                                            // 1 < Slope < infinity
+            s = dy - dx2;
+            x=x1;
+            y=y1;
+            while(y<=y2) {                                                    // Draw Line
+              if(minSide) { if(x<pts[y]) pts[y]=x; } else { if(x>pts[y]) pts[y]=x; }
+              if(s > 0) {
+                s -= dx2;
+              } else {
+                x++;
+                s += dy2 - dx2;
+              }
+              y++;
+            }
+          }
+        } else {                                                              // Negative Slope
+          if(dx > -dy) {                                                      // 0 > Slope > -infinity
+            s = dy2 + dx;
+            x=x1;
+            y=y1;
+            while(x<=x2) {                                                    // Draw Line
+              if(!isCliped(x, y)) { if(minSide) { if(x<pts[y]) pts[y]=x; } else { if(x>pts[y]) pts[y]=x; } };
+              if(s > 0) {
+                s += dy2;
+              } else {
+                y--;
+                s += dy2 + dx2;
+              }
+              x++;
+            }
+          } else {                                                            // -1 > Slope > -inf
+            s = dy + dx2;
+            x=x1;
+            y=y1;
+            while(y>=y2) {                                                    // Draw Line
+              if(minSide) { if(x<pts[y]) pts[y]=x; } else { if(x>pts[y]) pts[y]=x; }
+              if(s < 0) {
+                s += dx2;
+              } else {
+                x++;
+                s += dy2 + dx2;
+              }
+              y--;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillTriangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3, colorT color) {
+
+    static intCrdT *minPts, *maxPts;
+    static intCrdT  numPts;
+
+    if( !(isCliped(x1, y1) || isCliped(x2, y2) || isCliped(x3, y3))) {
+      ///////////////////////////////////////////////////////////////////////////////////
+      // Check our workspace, and allocate/reallocate as required.    
+      if(minPts == NULL) {               // First time in function -- allocate
+        minPts = new intCrdT[numYpix];
+        maxPts = new intCrdT[numYpix];
+        numPts = numYpix;
+      } else {                           // Not our first time!  We have a workspace.
+        if(numPts != numYpix) {          // Workspace is wrong size -- reallocate
+          delete[] minPts;
+          delete[] maxPts;
+          minPts = new intCrdT[numYpix];
+          maxPts = new intCrdT[numYpix];
+          numPts = numYpix;
+        }
+      }
+
+      ///////////////////////////////////////////////////////////////////////////////////
+      // Sort (x1,y1), (x2,y2), (x3,y3) so that y1 >= y2, y3 and y3 <= y2, y1
+      if(y1 > y2) {           // top != 2 && bot != 1
+        if(y1 > y3) {         // top != 3              y1>y2  y1>y3 y2>y3 top bot
+          if(y2 > y3) {       //             bot != 2    .      .     .    .   .
+            //                         T      T     T    1   3   NOP
+          } else {            //             bot != 3    .      .     .    .   .
+            std::swap(y2,y3); //                         T      T     F    1   2   SWAP(2,3)                                                                        
+            std::swap(x2,x3); //                         .      .     .    .   .                         
+          }                   //                         .      .     .    .   .                         
+        } else {              // top != 1                .      .     .    .   .                         
+          std::swap(y1,y3);   //                         T      F     U    3   2   SWAP(1,3) SWAP(2,3)                                                                          
+          std::swap(y2,y3);   //                         .      .     .    .   .                   
+          std::swap(x1,x3);   //                         .      .     .    .   .                         
+          std::swap(x2,x3);   //                         .      .     .    .   .                         
+        }                     //                         .      .     .    .   .                   
+      } else {                // top != 1                .      .     .    .   .                   
+        if(y2 > y3) {         // top != 3 && bot != 2    .      .     .    .   .                   
+          if(y1 > y3) {       //             bot != 1    .      .     .    .   .                   
+            std::swap(y1,y2); //                         F      T     T    2   3   SWAP(1,2)                                                                        
+            std::swap(x1,x2); //                         .      .     .    .   .                         
+          } else {            //             bot != 3    .      .     .    .   .                   
+            std::swap(y1,y2); //                         F      F     T    2   1   SWAP(1,2) SWAP(2,3)                                                                        
+            std::swap(y2,y3); //                         .      .     .    .   .                   
+            std::swap(x1,x2); //                         .      .     .    .   .                         
+            std::swap(x2,x3); //                         .      .     .    .   .                         
+          }                   //                         .      .     .    .   .                   
+        } else {              // top != 2 && bot != 3    .      .     .    .   .                   
+          std::swap(y1,y3);   //                         F      U     F    3   1   SWAP(1,3)
+          std::swap(x1,x3);   //                         .      .     .    .   .                         
+        }
+      }
+      ///////////////////////////////////////////////////////////////////////////////////
+      for(intCrdT y=y3; y<=y1; y++) {
+        minPts[y] = intCrdGrdMax;
+        maxPts[y] = intCrdGrdMin;
+      }
+      if(y1==y2) {                                           /*       */
+        if(x1 == x2) {                                       /*   1   */
+          drawLine(x1, y1, x3, y3, color);                   /*   |   */
+          return;                                            /*   3   */
+        } else if(x1 <= x2) {                                /* 1---2 */
+          triangleEdger(x1, y1, x3, y3, true,  minPts);      /*  \ /  */
+          triangleEdger(x2, y2, x3, y3, false, maxPts);      /*   3   */
+        } else {                                             /* 2---1 */
+          triangleEdger(x1, y1, x3, y3, false, maxPts);      /*  \ /  */
+          triangleEdger(x2, y2, x3, y3, true,  minPts);      /*   3   */
+        }                                                    /*       */
+      } else if(y2==y3) {                                    /*       */
+        if(x2 == x3) {                                       /*   1   */
+          drawLine(x2, y2, x1, y1, color);                   /*   |   */
+          return;                                            /*   3   */   
+        } else if(x2 <= x3) {                                /*   3   */
+          triangleEdger(x2, y2, x1, y1, true,  minPts);      /*  / \  */
+          triangleEdger(x3, y3, x1, y1, false, maxPts);      /* 1---2 */
+        } else {                                             /*   3   */
+          triangleEdger(x2, y2, x1, y1, false, maxPts);      /*  / \  */
+          triangleEdger(x3, y3, x1, y1, true,  minPts);      /* 2---1 */
+        }
+      } else {
+        intCrdT xli = 1.0*(x1*y3-x3*y1+(x3-x1)*y2)/(y3-y1);  /*       */ 
+        if(xli == x2) {                                      /*       */
+          drawLine(x1, y1, x3, y3, color);                   /*  1    */
+                                                             /*   \   */
+                                                             /*    3  */
+        } else if (xli < x2) {                               /*  1    Note: x1 need not equal x3 */
+          triangleEdger(x2, y2, x1, y1, false, maxPts);      /*  |\   */  
+          triangleEdger(x2, y2, x3, y3, false, maxPts);      /*  | 2  */  
+          triangleEdger(x1, y1, x3, y3, true,  minPts);      /*  |/   */  
+                                                             /*  3    */
+        } else {                                             /*    1  Note: x1 need not equal x3 */  
+          triangleEdger(x2, y2, x1, y1, true,  minPts);      /*   /|  */
+          triangleEdger(x2, y2, x3, y3, true,  minPts);      /*  2 |  */
+          triangleEdger(x1, y1, x3, y3, false, maxPts);      /*   \|  */
+                                                             /*    3  */
+        }
+      }
+      ///////////////////////////////////////////////////////////////////////////////////
+      // Fill between the left and right bits.
+      for(intCrdT y=y3; y<=y1; y++)
+        drawLine(minPts[y], y, maxPts[y], y, color);
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawPLCurve(int numPoints, fltCrdT *x, fltCrdT *y) {
+    drawPLCurve(numPoints, x, y, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawPLCurve(int numPoints, fltCrdT *x, fltCrdT *y, colorT color) {
+    for(int i=0; i<numPoints-1; i++)
+      drawLine(real2intX(x[i]), real2intY(y[i]), real2intX(x[i+1]), real2intY(y[i+1]), color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawPLCurve(int numPoints, intCrdT *x, intCrdT *y) {
+    drawPLCurve(numPoints, x, y, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawPLCurve(int numPoints, intCrdT *x, intCrdT *y, colorT color) {
+    for(int i=0; i<numPoints-1; i++)
+      drawLine(x[i], y[i], x[i+1], y[i+1], color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawPLCurve(int numPoints, rcPointInt *thePoints, colorT color) {
+    for(int i=0; i<numPoints-1; i++)
+      drawLine(thePoints[i].x, thePoints[i].y, thePoints[i+1].x, thePoints[i+1].y, color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawPLCurve(int numPoints, rcPointFlt *thePoints, colorT color) {
+    for(int i=0; i<numPoints-1; i++)
+      drawLine(thePoints[i].x, thePoints[i].y, thePoints[i+1].x, thePoints[i+1].y, color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawPLCurve(int numPoints, rcPointInt *thePoints) {
+    drawPLCurve(numPoints, thePoints, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawPLCurve(int numPoints, rcPointFlt *thePoints) {
+    drawPLCurve(numPoints, thePoints, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawTriangle(rcPointInt *thePoints, colorT color) {
+    drawTriangle(thePoints[0].x, thePoints[0].y, thePoints[1].x, thePoints[1].y, thePoints[2].x, thePoints[2].y, color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawTriangle(rcPointFlt *thePoints) {
+    drawTriangle(real2intX(thePoints[0].x), real2intY(thePoints[0].y),
+                 real2intX(thePoints[1].x), real2intY(thePoints[1].y),
+                 real2intX(thePoints[2].x), real2intY(thePoints[2].y), dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawTriangle(rcPointFlt *thePoints, colorT color) {
+    drawTriangle(real2intX(thePoints[0].x), real2intY(thePoints[0].y),
+                 real2intX(thePoints[1].x), real2intY(thePoints[1].y),
+                 real2intX(thePoints[2].x), real2intY(thePoints[2].y), color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawTriangle(rcPointInt *thePoints) {
+    drawTriangle(thePoints[0].x, thePoints[0].y, thePoints[1].x, thePoints[1].y, thePoints[2].x, thePoints[2].y, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawTriangle(rcPointInt point1, rcPointInt point2, rcPointInt point3) {
+    drawTriangle(point1.x, point1.y, point2.x, point2.y, point3.x, point3.y, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawTriangle(rcPointFlt point1, rcPointFlt point2, rcPointFlt point3) {
+    drawTriangle(real2intX(point1.x), real2intY(point1.y), real2intX(point2.x), real2intY(point2.y), real2intX(point3.x), real2intY(point3.y), dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawTriangle(rcPointFlt point1, rcPointFlt point2, rcPointFlt point3, colorT color) {
+    drawTriangle(real2intX(point1.x), real2intY(point1.y), real2intX(point2.x), real2intY(point2.y), real2intX(point3.x), real2intY(point3.y), color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawTriangle(rcPointInt point1, rcPointInt point2, rcPointInt point3, colorT color) {
+    drawTriangle(point1.x, point1.y, point2.x, point2.y, point3.x, point3.y, color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawTriangle(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2, fltCrdT x3, fltCrdT y3) {
+    drawTriangle(real2intX(x1), real2intY(y1), real2intX(x2), real2intY(y2), real2intX(x3), real2intY(y3), dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawTriangle(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2, fltCrdT x3, fltCrdT y3, colorT color) {
+    drawTriangle(real2intX(x1), real2intY(y1), real2intX(x2), real2intY(y2), real2intX(x3), real2intY(y3), color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawTriangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3) {
+    drawTriangle(x1, y1, x2, y2, x3, y3, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawTriangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3, colorT color) {
+    drawLine(x1, y1, x2, y2, color);
+    drawLine(x2, y2, x3, y3, color);
+    drawLine(x3, y3, x1, y1, color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawCircle(intCrdT radiusX) {
+    drawCircle(dfltX, dfltY, radiusX, dfltColor);
+  }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawCircle(fltCrdT radiusX) {
+    drawCircle(dfltX, dfltY, real2intX(radiusX), dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawCircle(rcPointFlt centerPoint, fltCrdT radiusX) {
+    drawCircle(real2intX(centerPoint.x), real2intY(centerPoint.y), real2intX(radiusX), dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawCircle(rcPointFlt centerPoint, fltCrdT radiusX, colorT color) {
+    drawCircle(real2intX(centerPoint.x), real2intY(centerPoint.y), real2intX(radiusX), color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawCircle(rcPointInt centerPoint, intCrdT radiusX) {
+    drawCircle(centerPoint.x, centerPoint.y, radiusX, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawCircle(rcPointInt centerPoint, intCrdT radiusX, colorT color) {
+    drawCircle(centerPoint.x, centerPoint.y, radiusX, color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawCircle(fltCrdT centerX, fltCrdT centerY, fltCrdT radiusX) {
+    drawCircle(real2intX(centerX), real2intY(centerY), real2intX(radiusX), dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawCircle(fltCrdT centerX, fltCrdT centerY, fltCrdT radiusX, colorT  color) {
+    drawCircle(real2intX(centerX), real2intY(centerY), real2intX(radiusX), color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawCircle(intCrdT centerX, intCrdT centerY, intCrdT radiusX) {
+    drawCircle(centerX, centerY, radiusX, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawCircle(intCrdT centerX, intCrdT centerY, intCrdT radiusX, colorT  color) {
+    int x = 0;
+    int y = radiusX;
+    int d = 1 - radiusX;
+    int deltaE = 3;
+    int deltaSE = -2 * radiusX + 5;
+
+    drawPoint( x+centerX, y+centerY, color);
+    drawPoint( x+centerX,-y+centerY, color);
+    drawPoint(-x+centerX, y+centerY, color);
+    drawPoint(-x+centerX,-y+centerY, color);
+    drawPoint( y+centerX, x+centerY, color);
+    drawPoint( y+centerX,-x+centerY, color);
+    drawPoint(-y+centerX, x+centerY, color);
+    drawPoint(-y+centerX,-x+centerY, color);
+
+    while(y>x) {
+      if(d<0) {
+        d += deltaE;
+        deltaE += 2;
+        deltaSE += 2;
+      } else {
+        d += deltaSE;
+        deltaE += 2;
+        deltaSE += 4;
+        y--;
+      }
+      x++;
+      drawPoint( x+centerX, y+centerY, color);
+      drawPoint( x+centerX,-y+centerY, color);
+      drawPoint(-x+centerX, y+centerY, color);
+      drawPoint(-x+centerX,-y+centerY, color);
+      drawPoint( y+centerX, x+centerY, color);
+      drawPoint( y+centerX,-x+centerY, color);
+      drawPoint(-y+centerX, x+centerY, color);
+      drawPoint(-y+centerX,-x+centerY, color);
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillCircle(fltCrdT radiusX) {
+    drawFillCircle(dfltX, dfltY, real2intX(radiusX), dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillCircle(intCrdT radiusX) {
+    drawFillCircle(dfltX, dfltY, radiusX, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillCircle(rcPointFlt centerPoint, fltCrdT radiusX, colorT color) {
+    drawFillCircle(real2intX(centerPoint.x), real2intY(centerPoint.y), real2intX(radiusX), color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillCircle(rcPointFlt centerPoint, fltCrdT radiusX) {
+    drawFillCircle(real2intX(centerPoint.x), real2intY(centerPoint.y), real2intX(radiusX), dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillCircle(rcPointInt centerPoint, intCrdT radiusX, colorT color) {
+    drawFillCircle(centerPoint.x, centerPoint.y, radiusX, color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillCircle(rcPointInt centerPoint, intCrdT radiusX) {
+    drawFillCircle(centerPoint.x, centerPoint.y, radiusX, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillCircle(fltCrdT centerX, fltCrdT centerY, fltCrdT radiusX) {
+    drawFillCircle(real2intX(centerX), real2intY(centerY), real2intX(radiusX), dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillCircle(fltCrdT centerX, fltCrdT centerY, fltCrdT radiusX, colorT  color) {
+    drawFillCircle(real2intX(centerX), real2intY(centerY), real2intX(radiusX), color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillCircle(intCrdT centerX, intCrdT centerY, intCrdT radiusX) {
+    drawFillCircle(centerX, centerY, radiusX, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillCircle(intCrdT centerX, intCrdT centerY, intCrdT radiusX, colorT  color) {
+    int minXY;
+    int x = 0;
+    int y = radiusX;
+    int d = 1 - radiusX;
+    int deltaE = 3;
+    int deltaSE = -2 * radiusX + 5;
+
+    if(x > y)
+      minXY = y;
+    else
+      minXY = x;
+    drawLine(  x+centerX,  y+centerY,  x+centerX,  minXY+centerY, color);
+    drawLine( -x+centerX,  y+centerY, -x+centerX,  minXY+centerY, color);
+    drawLine(  x+centerX, -y+centerY,  x+centerX, -minXY+centerY, color);
+    drawLine( -x+centerX, -y+centerY, -x+centerX, -minXY+centerY, color);
+    drawLine(  y+centerX,  x+centerY,  minXY+centerX,  x+centerY, color);
+    drawLine(  y+centerX, -x+centerY,  minXY+centerX, -x+centerY, color);
+    drawLine( -y+centerX,  x+centerY, -minXY+centerX,  x+centerY, color);
+    drawLine( -y+centerX, -x+centerY, -minXY+centerX, -x+centerY, color);
+
+    while(y>x) {
+      if(d<0) {
+        d += deltaE;
+        deltaE += 2;
+        deltaSE += 2;
+      } else {
+        d += deltaSE;
+        deltaE += 2;
+        deltaSE += 4;
+        y--;
+      }
+      x++;
+
+      if(x > y)
+        minXY = y;
+      else
+        minXY = x;
+      drawLine(  x+centerX,  y+centerY,  x+centerX,  minXY+centerY, color);
+      drawLine( -x+centerX,  y+centerY, -x+centerX,  minXY+centerY, color);
+      drawLine(  x+centerX, -y+centerY,  x+centerX, -minXY+centerY, color);
+      drawLine( -x+centerX, -y+centerY, -x+centerX, -minXY+centerY, color);
+      drawLine(  y+centerX,  x+centerY,  minXY+centerX,  x+centerY, color);
+      drawLine(  y+centerX, -x+centerY,  minXY+centerX, -x+centerY, color);
+      drawLine( -y+centerX,  x+centerY, -minXY+centerX,  x+centerY, color);
+      drawLine( -y+centerX, -x+centerY, -minXY+centerX, -x+centerY, color);
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawRectangle(rcPointInt point1, rcPointInt point2, colorT color) {
+    drawRectangle(point1.x, point1.y, point2.x, point2.y, color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawRectangle(rcPointInt point1, rcPointInt point2) {
+    drawRectangle(point1.x, point1.y, point2.x, point2.y, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawRectangle(rcPointFlt point1, rcPointFlt point2, colorT color) {
+    drawRectangle(real2intX(point1.x), real2intY(point1.y), real2intX(point2.x), real2intY(point2.y), color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawRectangle(rcPointFlt point1, rcPointFlt point2) {
+    drawRectangle(real2intX(point1.x), real2intY(point1.y), real2intX(point2.x), real2intY(point2.y), dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawRectangle(rcPointInt *thePoints, colorT color) {
+    drawRectangle(thePoints[0].x, thePoints[0].y, thePoints[1].x, thePoints[1].y, color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawRectangle(rcPointFlt *thePoints) {
+    drawRectangle(real2intX(thePoints[0].x), real2intY(thePoints[0].y), real2intX(thePoints[1].x), real2intY(thePoints[1].y), dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawRectangle(rcPointFlt *thePoints, colorT color) {
+    drawRectangle(real2intX(thePoints[0].x), real2intY(thePoints[0].y), real2intX(thePoints[1].x), real2intY(thePoints[1].y), color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawRectangle(rcPointInt *thePoints) {
+    drawRectangle(thePoints[0].x, thePoints[0].y, thePoints[1].x, thePoints[1].y, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawRectangle(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2) {
+    drawRectangle(real2intX(x1), real2intY(y1), real2intX(x2), real2intY(y2), dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawRectangle(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2, colorT color) {
+    drawRectangle(real2intX(x1), real2intY(y1), real2intX(x2), real2intY(y2), color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawRectangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2) {
+    drawRectangle(x1, y1, x2, y2, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawRectangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, colorT color) {
+    if(x1 > x2) // Get x1 < x2
+      std::swap(x1, x2);
+    if(y1 > y2) // Get y1 < y2
+      std::swap(y1, y2);
+    if( (y1 < numYpix) && (x1 < numXpix) && (y2 >= 0) && (x2 >= 0) ) { // Part of rect visable
+      int noTop, noBottom, noLeft, noRight;
+      if((noTop=(y1 < 0)))
+        y1 = 0;
+      if((noLeft=(x1 < 0)))
+        x1 = 0;
+      if((noBottom=(y2 >= numYpix)))
+        y2 = numYpix - 1;
+      if((noRight=(x2 >= numXpix)))
+        x2 = numXpix - 1;
+      // Draw top/bottom/left/right lines
+      if(!noLeft) // Have left
+        drawVertLineNC(y1, y2, x1, color);
+      if(!noRight) // Have Right
+        drawVertLineNC(y1, y2, x2, color);
+      if(!noTop) // Have top
+        drawHorzLineNC(x1, x2, y1, color);
+      if(!noBottom) // Have bottom
+        drawHorzLineNC(x1, x2, y2, color);
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillRectangle(rcPointInt point1, rcPointInt point2, colorT color) {
+    drawFillRectangle(point1.x, point1.y, point2.x, point2.y, color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillRectangle(rcPointInt point1, rcPointInt point2) {
+    drawFillRectangle(point1.x, point1.y, point2.x, point2.y, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillRectangle(rcPointFlt point1, rcPointFlt point2, colorT color) {
+    drawFillRectangle(real2intX(point1.x), real2intY(point1.y), real2intX(point2.x), real2intY(point2.y), color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillRectangle(rcPointFlt point1, rcPointFlt point2) {
+    drawFillRectangle(real2intX(point1.x), real2intY(point1.y), real2intX(point2.x), real2intY(point2.y), dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillRectangle(rcPointInt *thePoints, colorT color) {
+    drawFillRectangle(thePoints[0].x, thePoints[0].y, thePoints[1].x, thePoints[1].y, color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillRectangle(rcPointFlt *thePoints) {
+    drawFillRectangle(real2intX(thePoints[0].x), real2intY(thePoints[0].y), real2intX(thePoints[1].x), real2intY(thePoints[1].y), dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillRectangle(rcPointFlt *thePoints, colorT color) {
+    drawFillRectangle(real2intX(thePoints[0].x), real2intY(thePoints[0].y), real2intX(thePoints[1].x), real2intY(thePoints[1].y), color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillRectangle(rcPointInt *thePoints) {
+    drawFillRectangle(thePoints[0].x, thePoints[0].y, thePoints[1].x, thePoints[1].y, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillRectangle(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2) {
+    drawFillRectangle(real2intX(x1), real2intY(y1), real2intX(x2), real2intY(y2), dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillRectangle(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2, colorT color) {
+    drawFillRectangle(real2intX(x1), real2intY(y1), real2intX(x2), real2intY(y2), color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillRectangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2) {
+    drawFillRectangle(x1, y1, x2, y2, dfltColor);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillRectangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, colorT color) {
+    if(x1 > x2) // Get x1 < x2
+      std::swap(x1, x2);
+    if(y1 > y2) // Get y1 < y2
+      std::swap(y1, y2);
+    // Clip
+    if( (y1 >= numYpix) || (x1 >= numXpix) || (y2 < 0) || (x2 < 0) )
+      return;
+    if(y1 < 0)
+      y1 = 0;
+    if(x1 < 0)
+      x1 = 0;
+    if(y2 >= numYpix)
+      y2 = numYpix - 1;
+    if(x2 >= numXpix)
+      x2 = numXpix - 1;
+    for(intCrdT y=y1;y<=y2;y++)
+      drawHorzLineNC(x1, x2, y, color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  inline void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawPointNC(intCrdT x, intCrdT y, colorT color) {
+#if SUPPORT_ALWAYS_PRESERVE_ALPHA
+    if(numChan > 3)
+      typename colorT::channelType aColorComp = pixels[numXpix * y + x].getAlpha();
+#endif
+    pixels[numXpix * y + x] = color;
+#if SUPPORT_ALWAYS_PRESERVE_ALPHA
+    if(numChan > 3)
+      pixels[numXpix * y + x].setAlpha(aColorComp);
+#endif
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  inline void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::moveToNC(intCrdT x, intCrdT y) {
+    dfltX = x;
+    dfltY = y;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  inline colorT& ramCanvasTpl<colorT, intCrdT, fltCrdT>::getPxColorRefNC(intCrdT x, intCrdT y) const {
+    return pixels[numXpix * y + x];
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  inline colorT  ramCanvasTpl<colorT, intCrdT, fltCrdT>::getPxColorNC(intCrdT x, intCrdT y) const {
+    return pixels[numXpix * y + x];
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  inline void ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawHorzLineNC(intCrdT xMin, intCrdT xMax, intCrdT yConst, colorT color) {
+    for(intCrdT x=xMin;x<=xMax;x++)
+      drawPointNC(x, yConst, color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawVertLineNC(intCrdT yMin, intCrdT yMax, intCrdT xConst, colorT color) {
+    for(intCrdT y=yMin;y<=yMax;y++)
+      drawPointNC(xConst, y, color);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  inline void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawPointS(intCrdT x, intCrdT y, colorT color) {
+    pixels[numXpix * y + x] = color;
+  }
+
+
+} // end namespace mjr
+
+#define MJR_INCLUDE_ramCanvasTpl
+#endif
