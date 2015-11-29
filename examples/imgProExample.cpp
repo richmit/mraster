@@ -51,7 +51,15 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  // for(auto& pix : listOcanv[0])
+  //   //pix.setToRed();
+  //   pix.tfrmNot();
+
+  //listOcanv[0].applyHomoPixTfrm(&ramCanvas4c8b::rcColor::tfrmNot);
+  //listOcanv[0].do_pixels(&ramCanvas4c8b::rcColor::tfrmNot);
+
   listOcanv[0].writeTGAfile("y.tga");
+  listOcanv[0].writeRAWfile("y.mrw");
 
   /* ************************************************************************************************ */
   /* ************************************************************************************************ */
@@ -59,9 +67,9 @@ int main(int argc, char *argv[]) {
   /* ************************************************************************************************ */
   //listOcanv[0].writeTGAfile("in1.tga");
   //listOcanv[1].writeTGAfile("in2.tga");
-  //listOcanv[0].applyHomoPixTfrm(&color4c8b::tfrmAnd, color4c8b(0xF0, 0xF0, 0xF0));
-  //listOcanv[1].applyHomoPixTfrm(&color4c8b::tfrmShiftR, color4c8b(4, 4, 4));
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::nboOr, listOcanv[1]);
+  //listOcanv[0].applyHomoPixTfrm(&ramCanvas4c8b::rcColor::tfrmAnd, color4c8b(0xF0, 0xF0, 0xF0));
+  //listOcanv[1].applyHomoPixTfrm(&ramCanvas4c8b::rcColor::tfrmShiftR, color4c8b(4, 4, 4));
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::nboOr, listOcanv[1]);
   //listOcanv[0].writeTGAfile("cmb.tga");
 
   /* ************************************************************************************************ */
@@ -69,9 +77,9 @@ int main(int argc, char *argv[]) {
   /* Extract two images that have been combined.                                                      */
   /* ************************************************************************************************ */
   //listOcanv[1].reallocCanvas(listOcanv[0].get_numXpix(), listOcanv[0].get_numYpix());
-  //listOcanv[1].combineRamCanvasBinOp(&color4c8b::nboCopy, listOcanv[0]);
-  //listOcanv[0].applyHomoPixTfrm(&color4c8b::tfrmAnd, color4c8b(0xF0, 0xF0, 0xF0));
-  //listOcanv[1].applyHomoPixTfrm(&color4c8b::tfrmShiftL, color4c8b(4, 4, 4));
+  //listOcanv[1].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::nboCopy, listOcanv[0]);
+  //listOcanv[0].applyHomoPixTfrm(&ramCanvas4c8b::rcColor::tfrmAnd, color4c8b(0xF0, 0xF0, 0xF0));
+  //listOcanv[1].applyHomoPixTfrm(&ramCanvas4c8b::rcColor::tfrmShiftL, color4c8b(4, 4, 4));
   //listOcanv[0].writeTGAfile("out1.tga");
   //listOcanv[1].writeTGAfile("out2.tga");
 
@@ -79,22 +87,22 @@ int main(int argc, char *argv[]) {
   /* ************************************************************************************************ */
   /* Various homogenious transformations                                                              */
   /* ************************************************************************************************ */
-  //listOcanv[0].applyHomoPixTfrm(&color4c8b::tfrmStep, color4c8b(150, 150, 150), color4c8b(200, 200, 200));
-  //listOcanv[0].applyHomoPixTfrm(&color4c8b::tfrmSaw, color4c8b(150, 150, 150), color4c8b(200, 200, 200));
-  //listOcanv[0].applyHomoPixTfrm(&color4c8b::tfrmShiftL, color4c8b(4, 4, 4));
-  //listOcanv[0].applyHomoPixTfrm(&color4c8b::tfrmShiftR, color4c8b(4, 4, 4));
-  //listOcanv[0].applyHomoPixTfrm(&color4c8b::tfrmAnd, color4c8b(0x00, 0xFF, 0x00));
-  //listOcanv[0].applyHomoPixTfrm(&color4c8b::tfrmOr, color4c8b(0xFF, 0x00, 0x00));
-  //listOcanv[0].applyHomoPixTfrm(&color4c8b::tfrmXor, color4c8b(0xF0, 0x0F, 0x0F));
-  //listOcanv[0].applyHomoPixTfrm(&color4c8b::tfrmInvert);
-  //listOcanv[0].applyHomoPixTfrm(&color4c8b::tfrmNot);
-  //listOcanv[0].applyHomoPixTfrm(&color4c8b::tfrmStdPow, 0.7);
-  //listOcanv[0].applyHomoPixTfrm(&color4c8b::tfrmStdPow, 0.9, 0.8, 0.7);
-  //listOcanv[0].applyHomoPixTfrm(&color4c8b::tfrmLinearGreyLevelScale, 2.0, 150.0);  
-  //listOcanv[0].applyHomoPixTfrm(&color4c8b::tfrmLinearGreyLevelScale, 2, 150, 0, 0, 1, 0); // no workie
-  //listOcanv[0].applyHomoPixTfrm(&color4c8b::tfrmDirac, color4c8b(0xF0, 0x0F, 0x0F));
-  //listOcanv[0].applyHomoPixTfrm(&color4c8b::tfrmFuzzyDirac, color4c8b(0xF0, 0x0F, 0x0F), color4c8b(0x0F, 0x0F, 0x0F));
-  //listOcanv[0].applyHomoPixTfrm(&color4c8b::tfrmDiracTot, color4c8b(0xF0, 0x0F, 0x0F));
+  //listOcanv[0].applyHomoPixTfrm(&ramCanvas4c8b::rcColor::tfrmStep, color4c8b(150, 150, 150), color4c8b(200, 200, 200));
+  //listOcanv[0].applyHomoPixTfrm(&ramCanvas4c8b::rcColor::tfrmSaw, color4c8b(150, 150, 150), color4c8b(200, 200, 200));
+  //listOcanv[0].applyHomoPixTfrm(&ramCanvas4c8b::rcColor::tfrmShiftL, color4c8b(4, 4, 4));
+  //listOcanv[0].applyHomoPixTfrm(&ramCanvas4c8b::rcColor::tfrmShiftR, color4c8b(4, 4, 4));
+  //listOcanv[0].applyHomoPixTfrm(&ramCanvas4c8b::rcColor::tfrmAnd, color4c8b(0x00, 0xFF, 0x00));
+  //listOcanv[0].applyHomoPixTfrm(&ramCanvas4c8b::rcColor::tfrmOr, color4c8b(0xFF, 0x00, 0x00));
+  //listOcanv[0].applyHomoPixTfrm(&ramCanvas4c8b::rcColor::tfrmXor, color4c8b(0xF0, 0x0F, 0x0F));
+  //listOcanv[0].applyHomoPixTfrm(&ramCanvas4c8b::rcColor::tfrmInvert);
+  //listOcanv[0].applyHomoPixTfrm(&ramCanvas4c8b::rcColor::tfrmNot);
+  //listOcanv[0].applyHomoPixTfrm(&ramCanvas4c8b::rcColor::tfrmStdPow, 0.7);
+  //listOcanv[0].applyHomoPixTfrm(&ramCanvas4c8b::rcColor::tfrmStdPow, 0.9, 0.8, 0.7);
+  //listOcanv[0].applyHomoPixTfrm(&ramCanvas4c8b::rcColor::tfrmLinearGreyLevelScale, 2.0, 150.0);  
+  //listOcanv[0].applyHomoPixTfrm(&ramCanvas4c8b::rcColor::tfrmLinearGreyLevelScale, 2, 150, 0, 0, 1, 0); // no workie
+  //listOcanv[0].applyHomoPixTfrm(&ramCanvas4c8b::rcColor::tfrmDirac, color4c8b(0xF0, 0x0F, 0x0F));
+  //listOcanv[0].applyHomoPixTfrm(&ramCanvas4c8b::rcColor::tfrmFuzzyDirac, color4c8b(0xF0, 0x0F, 0x0F), color4c8b(0x0F, 0x0F, 0x0F));
+  //listOcanv[0].applyHomoPixTfrm(&ramCanvas4c8b::rcColor::tfrmDiracTot, color4c8b(0xF0, 0x0F, 0x0F));
 
   //listOcanv[0].writeTGAfile("imgProExample.tga");
 
@@ -102,32 +110,32 @@ int main(int argc, char *argv[]) {
   /* ************************************************************************************************ */
   /* Various canvas combination functions                                                             */
   /* ************************************************************************************************ */
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmXor,      listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmAnd,      listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmOr,       listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmCopy,     listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmAbsDiff,  listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmSqDiff,   listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmSum,      listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmSumClp,   listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmDiv,      listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmMult,     listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmMultClp,  listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmMean,     listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmMean,     listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmGmean,    listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmGmeanClp, listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmDiff,     listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmDiffClp,  listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmMod,      listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmMaxL,     listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmMinL,     listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmMax,      listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmMin,      listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmMean,     listOcanv[1], 10, 20);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmMean,     listOcanv[1], 20, 10, 50, 40);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmMean,     listOcanv[1], 10, 20, 50, 60, 100, 100);
-  //listOcanv[0].combineRamCanvasBinOp(&color4c8b::tfrmMean,     listOcanv[1], 400, 450, 150, 60, 100, 100);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmXor,      listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmAnd,      listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmOr,       listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmCopy,     listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmAbsDiff,  listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmSqDiff,   listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmSum,      listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmSumClp,   listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmDiv,      listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmMult,     listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmMultClp,  listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmMean,     listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmMean,     listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmGmean,    listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmGmeanClp, listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmDiff,     listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmDiffClp,  listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmMod,      listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmMaxL,     listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmMinL,     listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmMax,      listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmMin,      listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmMean,     listOcanv[1], 10, 20);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmMean,     listOcanv[1], 20, 10, 50, 40);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmMean,     listOcanv[1], 10, 20, 50, 60, 100, 100);
+  //listOcanv[0].combineRamCanvasBinOp(&ramCanvas4c8b::rcColor::tfrmMean,     listOcanv[1], 400, 450, 150, 60, 100, 100);
   //listOcanv[0].writeTGAfile("imgProExample.tga");
 
   /* ************************************************************************************************ */

@@ -36,15 +36,15 @@ DO_CFITSIO     = NO
 ################################################################################################################################################################
 # ramCanvas stuff
 RCHOME 	  = ../lib
-RCHPPF    = $(RCHOME)/colorData.hpp $(RCHOME)/colorTpl.hpp $(RCHOME)/ramCanvasTpl.hpp $(RCHOME)/ramConfig.hpp $(RCHOME)/mapclamp.hpp $(RCHOME)/color.hpp $(RCHOME)/ramCanvas.hpp
-RCCPPF    = $(RCHOME)/colorData.cpp
+RCHPPF    = $(RCHOME)/point2d.hpp $(RCHOME)/colorData.hpp $(RCHOME)/colorTpl.hpp $(RCHOME)/ramCanvasTpl.hpp $(RCHOME)/ramConfig.hpp $(RCHOME)/mapclamp.hpp $(RCHOME)/color.hpp $(RCHOME)/ramCanvas.hpp
+RCCPPF    = $(RCHOME)/colorData.cpp $(RCHOME)/hersheyFontData.cpp
 
 ################################################################################################################################################################
 # Define targets
 TCOLORS  = colorAll colorWebTriangle colorWebRectangle colorCubeGraphRamps colorIndexedPallets colorGeneralRamps colorRainbows colorInterplHLSvsRGB
-TTEST    = testDraw testDraw2 bmark testColor
+TTEST    = testDraw testDraw2 bmark testColor testPoint testStrings testGlyph testFonts testBaryTry
 TIMGPRO  = imgProExample
-TFRACTAL = mandelbrot_c sierpinskiTriangle newton3_c newton3_c newton2_c newton newton_c distanceMandelbrot mandelbrot potMandelbrot triangleMandelbrot
+TFRACTAL = mandelbrot_c sierpinskiTriangle newton3_c newton3_c newton2_c newton newton_c distanceMandelbrot mandelbrot potMandelbrot triangleMandelbrot peterdejong sic sic_search
 TMATHGR  = levelCCurves
 
 TGLUT    = glutImage
@@ -68,7 +68,7 @@ endif
 ################################################################################################################################################################
 # Set the compiler options
 ifeq "$(UNAME_S)" 'Darwin'
-    CXXFLAGS = -Wstrict-overflow=0 -std=c++14 -Wall -O3 -I$(RCHOME)
+    CXXFLAGS = -Wstrict-overflow=0 -ffast-math -std=c++14 -Wall -O3 -I$(RCHOME)
 else
     CXXFLAGS = -Wstrict-overflow=0 -ffast-math -std=c++14 -Wall -O5 -I$(RCHOME)
 endif
@@ -109,6 +109,12 @@ newton3_c : newton3_c.cpp $(RCHPPF) $(RCCPPF) makefile
 peterdejong : peterdejong.cpp $(RCHPPF) $(RCCPPF) makefile
 		$(CXX) $(CXXFLAGS) $(RCCPPF) peterdejong.cpp -o peterdejong
 
+sic : sic.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) sic.cpp -o sic
+
+sic_search : sic_search.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) sic_search.cpp -o sic_search
+
 colorAll : colorAll.cpp $(RCHPPF) $(RCCPPF) makefile
 		$(CXX) $(CXXFLAGS) $(RCCPPF) colorAll.cpp -o colorAll
 
@@ -123,6 +129,21 @@ bmark : bmark.cpp $(RCHPPF) $(RCCPPF) makefile
 
 testDraw : testDraw.cpp $(RCHPPF) $(RCCPPF) makefile
 		$(CXX) $(CXXFLAGS) $(RCCPPF) testDraw.cpp -o testDraw
+
+testBaryTry : testBaryTry.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) testBaryTry.cpp -o testBaryTry
+
+testPoint : testPoint.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) testPoint.cpp -o testPoint
+
+testStrings : testStrings.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) testStrings.cpp -o testStrings
+
+testFonts : testFonts.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) testFonts.cpp -o testFonts
+
+testGlyph : testGlyph.cpp $(RCHPPF) $(RCCPPF) makefile
+		$(CXX) $(CXXFLAGS) $(RCCPPF) testGlyph.cpp -o testGlyph
 
 colorCubeGraphRamps : colorCubeGraphRamps.cpp $(RCHPPF) $(RCCPPF) makefile
 		$(CXX) $(CXXFLAGS) $(RCCPPF) colorCubeGraphRamps.cpp -o colorCubeGraphRamps

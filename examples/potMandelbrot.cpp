@@ -3,7 +3,7 @@
 /**
  @file      potMandelbrot.cpp
  @author    Mitch Richling <http://www.mitchr.me>
- @brief     This program draws a mandelbrot set using the "potential"@EOL
+ @brief     This program draws a Mandelbrot set using the "potential"@EOL
  @std       C++98
  @copyright 
   @parblock
@@ -28,7 +28,10 @@
   @endparblock
  @filedetails   
 
-  This generates a Povray color scheme to generate a height field of the "potential" of the mandelbrot set.
+  This generates a POV-Ray color scheme to generate a height field of the "potential" of the Mandelbrot set.
+  Create the .mrd file like so:
+
+     dd if=potMandelbrot_2.mrw skip=100 iflag=skip_bytes of=potMandelbrot_2.mrd
 
 ***************************************************************************************************************************************************************/
 
@@ -37,31 +40,33 @@
 
 using namespace mjr;
 
-#define MAXITR 656
-//#define BALLSIZE 2.0
-#define BALLSIZE 100000.0
+#define CSIZE 4096
+#define MAXITR 6000
+#define BALLSIZE 10000000.0
 
-// This is out here so that it will get allocated on the heap
-// I'm too lazy to use malloc just this moment.
-double theValues[2000][2000];
+/* This is out here so that it will get allocated on the heap. I'm too lazy to use malloc just this moment. */
+double theValues[CSIZE][CSIZE];
 
 int main(void) {
   int x, y, count;
-  double xr, yr, zx, zy, tempx;
-  double pot, maxPot=0, minPot=0;
+  double xr, yr, zx, zy, tempx, pot, maxPot=0, minPot=0;
   color4c8b aColor;
-  ramCanvas4c8b theRamCanvas = ramCanvas4c8b(512, 512,
-//                                     -2, 2, -2, 2
-//                                     -0.1773439, -0.052343905, -0.9173759, -0.7923759
-//                                     -0.08673248, -0.07110748, -0.83358735, -0.81796235
-//                                     0.03534691, 0.5353469, 0.11538452, 0.6153845
-                                             -2.0, 1.0, -1.5, 1.5
-//                                     0.3260546, 0.2560546+0.1225859, 0.25996086, 0.25996086+0.12649214
+  ramCanvas4c8b theRamCanvas = ramCanvas4c8b(CSIZE, CSIZE,
+//                                     -2.0,        2.0,        -2.0,        2.0
+                                       -2.0,        1.0,        -1.5,        1.5
+//                                      0.3260546,  0.3786405,   0.2599608,  0.3864530
+//                                     -0.1773439, -0.0523439,  -0.9173759, -0.7923759
+//                                     -0.0867324, -0.0711074,  -0.8335873, -0.8179623
+//                                      0.0353469,  0.5353469,   0.1153845,  0.6153845
                                      );
   
-  /* Compute the min and max */
-  for(x=0;x<theRamCanvas.get_numXpix();x++) {
-    for(y=0;y<theRamCanvas.get_numYpix();y++) {
+  /* Compute the potential function on our grid.  We use the ramCanvas as a nice way to convert from integer to real coordinates on this grid, but we store *
+     the data in a floating point array.  We store -1 if the point appears to be in the Mandelbrot set, and the potential otherwise.  We do this so that we
+     can color the set differently allowing us to render a canyon-like plot instead of a plateau-like plot.  We also compute the min and max potential so that
+     we maximize the resulting image's color histogram. */
+  for(y=0;y<theRamCanvas.get_numYpix();y++) {
+    std::cout << "LINE: " << y << "/" << CSIZE << std::endl;
+    for(x=0;x<theRamCanvas.get_numXpix();x++) {
       for(xr=theRamCanvas.int2realX(x),yr=theRamCanvas.int2realY(y),zx=zy=0.0,count=0;
           (zx*zx+zy*zy<BALLSIZE)&&(count<MAXITR);
           count++,tempx=zx*zx-zy*zy+xr,zy=2*zx*zy+yr,zx=tempx) ;
@@ -82,8 +87,12 @@ int main(void) {
     }
   }
 
-  fprintf(stderr, "MIN: %10.5f  MAX: %10.5f\n", (float)minPot, (float)maxPot);
+  std::cout << "MIN: " << minPot << " MAX:" << maxPot << std::endl;
 
+  /* Draw a POV-Ray height field from the potential data.  This one will have the Mandelbrot set itself set to zero height (black).  This allows us to render
+     canyon-like images.  Rendering this data in 3D will tend to emphasize the edge of the set (the walls of the canyon), so a high maximum iteration count
+     will yield better results. */
+  std::cout << "TGA_1" << std::endl;
   for(x=0;x<theRamCanvas.get_numXpix();x++) {
     for(y=0;y<theRamCanvas.get_numYpix();y++) {
       pot=theValues[x][y];
@@ -99,25 +108,31 @@ int main(void) {
   }
   theRamCanvas.writeTGAfile("potMandelbrot_1.tga");
 
-  /* Draw */
-  for(x=0;x<theRamCanvas.get_numXpix();x++) {
-    for(y=0;y<theRamCanvas.get_numYpix();y++) {
-      for(xr=theRamCanvas.int2realX(x),yr=theRamCanvas.int2realY(y),zx=zy=0.0,count=0;
-          (zx*zx+zy*zy<BALLSIZE)&&(count<MAXITR);
-          count++,tempx=zx*zx-zy*zy+xr,zy=2*zx*zy+yr,zx=tempx) ;
-      if(count < MAXITR) {
-        pot=0.5*log(zx*zx+zy*zy)/pow(2.0,count);
-        if(pot < 0.0) pot = 0;
+  /* Draw a POV-Ray height field from the potential data.  This one will have the Mandelbrot set itself set the maximum height.  This allows us to render
+     plateau-like images. */
+  std::cout << "TGA_2" << std::endl;
+  for(x=0;x<theRamCanvas.get_numXpix();x++) 
+    for(y=0;y<theRamCanvas.get_numYpix();y++) 
+      if(theValues[x][y] <  0)
+	  theRamCanvas.drawPoint(x, y, aColor.cmpGreyTGA16bit(0xffff-1));
+  theRamCanvas.writeTGAfile("potMandelbrot_2.tga");
+
+  /* We dump out 16-bit unsigned integers less than 2^15 so that they may be interpreted as signed integers by tools like VisIT which might read the data via
+     the BOV file. */
+  std::cout << "RAW_2" << std::endl;
+  ramCanvas1c16b theRamCanvasG(CSIZE, CSIZE);
+  for(x=0;x<theRamCanvasG.get_numXpix();x++) {
+    for(y=0;y<theRamCanvasG.get_numYpix();y++) {
+      pot=theValues[x][y];
+      if(pot >=  0) {
         pot = pot - minPot;
-        if(pot < 0.0) pot = 0;
-        pot=(0xffff-1)-pot*(0xffff-2)/(maxPot-minPot);
-        aColor.cmpGreyTGA16bit((int)pot);
+        pot=(0x8000-1)-pot*(0x8000-2)/(maxPot-minPot);
+		theRamCanvasG.drawPoint(x, y, pot);
       } else {
-		aColor.cmpGreyTGA16bit(0xffff-1);
+        theRamCanvasG.drawPoint(x, y, 0x8000-1);
       }
-	  theRamCanvas.drawPoint(x, y, aColor);
     }
   }
-  theRamCanvas.writeTGAfile("potMandelbrot_2.tga");
+  theRamCanvasG.writeRAWfile("potMandelbrot_2.mrw");
   
 }

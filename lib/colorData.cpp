@@ -27,6 +27,9 @@
   @endparblock
 ***************************************************************************************************************************************************************/
 
+// Put everything in the mjr namespace
+namespace mjr {
+
 extern const float colMatchPoints[89][4] = {
   {390,   1.5000E-03,   -4.0000E-04,    6.2000E-03},    
   {395,   3.8000E-03,   -1.0000E-03,    1.6100E-02},    
@@ -1461,3 +1464,4 @@ const char *icp_MJR_BlWt_02[3]       = { "3", "#000000", "#ffffff" };
 /** Reg, Blue, Green */
 const char *icp_MJR_RBG_03[6]        = { "3", "#000000", "#ff0000", "#00ff00", "#0000ff", "#ffffff" };
 
+} // end namespace mjr

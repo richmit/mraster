@@ -63,8 +63,7 @@ int main(void) {
   std::string s;
   color1c16b aColor;
   aColor.setAll(1);
-//  for(int j=0; j<NPR; j++) {
-  for(int j=1; j<2; j++) {
+  for(int j=0; j<NPR; j++) {
     ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -2, 2, -2, 2);
 
     double a = params[j][0];
@@ -77,6 +76,8 @@ int main(void) {
     double h = params[j][7];
     double p = params[j][8];
 
+    /* Draw the atractor on a 16-bit, greyscale canvas -- the grey level will be an integer represeting the hit count for that pixel.  This is a good example
+       of how an image can have pixel values that are generic "data" as well as color information. */
     double x       = 1.0;
     double y       = 1.0;  
     uint64_t maxII = 0;
@@ -108,7 +109,8 @@ int main(void) {
     // theRamCanvas.applyHomoPixTfrm(&color1c16b::tfrmLn);
     // maxII = log(maxII);
 
-    // Create a new (color) image based on an integer color scale
+    /* Create a new image based on an integer color scale -- this one is 24-bit RGB color.  This isn't the most efficient technique from a RAM perspective in
+       that we could pass a conversion routine to writeTGAfile (see sic.cpp for an example of how to do just that). */
     ramCanvas3c8b anotherRamCanvas(BSIZ, BSIZ);
     color3c8b bColor;
     for(int yi=0;yi<theRamCanvas.get_numYpix();yi++)

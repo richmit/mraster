@@ -66,7 +66,7 @@ int main(void) {
       theRamCanvas_int.drawPoint(x, y, aColor);
       aColor.setColorFromPackedIntRGBA(igray(count));
       theRamCanvas_gry.drawPoint(x, y, aColor);
-      aColor.setColor(red, green, blue);
+      aColor.setColorRGB(red, green, blue);
       theRamCanvas_rgb.drawPoint(x, y, aColor);
       aColor.tfrmWebSafe216();
       theRamCanvas_web.drawPoint(x, y, aColor);

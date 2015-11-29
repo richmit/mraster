@@ -33,6 +33,7 @@
 
 #ifndef MJR_INCLUDE_ramCanvasTpl
 
+#include <functional>
 #include <sstream>
 #include <iomanip>
 #include <iostream>
@@ -41,7 +42,10 @@
 #include <vector>
 #include <type_traits>
 
+#include "color.hpp"
 #include "ramConfig.hpp"
+#include "hersheyFontData.hpp"
+#include "point2d.hpp"
 
 // Put everything in the mjr namespace
 namespace mjr {
@@ -51,69 +55,69 @@ namespace mjr {
       This class essentially manages a 2D array of pixels (represented as colorTpl objects).
       Both integer and floating point coordinates are supported.
 
-Coordinates
-===========
+      Coordinates
+      ===========
 
-Traditional Mathematical Coordinate System
-------------------------------------------
+      Traditional Mathematical Coordinate System
+      ------------------------------------------
 
-The traditional coordinate system used in mathematics is the Cartesian Coordinate system.  In this system the axes represent real numbers which increase as
-one moves to the right or up.
+      The traditional coordinate system used in mathematics is the Cartesian Coordinate system.  In this system the axes represent real numbers which increase as
+      one moves to the right or up.
 
 
-                                  ^ y (increasing upward)
-                                  | 
-                                  . (0, 1) 
-                                  | 
-                                  | 
-                                  | 
-                         (-1,0)   | (0,0)        x (increasing to the right)
-                       <-.--------+--------.----->
-                                  |        (1,0)
-                                  |
-                                  | 
-                                  |
-                                  . (0, -1)
-                                  |
-                                  v
+      ^ y (increasing upward)
+      | 
+      . (0, 1) 
+      | 
+      | 
+      | 
+      (-1,0)   | (0,0)        x (increasing to the right)
+      <-.--------+--------.----->
+      |        (1,0)
+      |
+      | 
+      |
+      . (0, -1)
+      |
+      v
         
-Traditional Computer Graphics Coordinate System
------------------------------------------------
+      Traditional Computer Graphics Coordinate System
+      -----------------------------------------------
 
-Unlike the Cartesian coordinate system, the traditional coordinates used in computer graphics have only positive, integer coordinates, the origin at the upper
-left, and the x and y coordinates increasing to the right and down.  This is a very natural choice given the discrete nature of digital displays and the
-typical layout of 2D arrays in RAM.
+      Unlike the Cartesian coordinate system, the traditional coordinates used in computer graphics have only positive, integer coordinates, the origin at the upper
+      left, and the x and y coordinates increasing to the right and down.  This is a very natural choice given the discrete nature of digital displays and the
+      typical layout of 2D arrays in RAM.
 
                                
-                               (0,0)   +------------+ (numXpix-1, 0)
-                                       |            |
-                                       |            |
-                                       |            |
-                                       |            |
-                                       |            |
-                        (numYpix-1, 0) +------------+ (numXpix-1, numYpix-1)
+      (0,0)   +------------+ (numXpix-1, 0)
+      |            |
+      |            |
+      |            |
+      |            |
+      |            |
+      (numYpix-1, 0) +------------+ (numXpix-1, numYpix-1)
 
-ramConfig Coordinate Systems
-----------------------------
+      ramConfig Coordinate Systems
+      ----------------------------
 
-This library supports two sets of coordinates for each image:
+      This library supports two sets of coordinates for each image:
 
-  - Integer -- much like traditional computer graphics coordinates
+      - Integer -- much like traditional computer graphics coordinates
 
-  - Floating Point -- much like mathematical coordinates
+      - Floating Point -- much like mathematical coordinates
 
-The integer coordinates are a generalization of the traditional integer coordinates used for computer graphics.  Like the traditional system, they are
-unsigned integers (so the coordinates start at 0), each pixel is one unit from the previous, and the maximum pixel coordinate is one minus the canvas size in
-that coordinate direction.  The generalization is that the origin of the coordinate system can be any of the four corners.  By default the origin is the
-lower, left corner.  Note that the memory layout of the image is not modified by the integer coordinate system -- i.e. the location of the origin is
-irrelevant when it comes to the layout of bits in RAM.  In RAM the layout is the same as the traditional coordinate system where the coordinates are the
-indexes of the image array.  What is the point?  The location of the origin is taken into consideration when the image is exported/imported by functions like
-writeTGAfile, writeRAWfile.
+      The integer coordinates are a generalization of the traditional integer coordinates used for computer graphics.  Like the traditional system, they are
+      unsigned integers (so the coordinates start at 0), each pixel is one unit from the previous, and the maximum pixel coordinate is one minus the canvas size in
+      that coordinate direction.  The generalization is that the origin of the coordinate system can be any of the four corners.  By default the origin is the
+      lower, left corner.  Note that the memory layout of the image is not modified by the integer coordinate system -- i.e. the location of the origin is
+      irrelevant when it comes to the layout of bits in RAM.  In RAM the layout is the same as the traditional coordinate system where the coordinates are the
+      indexes of the image array.  What is the point?  The location of the origin is taken into consideration when the image is exported/imported by functions like
+      writeTGAfile, writeRAWfile.
 
-@tparam intCrdT An integral type used for the integer image coordinates.  Mus be large enough to hold the value (numXpix * numYpix)
-@tparam colorT  A type for the image pixels (a color)
-@tparam fltCrdT A floating point type used for the floating point image coordinates
-*/
+      @tparam intCrdT An integral type used for the integer image coordinates.  Mus be large enough to hold the value (numXpix * numYpix)
+      @tparam colorT  A type for the image pixels (a color)
+      @tparam fltCrdT A floating point type used for the floating point image coordinates
+  */
   template <class colorT, class intCrdT, class fltCrdT>
   class ramCanvasTpl {
 
@@ -126,27 +130,39 @@ writeTGAfile, writeRAWfile.
       
     public:
 
-      typedef struct { fltCrdT x; fltCrdT y; } rcPointFlt;     //!< Real coordinate pair type
-      typedef struct { intCrdT x; intCrdT y; } rcPointInt;     //!< Integer coordinate pair type
+      typedef point2d<fltCrdT> rcPointFlt;     //!< Real coordinate pair type
+      typedef point2d<intCrdT> rcPointInt;     //!< Integer coordinate pair type
+
       typedef intCrdT rcCordInt;
       typedef fltCrdT rcCordFlt;
+      typedef colorT  rcColor;
 
       enum class axisOrientation {INVERTED, NATURAL};  //!< Enum for axis orientation
-
+      
+      enum class pt {INVERTED, NATURAL};  //!< Enum for axis orientation
+      
       //const static intCrdT intCrdMax = std::sqrt(std::numeric_limits<intCrdT>::max()) - 1; // Some compilers don't think sqrt(const) is const
       const static intCrdT intCrdMax = (1ul << ((sizeof(intCrdT)*CHAR_BIT-1)/2)) - 3;        //!< maximum "on canvas" integer coordinate
       const static intCrdT intCrdMin = 0;                                                    //!< maximum "on canvas" integer coordinate
-      
+
     private:
 
-      const static intCrdT intCrdGrdMax = intCrdMax+1; //!< Large sentinal value (always off canvas)
-      const static intCrdT intCrdGrdMin = intCrdMin-1; //!< Samll sentinal value (always off canvas)
+      /** Image File Types. */
+      enum class imgFileType {
+          TGA_TRU,    //!< 24-bit (8-bit/chan) truecolor.  See: writeTGAdataTRU()
+            RAW_DATA,   //!< The data part of a MJR RAW file.  See: writeRAWfile()
+            RAW_HEADER, //!< The header part of a MJR RAW file.  See: writeRAWfile()
+            RAW,        //!< MJR RAW file.  See: writeRAWfile()
+            };
+      
+      const static intCrdT intCrdGrdMax = intCrdMax+1; //!< Large sentinel value (always off canvas)
+      const static intCrdT intCrdGrdMin = intCrdMin-1; //!< Small sentinel value (always off canvas)
       
       /** @name Canvas integer coordinates */
       //@{
       intCrdT numXpix;     //!< Number of x pixels
       intCrdT numYpix;     //!< Number of y pixels
-      intCrdT numPix;      //!< Number of pixles
+      intCrdT numPix;      //!< Number of pixels
       //@}
       
       /** @name Canvas real coordinates */
@@ -186,6 +202,40 @@ writeTGAfile, writeRAWfile.
       colorT drawMode;    //!< Drawing mode.
       intCrdT dfltX;      //!< x coordinate used by default.
       intCrdT dfltY;      //!< y coordinate used by default.
+      //@}
+
+      /** @name Filled Triangle Utility Functions */
+      //@{
+      /** Utliity function behind the drawFillTriangle() functions.
+          @param x1 The x coordinate of the first point
+          @param y1 The y coordinate of the first point
+          @param x2 The x coordinate of the second point
+          @param y2 The y coordinate of the second point
+          @param x3 The x coordinate of the third point
+          @param y3 The y coordinate of the third point
+          @param c1 The color of the first point (x1, y1)
+          @param c2 The color of the second point (x2, y2)
+          @param c3 The color of the third point (x3, y3) 
+          @param solid Use only c1 if true, otherwise use barycentric interpolation */
+      void  drawFillTriangleUtl(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3, colorT c1, colorT c2, colorT c3, bool solid);
+      //@}
+
+      /** @name File Reading and Writing Utility Methods */
+      //@{
+      /** Write the header for a 24-bit truecolor (3 channels at 8-bits per channel) header for a TGA file to the given ostream */
+      int writeTGAheaderTRU(std::ostream& oStream);
+      /** Write the data for a 24-bit truecolor (3 channels at 8-bits per channel) header for a TGA file to the given ostream */
+      int writeTGAdataTRU(std::ostream& oStream, std::function<colorRGB8b (colorT&)> toTRU, std::function<colorT (colorT&)> filter);
+      /** Write the header for an MJR RAW file to the given ostream */
+      int writeRAWheader(std::ostream& oStream);
+      /** Write the data for an MJR RAW file to the given ostream */
+      int writeRAWdata(std::ostream& oStream, std::function<colorT (colorT&)> filter);
+      /** Write an image file with the given format and filters.  This is the work horse driver behind all the public write*file functions.
+          @param fileName The file name to read data from
+          @param fileType The type of file to write. 
+          @param toTRU    A functor used to transform native pixels into truecolor RGB pixels.
+          @param filter   A functor used to transform each pixel. */
+      int writeFile(char const* fileName, imgFileType fileType, std::function<colorRGB8b (colorT&)> toTRU, std::function<colorT (colorT&)> filter);
       //@}
 
       /** @name Coordinate System Manipulation (i) */
@@ -305,7 +355,7 @@ writeTGAfile, writeRAWfile.
       void newRealCoords(fltCrdT minRealX_p, fltCrdT maxRealX_p, fltCrdT minRealY_p, fltCrdT maxRealY_p);
       //@}
 
-      /** @name Canvas Rotation, Scaling, and Reflection Operations */
+      /** @name Canvas Rotation and Reflection. */
       //@{
       /** Loss-less 90 degree clockwise rotation of the canvas about the center.  i.e. the top row of pixels will be on the right side after the rotation.
           The canvas will be resized as required.  The transformation is not done "in place", so enough memory is required to duplicate the canvas.  */
@@ -328,6 +378,32 @@ writeTGAfile, writeRAWfile.
       void flipTranspose();
       //@}
 
+      /** @name Canvas Scaling. */
+      //@{
+      /** Scale up the image using proximal interpolation -- i.e. we create a xfactor*xfactor boxes filled with the color of the original pixel.  This
+          algorithm tends to make the resulting image a block, but the histograms stay accurate.  The algorithm is very fast as it is very simple.
+          @param xfactor The factor to scale up to -- must be a positive integer. */
+      void scaleUpProximal(int xfactor);
+      /** Scale down using only the upper left pixel from each block.  This will tend to highlight horizontal and vertical detail and generally sharpen up the
+          image.  Much data is lost with this sort of scaling operation.
+          @param xfactor The factor to scale up to -- must be a positive integer. */
+      void scaleDown1pt(int xfactor);
+      /** Scale down using only the pixel with maximum luminosity in each block.  Much like scaleDown1pt, this will sharpen up a scaled image, but it will
+          also tend to brighten up the image as well.
+          @param xfactor The factor to scale up to -- must be a positive integer. */
+      void scaleDownMax(int xfactor);
+      /** Scale down using the mean pixel value from each block.  This creates each pixel value by averaging all of the pixels that contribute -- i.e. a mean
+          on the xfactor*xfactor pixel corresponding to each new pixel.  This algorithm tends to "fuzz-up" the result -- frequently used for super-sampling.
+          @param xfactor The factor to scale down to -- must be a positive integer. */
+      void scaleDownMean(int xfactor);
+      //@}
+      
+      /** @name Iterators */
+      //@{
+      colorT *begin() { return pixels;  }
+      colorT *end()   { return pixelsE; }
+      //@}
+      
       /** @name Homogeneous Pixel Transformations (point operators) */
       //@{
       /** Homogeneous pixel transformations don't vary based upon the coordinates of the pixel in question, but depend only upon the value of the pixel.
@@ -392,7 +468,6 @@ writeTGAfile, writeRAWfile.
                                  intCrdT trgX =  0, intCrdT trgY =  0,
                                  intCrdT wide = -1, intCrdT tall = -1,
                                  intCrdT srcX =  0, intCrdT srcY =  0);
-
       //@}
 
       /** @name Statistical Canvas Combination Functions (useful for CCD imaging) */
@@ -562,8 +637,9 @@ writeTGAfile, writeRAWfile.
 
       /** @name Filled Triangle Drawing Methods */
       //@{
-      /** Draw a filled rectangle using a nicely optimized, horizontal scan conversion algorithm.  
-          Only triangles entirely on the canvas will be drawn -- no partial triangles clipped by an edge!
+      /** Draw a triangle filled with a solid color using a nicely optimized, horizontal scan conversion algorithm.  
+          @bug Triangles not entirely on the canvas are not rendered.
+          @bug Degenerate trainagles are not rendered
           @param x1 The x coordinate of the first point
           @param y1 The y coordinate of the first point
           @param x2 The x coordinate of the second point
@@ -594,6 +670,24 @@ writeTGAfile, writeRAWfile.
       void drawFillTriangle(rcPointFlt *thePoints, colorT color);
       /** @overload */
       void drawFillTriangle(rcPointFlt *thePoints);
+      //@}
+
+      /** @name Filled Triangle Drawing Methods */
+      //@{
+      /** Draw a filled triangle using barycentric color interpolation.
+          @bug Triangles not entirely on the canvas are not rendered.
+          @bug Degenerate trainagles are not rendered
+          @bug Painfully slow
+          @param x1 The x coordinate of the first point
+          @param y1 The y coordinate of the first point
+          @param x2 The x coordinate of the second point
+          @param y2 The y coordinate of the second point
+          @param x3 The x coordinate of the third point
+          @param y3 The y coordinate of the third point
+          @param c1 The color of the first point (x1, y1)
+          @param c2 The color of the second point (x2, y2)
+          @param c3 The color of the third point (x3, y3) */
+      void drawFillTriangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3, colorT color1, colorT color2, colorT color3);
       //@}
 
       /** @name Unfilled Rectangle Drawing Functions */
@@ -752,19 +846,54 @@ writeTGAfile, writeRAWfile.
       void drawPLCurve(int numPoints, rcPointFlt *thePoints);
       //@}
 
+      /** @name Hershey Glyph Rendering Utility Functions */
+      //@{
+      /** Render a glyph from the Hershey character set.  The glyph is rendered with its origin at the given coordinates.  This function is intended to provide
+          only the most basic glyph rendering.  For example, glyphs are rendered with the line drawing functions, and therefore are not anti-aliased.
+          @param glyphNum The character number of the glyph to render
+          @param x        The x coordinate at which to render the glyph
+          @param y        The x coordinate at which to render the glyph
+          @param magX     The magnification of the glyph in the x direction
+          @param magY     The magnification of the glyph in the y direction
+          @param aColor   The color with which to render the glyph */
+      void drawHersheyGlyph(int glyphNum, intCrdT x, intCrdT y, double magX, double magY, colorT aColor);
+      //@}
+
+      /** @name ASCII Character Rendering 
+          What are font rendering functions doing in a raster graphics library? Sometimes I like to put a label on image. :)*/
+      //@{
+      /** Render an ASCII C-string using Hershey ASCII Fonts.  While the string is rendered with fixed font spacing, the Hershey fonts are not fixed width fonts.
+          @param aString The C-string to render -- make sure it is null terminated
+          @param aFont   The font to set the default with
+          @param x       The x coordinate at which to render the first glyph
+          @param y       The x coordinate at which to render the first glyph
+          @param aColor  The color with which to render the glyphs
+          @param cex     A factor by which to expand the size of each glyph -- 1 is a good value (the name comes from R).
+          @param spc     Space to jump for each charcter -- 20 for SL fonts, 23 for DL fonts, and 25 for TL fonts.  Scaled with cex. */
+      void drawString(const char *aString, hersheyFont aFont, intCrdT x, intCrdT y, colorT aColor, double cex, intCrdT spc);    
+      /** Renders a filled, bounding box for the given string as rendered via drawString.
+          @param aString The C-string to render -- make sure it is null terminated
+          @param aFont   The font to set the default with
+          @param x       The x coordinate at which to render the first glyph
+          @param y       The x coordinate at which to render the first glyph
+          @param aColor  The color with which to render the BOX
+          @param cex     A factor by which to expand the size of each glyph -- 1 is a good value (the name comes from R).
+          @param spc     Space to jump for each charcter -- 20 for SL fonts, 23 for DL fonts, and 25 for TL fonts.  Scaled with cex. */
+      void drawStringBox(const char *aString, hersheyFont aFont, intCrdT x, intCrdT y, colorT stringColor, colorT boxColor, double cex, intCrdT spc);    
+      //@}
+      
       /** @name File Reading and Writing Methods */
       //@{
-      /** Write a TGA format graphics file. Respects integer coordinate system orientation.
-
-          If the image is greyscale with a depth greater than 8-bits, then a special (non-standard) TGA file will be written.  Greyscale of 8-bit or lower
-          depth are encoded as normal truecolor TGA files with each channel set to the same value.
-
-          Greyscale images of 24-bit depth or less will be precisely encoded as a non-standard greyscale TGA file.  If the greatest greyscale value in the
-          image is less than 2^16, then the result will be compatible with a POVRAY height file.  If the greatest greyscale value in the image is greater than
-          2^24, then the greyscale values will be scaled to a range of [0, -1+2^24].*/
+      /** Write a 24-bit (8-bit per channel) RGB, TGA format graphics file.  
+          Respects integer coordinate system orientation.
+          @param fileName The file name to read data from */
       int writeTGAfile(char const *fileName);
+      /** @overload */
+      int writeTGAfile(char const *fileName, std::function<colorRGB8b (colorT&)> toTRU, std::function<colorT (colorT&)> filter);
+      /** @overload */
+      int writeTGAfile(char const *fileName, std::function<colorRGB8b (colorT&)> toTRU);
       /** Read a TGA format graphics file.  This function can only read 24-bit truecolor images of type 2.  It will return various error codes.  If x or y are
-          less than zero, then the current ramCanvasTpl will be resized to the size of the image in the file. Respects integer cooridnate system orientation.
+          less than zero, then the current ramCanvasTpl will be resized to the size of the image in the file. Respects integer coordinate system orientation.
           @todo Extend to support non-standard greyscale TGA files.
           @param fileName The file name to read data from
           @retval 0 The read was successful.
@@ -773,10 +902,11 @@ writeTGAfile, writeRAWfile.
           @retval 3 The file was not 24-bit. */
       int readColorTGAfile(char const *fileName);
       /** Write a MJRRAW file.
-          Respects integer cooridnate system orientation.
-          This simple file format is designed to house the more exotic images this libray supports, and be easily imported consumed by many image processing
-          tools -- usually via a feature refred to as a raw importer.  The header is ASCII, and contains two newlines -- the idea being that one can do a
-          'head -n 2 FILENAME' on the image file, and get a human readable output of basic image info.  The file format is very simple:
+          Respects integer coordinate system orientation.
+          This simple file format is designed to house the more exotic images this library supports, and be easily consumed by many image processing and data
+          visualization tools -- usually via a feature referred to as a raw importer.  VisIT, ParaView, and ImageJ all can read this type of data. The header is
+          ASCII, and contains two newlines -- the idea being that one can do a 'head -n 2 FILENAME' on the image file, and get a human readable output of
+          basic image info.  The file format is very simple:
           - Header: Byte  00-05: "MJRRAW"
           - Header: Byte  06-06: Newline
           - Header: Byte  07-25: Number of pixels on X (horizontal axis) expressed as a zero padded, decimal integer
@@ -791,7 +921,7 @@ writeTGAfile, writeRAWfile.
           - Header: Byte  90-90: "s"
           - Header: Byte  91-93: "INT" for integral channels and "FLT" for floating point channels
           - Header: Byte  94-94: "t"
-          - Header: Byte  95-97: "BIG" for big indian and "LTL" for Little indian
+          - Header: Byte  95-97: "BIG" for big endian and "LTL" for Little endian
           - Header: Byte  98-98: "i"
           - Header: Byte  99-99: Newline
           - Data:   Byte 100---: Image data -- each channel dumped in order as it looks in RAM.
@@ -799,6 +929,8 @@ writeTGAfile, writeRAWfile.
           @retval 0 The write was successful.
           @retval 1 Could not open file. */
       int writeRAWfile(char const *fileName);
+      /** @overload */
+      int writeRAWfile(char const *fileName, std::function<colorT (colorT&)> filter);
       //@}
 
       /** @name Boolean Clip Test Methods */
@@ -834,13 +966,13 @@ writeTGAfile, writeRAWfile.
       /** @name Orientation of Real Coordinate Systems */
       //@{
       /** Get the real X axis orientation
-          @return INVERTED means interted with respect to the integer axis, and NATURAL otherwise.    */
+          @return INVERTED means inverted with respect to the integer axis, and NATURAL otherwise.    */
       axisOrientation get_xRealAxisOrientation();
       /** Set the real X axis orientation
           @param orientation The orientation (INVERTED or NATURAL)*/
       void set_xRealAxisOrientation(axisOrientation orientation);
       /** Get the real Y axis orientation
-          @return INVERTED means interted with respect to the integer axis, and NATURAL otherwise.    */
+          @return INVERTED means inverted with respect to the integer axis, and NATURAL otherwise.    */
       axisOrientation get_yRealAxisOrientation();
       /** Set the real Y axis orientation
           @param orientation The orientation (INVERTED or NATURAL) */
@@ -852,13 +984,13 @@ writeTGAfile, writeRAWfile.
       /** @name Orientation of Integer Coordinate Systems */
       //@{
       /** Get the integer X axis orientation
-          @return NATURAL means increaseing to the right. */
+          @return NATURAL means increasing to the right. */
       axisOrientation get_xIntAxisOrientation();
       /** Set the integer X axis orientation
           @param orientation The orientation (INVERTED or NATURAL) */
       void set_xIntAxisOrientation(axisOrientation orientation);
       /** Get the integer Y axis orientation
-          @return NATURAL means increaseing in the upward direction. */
+          @return NATURAL means increasing in the upward direction. */
       axisOrientation get_yIntAxisOrientation();
       /** Set the integer Y axis orientation
           @param orientation The orientation (INVERTED or NATURAL) */
@@ -879,16 +1011,6 @@ writeTGAfile, writeRAWfile.
       /** Return a clone (a copy) of the raw pixel store.  This function copies the internal pixel store and returns a pointer to this copy.
           @return Pointer to a copy of the raw pixel store. */
       colorT *clonePixels();
-      /** Return iterator to start of the raw pixel store.  This generally violates the ramCanvasTpl object interface; however, this may be required for
-          performance.  Note that pixelIteratorEnd() provides an "end" iterator.  The pixels may be traversed with code like this:
-
-          for(colorT p = pixelIteratorBegin; ; Li != pixelIteratorEnd ; ++p)*/
-      colorT *pixelIteratorBegin() { return pixels;  }
-      /** Return iterator to end of the raw pixel store.  This generally violates the ramCanvasTpl object interface; however, this may be required for
-          performance.  Note that pixelIteratorBegin() provides an "start" iterator.  The pixels may be traversed with code like this:
-
-          for(colorT* p = pixelIteratorBegin(); p != pixelIteratorEnd(); ++p)*/
-      colorT *pixelIteratorEnd()   { return pixelsE; }
       //@}
 
       /** @name Pixel Value Accessor Methods */
@@ -908,8 +1030,7 @@ writeTGAfile, writeRAWfile.
           returned ramCanvasTpl will be from the given x coordinate to the far right edge.  If the height is zero, then the height of the returned
           ramCanvasTpl will be from the given y coordinate to lower edge of the current ramCanvasTpl.  An argument list of all zeros will return a copy
           of the current ramCanvasTpl in it's entirety.
-          @retval NULL If no pixels are sampled, NULL will be returned.  This will happen, for example, if the x and y coordinates given are beyond the
-          ramCanvasTpl. */
+          @retval NULL If no pixels are sampled.  This will happen, for example, if the x and y coordinates given are beyond the ramCanvasTpl. */
       ramCanvasTpl *getSubCanvas(intCrdT x, intCrdT y, intCrdT width, intCrdT height);
       //@}
 
@@ -928,11 +1049,6 @@ writeTGAfile, writeRAWfile.
           @param x The x coordinate of the point
           @param y The y coordinate of the point
           @return NONE */
-      void moveToNC(intCrdT x, intCrdT y);
-      /** Returns the color value for the given pixel with no clipping or bounds checking.
-          @param x The x coordinate of the point
-          @param y The y coordinate of the point
-          @return color of the specified point */
       colorT getPxColorNC(intCrdT x, intCrdT y) const;
       /** Returns a reference to the color object for the given pixel with no clipping or bounds checking.
           @param x The x coordinate of the point
@@ -965,7 +1081,8 @@ writeTGAfile, writeRAWfile.
           the result.
           @param x The x coordinate of the point
           @param y The y coordinate of the point
-          @param color The color with which to draw the point */
+          @param color The color with which to draw the point
+          @return NONE  */
       void drawPointS(intCrdT x, intCrdT y, colorT color);
       //@}
   };
@@ -1254,9 +1371,8 @@ writeTGAfile, writeRAWfile.
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::moveTo(intCrdT x, intCrdT y) {
-    if((x >= 0) && (y >= 0) && (x<numXpix) && (y<numYpix)) {
-      moveToNC(x, y);
-    }
+    dfltX = x;
+    dfltY = y;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1363,7 +1479,7 @@ writeTGAfile, writeRAWfile.
     intCrdT dfltXnew = real2intX(point1.x);
     intCrdT dfltYnew = real2intY(point1.y);
     drawLine(dfltX, dfltY, dfltXnew, dfltYnew, dfltColor);
-    moveToNC(dfltXnew, dfltYnew);
+    moveTo(dfltXnew, dfltYnew);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1372,21 +1488,21 @@ writeTGAfile, writeRAWfile.
     intCrdT dfltXnew = real2intX(point1.x);
     intCrdT dfltYnew = real2intY(point1.y);
     drawLine(dfltX, dfltY, dfltXnew, dfltYnew, color);
-    moveToNC(dfltXnew, dfltYnew);
+    moveTo(dfltXnew, dfltYnew);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine(rcPointInt point1) {
     drawLine(dfltX, dfltY, point1.x, point1.y, dfltColor);
-    moveToNC(point1.x, point1.y);
+    moveTo(point1.x, point1.y);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine(rcPointInt point1, colorT color) {
     drawLine(dfltX, dfltY, point1.x, point1.y, color);
-    moveToNC(point1.x, point1.y);
+    moveTo(point1.x, point1.y);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1429,7 +1545,7 @@ writeTGAfile, writeRAWfile.
   template<class colorT, class intCrdT, class fltCrdT>
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine(intCrdT x, intCrdT y, colorT color) {
     drawLine(dfltX, dfltY, x, y, color);
-    moveToNC(x, y);
+    moveTo(x, y);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1438,7 +1554,7 @@ writeTGAfile, writeRAWfile.
     intCrdT dfltXnew = real2intX(x);
     intCrdT dfltYnew = real2intY(y);
     drawLine(dfltX, dfltY, dfltXnew, dfltYnew, color);
-    moveToNC(dfltXnew, dfltYnew);
+    moveTo(dfltXnew, dfltYnew);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1473,7 +1589,7 @@ writeTGAfile, writeRAWfile.
         x1 = 0;
       if(x2 >= numXpix)                                                       // Clip right
         x2 = numXpix - 1;
-      for(x=x1; x<=x2; x++)                                                   // Draw PIxels: drawHorzLineNC(x1, x2, y1, color);
+      for(x=x1; x<=x2; x++)                                                   // Draw Pixels: drawHorzLineNC(x1, x2, y1, color);
         drawPointNC(x, y1, color); 
     } else if(x1 == x2) {                                                     // slope = infinity
       if( (x1 < 0) || (x1 >= numXpix) )                                       // Line off canvas case
@@ -1484,7 +1600,7 @@ writeTGAfile, writeRAWfile.
         y1 = 0;
       if(y2 >= numYpix)                                                       // Clip bottom
         y2 = numYpix - 1;      
-      for(y=y1; y<=y2; y++)                                                   // Draw PIxels: drawVertLineNC(y1, y2, x1, color);
+      for(y=y1; y<=y2; y++)                                                   // Draw Pixels: drawVertLineNC(y1, y2, x1, color);
         drawPointNC(x1, y, color); 
     } else {                                                                  // Slope is not infinity or 0...
       int dx, dy;
@@ -1808,7 +1924,136 @@ writeTGAfile, writeRAWfile.
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
+  int ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeTGAheaderTRU(std::ostream& oStream) {
+    oStream.put(0);                 /* id length */
+    oStream.put(0);                 /* colourmaptype */
+    oStream.put(2);                 /* datatypecode: 2 == Truecolor no encodeing, 3 == Monochrome image data  no encodeing */
+    oStream.put(0);                 /* 16-bit colourmaporigin */
+    oStream.put(0);
+    oStream.put(0);                 /* colurmaplength */
+    oStream.put(0);
+    oStream.put(0);                 /* colormapdepth */
+    oStream.put(0);                 /* 16-bit x_origin */
+    oStream.put(0);
+    oStream.put(0);                 /* 16-bit y_origon */
+    oStream.put(0);
+    oStream.put(numXpix & 0x00ff);
+    oStream.put((numXpix & 0xff00) / 256);
+    oStream.put(numYpix & 0x00ff);
+    oStream.put((numYpix & 0xff00) / 256);
+    oStream.put(24);                /* bits per pixel: 8, 16, 24, 32. */
+    oStream.put(0);                 /* imagedescriptor */
+    return 0;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  int ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeTGAdataTRU(std::ostream& oStream,
+                                                              std::function<colorRGB8b (colorT&)> toTRU,
+                                                              std::function<colorT     (colorT&)> filter) {
+    intCrdT x, y;
+    /* Normally I would not resort to such trickery; however, this is an exception.  The following for loop is equivalent to switching between the two forms
+       "for(y=(numYpix-1); y>=0; y--)" and "for(y=0; y<numYpix; y++)". */
+    bool yNat = yIntAxOrientation==axisOrientation::NATURAL;
+    bool xNat = xIntAxOrientation==axisOrientation::NATURAL;
+    for((yNat?y=0:y=(numYpix-1)); (yNat?y<numYpix:y>=0); (yNat?y++:y--)) {
+      for((xNat?x=0:x=(numXpix-1)); (xNat?x<numXpix:x>=0); (xNat?x++:x--)) {
+        colorT aColor = getPxColorRefNC(x, y);
+        if(filter != NULL)
+          aColor = filter(aColor);
+        if(toTRU == NULL) {
+          oStream.put(aColor.getBlue8bit());
+          oStream.put(aColor.getGreen8bit());
+          oStream.put(aColor.getRed8bit());
+        } else {
+          colorRGB8b bColor = toTRU(aColor);
+          oStream.put(bColor.getBlue());
+          oStream.put(bColor.getGreen());
+          oStream.put(bColor.getRed());
+        }
+      }
+    }
+    return 0;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  int ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeRAWheader(std::ostream& oStream) {
+    unsigned int endiannessProbe = 1;
+    std::ostringstream outStringStream;
+    outStringStream << "MJRRAW\n";
+    outStringStream << std::setw(19) << std::setfill('0') << numXpix               << "x";
+    outStringStream << std::setw(19) << std::setfill('0') << numYpix               << "y";
+    outStringStream << std::setw(27) << std::setfill('0') << colorT::channelCount  << "c";
+    outStringStream << std::setw(11) << std::setfill('0') << colorT::bitsPerChan   << "b";
+    outStringStream << "UNS"                                                       << "s";
+    outStringStream << (colorT::channelTypeIsFlt ? "FLT" : "INT")                  << "t";
+    outStringStream << (((char *)&endiannessProbe)[0] ? "LTL" : "BIG")             << "i";
+    outStringStream                                                                << "\n";
+    oStream << outStringStream.str();
+    return 0;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  int ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeRAWdata(std::ostream& oStream, std::function<colorT (colorT&)> filter) {
+    intCrdT x, y;
+    /* Normally I would not resort to such trickery; however, this is an exception.  The following for loop is equivalent to switching between the two forms
+       "for(y=(numYpix-1); y>=0; y--)" and "for(y=0; y<numYpix; y++)". */
+    bool yNat = yIntAxOrientation==axisOrientation::NATURAL;
+    bool xNat = xIntAxOrientation==axisOrientation::NATURAL;
+    for((yNat?y=0:y=(numYpix-1)); (yNat?y<numYpix:y>=0); (yNat?y++:y--)) {
+      for((xNat?x=0:x=(numXpix-1)); (xNat?x<numXpix:x>=0); (xNat?x++:x--)) {
+        colorT aColor = getPxColorRefNC(x, y);
+        if(filter != NULL)
+          aColor = filter(aColor);
+        for(int c=0; c<aColor.channelCount; c++) {
+          typename colorT::channelType aChanValue = aColor.getChan(c);
+          oStream.write((const char *)&aChanValue, sizeof(typename colorT::channelType));
+        }
+      }
+    }
+    return 0;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeRAWfile(char const* fileName) {
+    return writeFile(fileName, imgFileType::RAW, NULL, NULL);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeRAWfile(char const* fileName, std::function<colorT (colorT&)> filter) {
+    return writeFile(fileName, imgFileType::RAW, NULL, filter);
+  }
+  
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
   int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeTGAfile(char const* fileName) {
+    return writeFile(fileName, imgFileType::TGA_TRU, NULL, NULL);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeTGAfile(char const* fileName,
+                                                            std::function<colorRGB8b (colorT&)> toTRU,
+                                                            std::function<colorT     (colorT&)> filter) {
+    return writeFile(fileName, imgFileType::TGA_TRU, toTRU, filter);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeTGAfile(char const* fileName, std::function<colorRGB8b (colorT&)> toTRU) {
+    return writeFile(fileName, imgFileType::TGA_TRU, toTRU, NULL);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeFile(char const* fileName,
+                                                         imgFileType fileType,
+                                                         std::function<colorRGB8b (colorT&)> toTRU,
+                                                         std::function<colorT     (colorT&)> filter) {
     bool useCout = ( (fileName[0] == '-') && (fileName[1] == '\0') );
     std::ostream* oStream;
     std::ofstream oFileStream;
@@ -1822,61 +2067,14 @@ writeTGAfile, writeRAWfile.
         return 1;
       }
     }
-    oStream->put(0);                 /* id length */
-    oStream->put(0);                 /* colourmaptype */
-    oStream->put(2);                 /* datatypecode: 2 == Truecolor no encodeing, 3 == Monochrome image data  no encodeing */
-    oStream->put(0);                 /* 16-bit colourmaporigin */
-    oStream->put(0);
-    oStream->put(0);                 /* colurmaplength */
-    oStream->put(0);
-    oStream->put(0);                 /* colormapdepth */
-    oStream->put(0);                 /* 16-bit x_origin */
-    oStream->put(0);
-    oStream->put(0);                 /* 16-bit y_origon */
-    oStream->put(0);
-    oStream->put(numXpix & 0x00ff);
-    oStream->put((numXpix & 0xff00) / 256);
-    oStream->put(numYpix & 0x00ff);
-    oStream->put((numYpix & 0xff00) / 256);
-    oStream->put(24);                /* bits per pixel: 8, 16, 24, 32. */
-    oStream->put(0);                 /* imagedescriptor */
-
-    typename colorT::channelType maxGreyValue = 0;
-    if( (colorT::channelTypeIsInt) && (colorT::channelCount == 1) && (colorT::bitsPerChan > 24)) {
-      for(int y=0;y<numYpix;y++) {
-        for(int x=0;x<numXpix;x++) {
-          typename colorT::channelType curGreyValue = getPxColorRefNC(x, y).getRed();
-          if(curGreyValue > maxGreyValue)
-            maxGreyValue = curGreyValue;
-        }
-      }
+          
+    switch(fileType) {
+    case imgFileType::TGA_TRU    : writeTGAheaderTRU(*oStream); writeTGAdataTRU(*oStream, toTRU, filter); break;
+    case imgFileType::RAW        : writeRAWheader(*oStream);    writeRAWdata(*oStream, filter);           break;
+    case imgFileType::RAW_HEADER : writeRAWheader(*oStream);                                              break;
+    case imgFileType::RAW_DATA   :                              writeRAWdata(*oStream, filter);           break;
     }
-    double bigGreyScale = 1;
-    if(maxGreyValue > 16777215)
-      bigGreyScale = maxGreyValue/16777215.0;
-
-    /* Normally I would not resort to such trickery; however, this is an exception.  The following for loop is equivalent to switching between the two forms
-       "for(y=(numYpix-1); y>=0; y--)" and "for(y=0; y<numYpix; y++)". */
-    intCrdT x, y;
-    for( (yIntAxOrientation==axisOrientation::NATURAL?y=0:y=(numYpix-1));
-         (yIntAxOrientation==axisOrientation::NATURAL?y<numYpix:y>=0);
-         (yIntAxOrientation==axisOrientation::NATURAL?y++:y--) ) {
-      for((xIntAxOrientation==axisOrientation::NATURAL?x=0:x=(numXpix-1));
-          (xIntAxOrientation==axisOrientation::NATURAL?x<numXpix:x>=0);
-          (xIntAxOrientation==axisOrientation::NATURAL?x++:x--) ) {
-        if(colorT::channelTypeIsInt && (colorT::channelCount == 1) && (colorT::bitsPerChan > 8)) {
-          uint64_t greyLevel = getPxColorRefNC(x, y).getRed() / bigGreyScale;
-          oStream->put((greyLevel >> 8)  & 0xff);
-          oStream->put((greyLevel)       & 0xff);
-          oStream->put((greyLevel >> 16) & 0xff);
-        } else {
-          colorT& aColor = getPxColorRefNC(x, y);
-          oStream->put(aColor.getBlue8bit());
-          oStream->put(aColor.getGreen8bit());
-          oStream->put(aColor.getRed8bit());
-        }
-      }
-    }
+    
     if(!useCout)
       oFileStream.close();
 
@@ -1957,57 +2155,7 @@ writeTGAfile, writeRAWfile.
     if(!useCin)
       oFileStream.close();
     return 0;
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template<class colorT, class intCrdT, class fltCrdT>
-  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeRAWfile(char const* fileName) {
-    bool useCout = ( (fileName[0] == '-') && (fileName[1] == '\0') );
-    std::ostream* oStream;
-    std::ofstream oFileStream;
-    unsigned int endiannessProbe = 1;
-
-    if(useCout) {
-      oStream = &std::cout;
-    } else {
-      oFileStream.open(fileName, std::ios::out | std::ios::binary | std::ios::trunc);
-      if (oFileStream.is_open()) {
-        oStream = &oFileStream;
-      } else {
-        return 1;
-      }
-    }
-    
-    std::ostringstream outStringStream;
-    outStringStream << "MJRRAW\n";
-    outStringStream << std::setw(18) << std::setfill('0') << numXpix               << "x";
-    outStringStream << std::setw(18) << std::setfill('0') << numYpix               << "y";
-    outStringStream << std::setw(26) << std::setfill('0') << colorT::channelCount  << "c";
-    outStringStream << std::setw(10) << std::setfill('0') << colorT::bitsPerChan   << "b";
-    outStringStream << "UNS"                                                       << "s";
-    outStringStream << (colorT::channelTypeIsFlt ? "FLT" : "INT")                  << "t";
-    outStringStream << (((char *)&endiannessProbe)[0] ? "LTL" : "BIG")             << "i";
-    outStringStream                                                                << "\n";
-    (*oStream) << outStringStream.str();
-
-    intCrdT x, y;
-    for( (yIntAxOrientation==axisOrientation::NATURAL?y=(numYpix-1):y=0);
-         (yIntAxOrientation==axisOrientation::NATURAL?y>=0:y<numYpix);
-         (yIntAxOrientation==axisOrientation::NATURAL?y--:y++) ) {
-      for((xIntAxOrientation==axisOrientation::NATURAL?x=0:x=(numXpix-1));
-          (xIntAxOrientation==axisOrientation::NATURAL?x<numXpix:x>=0);
-          (xIntAxOrientation==axisOrientation::NATURAL?x++:x--) ) {
-        colorT& aColor = getPxColorRefNC(x, y);
-        for(int c=0; c<aColor.channelCount; c++) {
-          typename colorT::channelType aChanValue = aColor.getChan(c);
-          oStream->write((const char *)&aChanValue, sizeof(typename colorT::channelType));
-        }
-      }
-    }
-    if(!useCout)
-      oFileStream.close();
-    return 0;
-  }
+  }  
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
@@ -2389,23 +2537,37 @@ writeTGAfile, writeRAWfile.
       }
     }
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillTriangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3, colorT color) {
+    drawFillTriangleUtl(x1, y1, x2, y2, x3, y3, color, color, color, true);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillTriangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3,
+                                                                 colorT color1, colorT color2, colorT color3) {
+    drawFillTriangleUtl(x1, y1, x2, y2, x3, y3, color1, color2, color3, false);
+  }
+  
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillTriangleUtl(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3,
+                                                                    colorT c1, colorT c2, colorT c3, bool solid) {
 
     static intCrdT *minPts, *maxPts;
     static intCrdT  numPts;
 
     if( !(isCliped(x1, y1) || isCliped(x2, y2) || isCliped(x3, y3))) {
       ///////////////////////////////////////////////////////////////////////////////////
-      // Check our workspace, and allocate/reallocate as required.    
+      // Check our work space, and allocate/reallocate as required.    
       if(minPts == NULL) {               // First time in function -- allocate
         minPts = new intCrdT[numYpix];
         maxPts = new intCrdT[numYpix];
         numPts = numYpix;
-      } else {                           // Not our first time!  We have a workspace.
-        if(numPts != numYpix) {          // Workspace is wrong size -- reallocate
+      } else {                           // Not our first time!  We have a work space.
+        if(numPts != numYpix) {          // Work space is wrong size -- reallocate
           delete[] minPts;
           delete[] maxPts;
           minPts = new intCrdT[numYpix];
@@ -2416,34 +2578,45 @@ writeTGAfile, writeRAWfile.
 
       ///////////////////////////////////////////////////////////////////////////////////
       // Sort (x1,y1), (x2,y2), (x3,y3) so that y1 >= y2, y3 and y3 <= y2, y1
-      if(y1 > y2) {           // top != 2 && bot != 1
-        if(y1 > y3) {         // top != 3              y1>y2  y1>y3 y2>y3 top bot
-          if(y2 > y3) {       //             bot != 2    .      .     .    .   .
-            //                         T      T     T    1   3   NOP
-          } else {            //             bot != 3    .      .     .    .   .
-            std::swap(y2,y3); //                         T      T     F    1   2   SWAP(2,3)                                                                        
-            std::swap(x2,x3); //                         .      .     .    .   .                         
-          }                   //                         .      .     .    .   .                         
-        } else {              // top != 1                .      .     .    .   .                         
-          std::swap(y1,y3);   //                         T      F     U    3   2   SWAP(1,3) SWAP(2,3)                                                                          
-          std::swap(y2,y3);   //                         .      .     .    .   .                   
-          std::swap(x1,x3);   //                         .      .     .    .   .                         
-          std::swap(x2,x3);   //                         .      .     .    .   .                         
-        }                     //                         .      .     .    .   .                   
-      } else {                // top != 1                .      .     .    .   .                   
-        if(y2 > y3) {         // top != 3 && bot != 2    .      .     .    .   .                   
-          if(y1 > y3) {       //             bot != 1    .      .     .    .   .                   
-            std::swap(y1,y2); //                         F      T     T    2   3   SWAP(1,2)                                                                        
-            std::swap(x1,x2); //                         .      .     .    .   .                         
-          } else {            //             bot != 3    .      .     .    .   .                   
-            std::swap(y1,y2); //                         F      F     T    2   1   SWAP(1,2) SWAP(2,3)                                                                        
-            std::swap(y2,y3); //                         .      .     .    .   .                   
-            std::swap(x1,x2); //                         .      .     .    .   .                         
-            std::swap(x2,x3); //                         .      .     .    .   .                         
-          }                   //                         .      .     .    .   .                   
-        } else {              // top != 2 && bot != 3    .      .     .    .   .                   
-          std::swap(y1,y3);   //                         F      U     F    3   1   SWAP(1,3)
-          std::swap(x1,x3);   //                         .      .     .    .   .                         
+      if(y1 > y2) {             // top != 2 && bot != 1
+        if(y1 > y3) {           // top != 3              y1>y2  y1>y3 y2>y3 top bot
+          if(y2 > y3) {         //             bot != 2    .      .     .    .   .
+                                //                         T      T     T    1   3   NOP
+          } else {              //             bot != 3    .      .     .    .   .
+            std::swap(y2,y3);   //                         T      T     F    1   2   SWAP(2,3)                                                                        
+            std::swap(x2,x3);   //                         .      .     .    .   .                         
+            std::swap(c2,c3);   //                         .      .     .    .   .                         
+          }                     //                         .      .     .    .   .                         
+        } else {                // top != 1                .      .     .    .   .                         
+          std::swap(y1,y3);     //                         T      F     U    3   2   SWAP(1,3) SWAP(2,3)                                                                          
+          std::swap(y2,y3);     //                         .      .     .    .   .                   
+          std::swap(x1,x3);     //                         .      .     .    .   .                         
+          std::swap(x2,x3);     //                         .      .     .    .   .
+          if(!solid) {          //                         .      .     .    .   .
+            std::swap(c1,c3);   //                         .      .     .    .   .                         
+            std::swap(c2,c3);   //                         .      .     .    .   .
+          }                     //                         .      .     .    .   .
+        }                       //                         .      .     .    .   .                   
+      } else {                  // top != 1                .      .     .    .   .                   
+        if(y2 > y3) {           // top != 3 && bot != 2    .      .     .    .   .                   
+          if(y1 > y3) {         //             bot != 1    .      .     .    .   .                   
+            std::swap(y1,y2);   //                         F      T     T    2   3   SWAP(1,2)                                                                        
+            std::swap(x1,x2);   //                         .      .     .    .   .                         
+            std::swap(c1,c2);   //                         .      .     .    .   .                         
+          } else {              //             bot != 3    .      .     .    .   .                   
+            std::swap(y1,y2);   //                         F      F     T    2   1   SWAP(1,2) SWAP(2,3)                                                                        
+            std::swap(y2,y3);   //                         .      .     .    .   .                   
+            std::swap(x1,x2);   //                         .      .     .    .   .                         
+            std::swap(x2,x3);   //                         .      .     .    .   .                         
+            if(!solid) {        //                         .      .     .    .   .                         
+              std::swap(c1,c2); //                         .      .     .    .   .                         
+              std::swap(c2,c3); //                         .      .     .    .   .
+            }                   //                         .      .     .    .   .                   
+          }                     //                         .      .     .    .   .                   
+        } else {                // top != 2 && bot != 3    .      .     .    .   .                   
+          std::swap(y1,y3);     //                         F      U     F    3   1   SWAP(1,3)
+          std::swap(x1,x3);     //                         .      .     .    .   .                         
+          std::swap(c1,c3);     //                         .      .     .    .   .                         
         }
       }
       ///////////////////////////////////////////////////////////////////////////////////
@@ -2453,7 +2626,7 @@ writeTGAfile, writeRAWfile.
       }
       if(y1==y2) {                                           /*       */
         if(x1 == x2) {                                       /*   1   */
-          drawLine(x1, y1, x3, y3, color);                   /*   |   */
+          //drawLine(x1, y1, x3, y3, c1);                    /*   |   */
           return;                                            /*   3   */
         } else if(x1 <= x2) {                                /* 1---2 */
           triangleEdger(x1, y1, x3, y3, true,  minPts);      /*  \ /  */
@@ -2464,7 +2637,7 @@ writeTGAfile, writeRAWfile.
         }                                                    /*       */
       } else if(y2==y3) {                                    /*       */
         if(x2 == x3) {                                       /*   1   */
-          drawLine(x2, y2, x1, y1, color);                   /*   |   */
+          //drawLine(x2, y2, x1, y1, c1);                    /*   |   */
           return;                                            /*   3   */   
         } else if(x2 <= x3) {                                /*   3   */
           triangleEdger(x2, y2, x1, y1, true,  minPts);      /*  / \  */
@@ -2476,8 +2649,8 @@ writeTGAfile, writeRAWfile.
       } else {
         intCrdT xli = 1.0*(x1*y3-x3*y1+(x3-x1)*y2)/(y3-y1);  /*       */ 
         if(xli == x2) {                                      /*       */
-          drawLine(x1, y1, x3, y3, color);                   /*  1    */
-                                                             /*   \   */
+          //drawLine(x1, y1, x3, y3, c1);                    /*  1    */
+          return;                                            /*   \   */
                                                              /*    3  */
         } else if (xli < x2) {                               /*  1    Note: x1 need not equal x3 */
           triangleEdger(x2, y2, x1, y1, false, maxPts);      /*  |\   */  
@@ -2493,8 +2666,30 @@ writeTGAfile, writeRAWfile.
       }
       ///////////////////////////////////////////////////////////////////////////////////
       // Fill between the left and right bits.
-      for(intCrdT y=y3; y<=y1; y++)
-        drawLine(minPts[y], y, maxPts[y], y, color);
+      if(solid) {
+        for(intCrdT y=y3; y<=y1; y++) 
+          drawLine(minPts[y], y, maxPts[y], y, c1);
+      } else {
+        typename colorT::channelFltArithType y12 = y1 - y2;
+        typename colorT::channelFltArithType y31 = y3 - y1;
+        typename colorT::channelFltArithType y23 = y2 - y3;
+        typename colorT::channelFltArithType a = std::abs(x1 * y23 + x2 * y31 + x3 * y12);
+        for(intCrdT y=y3; y<=y1; y++) {
+          //typename colorT::channelFltArithType y20 = y2 - y;
+          //typename colorT::channelFltArithType y01 = y  - y1;
+          typename colorT::channelFltArithType y03 = y  - y3;
+          typename colorT::channelFltArithType y10 = y1 - y;
+          typename colorT::channelFltArithType y30 = y3 - y;
+          typename colorT::channelFltArithType y02 = y  - y2;
+          for(intCrdT x=minPts[y]; x<=maxPts[y]; x++) {
+            typename colorT::channelFltArithType w1 = std::abs(x  * y23 + x2 * y30 + x3 * y02);
+            typename colorT::channelFltArithType w2 = std::abs(x1 * y03 + x  * y31 + x3 * y10);
+            //typename colorT::channelFltArithType w3 = std::abs(x1 * y20 + x2 * y01 + x  * y12);
+            //drawPoint(x, y, colorT().wMean(w1, w2, w3, c1, c2, c3));
+            drawPoint(x, y, colorT().wMean(w1/a, w2/a, c1, c2, c3));
+          }
+        }
+      }
     }
   }
 
@@ -2900,7 +3095,7 @@ writeTGAfile, writeRAWfile.
       std::swap(x1, x2);
     if(y1 > y2) // Get y1 < y2
       std::swap(y1, y2);
-    if( (y1 < numYpix) && (x1 < numXpix) && (y2 >= 0) && (x2 >= 0) ) { // Part of rect visable
+    if( (y1 < numYpix) && (x1 < numXpix) && (y2 >= 0) && (x2 >= 0) ) { // Part of rect visible
       int noTop, noBottom, noLeft, noRight;
       if((noTop=(y1 < 0)))
         y1 = 0;
@@ -3026,13 +3221,6 @@ writeTGAfile, writeRAWfile.
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
-  inline void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::moveToNC(intCrdT x, intCrdT y) {
-    dfltX = x;
-    dfltY = y;
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template<class colorT, class intCrdT, class fltCrdT>
   inline colorT& ramCanvasTpl<colorT, intCrdT, fltCrdT>::getPxColorRefNC(intCrdT x, intCrdT y) const {
     return pixels[numXpix * y + x];
   }
@@ -3063,8 +3251,155 @@ writeTGAfile, writeRAWfile.
     pixels[numXpix * y + x] = color;
   }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::scaleUpProximal(int xfactor) {
+    intCrdT new_numXpix_p = xfactor*numXpix;
+    intCrdT new_numYpix_p = xfactor*numYpix;
+    colorT *new_pixels = new colorT[new_numXpix_p * new_numYpix_p];
+    for(intCrdT y=0, y1=0; y<numYpix; y++) {
+      for(intCrdT x=0, x1=0; x<numXpix; x++) {
+        for(int i=0; i<xfactor; i++) {
+          for(int j=0; j<xfactor; j++) {
+            new_pixels[new_numXpix_p * (y1/*y-crd*/) + (x1/*x-crd*/)] = getPxColor(x, y);
+            x1++;
+          }
+          x1-=xfactor;
+          y1++;
+        }
+        x1+=xfactor;
+        y1-=xfactor;
+      }
+      y1+=xfactor;
+    }
+    rePointPixels(new_pixels, new_numXpix_p, new_numYpix_p);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::scaleDown1pt(int xfactor) {
+    intCrdT new_numXpix_p = numXpix/xfactor;
+    intCrdT new_numYpix_p = numYpix/xfactor;
+    colorT *new_pixels = new colorT[new_numXpix_p * new_numYpix_p];
+    for(intCrdT y=0, y1=0; y<new_numYpix_p; y++, y1+=xfactor)
+      for(intCrdT x=0, x1=0; x<new_numXpix_p; x++, x1+=xfactor)
+        new_pixels[new_numXpix_p * (y/*y-crd*/) + (x/*x-crd*/)] = getPxColor(x1, y1);
+
+    rePointPixels(new_pixels, new_numXpix_p, new_numYpix_p);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::scaleDownMean(int xfactor) {
+    intCrdT new_numXpix_p = numXpix/xfactor;
+    intCrdT new_numYpix_p = numYpix/xfactor;
+    colorT *new_pixels = new colorT[new_numXpix_p * new_numYpix_p];
+    for(intCrdT y=0, y1=0; y<new_numYpix_p; y++, y1+=xfactor)
+      for(intCrdT x=0, x1=0; x<new_numXpix_p; x++, x1+=xfactor) {
+        typename colorT::channelIntArithType sumr = 0;
+        typename colorT::channelIntArithType sumg = 0;
+        typename colorT::channelIntArithType sumb = 0;
+        for(int j=0; j<xfactor; j++) {
+          for(int i=0; i<xfactor; i++) {
+            sumr += getPxColor(x1+i, y1+j).getRed();
+            sumg += getPxColor(x1+i, y1+j).getGreen();
+            sumb += getPxColor(x1+i, y1+j).getBlue();
+          }
+        }
+        sumr /= (xfactor*xfactor);
+        sumg /= (xfactor*xfactor);
+        sumb /= (xfactor*xfactor);
+        new_pixels[new_numXpix_p * (y/*y-crd*/) + (x/*x-crd*/)] = colorT(sumr, sumg, sumb);
+      }
+
+    rePointPixels(new_pixels, new_numXpix_p, new_numYpix_p);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::scaleDownMax(int xfactor) {
+    intCrdT new_numXpix_p = numXpix/xfactor;
+    intCrdT new_numYpix_p = numYpix/xfactor;
+    colorT *new_pixels = new colorT[new_numXpix_p * new_numYpix_p];
+
+    for(intCrdT y=0, y1=0; y<new_numYpix_p; y++, y1+=xfactor)
+      for(intCrdT x=0, x1=0; x<new_numXpix_p; x++, x1+=xfactor) {
+        colorT maxColor = colorT(0,0,0);
+        for(int yi=0; yi<xfactor; yi++)
+          for(int xi=0; xi<xfactor; xi++)
+            maxColor.tfrmMaxI(getPxColor(xfactor*x+xi, xfactor*y+yi));
+        new_pixels[new_numXpix_p * (y/*y-crd*/) + (x/*x-crd*/)] = maxColor;
+      }
+
+    rePointPixels(new_pixels, new_numXpix_p, new_numYpix_p);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawHersheyGlyph(int glyphNum, intCrdT x, intCrdT y, double magX, double magY, colorT aColor) {
+    intCrdT x1, y1;
+    int actionIsMoveTo;
+
+    if( (glyphNum < 0) || (glyphNum > 3934) ) 
+      glyphNum = 699;
+
+    actionIsMoveTo=1;
+    for(int i=0; i<(theHerChars[glyphNum]).numComp; i++) {
+      if((theHerChars[glyphNum]).components[2*i] == ' ') {
+        actionIsMoveTo = 1;
+      } else {
+        if(xIntAxOrientation == axisOrientation::INVERTED)
+          x1 = magX * ('R'  -  (theHerChars[glyphNum]).components[2*i]);
+        else
+          x1 = magX * ((theHerChars[glyphNum]).components[2*i]  -  'R');
+        
+        if(yIntAxOrientation == axisOrientation::NATURAL)
+          y1 = magY * ('R' - (theHerChars[glyphNum]).components[2*i+1]);
+        else
+          y1 = magY * ((theHerChars[glyphNum]).components[2*i+1] - 'R');
+        
+        if(actionIsMoveTo) {
+          moveTo(x1+x, y1+y);
+          actionIsMoveTo = 0;
+        } else {
+          drawLine(x1+x, y1+y, aColor);
+        }
+      }
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawString(const char *aString, hersheyFont aFont, intCrdT x, intCrdT y, colorT aColor, double cex, intCrdT spc) {
+    int strLength = (int)strlen(aString);
+    for(int i=0; i<strLength; i++,x+=spc*cex) {
+      int glyphNum = 0;
+      int c = aString[i];
+      if((c>=32) && (c<=126))
+        glyphNum = hersheyFontAscii[(int)aFont][c-32];
+      drawHersheyGlyph(glyphNum, x, y, cex, cex, aColor);
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawStringBox(const char *aString,
+                                                             hersheyFont aFont,
+                                                             intCrdT x, intCrdT y,
+                                                             colorT stringColor, colorT boxColor,
+                                                             double cex, intCrdT spc) {
+    drawFillRectangle((intCrdT)(x-spc*cex),
+                      (intCrdT)(y-spc*cex),
+                      (intCrdT)(x+spc*cex*strlen(aString)),
+                      (intCrdT)(y+spc*cex),
+                      boxColor);
+    drawString(aString, aFont, x, y, stringColor, cex, spc);
+  }
 
 } // end namespace mjr
 
 #define MJR_INCLUDE_ramCanvasTpl
 #endif
+
+
+

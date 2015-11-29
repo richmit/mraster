@@ -1,13 +1,13 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
- @file      testDraw2.cpp
+ @file      testStrings.cpp
  @author    Mitch Richling <http://www.mitchr.me>
- @brief     Illustrate and test simple drawing functions.@EOL
- @std       C++98
+ @brief     Test string rendering both with a box and without.@EOL
+ @std       C++11
  @copyright 
   @parblock
-  Copyright (c) 1988-2015, Mitchell Jay Richling <http://www.mitchr.me> All rights reserved.
+  Copyright (c) 2015, Mitchell Jay Richling <http://www.mitchr.me> All rights reserved.
 
   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -33,49 +33,34 @@
 using namespace mjr;
 
 int main(void) {
-  color4c8b aColor;
-  ramCanvas4c8b theRamCanvas = ramCanvas4c8b(1024, 1024, -1, 1, 2, 2);
+  int y;
 
-  theRamCanvas.setDfltColor(color4c8b("white"));
-  theRamCanvas.drawRectangle(3, 3, 23, 23);
-  theRamCanvas.drawRectangle(0, 0, 20, 20);
-  theRamCanvas.drawRectangle(-10, -10, 50, 50);
+  ramCanvas4c8b theRamCanvas1 = ramCanvas4c8b(700, 240);
+  theRamCanvas1.set_yIntAxisOrientation(ramCanvas4c8b::axisOrientation::INVERTED);
+  theRamCanvas1.drawLine(100, 0,  100, 512, "blue");
+  y = 50;
+  theRamCanvas1.drawLine(0, y,   1024, y, "blue");  
+  theRamCanvas1.drawString("Hello, World!", hersheyFont::ROMAN_SL_SANSERIF, 100, y, "red",  1, 16);
+  y+=50;
+  theRamCanvas1.drawLine(0, y,   1024, y, "blue");  
+  theRamCanvas1.drawString("Hello, World!", hersheyFont::ROMAN_SL_SANSERIF, 100, y, "red",  2, 15);
+  y+=75;
+  theRamCanvas1.drawLine(0, y,   1024, y, "blue");  
+  theRamCanvas1.drawString("Hello, World!", hersheyFont::ROMAN_SL_SANSERIF, 100, y, "red",  3, 15);
+  theRamCanvas1.writeTGAfile("testStrings_1.tga");
 
-  theRamCanvas.setDfltColor(color4c8b("blue"));
-  theRamCanvas.drawFillRectangle(60, 60, 80, 80);
-  theRamCanvas.drawFillRectangle(400, 400, 600, 600);
+  ramCanvas4c8b theRamCanvas2 = ramCanvas4c8b(740, 420);
+  theRamCanvas2.set_yIntAxisOrientation(ramCanvas4c8b::axisOrientation::INVERTED);
+  y = 50;
+  theRamCanvas2.drawStringBox("Hello, World!", hersheyFont::ROMAN_SL_SANSERIF, 100, y, "red", "green",  1, 16);
+  theRamCanvas2.drawLine(0, y,   1024, y, "blue");  
+  y+=100;
+  theRamCanvas2.drawStringBox("Hello, World!", hersheyFont::ROMAN_SL_SANSERIF, 100, y, "red", "green",  2, 15);
+  theRamCanvas2.drawLine(0, y,   1024, y, "blue");  
+  y+=160;
+  theRamCanvas2.drawStringBox("Hello, World!", hersheyFont::ROMAN_SL_SANSERIF, 100, y, "red", "green",  3, 15);
+  theRamCanvas2.drawLine(0, y,   2024, y, "blue");  
+  theRamCanvas2.drawLine(100, 0,  100, 512, "blue");
+  theRamCanvas2.writeTGAfile("testStrings_2.tga");
 
-
-  theRamCanvas.drawFillTriangle(10, 700, 20, 600, 50, 650, color4c8b("green"));
-  theRamCanvas.drawFillTriangle(50, 750, 60, 650, 20, 700, color4c8b("green"));
-  theRamCanvas.drawFillTriangle(100, 650, 150, 650, 120, 700, color4c8b("green"));
-  theRamCanvas.drawFillTriangle(150, 700, 200, 700, 180, 650, color4c8b("green"));
-
-  theRamCanvas.setDfltColor("red");
-  for(int y=-75;y<75;y+=3) {
-    theRamCanvas.drawLine(400, 200, 400+150, 200+y);
-    theRamCanvas.drawLine(400, 200, 400-150, 200+y);
-    theRamCanvas.drawLine(400, 200, 400+y,   200+150);
-    theRamCanvas.drawLine(400, 200, 400+y,   200-150);
-  }
- 
-  theRamCanvas.drawLine(-20, -10, 70, 60);
- 
-  for(int y=-10;y<50;y+=5) {
-    theRamCanvas.drawTriangle(20, 200, y, 200+30, 30, 300);
-  }
- 
-  theRamCanvas.setDfltColor(color4c8b("green"));
-  for(int r=10;r<50;r+=5)
-    theRamCanvas.drawCircle(200, 250, r);
-
-  theRamCanvas.drawFillCircle(150, 150, 50);
-
-  // Check out some of they ways to specify color (more exist)!
-  theRamCanvas.drawFillCircle(70, 400, 50, "red");
-  theRamCanvas.drawFillCircle(70, 400, 40, "#ff00ff");
-  theRamCanvas.drawFillCircle(70, 400, 30, color4c8b::cornerColor::BLUE);
-  theRamCanvas.drawFillCircle(70, 400, 10, color4c8b(0xff, 0xff, 0x00));
-
-  theRamCanvas.writeTGAfile("testDraw2.tga");
 }

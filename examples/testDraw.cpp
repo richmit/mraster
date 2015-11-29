@@ -300,6 +300,7 @@ int main(void) {
   theRamCanvas.drawPLCurve(3, ptl20);                                                 // drawPLCurve(int numPoints, fPnt *thePoints);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  theRamCanvas.scaleUpProximal(5);
   theRamCanvas.writeTGAfile("testDraw.tga");
   theRamCanvas.writeRAWfile("testDraw.mrw");
 }

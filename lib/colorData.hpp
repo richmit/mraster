@@ -29,11 +29,8 @@
 
 #ifndef MJR_INCLUDE_colorData
 
-
-
-#ifdef __cplusplus
-//  extern "C" {
-#endif
+// Put everything in the mjr namespace
+namespace mjr {
 
 /** Color Matching Functions as tabulated in table 3 from Stockman and Sharpe (2000).  I beleive they are taken from Stiles and Burch 10-degree (1959)*/
     extern const float colMatchPoints[89][4];
@@ -1153,9 +1150,7 @@
     Color scheme type: Sequential */
     extern const char *icp_CB_YlOrRd_09[12];
 
+} // end namespace mjr
 
-#ifdef __cplusplus
-//  } // extern "C"
-#endif
 #define MJR_INCLUDE_colorData
 #endif
