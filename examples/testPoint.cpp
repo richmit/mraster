@@ -52,7 +52,9 @@ int main(void) {
   theRamCanvas.drawPoint(ramCanvasRGB8b::rcPointInt(std::tuple<int,int>(6, 2)),   aColor);  // tuple<int,int>
   theRamCanvas.drawPoint(ramCanvasRGB8b::rcPointInt(std::tuple<int,short>(8, 2)), bColor);  // tuple<int,short>
   theRamCanvas.drawPoint(ramCanvasRGB8b::rcPointInt(std::complex<int>(10, 2)),    aColor);  // complex<int>
+#ifndef __clang__
   theRamCanvas.drawPoint(ramCanvasRGB8b::rcPointInt(std::complex<short>(12, 2)),  bColor);  // complex<short>
+#endif
   theRamCanvas.drawPoint(ramCanvasRGB8b::rcPointInt(std::vector<int>({14, 2})),   aColor);  // vector<int)
   int aArI[2] = {16, 2};
   theRamCanvas.drawPoint(ramCanvasRGB8b::rcPointInt(aArI),                        bColor);  // array of int

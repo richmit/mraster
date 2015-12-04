@@ -3028,7 +3028,7 @@ namespace mjr {
       SET_ERR_COLOR;
     } else {
       setGreen8bit(anInt         & 0xff);
-      setBlue8bit( (anInt >> 8)  & 0xff);
+      setRed8bit( (anInt >> 8)  & 0xff);
     }
     return *this;
   }
@@ -3042,8 +3042,8 @@ namespace mjr {
       SET_ERR_COLOR;
     } else {
       setGreen8bit(anInt         & 0xff);
-      setBlue8bit( (anInt >> 8)  & 0xff);
-      setRed8bit(  (anInt >> 16) & 0xff);
+      setRed8bit(  (anInt >> 8)  & 0xff);
+      setBlue8bit( (anInt >> 16) & 0xff);
     }
     return *this;
   }

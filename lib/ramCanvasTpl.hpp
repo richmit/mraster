@@ -38,6 +38,7 @@
 #include <iomanip>
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <utility> 
 #include <vector>
 #include <type_traits>
@@ -65,21 +66,21 @@ namespace mjr {
       one moves to the right or up.
 
 
-      ^ y (increasing upward)
-      | 
-      . (0, 1) 
-      | 
-      | 
-      | 
-      (-1,0)   | (0,0)        x (increasing to the right)
+                 ^ y (increasing upward)
+                 | 
+                 . (0, 1) 
+                 | 
+                 | 
+                 | 
+        (-1,0)   | (0,0)        x (increasing to the right)
       <-.--------+--------.----->
-      |        (1,0)
-      |
-      | 
-      |
-      . (0, -1)
-      |
-      v
+                 |        (1,0)
+                 |
+                 | 
+                 |
+                 . (0, -1)
+                 |
+                 v
         
       Traditional Computer Graphics Coordinate System
       -----------------------------------------------
@@ -90,12 +91,12 @@ namespace mjr {
 
                                
       (0,0)   +------------+ (numXpix-1, 0)
-      |            |
-      |            |
-      |            |
-      |            |
-      |            |
-      (numYpix-1, 0) +------------+ (numXpix-1, numYpix-1)
+              |            |
+              |            |
+              |            |
+              |            |
+              |            |
+              (numYpix-1, 0) +------------+ (numXpix-1, numYpix-1)
 
       ramConfig Coordinate Systems
       ----------------------------
@@ -235,7 +236,7 @@ namespace mjr {
           @param fileType The type of file to write. 
           @param toTRU    A functor used to transform native pixels into truecolor RGB pixels.
           @param filter   A functor used to transform each pixel. */
-      int writeFile(char const* fileName, imgFileType fileType, std::function<colorRGB8b (colorT&)> toTRU, std::function<colorT (colorT&)> filter);
+      int writeFile(std::string fileName, imgFileType fileType, std::function<colorRGB8b (colorT&)> toTRU, std::function<colorT (colorT&)> filter);
       //@}
 
       /** @name Coordinate System Manipulation (i) */
@@ -887,11 +888,11 @@ namespace mjr {
       /** Write a 24-bit (8-bit per channel) RGB, TGA format graphics file.  
           Respects integer coordinate system orientation.
           @param fileName The file name to read data from */
-      int writeTGAfile(char const *fileName);
+      int writeTGAfile(std::string fileName);
       /** @overload */
-      int writeTGAfile(char const *fileName, std::function<colorRGB8b (colorT&)> toTRU, std::function<colorT (colorT&)> filter);
+      int writeTGAfile(std::string fileName, std::function<colorRGB8b (colorT&)> toTRU, std::function<colorT (colorT&)> filter);
       /** @overload */
-      int writeTGAfile(char const *fileName, std::function<colorRGB8b (colorT&)> toTRU);
+      int writeTGAfile(std::string fileName, std::function<colorRGB8b (colorT&)> toTRU);
       /** Read a TGA format graphics file.  This function can only read 24-bit truecolor images of type 2.  It will return various error codes.  If x or y are
           less than zero, then the current ramCanvasTpl will be resized to the size of the image in the file. Respects integer coordinate system orientation.
           @todo Extend to support non-standard greyscale TGA files.
@@ -900,7 +901,7 @@ namespace mjr {
           @retval 1 Could not open file.
           @retval 2 The file was not a type 2 TGA file.
           @retval 3 The file was not 24-bit. */
-      int readColorTGAfile(char const *fileName);
+      int readColorTGAfile(std::string fileName);
       /** Write a MJRRAW file.
           Respects integer coordinate system orientation.
           This simple file format is designed to house the more exotic images this library supports, and be easily consumed by many image processing and data
@@ -928,9 +929,9 @@ namespace mjr {
           @param fileName The file name to read data from
           @retval 0 The write was successful.
           @retval 1 Could not open file. */
-      int writeRAWfile(char const *fileName);
+      int writeRAWfile(std::string fileName);
       /** @overload */
-      int writeRAWfile(char const *fileName, std::function<colorT (colorT&)> filter);
+      int writeRAWfile(std::string fileName, std::function<colorT (colorT&)> filter);
       //@}
 
       /** @name Boolean Clip Test Methods */
@@ -2018,25 +2019,25 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
-  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeRAWfile(char const* fileName) {
+  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeRAWfile(std::string fileName) {
     return writeFile(fileName, imgFileType::RAW, NULL, NULL);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
-  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeRAWfile(char const* fileName, std::function<colorT (colorT&)> filter) {
+  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeRAWfile(std::string fileName, std::function<colorT (colorT&)> filter) {
     return writeFile(fileName, imgFileType::RAW, NULL, filter);
   }
   
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
-  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeTGAfile(char const* fileName) {
+  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeTGAfile(std::string fileName) {
     return writeFile(fileName, imgFileType::TGA_TRU, NULL, NULL);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
-  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeTGAfile(char const* fileName,
+  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeTGAfile(std::string fileName,
                                                             std::function<colorRGB8b (colorT&)> toTRU,
                                                             std::function<colorT     (colorT&)> filter) {
     return writeFile(fileName, imgFileType::TGA_TRU, toTRU, filter);
@@ -2044,13 +2045,13 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
-  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeTGAfile(char const* fileName, std::function<colorRGB8b (colorT&)> toTRU) {
+  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeTGAfile(std::string fileName, std::function<colorRGB8b (colorT&)> toTRU) {
     return writeFile(fileName, imgFileType::TGA_TRU, toTRU, NULL);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
-  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeFile(char const* fileName,
+  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeFile(std::string fileName,
                                                          imgFileType fileType,
                                                          std::function<colorRGB8b (colorT&)> toTRU,
                                                          std::function<colorT     (colorT&)> filter) {
@@ -2083,7 +2084,7 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
-  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::readColorTGAfile(char const *fileName) {
+  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::readColorTGAfile(std::string fileName) {
     bool useCin = ( (fileName[0] == '-') && (fileName[1] == '\0') );
     std::istream* iStream;
     std::ifstream oFileStream;

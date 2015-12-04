@@ -54,23 +54,33 @@ TFITS    = readFITSfile
 TARGETS  := $(TCOLORS) $(TTEST) $(TFRACTAL) $(TMATHGR) $(TIMGPRO)
 
 ################################################################################################################################################################
+# POV-Ray
+
+#POPT = -Q11 +A0.05
+#POPT = -Q3  +A0.99
+
+################################################################################################################################################################
 # Get platform
 UNAME_S := $(shell uname -s)
 
 ################################################################################################################################################################
 # Set the compiler
 ifeq "$(UNAME_S)" 'Darwin'
-    CXX = clang++
-else
-    CXX = g++
+	CXX = clang++
+else	
+    CXX ?= g++
 endif
 
 ################################################################################################################################################################
 # Set the compiler options
-ifeq "$(UNAME_S)" 'Darwin'
-    CXXFLAGS = -Wstrict-overflow=0 -ffast-math -std=c++14 -Wall -O3 -I$(RCHOME)
-else
+ifeq "$(CXX)" 'g++'
     CXXFLAGS = -Wstrict-overflow=0 -ffast-math -std=c++14 -Wall -O5 -I$(RCHOME)
+endif
+ifeq "$(CXX)" 'clang++'
+    CXXFLAGS = -Wstrict-overflow=0 -ffast-math -std=c++14 -Wall -O3 -I$(RCHOME)
+endif
+ifeq "$(CXX)" 'icc'
+	CXXFLAGS = -std=c++14 -Wall -O3 -I$(RCHOME)
 endif
 
 ################################################################################################################################################################
@@ -94,107 +104,141 @@ endif
 ################################################################################################################################################################
 all : $(TARGETS)
 
-newton : newton.cpp $(RCHPPF) $(RCCPPF) makefile
+vtest :
+	echo $(UNAME_S)
+	echo $(CXX)
+
+newton : newton.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) newton.cpp -o newton
 
-newton_c : newton_c.cpp $(RCHPPF) $(RCCPPF) makefile
+newton_c : newton_c.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) newton_c.cpp -o newton_c
 
-newton2_c : newton2_c.cpp $(RCHPPF) $(RCCPPF) makefile
+newton2_c : newton2_c.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) newton2_c.cpp -o newton2_c
 
-newton3_c : newton3_c.cpp $(RCHPPF) $(RCCPPF) makefile
+newton3_c : newton3_c.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) newton3_c.cpp -o newton3_c
 
-peterdejong : peterdejong.cpp $(RCHPPF) $(RCCPPF) makefile
+peterdejong : peterdejong.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) peterdejong.cpp -o peterdejong
 
-sic : sic.cpp $(RCHPPF) $(RCCPPF) makefile
+sic : sic.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) sic.cpp -o sic
 
-sic_search : sic_search.cpp $(RCHPPF) $(RCCPPF) makefile
+sic_search : sic_search.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) sic_search.cpp -o sic_search
 
-colorAll : colorAll.cpp $(RCHPPF) $(RCCPPF) makefile
+colorAll : colorAll.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) colorAll.cpp -o colorAll
 
-colorWebTriangle : colorWebTriangle.cpp $(RCHPPF) $(RCCPPF) makefile
+colorWebTriangle : colorWebTriangle.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) colorWebTriangle.cpp -o colorWebTriangle
 
-colorWebRectangle : colorWebRectangle.cpp $(RCHPPF) $(RCCPPF) makefile
+colorWebRectangle : colorWebRectangle.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) colorWebRectangle.cpp -o colorWebRectangle
 
-bmark : bmark.cpp $(RCHPPF) $(RCCPPF) makefile
+bmark : bmark.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) bmark.cpp -o bmark
 
-testDraw : testDraw.cpp $(RCHPPF) $(RCCPPF) makefile
+testDraw : testDraw.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) testDraw.cpp -o testDraw
 
-testBaryTry : testBaryTry.cpp $(RCHPPF) $(RCCPPF) makefile
+testBaryTry : testBaryTry.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) testBaryTry.cpp -o testBaryTry
 
-testPoint : testPoint.cpp $(RCHPPF) $(RCCPPF) makefile
+testPoint : testPoint.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) testPoint.cpp -o testPoint
 
-testStrings : testStrings.cpp $(RCHPPF) $(RCCPPF) makefile
+testStrings : testStrings.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) testStrings.cpp -o testStrings
 
-testFonts : testFonts.cpp $(RCHPPF) $(RCCPPF) makefile
+testFonts : testFonts.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) testFonts.cpp -o testFonts
 
-testGlyph : testGlyph.cpp $(RCHPPF) $(RCCPPF) makefile
+testGlyph : testGlyph.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) testGlyph.cpp -o testGlyph
 
-colorCubeGraphRamps : colorCubeGraphRamps.cpp $(RCHPPF) $(RCCPPF) makefile
+colorCubeGraphRamps : colorCubeGraphRamps.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) colorCubeGraphRamps.cpp -o colorCubeGraphRamps
 
-colorGeneralRamps : colorGeneralRamps.cpp $(RCHPPF) $(RCCPPF) makefile
+colorGeneralRamps : colorGeneralRamps.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) colorGeneralRamps.cpp -o colorGeneralRamps
 
-distanceMandelbrot : distanceMandelbrot.cpp $(RCHPPF) $(RCCPPF) makefile
+distanceMandelbrot : distanceMandelbrot.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) distanceMandelbrot.cpp -o distanceMandelbrot
 
-levelCCurves : levelCCurves.cpp $(RCHPPF) $(RCCPPF) makefile
+levelCCurves : levelCCurves.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) levelCCurves.cpp -lm -o levelCCurves
 
-lineTest : lineTest.cpp $(RCHPPF) $(RCCPPF) makefile
+lineTest : lineTest.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) lineTest.cpp -o lineTest
 
-mandelbrot : mandelbrot.cpp $(RCHPPF) $(RCCPPF) makefile
+mandelbrot : mandelbrot.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) mandelbrot.cpp -o mandelbrot
 
-mandelbrot_c : mandelbrot_c.cpp $(RCHPPF) $(RCCPPF) makefile
+mandelbrot_c : mandelbrot_c.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) mandelbrot_c.cpp -o mandelbrot_c
 
-potMandelbrot : potMandelbrot.cpp $(RCHPPF) $(RCCPPF) makefile
+potMandelbrot : potMandelbrot.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) potMandelbrot.cpp -o potMandelbrot
 
-testDraw2 : testDraw2.cpp $(RCHPPF) $(RCCPPF) makefile
+testDraw2 : testDraw2.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) testDraw2.cpp -o testDraw2
 
-testColor : testColor.cpp $(RCHPPF) $(RCCPPF) makefile
+testColor : testColor.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) testColor.cpp -o testColor
 
-sierpinskiTriangle : sierpinskiTriangle.cpp $(RCHPPF) $(RCCPPF) makefile
+sierpinskiTriangle : sierpinskiTriangle.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) sierpinskiTriangle.cpp -o sierpinskiTriangle
 
-triangleMandelbrot : triangleMandelbrot.cpp $(RCHPPF) $(RCCPPF) makefile
+triangleMandelbrot : triangleMandelbrot.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) triangleMandelbrot.cpp -o triangleMandelbrot
 
-colorIndexedPallets : colorIndexedPallets.cpp $(RCHPPF) $(RCCPPF) makefile
+colorIndexedPallets : colorIndexedPallets.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) colorIndexedPallets.cpp -o colorIndexedPallets
 
-colorRainbows : colorRainbows.cpp $(RCHPPF) $(RCCPPF) makefile
+colorRainbows : colorRainbows.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) colorRainbows.cpp -o colorRainbows
 
-colorInterplHLSvsRGB : colorInterplHLSvsRGB.cpp $(RCHPPF) $(RCCPPF) makefile
+colorInterplHLSvsRGB : colorInterplHLSvsRGB.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) colorInterplHLSvsRGB.cpp -o colorInterplHLSvsRGB
 
-imgProExample : imgProExample.cpp $(RCHPPF) $(RCCPPF) makefile
+imgProExample : imgProExample.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) imgProExample.cpp -o imgProExample
 
-glutImage : glutImage.cpp  $(RCHPPF) $(RCCPPF) makefile
+glutImage : glutImage.cpp  $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) glutImage.cpp -o glutImage $(GLUTFLAGS)
+
+potMandelbrot_a_0.tga potMandelbrot_a_1.tga potMandelbrot_a_2.tga potMandelbrot_b_0.tga potMandelbrot_b_1.tga potMandelbrot_b_2.tga : potMandelbrot
+	./potMandelbrot
+
+potMandelbrot_b_0.mrd : potMandelbrot_b_0.mrw
+	dd if=potMandelbrot_b_0.mrw skip=100 iflag=skip_bytes of=potMandelbrot_b_0.mrd
+
+potMandelbrot_b_0d.png : potMandelbrot_b_0.pov potMandelbrot_b_0.tga
+	povray -W3900 -H2275 -Q11 +A0.05 -AM2 -R6 +J5 +WT8 -P -D -OpotMandelbrot_b_0d.png -IpotMandelbrot_b_0.pov
+
+potMandelbrot_b_1d.png : potMandelbrot_b_1.pov potMandelbrot_b_1.tga
+	povray -W3900 -H2275 -Q11 +A0.05 -AM2 -R6 +J5 +WT8 -P -D -OpotMandelbrot_b_1d.png -IpotMandelbrot_b_1.pov   
+
+potMandelbrot_b_2d.png : potMandelbrot_b_2.pov potMandelbrot_b_2.tga
+	povray -W3900 -H2275 -Q11 +A0.05 -AM2 -R6 +J5 +WT8 -P -D -OpotMandelbrot_b_2d.png -IpotMandelbrot_b_2.pov
+
+potMandelbrot_a_0d.png : potMandelbrot_a_0.pov potMandelbrot_a_0.tga
+	povray -W3900 -H2275 -Q11 +A0.05 -AM2 -R6 +J5 +WT8 -P -D -OpotMandelbrot_a_0d.png -IpotMandelbrot_a_0.pov
+
+potMandelbrot_a_1d.png : potMandelbrot_a_1.pov potMandelbrot_a_1.tga
+	povray -W3900 -H2275 -Q11 +A0.05 -AM2 -R6 +J5 +WT8 -P -D -OpotMandelbrot_a_1d.png -IpotMandelbrot_a_1.pov   
+
+potMandelbrot_a_2d.png : potMandelbrot_a_2.pov potMandelbrot_a_2.tga
+	povray -W3900 -H2275 -Q11 +A0.05 -AM2 -R6 +J5 +WT8 -P -D -OpotMandelbrot_a_2d.png -IpotMandelbrot_a_2.pov
+
+potMandelbrot_a_1t.png : potMandelbrot_a_1t.pov potMandelbrot_a_0.tga
+	povray -W3900 -H3900 -Q11 +A0.05 -AM2 -R6 +J5 +WT8 -P -D -OpotMandelbrot_a_1t.png -IpotMandelbrot_a_1t.pov
+
+render : potMandelbrot_b_0d.png potMandelbrot_b_1d.png potMandelbrot_b_2d.png potMandelbrot_a_0d.png potMandelbrot_a_1d.png potMandelbrot_a_2d.png potMandelbrot_a_1t.png
+	espeak "render complete"
 
 clean :
 		rm -f *~

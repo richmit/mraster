@@ -84,7 +84,6 @@ class g2rgb8 {
 };
 
 int main(void) {
-  std::string s;
   color1c16b aColor;
   aColor.setAll(1);
   for(int j=0; j<NPR; j++) {
@@ -122,8 +121,7 @@ int main(void) {
     }
 
     std::cout << "ITER(" << j <<  "): " << "RAW" << std::endl;
-    s = "sic_" + std::to_string(j) + ".mrw";
-    theRamCanvas.writeRAWfile(s.c_str());
+    theRamCanvas.writeRAWfile("sic_" + std::to_string(j) + ".mrw");
 
     // Root image transform
     std::cout << "ITER(" << j <<  "): " << "TFRM & SCALE" << std::endl;
@@ -144,10 +142,9 @@ int main(void) {
         maxII = pixel.getRed();
     
     std::cout << "ITER(" << j <<  "): " << "TGA" << std::endl;
-    s = "sic_" + std::to_string(j) + ".tga";
     /* We would like to create a 24-bit RGB TGA file, but we have a 16-bit greyscale image.  We could create a 24-bit ramCanvas object from the greyscale one,
        or we can give the writeTGAfile member a functor telling it how to convert each pixel as it is required. */
-    theRamCanvas.writeTGAfile(s.c_str(), g2rgb8(maxII));
+    theRamCanvas.writeTGAfile("sic_" + std::to_string(j) + ".tga", g2rgb8(maxII));
   }
   return 0;
 }

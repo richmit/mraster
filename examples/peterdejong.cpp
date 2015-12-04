@@ -60,7 +60,6 @@ double params[NPR][9] = {
 };
 
 int main(void) {
-  std::string s;
   color1c16b aColor;
   aColor.setAll(1);
   for(int j=0; j<NPR; j++) {
@@ -98,8 +97,7 @@ int main(void) {
       y=yNew;
     }
 
-    s = "peterdejong_" + std::to_string(j) + ".mrw";
-    theRamCanvas.writeRAWfile(s.c_str());
+    theRamCanvas.writeRAWfile("peterdejong_" + std::to_string(j) + ".mrw");
 
     // Root image transform
     theRamCanvas.applyHomoPixTfrm(&color1c16b::tfrmStdPow, 1/p);
@@ -117,8 +115,7 @@ int main(void) {
       for(int xi=0;xi<theRamCanvas.get_numXpix();xi++)
         anotherRamCanvas.drawPoint(xi, yi, bColor.cmpColorRamp(theRamCanvas.getPxColor(xi, yi).getRed() * 1275 / maxII, "0RYBCW"));
     
-    s = "peterdejong_" + std::to_string(j) + ".tga";
-    anotherRamCanvas.writeTGAfile(s.c_str());
+    anotherRamCanvas.writeTGAfile("peterdejong_" + std::to_string(j) + ".tga");
   }
   return 0;
 }
