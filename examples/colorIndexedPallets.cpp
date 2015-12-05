@@ -29,69 +29,71 @@
 ***************************************************************************************************************************************************************/
 
 #include "ramCanvas.hpp"
+#include <string>
 
 using namespace mjr;
 
 int main(void) {
   ramCanvas4c8b theRamCanvas = ramCanvas4c8b(450, 832);
   color4c8b aColor;
-  int doWS = 0;
-  int i = 0;
-  for(int x=0;x<48;x++) {
-    int y = 0;
-    y++; aColor.icpSetColor(i, icp_uO_BrBu_10);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_uO_BrBu_12);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_uO_BuDOr_12);     if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_uO_BuDOr_18);     if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_uO_BuDRd_12);     if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_uO_BuDRd_18);     if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_uO_BuGr_14);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_uO_BuGy_8);       if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_uO_BuOrR_14);     if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_uO_BuOr_12);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_uO_BuOr_8);       if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_uO_Bu_10);        if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_uO_Bu_7);         if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_uO_Cat_12);       if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_uO_GrMg_16);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_uO_RdYlBu_11b);   if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_uO_StepSeq_25);   if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_Accent_08);    if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_Blues_09);     if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_BrBG_11);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_BuGn_09);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_BuPu_09);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_Dark2_08);     if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_GnBu_09);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_Greens_09);    if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_Greys_09);     if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_OrRd_09);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_Oranges_09);   if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_PRGn_11);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_Paired_12);    if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_Pastel2_08);   if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_PiYG_11);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_PuBuGn_09);    if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_PuBu_09);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_PuOr_11);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_PuRd_09);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_Purples_09);   if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_RdBu_11);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_RdGy_11);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_RdPu_09);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_RdYlBu_11);    if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_RdYlGn_11);    if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_Reds_09);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_Set1_09);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_Set2_08);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_Set3_12);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_Spectral_11);  if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_YlGnBu_09);    if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_YlGn_09);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    y++; aColor.icpSetColor(i, icp_CB_YlOrRd_09);    if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
-    i++;
+  for(int doWS=0; doWS<2; doWS++) {
+    int i = 0;
+    for(int x=0;x<48;x++) {
+      int y = 0;
+      y++; aColor.icpSetColor(i, icp_uO_BrBu_10);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_uO_BrBu_12);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_uO_BuDOr_12);     if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_uO_BuDOr_18);     if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_uO_BuDRd_12);     if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_uO_BuDRd_18);     if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_uO_BuGr_14);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_uO_BuGy_8);       if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_uO_BuOrR_14);     if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_uO_BuOr_12);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_uO_BuOr_8);       if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_uO_Bu_10);        if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_uO_Bu_7);         if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_uO_Cat_12);       if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_uO_GrMg_16);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_uO_RdYlBu_11b);   if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_uO_StepSeq_25);   if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_Accent_08);    if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_Blues_09);     if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_BrBG_11);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_BuGn_09);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_BuPu_09);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_Dark2_08);     if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_GnBu_09);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_Greens_09);    if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_Greys_09);     if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_OrRd_09);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_Oranges_09);   if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_PRGn_11);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_Paired_12);    if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_Pastel2_08);   if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_PiYG_11);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_PuBuGn_09);    if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_PuBu_09);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_PuOr_11);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_PuRd_09);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_Purples_09);   if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_RdBu_11);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_RdGy_11);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_RdPu_09);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_RdYlBu_11);    if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_RdYlGn_11);    if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_Reds_09);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_Set1_09);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_Set2_08);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_Set3_12);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_Spectral_11);  if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_YlGnBu_09);    if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_YlGn_09);      if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      y++; aColor.icpSetColor(i, icp_CB_YlOrRd_09);    if(doWS) aColor.tfrmWebSafe216();  theRamCanvas.drawFillRectangle(x*16, y*16, x*16+14, y*16+14, aColor);
+      i++;
+    }
+    theRamCanvas.writeTGAfile(std::string("colorIndexedPallets") + (doWS?"WS":"TC") + ".tga");
   }
-  theRamCanvas.writeTGAfile("colorIndexedPallets.tga");
 }
 
 

@@ -9,4 +9,12 @@ Dumps results into TGA files.
 
 The license for this software may be found in the LICENSE.TXT file.
 
+Some examples of what can be done with this library:
+
+* [Mandelbrot Mountains](http://www.mitchr.me/SS/mandelbrot/index.html)
+* [Newton Fractal](http://www.mitchr.me/SS/newton/index.html)
+* [Peter de Jong Fractal](http://www.mitchr.me/SS/swirl/index.html)
+* [Symmetric Fractals](http://www.mitchr.me/SS/sic/index.html)
+
+
 Have fun.

@@ -1,10 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
- @file      colorAll.cpp
+ @file      bifurcationDiagram.cpp
  @author    Mitch Richling <http://www.mitchr.me>
- @brief     Draw every possible color in 24-bit.@EOL
- @std       C++98
+ @brief     Draws a mandelbrot set using the C++ complex type.@EOL
+ @std       C++14
  @copyright 
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <http://www.mitchr.me> All rights reserved.
@@ -26,69 +26,25 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
-
-  This is a very simple program that plots a point of EVERY possible 24-bit color.  This program illustrates how to count by bytes, set colors in byte order,
-  how to avoid all the work and do it with simple integers via setColorFromPackedIntABGR, how to count via Grey code order, and how to reduce to 216 web safe
-  color.
-
 ***************************************************************************************************************************************************************/
 
 #include "ramCanvas.hpp"
+#include <complex>
 
 using namespace mjr;
 
-unsigned long igray(unsigned long n);
-
 int main(void) {
-  ramCanvas4c8b theRamCanvas_iii = ramCanvas4c8b(4096, 4096);
-  ramCanvas4c8b theRamCanvas_int = ramCanvas4c8b(4096, 4096);
-  ramCanvas4c8b theRamCanvas_gry = ramCanvas4c8b(4096, 4096);
-  ramCanvas4c8b theRamCanvas_rgb = ramCanvas4c8b(4096, 4096);
-  ramCanvas4c8b theRamCanvas_web = ramCanvas4c8b(4096, 4096);
-
-  int red=0, blue=0, green=0, count=0;
-  for(int y=0;y<theRamCanvas_int.get_numYpix();y++) {
-    for(int x=0;x<theRamCanvas_int.get_numXpix();x++) {
-      red++;
-      if(red>=256) {
-        red=0;
-        green++;
-        if(green>=256) {
-          green=0;
-          blue++;
-        }
+  ramCanvas1c16b theRamCanvas(7680, 7680, 2.5, 4, -0.1, 1.1);
+  for(ramCanvas1c16b::rcCordFlt r=theRamCanvas.get_minRealX(); r<theRamCanvas.get_maxRealX(); r+=theRamCanvas.get_xPixWid()/20) {
+    ramCanvas1c16b::rcCordFlt f = 0.5;
+    ramCanvas1c16b::rcCordInt x  = theRamCanvas.real2intX(r);
+    for(int i=0; i<5000 && std::abs(f)<100; i++) {
+      f = r*f*(1-f);
+      if(i>1000) {
+        ramCanvas1c16b::rcCordInt y = theRamCanvas.real2intY(f);
+        theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColor(x, y).tfrmAddClp(color1c16b(600)));
       }
-      color4c8b aColor;
-      aColor.setColorFromPackedIntABGR(count, 0, 1, 2, 3);
-      theRamCanvas_iii.drawPoint(x, y, aColor);
-      aColor.setColorFromPackedIntABGR(count);    
-      theRamCanvas_int.drawPoint(x, y, aColor);
-      aColor.setColorFromPackedIntABGR(igray(count));
-      theRamCanvas_gry.drawPoint(x, y, aColor);
-      aColor.setColorRGB(red, green, blue);
-      theRamCanvas_rgb.drawPoint(x, y, aColor);
-      aColor.tfrmWebSafe216();
-      theRamCanvas_web.drawPoint(x, y, aColor);
-      count++;
     }
   }
-  theRamCanvas_int.writeTGAfile("colorAll_int.tga");
-  theRamCanvas_iii.writeTGAfile("colorAll_iii.tga");
-  theRamCanvas_gry.writeTGAfile("colorAll_gry.tga");
-  theRamCanvas_rgb.writeTGAfile("colorAll_rgb.tga");
-  theRamCanvas_web.writeTGAfile("colorAll_web.tga");
-}
-
-unsigned long igray(unsigned long n) {
-  unsigned long ans = n;
-  unsigned long idiv;
-  int ish = 1;
-  ans=n;
-  for(;;) {
-    ans ^= (idiv=ans>>ish);
-    if(idiv <=1 || ish == 16)
-      return ans;
-    ish <<=1;
-  }
+  theRamCanvas.writeTGAfile("bifurcationDiagram.tga");
 }

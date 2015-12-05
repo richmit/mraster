@@ -1014,6 +1014,18 @@ namespace mjr {
       colorT *clonePixels();
       //@}
 
+      /** @name Accessor Methods */
+      //@{
+      fltCrdT get_minRealX() { return minRealX; }    //!< x coord of min (real coord)
+      fltCrdT get_maxRealX() { return maxRealX; }    //!< x coord of max (real coord)
+      fltCrdT get_minRealY() { return minRealY; }    //!< y coord of min (real coord)
+      fltCrdT get_maxRealY() { return maxRealY; }    //!< y coord of max (real coord)
+      fltCrdT get_xPixWid()  { return xPixWid;  }      //!< Width of a pixel (real coord)
+      fltCrdT get_yPixWid()  { return yPixWid;  }      //!< Height of a pixel (real coord)
+      fltCrdT get_xWid()     { return xWid;     }         //!< Width of the display (real coord)
+      fltCrdT get_yWid()     { return yWid;     }         //!< height of the display(real coord)
+      //@}
+
       /** @name Pixel Value Accessor Methods */
       //@{
       /** Returns a copy of the color at the given coordinates */
@@ -1204,8 +1216,8 @@ namespace mjr {
     for(intCrdT y=0;y<numYpix;y++) {
       for(intCrdT x=0;x<numXpix;x++) {
         colorT theColor = getPxColorNC(x, y);
-        typename colorT::channelType curMin = theColor.getMinRGB();
-        typename colorT::channelType curMax = theColor.getMaxRGB();
+        typename colorT::channelType curMin = theColor.getMinC();
+        typename colorT::channelType curMax = theColor.getMaxC();
 
         if(curMax > cmax)
           cmax = curMax;
@@ -1214,7 +1226,6 @@ namespace mjr {
           cmin = curMin;
       }
     }
-
     if(cmax-cmin > 0) {
       float c = 1.0*(colorT::maxChanVal-colorT::minChanVal)/(cmax-cmin);
       float b = colorT::maxChanVal - 1.0*c*cmax;
@@ -1236,8 +1247,8 @@ namespace mjr {
       }
     }
 
-    typename colorT::channelType absCompMin = cmin.getMinRGB();
-    typename colorT::channelType absCompMax = cmax.getMaxRGB();
+    typename colorT::channelType absCompMin = cmin.getMinC();
+    typename colorT::channelType absCompMax = cmax.getMaxC();
     if(absCompMax-absCompMin > 0) {
       float rc = 1.0*(cmin.maxChanVal-cmin.minChanVal)/(cmax.getRed()-cmin.getRed());
       float rb = cmin.maxChanVal - 1.0*rc*cmax.getRed();

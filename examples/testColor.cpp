@@ -115,7 +115,7 @@ int main(void) {
   aColor.setColorFrom8bit(100, 200, 210);                     std::cout << "aColor.setColorFrom8bit(100, 200, 210);     " << aColor << std::endl;
   aColor.setColorFromF(0.5, 0.5, 0.5, 0.5);                   std::cout << "aColor.setColorFromF(0.5, 0.5, 0.5, 0.5);   " << aColor << std::endl;
   aColor.setColorFromF(0.5, 0.5, 0.5);                        std::cout << "aColor.setColorFromF(0.5, 0.5, 0.5);        " << aColor << std::endl;
-  aColor.setColorFromPackedIntRGBA(123);                      std::cout << "aColor.setColorFromPackedIntRGBA(123);      " << aColor << std::endl;
+  aColor.setColorFromPackedIntABGR(123);                      std::cout << "aColor.setColorFromPackedIntABGR(123);      " << aColor << std::endl;
   
   aColor.tfrmLinearGreyLevelScale(.5, .1);                    std::cout << "aColor.tfrmLinearGreyLevelScale(.5, .1);    " << aColor << std::endl;
 

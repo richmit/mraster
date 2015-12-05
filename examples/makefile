@@ -44,7 +44,7 @@ RCCPPF    = $(RCHOME)/colorData.cpp $(RCHOME)/hersheyFontData.cpp
 TCOLORS  = colorAll colorWebTriangle colorWebRectangle colorCubeGraphRamps colorIndexedPallets colorGeneralRamps colorRainbows colorInterplHLSvsRGB
 TTEST    = testDraw testDraw2 bmark testColor testPoint testStrings testGlyph testFonts testBaryTry
 TIMGPRO  = imgProExample
-TFRACTAL = mandelbrot_c sierpinskiTriangle newton3_c newton3_c newton2_c newton newton_c distanceMandelbrot mandelbrot potMandelbrot triangleMandelbrot peterdejong sic sic_search
+TFRACTAL = mandelbrot_c sierpinskiTriangle newton3_c newton3_c newton2_c newton newton_c distanceMandelbrot mandelbrot potMandelbrot triangleMandelbrot peterdejong sic sic_search tippets biomorph1 biomorph2 bifurcationDiagram
 TMATHGR  = levelCCurves
 
 TGLUT    = glutImage
@@ -119,6 +119,15 @@ newton2_c : newton2_c.cpp $(RCHPPF) $(RCCPPF)
 
 newton3_c : newton3_c.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) newton3_c.cpp -o newton3_c
+
+biomorph1 : biomorph1.cpp $(RCHPPF) $(RCCPPF)
+		$(CXX) $(CXXFLAGS) $(RCCPPF) biomorph1.cpp -o biomorph1
+
+biomorph2 : biomorph2.cpp $(RCHPPF) $(RCCPPF)
+		$(CXX) $(CXXFLAGS) $(RCCPPF) biomorph2.cpp -o biomorph2
+
+bifurcationDiagram : bifurcationDiagram.cpp $(RCHPPF) $(RCCPPF)
+		$(CXX) $(CXXFLAGS) $(RCCPPF) bifurcationDiagram.cpp -o bifurcationDiagram
 
 peterdejong : peterdejong.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) peterdejong.cpp -o peterdejong
@@ -207,7 +216,11 @@ colorInterplHLSvsRGB : colorInterplHLSvsRGB.cpp $(RCHPPF) $(RCCPPF)
 imgProExample : imgProExample.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) imgProExample.cpp -o imgProExample
 
+tippets : tippets.cpp $(RCHPPF) $(RCCPPF)
+		$(CXX) $(CXXFLAGS) $(RCCPPF) tippets.cpp -o tippets
+
 glutImage : glutImage.cpp  $(RCHPPF) $(RCCPPF)
+
 		$(CXX) $(CXXFLAGS) $(RCCPPF) glutImage.cpp -o glutImage $(GLUTFLAGS)
 
 potMandelbrot_a_0.tga potMandelbrot_a_1.tga potMandelbrot_a_2.tga potMandelbrot_b_0.tga potMandelbrot_b_1.tga potMandelbrot_b_2.tga : potMandelbrot

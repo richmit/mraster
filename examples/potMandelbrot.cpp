@@ -63,7 +63,7 @@ int main(void) {
   for(int i=0; i<3; i++) {
   //for(int i : { 0 } ) {
     theRamCanvas.newRealCoords(ranges[i][0], ranges[i][1], ranges[i][2], ranges[i][3]);
-  
+    theRamCanvas.clrCanvasToBlack();
     /* Compute the potential function on our grid.  We use the ramCanvas as a nice way to convert from integer to real coordinates on this grid, but we store
        the data in a floating point array.  We store -1 if the point appears to be in the Mandelbrot set, and the potential otherwise.  We do this so that we
        can color the set differently allowing us to render a canyon-like plot instead of a plateau-like plot.  We also compute the min and max potential so

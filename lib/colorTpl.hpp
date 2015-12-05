@@ -510,16 +510,22 @@ namespace mjr {
           bytes are interpreted as by setColorFrom8bit.  
           @param anInt The integer from which to extract bytes to set color
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setColorFromPackedIntRGBA(uint32_t anInt);
+      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setColorFromPackedIntABGR(uint32_t anInt);
+      /** This function sets color based upon the bytes of the given integer.  The LSB (lest significant byte) of the given integer will be used to set blue.
+          If the integer is at least two bytes long, then the next byte will be green. Green and alpha are filled next if enough bytes exist.  Note that the
+          bytes are interpreted as by setColorFrom8bit.  
+          @param anInt The integer from which to extract bytes to set color
+          @return Returns a reference to the current color object.*/
+      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setColorFromPackedIntARGB(uint32_t anInt);
       /** @overload 
           @param anInt The integer from which to extract bytes to set color
           @param rIdx Location of red byte in anInt
           @param gIdx Location of green byte in anInt
           @param bIdx Location of blue byte in anInt
           @param aIdx Location of alpha byte in anInt*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setColorFromPackedIntRGBA(uint32_t anInt,
-                                                                                                               uint8_t rIdx, uint8_t gIdx,
-                                                                                                               uint8_t bIdx, uint8_t aIdx);
+      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setColorFromPackedInt(uint32_t anInt,
+                                                                                                           uint8_t rIdx, uint8_t gIdx,
+                                                                                                           uint8_t bIdx, uint8_t aIdx);
       //@}
 
       /** @name Set to special colors */
@@ -616,6 +622,7 @@ namespace mjr {
           @param icpArray The pallet data
           @return A reference to the current object */
       colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& icpSetColor(int anInt, const char **icpArray);
+      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& icpSetColor(int anInt, const uint32_t* icpArray);
       //@}
 
       /** @name Set color based upon color maps */
@@ -2583,7 +2590,7 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromPackedIntRGBA(uint32_t anInt) {
+  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromPackedIntABGR(uint32_t anInt) {
     uint8_t aByte;
     aByte = 0xFF & anInt; setRed8bit(aByte);
     if(numChan > 1) { anInt = anInt >> 8; aByte = 0xFF & anInt; setGreen8bit(aByte); }
@@ -2595,8 +2602,20 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromPackedIntRGBA(uint32_t anInt,
-                                                                                                           uint8_t rIdx, uint8_t gIdx, uint8_t bIdx, uint8_t aIdx) {
+  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromPackedIntARGB(uint32_t anInt) {
+    uint8_t aByte;
+    aByte = 0xFF & anInt; setBlue8bit(aByte);
+    if(numChan > 1) { anInt = anInt >> 8; aByte = 0xFF & anInt; setGreen8bit(aByte); }
+    if(numChan > 2) { anInt = anInt >> 8; aByte = 0xFF & anInt; setRed8bit(aByte);   }
+    if(numChan > 3) { anInt = anInt >> 8; aByte = 0xFF & anInt; setAlpha8bit(aByte); }
+    return *this;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromPackedInt(uint32_t anInt,
+                                                                                                       uint8_t rIdx, uint8_t gIdx, uint8_t bIdx, uint8_t aIdx) {
     uint8_t *curByte = (uint8_t *)(&anInt);
     theColor.theParts.red                    = curByte[rIdx];
     if(numChan > 1) theColor.theParts.green  = curByte[gIdx];
@@ -4085,6 +4104,20 @@ namespace mjr {
     return *this;
   }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::icpSetColor(int anInt, const uint32_t* icpArray) {
+    int numColorsInArray = icpArray[0];
+    anInt++; // Increment anInt
+    if( (anInt < 1) || (anInt > numColorsInArray) ) {
+      SET_ERR_COLOR;
+    } else {
+      setColorFromPackedIntARGB(icpArray[anInt]);
+    }
+    return *this;
+  }
+  
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&

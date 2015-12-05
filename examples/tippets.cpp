@@ -1,10 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
- @file      colorAll.cpp
+ @file      tippets.cpp
  @author    Mitch Richling <http://www.mitchr.me>
- @brief     Draw every possible color in 24-bit.@EOL
- @std       C++98
+ @brief     Draws a mandelbrot set using the C++ complex type.@EOL
+ @std       C++14
  @copyright 
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <http://www.mitchr.me> All rights reserved.
@@ -26,69 +26,41 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
-
-  This is a very simple program that plots a point of EVERY possible 24-bit color.  This program illustrates how to count by bytes, set colors in byte order,
-  how to avoid all the work and do it with simple integers via setColorFromPackedIntABGR, how to count via Grey code order, and how to reduce to 216 web safe
-  color.
-
 ***************************************************************************************************************************************************************/
 
 #include "ramCanvas.hpp"
+#include <complex>
+
+#define NUMITR 2000
+#define CSIZE  3840
 
 using namespace mjr;
 
-unsigned long igray(unsigned long n);
+double ranges[6][4] = { {  -2.700,  2.100, -2.100,  2.100 },
+                        {  -2.100, -1.700, -0.300,  0.300 },
+                        {  -1.540, -1.330, -0.175,  0.175 },
+                        {   0.250,  0.700, -1.000,  1.000 },
+                        {   0.250,  0.600,  0.700,  1.000 },
+                        {  -0.720, -0.695,  0.385,  0.410 } };
 
 int main(void) {
-  ramCanvas4c8b theRamCanvas_iii = ramCanvas4c8b(4096, 4096);
-  ramCanvas4c8b theRamCanvas_int = ramCanvas4c8b(4096, 4096);
-  ramCanvas4c8b theRamCanvas_gry = ramCanvas4c8b(4096, 4096);
-  ramCanvas4c8b theRamCanvas_rgb = ramCanvas4c8b(4096, 4096);
-  ramCanvas4c8b theRamCanvas_web = ramCanvas4c8b(4096, 4096);
-
-  int red=0, blue=0, green=0, count=0;
-  for(int y=0;y<theRamCanvas_int.get_numYpix();y++) {
-    for(int x=0;x<theRamCanvas_int.get_numXpix();x++) {
-      red++;
-      if(red>=256) {
-        red=0;
-        green++;
-        if(green>=256) {
-          green=0;
-          blue++;
-        }
+  int count;
+  float a, b, zx, zy;
+  ramCanvas4c8b theRamCanvas(CSIZE, CSIZE);
+  for(int i=0; i<6; i++) {    
+    theRamCanvas.newRealCoords(ranges[i][0], ranges[i][1], ranges[i][2], ranges[i][3]);  
+    theRamCanvas.clrCanvasToBlack();
+    for(int y=0;y<theRamCanvas.get_numYpix();y++) {
+      if((y%(CSIZE/10))==0)
+        std::cout << "    CASE: " << i << " LINE: " << y << "/" << CSIZE << std::endl;
+      for(int x=0;x<theRamCanvas.get_numXpix();x++) {
+        for(a=theRamCanvas.int2realX(x),b=theRamCanvas.int2realY(y),zx=zy=0.0,count=0;
+            (zx*zx+zy*zy<100000)&&(count<=NUMITR);
+            count++,zx=zx*zx-zy*zy+a,zy=2*zx*zy+b) ;
+        if(count < NUMITR)
+          theRamCanvas.drawPoint(x, y, color4c8b().cmpFireRamp(intWrap(count*20, 767)));
       }
-      color4c8b aColor;
-      aColor.setColorFromPackedIntABGR(count, 0, 1, 2, 3);
-      theRamCanvas_iii.drawPoint(x, y, aColor);
-      aColor.setColorFromPackedIntABGR(count);    
-      theRamCanvas_int.drawPoint(x, y, aColor);
-      aColor.setColorFromPackedIntABGR(igray(count));
-      theRamCanvas_gry.drawPoint(x, y, aColor);
-      aColor.setColorRGB(red, green, blue);
-      theRamCanvas_rgb.drawPoint(x, y, aColor);
-      aColor.tfrmWebSafe216();
-      theRamCanvas_web.drawPoint(x, y, aColor);
-      count++;
     }
-  }
-  theRamCanvas_int.writeTGAfile("colorAll_int.tga");
-  theRamCanvas_iii.writeTGAfile("colorAll_iii.tga");
-  theRamCanvas_gry.writeTGAfile("colorAll_gry.tga");
-  theRamCanvas_rgb.writeTGAfile("colorAll_rgb.tga");
-  theRamCanvas_web.writeTGAfile("colorAll_web.tga");
-}
-
-unsigned long igray(unsigned long n) {
-  unsigned long ans = n;
-  unsigned long idiv;
-  int ish = 1;
-  ans=n;
-  for(;;) {
-    ans ^= (idiv=ans>>ish);
-    if(idiv <=1 || ish == 16)
-      return ans;
-    ish <<=1;
+    theRamCanvas.writeTGAfile("tippets" + std::to_string(i) + ".tga");
   }
 }

@@ -27,6 +27,8 @@
   @endparblock
 ***************************************************************************************************************************************************************/
 
+#include <cstdint>
+
 // Put everything in the mjr namespace
 namespace mjr {
 
@@ -348,1120 +350,1120 @@ const char *webSafeColorData[218][7] = {
 
 
 /** Color scheme known as icp_uO_BrBu_10 (Brown to Blue, 10 steps) from U of Oregon (Dept of geography) */
-const char *icp_uO_BrBu_10[13]       = {        "d", "#000000", "#662f00", "#996035", "#cc9b7a", "#d8af97", "#f2dacd", "#ccfdff", "#99f8ff", "#65efff", "#32e3ff", "#00a9cc", "#ffffff" };
+extern const uint32_t icp_uO_BrBu_10[13]       = {        0xd, 0x000000, 0x662f00, 0x996035, 0xcc9b7a, 0xd8af97, 0xf2dacd, 0xccfdff, 0x99f8ff, 0x65efff, 0x32e3ff, 0x00a9cc, 0xffffff };
 
 /** Color scheme known as icp_uO_BrBu_12 (Brown to Blue, 12 steps) from U of Oregon (Dept of geography) */
-const char *icp_uO_BrBu_12[15]       = {        "f", "#000000", "#331900", "#662f00", "#996035", "#cc9b7a", "#d8af97", "#f2dacd", "#ccfdff", "#99f8ff", "#65efff", "#32e3ff", "#00a9cc", "#007a99", "#ffffff" };
+extern const uint32_t icp_uO_BrBu_12[15]       = {        0xf, 0x000000, 0x331900, 0x662f00, 0x996035, 0xcc9b7a, 0xd8af97, 0xf2dacd, 0xccfdff, 0x99f8ff, 0x65efff, 0x32e3ff, 0x00a9cc, 0x007a99, 0xffffff };
 
 /** Color scheme known as icp_uO_BuDOr_12 (Blue to Dark Orange, 12 steps) from U of Oregon (Dept of geography) */
-const char *icp_uO_BuDOr_12[15]      = {        "f", "#000000", "#1e8e99", "#51c3cc", "#99f9ff", "#b2fcff", "#ccfeff", "#e5ffff", "#ffe5cc", "#ffca99", "#ffad65", "#ff8e32", "#cc5800", "#993f00", "#ffffff" };
+extern const uint32_t icp_uO_BuDOr_12[15]      = {        0xf, 0x000000, 0x1e8e99, 0x51c3cc, 0x99f9ff, 0xb2fcff, 0xccfeff, 0xe5ffff, 0xffe5cc, 0xffca99, 0xffad65, 0xff8e32, 0xcc5800, 0x993f00, 0xffffff };
 
 /** Color scheme known as icp_uO_BuDOr_18 (Blue to Dark Orange, 18 steps) from U of Oregon (Dept of geography) */
-const char *icp_uO_BuDOr_18[21]      = {       "15", "#000000", "#006666", "#009999", "#00cccc", "#00ffff", "#33ffff", "#65ffff", "#99ffff", "#b2ffff", "#cbffff", "#e5ffff", "#ffe5cb", "#ffca99", "#ffad65", "#ff8e33", "#ff6e00", "#cc5500", "#993d00", "#662700", "#ffffff" };
+extern const uint32_t icp_uO_BuDOr_18[21]      = {       0x15, 0x000000, 0x006666, 0x009999, 0x00cccc, 0x00ffff, 0x33ffff, 0x65ffff, 0x99ffff, 0xb2ffff, 0xcbffff, 0xe5ffff, 0xffe5cb, 0xffca99, 0xffad65, 0xff8e33, 0xff6e00, 0xcc5500, 0x993d00, 0x662700, 0xffffff };
 
 /** Color scheme known as icp_uO_BuDRd_12 (Dark Red to Blue, 12 steps, based on ColorBrewer RdYlBu_11) from U of Oregon (Dept of geography) */
-const char *icp_uO_BuDRd_12[15]      = {        "f", "#000000", "#290ad8", "#264dff", "#3fa0ff", "#72d9ff", "#aaf7ff", "#e0ffff", "#ffffbf", "#ffe099", "#ffad72", "#f76d5e", "#d82632", "#a50021", "#ffffff" };
+extern const uint32_t icp_uO_BuDRd_12[15]      = {        0xf, 0x000000, 0x290ad8, 0x264dff, 0x3fa0ff, 0x72d9ff, 0xaaf7ff, 0xe0ffff, 0xffffbf, 0xffe099, 0xffad72, 0xf76d5e, 0xd82632, 0xa50021, 0xffffff };
 
 /** Color scheme known as icp_uO_BuDRd_18 (Dark Red to Blue, 18 steps, based on ColorBrewer RdYlBu_11) from U of Oregon (Dept of geography) */
-const char *icp_uO_BuDRd_18[21]      = {       "15", "#000000", "#2400d8", "#181cf7", "#2857ff", "#3d87ff", "#56b0ff", "#75d3ff", "#99eaff", "#bcf9ff", "#eaffff", "#ffffea", "#fff1bc", "#ffd699", "#ffac75", "#ff7856", "#ff3d3d", "#f72735", "#d8152f", "#a50021", "#ffffff" };
+extern const uint32_t icp_uO_BuDRd_18[21]      = {       0x15, 0x000000, 0x2400d8, 0x181cf7, 0x2857ff, 0x3d87ff, 0x56b0ff, 0x75d3ff, 0x99eaff, 0xbcf9ff, 0xeaffff, 0xffffea, 0xfff1bc, 0xffd699, 0xffac75, 0xff7856, 0xff3d3d, 0xf72735, 0xd8152f, 0xa50021, 0xffffff };
 
 /** Color scheme known as icp_uO_BuGr_14 (Blue-Green) from U of Oregon (Dept of geography) */
-const char *icp_uO_BuGr_14[17]       = {       "11", "#000000", "#0000ff", "#3333ff", "#6565ff", "#9999ff", "#b2b2ff", "#cbcbff", "#e5e5ff", "#e5ffe5", "#cbffcb", "#b2ffb2", "#99ff99", "#65ff65", "#33ff33", "#00ff00", "#ffffff" };
+extern const uint32_t icp_uO_BuGr_14[17]       = {       0x11, 0x000000, 0x0000ff, 0x3333ff, 0x6565ff, 0x9999ff, 0xb2b2ff, 0xcbcbff, 0xe5e5ff, 0xe5ffe5, 0xcbffcb, 0xb2ffb2, 0x99ff99, 0x65ff65, 0x33ff33, 0x00ff00, 0xffffff };
 
 /** Color scheme known as icp_uO_BuGy_8 (Blue to Gray, 8 steps) from U of Oregon (Dept of geography) */
-const char *icp_uO_BuGy_8[11]        = {        "b", "#000000", "#0099cc", "#66e5ff", "#99ffff", "#ccffff", "#e5e5e5", "#999999", "#666666", "#333333", "#ffffff" };
+extern const uint32_t icp_uO_BuGy_8[11]        = {        0xb, 0x000000, 0x0099cc, 0x66e5ff, 0x99ffff, 0xccffff, 0xe5e5e5, 0x999999, 0x666666, 0x333333, 0xffffff };
 
 /** Color scheme known as icp_uO_BuOrR_14 (Blue to Orange Red, 14 steps) from U of Oregon (Dept of geography) */
-const char *icp_uO_BuOrR_14[17]      = {       "11", "#000000", "#075aff", "#3276ff", "#5990ff", "#8cb2ff", "#bfd4ff", "#e5eeff", "#f7f9ff", "#ffffcc", "#ffff99", "#ffff00", "#ffcc00", "#ff9900", "#ff6600", "#ff0000", "#ffffff" };
+extern const uint32_t icp_uO_BuOrR_14[17]      = {       0x11, 0x000000, 0x075aff, 0x3276ff, 0x5990ff, 0x8cb2ff, 0xbfd4ff, 0xe5eeff, 0xf7f9ff, 0xffffcc, 0xffff99, 0xffff00, 0xffcc00, 0xff9900, 0xff6600, 0xff0000, 0xffffff };
 
 /** Color scheme known as icp_uO_BuOr_12 (Blue to Orange, 12 steps) from U of Oregon (Dept of geography) */
-const char *icp_uO_BuOr_12[15]       = {        "f", "#000000", "#002aff", "#1965ff", "#3299ff", "#65ccff", "#99edff", "#ccffff", "#ffffcc", "#ffee99", "#ffcc65", "#ff9932", "#ff6619", "#ff2a00", "#ffffff" };
+extern const uint32_t icp_uO_BuOr_12[15]       = {        0xf, 0x000000, 0x002aff, 0x1965ff, 0x3299ff, 0x65ccff, 0x99edff, 0xccffff, 0xffffcc, 0xffee99, 0xffcc65, 0xff9932, 0xff6619, 0xff2a00, 0xffffff };
 
 /** Color scheme known as icp_uO_BuOr_8 (Blue to Orange, 8 steps) from U of Oregon (Dept of geography) */
-const char *icp_uO_BuOr_8[11]        = {        "b", "#000000", "#007fff", "#4cc3ff", "#99edff", "#ccffff", "#ffffcc", "#ffee99", "#ffc34c", "#ff7f00", "#ffffff" };
+extern const uint32_t icp_uO_BuOr_8[11]        = {        0xb, 0x000000, 0x007fff, 0x4cc3ff, 0x99edff, 0xccffff, 0xffffcc, 0xffee99, 0xffc34c, 0xff7f00, 0xffffff };
 
 /** Color scheme known as icp_uO_Bu_10 (Light blue to dark blue, 10 steps) from U of Oregon (Dept of geography) */
-const char *icp_uO_Bu_10[13]         = {        "d", "#000000", "#e5ffff", "#ccfaff", "#b2f2ff", "#99e5ff", "#7fd4ff", "#65bfff", "#4ca5ff", "#3288ff", "#1965ff", "#003fff", "#ffffff" };
+extern const uint32_t icp_uO_Bu_10[13]         = {        0xd, 0x000000, 0xe5ffff, 0xccfaff, 0xb2f2ff, 0x99e5ff, 0x7fd4ff, 0x65bfff, 0x4ca5ff, 0x3288ff, 0x1965ff, 0x003fff, 0xffffff };
 
 /** Color scheme known as icp_uO_Bu_7 (Light Blue to Dark Blue, 7 steps) from U of Oregon (Dept of geography) */
-const char *icp_uO_Bu_7[10]          = {        "a", "#000000", "#ffff00", "#fdff00", "#f8ff00", "#f0ff00", "#e4ff00", "#aacc00", "#7a9900", "#ffffff" };
+extern const uint32_t icp_uO_Bu_7[10]          = {        0xa, 0x000000, 0xffff00, 0xfdff00, 0xf8ff00, 0xf0ff00, 0xe4ff00, 0xaacc00, 0x7a9900, 0xffffff };
 
 /** Color scheme known as icp_uO_Cat_12 (Categorical 12-step scheme, after ColorBrewer 11-step Paired Scheme) from U of Oregon (Dept of geography) */
-const char *icp_uO_Cat_12[15]        = {        "f", "#000000", "#ffbf7f", "#ff7f00", "#ffff99", "#ffff32", "#b2ff8c", "#32ff00", "#a5edff", "#19b2ff", "#ccbfff", "#654cff", "#ff99bf", "#e51932", "#ffffff" };
+extern const uint32_t icp_uO_Cat_12[15]        = {        0xf, 0x000000, 0xffbf7f, 0xff7f00, 0xffff99, 0xffff32, 0xb2ff8c, 0x32ff00, 0xa5edff, 0x19b2ff, 0xccbfff, 0x654cff, 0xff99bf, 0xe51932, 0xffffff };
 
 /** Color scheme known as icp_uO_GrMg_16 (Green to Magenta, 16 steps) from U of Oregon (Dept of geography) */
-const char *icp_uO_GrMg_16[19]       = {       "13", "#000000", "#005000", "#008600", "#00bb00", "#00f100", "#50ff50", "#86ff86", "#bbffbb", "#ffffff", "#fff1ff", "#ffbbff", "#ff86ff", "#ff50ff", "#f100f1", "#bb00bb", "#860086", "#500050", "#ffffff" };
+extern const uint32_t icp_uO_GrMg_16[19]       = {       0x13, 0x000000, 0x005000, 0x008600, 0x00bb00, 0x00f100, 0x50ff50, 0x86ff86, 0xbbffbb, 0xffffff, 0xfff1ff, 0xffbbff, 0xff86ff, 0xff50ff, 0xf100f1, 0xbb00bb, 0x860086, 0x500050, 0xffffff };
 
 /** Color scheme known as icp_uO_RdYlBu_11b (RdYlBu_11b (Hue fixed for protans, after ColorBrewer RdYlBu)) from U of Oregon (Dept of geography) */
-const char *icp_uO_RdYlBu_11b[14]    = {        "e", "#000000", "#a50021", "#d82632", "#f76d5e", "#ffad72", "#ffe099", "#ffffbf", "#e0ffff", "#aaf7ff", "#72d8ff", "#3fa0ff", "#264cff", "#ffffff" };
+extern const uint32_t icp_uO_RdYlBu_11b[14]    = {        0xe, 0x000000, 0xa50021, 0xd82632, 0xf76d5e, 0xffad72, 0xffe099, 0xffffbf, 0xe0ffff, 0xaaf7ff, 0x72d8ff, 0x3fa0ff, 0x264cff, 0xffffff };
 
 /** Color scheme known as icp_uO_StepSeq_25 (Stepped sequential scheme, 5 steps) from U of Oregon (Dept of geography) */
-const char *icp_uO_StepSeq_25[28]    = {       "1c", "#000000", "#990f0f", "#b22c2c", "#cc5151", "#e57e7e", "#ffb2b2", "#99540f", "#b26f2c", "#cc8e51", "#e5b17e", "#ffd8b2", "#6b990f", "#85b22c", "#a3cc51", "#c3e57e", "#e5ffb2", "#0f6b99", "#2c85b2", "#51a3cc", "#7ec3e5", "#b2e5ff", "#260f99", "#422cb2", "#6551cc", "#8f7ee5", "#bfb2ff", "#ffffff" };
+extern const uint32_t icp_uO_StepSeq_25[28]    = {       0x1c, 0x000000, 0x990f0f, 0xb22c2c, 0xcc5151, 0xe57e7e, 0xffb2b2, 0x99540f, 0xb26f2c, 0xcc8e51, 0xe5b17e, 0xffd8b2, 0x6b990f, 0x85b22c, 0xa3cc51, 0xc3e57e, 0xe5ffb2, 0x0f6b99, 0x2c85b2, 0x51a3cc, 0x7ec3e5, 0xb2e5ff, 0x260f99, 0x422cb2, 0x6551cc, 0x8f7ee5, 0xbfb2ff, 0xffffff };
 
 /** Color scheme known as icp_CB_Accent_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Accent_03[6]      = {        "6", "#000000", "#7fc97f", "#beaed4", "#fdc086", "#ffffff" };
+extern const uint32_t icp_CB_Accent_03[6]      = {        0x6, 0x000000, 0x7fc97f, 0xbeaed4, 0xfdc086, 0xffffff };
 
 /** Color scheme known as icp_CB_Accent_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Accent_04[7]      = {        "7", "#000000", "#7fc97f", "#beaed4", "#fdc086", "#ffff99", "#ffffff" };
+extern const uint32_t icp_CB_Accent_04[7]      = {        0x7, 0x000000, 0x7fc97f, 0xbeaed4, 0xfdc086, 0xffff99, 0xffffff };
 
 /** Color scheme known as icp_CB_Accent_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Accent_05[8]      = {        "8", "#000000", "#7fc97f", "#beaed4", "#fdc086", "#ffff99", "#386cb0", "#ffffff" };
+extern const uint32_t icp_CB_Accent_05[8]      = {        0x8, 0x000000, 0x7fc97f, 0xbeaed4, 0xfdc086, 0xffff99, 0x386cb0, 0xffffff };
 
 /** Color scheme known as icp_CB_Accent_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Accent_06[9]      = {        "9", "#000000", "#7fc97f", "#beaed4", "#fdc086", "#ffff99", "#386cb0", "#f0027f", "#ffffff" };
+extern const uint32_t icp_CB_Accent_06[9]      = {        0x9, 0x000000, 0x7fc97f, 0xbeaed4, 0xfdc086, 0xffff99, 0x386cb0, 0xf0027f, 0xffffff };
 
 /** Color scheme known as icp_CB_Accent_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Accent_07[10]     = {        "a", "#000000", "#7fc97f", "#beaed4", "#fdc086", "#ffff99", "#386cb0", "#f0027f", "#bf5b17", "#ffffff" };
+extern const uint32_t icp_CB_Accent_07[10]     = {        0xa, 0x000000, 0x7fc97f, 0xbeaed4, 0xfdc086, 0xffff99, 0x386cb0, 0xf0027f, 0xbf5b17, 0xffffff };
 
 /** Color scheme known as icp_CB_Accent_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Accent_08[11]     = {        "b", "#000000", "#7fc97f", "#beaed4", "#fdc086", "#ffff99", "#386cb0", "#f0027f", "#bf5b17", "#666666", "#ffffff" };
+extern const uint32_t icp_CB_Accent_08[11]     = {        0xb, 0x000000, 0x7fc97f, 0xbeaed4, 0xfdc086, 0xffff99, 0x386cb0, 0xf0027f, 0xbf5b17, 0x666666, 0xffffff };
 
 /** Color scheme known as icp_CB_Blues_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Blues_03[6]       = {        "6", "#000000", "#deebf7", "#9ecae1", "#3182bd", "#ffffff" };
+extern const uint32_t icp_CB_Blues_03[6]       = {        0x6, 0x000000, 0xdeebf7, 0x9ecae1, 0x3182bd, 0xffffff };
 
 /** Color scheme known as icp_CB_Blues_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Blues_04[7]       = {        "7", "#000000", "#eff3ff", "#bdd7e7", "#6baed6", "#2171b5", "#ffffff" };
+extern const uint32_t icp_CB_Blues_04[7]       = {        0x7, 0x000000, 0xeff3ff, 0xbdd7e7, 0x6baed6, 0x2171b5, 0xffffff };
 
 /** Color scheme known as icp_CB_Blues_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Blues_05[8]       = {        "8", "#000000", "#eff3ff", "#bdd7e7", "#6baed6", "#3182bd", "#08519c", "#ffffff" };
+extern const uint32_t icp_CB_Blues_05[8]       = {        0x8, 0x000000, 0xeff3ff, 0xbdd7e7, 0x6baed6, 0x3182bd, 0x08519c, 0xffffff };
 
 /** Color scheme known as icp_CB_Blues_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Blues_06[9]       = {        "9", "#000000", "#eff3ff", "#c6dbef", "#9ecae1", "#6baed6", "#3182bd", "#08519c", "#ffffff" };
+extern const uint32_t icp_CB_Blues_06[9]       = {        0x9, 0x000000, 0xeff3ff, 0xc6dbef, 0x9ecae1, 0x6baed6, 0x3182bd, 0x08519c, 0xffffff };
 
 /** Color scheme known as icp_CB_Blues_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Blues_07[10]      = {        "a", "#000000", "#eff3ff", "#c6dbef", "#9ecae1", "#6baed6", "#4292c6", "#2171b5", "#084594", "#ffffff" };
+extern const uint32_t icp_CB_Blues_07[10]      = {        0xa, 0x000000, 0xeff3ff, 0xc6dbef, 0x9ecae1, 0x6baed6, 0x4292c6, 0x2171b5, 0x084594, 0xffffff };
 
 /** Color scheme known as icp_CB_Blues_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Blues_08[11]      = {        "b", "#000000", "#f7fbff", "#deebf7", "#c6dbef", "#9ecae1", "#6baed6", "#4292c6", "#2171b5", "#084594", "#ffffff" };
+extern const uint32_t icp_CB_Blues_08[11]      = {        0xb, 0x000000, 0xf7fbff, 0xdeebf7, 0xc6dbef, 0x9ecae1, 0x6baed6, 0x4292c6, 0x2171b5, 0x084594, 0xffffff };
 
 /** Color scheme known as icp_CB_Blues_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Blues_09[12]      = {        "c", "#000000", "#f7fbff", "#deebf7", "#c6dbef", "#9ecae1", "#6baed6", "#4292c6", "#2171b5", "#08519c", "#08306b", "#ffffff" };
+extern const uint32_t icp_CB_Blues_09[12]      = {        0xc, 0x000000, 0xf7fbff, 0xdeebf7, 0xc6dbef, 0x9ecae1, 0x6baed6, 0x4292c6, 0x2171b5, 0x08519c, 0x08306b, 0xffffff };
 
 /** Color scheme known as icp_CB_BrBG_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_BrBG_03[6]        = {        "6", "#000000", "#d8b365", "#f5f5f5", "#5ab4ac", "#ffffff" };
+extern const uint32_t icp_CB_BrBG_03[6]        = {        0x6, 0x000000, 0xd8b365, 0xf5f5f5, 0x5ab4ac, 0xffffff };
 
 /** Color scheme known as icp_CB_BrBG_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_BrBG_04[7]        = {        "7", "#000000", "#a6611a", "#dfc27d", "#80cdc1", "#018571", "#ffffff" };
+extern const uint32_t icp_CB_BrBG_04[7]        = {        0x7, 0x000000, 0xa6611a, 0xdfc27d, 0x80cdc1, 0x018571, 0xffffff };
 
 /** Color scheme known as icp_CB_BrBG_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_BrBG_05[8]        = {        "8", "#000000", "#a6611a", "#dfc27d", "#f5f5f5", "#80cdc1", "#018571", "#ffffff" };
+extern const uint32_t icp_CB_BrBG_05[8]        = {        0x8, 0x000000, 0xa6611a, 0xdfc27d, 0xf5f5f5, 0x80cdc1, 0x018571, 0xffffff };
 
 /** Color scheme known as icp_CB_BrBG_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_BrBG_06[9]        = {        "9", "#000000", "#8c510a", "#d8b365", "#f6e8c3", "#c7eae5", "#5ab4ac", "#01665e", "#ffffff" };
+extern const uint32_t icp_CB_BrBG_06[9]        = {        0x9, 0x000000, 0x8c510a, 0xd8b365, 0xf6e8c3, 0xc7eae5, 0x5ab4ac, 0x01665e, 0xffffff };
 
 /** Color scheme known as icp_CB_BrBG_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_BrBG_07[10]       = {        "a", "#000000", "#8c510a", "#d8b365", "#f6e8c3", "#f5f5f5", "#c7eae5", "#5ab4ac", "#01665e", "#ffffff" };
+extern const uint32_t icp_CB_BrBG_07[10]       = {        0xa, 0x000000, 0x8c510a, 0xd8b365, 0xf6e8c3, 0xf5f5f5, 0xc7eae5, 0x5ab4ac, 0x01665e, 0xffffff };
 
 /** Color scheme known as icp_CB_BrBG_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_BrBG_08[11]       = {        "b", "#000000", "#8c510a", "#bf812d", "#dfc27d", "#f6e8c3", "#c7eae5", "#80cdc1", "#35978f", "#01665e", "#ffffff" };
+extern const uint32_t icp_CB_BrBG_08[11]       = {        0xb, 0x000000, 0x8c510a, 0xbf812d, 0xdfc27d, 0xf6e8c3, 0xc7eae5, 0x80cdc1, 0x35978f, 0x01665e, 0xffffff };
 
 /** Color scheme known as icp_CB_BrBG_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_BrBG_09[12]       = {        "c", "#000000", "#8c510a", "#bf812d", "#dfc27d", "#f6e8c3", "#f5f5f5", "#c7eae5", "#80cdc1", "#35978f", "#01665e", "#ffffff" };
+extern const uint32_t icp_CB_BrBG_09[12]       = {        0xc, 0x000000, 0x8c510a, 0xbf812d, 0xdfc27d, 0xf6e8c3, 0xf5f5f5, 0xc7eae5, 0x80cdc1, 0x35978f, 0x01665e, 0xffffff };
 
 /** Color scheme known as icp_CB_BrBG_10 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_BrBG_10[13]       = {        "d", "#000000", "#543005", "#8c510a", "#bf812d", "#dfc27d", "#f6e8c3", "#c7eae5", "#80cdc1", "#35978f", "#01665e", "#003c30", "#ffffff" };
+extern const uint32_t icp_CB_BrBG_10[13]       = {        0xd, 0x000000, 0x543005, 0x8c510a, 0xbf812d, 0xdfc27d, 0xf6e8c3, 0xc7eae5, 0x80cdc1, 0x35978f, 0x01665e, 0x003c30, 0xffffff };
 
 /** Color scheme known as icp_CB_BrBG_11 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_BrBG_11[14]       = {        "e", "#000000", "#543005", "#8c510a", "#bf812d", "#dfc27d", "#f6e8c3", "#f5f5f5", "#c7eae5", "#80cdc1", "#35978f", "#01665e", "#003c30", "#ffffff" };
+extern const uint32_t icp_CB_BrBG_11[14]       = {        0xe, 0x000000, 0x543005, 0x8c510a, 0xbf812d, 0xdfc27d, 0xf6e8c3, 0xf5f5f5, 0xc7eae5, 0x80cdc1, 0x35978f, 0x01665e, 0x003c30, 0xffffff };
 
 /** Color scheme known as icp_CB_BuGn_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_BuGn_03[6]        = {        "6", "#000000", "#e5f5f9", "#99d8c9", "#2ca25f", "#ffffff" };
+extern const uint32_t icp_CB_BuGn_03[6]        = {        0x6, 0x000000, 0xe5f5f9, 0x99d8c9, 0x2ca25f, 0xffffff };
 
 /** Color scheme known as icp_CB_BuGn_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_BuGn_04[7]        = {        "7", "#000000", "#edf8fb", "#b2e2e2", "#66c2a4", "#238b45", "#ffffff" };
+extern const uint32_t icp_CB_BuGn_04[7]        = {        0x7, 0x000000, 0xedf8fb, 0xb2e2e2, 0x66c2a4, 0x238b45, 0xffffff };
 
 /** Color scheme known as icp_CB_BuGn_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_BuGn_05[8]        = {        "8", "#000000", "#edf8fb", "#b2e2e2", "#66c2a4", "#2ca25f", "#006d2c", "#ffffff" };
+extern const uint32_t icp_CB_BuGn_05[8]        = {        0x8, 0x000000, 0xedf8fb, 0xb2e2e2, 0x66c2a4, 0x2ca25f, 0x006d2c, 0xffffff };
 
 /** Color scheme known as icp_CB_BuGn_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_BuGn_06[9]        = {        "9", "#000000", "#edf8fb", "#ccece6", "#99d8c9", "#66c2a4", "#2ca25f", "#006d2c", "#ffffff" };
+extern const uint32_t icp_CB_BuGn_06[9]        = {        0x9, 0x000000, 0xedf8fb, 0xccece6, 0x99d8c9, 0x66c2a4, 0x2ca25f, 0x006d2c, 0xffffff };
 
 /** Color scheme known as icp_CB_BuGn_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_BuGn_07[10]       = {        "a", "#000000", "#edf8fb", "#ccece6", "#99d8c9", "#66c2a4", "#41ae76", "#238b45", "#005824", "#ffffff" };
+extern const uint32_t icp_CB_BuGn_07[10]       = {        0xa, 0x000000, 0xedf8fb, 0xccece6, 0x99d8c9, 0x66c2a4, 0x41ae76, 0x238b45, 0x005824, 0xffffff };
 
 /** Color scheme known as icp_CB_BuGn_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_BuGn_08[11]       = {        "b", "#000000", "#f7fcfd", "#e5f5f9", "#ccece6", "#99d8c9", "#66c2a4", "#41ae76", "#238b45", "#005824", "#ffffff" };
+extern const uint32_t icp_CB_BuGn_08[11]       = {        0xb, 0x000000, 0xf7fcfd, 0xe5f5f9, 0xccece6, 0x99d8c9, 0x66c2a4, 0x41ae76, 0x238b45, 0x005824, 0xffffff };
 
 /** Color scheme known as icp_CB_BuGn_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_BuGn_09[12]       = {        "c", "#000000", "#f7fcfd", "#e5f5f9", "#ccece6", "#99d8c9", "#66c2a4", "#41ae76", "#238b45", "#006d2c", "#00441b", "#ffffff" };
+extern const uint32_t icp_CB_BuGn_09[12]       = {        0xc, 0x000000, 0xf7fcfd, 0xe5f5f9, 0xccece6, 0x99d8c9, 0x66c2a4, 0x41ae76, 0x238b45, 0x006d2c, 0x00441b, 0xffffff };
 
 /** Color scheme known as icp_CB_BuPu_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_BuPu_03[6]        = {        "6", "#000000", "#e0ecf4", "#9ebcda", "#8856a7", "#ffffff" };
+extern const uint32_t icp_CB_BuPu_03[6]        = {        0x6, 0x000000, 0xe0ecf4, 0x9ebcda, 0x8856a7, 0xffffff };
 
 /** Color scheme known as icp_CB_BuPu_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_BuPu_04[7]        = {        "7", "#000000", "#edf8fb", "#b3cde3", "#8c96c6", "#88419d", "#ffffff" };
+extern const uint32_t icp_CB_BuPu_04[7]        = {        0x7, 0x000000, 0xedf8fb, 0xb3cde3, 0x8c96c6, 0x88419d, 0xffffff };
 
 /** Color scheme known as icp_CB_BuPu_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_BuPu_05[8]        = {        "8", "#000000", "#edf8fb", "#b3cde3", "#8c96c6", "#8856a7", "#810f7c", "#ffffff" };
+extern const uint32_t icp_CB_BuPu_05[8]        = {        0x8, 0x000000, 0xedf8fb, 0xb3cde3, 0x8c96c6, 0x8856a7, 0x810f7c, 0xffffff };
 
 /** Color scheme known as icp_CB_BuPu_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_BuPu_06[9]        = {        "9", "#000000", "#edf8fb", "#bfd3e6", "#9ebcda", "#8c96c6", "#8856a7", "#810f7c", "#ffffff" };
+extern const uint32_t icp_CB_BuPu_06[9]        = {        0x9, 0x000000, 0xedf8fb, 0xbfd3e6, 0x9ebcda, 0x8c96c6, 0x8856a7, 0x810f7c, 0xffffff };
 
 /** Color scheme known as icp_CB_BuPu_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_BuPu_07[10]       = {        "a", "#000000", "#edf8fb", "#bfd3e6", "#9ebcda", "#8c96c6", "#8c6bb1", "#88419d", "#6e016b", "#ffffff" };
+extern const uint32_t icp_CB_BuPu_07[10]       = {        0xa, 0x000000, 0xedf8fb, 0xbfd3e6, 0x9ebcda, 0x8c96c6, 0x8c6bb1, 0x88419d, 0x6e016b, 0xffffff };
 
 /** Color scheme known as icp_CB_BuPu_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_BuPu_08[11]       = {        "b", "#000000", "#f7fcfd", "#e0ecf4", "#bfd3e6", "#9ebcda", "#8c96c6", "#8c6bb1", "#88419d", "#6e016b", "#ffffff" };
+extern const uint32_t icp_CB_BuPu_08[11]       = {        0xb, 0x000000, 0xf7fcfd, 0xe0ecf4, 0xbfd3e6, 0x9ebcda, 0x8c96c6, 0x8c6bb1, 0x88419d, 0x6e016b, 0xffffff };
 
 /** Color scheme known as icp_CB_BuPu_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_BuPu_09[12]       = {        "c", "#000000", "#f7fcfd", "#e0ecf4", "#bfd3e6", "#9ebcda", "#8c96c6", "#8c6bb1", "#88419d", "#810f7c", "#4d004b", "#ffffff" };
+extern const uint32_t icp_CB_BuPu_09[12]       = {        0xc, 0x000000, 0xf7fcfd, 0xe0ecf4, 0xbfd3e6, 0x9ebcda, 0x8c96c6, 0x8c6bb1, 0x88419d, 0x810f7c, 0x4d004b, 0xffffff };
 
 /** Color scheme known as icp_CB_Dark2_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Dark2_03[6]       = {        "6", "#000000", "#1b9e77", "#d95f02", "#7570b3", "#ffffff" };
+extern const uint32_t icp_CB_Dark2_03[6]       = {        0x6, 0x000000, 0x1b9e77, 0xd95f02, 0x7570b3, 0xffffff };
 
 /** Color scheme known as icp_CB_Dark2_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Dark2_04[7]       = {        "7", "#000000", "#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#ffffff" };
+extern const uint32_t icp_CB_Dark2_04[7]       = {        0x7, 0x000000, 0x1b9e77, 0xd95f02, 0x7570b3, 0xe7298a, 0xffffff };
 
 /** Color scheme known as icp_CB_Dark2_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Dark2_05[8]       = {        "8", "#000000", "#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e", "#ffffff" };
+extern const uint32_t icp_CB_Dark2_05[8]       = {        0x8, 0x000000, 0x1b9e77, 0xd95f02, 0x7570b3, 0xe7298a, 0x66a61e, 0xffffff };
 
 /** Color scheme known as icp_CB_Dark2_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Dark2_06[9]       = {        "9", "#000000", "#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e", "#e6ab02", "#ffffff" };
+extern const uint32_t icp_CB_Dark2_06[9]       = {        0x9, 0x000000, 0x1b9e77, 0xd95f02, 0x7570b3, 0xe7298a, 0x66a61e, 0xe6ab02, 0xffffff };
 
 /** Color scheme known as icp_CB_Dark2_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Dark2_07[10]      = {        "a", "#000000", "#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e", "#e6ab02", "#a6761d", "#ffffff" };
+extern const uint32_t icp_CB_Dark2_07[10]      = {        0xa, 0x000000, 0x1b9e77, 0xd95f02, 0x7570b3, 0xe7298a, 0x66a61e, 0xe6ab02, 0xa6761d, 0xffffff };
 
 /** Color scheme known as icp_CB_Dark2_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Dark2_08[11]      = {        "b", "#000000", "#1b9e77", "#d95f02", "#7570b3", "#e7298a", "#66a61e", "#e6ab02", "#a6761d", "#666666", "#ffffff" };
+extern const uint32_t icp_CB_Dark2_08[11]      = {        0xb, 0x000000, 0x1b9e77, 0xd95f02, 0x7570b3, 0xe7298a, 0x66a61e, 0xe6ab02, 0xa6761d, 0x666666, 0xffffff };
 
 /** Color scheme known as icp_CB_GnBu_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_GnBu_03[6]        = {        "6", "#000000", "#e0f3db", "#a8ddb5", "#43a2ca", "#ffffff" };
+extern const uint32_t icp_CB_GnBu_03[6]        = {        0x6, 0x000000, 0xe0f3db, 0xa8ddb5, 0x43a2ca, 0xffffff };
 
 /** Color scheme known as icp_CB_GnBu_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_GnBu_04[7]        = {        "7", "#000000", "#f0f9e8", "#bae4bc", "#7bccc4", "#2b8cbe", "#ffffff" };
+extern const uint32_t icp_CB_GnBu_04[7]        = {        0x7, 0x000000, 0xf0f9e8, 0xbae4bc, 0x7bccc4, 0x2b8cbe, 0xffffff };
 
 /** Color scheme known as icp_CB_GnBu_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_GnBu_05[8]        = {        "8", "#000000", "#f0f9e8", "#bae4bc", "#7bccc4", "#43a2ca", "#0868ac", "#ffffff" };
+extern const uint32_t icp_CB_GnBu_05[8]        = {        0x8, 0x000000, 0xf0f9e8, 0xbae4bc, 0x7bccc4, 0x43a2ca, 0x0868ac, 0xffffff };
 
 /** Color scheme known as icp_CB_GnBu_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_GnBu_06[9]        = {        "9", "#000000", "#f0f9e8", "#ccebc5", "#a8ddb5", "#7bccc4", "#43a2ca", "#0868ac", "#ffffff" };
+extern const uint32_t icp_CB_GnBu_06[9]        = {        0x9, 0x000000, 0xf0f9e8, 0xccebc5, 0xa8ddb5, 0x7bccc4, 0x43a2ca, 0x0868ac, 0xffffff };
 
 /** Color scheme known as icp_CB_GnBu_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_GnBu_07[10]       = {        "a", "#000000", "#f0f9e8", "#ccebc5", "#a8ddb5", "#7bccc4", "#4eb3d3", "#2b8cbe", "#08589e", "#ffffff" };
+extern const uint32_t icp_CB_GnBu_07[10]       = {        0xa, 0x000000, 0xf0f9e8, 0xccebc5, 0xa8ddb5, 0x7bccc4, 0x4eb3d3, 0x2b8cbe, 0x08589e, 0xffffff };
 
 /** Color scheme known as icp_CB_GnBu_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_GnBu_08[11]       = {        "b", "#000000", "#f7fcf0", "#e0f3db", "#ccebc5", "#a8ddb5", "#7bccc4", "#4eb3d3", "#2b8cbe", "#08589e", "#ffffff" };
+extern const uint32_t icp_CB_GnBu_08[11]       = {        0xb, 0x000000, 0xf7fcf0, 0xe0f3db, 0xccebc5, 0xa8ddb5, 0x7bccc4, 0x4eb3d3, 0x2b8cbe, 0x08589e, 0xffffff };
 
 /** Color scheme known as icp_CB_GnBu_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_GnBu_09[12]       = {        "c", "#000000", "#f7fcf0", "#e0f3db", "#ccebc5", "#a8ddb5", "#7bccc4", "#4eb3d3", "#2b8cbe", "#0868ac", "#084081", "#ffffff" };
+extern const uint32_t icp_CB_GnBu_09[12]       = {        0xc, 0x000000, 0xf7fcf0, 0xe0f3db, 0xccebc5, 0xa8ddb5, 0x7bccc4, 0x4eb3d3, 0x2b8cbe, 0x0868ac, 0x084081, 0xffffff };
 
 /** Color scheme known as icp_CB_Greens_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Greens_03[6]      = {        "6", "#000000", "#e5f5e0", "#a1d99b", "#31a354", "#ffffff" };
+extern const uint32_t icp_CB_Greens_03[6]      = {        0x6, 0x000000, 0xe5f5e0, 0xa1d99b, 0x31a354, 0xffffff };
 
 /** Color scheme known as icp_CB_Greens_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Greens_04[7]      = {        "7", "#000000", "#edf8e9", "#bae4b3", "#74c476", "#238b45", "#ffffff" };
+extern const uint32_t icp_CB_Greens_04[7]      = {        0x7, 0x000000, 0xedf8e9, 0xbae4b3, 0x74c476, 0x238b45, 0xffffff };
 
 /** Color scheme known as icp_CB_Greens_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Greens_05[8]      = {        "8", "#000000", "#edf8e9", "#bae4b3", "#74c476", "#31a354", "#006d2c", "#ffffff" };
+extern const uint32_t icp_CB_Greens_05[8]      = {        0x8, 0x000000, 0xedf8e9, 0xbae4b3, 0x74c476, 0x31a354, 0x006d2c, 0xffffff };
 
 /** Color scheme known as icp_CB_Greens_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Greens_06[9]      = {        "9", "#000000", "#edf8e9", "#c7e9c0", "#a1d99b", "#74c476", "#31a354", "#006d2c", "#ffffff" };
+extern const uint32_t icp_CB_Greens_06[9]      = {        0x9, 0x000000, 0xedf8e9, 0xc7e9c0, 0xa1d99b, 0x74c476, 0x31a354, 0x006d2c, 0xffffff };
 
 /** Color scheme known as icp_CB_Greens_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Greens_07[10]     = {        "a", "#000000", "#edf8e9", "#c7e9c0", "#a1d99b", "#74c476", "#41ab5d", "#238b45", "#005a32", "#ffffff" };
+extern const uint32_t icp_CB_Greens_07[10]     = {        0xa, 0x000000, 0xedf8e9, 0xc7e9c0, 0xa1d99b, 0x74c476, 0x41ab5d, 0x238b45, 0x005a32, 0xffffff };
 
 /** Color scheme known as icp_CB_Greens_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Greens_08[11]     = {        "b", "#000000", "#f7fcf5", "#e5f5e0", "#c7e9c0", "#a1d99b", "#74c476", "#41ab5d", "#238b45", "#005a32", "#ffffff" };
+extern const uint32_t icp_CB_Greens_08[11]     = {        0xb, 0x000000, 0xf7fcf5, 0xe5f5e0, 0xc7e9c0, 0xa1d99b, 0x74c476, 0x41ab5d, 0x238b45, 0x005a32, 0xffffff };
 
 /** Color scheme known as icp_CB_Greens_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Greens_09[12]     = {        "c", "#000000", "#f7fcf5", "#e5f5e0", "#c7e9c0", "#a1d99b", "#74c476", "#41ab5d", "#238b45", "#006d2c", "#00441b", "#ffffff" };
+extern const uint32_t icp_CB_Greens_09[12]     = {        0xc, 0x000000, 0xf7fcf5, 0xe5f5e0, 0xc7e9c0, 0xa1d99b, 0x74c476, 0x41ab5d, 0x238b45, 0x006d2c, 0x00441b, 0xffffff };
 
 /** Color scheme known as icp_CB_Greys_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Greys_03[6]       = {        "6", "#000000", "#f0f0f0", "#bdbdbd", "#636363", "#ffffff" };
+extern const uint32_t icp_CB_Greys_03[6]       = {        0x6, 0x000000, 0xf0f0f0, 0xbdbdbd, 0x636363, 0xffffff };
 
 /** Color scheme known as icp_CB_Greys_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Greys_04[7]       = {        "7", "#000000", "#f7f7f7", "#cccccc", "#969696", "#525252", "#ffffff" };
+extern const uint32_t icp_CB_Greys_04[7]       = {        0x7, 0x000000, 0xf7f7f7, 0xcccccc, 0x969696, 0x525252, 0xffffff };
 
 /** Color scheme known as icp_CB_Greys_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Greys_05[8]       = {        "8", "#000000", "#f7f7f7", "#cccccc", "#969696", "#636363", "#252525", "#ffffff" };
+extern const uint32_t icp_CB_Greys_05[8]       = {        0x8, 0x000000, 0xf7f7f7, 0xcccccc, 0x969696, 0x636363, 0x252525, 0xffffff };
 
 /** Color scheme known as icp_CB_Greys_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Greys_06[9]       = {        "9", "#000000", "#f7f7f7", "#d9d9d9", "#bdbdbd", "#969696", "#636363", "#252525", "#ffffff" };
+extern const uint32_t icp_CB_Greys_06[9]       = {        0x9, 0x000000, 0xf7f7f7, 0xd9d9d9, 0xbdbdbd, 0x969696, 0x636363, 0x252525, 0xffffff };
 
 /** Color scheme known as icp_CB_Greys_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Greys_07[10]      = {        "a", "#000000", "#f7f7f7", "#d9d9d9", "#bdbdbd", "#969696", "#737373", "#525252", "#252525", "#ffffff" };
+extern const uint32_t icp_CB_Greys_07[10]      = {        0xa, 0x000000, 0xf7f7f7, 0xd9d9d9, 0xbdbdbd, 0x969696, 0x737373, 0x525252, 0x252525, 0xffffff };
 
 /** Color scheme known as icp_CB_Greys_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Greys_08[11]      = {        "b", "#000000", "#ffffff", "#f0f0f0", "#d9d9d9", "#bdbdbd", "#969696", "#737373", "#525252", "#252525", "#ffffff" };
+extern const uint32_t icp_CB_Greys_08[11]      = {        0xb, 0x000000, 0xffffff, 0xf0f0f0, 0xd9d9d9, 0xbdbdbd, 0x969696, 0x737373, 0x525252, 0x252525, 0xffffff };
 
 /** Color scheme known as icp_CB_Greys_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Greys_09[12]      = {        "c", "#000000", "#ffffff", "#f0f0f0", "#d9d9d9", "#bdbdbd", "#969696", "#737373", "#525252", "#252525", "#000000", "#ffffff" };
+extern const uint32_t icp_CB_Greys_09[12]      = {        0xc, 0x000000, 0xffffff, 0xf0f0f0, 0xd9d9d9, 0xbdbdbd, 0x969696, 0x737373, 0x525252, 0x252525, 0x000000, 0xffffff };
 
 /** Color scheme known as icp_CB_OrRd_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_OrRd_03[6]        = {        "6", "#000000", "#fee8c8", "#fdbb84", "#e34a33", "#ffffff" };
+extern const uint32_t icp_CB_OrRd_03[6]        = {        0x6, 0x000000, 0xfee8c8, 0xfdbb84, 0xe34a33, 0xffffff };
 
 /** Color scheme known as icp_CB_OrRd_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_OrRd_04[7]        = {        "7", "#000000", "#fef0d9", "#fdcc8a", "#fc8d59", "#d7301f", "#ffffff" };
+extern const uint32_t icp_CB_OrRd_04[7]        = {        0x7, 0x000000, 0xfef0d9, 0xfdcc8a, 0xfc8d59, 0xd7301f, 0xffffff };
 
 /** Color scheme known as icp_CB_OrRd_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_OrRd_05[8]        = {        "8", "#000000", "#fef0d9", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000", "#ffffff" };
+extern const uint32_t icp_CB_OrRd_05[8]        = {        0x8, 0x000000, 0xfef0d9, 0xfdcc8a, 0xfc8d59, 0xe34a33, 0xb30000, 0xffffff };
 
 /** Color scheme known as icp_CB_OrRd_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_OrRd_06[9]        = {        "9", "#000000", "#fef0d9", "#fdd49e", "#fdbb84", "#fc8d59", "#e34a33", "#b30000", "#ffffff" };
+extern const uint32_t icp_CB_OrRd_06[9]        = {        0x9, 0x000000, 0xfef0d9, 0xfdd49e, 0xfdbb84, 0xfc8d59, 0xe34a33, 0xb30000, 0xffffff };
 
 /** Color scheme known as icp_CB_OrRd_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_OrRd_07[10]       = {        "a", "#000000", "#fef0d9", "#fdd49e", "#fdbb84", "#fc8d59", "#ef6548", "#d7301f", "#990000", "#ffffff" };
+extern const uint32_t icp_CB_OrRd_07[10]       = {        0xa, 0x000000, 0xfef0d9, 0xfdd49e, 0xfdbb84, 0xfc8d59, 0xef6548, 0xd7301f, 0x990000, 0xffffff };
 
 /** Color scheme known as icp_CB_OrRd_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_OrRd_08[11]       = {        "b", "#000000", "#fff7ec", "#fee8c8", "#fdd49e", "#fdbb84", "#fc8d59", "#ef6548", "#d7301f", "#990000", "#ffffff" };
+extern const uint32_t icp_CB_OrRd_08[11]       = {        0xb, 0x000000, 0xfff7ec, 0xfee8c8, 0xfdd49e, 0xfdbb84, 0xfc8d59, 0xef6548, 0xd7301f, 0x990000, 0xffffff };
 
 /** Color scheme known as icp_CB_OrRd_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_OrRd_09[12]       = {        "c", "#000000", "#fff7ec", "#fee8c8", "#fdd49e", "#fdbb84", "#fc8d59", "#ef6548", "#d7301f", "#b30000", "#7f0000", "#ffffff" };
+extern const uint32_t icp_CB_OrRd_09[12]       = {        0xc, 0x000000, 0xfff7ec, 0xfee8c8, 0xfdd49e, 0xfdbb84, 0xfc8d59, 0xef6548, 0xd7301f, 0xb30000, 0x7f0000, 0xffffff };
 
 /** Color scheme known as icp_CB_Oranges_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Oranges_03[6]     = {        "6", "#000000", "#fee6ce", "#fdae6b", "#e6550d", "#ffffff" };
+extern const uint32_t icp_CB_Oranges_03[6]     = {        0x6, 0x000000, 0xfee6ce, 0xfdae6b, 0xe6550d, 0xffffff };
 
 /** Color scheme known as icp_CB_Oranges_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Oranges_04[7]     = {        "7", "#000000", "#feedde", "#fdbe85", "#fd8d3c", "#d94701", "#ffffff" };
+extern const uint32_t icp_CB_Oranges_04[7]     = {        0x7, 0x000000, 0xfeedde, 0xfdbe85, 0xfd8d3c, 0xd94701, 0xffffff };
 
 /** Color scheme known as icp_CB_Oranges_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Oranges_05[8]     = {        "8", "#000000", "#feedde", "#fdbe85", "#fd8d3c", "#e6550d", "#a63603", "#ffffff" };
+extern const uint32_t icp_CB_Oranges_05[8]     = {        0x8, 0x000000, 0xfeedde, 0xfdbe85, 0xfd8d3c, 0xe6550d, 0xa63603, 0xffffff };
 
 /** Color scheme known as icp_CB_Oranges_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Oranges_06[9]     = {        "9", "#000000", "#feedde", "#fdd0a2", "#fdae6b", "#fd8d3c", "#e6550d", "#a63603", "#ffffff" };
+extern const uint32_t icp_CB_Oranges_06[9]     = {        0x9, 0x000000, 0xfeedde, 0xfdd0a2, 0xfdae6b, 0xfd8d3c, 0xe6550d, 0xa63603, 0xffffff };
 
 /** Color scheme known as icp_CB_Oranges_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Oranges_07[10]    = {        "a", "#000000", "#feedde", "#fdd0a2", "#fdae6b", "#fd8d3c", "#f16913", "#d94801", "#8c2d04", "#ffffff" };
+extern const uint32_t icp_CB_Oranges_07[10]    = {        0xa, 0x000000, 0xfeedde, 0xfdd0a2, 0xfdae6b, 0xfd8d3c, 0xf16913, 0xd94801, 0x8c2d04, 0xffffff };
 
 /** Color scheme known as icp_CB_Oranges_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Oranges_08[11]    = {        "b", "#000000", "#fff5eb", "#fee6ce", "#fdd0a2", "#fdae6b", "#fd8d3c", "#f16913", "#d94801", "#8c2d04", "#ffffff" };
+extern const uint32_t icp_CB_Oranges_08[11]    = {        0xb, 0x000000, 0xfff5eb, 0xfee6ce, 0xfdd0a2, 0xfdae6b, 0xfd8d3c, 0xf16913, 0xd94801, 0x8c2d04, 0xffffff };
 
 /** Color scheme known as icp_CB_Oranges_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Oranges_09[12]    = {        "c", "#000000", "#fff5eb", "#fee6ce", "#fdd0a2", "#fdae6b", "#fd8d3c", "#f16913", "#d94801", "#a63603", "#7f2704", "#ffffff" };
+extern const uint32_t icp_CB_Oranges_09[12]    = {        0xc, 0x000000, 0xfff5eb, 0xfee6ce, 0xfdd0a2, 0xfdae6b, 0xfd8d3c, 0xf16913, 0xd94801, 0xa63603, 0x7f2704, 0xffffff };
 
 /** Color scheme known as icp_CB_PRGn_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PRGn_03[6]        = {        "6", "#000000", "#af8dc3", "#f7f7f7", "#7fbf7b", "#ffffff" };
+extern const uint32_t icp_CB_PRGn_03[6]        = {        0x6, 0x000000, 0xaf8dc3, 0xf7f7f7, 0x7fbf7b, 0xffffff };
 
 /** Color scheme known as icp_CB_PRGn_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PRGn_04[7]        = {        "7", "#000000", "#7b3294", "#c2a5cf", "#a6dba0", "#008837", "#ffffff" };
+extern const uint32_t icp_CB_PRGn_04[7]        = {        0x7, 0x000000, 0x7b3294, 0xc2a5cf, 0xa6dba0, 0x008837, 0xffffff };
 
 /** Color scheme known as icp_CB_PRGn_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PRGn_05[8]        = {        "8", "#000000", "#7b3294", "#c2a5cf", "#f7f7f7", "#a6dba0", "#008837", "#ffffff" };
+extern const uint32_t icp_CB_PRGn_05[8]        = {        0x8, 0x000000, 0x7b3294, 0xc2a5cf, 0xf7f7f7, 0xa6dba0, 0x008837, 0xffffff };
 
 /** Color scheme known as icp_CB_PRGn_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PRGn_06[9]        = {        "9", "#000000", "#762a83", "#af8dc3", "#e7d4e8", "#d9f0d3", "#7fbf7b", "#1b7837", "#ffffff" };
+extern const uint32_t icp_CB_PRGn_06[9]        = {        0x9, 0x000000, 0x762a83, 0xaf8dc3, 0xe7d4e8, 0xd9f0d3, 0x7fbf7b, 0x1b7837, 0xffffff };
 
 /** Color scheme known as icp_CB_PRGn_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PRGn_07[10]       = {        "a", "#000000", "#762a83", "#af8dc3", "#e7d4e8", "#f7f7f7", "#d9f0d3", "#7fbf7b", "#1b7837", "#ffffff" };
+extern const uint32_t icp_CB_PRGn_07[10]       = {        0xa, 0x000000, 0x762a83, 0xaf8dc3, 0xe7d4e8, 0xf7f7f7, 0xd9f0d3, 0x7fbf7b, 0x1b7837, 0xffffff };
 
 /** Color scheme known as icp_CB_PRGn_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PRGn_08[11]       = {        "b", "#000000", "#762a83", "#9970ab", "#c2a5cf", "#e7d4e8", "#d9f0d3", "#a6dba0", "#5aae61", "#1b7837", "#ffffff" };
+extern const uint32_t icp_CB_PRGn_08[11]       = {        0xb, 0x000000, 0x762a83, 0x9970ab, 0xc2a5cf, 0xe7d4e8, 0xd9f0d3, 0xa6dba0, 0x5aae61, 0x1b7837, 0xffffff };
 
 /** Color scheme known as icp_CB_PRGn_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PRGn_09[12]       = {        "c", "#000000", "#762a83", "#9970ab", "#c2a5cf", "#e7d4e8", "#f7f7f7", "#d9f0d3", "#a6dba0", "#5aae61", "#1b7837", "#ffffff" };
+extern const uint32_t icp_CB_PRGn_09[12]       = {        0xc, 0x000000, 0x762a83, 0x9970ab, 0xc2a5cf, 0xe7d4e8, 0xf7f7f7, 0xd9f0d3, 0xa6dba0, 0x5aae61, 0x1b7837, 0xffffff };
 
 /** Color scheme known as icp_CB_PRGn_10 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PRGn_10[13]       = {        "d", "#000000", "#40004b", "#762a83", "#9970ab", "#c2a5cf", "#e7d4e8", "#d9f0d3", "#a6dba0", "#5aae61", "#1b7837", "#00441b", "#ffffff" };
+extern const uint32_t icp_CB_PRGn_10[13]       = {        0xd, 0x000000, 0x40004b, 0x762a83, 0x9970ab, 0xc2a5cf, 0xe7d4e8, 0xd9f0d3, 0xa6dba0, 0x5aae61, 0x1b7837, 0x00441b, 0xffffff };
 
 /** Color scheme known as icp_CB_PRGn_11 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PRGn_11[14]       = {        "e", "#000000", "#40004b", "#762a83", "#9970ab", "#c2a5cf", "#e7d4e8", "#f7f7f7", "#d9f0d3", "#a6dba0", "#5aae61", "#1b7837", "#00441b", "#ffffff" };
+extern const uint32_t icp_CB_PRGn_11[14]       = {        0xe, 0x000000, 0x40004b, 0x762a83, 0x9970ab, 0xc2a5cf, 0xe7d4e8, 0xf7f7f7, 0xd9f0d3, 0xa6dba0, 0x5aae61, 0x1b7837, 0x00441b, 0xffffff };
 
 /** Color scheme known as icp_CB_Paired_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Paired_03[6]      = {        "6", "#000000", "#a6cee3", "#1f78b4", "#b2df8a", "#ffffff" };
+extern const uint32_t icp_CB_Paired_03[6]      = {        0x6, 0x000000, 0xa6cee3, 0x1f78b4, 0xb2df8a, 0xffffff };
 
 /** Color scheme known as icp_CB_Paired_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Paired_04[7]      = {        "7", "#000000", "#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#ffffff" };
+extern const uint32_t icp_CB_Paired_04[7]      = {        0x7, 0x000000, 0xa6cee3, 0x1f78b4, 0xb2df8a, 0x33a02c, 0xffffff };
 
 /** Color scheme known as icp_CB_Paired_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Paired_05[8]      = {        "8", "#000000", "#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#ffffff" };
+extern const uint32_t icp_CB_Paired_05[8]      = {        0x8, 0x000000, 0xa6cee3, 0x1f78b4, 0xb2df8a, 0x33a02c, 0xfb9a99, 0xffffff };
 
 /** Color scheme known as icp_CB_Paired_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Paired_06[9]      = {        "9", "#000000", "#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#ffffff" };
+extern const uint32_t icp_CB_Paired_06[9]      = {        0x9, 0x000000, 0xa6cee3, 0x1f78b4, 0xb2df8a, 0x33a02c, 0xfb9a99, 0xe31a1c, 0xffffff };
 
 /** Color scheme known as icp_CB_Paired_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Paired_07[10]     = {        "a", "#000000", "#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ffffff" };
+extern const uint32_t icp_CB_Paired_07[10]     = {        0xa, 0x000000, 0xa6cee3, 0x1f78b4, 0xb2df8a, 0x33a02c, 0xfb9a99, 0xe31a1c, 0xfdbf6f, 0xffffff };
 
 /** Color scheme known as icp_CB_Paired_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Paired_08[11]     = {        "b", "#000000", "#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#ffffff" };
+extern const uint32_t icp_CB_Paired_08[11]     = {        0xb, 0x000000, 0xa6cee3, 0x1f78b4, 0xb2df8a, 0x33a02c, 0xfb9a99, 0xe31a1c, 0xfdbf6f, 0xff7f00, 0xffffff };
 
 /** Color scheme known as icp_CB_Paired_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Paired_09[12]     = {        "c", "#000000", "#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#cab2d6", "#ffffff" };
+extern const uint32_t icp_CB_Paired_09[12]     = {        0xc, 0x000000, 0xa6cee3, 0x1f78b4, 0xb2df8a, 0x33a02c, 0xfb9a99, 0xe31a1c, 0xfdbf6f, 0xff7f00, 0xcab2d6, 0xffffff };
 
 /** Color scheme known as icp_CB_Paired_10 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Paired_10[13]     = {        "d", "#000000", "#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#cab2d6", "#6a3d9a", "#ffffff" };
+extern const uint32_t icp_CB_Paired_10[13]     = {        0xd, 0x000000, 0xa6cee3, 0x1f78b4, 0xb2df8a, 0x33a02c, 0xfb9a99, 0xe31a1c, 0xfdbf6f, 0xff7f00, 0xcab2d6, 0x6a3d9a, 0xffffff };
 
 /** Color scheme known as icp_CB_Paired_11 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Paired_11[14]     = {        "e", "#000000", "#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#cab2d6", "#6a3d9a", "#ffff99", "#ffffff" };
+extern const uint32_t icp_CB_Paired_11[14]     = {        0xe, 0x000000, 0xa6cee3, 0x1f78b4, 0xb2df8a, 0x33a02c, 0xfb9a99, 0xe31a1c, 0xfdbf6f, 0xff7f00, 0xcab2d6, 0x6a3d9a, 0xffff99, 0xffffff };
 
 /** Color scheme known as icp_CB_Paired_12 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Paired_12[15]     = {        "f", "#000000", "#a6cee3", "#1f78b4", "#b2df8a", "#33a02c", "#fb9a99", "#e31a1c", "#fdbf6f", "#ff7f00", "#cab2d6", "#6a3d9a", "#ffff99", "#b15928", "#ffffff" };
+extern const uint32_t icp_CB_Paired_12[15]     = {        0xf, 0x000000, 0xa6cee3, 0x1f78b4, 0xb2df8a, 0x33a02c, 0xfb9a99, 0xe31a1c, 0xfdbf6f, 0xff7f00, 0xcab2d6, 0x6a3d9a, 0xffff99, 0xb15928, 0xffffff };
 
 /** Color scheme known as icp_CB_Pastel1_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Pastel1_03[6]     = {        "6", "#000000", "#fbb4ae", "#b3cde3", "#ccebc5", "#ffffff" };
+extern const uint32_t icp_CB_Pastel1_03[6]     = {        0x6, 0x000000, 0xfbb4ae, 0xb3cde3, 0xccebc5, 0xffffff };
 
 /** Color scheme known as icp_CB_Pastel1_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Pastel1_04[7]     = {        "7", "#000000", "#fbb4ae", "#b3cde3", "#ccebc5", "#decbe4", "#ffffff" };
+extern const uint32_t icp_CB_Pastel1_04[7]     = {        0x7, 0x000000, 0xfbb4ae, 0xb3cde3, 0xccebc5, 0xdecbe4, 0xffffff };
 
 /** Color scheme known as icp_CB_Pastel1_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Pastel1_05[8]     = {        "8", "#000000", "#fbb4ae", "#b3cde3", "#ccebc5", "#decbe4", "#fed9a6", "#ffffff" };
+extern const uint32_t icp_CB_Pastel1_05[8]     = {        0x8, 0x000000, 0xfbb4ae, 0xb3cde3, 0xccebc5, 0xdecbe4, 0xfed9a6, 0xffffff };
 
 /** Color scheme known as icp_CB_Pastel1_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Pastel1_06[9]     = {        "9", "#000000", "#fbb4ae", "#b3cde3", "#ccebc5", "#decbe4", "#fed9a6", "#ffffcc", "#ffffff" };
+extern const uint32_t icp_CB_Pastel1_06[9]     = {        0x9, 0x000000, 0xfbb4ae, 0xb3cde3, 0xccebc5, 0xdecbe4, 0xfed9a6, 0xffffcc, 0xffffff };
 
 /** Color scheme known as icp_CB_Pastel1_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Pastel1_07[10]    = {        "a", "#000000", "#fbb4ae", "#b3cde3", "#ccebc5", "#decbe4", "#fed9a6", "#ffffcc", "#e5d8bd", "#ffffff" };
+extern const uint32_t icp_CB_Pastel1_07[10]    = {        0xa, 0x000000, 0xfbb4ae, 0xb3cde3, 0xccebc5, 0xdecbe4, 0xfed9a6, 0xffffcc, 0xe5d8bd, 0xffffff };
 
 /** Color scheme known as icp_CB_Pastel1_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Pastel1_08[11]    = {        "b", "#000000", "#fbb4ae", "#b3cde3", "#ccebc5", "#decbe4", "#fed9a6", "#ffffcc", "#e5d8bd", "#fddaec", "#ffffff" };
+extern const uint32_t icp_CB_Pastel1_08[11]    = {        0xb, 0x000000, 0xfbb4ae, 0xb3cde3, 0xccebc5, 0xdecbe4, 0xfed9a6, 0xffffcc, 0xe5d8bd, 0xfddaec, 0xffffff };
 
 /** Color scheme known as icp_CB_Pastel1_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Pastel1_09[12]    = {        "c", "#000000", "#fbb4ae", "#b3cde3", "#ccebc5", "#decbe4", "#fed9a6", "#ffffcc", "#e5d8bd", "#fddaec", "#f2f2f2", "#ffffff" };
+extern const uint32_t icp_CB_Pastel1_09[12]    = {        0xc, 0x000000, 0xfbb4ae, 0xb3cde3, 0xccebc5, 0xdecbe4, 0xfed9a6, 0xffffcc, 0xe5d8bd, 0xfddaec, 0xf2f2f2, 0xffffff };
 
 /** Color scheme known as icp_CB_Pastel2_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Pastel2_03[6]     = {        "6", "#000000", "#b3e2cd", "#fdcdac", "#cbd5e8", "#ffffff" };
+extern const uint32_t icp_CB_Pastel2_03[6]     = {        0x6, 0x000000, 0xb3e2cd, 0xfdcdac, 0xcbd5e8, 0xffffff };
 
 /** Color scheme known as icp_CB_Pastel2_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Pastel2_04[7]     = {        "7", "#000000", "#b3e2cd", "#fdcdac", "#cbd5e8", "#f4cae4", "#ffffff" };
+extern const uint32_t icp_CB_Pastel2_04[7]     = {        0x7, 0x000000, 0xb3e2cd, 0xfdcdac, 0xcbd5e8, 0xf4cae4, 0xffffff };
 
 /** Color scheme known as icp_CB_Pastel2_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Pastel2_05[8]     = {        "8", "#000000", "#b3e2cd", "#fdcdac", "#cbd5e8", "#f4cae4", "#e6f5c9", "#ffffff" };
+extern const uint32_t icp_CB_Pastel2_05[8]     = {        0x8, 0x000000, 0xb3e2cd, 0xfdcdac, 0xcbd5e8, 0xf4cae4, 0xe6f5c9, 0xffffff };
 
 /** Color scheme known as icp_CB_Pastel2_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Pastel2_06[9]     = {        "9", "#000000", "#b3e2cd", "#fdcdac", "#cbd5e8", "#f4cae4", "#e6f5c9", "#fff2ae", "#ffffff" };
+extern const uint32_t icp_CB_Pastel2_06[9]     = {        0x9, 0x000000, 0xb3e2cd, 0xfdcdac, 0xcbd5e8, 0xf4cae4, 0xe6f5c9, 0xfff2ae, 0xffffff };
 
 /** Color scheme known as icp_CB_Pastel2_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Pastel2_07[10]    = {        "a", "#000000", "#b3e2cd", "#fdcdac", "#cbd5e8", "#f4cae4", "#e6f5c9", "#fff2ae", "#f1e2cc", "#ffffff" };
+extern const uint32_t icp_CB_Pastel2_07[10]    = {        0xa, 0x000000, 0xb3e2cd, 0xfdcdac, 0xcbd5e8, 0xf4cae4, 0xe6f5c9, 0xfff2ae, 0xf1e2cc, 0xffffff };
 
 /** Color scheme known as icp_CB_Pastel2_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Pastel2_08[11]    = {        "b", "#000000", "#b3e2cd", "#fdcdac", "#cbd5e8", "#f4cae4", "#e6f5c9", "#fff2ae", "#f1e2cc", "#cccccc", "#ffffff" };
+extern const uint32_t icp_CB_Pastel2_08[11]    = {        0xb, 0x000000, 0xb3e2cd, 0xfdcdac, 0xcbd5e8, 0xf4cae4, 0xe6f5c9, 0xfff2ae, 0xf1e2cc, 0xcccccc, 0xffffff };
 
 /** Color scheme known as icp_CB_PiYG_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PiYG_03[6]        = {        "6", "#000000", "#e9a3c9", "#f7f7f7", "#a1d76a", "#ffffff" };
+extern const uint32_t icp_CB_PiYG_03[6]        = {        0x6, 0x000000, 0xe9a3c9, 0xf7f7f7, 0xa1d76a, 0xffffff };
 
 /** Color scheme known as icp_CB_PiYG_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PiYG_04[7]        = {        "7", "#000000", "#d01c8b", "#f1b6da", "#b8e186", "#4dac26", "#ffffff" };
+extern const uint32_t icp_CB_PiYG_04[7]        = {        0x7, 0x000000, 0xd01c8b, 0xf1b6da, 0xb8e186, 0x4dac26, 0xffffff };
 
 /** Color scheme known as icp_CB_PiYG_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PiYG_05[8]        = {        "8", "#000000", "#d01c8b", "#f1b6da", "#f7f7f7", "#b8e186", "#4dac26", "#ffffff" };
+extern const uint32_t icp_CB_PiYG_05[8]        = {        0x8, 0x000000, 0xd01c8b, 0xf1b6da, 0xf7f7f7, 0xb8e186, 0x4dac26, 0xffffff };
 
 /** Color scheme known as icp_CB_PiYG_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PiYG_06[9]        = {        "9", "#000000", "#c51b7d", "#e9a3c9", "#fde0ef", "#e6f5d0", "#a1d76a", "#4d9221", "#ffffff" };
+extern const uint32_t icp_CB_PiYG_06[9]        = {        0x9, 0x000000, 0xc51b7d, 0xe9a3c9, 0xfde0ef, 0xe6f5d0, 0xa1d76a, 0x4d9221, 0xffffff };
 
 /** Color scheme known as icp_CB_PiYG_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PiYG_07[10]       = {        "a", "#000000", "#c51b7d", "#e9a3c9", "#fde0ef", "#f7f7f7", "#e6f5d0", "#a1d76a", "#4d9221", "#ffffff" };
+extern const uint32_t icp_CB_PiYG_07[10]       = {        0xa, 0x000000, 0xc51b7d, 0xe9a3c9, 0xfde0ef, 0xf7f7f7, 0xe6f5d0, 0xa1d76a, 0x4d9221, 0xffffff };
 
 /** Color scheme known as icp_CB_PiYG_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PiYG_08[11]       = {        "b", "#000000", "#c51b7d", "#de77ae", "#f1b6da", "#fde0ef", "#e6f5d0", "#b8e186", "#7fbc41", "#4d9221", "#ffffff" };
+extern const uint32_t icp_CB_PiYG_08[11]       = {        0xb, 0x000000, 0xc51b7d, 0xde77ae, 0xf1b6da, 0xfde0ef, 0xe6f5d0, 0xb8e186, 0x7fbc41, 0x4d9221, 0xffffff };
 
 /** Color scheme known as icp_CB_PiYG_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PiYG_09[12]       = {        "c", "#000000", "#c51b7d", "#de77ae", "#f1b6da", "#fde0ef", "#f7f7f7", "#e6f5d0", "#b8e186", "#7fbc41", "#4d9221", "#ffffff" };
+extern const uint32_t icp_CB_PiYG_09[12]       = {        0xc, 0x000000, 0xc51b7d, 0xde77ae, 0xf1b6da, 0xfde0ef, 0xf7f7f7, 0xe6f5d0, 0xb8e186, 0x7fbc41, 0x4d9221, 0xffffff };
 
 /** Color scheme known as icp_CB_PiYG_10 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PiYG_10[13]       = {        "d", "#000000", "#8e0152", "#c51b7d", "#de77ae", "#f1b6da", "#fde0ef", "#e6f5d0", "#b8e186", "#7fbc41", "#4d9221", "#276419", "#ffffff" };
+extern const uint32_t icp_CB_PiYG_10[13]       = {        0xd, 0x000000, 0x8e0152, 0xc51b7d, 0xde77ae, 0xf1b6da, 0xfde0ef, 0xe6f5d0, 0xb8e186, 0x7fbc41, 0x4d9221, 0x276419, 0xffffff };
 
 /** Color scheme known as icp_CB_PiYG_11 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PiYG_11[14]       = {        "e", "#000000", "#8e0152", "#c51b7d", "#de77ae", "#f1b6da", "#fde0ef", "#f7f7f7", "#e6f5d0", "#b8e186", "#7fbc41", "#4d9221", "#276419", "#ffffff" };
+extern const uint32_t icp_CB_PiYG_11[14]       = {        0xe, 0x000000, 0x8e0152, 0xc51b7d, 0xde77ae, 0xf1b6da, 0xfde0ef, 0xf7f7f7, 0xe6f5d0, 0xb8e186, 0x7fbc41, 0x4d9221, 0x276419, 0xffffff };
 
 /** Color scheme known as icp_CB_PuBuGn_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_PuBuGn_03[6]      = {        "6", "#000000", "#ece2f0", "#a6bddb", "#1c9099", "#ffffff" };
+extern const uint32_t icp_CB_PuBuGn_03[6]      = {        0x6, 0x000000, 0xece2f0, 0xa6bddb, 0x1c9099, 0xffffff };
 
 /** Color scheme known as icp_CB_PuBuGn_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_PuBuGn_04[7]      = {        "7", "#000000", "#f6eff7", "#bdc9e1", "#67a9cf", "#02818a", "#ffffff" };
+extern const uint32_t icp_CB_PuBuGn_04[7]      = {        0x7, 0x000000, 0xf6eff7, 0xbdc9e1, 0x67a9cf, 0x02818a, 0xffffff };
 
 /** Color scheme known as icp_CB_PuBuGn_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_PuBuGn_05[8]      = {        "8", "#000000", "#f6eff7", "#bdc9e1", "#67a9cf", "#1c9099", "#016c59", "#ffffff" };
+extern const uint32_t icp_CB_PuBuGn_05[8]      = {        0x8, 0x000000, 0xf6eff7, 0xbdc9e1, 0x67a9cf, 0x1c9099, 0x016c59, 0xffffff };
 
 /** Color scheme known as icp_CB_PuBuGn_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_PuBuGn_06[9]      = {        "9", "#000000", "#f6eff7", "#d0d1e6", "#a6bddb", "#67a9cf", "#1c9099", "#016c59", "#ffffff" };
+extern const uint32_t icp_CB_PuBuGn_06[9]      = {        0x9, 0x000000, 0xf6eff7, 0xd0d1e6, 0xa6bddb, 0x67a9cf, 0x1c9099, 0x016c59, 0xffffff };
 
 /** Color scheme known as icp_CB_PuBuGn_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_PuBuGn_07[10]     = {        "a", "#000000", "#f6eff7", "#d0d1e6", "#a6bddb", "#67a9cf", "#3690c0", "#02818a", "#016450", "#ffffff" };
+extern const uint32_t icp_CB_PuBuGn_07[10]     = {        0xa, 0x000000, 0xf6eff7, 0xd0d1e6, 0xa6bddb, 0x67a9cf, 0x3690c0, 0x02818a, 0x016450, 0xffffff };
 
 /** Color scheme known as icp_CB_PuBuGn_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_PuBuGn_08[11]     = {        "b", "#000000", "#fff7fb", "#ece2f0", "#d0d1e6", "#a6bddb", "#67a9cf", "#3690c0", "#02818a", "#016450", "#ffffff" };
+extern const uint32_t icp_CB_PuBuGn_08[11]     = {        0xb, 0x000000, 0xfff7fb, 0xece2f0, 0xd0d1e6, 0xa6bddb, 0x67a9cf, 0x3690c0, 0x02818a, 0x016450, 0xffffff };
 
 /** Color scheme known as icp_CB_PuBuGn_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_PuBuGn_09[12]     = {        "c", "#000000", "#fff7fb", "#ece2f0", "#d0d1e6", "#a6bddb", "#67a9cf", "#3690c0", "#02818a", "#016c59", "#014636", "#ffffff" };
+extern const uint32_t icp_CB_PuBuGn_09[12]     = {        0xc, 0x000000, 0xfff7fb, 0xece2f0, 0xd0d1e6, 0xa6bddb, 0x67a9cf, 0x3690c0, 0x02818a, 0x016c59, 0x014636, 0xffffff };
 
 /** Color scheme known as icp_CB_PuBu_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_PuBu_03[6]        = {        "6", "#000000", "#ece7f2", "#a6bddb", "#2b8cbe", "#ffffff" };
+extern const uint32_t icp_CB_PuBu_03[6]        = {        0x6, 0x000000, 0xece7f2, 0xa6bddb, 0x2b8cbe, 0xffffff };
 
 /** Color scheme known as icp_CB_PuBu_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_PuBu_04[7]        = {        "7", "#000000", "#f1eef6", "#bdc9e1", "#74a9cf", "#0570b0", "#ffffff" };
+extern const uint32_t icp_CB_PuBu_04[7]        = {        0x7, 0x000000, 0xf1eef6, 0xbdc9e1, 0x74a9cf, 0x0570b0, 0xffffff };
 
 /** Color scheme known as icp_CB_PuBu_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_PuBu_05[8]        = {        "8", "#000000", "#f1eef6", "#bdc9e1", "#74a9cf", "#2b8cbe", "#045a8d", "#ffffff" };
+extern const uint32_t icp_CB_PuBu_05[8]        = {        0x8, 0x000000, 0xf1eef6, 0xbdc9e1, 0x74a9cf, 0x2b8cbe, 0x045a8d, 0xffffff };
 
 /** Color scheme known as icp_CB_PuBu_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_PuBu_06[9]        = {        "9", "#000000", "#f1eef6", "#d0d1e6", "#a6bddb", "#74a9cf", "#2b8cbe", "#045a8d", "#ffffff" };
+extern const uint32_t icp_CB_PuBu_06[9]        = {        0x9, 0x000000, 0xf1eef6, 0xd0d1e6, 0xa6bddb, 0x74a9cf, 0x2b8cbe, 0x045a8d, 0xffffff };
 
 /** Color scheme known as icp_CB_PuBu_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_PuBu_07[10]       = {        "a", "#000000", "#f1eef6", "#d0d1e6", "#a6bddb", "#74a9cf", "#3690c0", "#0570b0", "#034e7b", "#ffffff" };
+extern const uint32_t icp_CB_PuBu_07[10]       = {        0xa, 0x000000, 0xf1eef6, 0xd0d1e6, 0xa6bddb, 0x74a9cf, 0x3690c0, 0x0570b0, 0x034e7b, 0xffffff };
 
 /** Color scheme known as icp_CB_PuBu_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_PuBu_08[11]       = {        "b", "#000000", "#fff7fb", "#ece7f2", "#d0d1e6", "#a6bddb", "#74a9cf", "#3690c0", "#0570b0", "#034e7b", "#ffffff" };
+extern const uint32_t icp_CB_PuBu_08[11]       = {        0xb, 0x000000, 0xfff7fb, 0xece7f2, 0xd0d1e6, 0xa6bddb, 0x74a9cf, 0x3690c0, 0x0570b0, 0x034e7b, 0xffffff };
 
 /** Color scheme known as icp_CB_PuBu_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_PuBu_09[12]       = {        "c", "#000000", "#fff7fb", "#ece7f2", "#d0d1e6", "#a6bddb", "#74a9cf", "#3690c0", "#0570b0", "#045a8d", "#023858", "#ffffff" };
+extern const uint32_t icp_CB_PuBu_09[12]       = {        0xc, 0x000000, 0xfff7fb, 0xece7f2, 0xd0d1e6, 0xa6bddb, 0x74a9cf, 0x3690c0, 0x0570b0, 0x045a8d, 0x023858, 0xffffff };
 
 /** Color scheme known as icp_CB_PuOr_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PuOr_03[6]        = {        "6", "#000000", "#f1a340", "#f7f7f7", "#998ec3", "#ffffff" };
+extern const uint32_t icp_CB_PuOr_03[6]        = {        0x6, 0x000000, 0xf1a340, 0xf7f7f7, 0x998ec3, 0xffffff };
 
 /** Color scheme known as icp_CB_PuOr_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PuOr_04[7]        = {        "7", "#000000", "#e66101", "#fdb863", "#b2abd2", "#5e3c99", "#ffffff" };
+extern const uint32_t icp_CB_PuOr_04[7]        = {        0x7, 0x000000, 0xe66101, 0xfdb863, 0xb2abd2, 0x5e3c99, 0xffffff };
 
 /** Color scheme known as icp_CB_PuOr_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PuOr_05[8]        = {        "8", "#000000", "#e66101", "#fdb863", "#f7f7f7", "#b2abd2", "#5e3c99", "#ffffff" };
+extern const uint32_t icp_CB_PuOr_05[8]        = {        0x8, 0x000000, 0xe66101, 0xfdb863, 0xf7f7f7, 0xb2abd2, 0x5e3c99, 0xffffff };
 
 /** Color scheme known as icp_CB_PuOr_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PuOr_06[9]        = {        "9", "#000000", "#b35806", "#f1a340", "#fee0b6", "#d8daeb", "#998ec3", "#542788", "#ffffff" };
+extern const uint32_t icp_CB_PuOr_06[9]        = {        0x9, 0x000000, 0xb35806, 0xf1a340, 0xfee0b6, 0xd8daeb, 0x998ec3, 0x542788, 0xffffff };
 
 /** Color scheme known as icp_CB_PuOr_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PuOr_07[10]       = {        "a", "#000000", "#b35806", "#f1a340", "#fee0b6", "#f7f7f7", "#d8daeb", "#998ec3", "#542788", "#ffffff" };
+extern const uint32_t icp_CB_PuOr_07[10]       = {        0xa, 0x000000, 0xb35806, 0xf1a340, 0xfee0b6, 0xf7f7f7, 0xd8daeb, 0x998ec3, 0x542788, 0xffffff };
 
 /** Color scheme known as icp_CB_PuOr_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PuOr_08[11]       = {        "b", "#000000", "#b35806", "#e08214", "#fdb863", "#fee0b6", "#d8daeb", "#b2abd2", "#8073ac", "#542788", "#ffffff" };
+extern const uint32_t icp_CB_PuOr_08[11]       = {        0xb, 0x000000, 0xb35806, 0xe08214, 0xfdb863, 0xfee0b6, 0xd8daeb, 0xb2abd2, 0x8073ac, 0x542788, 0xffffff };
 
 /** Color scheme known as icp_CB_PuOr_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PuOr_09[12]       = {        "c", "#000000", "#b35806", "#e08214", "#fdb863", "#fee0b6", "#f7f7f7", "#d8daeb", "#b2abd2", "#8073ac", "#542788", "#ffffff" };
+extern const uint32_t icp_CB_PuOr_09[12]       = {        0xc, 0x000000, 0xb35806, 0xe08214, 0xfdb863, 0xfee0b6, 0xf7f7f7, 0xd8daeb, 0xb2abd2, 0x8073ac, 0x542788, 0xffffff };
 
 /** Color scheme known as icp_CB_PuOr_10 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PuOr_10[13]       = {        "d", "#000000", "#7f3b08", "#b35806", "#e08214", "#fdb863", "#fee0b6", "#d8daeb", "#b2abd2", "#8073ac", "#542788", "#2d004b", "#ffffff" };
+extern const uint32_t icp_CB_PuOr_10[13]       = {        0xd, 0x000000, 0x7f3b08, 0xb35806, 0xe08214, 0xfdb863, 0xfee0b6, 0xd8daeb, 0xb2abd2, 0x8073ac, 0x542788, 0x2d004b, 0xffffff };
 
 /** Color scheme known as icp_CB_PuOr_11 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_PuOr_11[14]       = {        "e", "#000000", "#7f3b08", "#b35806", "#e08214", "#fdb863", "#fee0b6", "#f7f7f7", "#d8daeb", "#b2abd2", "#8073ac", "#542788", "#2d004b", "#ffffff" };
+extern const uint32_t icp_CB_PuOr_11[14]       = {        0xe, 0x000000, 0x7f3b08, 0xb35806, 0xe08214, 0xfdb863, 0xfee0b6, 0xf7f7f7, 0xd8daeb, 0xb2abd2, 0x8073ac, 0x542788, 0x2d004b, 0xffffff };
 
 /** Color scheme known as icp_CB_PuRd_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_PuRd_03[6]        = {        "6", "#000000", "#e7e1ef", "#c994c7", "#dd1c77", "#ffffff" };
+extern const uint32_t icp_CB_PuRd_03[6]        = {        0x6, 0x000000, 0xe7e1ef, 0xc994c7, 0xdd1c77, 0xffffff };
 
 /** Color scheme known as icp_CB_PuRd_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_PuRd_04[7]        = {        "7", "#000000", "#f1eef6", "#d7b5d8", "#df65b0", "#ce1256", "#ffffff" };
+extern const uint32_t icp_CB_PuRd_04[7]        = {        0x7, 0x000000, 0xf1eef6, 0xd7b5d8, 0xdf65b0, 0xce1256, 0xffffff };
 
 /** Color scheme known as icp_CB_PuRd_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_PuRd_05[8]        = {        "8", "#000000", "#f1eef6", "#d7b5d8", "#df65b0", "#dd1c77", "#980043", "#ffffff" };
+extern const uint32_t icp_CB_PuRd_05[8]        = {        0x8, 0x000000, 0xf1eef6, 0xd7b5d8, 0xdf65b0, 0xdd1c77, 0x980043, 0xffffff };
 
 /** Color scheme known as icp_CB_PuRd_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_PuRd_06[9]        = {        "9", "#000000", "#f1eef6", "#d4b9da", "#c994c7", "#df65b0", "#dd1c77", "#980043", "#ffffff" };
+extern const uint32_t icp_CB_PuRd_06[9]        = {        0x9, 0x000000, 0xf1eef6, 0xd4b9da, 0xc994c7, 0xdf65b0, 0xdd1c77, 0x980043, 0xffffff };
 
 /** Color scheme known as icp_CB_PuRd_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_PuRd_07[10]       = {        "a", "#000000", "#f1eef6", "#d4b9da", "#c994c7", "#df65b0", "#e7298a", "#ce1256", "#91003f", "#ffffff" };
+extern const uint32_t icp_CB_PuRd_07[10]       = {        0xa, 0x000000, 0xf1eef6, 0xd4b9da, 0xc994c7, 0xdf65b0, 0xe7298a, 0xce1256, 0x91003f, 0xffffff };
 
 /** Color scheme known as icp_CB_PuRd_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_PuRd_08[11]       = {        "b", "#000000", "#f7f4f9", "#e7e1ef", "#d4b9da", "#c994c7", "#df65b0", "#e7298a", "#ce1256", "#91003f", "#ffffff" };
+extern const uint32_t icp_CB_PuRd_08[11]       = {        0xb, 0x000000, 0xf7f4f9, 0xe7e1ef, 0xd4b9da, 0xc994c7, 0xdf65b0, 0xe7298a, 0xce1256, 0x91003f, 0xffffff };
 
 /** Color scheme known as icp_CB_PuRd_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_PuRd_09[12]       = {        "c", "#000000", "#f7f4f9", "#e7e1ef", "#d4b9da", "#c994c7", "#df65b0", "#e7298a", "#ce1256", "#980043", "#67001f", "#ffffff" };
+extern const uint32_t icp_CB_PuRd_09[12]       = {        0xc, 0x000000, 0xf7f4f9, 0xe7e1ef, 0xd4b9da, 0xc994c7, 0xdf65b0, 0xe7298a, 0xce1256, 0x980043, 0x67001f, 0xffffff };
 
 /** Color scheme known as icp_CB_Purples_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Purples_03[6]     = {        "6", "#000000", "#efedf5", "#bcbddc", "#756bb1", "#ffffff" };
+extern const uint32_t icp_CB_Purples_03[6]     = {        0x6, 0x000000, 0xefedf5, 0xbcbddc, 0x756bb1, 0xffffff };
 
 /** Color scheme known as icp_CB_Purples_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Purples_04[7]     = {        "7", "#000000", "#f2f0f7", "#cbc9e2", "#9e9ac8", "#6a51a3", "#ffffff" };
+extern const uint32_t icp_CB_Purples_04[7]     = {        0x7, 0x000000, 0xf2f0f7, 0xcbc9e2, 0x9e9ac8, 0x6a51a3, 0xffffff };
 
 /** Color scheme known as icp_CB_Purples_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Purples_05[8]     = {        "8", "#000000", "#f2f0f7", "#cbc9e2", "#9e9ac8", "#756bb1", "#54278f", "#ffffff" };
+extern const uint32_t icp_CB_Purples_05[8]     = {        0x8, 0x000000, 0xf2f0f7, 0xcbc9e2, 0x9e9ac8, 0x756bb1, 0x54278f, 0xffffff };
 
 /** Color scheme known as icp_CB_Purples_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Purples_06[9]     = {        "9", "#000000", "#f2f0f7", "#dadaeb", "#bcbddc", "#9e9ac8", "#756bb1", "#54278f", "#ffffff" };
+extern const uint32_t icp_CB_Purples_06[9]     = {        0x9, 0x000000, 0xf2f0f7, 0xdadaeb, 0xbcbddc, 0x9e9ac8, 0x756bb1, 0x54278f, 0xffffff };
 
 /** Color scheme known as icp_CB_Purples_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Purples_07[10]    = {        "a", "#000000", "#f2f0f7", "#dadaeb", "#bcbddc", "#9e9ac8", "#807dba", "#6a51a3", "#4a1486", "#ffffff" };
+extern const uint32_t icp_CB_Purples_07[10]    = {        0xa, 0x000000, 0xf2f0f7, 0xdadaeb, 0xbcbddc, 0x9e9ac8, 0x807dba, 0x6a51a3, 0x4a1486, 0xffffff };
 
 /** Color scheme known as icp_CB_Purples_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Purples_08[11]    = {        "b", "#000000", "#fcfbfd", "#efedf5", "#dadaeb", "#bcbddc", "#9e9ac8", "#807dba", "#6a51a3", "#4a1486", "#ffffff" };
+extern const uint32_t icp_CB_Purples_08[11]    = {        0xb, 0x000000, 0xfcfbfd, 0xefedf5, 0xdadaeb, 0xbcbddc, 0x9e9ac8, 0x807dba, 0x6a51a3, 0x4a1486, 0xffffff };
 
 /** Color scheme known as icp_CB_Purples_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Purples_09[12]    = {        "c", "#000000", "#fcfbfd", "#efedf5", "#dadaeb", "#bcbddc", "#9e9ac8", "#807dba", "#6a51a3", "#54278f", "#3f007d", "#ffffff" };
+extern const uint32_t icp_CB_Purples_09[12]    = {        0xc, 0x000000, 0xfcfbfd, 0xefedf5, 0xdadaeb, 0xbcbddc, 0x9e9ac8, 0x807dba, 0x6a51a3, 0x54278f, 0x3f007d, 0xffffff };
 
 /** Color scheme known as icp_CB_RdBu_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdBu_03[6]        = {        "6", "#000000", "#ef8a62", "#f7f7f7", "#67a9cf", "#ffffff" };
+extern const uint32_t icp_CB_RdBu_03[6]        = {        0x6, 0x000000, 0xef8a62, 0xf7f7f7, 0x67a9cf, 0xffffff };
 
 /** Color scheme known as icp_CB_RdBu_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdBu_04[7]        = {        "7", "#000000", "#ca0020", "#f4a582", "#92c5de", "#0571b0", "#ffffff" };
+extern const uint32_t icp_CB_RdBu_04[7]        = {        0x7, 0x000000, 0xca0020, 0xf4a582, 0x92c5de, 0x0571b0, 0xffffff };
 
 /** Color scheme known as icp_CB_RdBu_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdBu_05[8]        = {        "8", "#000000", "#ca0020", "#f4a582", "#f7f7f7", "#92c5de", "#0571b0", "#ffffff" };
+extern const uint32_t icp_CB_RdBu_05[8]        = {        0x8, 0x000000, 0xca0020, 0xf4a582, 0xf7f7f7, 0x92c5de, 0x0571b0, 0xffffff };
 
 /** Color scheme known as icp_CB_RdBu_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdBu_06[9]        = {        "9", "#000000", "#b2182b", "#ef8a62", "#fddbc7", "#d1e5f0", "#67a9cf", "#2166ac", "#ffffff" };
+extern const uint32_t icp_CB_RdBu_06[9]        = {        0x9, 0x000000, 0xb2182b, 0xef8a62, 0xfddbc7, 0xd1e5f0, 0x67a9cf, 0x2166ac, 0xffffff };
 
 /** Color scheme known as icp_CB_RdBu_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdBu_07[10]       = {        "a", "#000000", "#b2182b", "#ef8a62", "#fddbc7", "#f7f7f7", "#d1e5f0", "#67a9cf", "#2166ac", "#ffffff" };
+extern const uint32_t icp_CB_RdBu_07[10]       = {        0xa, 0x000000, 0xb2182b, 0xef8a62, 0xfddbc7, 0xf7f7f7, 0xd1e5f0, 0x67a9cf, 0x2166ac, 0xffffff };
 
 /** Color scheme known as icp_CB_RdBu_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdBu_08[11]       = {        "b", "#000000", "#b2182b", "#d6604d", "#f4a582", "#fddbc7", "#d1e5f0", "#92c5de", "#4393c3", "#2166ac", "#ffffff" };
+extern const uint32_t icp_CB_RdBu_08[11]       = {        0xb, 0x000000, 0xb2182b, 0xd6604d, 0xf4a582, 0xfddbc7, 0xd1e5f0, 0x92c5de, 0x4393c3, 0x2166ac, 0xffffff };
 
 /** Color scheme known as icp_CB_RdBu_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdBu_09[12]       = {        "c", "#000000", "#b2182b", "#d6604d", "#f4a582", "#fddbc7", "#f7f7f7", "#d1e5f0", "#92c5de", "#4393c3", "#2166ac", "#ffffff" };
+extern const uint32_t icp_CB_RdBu_09[12]       = {        0xc, 0x000000, 0xb2182b, 0xd6604d, 0xf4a582, 0xfddbc7, 0xf7f7f7, 0xd1e5f0, 0x92c5de, 0x4393c3, 0x2166ac, 0xffffff };
 
 /** Color scheme known as icp_CB_RdBu_10 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdBu_10[13]       = {        "d", "#000000", "#67001f", "#b2182b", "#d6604d", "#f4a582", "#fddbc7", "#d1e5f0", "#92c5de", "#4393c3", "#2166ac", "#053061", "#ffffff" };
+extern const uint32_t icp_CB_RdBu_10[13]       = {        0xd, 0x000000, 0x67001f, 0xb2182b, 0xd6604d, 0xf4a582, 0xfddbc7, 0xd1e5f0, 0x92c5de, 0x4393c3, 0x2166ac, 0x053061, 0xffffff };
 
 /** Color scheme known as icp_CB_RdBu_11 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdBu_11[14]       = {        "e", "#000000", "#67001f", "#b2182b", "#d6604d", "#f4a582", "#fddbc7", "#f7f7f7", "#d1e5f0", "#92c5de", "#4393c3", "#2166ac", "#053061", "#ffffff" };
+extern const uint32_t icp_CB_RdBu_11[14]       = {        0xe, 0x000000, 0x67001f, 0xb2182b, 0xd6604d, 0xf4a582, 0xfddbc7, 0xf7f7f7, 0xd1e5f0, 0x92c5de, 0x4393c3, 0x2166ac, 0x053061, 0xffffff };
 
 /** Color scheme known as icp_CB_RdGy_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdGy_03[6]        = {        "6", "#000000", "#ef8a62", "#ffffff", "#999999", "#ffffff" };
+extern const uint32_t icp_CB_RdGy_03[6]        = {        0x6, 0x000000, 0xef8a62, 0xffffff, 0x999999, 0xffffff };
 
 /** Color scheme known as icp_CB_RdGy_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdGy_04[7]        = {        "7", "#000000", "#ca0020", "#f4a582", "#bababa", "#404040", "#ffffff" };
+extern const uint32_t icp_CB_RdGy_04[7]        = {        0x7, 0x000000, 0xca0020, 0xf4a582, 0xbababa, 0x404040, 0xffffff };
 
 /** Color scheme known as icp_CB_RdGy_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdGy_05[8]        = {        "8", "#000000", "#ca0020", "#f4a582", "#ffffff", "#bababa", "#404040", "#ffffff" };
+extern const uint32_t icp_CB_RdGy_05[8]        = {        0x8, 0x000000, 0xca0020, 0xf4a582, 0xffffff, 0xbababa, 0x404040, 0xffffff };
 
 /** Color scheme known as icp_CB_RdGy_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdGy_06[9]        = {        "9", "#000000", "#b2182b", "#ef8a62", "#fddbc7", "#e0e0e0", "#999999", "#4d4d4d", "#ffffff" };
+extern const uint32_t icp_CB_RdGy_06[9]        = {        0x9, 0x000000, 0xb2182b, 0xef8a62, 0xfddbc7, 0xe0e0e0, 0x999999, 0x4d4d4d, 0xffffff };
 
 /** Color scheme known as icp_CB_RdGy_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdGy_07[10]       = {        "a", "#000000", "#b2182b", "#ef8a62", "#fddbc7", "#ffffff", "#e0e0e0", "#999999", "#4d4d4d", "#ffffff" };
+extern const uint32_t icp_CB_RdGy_07[10]       = {        0xa, 0x000000, 0xb2182b, 0xef8a62, 0xfddbc7, 0xffffff, 0xe0e0e0, 0x999999, 0x4d4d4d, 0xffffff };
 
 /** Color scheme known as icp_CB_RdGy_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdGy_08[11]       = {        "b", "#000000", "#b2182b", "#d6604d", "#f4a582", "#fddbc7", "#e0e0e0", "#bababa", "#878787", "#4d4d4d", "#ffffff" };
+extern const uint32_t icp_CB_RdGy_08[11]       = {        0xb, 0x000000, 0xb2182b, 0xd6604d, 0xf4a582, 0xfddbc7, 0xe0e0e0, 0xbababa, 0x878787, 0x4d4d4d, 0xffffff };
 
 /** Color scheme known as icp_CB_RdGy_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdGy_09[12]       = {        "c", "#000000", "#b2182b", "#d6604d", "#f4a582", "#fddbc7", "#ffffff", "#e0e0e0", "#bababa", "#878787", "#4d4d4d", "#ffffff" };
+extern const uint32_t icp_CB_RdGy_09[12]       = {        0xc, 0x000000, 0xb2182b, 0xd6604d, 0xf4a582, 0xfddbc7, 0xffffff, 0xe0e0e0, 0xbababa, 0x878787, 0x4d4d4d, 0xffffff };
 
 /** Color scheme known as icp_CB_RdGy_10 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdGy_10[13]       = {        "d", "#000000", "#67001f", "#b2182b", "#d6604d", "#f4a582", "#fddbc7", "#e0e0e0", "#bababa", "#878787", "#4d4d4d", "#1a1a1a", "#ffffff" };
+extern const uint32_t icp_CB_RdGy_10[13]       = {        0xd, 0x000000, 0x67001f, 0xb2182b, 0xd6604d, 0xf4a582, 0xfddbc7, 0xe0e0e0, 0xbababa, 0x878787, 0x4d4d4d, 0x1a1a1a, 0xffffff };
 
 /** Color scheme known as icp_CB_RdGy_11 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdGy_11[14]       = {        "e", "#000000", "#67001f", "#b2182b", "#d6604d", "#f4a582", "#fddbc7", "#ffffff", "#e0e0e0", "#bababa", "#878787", "#4d4d4d", "#1a1a1a", "#ffffff" };
+extern const uint32_t icp_CB_RdGy_11[14]       = {        0xe, 0x000000, 0x67001f, 0xb2182b, 0xd6604d, 0xf4a582, 0xfddbc7, 0xffffff, 0xe0e0e0, 0xbababa, 0x878787, 0x4d4d4d, 0x1a1a1a, 0xffffff };
 
 /** Color scheme known as icp_CB_RdPu_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_RdPu_03[6]        = {        "6", "#000000", "#fde0dd", "#fa9fb5", "#c51b8a", "#ffffff" };
+extern const uint32_t icp_CB_RdPu_03[6]        = {        0x6, 0x000000, 0xfde0dd, 0xfa9fb5, 0xc51b8a, 0xffffff };
 
 /** Color scheme known as icp_CB_RdPu_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_RdPu_04[7]        = {        "7", "#000000", "#feebe2", "#fbb4b9", "#f768a1", "#ae017e", "#ffffff" };
+extern const uint32_t icp_CB_RdPu_04[7]        = {        0x7, 0x000000, 0xfeebe2, 0xfbb4b9, 0xf768a1, 0xae017e, 0xffffff };
 
 /** Color scheme known as icp_CB_RdPu_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_RdPu_05[8]        = {        "8", "#000000", "#feebe2", "#fbb4b9", "#f768a1", "#c51b8a", "#7a0177", "#ffffff" };
+extern const uint32_t icp_CB_RdPu_05[8]        = {        0x8, 0x000000, 0xfeebe2, 0xfbb4b9, 0xf768a1, 0xc51b8a, 0x7a0177, 0xffffff };
 
 /** Color scheme known as icp_CB_RdPu_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_RdPu_06[9]        = {        "9", "#000000", "#feebe2", "#fcc5c0", "#fa9fb5", "#f768a1", "#c51b8a", "#7a0177", "#ffffff" };
+extern const uint32_t icp_CB_RdPu_06[9]        = {        0x9, 0x000000, 0xfeebe2, 0xfcc5c0, 0xfa9fb5, 0xf768a1, 0xc51b8a, 0x7a0177, 0xffffff };
 
 /** Color scheme known as icp_CB_RdPu_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_RdPu_07[10]       = {        "a", "#000000", "#feebe2", "#fcc5c0", "#fa9fb5", "#f768a1", "#dd3497", "#ae017e", "#7a0177", "#ffffff" };
+extern const uint32_t icp_CB_RdPu_07[10]       = {        0xa, 0x000000, 0xfeebe2, 0xfcc5c0, 0xfa9fb5, 0xf768a1, 0xdd3497, 0xae017e, 0x7a0177, 0xffffff };
 
 /** Color scheme known as icp_CB_RdPu_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_RdPu_08[11]       = {        "b", "#000000", "#fff7f3", "#fde0dd", "#fcc5c0", "#fa9fb5", "#f768a1", "#dd3497", "#ae017e", "#7a0177", "#ffffff" };
+extern const uint32_t icp_CB_RdPu_08[11]       = {        0xb, 0x000000, 0xfff7f3, 0xfde0dd, 0xfcc5c0, 0xfa9fb5, 0xf768a1, 0xdd3497, 0xae017e, 0x7a0177, 0xffffff };
 
 /** Color scheme known as icp_CB_RdPu_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_RdPu_09[12]       = {        "c", "#000000", "#fff7f3", "#fde0dd", "#fcc5c0", "#fa9fb5", "#f768a1", "#dd3497", "#ae017e", "#7a0177", "#49006a", "#ffffff" };
+extern const uint32_t icp_CB_RdPu_09[12]       = {        0xc, 0x000000, 0xfff7f3, 0xfde0dd, 0xfcc5c0, 0xfa9fb5, 0xf768a1, 0xdd3497, 0xae017e, 0x7a0177, 0x49006a, 0xffffff };
 
 /** Color scheme known as icp_CB_RdYlBu_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdYlBu_03[6]      = {        "6", "#000000", "#fc8d59", "#ffffbf", "#91bfdb", "#ffffff" };
+extern const uint32_t icp_CB_RdYlBu_03[6]      = {        0x6, 0x000000, 0xfc8d59, 0xffffbf, 0x91bfdb, 0xffffff };
 
 /** Color scheme known as icp_CB_RdYlBu_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdYlBu_04[7]      = {        "7", "#000000", "#d7191c", "#fdae61", "#abd9e9", "#2c7bb6", "#ffffff" };
+extern const uint32_t icp_CB_RdYlBu_04[7]      = {        0x7, 0x000000, 0xd7191c, 0xfdae61, 0xabd9e9, 0x2c7bb6, 0xffffff };
 
 /** Color scheme known as icp_CB_RdYlBu_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdYlBu_05[8]      = {        "8", "#000000", "#d7191c", "#fdae61", "#ffffbf", "#abd9e9", "#2c7bb6", "#ffffff" };
+extern const uint32_t icp_CB_RdYlBu_05[8]      = {        0x8, 0x000000, 0xd7191c, 0xfdae61, 0xffffbf, 0xabd9e9, 0x2c7bb6, 0xffffff };
 
 /** Color scheme known as icp_CB_RdYlBu_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdYlBu_06[9]      = {        "9", "#000000", "#d73027", "#fc8d59", "#fee090", "#e0f3f8", "#91bfdb", "#4575b4", "#ffffff" };
+extern const uint32_t icp_CB_RdYlBu_06[9]      = {        0x9, 0x000000, 0xd73027, 0xfc8d59, 0xfee090, 0xe0f3f8, 0x91bfdb, 0x4575b4, 0xffffff };
 
 /** Color scheme known as icp_CB_RdYlBu_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdYlBu_07[10]     = {        "a", "#000000", "#d73027", "#fc8d59", "#fee090", "#ffffbf", "#e0f3f8", "#91bfdb", "#4575b4", "#ffffff" };
+extern const uint32_t icp_CB_RdYlBu_07[10]     = {        0xa, 0x000000, 0xd73027, 0xfc8d59, 0xfee090, 0xffffbf, 0xe0f3f8, 0x91bfdb, 0x4575b4, 0xffffff };
 
 /** Color scheme known as icp_CB_RdYlBu_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdYlBu_08[11]     = {        "b", "#000000", "#d73027", "#f46d43", "#fdae61", "#fee090", "#e0f3f8", "#abd9e9", "#74add1", "#4575b4", "#ffffff" };
+extern const uint32_t icp_CB_RdYlBu_08[11]     = {        0xb, 0x000000, 0xd73027, 0xf46d43, 0xfdae61, 0xfee090, 0xe0f3f8, 0xabd9e9, 0x74add1, 0x4575b4, 0xffffff };
 
 /** Color scheme known as icp_CB_RdYlBu_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdYlBu_09[12]     = {        "c", "#000000", "#d73027", "#f46d43", "#fdae61", "#fee090", "#ffffbf", "#e0f3f8", "#abd9e9", "#74add1", "#4575b4", "#ffffff" };
+extern const uint32_t icp_CB_RdYlBu_09[12]     = {        0xc, 0x000000, 0xd73027, 0xf46d43, 0xfdae61, 0xfee090, 0xffffbf, 0xe0f3f8, 0xabd9e9, 0x74add1, 0x4575b4, 0xffffff };
 
 /** Color scheme known as icp_CB_RdYlBu_10 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdYlBu_10[13]     = {        "d", "#000000", "#a50026", "#d73027", "#f46d43", "#fdae61", "#fee090", "#e0f3f8", "#abd9e9", "#74add1", "#4575b4", "#313695", "#ffffff" };
+extern const uint32_t icp_CB_RdYlBu_10[13]     = {        0xd, 0x000000, 0xa50026, 0xd73027, 0xf46d43, 0xfdae61, 0xfee090, 0xe0f3f8, 0xabd9e9, 0x74add1, 0x4575b4, 0x313695, 0xffffff };
 
 /** Color scheme known as icp_CB_RdYlBu_11 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdYlBu_11[14]     = {        "e", "#000000", "#a50026", "#d73027", "#f46d43", "#fdae61", "#fee090", "#ffffbf", "#e0f3f8", "#abd9e9", "#74add1", "#4575b4", "#313695", "#ffffff" };
+extern const uint32_t icp_CB_RdYlBu_11[14]     = {        0xe, 0x000000, 0xa50026, 0xd73027, 0xf46d43, 0xfdae61, 0xfee090, 0xffffbf, 0xe0f3f8, 0xabd9e9, 0x74add1, 0x4575b4, 0x313695, 0xffffff };
 
 /** Color scheme known as icp_CB_RdYlGn_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdYlGn_03[6]      = {        "6", "#000000", "#fc8d59", "#ffffbf", "#91cf60", "#ffffff" };
+extern const uint32_t icp_CB_RdYlGn_03[6]      = {        0x6, 0x000000, 0xfc8d59, 0xffffbf, 0x91cf60, 0xffffff };
 
 /** Color scheme known as icp_CB_RdYlGn_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdYlGn_04[7]      = {        "7", "#000000", "#d7191c", "#fdae61", "#a6d96a", "#1a9641", "#ffffff" };
+extern const uint32_t icp_CB_RdYlGn_04[7]      = {        0x7, 0x000000, 0xd7191c, 0xfdae61, 0xa6d96a, 0x1a9641, 0xffffff };
 
 /** Color scheme known as icp_CB_RdYlGn_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdYlGn_05[8]      = {        "8", "#000000", "#d7191c", "#fdae61", "#ffffbf", "#a6d96a", "#1a9641", "#ffffff" };
+extern const uint32_t icp_CB_RdYlGn_05[8]      = {        0x8, 0x000000, 0xd7191c, 0xfdae61, 0xffffbf, 0xa6d96a, 0x1a9641, 0xffffff };
 
 /** Color scheme known as icp_CB_RdYlGn_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdYlGn_06[9]      = {        "9", "#000000", "#d73027", "#fc8d59", "#fee08b", "#d9ef8b", "#91cf60", "#1a9850", "#ffffff" };
+extern const uint32_t icp_CB_RdYlGn_06[9]      = {        0x9, 0x000000, 0xd73027, 0xfc8d59, 0xfee08b, 0xd9ef8b, 0x91cf60, 0x1a9850, 0xffffff };
 
 /** Color scheme known as icp_CB_RdYlGn_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdYlGn_07[10]     = {        "a", "#000000", "#d73027", "#fc8d59", "#fee08b", "#ffffbf", "#d9ef8b", "#91cf60", "#1a9850", "#ffffff" };
+extern const uint32_t icp_CB_RdYlGn_07[10]     = {        0xa, 0x000000, 0xd73027, 0xfc8d59, 0xfee08b, 0xffffbf, 0xd9ef8b, 0x91cf60, 0x1a9850, 0xffffff };
 
 /** Color scheme known as icp_CB_RdYlGn_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdYlGn_08[11]     = {        "b", "#000000", "#d73027", "#f46d43", "#fdae61", "#fee08b", "#d9ef8b", "#a6d96a", "#66bd63", "#1a9850", "#ffffff" };
+extern const uint32_t icp_CB_RdYlGn_08[11]     = {        0xb, 0x000000, 0xd73027, 0xf46d43, 0xfdae61, 0xfee08b, 0xd9ef8b, 0xa6d96a, 0x66bd63, 0x1a9850, 0xffffff };
 
 /** Color scheme known as icp_CB_RdYlGn_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdYlGn_09[12]     = {        "c", "#000000", "#d73027", "#f46d43", "#fdae61", "#fee08b", "#ffffbf", "#d9ef8b", "#a6d96a", "#66bd63", "#1a9850", "#ffffff" };
+extern const uint32_t icp_CB_RdYlGn_09[12]     = {        0xc, 0x000000, 0xd73027, 0xf46d43, 0xfdae61, 0xfee08b, 0xffffbf, 0xd9ef8b, 0xa6d96a, 0x66bd63, 0x1a9850, 0xffffff };
 
 /** Color scheme known as icp_CB_RdYlGn_10 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdYlGn_10[13]     = {        "d", "#000000", "#a50026", "#d73027", "#f46d43", "#fdae61", "#fee08b", "#d9ef8b", "#a6d96a", "#66bd63", "#1a9850", "#006837", "#ffffff" };
+extern const uint32_t icp_CB_RdYlGn_10[13]     = {        0xd, 0x000000, 0xa50026, 0xd73027, 0xf46d43, 0xfdae61, 0xfee08b, 0xd9ef8b, 0xa6d96a, 0x66bd63, 0x1a9850, 0x006837, 0xffffff };
 
 /** Color scheme known as icp_CB_RdYlGn_11 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_RdYlGn_11[14]     = {        "e", "#000000", "#a50026", "#d73027", "#f46d43", "#fdae61", "#fee08b", "#ffffbf", "#d9ef8b", "#a6d96a", "#66bd63", "#1a9850", "#006837", "#ffffff" };
+extern const uint32_t icp_CB_RdYlGn_11[14]     = {        0xe, 0x000000, 0xa50026, 0xd73027, 0xf46d43, 0xfdae61, 0xfee08b, 0xffffbf, 0xd9ef8b, 0xa6d96a, 0x66bd63, 0x1a9850, 0x006837, 0xffffff };
 
 /** Color scheme known as icp_CB_Reds_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Reds_03[6]        = {        "6", "#000000", "#fee0d2", "#fc9272", "#de2d26", "#ffffff" };
+extern const uint32_t icp_CB_Reds_03[6]        = {        0x6, 0x000000, 0xfee0d2, 0xfc9272, 0xde2d26, 0xffffff };
 
 /** Color scheme known as icp_CB_Reds_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Reds_04[7]        = {        "7", "#000000", "#fee5d9", "#fcae91", "#fb6a4a", "#cb181d", "#ffffff" };
+extern const uint32_t icp_CB_Reds_04[7]        = {        0x7, 0x000000, 0xfee5d9, 0xfcae91, 0xfb6a4a, 0xcb181d, 0xffffff };
 
 /** Color scheme known as icp_CB_Reds_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Reds_05[8]        = {        "8", "#000000", "#fee5d9", "#fcae91", "#fb6a4a", "#de2d26", "#a50f15", "#ffffff" };
+extern const uint32_t icp_CB_Reds_05[8]        = {        0x8, 0x000000, 0xfee5d9, 0xfcae91, 0xfb6a4a, 0xde2d26, 0xa50f15, 0xffffff };
 
 /** Color scheme known as icp_CB_Reds_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Reds_06[9]        = {        "9", "#000000", "#fee5d9", "#fcbba1", "#fc9272", "#fb6a4a", "#de2d26", "#a50f15", "#ffffff" };
+extern const uint32_t icp_CB_Reds_06[9]        = {        0x9, 0x000000, 0xfee5d9, 0xfcbba1, 0xfc9272, 0xfb6a4a, 0xde2d26, 0xa50f15, 0xffffff };
 
 /** Color scheme known as icp_CB_Reds_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Reds_07[10]       = {        "a", "#000000", "#fee5d9", "#fcbba1", "#fc9272", "#fb6a4a", "#ef3b2c", "#cb181d", "#99000d", "#ffffff" };
+extern const uint32_t icp_CB_Reds_07[10]       = {        0xa, 0x000000, 0xfee5d9, 0xfcbba1, 0xfc9272, 0xfb6a4a, 0xef3b2c, 0xcb181d, 0x99000d, 0xffffff };
 
 /** Color scheme known as icp_CB_Reds_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Reds_08[11]       = {        "b", "#000000", "#fff5f0", "#fee0d2", "#fcbba1", "#fc9272", "#fb6a4a", "#ef3b2c", "#cb181d", "#99000d", "#ffffff" };
+extern const uint32_t icp_CB_Reds_08[11]       = {        0xb, 0x000000, 0xfff5f0, 0xfee0d2, 0xfcbba1, 0xfc9272, 0xfb6a4a, 0xef3b2c, 0xcb181d, 0x99000d, 0xffffff };
 
 /** Color scheme known as icp_CB_Reds_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_Reds_09[12]       = {        "c", "#000000", "#fff5f0", "#fee0d2", "#fcbba1", "#fc9272", "#fb6a4a", "#ef3b2c", "#cb181d", "#a50f15", "#67000d", "#ffffff" };
+extern const uint32_t icp_CB_Reds_09[12]       = {        0xc, 0x000000, 0xfff5f0, 0xfee0d2, 0xfcbba1, 0xfc9272, 0xfb6a4a, 0xef3b2c, 0xcb181d, 0xa50f15, 0x67000d, 0xffffff };
 
 /** Color scheme known as icp_CB_Set1_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set1_03[6]        = {        "6", "#000000", "#e41a1c", "#377eb8", "#4daf4a", "#ffffff" };
+extern const uint32_t icp_CB_Set1_03[6]        = {        0x6, 0x000000, 0xe41a1c, 0x377eb8, 0x4daf4a, 0xffffff };
 
 /** Color scheme known as icp_CB_Set1_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set1_04[7]        = {        "7", "#000000", "#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ffffff" };
+extern const uint32_t icp_CB_Set1_04[7]        = {        0x7, 0x000000, 0xe41a1c, 0x377eb8, 0x4daf4a, 0x984ea3, 0xffffff };
 
 /** Color scheme known as icp_CB_Set1_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set1_05[8]        = {        "8", "#000000", "#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffffff" };
+extern const uint32_t icp_CB_Set1_05[8]        = {        0x8, 0x000000, 0xe41a1c, 0x377eb8, 0x4daf4a, 0x984ea3, 0xff7f00, 0xffffff };
 
 /** Color scheme known as icp_CB_Set1_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set1_06[9]        = {        "9", "#000000", "#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#ffffff" };
+extern const uint32_t icp_CB_Set1_06[9]        = {        0x9, 0x000000, 0xe41a1c, 0x377eb8, 0x4daf4a, 0x984ea3, 0xff7f00, 0xffff33, 0xffffff };
 
 /** Color scheme known as icp_CB_Set1_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set1_07[10]       = {        "a", "#000000", "#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628", "#ffffff" };
+extern const uint32_t icp_CB_Set1_07[10]       = {        0xa, 0x000000, 0xe41a1c, 0x377eb8, 0x4daf4a, 0x984ea3, 0xff7f00, 0xffff33, 0xa65628, 0xffffff };
 
 /** Color scheme known as icp_CB_Set1_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set1_08[11]       = {        "b", "#000000", "#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628", "#f781bf", "#ffffff" };
+extern const uint32_t icp_CB_Set1_08[11]       = {        0xb, 0x000000, 0xe41a1c, 0x377eb8, 0x4daf4a, 0x984ea3, 0xff7f00, 0xffff33, 0xa65628, 0xf781bf, 0xffffff };
 
 /** Color scheme known as icp_CB_Set1_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set1_09[12]       = {        "c", "#000000", "#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628", "#f781bf", "#999999", "#ffffff" };
+extern const uint32_t icp_CB_Set1_09[12]       = {        0xc, 0x000000, 0xe41a1c, 0x377eb8, 0x4daf4a, 0x984ea3, 0xff7f00, 0xffff33, 0xa65628, 0xf781bf, 0x999999, 0xffffff };
 
 /** Color scheme known as icp_CB_Set2_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set2_03[6]        = {        "6", "#000000", "#66c2a5", "#fc8d62", "#8da0cb", "#ffffff" };
+extern const uint32_t icp_CB_Set2_03[6]        = {        0x6, 0x000000, 0x66c2a5, 0xfc8d62, 0x8da0cb, 0xffffff };
 
 /** Color scheme known as icp_CB_Set2_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set2_04[7]        = {        "7", "#000000", "#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#ffffff" };
+extern const uint32_t icp_CB_Set2_04[7]        = {        0x7, 0x000000, 0x66c2a5, 0xfc8d62, 0x8da0cb, 0xe78ac3, 0xffffff };
 
 /** Color scheme known as icp_CB_Set2_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set2_05[8]        = {        "8", "#000000", "#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854", "#ffffff" };
+extern const uint32_t icp_CB_Set2_05[8]        = {        0x8, 0x000000, 0x66c2a5, 0xfc8d62, 0x8da0cb, 0xe78ac3, 0xa6d854, 0xffffff };
 
 /** Color scheme known as icp_CB_Set2_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set2_06[9]        = {        "9", "#000000", "#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854", "#ffd92f", "#ffffff" };
+extern const uint32_t icp_CB_Set2_06[9]        = {        0x9, 0x000000, 0x66c2a5, 0xfc8d62, 0x8da0cb, 0xe78ac3, 0xa6d854, 0xffd92f, 0xffffff };
 
 /** Color scheme known as icp_CB_Set2_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set2_07[10]       = {        "a", "#000000", "#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854", "#ffd92f", "#e5c494", "#ffffff" };
+extern const uint32_t icp_CB_Set2_07[10]       = {        0xa, 0x000000, 0x66c2a5, 0xfc8d62, 0x8da0cb, 0xe78ac3, 0xa6d854, 0xffd92f, 0xe5c494, 0xffffff };
 
 /** Color scheme known as icp_CB_Set2_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set2_08[11]       = {        "b", "#000000", "#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854", "#ffd92f", "#e5c494", "#b3b3b3", "#ffffff" };
+extern const uint32_t icp_CB_Set2_08[11]       = {        0xb, 0x000000, 0x66c2a5, 0xfc8d62, 0x8da0cb, 0xe78ac3, 0xa6d854, 0xffd92f, 0xe5c494, 0xb3b3b3, 0xffffff };
 
 /** Color scheme known as icp_CB_Set3_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set3_03[6]        = {        "6", "#000000", "#8dd3c7", "#ffffb3", "#bebada", "#ffffff" };
+extern const uint32_t icp_CB_Set3_03[6]        = {        0x6, 0x000000, 0x8dd3c7, 0xffffb3, 0xbebada, 0xffffff };
 
 /** Color scheme known as icp_CB_Set3_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set3_04[7]        = {        "7", "#000000", "#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#ffffff" };
+extern const uint32_t icp_CB_Set3_04[7]        = {        0x7, 0x000000, 0x8dd3c7, 0xffffb3, 0xbebada, 0xfb8072, 0xffffff };
 
 /** Color scheme known as icp_CB_Set3_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set3_05[8]        = {        "8", "#000000", "#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#ffffff" };
+extern const uint32_t icp_CB_Set3_05[8]        = {        0x8, 0x000000, 0x8dd3c7, 0xffffb3, 0xbebada, 0xfb8072, 0x80b1d3, 0xffffff };
 
 /** Color scheme known as icp_CB_Set3_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set3_06[9]        = {        "9", "#000000", "#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#ffffff" };
+extern const uint32_t icp_CB_Set3_06[9]        = {        0x9, 0x000000, 0x8dd3c7, 0xffffb3, 0xbebada, 0xfb8072, 0x80b1d3, 0xfdb462, 0xffffff };
 
 /** Color scheme known as icp_CB_Set3_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set3_07[10]       = {        "a", "#000000", "#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#ffffff" };
+extern const uint32_t icp_CB_Set3_07[10]       = {        0xa, 0x000000, 0x8dd3c7, 0xffffb3, 0xbebada, 0xfb8072, 0x80b1d3, 0xfdb462, 0xb3de69, 0xffffff };
 
 /** Color scheme known as icp_CB_Set3_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set3_08[11]       = {        "b", "#000000", "#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5", "#ffffff" };
+extern const uint32_t icp_CB_Set3_08[11]       = {        0xb, 0x000000, 0x8dd3c7, 0xffffb3, 0xbebada, 0xfb8072, 0x80b1d3, 0xfdb462, 0xb3de69, 0xfccde5, 0xffffff };
 
 /** Color scheme known as icp_CB_Set3_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set3_09[12]       = {        "c", "#000000", "#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5", "#d9d9d9", "#ffffff" };
+extern const uint32_t icp_CB_Set3_09[12]       = {        0xc, 0x000000, 0x8dd3c7, 0xffffb3, 0xbebada, 0xfb8072, 0x80b1d3, 0xfdb462, 0xb3de69, 0xfccde5, 0xd9d9d9, 0xffffff };
 
 /** Color scheme known as icp_CB_Set3_10 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set3_10[13]       = {        "d", "#000000", "#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5", "#d9d9d9", "#bc80bd", "#ffffff" };
+extern const uint32_t icp_CB_Set3_10[13]       = {        0xd, 0x000000, 0x8dd3c7, 0xffffb3, 0xbebada, 0xfb8072, 0x80b1d3, 0xfdb462, 0xb3de69, 0xfccde5, 0xd9d9d9, 0xbc80bd, 0xffffff };
 
 /** Color scheme known as icp_CB_Set3_11 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set3_11[14]       = {        "e", "#000000", "#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5", "#d9d9d9", "#bc80bd", "#ccebc5", "#ffffff" };
+extern const uint32_t icp_CB_Set3_11[14]       = {        0xe, 0x000000, 0x8dd3c7, 0xffffb3, 0xbebada, 0xfb8072, 0x80b1d3, 0xfdb462, 0xb3de69, 0xfccde5, 0xd9d9d9, 0xbc80bd, 0xccebc5, 0xffffff };
 
 /** Color scheme known as icp_CB_Set3_12 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Qualitative */
-const char *icp_CB_Set3_12[15]       = {        "f", "#000000", "#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5", "#d9d9d9", "#bc80bd", "#ccebc5", "#ffed6f", "#ffffff" };
+extern const uint32_t icp_CB_Set3_12[15]       = {        0xf, 0x000000, 0x8dd3c7, 0xffffb3, 0xbebada, 0xfb8072, 0x80b1d3, 0xfdb462, 0xb3de69, 0xfccde5, 0xd9d9d9, 0xbc80bd, 0xccebc5, 0xffed6f, 0xffffff };
 
 /** Color scheme known as icp_CB_Spectral_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_Spectral_03[6]    = {        "6", "#000000", "#fc8d59", "#ffffbf", "#99d594", "#ffffff" };
+extern const uint32_t icp_CB_Spectral_03[6]    = {        0x6, 0x000000, 0xfc8d59, 0xffffbf, 0x99d594, 0xffffff };
 
 /** Color scheme known as icp_CB_Spectral_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_Spectral_04[7]    = {        "7", "#000000", "#d7191c", "#fdae61", "#abdda4", "#2b83ba", "#ffffff" };
+extern const uint32_t icp_CB_Spectral_04[7]    = {        0x7, 0x000000, 0xd7191c, 0xfdae61, 0xabdda4, 0x2b83ba, 0xffffff };
 
 /** Color scheme known as icp_CB_Spectral_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_Spectral_05[8]    = {        "8", "#000000", "#d7191c", "#fdae61", "#ffffbf", "#abdda4", "#2b83ba", "#ffffff" };
+extern const uint32_t icp_CB_Spectral_05[8]    = {        0x8, 0x000000, 0xd7191c, 0xfdae61, 0xffffbf, 0xabdda4, 0x2b83ba, 0xffffff };
 
 /** Color scheme known as icp_CB_Spectral_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_Spectral_06[9]    = {        "9", "#000000", "#d53e4f", "#fc8d59", "#fee08b", "#e6f598", "#99d594", "#3288bd", "#ffffff" };
+extern const uint32_t icp_CB_Spectral_06[9]    = {        0x9, 0x000000, 0xd53e4f, 0xfc8d59, 0xfee08b, 0xe6f598, 0x99d594, 0x3288bd, 0xffffff };
 
 /** Color scheme known as icp_CB_Spectral_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_Spectral_07[10]   = {        "a", "#000000", "#d53e4f", "#fc8d59", "#fee08b", "#ffffbf", "#e6f598", "#99d594", "#3288bd", "#ffffff" };
+extern const uint32_t icp_CB_Spectral_07[10]   = {        0xa, 0x000000, 0xd53e4f, 0xfc8d59, 0xfee08b, 0xffffbf, 0xe6f598, 0x99d594, 0x3288bd, 0xffffff };
 
 /** Color scheme known as icp_CB_Spectral_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_Spectral_08[11]   = {        "b", "#000000", "#d53e4f", "#f46d43", "#fdae61", "#fee08b", "#e6f598", "#abdda4", "#66c2a5", "#3288bd", "#ffffff" };
+extern const uint32_t icp_CB_Spectral_08[11]   = {        0xb, 0x000000, 0xd53e4f, 0xf46d43, 0xfdae61, 0xfee08b, 0xe6f598, 0xabdda4, 0x66c2a5, 0x3288bd, 0xffffff };
 
 /** Color scheme known as icp_CB_Spectral_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_Spectral_09[12]   = {        "c", "#000000", "#d53e4f", "#f46d43", "#fdae61", "#fee08b", "#ffffbf", "#e6f598", "#abdda4", "#66c2a5", "#3288bd", "#ffffff" };
+extern const uint32_t icp_CB_Spectral_09[12]   = {        0xc, 0x000000, 0xd53e4f, 0xf46d43, 0xfdae61, 0xfee08b, 0xffffbf, 0xe6f598, 0xabdda4, 0x66c2a5, 0x3288bd, 0xffffff };
 
 /** Color scheme known as icp_CB_Spectral_10 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_Spectral_10[13]   = {        "d", "#000000", "#9e0142", "#d53e4f", "#f46d43", "#fdae61", "#fee08b", "#e6f598", "#abdda4", "#66c2a5", "#3288bd", "#5e4fa2", "#ffffff" };
+extern const uint32_t icp_CB_Spectral_10[13]   = {        0xd, 0x000000, 0x9e0142, 0xd53e4f, 0xf46d43, 0xfdae61, 0xfee08b, 0xe6f598, 0xabdda4, 0x66c2a5, 0x3288bd, 0x5e4fa2, 0xffffff };
 
 /** Color scheme known as icp_CB_Spectral_11 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Divergent */
-const char *icp_CB_Spectral_11[14]   = {        "e", "#000000", "#9e0142", "#d53e4f", "#f46d43", "#fdae61", "#fee08b", "#ffffbf", "#e6f598", "#abdda4", "#66c2a5", "#3288bd", "#5e4fa2", "#ffffff" };
+extern const uint32_t icp_CB_Spectral_11[14]   = {        0xe, 0x000000, 0x9e0142, 0xd53e4f, 0xf46d43, 0xfdae61, 0xfee08b, 0xffffbf, 0xe6f598, 0xabdda4, 0x66c2a5, 0x3288bd, 0x5e4fa2, 0xffffff };
 
 /** Color scheme known as icp_CB_YlGnBu_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlGnBu_03[6]      = {        "6", "#000000", "#edf8b1", "#7fcdbb", "#2c7fb8", "#ffffff" };
+extern const uint32_t icp_CB_YlGnBu_03[6]      = {        0x6, 0x000000, 0xedf8b1, 0x7fcdbb, 0x2c7fb8, 0xffffff };
 
 /** Color scheme known as icp_CB_YlGnBu_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlGnBu_04[7]      = {        "7", "#000000", "#ffffcc", "#a1dab4", "#41b6c4", "#225ea8", "#ffffff" };
+extern const uint32_t icp_CB_YlGnBu_04[7]      = {        0x7, 0x000000, 0xffffcc, 0xa1dab4, 0x41b6c4, 0x225ea8, 0xffffff };
 
 /** Color scheme known as icp_CB_YlGnBu_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlGnBu_05[8]      = {        "8", "#000000", "#ffffcc", "#a1dab4", "#41b6c4", "#2c7fb8", "#253494", "#ffffff" };
+extern const uint32_t icp_CB_YlGnBu_05[8]      = {        0x8, 0x000000, 0xffffcc, 0xa1dab4, 0x41b6c4, 0x2c7fb8, 0x253494, 0xffffff };
 
 /** Color scheme known as icp_CB_YlGnBu_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlGnBu_06[9]      = {        "9", "#000000", "#ffffcc", "#c7e9b4", "#7fcdbb", "#41b6c4", "#2c7fb8", "#253494", "#ffffff" };
+extern const uint32_t icp_CB_YlGnBu_06[9]      = {        0x9, 0x000000, 0xffffcc, 0xc7e9b4, 0x7fcdbb, 0x41b6c4, 0x2c7fb8, 0x253494, 0xffffff };
 
 /** Color scheme known as icp_CB_YlGnBu_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlGnBu_07[10]     = {        "a", "#000000", "#ffffcc", "#c7e9b4", "#7fcdbb", "#41b6c4", "#1d91c0", "#225ea8", "#0c2c84", "#ffffff" };
+extern const uint32_t icp_CB_YlGnBu_07[10]     = {        0xa, 0x000000, 0xffffcc, 0xc7e9b4, 0x7fcdbb, 0x41b6c4, 0x1d91c0, 0x225ea8, 0x0c2c84, 0xffffff };
 
 /** Color scheme known as icp_CB_YlGnBu_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlGnBu_08[11]     = {        "b", "#000000", "#ffffd9", "#edf8b1", "#c7e9b4", "#7fcdbb", "#41b6c4", "#1d91c0", "#225ea8", "#0c2c84", "#ffffff" };
+extern const uint32_t icp_CB_YlGnBu_08[11]     = {        0xb, 0x000000, 0xffffd9, 0xedf8b1, 0xc7e9b4, 0x7fcdbb, 0x41b6c4, 0x1d91c0, 0x225ea8, 0x0c2c84, 0xffffff };
 
 /** Color scheme known as icp_CB_YlGnBu_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlGnBu_09[12]     = {        "c", "#000000", "#ffffd9", "#edf8b1", "#c7e9b4", "#7fcdbb", "#41b6c4", "#1d91c0", "#225ea8", "#253494", "#081d58", "#ffffff" };
+extern const uint32_t icp_CB_YlGnBu_09[12]     = {        0xc, 0x000000, 0xffffd9, 0xedf8b1, 0xc7e9b4, 0x7fcdbb, 0x41b6c4, 0x1d91c0, 0x225ea8, 0x253494, 0x081d58, 0xffffff };
 
 /** Color scheme known as icp_CB_YlGn_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlGn_03[6]        = {        "6", "#000000", "#f7fcb9", "#addd8e", "#31a354", "#ffffff" };
+extern const uint32_t icp_CB_YlGn_03[6]        = {        0x6, 0x000000, 0xf7fcb9, 0xaddd8e, 0x31a354, 0xffffff };
 
 /** Color scheme known as icp_CB_YlGn_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlGn_04[7]        = {        "7", "#000000", "#ffffcc", "#c2e699", "#78c679", "#238443", "#ffffff" };
+extern const uint32_t icp_CB_YlGn_04[7]        = {        0x7, 0x000000, 0xffffcc, 0xc2e699, 0x78c679, 0x238443, 0xffffff };
 
 /** Color scheme known as icp_CB_YlGn_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlGn_05[8]        = {        "8", "#000000", "#ffffcc", "#c2e699", "#78c679", "#31a354", "#006837", "#ffffff" };
+extern const uint32_t icp_CB_YlGn_05[8]        = {        0x8, 0x000000, 0xffffcc, 0xc2e699, 0x78c679, 0x31a354, 0x006837, 0xffffff };
 
 /** Color scheme known as icp_CB_YlGn_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlGn_06[9]        = {        "9", "#000000", "#ffffcc", "#d9f0a3", "#addd8e", "#78c679", "#31a354", "#006837", "#ffffff" };
+extern const uint32_t icp_CB_YlGn_06[9]        = {        0x9, 0x000000, 0xffffcc, 0xd9f0a3, 0xaddd8e, 0x78c679, 0x31a354, 0x006837, 0xffffff };
 
 /** Color scheme known as icp_CB_YlGn_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlGn_07[10]       = {        "a", "#000000", "#ffffcc", "#d9f0a3", "#addd8e", "#78c679", "#41ab5d", "#238443", "#005a32", "#ffffff" };
+extern const uint32_t icp_CB_YlGn_07[10]       = {        0xa, 0x000000, 0xffffcc, 0xd9f0a3, 0xaddd8e, 0x78c679, 0x41ab5d, 0x238443, 0x005a32, 0xffffff };
 
 /** Color scheme known as icp_CB_YlGn_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlGn_08[11]       = {        "b", "#000000", "#ffffe5", "#f7fcb9", "#d9f0a3", "#addd8e", "#78c679", "#41ab5d", "#238443", "#005a32", "#ffffff" };
+extern const uint32_t icp_CB_YlGn_08[11]       = {        0xb, 0x000000, 0xffffe5, 0xf7fcb9, 0xd9f0a3, 0xaddd8e, 0x78c679, 0x41ab5d, 0x238443, 0x005a32, 0xffffff };
 
 /** Color scheme known as icp_CB_YlGn_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlGn_09[12]       = {        "c", "#000000", "#ffffe5", "#f7fcb9", "#d9f0a3", "#addd8e", "#78c679", "#41ab5d", "#238443", "#006837", "#004529", "#ffffff" };
+extern const uint32_t icp_CB_YlGn_09[12]       = {        0xc, 0x000000, 0xffffe5, 0xf7fcb9, 0xd9f0a3, 0xaddd8e, 0x78c679, 0x41ab5d, 0x238443, 0x006837, 0x004529, 0xffffff };
 
 /** Color scheme known as icp_CB_YlOrBr_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlOrBr_03[6]      = {        "6", "#000000", "#fff7bc", "#fec44f", "#d95f0e", "#ffffff" };
+extern const uint32_t icp_CB_YlOrBr_03[6]      = {        0x6, 0x000000, 0xfff7bc, 0xfec44f, 0xd95f0e, 0xffffff };
 
 /** Color scheme known as icp_CB_YlOrBr_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlOrBr_04[7]      = {        "7", "#000000", "#ffffd4", "#fed98e", "#fe9929", "#cc4c02", "#ffffff" };
+extern const uint32_t icp_CB_YlOrBr_04[7]      = {        0x7, 0x000000, 0xffffd4, 0xfed98e, 0xfe9929, 0xcc4c02, 0xffffff };
 
 /** Color scheme known as icp_CB_YlOrBr_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlOrBr_05[8]      = {        "8", "#000000", "#ffffd4", "#fed98e", "#fe9929", "#d95f0e", "#993404", "#ffffff" };
+extern const uint32_t icp_CB_YlOrBr_05[8]      = {        0x8, 0x000000, 0xffffd4, 0xfed98e, 0xfe9929, 0xd95f0e, 0x993404, 0xffffff };
 
 /** Color scheme known as icp_CB_YlOrBr_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlOrBr_06[9]      = {        "9", "#000000", "#ffffd4", "#fee391", "#fec44f", "#fe9929", "#d95f0e", "#993404", "#ffffff" };
+extern const uint32_t icp_CB_YlOrBr_06[9]      = {        0x9, 0x000000, 0xffffd4, 0xfee391, 0xfec44f, 0xfe9929, 0xd95f0e, 0x993404, 0xffffff };
 
 /** Color scheme known as icp_CB_YlOrBr_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlOrBr_07[10]     = {        "a", "#000000", "#ffffd4", "#fee391", "#fec44f", "#fe9929", "#ec7014", "#cc4c02", "#8c2d04", "#ffffff" };
+extern const uint32_t icp_CB_YlOrBr_07[10]     = {        0xa, 0x000000, 0xffffd4, 0xfee391, 0xfec44f, 0xfe9929, 0xec7014, 0xcc4c02, 0x8c2d04, 0xffffff };
 
 /** Color scheme known as icp_CB_YlOrBr_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlOrBr_08[11]     = {        "b", "#000000", "#ffffe5", "#fff7bc", "#fee391", "#fec44f", "#fe9929", "#ec7014", "#cc4c02", "#8c2d04", "#ffffff" };
+extern const uint32_t icp_CB_YlOrBr_08[11]     = {        0xb, 0x000000, 0xffffe5, 0xfff7bc, 0xfee391, 0xfec44f, 0xfe9929, 0xec7014, 0xcc4c02, 0x8c2d04, 0xffffff };
 
 /** Color scheme known as icp_CB_YlOrBr_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlOrBr_09[12]     = {        "c", "#000000", "#ffffe5", "#fff7bc", "#fee391", "#fec44f", "#fe9929", "#ec7014", "#cc4c02", "#993404", "#662506", "#ffffff" };
+extern const uint32_t icp_CB_YlOrBr_09[12]     = {        0xc, 0x000000, 0xffffe5, 0xfff7bc, 0xfee391, 0xfec44f, 0xfe9929, 0xec7014, 0xcc4c02, 0x993404, 0x662506, 0xffffff };
 
 /** Color scheme known as icp_CB_YlOrRd_03 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlOrRd_03[6]      = {        "6", "#000000", "#ffeda0", "#feb24c", "#f03b20", "#ffffff" };
+extern const uint32_t icp_CB_YlOrRd_03[6]      = {        0x6, 0x000000, 0xffeda0, 0xfeb24c, 0xf03b20, 0xffffff };
 
 /** Color scheme known as icp_CB_YlOrRd_04 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlOrRd_04[7]      = {        "7", "#000000", "#ffffb2", "#fecc5c", "#fd8d3c", "#e31a1c", "#ffffff" };
+extern const uint32_t icp_CB_YlOrRd_04[7]      = {        0x7, 0x000000, 0xffffb2, 0xfecc5c, 0xfd8d3c, 0xe31a1c, 0xffffff };
 
 /** Color scheme known as icp_CB_YlOrRd_05 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlOrRd_05[8]      = {        "8", "#000000", "#ffffb2", "#fecc5c", "#fd8d3c", "#f03b20", "#bd0026", "#ffffff" };
+extern const uint32_t icp_CB_YlOrRd_05[8]      = {        0x8, 0x000000, 0xffffb2, 0xfecc5c, 0xfd8d3c, 0xf03b20, 0xbd0026, 0xffffff };
 
 /** Color scheme known as icp_CB_YlOrRd_06 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlOrRd_06[9]      = {        "9", "#000000", "#ffffb2", "#fed976", "#feb24c", "#fd8d3c", "#f03b20", "#bd0026", "#ffffff" };
+extern const uint32_t icp_CB_YlOrRd_06[9]      = {        0x9, 0x000000, 0xffffb2, 0xfed976, 0xfeb24c, 0xfd8d3c, 0xf03b20, 0xbd0026, 0xffffff };
 
 /** Color scheme known as icp_CB_YlOrRd_07 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlOrRd_07[10]     = {        "a", "#000000", "#ffffb2", "#fed976", "#feb24c", "#fd8d3c", "#fc4e2a", "#e31a1c", "#b10026", "#ffffff" };
+extern const uint32_t icp_CB_YlOrRd_07[10]     = {        0xa, 0x000000, 0xffffb2, 0xfed976, 0xfeb24c, 0xfd8d3c, 0xfc4e2a, 0xe31a1c, 0xb10026, 0xffffff };
 
 /** Color scheme known as icp_CB_YlOrRd_08 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlOrRd_08[11]     = {        "b", "#000000", "#ffffcc", "#ffeda0", "#fed976", "#feb24c", "#fd8d3c", "#fc4e2a", "#e31a1c", "#b10026", "#ffffff" };
+extern const uint32_t icp_CB_YlOrRd_08[11]     = {        0xb, 0x000000, 0xffffcc, 0xffeda0, 0xfed976, 0xfeb24c, 0xfd8d3c, 0xfc4e2a, 0xe31a1c, 0xb10026, 0xffffff };
 
 /** Color scheme known as icp_CB_YlOrRd_09 the ColorBrewer collection.  Origonal source: Brewer, Cynthia A., 2005. http://www.ColorBrewer.org, 2005-12-19.
     Color scheme type: Sequential */
-const char *icp_CB_YlOrRd_09[12]     = {        "c", "#000000", "#ffffcc", "#ffeda0", "#fed976", "#feb24c", "#fd8d3c", "#fc4e2a", "#e31a1c", "#bd0026", "#800026", "#ffffff" };
+extern const uint32_t icp_CB_YlOrRd_09[12]     = {        0xc, 0x000000, 0xffffcc, 0xffeda0, 0xfed976, 0xfeb24c, 0xfd8d3c, 0xfc4e2a, 0xe31a1c, 0xbd0026, 0x800026, 0xffffff };
 
 /** Black and White Color */
-const char *icp_MJR_BlWt_02[3]       = { "3", "#000000", "#ffffff" };
+extern const uint32_t icp_MJR_BlWt_02[3]       = { 0x3, 0x000000, 0xffffff };
 
 /** Reg, Blue, Green */
-const char *icp_MJR_RBG_03[6]        = { "3", "#000000", "#ff0000", "#00ff00", "#0000ff", "#ffffff" };
+extern const uint32_t icp_MJR_RBG_03[6]        = { 0x3, 0x000000, 0xff0000, 0x00ff00, 0x0000ff, 0xffffff };
 
 } // end namespace mjr
