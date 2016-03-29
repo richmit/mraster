@@ -31,23 +31,24 @@
 #include "ramCanvas.hpp"
 #include <complex>
 
-#define NUMITR 1024
-
-using namespace mjr;
-
 int main(void) {
   int count;
+  const int NUMITR = 1024;
   std::complex<float> c, z, zero(0.0, 0.0);  
-  ramCanvas4c8b theRamCanvas = ramCanvas4c8b(7680, 7680, -2.2, 0.8, -1.5, 1.5);
+  mjr::ramCanvas4c8b theRamCanvas(7680, 7680, -2.2, 0.8, -1.5, 1.5);
 
+#pragma omp parallel for private(c, z, count)
   for(int y=0;y<theRamCanvas.get_numYpix();y++) {
     for(int x=0;x<theRamCanvas.get_numXpix();x++) {
       for(c=std::complex<float>(theRamCanvas.int2realX(x),theRamCanvas.int2realY(y)),z=zero,count=0; (std::norm(z)<4)&&(count<=NUMITR); count++,z=z*z+c)
         ;
 	  if(count < NUMITR)
-        theRamCanvas.drawPoint(x, y, color4c8b().cmpFireRamp(intWrap(count*20, 767)));
+        theRamCanvas.drawPoint(x, y, mjr::color4c8b().cmpFireRamp(mjr::intWrap(count*20, 767)));
     }
   }
+#if defined(_OPENMP)
+  theRamCanvas.writeTGAfile("mandelbrot_c_MT.tga");
+#else
   theRamCanvas.writeTGAfile("mandelbrot_c.tga");
+#endif  
 }
-

@@ -44,7 +44,7 @@ RCCPPF    = $(RCHOME)/colorData.cpp $(RCHOME)/hersheyFontData.cpp
 TCOLORS  = colorAll colorWebTriangle colorWebRectangle colorCubeGraphRamps colorIndexedPallets colorGeneralRamps colorRainbows colorInterplHLSvsRGB
 TTEST    = testDraw testDraw2 bmark testColor testPoint testStrings testGlyph testFonts testBaryTry
 TIMGPRO  = imgProExample
-TFRACTAL = mandelbrot_c sierpinskiTriangle newton3_c newton3_c newton2_c newton newton_c distanceMandelbrot mandelbrot potMandelbrot triangleMandelbrot peterdejong sic sic_search tippets biomorph1 biomorph2 bifurcationDiagram
+TFRACTAL = mandelbrot_c sierpinskiTriangle newton3_c newton3_c newton2_c newton newton_c distanceMandelbrot mandelbrot potMandelbrot triangleMandelbrot peterdejong sic sic_search tippets biomorph1 biomorph2 bifurcationDiagram mandelbrot_c_MT
 TMATHGR  = levelCCurves
 
 TGLUT    = glutImage
@@ -187,7 +187,10 @@ mandelbrot : mandelbrot.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) mandelbrot.cpp -o mandelbrot
 
 mandelbrot_c : mandelbrot_c.cpp $(RCHPPF) $(RCCPPF)
-		$(CXX) $(CXXFLAGS) $(RCCPPF) mandelbrot_c.cpp -o mandelbrot_c
+		$(CXX) -Wno-unknown-pragmas $(CXXFLAGS) $(RCCPPF) mandelbrot_c.cpp -o mandelbrot_c
+
+mandelbrot_c_MT : mandelbrot_c.cpp $(RCHPPF) $(RCCPPF)
+		$(CXX) -fopenmp $(CXXFLAGS) $(RCCPPF) mandelbrot_c.cpp -o mandelbrot_c_MT
 
 potMandelbrot : potMandelbrot.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) potMandelbrot.cpp -o potMandelbrot

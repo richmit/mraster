@@ -60,7 +60,7 @@ int main(void) {
         }
       }
       color4c8b aColor;
-      aColor.setColorFromPackedIntABGR(count, 0, 1, 2, 3);
+      aColor.setColorFromPackedInt(count, 0, 1, 2, 3);
       theRamCanvas_iii.drawPoint(x, y, aColor);
       aColor.setColorFromPackedIntABGR(count);    
       theRamCanvas_int.drawPoint(x, y, aColor);
