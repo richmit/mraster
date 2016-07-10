@@ -2,12 +2,12 @@
 /**************************************************************************************************************************************************************/
 /**
  @file      mandelbrot_c.cpp
- @author    Mitch Richling <http://www.mitchr.me>
+ @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draws a mandelbrot set using the C++ complex type.@EOL
  @std       C++98
  @copyright 
   @parblock
-  Copyright (c) 1988-2015, Mitchell Jay Richling <http://www.mitchr.me> All rights reserved.
+  Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 

@@ -2,11 +2,11 @@
 ################################################################################################################################################################
 ##
 # @file      makefile
-# @author    Mitch Richling <http://www.mitchr.me>
+# @author    Mitch Richling <https://www.mitchr.me>
 # @brief     Makefile for ramCanvas example programs.@EOL
 # @copyright
 #  @parblock
-#  Copyright (c) 2015, Mitchell Jay Richling <http://www.mitchr.me> All rights reserved.
+#  Copyright (c) 2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 #

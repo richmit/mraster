@@ -2,14 +2,14 @@
 /**************************************************************************************************************************************************************/
 /**
  @file      sic_search.cpp
- @author    Mitch Richling <http://www.mitchr.me>
+ @author    Mitch Richling <https://www.mitchr.me>
  @brief     Find parameters for SIC fractals that light up lots of pixels.@EOL
  @keywords  
  @std       C++11
  @see       
  @copyright 
   @parblock
-  Copyright (c) 1988-2015, Mitchell Jay Richling <http://www.mitchr.me> All rights reserved.
+  Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
