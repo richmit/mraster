@@ -141,6 +141,8 @@ namespace mjr {
       enum class axisOrientation {INVERTED, NATURAL};  //!< Enum for axis orientation
       
       enum class pt {INVERTED, NATURAL};  //!< Enum for axis orientation
+
+      enum class drawModeType {SET, XOR, ADDCLIP, AND, OR, DIFFCLIP, MULTCLIP};  //!< Enum for drawing Mode
       
       //const static intCrdT intCrdMax = std::sqrt(std::numeric_limits<intCrdT>::max()) - 1; // Some compilers don't think sqrt(const) is const
       const static intCrdT intCrdMax = (1ul << ((sizeof(intCrdT)*CHAR_BIT-1)/2)) - 3;        //!< maximum "on canvas" integer coordinate
@@ -199,10 +201,10 @@ namespace mjr {
 
       /** @name Drawing defaults */
       //@{
-      colorT dfltColor;   //!< Default color.
-      colorT drawMode;    //!< Drawing mode.
-      intCrdT dfltX;      //!< x coordinate used by default.
-      intCrdT dfltY;      //!< y coordinate used by default.
+      colorT dfltColor;      //!< Default color.
+      drawModeType drawMode; //!< Drawing mode.
+      intCrdT dfltX;         //!< x coordinate used by default.
+      intCrdT dfltY;         //!< y coordinate used by default.
       //@}
 
       /** @name Filled Triangle Utility Functions */
@@ -982,6 +984,18 @@ namespace mjr {
       void set_realAxisDefaultOrientation();      
       //@}
 
+      /** @name Drawing Mode */
+      //@{
+      /** Get the current drawing mode
+          @return NATURAL means increasing to the right. */
+      drawModeType get_drawMode();
+      /** Set the current drawing mode
+          @param newDrawMode The drawing mode */
+      void set_drawMode(drawModeType newDrawMode);
+      /** Set the default draw mode */
+      void set_DefaultDrawMode();
+      //@}
+      
       /** @name Orientation of Integer Coordinate Systems */
       //@{
       /** Get the integer X axis orientation
@@ -1089,9 +1103,9 @@ namespace mjr {
       /** This function supports no special drawing options.  It simply sets the pixel to the given color.  In addition, no clipping or bounds checking is
           performed.  Thus, if an argument would cause something to be drawn beyond the bounds of the ramCanvasTpl, a core dump will most certainly result.
           The intent is to provide a less overhead for very careful code that handles clipping and error checking and drawing options by itself -- an image
-          filter algorithm for example.  The options expected to be taken care of are: SUPPORT_ALWAYS_PRESERVE_ALPHA, and SUPPORT_CMP_MOD.  IT is conceivable
-          that the other draw pixel functions could call this one, but a good optimizing compiler must be used in this case or a performance impact will be
-          the result.
+          filter algorithm for example.  The options expected to be taken care of are: SUPPORT_ALWAYS_PRESERVE_ALPHA, and SUPPORT_DRAWING_MODE.  IT is
+          conceivable that the other draw pixel functions could call this one, but a good optimizing compiler must be used in this case or a performance
+          impact will be the result.
           @param x The x coordinate of the point
           @param y The y coordinate of the point
           @param color The color with which to draw the point
@@ -1108,6 +1122,7 @@ namespace mjr {
     pixelsE = NULL;
     set_realAxisDefaultOrientation();
     set_intAxisDefaultOrientation();
+    set_DefaultDrawMode();
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1117,10 +1132,11 @@ namespace mjr {
     newRealCoords(theCanvas.minRealX, theCanvas.maxRealX, theCanvas.minRealY, theCanvas.maxRealY);
     pixels = new colorT[theCanvas.numXpix * theCanvas.numYpix];
     pixelsE = pixels + (theCanvas.numXpix * theCanvas.numYpix);
-    xRealAxOrientation  = theCanvas.xRealAxOrientation;
-    yRealAxOrientation  = theCanvas.yRealAxOrientation;
+    xRealAxOrientation = theCanvas.xRealAxOrientation;
+    yRealAxOrientation = theCanvas.yRealAxOrientation;
     xIntAxOrientation = theCanvas.xIntAxOrientation;
     yIntAxOrientation = theCanvas.yIntAxOrientation;
+    drawMode = theCanvas.drawMode;
     for(intCrdT y=0; y<numYpix; y++)
       for(intCrdT x=0; x<numXpix; x++)
         getPxColorRefNC(x, y) = theCanvas.getPxColorRefNC(x, y);
@@ -1135,9 +1151,31 @@ namespace mjr {
     pixelsE = pixels + (numXpix * numYpix);
     set_realAxisDefaultOrientation();
     set_intAxisDefaultOrientation();
+    set_DefaultDrawMode();
     clrCanvasToBlack();
   }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::set_drawMode(ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawModeType newDrawMode) {
+    drawMode = newDrawMode;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::set_DefaultDrawMode() {
+    set_drawMode(drawModeType::SET);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  typename ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawModeType
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::get_drawMode() {
+    return drawMode;
+  }
+  
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void ramCanvasTpl<colorT, intCrdT, fltCrdT>::newIntCoordsNC(intCrdT numXpix_p, intCrdT numYpix_p) {
@@ -1196,7 +1234,7 @@ namespace mjr {
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::clrCanvas() {
     for(intCrdT y=0; y<numYpix; y++)
       for(intCrdT x=0; x<numXpix; x++)
-        drawPointNC(x, y, dfltColor);
+        drawPointS(x, y, dfltColor);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1204,7 +1242,7 @@ namespace mjr {
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::clrCanvas(colorT color) {
     for(intCrdT y=0; y<numYpix; y++)
       for(intCrdT x=0; x<numXpix; x++)
-        drawPointNC(x, y, color);
+        drawPointS(x, y, color);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2229,6 +2267,8 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT>
   typename ramCanvasTpl<colorT, intCrdT, fltCrdT>::axisOrientation
   ramCanvasTpl<colorT, intCrdT, fltCrdT>::get_xRealAxisOrientation() {
+    //return xRealAxOrientation
+    // TODO -- CHECK ME OUT
   }
   
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3224,7 +3264,33 @@ namespace mjr {
     if(numChan > 3)
       typename colorT::channelType aColorComp = pixels[numXpix * y + x].getAlpha();
 #endif
+#if SUPPORT_DRAWING_MODE
+    switch(drawMode) {
+      case drawModeType::SET:
+        pixels[numXpix * y + x] = color;
+        break;
+      case drawModeType::XOR:
+        pixels[numXpix * y + x].tfrmXor(color);
+        break;
+      case drawModeType::ADDCLIP:
+        pixels[numXpix * y + x].tfrmAddClp(color);
+        break;
+      case drawModeType::AND:
+        pixels[numXpix * y + x].tfrmAnd(color);
+        break;
+      case drawModeType::OR:
+        pixels[numXpix * y + x].tfrmOr(color);
+        break;
+      case drawModeType::DIFFCLIP:
+        pixels[numXpix * y + x].tfrmDiffClp(color);
+        break;
+      case drawModeType::MULTCLIP:
+        pixels[numXpix * y + x].tfrmMultClp(color);
+        break;
+    }
+#else
     pixels[numXpix * y + x] = color;
+#endif
 #if SUPPORT_ALWAYS_PRESERVE_ALPHA
     if(numChan > 3)
       pixels[numXpix * y + x].setAlpha(aColorComp);

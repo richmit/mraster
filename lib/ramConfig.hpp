@@ -77,10 +77,17 @@
 #endif
 
 /** @brief Always keep the Alpha color safe@EOL 
-    If this define is non-zero, then the library will preserve the alpha color for normal draw operations.  
+    If this non-zero, then the library will preserve the alpha color for normal draw operations.  
     @warning Imposes a small performance impact. */
 #ifndef SUPPORT_ALWAYS_PRESERVE_ALPHA
 #define SUPPORT_ALWAYS_PRESERVE_ALPHA 0
+#endif
+
+/** @brief Support drawing modes@EOL 
+    If this non-zero, then the library will support drawMode in ramCanvas objects.
+    @warning Imposes a small performance impact. */
+#ifndef SUPPORT_DRAWING_MODE
+#define SUPPORT_DRAWING_MODE 0
 #endif
 
 // Put everything in the mjr namespace
@@ -92,8 +99,9 @@ namespace mjr {
       
     /** @name Run time detection of compile time options */
     //@{
-    static int              support_always_preserve_alpha() { return SUPPORT_ALWAYS_PRESERVE_ALPHA; }
-    static int              dirty_list()                    { return DIRTY_LIST; }
+      static int support_always_preserve_alpha() { return SUPPORT_ALWAYS_PRESERVE_ALPHA; }
+      static int support_drawing_mode()          { return SUPPORT_DRAWING_MODE; }
+      static int dirty_list()                    { return DIRTY_LIST; }
     //@}
   };
 

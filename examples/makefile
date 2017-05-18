@@ -223,8 +223,10 @@ tippets : tippets.cpp $(RCHPPF) $(RCCPPF)
 		$(CXX) $(CXXFLAGS) $(RCCPPF) tippets.cpp -o tippets
 
 glutImage : glutImage.cpp  $(RCHPPF) $(RCCPPF)
-
 		$(CXX) $(CXXFLAGS) $(RCCPPF) glutImage.cpp -o glutImage $(GLUTFLAGS)
+
+apollony : apollony.cpp $(RCHPPF) $(RCCPPF)
+		$(CXX) $(CXXFLAGS) $(RCCPPF) apollony.cpp -o apollony
 
 potMandelbrot_a_0.tga potMandelbrot_a_1.tga potMandelbrot_a_2.tga potMandelbrot_b_0.tga potMandelbrot_b_1.tga potMandelbrot_b_2.tga : potMandelbrot
 	./potMandelbrot
@@ -256,6 +258,18 @@ potMandelbrot_a_1t.png : potMandelbrot_a_1t.pov potMandelbrot_a_0.tga
 render : potMandelbrot_b_0d.png potMandelbrot_b_1d.png potMandelbrot_b_2d.png potMandelbrot_a_0d.png potMandelbrot_a_1d.png potMandelbrot_a_2d.png potMandelbrot_a_1t.png
 	espeak "render complete"
 
+apomorph : apomorph.cpp
+	g++ -DSUPPORT_DRAWING_MODE=1 -Wstrict-overflow=0 -ffast-math -std=c++14 -Wall -O5 -I../lib ../lib/colorData.cpp ../lib/hersheyFontData.cpp apomorph.cpp -o apomorph
+
+apomorph100.tga : apomorph
+	./apomorph
+
+apomorph.mp4 : apomorph100.tga
+	avconv -i apomorph%3d.tga.png -r 10 -s 540x540 apomorph.mp4
+
+apomorph.avi : apomorph100.tga
+	avconv -i apomorph%3d.tga -vcodec mpeg4 -q 0 -r 10 -s 540x540 -acodec libmp3lame apomorph.avi
+
 clean :
 		rm -f *~
 		rm -f a.out
@@ -263,3 +277,5 @@ clean :
 		rm -f *.o
 		rm -f *.bak
 		rm -f $(TARGETS)
+
+
