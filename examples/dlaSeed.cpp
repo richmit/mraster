@@ -1,12 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
- @file      sic_search.cpp
+ @file      dlaSeed.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Find parameters for SIC fractals that light up lots of pixels.@EOL
- @keywords  
+ @brief     Produces seed images for diffusion limited aggregation (DLA) simulations.@EOL
  @std       C++11
- @see       sic.cpp
  @copyright 
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -32,37 +30,24 @@
 
 #include "ramCanvas.hpp"
 
-#include <map>                                                           /* STL map                 C++11    */
-#include <random>                                                        /* C++ random numbers      C++11    */
+int main(int argc, char *argv[]) {
+  mjr::ramCanvas3c8b theRamCanvas(7680/2, 4320/2, -2.2, 2.2, -2.2, 2.2);
 
-#define BSIZ 2048
+  theRamCanvas.clrCanvas(mjr::color3c8b(255, 0, 0));
+  theRamCanvas.drawLine(                            2,                            2, theRamCanvas.get_numXpix()-3,                            2, mjr::color3c8b(0, 0, 255));
+  theRamCanvas.drawLine(                            2, theRamCanvas.get_numYpix()-3, theRamCanvas.get_numXpix()-3, theRamCanvas.get_numYpix()-3, mjr::color3c8b(0, 0, 255));
+  theRamCanvas.drawLine(                            2,                            2,                            2, theRamCanvas.get_numYpix()-3, mjr::color3c8b(0, 0, 255));
+  theRamCanvas.drawLine( theRamCanvas.get_numXpix()-3,                            2, theRamCanvas.get_numXpix()-3, theRamCanvas.get_numYpix()-3, mjr::color3c8b(0, 0, 255));
+  theRamCanvas.writeTIFFfile("dlaSeed_border.tiff");
+  
+  theRamCanvas.clrCanvas(mjr::color3c8b(255, 0, 0));
+  theRamCanvas.drawPoint(theRamCanvas.get_numXpix()/2, theRamCanvas.get_numYpix()/2, mjr::color3c8b(0, 0, 255));
+  theRamCanvas.writeTIFFfile("dlaSeed_center.tiff");
 
-int main(void) {
-  std::random_device rd;
-  std::mt19937 rEng(rd());
-  std::uniform_real_distribution<double> uniform_dist_float(-2.0, 2.0);
-  std::uniform_int_distribution<int>     uniform_dist_int(3, 7);
-
-  mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -2, 2, -2, 2); // Just used for coordinate conversion. ;)
-
-  uint64_t maxCnt = 0;
-  for(int j=0; j<100000; j++) {
-    std::map<uint64_t, uint64_t> ptcnt;
-    float lambda = uniform_dist_float(rEng);
-    float alpha  = uniform_dist_float(rEng);
-    float beta   = uniform_dist_float(rEng);
-    float gamma  = uniform_dist_float(rEng);
-    float w      = uniform_dist_float(rEng);
-    int n        = uniform_dist_int(rEng);
-    std::complex<float> z(.01,.01);
-    for(uint64_t i=0;i<10000;i++) { 
-      z = (lambda + alpha*z*std::conj(z)+beta*std::pow(z, n).real() + w*std::complex<float>(0,1))*z+gamma*std::pow(std::conj(z), n-1);
-      ptcnt[((uint64_t)theRamCanvas.real2intX(z.real()))<<32 | ((uint64_t)theRamCanvas.real2intY(z.imag()))] = 1;
-    }
-    if(ptcnt.size() > maxCnt) {
-      maxCnt = ptcnt.size();
-      std::cout << j << " " << maxCnt << " " << lambda << "," <<  alpha << "," <<  beta << "," <<  gamma << "," <<  w << "," << n << std::endl;
-    }
-  }
-  return 0;
+  theRamCanvas.clrCanvas(mjr::color3c8b(255, 0, 0));
+  theRamCanvas.drawCircle( theRamCanvas.get_numXpix()/2, theRamCanvas.get_numYpix()/2, theRamCanvas.get_numYpix()/4,   mjr::color3c8b(0, 0, 255));
+  theRamCanvas.drawCircle( theRamCanvas.get_numXpix()/2, theRamCanvas.get_numYpix()/2, theRamCanvas.get_numYpix()/2-3, mjr::color3c8b(0, 0, 255));
+  theRamCanvas.drawCircle( theRamCanvas.get_numXpix()/2, theRamCanvas.get_numYpix()/2, theRamCanvas.get_numXpix()/2-3, mjr::color3c8b(0, 0, 255));
+  theRamCanvas.drawCircle( theRamCanvas.get_numXpix()/2, theRamCanvas.get_numYpix()/2, (theRamCanvas.get_numYpix()+theRamCanvas.get_numXpix())/4-3, mjr::color3c8b(0, 0, 255));
+  theRamCanvas.writeTIFFfile("dlaSeed_circles.tiff");
 }

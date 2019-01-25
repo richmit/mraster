@@ -3,7 +3,7 @@
 /**
  @file      biomorph1.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Draws a mandelbrot set using the C++ complex type.@EOL
+ @brief     Draw some classical versions of Clifford Pickover's biomorph fractals.@EOL
  @std       C++14
  @copyright 
   @parblock
@@ -29,31 +29,30 @@
 ***************************************************************************************************************************************************************/
 
 #include "ramCanvas.hpp"
-#include <complex>
+
+#include <complex>                                                       /* STL algorithm           C++11    */
 
 #define NUMITR 2000
 #define CSIZE  7680
 //#define CSIZE  2000
 #define LIM  4
 
-using namespace mjr;
-
 int main(void) {
   int count;
   std::complex<float> oneone(1,1), z;
     
-  ramCanvas4c8b theRamCanvasA(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
-  ramCanvas4c8b theRamCanvasB(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
-  ramCanvas4c8b theRamCanvasC(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
-  ramCanvas4c8b theRamCanvasD(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
-  ramCanvas4c8b theRamCanvasE(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
-  ramCanvas4c8b theRamCanvasF(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
-  ramCanvas4c8b theRamCanvasG(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
-  ramCanvas4c8b theRamCanvasH(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
-  ramCanvas4c8b theRamCanvasI(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
-  ramCanvas4c8b theRamCanvasJ(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
-  ramCanvas4c8b theRamCanvasK(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
-  ramCanvas4c8b theRamCanvasL(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
+  mjr::ramCanvas3c8b theRamCanvasA(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
+  mjr::ramCanvas3c8b theRamCanvasB(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
+  mjr::ramCanvas3c8b theRamCanvasC(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
+  mjr::ramCanvas3c8b theRamCanvasD(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
+  mjr::ramCanvas3c8b theRamCanvasE(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
+  mjr::ramCanvas3c8b theRamCanvasF(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
+  mjr::ramCanvas3c8b theRamCanvasG(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
+  mjr::ramCanvas3c8b theRamCanvasH(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
+  mjr::ramCanvas3c8b theRamCanvasI(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
+  mjr::ramCanvas3c8b theRamCanvasJ(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
+  mjr::ramCanvas3c8b theRamCanvasK(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
+  mjr::ramCanvas3c8b theRamCanvasL(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
 
   for(int y=0;y<theRamCanvasA.get_numYpix();y++) {
     if((y%(CSIZE/10))==0)
@@ -64,61 +63,61 @@ int main(void) {
           count++,z=std::pow(z, 5)+oneone) ;
       if(count < NUMITR) {
         // A
-        theRamCanvasA.drawPoint(x, y, color4c8b().cmpClrCubeRainbow(intWrap(count*500, 255*6+1)));
+        theRamCanvasA.drawPoint(x, y, mjr::color3c8b().cmpClrCubeRainbow(mjr::intWrap(count*500, 255*6+1)));
         // B
-        theRamCanvasB.drawPoint(x, y, color4c8b().cmpClrCubeRainbow(intWrap(std::norm(z)/1000, 255*6+1)));
+        theRamCanvasB.drawPoint(x, y, mjr::color3c8b().cmpClrCubeRainbow(mjr::intWrap(std::norm(z)/1000, 255*6+1)));
         // C
-        theRamCanvasC.drawPoint(x, y, color4c8b().cmpClrCubeRainbow(intWrap(std::abs(std::imag(z)), 255*6+1)));
+        theRamCanvasC.drawPoint(x, y, mjr::color3c8b().cmpClrCubeRainbow(mjr::intWrap(std::abs(std::imag(z)), 255*6+1)));
         // D
-        theRamCanvasD.drawPoint(x, y, color4c8b().cmpClrCubeRainbow(intWrap(std::abs(std::real(z)), 255*6+1)));
+        theRamCanvasD.drawPoint(x, y, mjr::color3c8b().cmpClrCubeRainbow(mjr::intWrap(std::abs(std::real(z)), 255*6+1)));
         // E
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
-          theRamCanvasE.drawPoint(x, y, color4c8b("red"));
+          theRamCanvasE.drawPoint(x, y, mjr::color3c8b("red"));
         else
-          theRamCanvasE.drawPoint(x, y, color4c8b("blue"));
+          theRamCanvasE.drawPoint(x, y, mjr::color3c8b("blue"));
         // F
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
-          theRamCanvasF.drawPoint(x, y, color4c8b().cmpColorRamp(intWrap(std::abs(std::real(z))/1, 255*1-1), "0R"));
+          theRamCanvasF.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(std::abs(std::real(z))/1, 255*1-1), "0R"));
         else
-          theRamCanvasF.drawPoint(x, y, color4c8b().cmpColorRamp(intWrap(std::abs(std::imag(z))/1, 255*1-1), "0B"));
+          theRamCanvasF.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(std::abs(std::imag(z))/1, 255*1-1), "0B"));
         // G
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
-          theRamCanvasG.drawPoint(x, y, color4c8b().cmpColorRamp(intWrap(std::norm(z)/1000, 255*1-1), "0R"));
+          theRamCanvasG.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(std::norm(z)/1000, 255*1-1), "0R"));
         else
-          theRamCanvasG.drawPoint(x, y, color4c8b().cmpColorRamp(intWrap(std::norm(z)/1000, 255*1-1), "0B"));
+          theRamCanvasG.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(std::norm(z)/1000, 255*1-1), "0B"));
         // H
         if(std::real(z) < 0) {
           if(std::imag(z) < 0) {
-            theRamCanvasH.drawPoint(x, y, color4c8b().cmpColorRamp(intWrap(std::abs(std::real(z)), 255*1-1), "0R"));
+            theRamCanvasH.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(std::abs(std::real(z)), 255*1-1), "0R"));
           } else {
-            theRamCanvasH.drawPoint(x, y, color4c8b().cmpColorRamp(intWrap(std::abs(std::real(z)), 255*1-1), "0B"));
+            theRamCanvasH.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(std::abs(std::real(z)), 255*1-1), "0B"));
           }
         } else {
           if(std::imag(z) < 0) {
-            theRamCanvasH.drawPoint(x, y, color4c8b().cmpColorRamp(intWrap(std::abs(std::real(z)), 255*1-1), "0M"));
+            theRamCanvasH.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(std::abs(std::real(z)), 255*1-1), "0M"));
           } else {
-            theRamCanvasH.drawPoint(x, y, color4c8b().cmpColorRamp(intWrap(std::abs(std::real(z)), 255*1-1), "0C"));
+            theRamCanvasH.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(std::abs(std::real(z)), 255*1-1), "0C"));
           }
         }
         // I
         if(std::real(z) < 0) {
           if(std::imag(z) < 0) {
             if(std::imag(z) < std::real(z) ) {
-              theRamCanvasI.drawPoint(x, y, color4c8b("red"));
+              theRamCanvasI.drawPoint(x, y, mjr::color3c8b("red"));
             } else {
-              theRamCanvasI.drawPoint(x, y, color4c8b("yellow"));
+              theRamCanvasI.drawPoint(x, y, mjr::color3c8b("yellow"));
             }
           } else {
-            theRamCanvasI.drawPoint(x, y, color4c8b("blue"));
+            theRamCanvasI.drawPoint(x, y, mjr::color3c8b("blue"));
           }
         } else {
           if(std::imag(z) < 0) {
-            theRamCanvasI.drawPoint(x, y, color4c8b("magenta"));
+            theRamCanvasI.drawPoint(x, y, mjr::color3c8b("magenta"));
           } else {
             if(std::imag(z) < std::real(z) ) {
-              theRamCanvasI.drawPoint(x, y, color4c8b("cyan"));
+              theRamCanvasI.drawPoint(x, y, mjr::color3c8b("cyan"));
             } else {
-              theRamCanvasI.drawPoint(x, y, color4c8b("green"));
+              theRamCanvasI.drawPoint(x, y, mjr::color3c8b("green"));
             }
           }
         }
@@ -126,44 +125,44 @@ int main(void) {
         if(std::real(z) < 0) {
           if(std::imag(z) < 0) {
             if(std::imag(z) < std::real(z) ) {
-              theRamCanvasJ.drawPoint(x, y, color4c8b().cmpColorRamp(intWrap(std::abs(std::real(z)), 255*1-1), "0R")); 
+              theRamCanvasJ.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(std::abs(std::real(z)), 255*1-1), "0R")); 
             } else {
-              theRamCanvasJ.drawPoint(x, y, color4c8b().cmpColorRamp(intWrap(std::abs(std::real(z)), 255*1-1), "0Y")); 
+              theRamCanvasJ.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(std::abs(std::real(z)), 255*1-1), "0Y")); 
             }
           } else {
-            theRamCanvasJ.drawPoint(x, y, color4c8b().cmpColorRamp(intWrap(std::abs(std::real(z)), 255*1-1), "0B"));   
+            theRamCanvasJ.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(std::abs(std::real(z)), 255*1-1), "0B"));   
           }
         } else {
           if(std::imag(z) < 0) {
-            theRamCanvasJ.drawPoint(x, y, color4c8b().cmpColorRamp(intWrap(std::abs(std::real(z)), 255*1-1), "0M"));   
+            theRamCanvasJ.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(std::abs(std::real(z)), 255*1-1), "0M"));   
           } else {
             if(std::imag(z) < std::real(z) ) {
-              theRamCanvasJ.drawPoint(x, y, color4c8b().cmpColorRamp(intWrap(std::abs(std::real(z)), 255*1-1), "0C")); 
+              theRamCanvasJ.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(std::abs(std::real(z)), 255*1-1), "0C")); 
             } else {
-              theRamCanvasJ.drawPoint(x, y, color4c8b().cmpColorRamp(intWrap(std::abs(std::real(z)), 255*1-1), "0G")); 
+              theRamCanvasJ.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(std::abs(std::real(z)), 255*1-1), "0G")); 
             }
           }
         }
         // K
-        theRamCanvasK.drawPoint(x, y, color4c8b().cmpClrCubeRainbow(intWrap((std::arg(z)+3.14)*255, 255*6+1)));
+        theRamCanvasK.drawPoint(x, y, mjr::color3c8b().cmpClrCubeRainbow(mjr::intWrap((std::arg(z)+3.14)*255, 255*6+1)));
         // L
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
-          theRamCanvasL.drawPoint(x, y, color4c8b().cmpColorRamp(intClamp(std::abs(std::real(z))/100, 255*1-1), "0R"));
+          theRamCanvasL.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intClamp(std::abs(std::real(z))/100, 255*1-1), "0R"));
         else
-          theRamCanvasL.drawPoint(x, y, color4c8b().cmpColorRamp(intClamp(std::abs(std::imag(z))/100, 255*1-1), "0B"));
+          theRamCanvasL.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intClamp(std::abs(std::imag(z))/100, 255*1-1), "0B"));
       }
     }
   }
-  theRamCanvasA.writeTGAfile("biomorph1A.tga");
-  theRamCanvasB.writeTGAfile("biomorph1B.tga");
-  theRamCanvasC.writeTGAfile("biomorph1C.tga");
-  theRamCanvasD.writeTGAfile("biomorph1D.tga");
-  theRamCanvasE.writeTGAfile("biomorph1E.tga");
-  theRamCanvasF.writeTGAfile("biomorph1F.tga");
-  theRamCanvasG.writeTGAfile("biomorph1G.tga");
-  theRamCanvasH.writeTGAfile("biomorph1H.tga");
-  theRamCanvasI.writeTGAfile("biomorph1I.tga");
-  theRamCanvasJ.writeTGAfile("biomorph1J.tga");
-  theRamCanvasK.writeTGAfile("biomorph1K.tga");
-  theRamCanvasL.writeTGAfile("biomorph1L.tga");
+  theRamCanvasA.writeTIFFfile("biomorph1A.tiff");
+  theRamCanvasB.writeTIFFfile("biomorph1B.tiff");
+  theRamCanvasC.writeTIFFfile("biomorph1C.tiff");
+  theRamCanvasD.writeTIFFfile("biomorph1D.tiff");
+  theRamCanvasE.writeTIFFfile("biomorph1E.tiff");
+  theRamCanvasF.writeTIFFfile("biomorph1F.tiff");
+  theRamCanvasG.writeTIFFfile("biomorph1G.tiff");
+  theRamCanvasH.writeTIFFfile("biomorph1H.tiff");
+  theRamCanvasI.writeTIFFfile("biomorph1I.tiff");
+  theRamCanvasJ.writeTIFFfile("biomorph1J.tiff");
+  theRamCanvasK.writeTIFFfile("biomorph1K.tiff");
+  theRamCanvasL.writeTIFFfile("biomorph1L.tiff");
 }

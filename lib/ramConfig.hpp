@@ -71,7 +71,7 @@
 #define REAL_CHAN float
 #endif
 
-/** @brief Int type used for intCrdT in predefiend ramCanvasTpl types defined in ramCanvas.hpp.@EOL */
+/** @brief Int type used for intCrdT in predefined ramCanvasTpl types defined in ramCanvas.hpp.@EOL */
 #ifndef INT_CORD
 #define INT_CORD int
 #endif

@@ -29,24 +29,23 @@
   @endparblock
  @filedetails   
 
-  Pick an initial $z\in\mathbb{C}$, say $\frac{1}{10}+\frac{2}{10}i$.  Then iterate.  For each iteration let the next $z$ value be $f_n(z)$ where $n$ is
-  selected at random.  If we plot the $z$ points, we obtain the classical Apollony Gasket.
+  Pick an initial \f$z\in\mathbb{C}\f$, say \f$\frac{1}{10}+\frac{2}{10}i\f$.  Then iterate.  For each iteration let the next $z$ value be \f$f_n(z)\f$ where \f$n\f$ is
+  selected at random.  If we plot the \f$z\f$ points, we obtain the classical Apollony Gasket.
   
-  $$\begin{array}{rcl}
+  \f[\begin{array}{rcl}
     f_1(z) &=& f(z)                         \\
     f_2(z) &=& \frac{-1 + i\sqrt{3}}{2f(z)} \\
     f_3(z) &=& \frac{-1 - i\sqrt{3}}{2f(z)} \\
-  \end{array}$$
+  \end{array}\f]
 
   Where
 
-  $$ f(z) = \frac{3}{1-z+\sqrt{3}} - \frac{1+\sqrt{3}}{2+\sqrt{3}} $$
-
+  \f[ f(z) = \frac{3}{1-z+\sqrt{3}} - \frac{1+\sqrt{3}}{2+\sqrt{3}} \f]
 ***************************************************************************************************************************************************************/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-#include <iostream>                                                      /* C++ iostream            C++98/11 */
-#include <complex>                                                       /* STL algorithm           C++98/11 */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+#include <complex>                                                       /* STL algorithm           C++11    */
 #include <random>                                                        /* C++ random numbers      C++11    */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -60,13 +59,13 @@ int main()
   const int ITRTOSS = 1000;       // Throw away first iterations
   const long NUMITR = 500000000; // Needs to be big
 
-  mjr::ramCanvas4c8b theRamCanvas(CSIZE, CSIZE, -4.0, 4.0, -4.0, 4.0);
-  theRamCanvas.set_drawMode(mjr::ramCanvas4c8b::drawModeType::ADDCLIP);
+  mjr::ramCanvas3c8b theRamCanvas(CSIZE, CSIZE, -4.0, 4.0, -4.0, 4.0);
+  theRamCanvas.set_drawMode(mjr::ramCanvas3c8b::drawModeType::ADDCLIP);
   
 #if SUPPORT_DRAWING_MODE
-  mjr::color4c8b aColor[] = { mjr::color4c8b(1, 0, 0), mjr::color4c8b(0, 1, 0), mjr::color4c8b(0, 0, 1) };
+  mjr::color3c8b aColor[] = { mjr::color3c8b(1, 0, 0), mjr::color3c8b(0, 1, 0), mjr::color3c8b(0, 0, 1) };
 #else
-  mjr::color4c8b aColor[] = { mjr::color4c8b(255, 0, 0), mjr::color4c8b(0, 255, 0), mjr::color4c8b(0, 0, 255) };
+  mjr::color3c8b aColor[] = { mjr::color3c8b(255, 0, 0), mjr::color3c8b(0, 255, 0), mjr::color3c8b(0, 0, 255) };
 #endif  
 
   std::random_device rd;
@@ -105,8 +104,8 @@ int main()
   }
   std::cout << "|" << std::endl;
   std::cout << "apollony dump" << std::endl;
-  theRamCanvas.applyHomoPixTfrm(&mjr::color4c8b::tfrmStdPow, 1/5.0);
-  theRamCanvas.writeTGAfile("apollony.tga");
+  theRamCanvas.applyHomoPixTfrm(&mjr::color3c8b::tfrmStdPow, 1/5.0);
+  theRamCanvas.writeTIFFfile("apollony.tiff");
   std::cout << "apollony finish" << std::endl;
   return 0;
 }

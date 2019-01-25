@@ -1,12 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
- @file      sic_search.cpp
+ @file      test_draw_btriangle.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Find parameters for SIC fractals that light up lots of pixels.@EOL
- @keywords  
- @std       C++11
- @see       sic.cpp
+ @brief     Illustrate and test barycentric interpolation.@EOL
+ @std       C++98
  @copyright 
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -32,37 +30,19 @@
 
 #include "ramCanvas.hpp"
 
-#include <map>                                                           /* STL map                 C++11    */
-#include <random>                                                        /* C++ random numbers      C++11    */
-
-#define BSIZ 2048
-
 int main(void) {
-  std::random_device rd;
-  std::mt19937 rEng(rd());
-  std::uniform_real_distribution<double> uniform_dist_float(-2.0, 2.0);
-  std::uniform_int_distribution<int>     uniform_dist_int(3, 7);
-
-  mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -2, 2, -2, 2); // Just used for coordinate conversion. ;)
-
-  uint64_t maxCnt = 0;
-  for(int j=0; j<100000; j++) {
-    std::map<uint64_t, uint64_t> ptcnt;
-    float lambda = uniform_dist_float(rEng);
-    float alpha  = uniform_dist_float(rEng);
-    float beta   = uniform_dist_float(rEng);
-    float gamma  = uniform_dist_float(rEng);
-    float w      = uniform_dist_float(rEng);
-    int n        = uniform_dist_int(rEng);
-    std::complex<float> z(.01,.01);
-    for(uint64_t i=0;i<10000;i++) { 
-      z = (lambda + alpha*z*std::conj(z)+beta*std::pow(z, n).real() + w*std::complex<float>(0,1))*z+gamma*std::pow(std::conj(z), n-1);
-      ptcnt[((uint64_t)theRamCanvas.real2intX(z.real()))<<32 | ((uint64_t)theRamCanvas.real2intY(z.imag()))] = 1;
-    }
-    if(ptcnt.size() > maxCnt) {
-      maxCnt = ptcnt.size();
-      std::cout << j << " " << maxCnt << " " << lambda << "," <<  alpha << "," <<  beta << "," <<  gamma << "," <<  w << "," << n << std::endl;
-    }
-  }
-  return 0;
+  const int s = 1; // Set to 10 for high res image (test smoothness), set to 1 for low resolution (test pixel level detail)
+  const int c = 11 - s;
+  static_assert(s<11 && s>0, "ERROR: s must be in [1, 10].");
+ 
+  mjr::ramCanvas3c8b theRamCanvas(s*170, s*100);
+  mjr::ramCanvas3c8b::rcCordInt x = 0, y = 0;
+  x = 0;
+  theRamCanvas.drawFillTriangle(90*s+x, 40*s+y, 10*s+x, 10*s+y, 60*s+x, 90*s+y, "green", "red",   "blue");
+  theRamCanvas.drawTriangle    (90*s+x, 40*s+y, 10*s+x, 10*s+y, 60*s+x, 90*s+y, "white");
+  x += 70*s;
+  theRamCanvas.drawFillTriangle(10*s+x, 10*s+y, 90*s+x, 40*s+y, 60*s+x, 90*s+y, "red",   "green", "blue");
+  theRamCanvas.drawTriangle    (10*s+x, 10*s+y, 90*s+x, 40*s+y, 60*s+x, 90*s+y, "white");
+  theRamCanvas.scaleUpProximal(c);
+  theRamCanvas.writeTIFFfile("test_draw_btriangle.tiff");
 }

@@ -1,12 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
- @file      sic_search.cpp
+ @file      newton_max_mod.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Find parameters for SIC fractals that light up lots of pixels.@EOL
- @keywords  
- @std       C++11
- @see       sic.cpp
+ @brief     Draw a Newton Fractical -- color by root and max modulus.@EOL
+ @std       C++98
  @copyright 
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -32,37 +30,40 @@
 
 #include "ramCanvas.hpp"
 
-#include <map>                                                           /* STL map                 C++11    */
-#include <random>                                                        /* C++ random numbers      C++11    */
+#include <complex>                                                       /* STL algorithm           C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
 
-#define BSIZ 2048
+#define pi 3.14159265359
 
 int main(void) {
-  std::random_device rd;
-  std::mt19937 rEng(rd());
-  std::uniform_real_distribution<double> uniform_dist_float(-2.0, 2.0);
-  std::uniform_int_distribution<int>     uniform_dist_int(3, 7);
+  int   MaxCount = 255;
+  int   MultCol  = 400; // 1, 400, 3000
+  float Tol      = .0001;
+  std::complex<double> r1(1,               0);
+  std::complex<double> r2(-0.5,  sin(2*pi/3));
+  std::complex<double> r3(-0.5, -sin(2*pi/3));
+  mjr::ramCanvas3c8b theRamCanvas(4096, 4096, -2.15, 1.85, -2.0, 2.0);
 
-  mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -2, 2, -2, 2); // Just used for coordinate conversion. ;)
+  for(int y=0;y<theRamCanvas.get_numYpix();y++) {
+    for(int x=0;x<theRamCanvas.get_numXpix();x++) {
+      std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
+      int  count = 0;
+      double maxMod = 0.0;
+      while((count < MaxCount) && (abs(z-r1) >= Tol) && (abs(z-r2) >= Tol) && (abs(z-r3) >= Tol)) {
+        if(abs(z) > 0)
+          z = z-(z*z*z-1.0)/(z*z*3.0);
+        if(abs(z)>maxMod)
+          maxMod=abs(z);
+        count++;
+      }
 
-  uint64_t maxCnt = 0;
-  for(int j=0; j<100000; j++) {
-    std::map<uint64_t, uint64_t> ptcnt;
-    float lambda = uniform_dist_float(rEng);
-    float alpha  = uniform_dist_float(rEng);
-    float beta   = uniform_dist_float(rEng);
-    float gamma  = uniform_dist_float(rEng);
-    float w      = uniform_dist_float(rEng);
-    int n        = uniform_dist_int(rEng);
-    std::complex<float> z(.01,.01);
-    for(uint64_t i=0;i<10000;i++) { 
-      z = (lambda + alpha*z*std::conj(z)+beta*std::pow(z, n).real() + w*std::complex<float>(0,1))*z+gamma*std::pow(std::conj(z), n-1);
-      ptcnt[((uint64_t)theRamCanvas.real2intX(z.real()))<<32 | ((uint64_t)theRamCanvas.real2intY(z.imag()))] = 1;
-    }
-    if(ptcnt.size() > maxCnt) {
-      maxCnt = ptcnt.size();
-      std::cout << j << " " << maxCnt << " " << lambda << "," <<  alpha << "," <<  beta << "," <<  gamma << "," <<  w << "," << n << std::endl;
+      if(abs(z-r1) <= Tol)
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b(int(255-maxMod*MultCol), 0, 0));
+      else if(abs(z-r2) <= Tol)
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, int(255-maxMod*MultCol), 0));
+      else if(abs(z-r3) <= Tol)
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, 0, int(255-maxMod*MultCol)));
     }
   }
-  return 0;
+  theRamCanvas.writeTIFFfile("newton_max_mod.tiff");
 }

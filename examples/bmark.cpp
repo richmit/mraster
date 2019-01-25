@@ -32,9 +32,8 @@
 ***************************************************************************************************************************************************************/
 
 #include "ramCanvas.hpp"
-#include <cmath>
 
-using namespace mjr;
+#include <cmath>                                                         /* std:: C math.h          C++11    */
 
 #define DO_LINE      1
 #define DO_CLIP_LINE 1
@@ -55,11 +54,11 @@ using namespace mjr;
 #define BSIZE 2024
 
 int main(void) {
-  ramCanvasRGB8b theRamCanvas(BSIZE, BSIZE);
+  mjr::ramCanvasRGB8b theRamCanvas(BSIZE, BSIZE);
   int xMax = theRamCanvas.get_numXpix()-1;
   int yMax = theRamCanvas.get_numYpix()-1;
-  colorRGB8b aColor(255,   0, 0);
-  colorRGB8b bColor(  0, 255, 0);
+  mjr::colorRGB8b aColor(255,   0, 0);
+  mjr::colorRGB8b bColor(  0, 255, 0);
 
 #if DO_POINT
   for(int i=0;i<REPS;i++)
@@ -167,7 +166,7 @@ int main(void) {
 #endif
   
 #if DO_OUT
-  theRamCanvas.writeTGAfile("bmark.tga");
+  theRamCanvas.writeTIFFfile("bmark.tiff");
   theRamCanvas.writeRAWfile("bmark.mrw");
 #endif
   

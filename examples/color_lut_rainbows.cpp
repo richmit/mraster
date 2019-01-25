@@ -1,12 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
- @file      sic_search.cpp
+ @file      color_lut_rainbows.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Find parameters for SIC fractals that light up lots of pixels.@EOL
- @keywords  
- @std       C++11
- @see       sic.cpp
+ @brief     rainbow related colors@EOL
+ @std       C++98
  @copyright 
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -32,37 +30,30 @@
 
 #include "ramCanvas.hpp"
 
-#include <map>                                                           /* STL map                 C++11    */
-#include <random>                                                        /* C++ random numbers      C++11    */
-
-#define BSIZ 2048
-
 int main(void) {
-  std::random_device rd;
-  std::mt19937 rEng(rd());
-  std::uniform_real_distribution<double> uniform_dist_float(-2.0, 2.0);
-  std::uniform_int_distribution<int>     uniform_dist_int(3, 7);
+  int numRamps = 8, rampGap = 10, rampWidth = 150;
+  
+  mjr::ramCanvas3c8b theRamCanvas(1536+rampGap, (2+numRamps)*rampWidth+rampGap);
+  mjr::color3c8b aColor(255, 255, 255);
 
-  mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -2, 2, -2, 2); // Just used for coordinate conversion. ;)
+  for(int x=0; x<theRamCanvas.get_numXpix();x=x+256)
+    theRamCanvas.drawLine(x, 0, x, theRamCanvas.get_numYpix()-1, aColor);
 
-  uint64_t maxCnt = 0;
-  for(int j=0; j<100000; j++) {
-    std::map<uint64_t, uint64_t> ptcnt;
-    float lambda = uniform_dist_float(rEng);
-    float alpha  = uniform_dist_float(rEng);
-    float beta   = uniform_dist_float(rEng);
-    float gamma  = uniform_dist_float(rEng);
-    float w      = uniform_dist_float(rEng);
-    int n        = uniform_dist_int(rEng);
-    std::complex<float> z(.01,.01);
-    for(uint64_t i=0;i<10000;i++) { 
-      z = (lambda + alpha*z*std::conj(z)+beta*std::pow(z, n).real() + w*std::complex<float>(0,1))*z+gamma*std::pow(std::conj(z), n-1);
-      ptcnt[((uint64_t)theRamCanvas.real2intX(z.real()))<<32 | ((uint64_t)theRamCanvas.real2intY(z.imag()))] = 1;
+  for(int x=0;x<theRamCanvas.get_numXpix();x++)
+    for(int i=0; i<numRamps; i++) {
+      int y1 = rampWidth + i * rampWidth;
+      int y2 = rampWidth + i * rampWidth + rampWidth - rampGap;
+      switch(i) {
+        case 0: theRamCanvas.drawLine(x, y1, x, y2, aColor.cmpClrCubeRainbow(x));                             break;
+        case 1: theRamCanvas.drawLine(x, y1, x, y2, aColor.cmpRainbowHSV(theRamCanvas.get_numXpix(), x));     break;
+        case 2: theRamCanvas.drawLine(x, y1, x, y2, aColor.cmpRainbowLA( theRamCanvas.get_numXpix(), x));     break;
+        case 3: theRamCanvas.drawLine(x, y1, x, y2, aColor.cmpRainbowCM( theRamCanvas.get_numXpix(), x, 0));  break;
+        case 4: theRamCanvas.drawLine(x, y1, x, y2, aColor.cmpRainbowCM( theRamCanvas.get_numXpix(), x, 1));  break;
+        case 5: theRamCanvas.drawLine(x, y1, x, y2, aColor.cmpRainbowCM( theRamCanvas.get_numXpix(), x, 2));  break;
+        case 6: theRamCanvas.drawLine(x, y1, x, y2, aColor.cmpRainbowCM( theRamCanvas.get_numXpix(), x, 3));  break;
+        case 7: theRamCanvas.drawLine(x, y1, x, y2, aColor.cmpRainbowCM( theRamCanvas.get_numXpix(), x, 4));  break;
+      }
     }
-    if(ptcnt.size() > maxCnt) {
-      maxCnt = ptcnt.size();
-      std::cout << j << " " << maxCnt << " " << lambda << "," <<  alpha << "," <<  beta << "," <<  gamma << "," <<  w << "," << n << std::endl;
-    }
-  }
-  return 0;
+  theRamCanvas.writeTIFFfile("color_lut_rainbows.tiff");
 }
+

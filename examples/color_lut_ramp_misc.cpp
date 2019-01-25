@@ -1,12 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
- @file      sic_search.cpp
+ @file      color_lut_ramp_misc.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Find parameters for SIC fractals that light up lots of pixels.@EOL
- @keywords  
- @std       C++11
- @see       sic.cpp
+ @brief     Demonstrate the cmpColorRamp (general color ramp) function
+ @std       C++98
  @copyright 
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -32,37 +30,42 @@
 
 #include "ramCanvas.hpp"
 
-#include <map>                                                           /* STL map                 C++11    */
-#include <random>                                                        /* C++ random numbers      C++11    */
-
-#define BSIZ 2048
-
 int main(void) {
-  std::random_device rd;
-  std::mt19937 rEng(rd());
-  std::uniform_real_distribution<double> uniform_dist_float(-2.0, 2.0);
-  std::uniform_int_distribution<int>     uniform_dist_int(3, 7);
+  mjr::ramCanvasRGB8b theRamCanvas(1024, 1024);
+  mjr::colorRGB8b aColor(0,0,0);
 
-  mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -2, 2, -2, 2); // Just used for coordinate conversion. ;)
+//  mjr::color3c8b corners[7] = { color3c8b("red"),   color3c8b("yellow"), 
+//                           color3c8b("green"), color3c8b("cyan"), 
+//                           color3c8b("blue"),  color3c8b("magenta"), 
+//                           color3c8b("red")};
+//
+//  mjr::color3c8b corners2[7] = { color3c8b(color3c8b::cornerColors::RED),   color3c8b(color3c8b::cornerColors::YELLOW), 
+//                            color3c8b(color3c8b::cornerColors::GREEN), color3c8b(color3c8b::cornerColors::CYAN), 
+//                            color3c8b(color3c8b::cornerColors::BLUE),  color3c8b(color3c8b::cornerColors::MAGENTA), 
+//                            color3c8b(color3c8b::cornerColors::RED)};
+//
+//  double anchors[7] = {0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
+//  for(int i=0; i<7; i++)
+//    anchors[i] = anchors[i]/6.0;
 
-  uint64_t maxCnt = 0;
-  for(int j=0; j<100000; j++) {
-    std::map<uint64_t, uint64_t> ptcnt;
-    float lambda = uniform_dist_float(rEng);
-    float alpha  = uniform_dist_float(rEng);
-    float beta   = uniform_dist_float(rEng);
-    float gamma  = uniform_dist_float(rEng);
-    float w      = uniform_dist_float(rEng);
-    int n        = uniform_dist_int(rEng);
-    std::complex<float> z(.01,.01);
-    for(uint64_t i=0;i<10000;i++) { 
-      z = (lambda + alpha*z*std::conj(z)+beta*std::pow(z, n).real() + w*std::complex<float>(0,1))*z+gamma*std::pow(std::conj(z), n-1);
-      ptcnt[((uint64_t)theRamCanvas.real2intX(z.real()))<<32 | ((uint64_t)theRamCanvas.real2intY(z.imag()))] = 1;
-    }
-    if(ptcnt.size() > maxCnt) {
-      maxCnt = ptcnt.size();
-      std::cout << j << " " << maxCnt << " " << lambda << "," <<  alpha << "," <<  beta << "," <<  gamma << "," <<  w << "," << n << std::endl;
-    }
-  }
-  return 0;
+  double anchors[8] = {390, 425, 445, 495, 540, 600, 685, 830};
+
+  mjr::colorRGB8b corners[8];
+
+  corners[0].setColorFromF(  4.735895e-04, -3.803366e-04,  6.188242e-03);
+  corners[1].setColorFromF(  2.408992e-02, -3.213844e-02,  6.140333e-01);
+  corners[2].setColorFromF( -1.389196e-03,  2.282020e-03,  1.000000e+00);
+  corners[3].setColorFromF( -1.405614e-01,  5.221071e-01,  1.304521e-01);
+  corners[4].setColorFromF(  1.692925e-01,  1.000000e+00, -8.184450e-03);
+  corners[5].setColorFromF(  1.000000e+00,  2.463630e-01, -2.764747e-03);
+  corners[6].setColorFromF(  2.693146e-02, -6.494247e-04,  7.366005e-06);
+  corners[7].setColorFromF(  1.436555e-06, -2.633831e-09,  4.411618e-11);
+
+  for(int x=0;x<theRamCanvas.get_numXpix();x++)
+	for(int y=0;y<theRamCanvas.get_numYpix();y++)
+      theRamCanvas.drawPoint(x, y, aColor.cmpColorRamp(x, 8, anchors, corners));
+
+  theRamCanvas.writeTIFFfile("color_lut_ramp_misc.tiff");
 }
+
+

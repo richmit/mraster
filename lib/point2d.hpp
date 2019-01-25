@@ -1,10 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
-   @file      point2d.hpp
-   @author    Mitch Richling <https://www.mitchr.me>
-   @brief     Internal include file for ramCanvas types.@EOL
-   @copyright
+ @file      point2d.hpp
+ @author    Mitch Richling <https://www.mitchr.me>
+ @brief     Internal include file for ramCanvas types.@EOL
+ @copyright
    @parblock
    Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -39,6 +39,7 @@
 
 // Put everything in the mjr namespace
 namespace mjr {
+  /** Handy class to hold a point in 2D (integer or real) */
   template <class coordT>
   class point2d {
 
@@ -47,7 +48,7 @@ namespace mjr {
       
     public:
       coordT x; //!< X coordinate
-      coordT y; //!< X coordinate
+      coordT y; //!< Y coordinate
 
       /** @name Constructors */
       //@{  

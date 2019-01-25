@@ -1,15 +1,13 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
- @file      sic_search.cpp
+ @file      test_draw_strings.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Find parameters for SIC fractals that light up lots of pixels.@EOL
- @keywords  
+ @brief     Test string rendering both with a box and without.@EOL
  @std       C++11
- @see       sic.cpp
  @copyright 
   @parblock
-  Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
+  Copyright (c) 2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -32,37 +30,34 @@
 
 #include "ramCanvas.hpp"
 
-#include <map>                                                           /* STL map                 C++11    */
-#include <random>                                                        /* C++ random numbers      C++11    */
-
-#define BSIZ 2048
-
 int main(void) {
-  std::random_device rd;
-  std::mt19937 rEng(rd());
-  std::uniform_real_distribution<double> uniform_dist_float(-2.0, 2.0);
-  std::uniform_int_distribution<int>     uniform_dist_int(3, 7);
+  int y;
 
-  mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -2, 2, -2, 2); // Just used for coordinate conversion. ;)
+  mjr::ramCanvas3c8b theRamCanvas1(700, 240);
+  theRamCanvas1.set_yIntAxisOrientation(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
+  theRamCanvas1.drawLine(100, 0,  100, 512, "blue");
+  y = 50;
+  theRamCanvas1.drawLine(0, y,   1024, y, "blue");  
+  theRamCanvas1.drawString("Hello, World!", mjr::hersheyFont::ROMAN_SL_SANSERIF, 100, y, "red",  1, 16);
+  y+=50;
+  theRamCanvas1.drawLine(0, y,   1024, y, "blue");  
+  theRamCanvas1.drawString("Hello, World!", mjr::hersheyFont::ROMAN_SL_SANSERIF, 100, y, "red",  2, 15);
+  y+=75;
+  theRamCanvas1.drawLine(0, y,   1024, y, "blue");  
+  theRamCanvas1.drawString("Hello, World!", mjr::hersheyFont::ROMAN_SL_SANSERIF, 100, y, "red",  3, 15);
+  theRamCanvas1.writeTIFFfile("test_draw_strings_1.tiff");
 
-  uint64_t maxCnt = 0;
-  for(int j=0; j<100000; j++) {
-    std::map<uint64_t, uint64_t> ptcnt;
-    float lambda = uniform_dist_float(rEng);
-    float alpha  = uniform_dist_float(rEng);
-    float beta   = uniform_dist_float(rEng);
-    float gamma  = uniform_dist_float(rEng);
-    float w      = uniform_dist_float(rEng);
-    int n        = uniform_dist_int(rEng);
-    std::complex<float> z(.01,.01);
-    for(uint64_t i=0;i<10000;i++) { 
-      z = (lambda + alpha*z*std::conj(z)+beta*std::pow(z, n).real() + w*std::complex<float>(0,1))*z+gamma*std::pow(std::conj(z), n-1);
-      ptcnt[((uint64_t)theRamCanvas.real2intX(z.real()))<<32 | ((uint64_t)theRamCanvas.real2intY(z.imag()))] = 1;
-    }
-    if(ptcnt.size() > maxCnt) {
-      maxCnt = ptcnt.size();
-      std::cout << j << " " << maxCnt << " " << lambda << "," <<  alpha << "," <<  beta << "," <<  gamma << "," <<  w << "," << n << std::endl;
-    }
-  }
-  return 0;
+  mjr::ramCanvas3c8b theRamCanvas2(740, 420);
+  theRamCanvas2.set_yIntAxisOrientation(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
+  y = 50;
+  theRamCanvas2.drawStringBox("Hello, World!", mjr::hersheyFont::ROMAN_SL_SANSERIF, 100, y, "red", "green",  1, 16);
+  theRamCanvas2.drawLine(0, y,   1024, y, "blue");  
+  y+=100;
+  theRamCanvas2.drawStringBox("Hello, World!", mjr::hersheyFont::ROMAN_SL_SANSERIF, 100, y, "red", "green",  2, 15);
+  theRamCanvas2.drawLine(0, y,   1024, y, "blue");  
+  y+=160;
+  theRamCanvas2.drawStringBox("Hello, World!", mjr::hersheyFont::ROMAN_SL_SANSERIF, 100, y, "red", "green",  3, 15);
+  theRamCanvas2.drawLine(0, y,   2024, y, "blue");  
+  theRamCanvas2.drawLine(100, 0,  100, 512, "blue");
+  theRamCanvas2.writeTIFFfile("test_draw_strings_2.tiff");
 }

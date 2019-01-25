@@ -1,12 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
- @file      sic_search.cpp
+ @file      color_all.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Find parameters for SIC fractals that light up lots of pixels.@EOL
- @keywords  
- @std       C++11
- @see       sic.cpp
+ @brief     Draw every possible color in 24-bit.@EOL
+ @std       C++98
  @copyright 
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -28,41 +26,67 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
+ @filedetails   
+
+  This is a very simple program that plots a point of EVERY possible 24-bit color.  This program illustrates how to count by bytes, set colors in byte order,
+  how to avoid all the work and do it with simple integers via setColorFromPackedIntABGR, how to count via Grey code order, and how to reduce to 216 web safe
+  color.
+
 ***************************************************************************************************************************************************************/
 
 #include "ramCanvas.hpp"
 
-#include <map>                                                           /* STL map                 C++11    */
-#include <random>                                                        /* C++ random numbers      C++11    */
-
-#define BSIZ 2048
+unsigned long igray(unsigned long n);
 
 int main(void) {
-  std::random_device rd;
-  std::mt19937 rEng(rd());
-  std::uniform_real_distribution<double> uniform_dist_float(-2.0, 2.0);
-  std::uniform_int_distribution<int>     uniform_dist_int(3, 7);
+  mjr::ramCanvas3c8b theRamCanvas_iii(4096, 4096);
+  mjr::ramCanvas3c8b theRamCanvas_int(4096, 4096);
+  mjr::ramCanvas3c8b theRamCanvas_gry(4096, 4096);
+  mjr::ramCanvas3c8b theRamCanvas_rgb(4096, 4096);
+  mjr::ramCanvas3c8b theRamCanvas_web(4096, 4096);
 
-  mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -2, 2, -2, 2); // Just used for coordinate conversion. ;)
-
-  uint64_t maxCnt = 0;
-  for(int j=0; j<100000; j++) {
-    std::map<uint64_t, uint64_t> ptcnt;
-    float lambda = uniform_dist_float(rEng);
-    float alpha  = uniform_dist_float(rEng);
-    float beta   = uniform_dist_float(rEng);
-    float gamma  = uniform_dist_float(rEng);
-    float w      = uniform_dist_float(rEng);
-    int n        = uniform_dist_int(rEng);
-    std::complex<float> z(.01,.01);
-    for(uint64_t i=0;i<10000;i++) { 
-      z = (lambda + alpha*z*std::conj(z)+beta*std::pow(z, n).real() + w*std::complex<float>(0,1))*z+gamma*std::pow(std::conj(z), n-1);
-      ptcnt[((uint64_t)theRamCanvas.real2intX(z.real()))<<32 | ((uint64_t)theRamCanvas.real2intY(z.imag()))] = 1;
-    }
-    if(ptcnt.size() > maxCnt) {
-      maxCnt = ptcnt.size();
-      std::cout << j << " " << maxCnt << " " << lambda << "," <<  alpha << "," <<  beta << "," <<  gamma << "," <<  w << "," << n << std::endl;
+  int red=0, blue=0, green=0, count=0;
+  for(int y=0;y<theRamCanvas_int.get_numYpix();y++) {
+    for(int x=0;x<theRamCanvas_int.get_numXpix();x++) {
+      red++;
+      if(red>=256) {
+        red=0;
+        green++;
+        if(green>=256) {
+          green=0;
+          blue++;
+        }
+      }
+      mjr::color3c8b aColor;
+      aColor.setColorFromPackedInt(count, 0, 1, 2, 3);
+      theRamCanvas_iii.drawPoint(x, y, aColor);
+      aColor.setColorFromPackedIntABGR(count);    
+      theRamCanvas_int.drawPoint(x, y, aColor);
+      aColor.setColorFromPackedIntABGR(igray(count));
+      theRamCanvas_gry.drawPoint(x, y, aColor);
+      aColor.setColorRGB(red, green, blue);
+      theRamCanvas_rgb.drawPoint(x, y, aColor);
+      aColor.tfrmWebSafe216();
+      theRamCanvas_web.drawPoint(x, y, aColor);
+      count++;
     }
   }
-  return 0;
+  theRamCanvas_int.writeTIFFfile("color_all_int.tiff");
+  theRamCanvas_iii.writeTIFFfile("color_all_iii.tiff");
+  theRamCanvas_gry.writeTIFFfile("color_all_gry.tiff");
+  theRamCanvas_rgb.writeTIFFfile("color_all_rgb.tiff");
+  theRamCanvas_web.writeTIFFfile("color_all_web.tiff");
+}
+
+unsigned long igray(unsigned long n) {
+  unsigned long ans = n;
+  unsigned long idiv;
+  int ish = 1;
+  ans=n;
+  for(;;) {
+    ans ^= (idiv=ans>>ish);
+    if(idiv <=1 || ish == 16)
+      return ans;
+    ish <<=1;
+  }
 }

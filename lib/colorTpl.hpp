@@ -1,10 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
-   @file      colorTpl.hpp
-   @author    Mitch Richling <https://www.mitchr.me>
-   @brief     Header for the ramColor class@EOL
-   @copyright
+ @file      colorTpl.hpp
+ @author    Mitch Richling <https://www.mitchr.me>
+ @brief     Header for the ramColor class@EOL
+ @copyright 
    @parblock
    Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -70,13 +70,9 @@ namespace mjr {
 
     For best performance:
 
-    - Use an integer type for clrChanT
-    - Use a *fast* unsigned integer type for clrMaskT such that sizeof(clrMaskT) > sizeof(clrChanT)*numChan
+    - Use a *fast* unsigned integer type for clrChanT & clrMaskT
 
-    Reasonably performance may also be expected when:
-
-    - clrChanT is a floating point type
-    - Use a *fast* unsigned integer type for clrMaskT such that sizeof(clrMaskT) > sizeof(clrChanT)*numChan
+    - Make sure sizeof(clrMaskT) >= sizeof(clrChanT)*numChan -- the best case equality
 
     @par Memory Layout
 
@@ -130,8 +126,8 @@ namespace mjr {
     object.  Note that the setColor*() API is much richer than the construction API.
 
     @tparam clrMaskT Integer type that is high performance on the platform of choice.  Incredible performance gains can be achieved if this type is as big as,
-            but not larger than, an array o   f clrChanT that is numChan long.
-    @tparam clrChanT Type to contain the channel information.  This type should be a floating point or an unsigned integral type.  Be warned that some
+            but not larger than, an array of clrChanT that is numChan long.
+    @tparam clrChanT Type to contain the channel information.  This type should be a unsigned integral type.  Be warned that some
             functions only make since for integeral types.
     @tparam clrChanIArthT A SIGNED arithmetic type capable of holding arithmetic operations on clrChanT types.  At a minimum this type should be able to hold the
             sum and difference of two such values, and at best it should be able to hold products of such types.
@@ -149,8 +145,8 @@ namespace mjr {
       static_assert(std::is_arithmetic<clrChanT>::value,
                     "ERROR: clrChanT parameter of colorTpl template must be an arithmetic type");
 
-      static_assert(std::is_floating_point<clrChanT>::value || (std::is_unsigned<clrChanT>::value && std::is_integral<clrChanT>::value),
-                    "ERROR: clrChanT parameter of colorTpl template must be an unsigned integral type or a floating point type.");
+      static_assert((std::is_unsigned<clrChanT>::value && std::is_integral<clrChanT>::value),
+                    "ERROR: clrChanT parameter of colorTpl template must be an unsigned integral type.");
 
       static_assert(std::is_arithmetic<clrChanIArthT>::value,
                     "ERROR: clrChanIArthT parameter of colorTpl template must be an arithmetic type");
@@ -173,9 +169,10 @@ namespace mjr {
       const static int minWavelength = 360;     //!< Minimum wavelength for wavelength conversion
       const static int maxWavelength = 830;     //!< Maximum wavelength for wavelength conversion
       
-      /* Several handy values... */
-
+      /** Is theInt is larger than thePartsA array? */
       const static int  fastMask                = (sizeof(clrMaskT)>=sizeof(clrChanT)*numChan);
+
+      /** Is theInt an unsigned value and is fastMask true? */
       const static bool fastMaskUnsignedInt     = std::is_integral<clrChanT>::value && fastMask;
 
       /** Helper function for converting to web safe colors.  This function is highly optimized. */
@@ -188,13 +185,11 @@ namespace mjr {
 
     public:
 
-      const static bool          channelTypeIsFlt    = std::is_floating_point<clrChanT>::value;                       //!< is clrChanT a floating point type?
-      const static bool          channelTypeIsInt    = std::is_integral<clrChanT>::value;                             //!< is clrChanT an integral type?
       const static int           bitsPerChan         = (int)(sizeof(clrChanT)*CHAR_BIT);                              //!< Number of bits in clrChanT
-      const static bool          channelType8bitInt  = channelTypeIsInt && (bitsPerChan==8);                          //!< is clrChanT an 8-bit int?
+      const static bool          channelType8bitInt  = bitsPerChan==8;                                                //!< is clrChanT an 8-bit int?
       const static int           bitsPerPixel        = numChan*bitsPerChan;                                           //!< Number of color data bits
-      const static clrChanT      maxChanVal          = (channelTypeIsInt ? std::numeric_limits<clrChanT>::max() : 1); //!< maximum value for a channel
-      const static clrChanT      minChanVal          = (channelTypeIsInt ? std::numeric_limits<clrChanT>::min() : 0); //!< maximum value for a channel
+      const static clrChanT      maxChanVal          = std::numeric_limits<clrChanT>::max();                          //!< maximum value for a channel
+      const static clrChanT      minChanVal          = std::numeric_limits<clrChanT>::min();                          //!< maximum value for a channel
       const static clrChanT      meanChanVal         = (maxChanVal-minChanVal)/2;                                     //!< middle value for a channel
       const static int           numChanNonRGB       = (numChan>3 ? numChan-3 : 0);                                   //!< number of non-RGB channels
       const static clrChanIArthT numValuesPerChan    = (clrChanIArthT)(1u<<bitsPerChan);                              //!< unique channel value approximation
@@ -1376,50 +1371,35 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   clrChanFArthT
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getRedF() const {
-    if(channelTypeIsFlt)
-      return theColor.theParts.red;
-    else
-      return theColor.theParts.red / double(maxChanVal);
+    return theColor.theParts.red / double(maxChanVal);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   clrChanFArthT
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getBlueF() const {
-    if(channelTypeIsFlt)
-      return theColor.theParts.blue;
-    else
-      return theColor.theParts.blue / double(maxChanVal);
+    return theColor.theParts.blue / double(maxChanVal);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   clrChanFArthT
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getGreenF() const {
-    if(channelTypeIsFlt)
-      return theColor.theParts.green;
-    else
-      return theColor.theParts.green / double(maxChanVal);
+    return theColor.theParts.green / double(maxChanVal);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   clrChanFArthT
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getAlphaF() const {
-    if(channelTypeIsFlt)
-      return theColor.theParts.alpha;
-    else
-      return theColor.theParts.alpha / double(maxChanVal);
+    return theColor.theParts.alpha / double(maxChanVal);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   clrChanFArthT
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getChanF(int chan) const {
-    if(channelTypeIsFlt)
-      return theColor.thePartsA[chan];
-    else
-      return theColor.thePartsA[chan] / double(maxChanVal);
+    return theColor.thePartsA[chan] / double(maxChanVal);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4406,6 +4386,7 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /** I/O stream output operator for colorTpl types. */
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   std::ostream& operator<< (std::ostream &out, colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> &color) {
     for(int i=0; i<numChan; i++)

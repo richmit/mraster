@@ -3,7 +3,7 @@
 /**
  @file      biomorph2.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Draws a mandelbrot set using the C++ complex type.@EOL
+ @brief     Draw a corner centered biomorph fractal nice for a desktop background image.@EOL
  @std       C++14
  @copyright 
   @parblock
@@ -29,23 +29,22 @@
 ***************************************************************************************************************************************************************/
 
 #include "ramCanvas.hpp"
-#include <complex>
+
+#include <complex>                                                       /* STL algorithm           C++11    */
 
 #define NUMITR 100
 #define CSIZE  7680
 //#define CSIZE  680
 #define LIM  4
 
-using namespace mjr;
-
 int main(void) {
   int count;
   std::complex<float> oneone(1,1), z;
 
-  ramCanvas4c8b theRamCanvasA(CSIZE, CSIZE, -1.0, 1.4, -1.0, 1.4);
-  ramCanvas4c8b theRamCanvasE(CSIZE, CSIZE, -1.0, 1.4, -1.0, 1.4);
-  ramCanvas4c8b theRamCanvasK(CSIZE, CSIZE, -1.0, 1.4, -1.0, 1.4);
-  ramCanvas4c8b theRamCanvasL(CSIZE, CSIZE, -1.0, 1.4, -1.0, 1.4);
+  mjr::ramCanvas3c8b theRamCanvasA(CSIZE, CSIZE, -1.0, 1.4, -1.0, 1.4);
+  mjr::ramCanvas3c8b theRamCanvasE(CSIZE, CSIZE, -1.0, 1.4, -1.0, 1.4);
+  mjr::ramCanvas3c8b theRamCanvasK(CSIZE, CSIZE, -1.0, 1.4, -1.0, 1.4);
+  mjr::ramCanvas3c8b theRamCanvasL(CSIZE, CSIZE, -1.0, 1.4, -1.0, 1.4);
 
   for(int y=0;y<theRamCanvasA.get_numYpix();y++) {
     if((y%(CSIZE/10))==0)
@@ -56,24 +55,24 @@ int main(void) {
           count++,z=std::sin(z)+oneone) ;
       if(count < NUMITR) {
         // A
-        theRamCanvasA.drawPoint(x, y, color4c8b().cmpClrCubeRainbow(intWrap(count*500, 255*6+1)));
+        theRamCanvasA.drawPoint(x, y, mjr::color3c8b().cmpClrCubeRainbow(mjr::intWrap(count*500, 255*6+1)));
         // E
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
-          theRamCanvasE.drawPoint(x, y, color4c8b("red"));
+          theRamCanvasE.drawPoint(x, y, mjr::color3c8b("red"));
         else
-          theRamCanvasE.drawPoint(x, y, color4c8b("blue"));
+          theRamCanvasE.drawPoint(x, y, mjr::color3c8b("blue"));
         // K
-        theRamCanvasK.drawPoint(x, y, color4c8b().cmpClrCubeRainbow(intWrap((std::arg(z)+3.14)*255, 255*6+1)));
+        theRamCanvasK.drawPoint(x, y, mjr::color3c8b().cmpClrCubeRainbow(mjr::intWrap((std::arg(z)+3.14)*255, 255*6+1)));
         // L
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
-          theRamCanvasL.drawPoint(x, y, color4c8b().cmpColorRamp(intClamp(std::abs(std::real(z))*15, 255*1-1), "0R"));
+          theRamCanvasL.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intClamp(std::abs(std::real(z))*15, 255*1-1), "0R"));
         else
-          theRamCanvasL.drawPoint(x, y, color4c8b().cmpColorRamp(intClamp(std::abs(std::imag(z))*15, 255*1-1), "0B"));
+          theRamCanvasL.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intClamp(std::abs(std::imag(z))*15, 255*1-1), "0B"));
       }
     }
   }
-  theRamCanvasA.writeTGAfile("biomorph2A.tga");
-  theRamCanvasE.writeTGAfile("biomorph2E.tga");
-  theRamCanvasK.writeTGAfile("biomorph2K.tga");
-  theRamCanvasL.writeTGAfile("biomorph2L.tga");
+  theRamCanvasA.writeTIFFfile("biomorph2A.tiff");
+  theRamCanvasE.writeTIFFfile("biomorph2E.tiff");
+  theRamCanvasK.writeTIFFfile("biomorph2K.tiff");
+  theRamCanvasL.writeTIFFfile("biomorph2L.tiff");
 }

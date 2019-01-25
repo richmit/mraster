@@ -3,8 +3,9 @@
 /**
  @file      sic.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Draw a Peter de Jong Attractor.@EOL
+ @brief     Draw fractals inspired by the book Symmetry in Chaos.@EOL
  @std       C++98
+ @see       sic_search.cpp
  @copyright 
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -33,15 +34,12 @@
 ***************************************************************************************************************************************************************/
 
 #include "ramCanvas.hpp"
-#include <math.h>
 
 #define BSIZ 7680
 
 #define NPR 27
 
-using namespace mjr;
-
-typename ramCanvas1c16b::rcCordFlt params[NPR][12] = {
+typename mjr::ramCanvas1c16b::rcCordFlt params[NPR][12] = {
   /*  lambda       alpha      beta     gamma      omega   n    ipw   xmin  xmax   ymin  ymax    1=mean */
   { 1.375390, -0.4212800,  0.26969,  0.08352,  0.338347,  6, 15.00, -1.30, 1.30, -1.30, 1.30, 1.0}, // 0  |             
   { 1.600230, -1.1340800, -0.17506,  0.67872,  0.049490,  6, 14.00,  0.10, 0.70,  0.43, 0.90, 0.0}, // 1  |  WACKY      
@@ -77,32 +75,32 @@ class g2rgb8 {
     int factor;
   public:
     g2rgb8(int newFactor) { factor = newFactor; }
-    colorRGB8b operator() (ramCanvas1c16b::rcColor c) {
-      colorRGB8b retColor;
+    mjr::colorRGB8b operator() (mjr::ramCanvas1c16b::rcColor c) {
+      mjr::colorRGB8b retColor;
       return retColor.cmpColorRamp(c.getRed() * 1275 / factor, "0RYBCW");
     }
 };
 
 int main(void) {
-  color1c16b aColor;
+  mjr::color1c16b aColor;
   aColor.setAll(1);
-  for(int j=0; j<NPR; j++) {
-    //for(int j : { 0 } ) {
-    ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, params[j][7], params[j][8], params[j][9], params[j][10]);
-    typename ramCanvas1c16b::rcCordFlt lambda = params[j][0];
-    typename ramCanvas1c16b::rcCordFlt alpha  = params[j][1];
-    typename ramCanvas1c16b::rcCordFlt beta   = params[j][2];
-    typename ramCanvas1c16b::rcCordFlt gamma  = params[j][3];
-    typename ramCanvas1c16b::rcCordFlt w      = params[j][4];
+  //for(int j=0; j<NPR; j++) {
+    for(int j : { 0 } ) {
+    mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, params[j][7], params[j][8], params[j][9], params[j][10]);
+    typename mjr::ramCanvas1c16b::rcCordFlt lambda = params[j][0];
+    typename mjr::ramCanvas1c16b::rcCordFlt alpha  = params[j][1];
+    typename mjr::ramCanvas1c16b::rcCordFlt beta   = params[j][2];
+    typename mjr::ramCanvas1c16b::rcCordFlt gamma  = params[j][3];
+    typename mjr::ramCanvas1c16b::rcCordFlt w      = params[j][4];
     int n        = params[j][5];
     float ipw    = params[j][6];
     int filter   = params[j][11];
 
-    std::complex<typename ramCanvas1c16b::rcCordFlt> cplxi (0,1);
+    std::complex<typename mjr::ramCanvas1c16b::rcCordFlt> cplxi (0,1);
 
     uint64_t maxitr = 10000000000ul;
     
-    std::complex<typename ramCanvas1c16b::rcCordFlt> z(.01,.01);
+    std::complex<typename mjr::ramCanvas1c16b::rcCordFlt> z(.01,.01);
     uint64_t maxII = 0;
     for(uint64_t i=0;i<maxitr;i++) { 
       z = (lambda + alpha*z*std::conj(z)+beta*std::pow(z, n).real() + w*cplxi)*z+gamma*std::pow(std::conj(z), n-1);
@@ -120,14 +118,14 @@ int main(void) {
         std::cout << "ITER(" << j <<  "): " << i << " MAXS: " << maxII << std::endl;
     }
 
-    std::cout << "ITER(" << j <<  "): " << "RAW" << std::endl;
-    theRamCanvas.writeRAWfile("sic_" + std::to_string(j) + ".mrw");
+    std::cout << "ITER(" << j <<  "): " << "Big TIFF" << std::endl;
+    theRamCanvas.writeTIFFfile("sic_" + std::to_string(j) + ".tiff");
 
     // Root image transform
     std::cout << "ITER(" << j <<  "): " << "TFRM & SCALE" << std::endl;
     theRamCanvas.autoHistStrech();
-    //theRamCanvas.applyHomoPixTfrm(&color1c16b::tfrmLn);
-    theRamCanvas.applyHomoPixTfrm(&color1c16b::tfrmStdPow, 1/ipw);
+    //theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmLn);
+    theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmStdPow, 1/ipw);
     if(filter)
       theRamCanvas.scaleDownMean(4);
     else
@@ -141,10 +139,12 @@ int main(void) {
       if(pixel.getRed() > maxII)
         maxII = pixel.getRed();
     
-    std::cout << "ITER(" << j <<  "): " << "TGA" << std::endl;
-    /* We would like to create a 24-bit RGB TGA file, but we have a 16-bit greyscale image.  We could create a 24-bit ramCanvas object from the greyscale one,
-       or we can give the writeTGAfile member a functor telling it how to convert each pixel as it is required. */
-    theRamCanvas.writeTGAfile("sic_" + std::to_string(j) + ".tga", g2rgb8(maxII));
+    std::cout << "ITER(" << j <<  "): " << "TIFF" << std::endl;
+    /* Dump the 16-bit grayscale TIFF */
+    theRamCanvas.writeTIFFfile("sicM_" + std::to_string(j) + ".tiff");
+    /* Now we would like a false color one (24-bit RFB).  We could create a 24-bit ramCanvas object from the greyscale one, but we have a better option -- one
+       that requires no extra RAM.  We give the writeTIFFfile member a functor telling it how to convert each pixel as it is required. */
+    theRamCanvas.writeTIFFfile("sicC_" + std::to_string(j) + ".tiff", g2rgb8(maxII));
   }
   return 0;
 }

@@ -1,15 +1,13 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
- @file      sic_search.cpp
+ @file      mandelbrot_grayscale.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Find parameters for SIC fractals that light up lots of pixels.@EOL
- @keywords  
- @std       C++11
- @see       sic.cpp
+ @brief     Draw a grayscale Mandelbrot Set.@EOL
+ @std       C++14
  @copyright 
   @parblock
-  Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
+  Copyright (c) 1988-2015,2018 Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -30,39 +28,36 @@
   @endparblock
 ***************************************************************************************************************************************************************/
 
+// Draw a grayscale Mandelbrot set.
+// We illustrate:
+//   - How to create and use a grayscale canvas
+//   - An optimization to make drawing the set faster
+//   - How to losslessly stretch an image histogram to the limits
+
 #include "ramCanvas.hpp"
 
-#include <map>                                                           /* STL map                 C++11    */
-#include <random>                                                        /* C++ random numbers      C++11    */
-
-#define BSIZ 2048
+#include <complex>                                                       /* STL algorithm           C++11    */
 
 int main(void) {
-  std::random_device rd;
-  std::mt19937 rEng(rd());
-  std::uniform_real_distribution<double> uniform_dist_float(-2.0, 2.0);
-  std::uniform_int_distribution<int>     uniform_dist_int(3, 7);
-
-  mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -2, 2, -2, 2); // Just used for coordinate conversion. ;)
-
-  uint64_t maxCnt = 0;
-  for(int j=0; j<100000; j++) {
-    std::map<uint64_t, uint64_t> ptcnt;
-    float lambda = uniform_dist_float(rEng);
-    float alpha  = uniform_dist_float(rEng);
-    float beta   = uniform_dist_float(rEng);
-    float gamma  = uniform_dist_float(rEng);
-    float w      = uniform_dist_float(rEng);
-    int n        = uniform_dist_int(rEng);
-    std::complex<float> z(.01,.01);
-    for(uint64_t i=0;i<10000;i++) { 
-      z = (lambda + alpha*z*std::conj(z)+beta*std::pow(z, n).real() + w*std::complex<float>(0,1))*z+gamma*std::pow(std::conj(z), n-1);
-      ptcnt[((uint64_t)theRamCanvas.real2intX(z.real()))<<32 | ((uint64_t)theRamCanvas.real2intY(z.imag()))] = 1;
-    }
-    if(ptcnt.size() > maxCnt) {
-      maxCnt = ptcnt.size();
-      std::cout << j << " " << maxCnt << " " << lambda << "," <<  alpha << "," <<  beta << "," <<  gamma << "," <<  w << "," << n << std::endl;
+  mjr::ramCanvas1c16b theRamCanvas(7680, 7680, -2.2, 0.8, -1.5, 1.5);
+  int count;
+  const int NUMITR = mjr::ramCanvas1c16b::rcColor::maxChanVal / 32;
+  float cr, ci;
+  std::complex<float> c, z, zero(0.0, 0.0);  
+  for(int y=0;y<theRamCanvas.get_numYpix();y++) {
+    for(int x=0;x<theRamCanvas.get_numXpix();x++) {
+      cr = theRamCanvas.int2realX(x);
+      ci = theRamCanvas.int2realY(y);
+      c  = std::complex<float>(cr, ci);
+      float p = abs(c-0.25f);
+      if((cr >= p-2.0f*p*p+0.25f) && abs(c+1.0f) >= 0.25f) {
+        for(z=zero,count=0; (std::norm(z)<4)&&(count<=NUMITR); count++,z=z*z+c)
+          ;
+        if(count < NUMITR)
+          theRamCanvas.drawPoint(x, y, count*100);
+      }
     }
   }
-  return 0;
+  theRamCanvas.autoHistStrech();
+  theRamCanvas.writeTIFFfile("mandelbrot_grayscale.tiff");
 }

@@ -60,6 +60,18 @@ inline int intClamp(int anInt, int maxOutValue) {
   return anInt;
 }
 
+/** Clamp a floating point number to the range [0,1] via a true clamping function (i.e. values less than 0 map to 0, and values above 1 map to 1.).
+    @param aReal The value to be clamped
+    @return The wrapped value. */
+template <typename realType>
+inline realType unitClamp(realType aReal) {
+  if(aReal < 0)
+    return 0;
+  if(aReal > 1)
+    return 1;
+  return aReal;
+}
+
 /** Map an integer in the range [0,maxInValue] onto the range [0,maxOutValue] via a linear mapping function.  That is to say, 0 maps to zero, and maxInValue
     maps to maxOutValue. Input values outside the allowed input range will be linearly mapped outside of the given output range.  To guarantee an output
     within [0,maxInValue], then clamp the input values.

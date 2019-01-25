@@ -35,8 +35,8 @@
 ***************************************************************************************************************************************************************/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-#include <iostream>                                                      /* C++ iostream            C++98/11 */
-#include <complex>                                                       /* STL algorithm           C++98/11 */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+#include <complex>                                                       /* STL algorithm           C++11    */
 #include <random>                                                        /* C++ random numbers      C++11    */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -50,10 +50,10 @@ int main()
   const int ITRTOSS = 1000;      // Throw away first iterations
   const long NUMITR = 400000000; // Needs to be big
 
-  mjr::ramCanvas4c8b theRamCanvas(CSIZE, CSIZE, -4.0, 4.0, -4.0, 4.0);
-  theRamCanvas.set_drawMode(mjr::ramCanvas4c8b::drawModeType::ADDCLIP);
+  mjr::ramCanvas3c8b theRamCanvas(CSIZE, CSIZE, -4.0, 4.0, -4.0, 4.0);
+  theRamCanvas.set_drawMode(mjr::ramCanvas3c8b::drawModeType::ADDCLIP);
   
-  mjr::color4c8b aColor[] = { mjr::color4c8b(1, 0, 0), mjr::color4c8b(0, 1, 0), mjr::color4c8b(0, 0, 1) };
+  mjr::color3c8b aColor[] = { mjr::color3c8b(1, 0, 0), mjr::color3c8b(0, 1, 0), mjr::color3c8b(0, 0, 1) };
 
   std::random_device rd;
   std::minstd_rand0 rEng(rd()); // Fast is better than high quality for this application.
@@ -94,10 +94,10 @@ int main()
     }
     std::cout << "|" << std::endl;
     std::cout << "apomorph dump" << std::endl;
-    theRamCanvas.applyHomoPixTfrm(&mjr::color4c8b::tfrmStdPow, 1/5.0);
+    theRamCanvas.applyHomoPixTfrm(&mjr::color3c8b::tfrmStdPow, 1/5.0);
     std::ostringstream stringStream;
-    stringStream << "apomorph" << std::setfill('0') << std::setw(3) << frame << ".tga";
-    theRamCanvas.writeTGAfile(stringStream.str());
+    stringStream << "apomorph" << std::setfill('0') << std::setw(3) << frame << ".tiff";
+    theRamCanvas.writeTIFFfile(stringStream.str());
     std::cout << "apomorph finish" << std::endl;
   }
   return 0;

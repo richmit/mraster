@@ -1,12 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
- @file      sic_search.cpp
+ @file      bifurcation_diagram.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Find parameters for SIC fractals that light up lots of pixels.@EOL
- @keywords  
- @std       C++11
- @see       sic.cpp
+ @brief     Draw a bifurcation diagram for the logistic map.@EOL
+ @std       C++14
  @copyright 
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -32,37 +30,20 @@
 
 #include "ramCanvas.hpp"
 
-#include <map>                                                           /* STL map                 C++11    */
-#include <random>                                                        /* C++ random numbers      C++11    */
-
-#define BSIZ 2048
+#include <complex>                                                       /* STL algorithm           C++11    */
 
 int main(void) {
-  std::random_device rd;
-  std::mt19937 rEng(rd());
-  std::uniform_real_distribution<double> uniform_dist_float(-2.0, 2.0);
-  std::uniform_int_distribution<int>     uniform_dist_int(3, 7);
-
-  mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -2, 2, -2, 2); // Just used for coordinate conversion. ;)
-
-  uint64_t maxCnt = 0;
-  for(int j=0; j<100000; j++) {
-    std::map<uint64_t, uint64_t> ptcnt;
-    float lambda = uniform_dist_float(rEng);
-    float alpha  = uniform_dist_float(rEng);
-    float beta   = uniform_dist_float(rEng);
-    float gamma  = uniform_dist_float(rEng);
-    float w      = uniform_dist_float(rEng);
-    int n        = uniform_dist_int(rEng);
-    std::complex<float> z(.01,.01);
-    for(uint64_t i=0;i<10000;i++) { 
-      z = (lambda + alpha*z*std::conj(z)+beta*std::pow(z, n).real() + w*std::complex<float>(0,1))*z+gamma*std::pow(std::conj(z), n-1);
-      ptcnt[((uint64_t)theRamCanvas.real2intX(z.real()))<<32 | ((uint64_t)theRamCanvas.real2intY(z.imag()))] = 1;
-    }
-    if(ptcnt.size() > maxCnt) {
-      maxCnt = ptcnt.size();
-      std::cout << j << " " << maxCnt << " " << lambda << "," <<  alpha << "," <<  beta << "," <<  gamma << "," <<  w << "," << n << std::endl;
+  mjr::ramCanvas1c16b theRamCanvas(7680, 7680, 2.5, 4, -0.1, 1.1);
+  for(mjr::ramCanvas1c16b::rcCordFlt r=theRamCanvas.get_minRealX(); r<theRamCanvas.get_maxRealX(); r+=theRamCanvas.get_xPixWid()/20) {
+    mjr::ramCanvas1c16b::rcCordFlt f = 0.5;
+    mjr::ramCanvas1c16b::rcCordInt x  = theRamCanvas.real2intX(r);
+    for(int i=0; i<5000 && std::abs(f)<100; i++) {
+      f = r*f*(1-f);
+      if(i>1000) {
+        mjr::ramCanvas1c16b::rcCordInt y = theRamCanvas.real2intY(f);
+        theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColor(x, y).tfrmAddClp(mjr::color1c16b(600)));
+      }
     }
   }
-  return 0;
+  theRamCanvas.writeTIFFfile("bifurcation_diagram.tiff");
 }

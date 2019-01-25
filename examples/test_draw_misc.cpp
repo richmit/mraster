@@ -1,12 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
- @file      sic_search.cpp
+ @file      test_draw_misc.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Find parameters for SIC fractals that light up lots of pixels.@EOL
- @keywords  
- @std       C++11
- @see       sic.cpp
+ @brief     Illustrate and test simple drawing functions.@EOL
+ @std       C++98
  @copyright 
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -32,37 +30,50 @@
 
 #include "ramCanvas.hpp"
 
-#include <map>                                                           /* STL map                 C++11    */
-#include <random>                                                        /* C++ random numbers      C++11    */
-
-#define BSIZ 2048
-
 int main(void) {
-  std::random_device rd;
-  std::mt19937 rEng(rd());
-  std::uniform_real_distribution<double> uniform_dist_float(-2.0, 2.0);
-  std::uniform_int_distribution<int>     uniform_dist_int(3, 7);
+  mjr::color3c8b aColor;
+  mjr::ramCanvas3c8b theRamCanvas(1024, 1024, -1, 1, 2, 2);
 
-  mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -2, 2, -2, 2); // Just used for coordinate conversion. ;)
+  theRamCanvas.setDfltColor(mjr::color3c8b("white"));
+  theRamCanvas.drawRectangle(3, 3, 23, 23);
+  theRamCanvas.drawRectangle(0, 0, 20, 20);
+  theRamCanvas.drawRectangle(-10, -10, 50, 50);
 
-  uint64_t maxCnt = 0;
-  for(int j=0; j<100000; j++) {
-    std::map<uint64_t, uint64_t> ptcnt;
-    float lambda = uniform_dist_float(rEng);
-    float alpha  = uniform_dist_float(rEng);
-    float beta   = uniform_dist_float(rEng);
-    float gamma  = uniform_dist_float(rEng);
-    float w      = uniform_dist_float(rEng);
-    int n        = uniform_dist_int(rEng);
-    std::complex<float> z(.01,.01);
-    for(uint64_t i=0;i<10000;i++) { 
-      z = (lambda + alpha*z*std::conj(z)+beta*std::pow(z, n).real() + w*std::complex<float>(0,1))*z+gamma*std::pow(std::conj(z), n-1);
-      ptcnt[((uint64_t)theRamCanvas.real2intX(z.real()))<<32 | ((uint64_t)theRamCanvas.real2intY(z.imag()))] = 1;
-    }
-    if(ptcnt.size() > maxCnt) {
-      maxCnt = ptcnt.size();
-      std::cout << j << " " << maxCnt << " " << lambda << "," <<  alpha << "," <<  beta << "," <<  gamma << "," <<  w << "," << n << std::endl;
-    }
+  theRamCanvas.setDfltColor(mjr::color3c8b("blue"));
+  theRamCanvas.drawFillRectangle(60, 60, 80, 80);
+  theRamCanvas.drawFillRectangle(400, 400, 600, 600);
+
+
+  theRamCanvas.drawFillTriangle(10, 700, 20, 600, 50, 650, mjr::color3c8b("green"));
+  theRamCanvas.drawFillTriangle(50, 750, 60, 650, 20, 700, mjr::color3c8b("green"));
+  theRamCanvas.drawFillTriangle(100, 650, 150, 650, 120, 700, mjr::color3c8b("green"));
+  theRamCanvas.drawFillTriangle(150, 700, 200, 700, 180, 650, mjr::color3c8b("green"));
+
+  theRamCanvas.setDfltColor("red");
+  for(int y=-75;y<75;y+=3) {
+    theRamCanvas.drawLine(400, 200, 400+150, 200+y);
+    theRamCanvas.drawLine(400, 200, 400-150, 200+y);
+    theRamCanvas.drawLine(400, 200, 400+y,   200+150);
+    theRamCanvas.drawLine(400, 200, 400+y,   200-150);
   }
-  return 0;
+ 
+  theRamCanvas.drawLine(-20, -10, 70, 60);
+ 
+  for(int y=-10;y<50;y+=5) {
+    theRamCanvas.drawTriangle(20, 200, y, 200+30, 30, 300);
+  }
+ 
+  theRamCanvas.setDfltColor(mjr::color3c8b("green"));
+  for(int r=10;r<50;r+=5)
+    theRamCanvas.drawCircle(200, 250, r);
+
+  theRamCanvas.drawFillCircle(150, 150, 50);
+
+  // Check out some of they ways to specify color (more exist)!
+  theRamCanvas.drawFillCircle(70, 400, 50, "red");
+  theRamCanvas.drawFillCircle(70, 400, 40, "#ff00ff");
+  theRamCanvas.drawFillCircle(70, 400, 30, mjr::color3c8b::cornerColor::BLUE);
+  theRamCanvas.drawFillCircle(70, 400, 10, mjr::color3c8b(0xff, 0xff, 0x00));
+
+  theRamCanvas.writeTIFFfile("test_draw_misc.tiff");
 }

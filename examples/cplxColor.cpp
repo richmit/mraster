@@ -1,10 +1,11 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
- @file      tippets.cpp
+ @file      cplxColor.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Draw the John Tippetts variant of the Mandelbrot set.@EOL
- @std       C++14
+ @brief     draw complex function plots@EOL
+ @keywords  
+ @std       C++11
  @copyright 
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -28,40 +29,50 @@
   @endparblock
 ***************************************************************************************************************************************************************/
 
-#define __USE_MINGW_ANSI_STUDIO 0
-
 #include "ramCanvas.hpp"
 
+#include <iostream>                                                      /* C++ iostream            C++11    */
 #include <complex>                                                       /* STL algorithm           C++11    */
+#include <cmath>                                                         /* std:: C math.h          C++11    */
 
-#define NUMITR 2000
-#define CSIZE  3840
+using cplx = std::complex<float>;
 
-double ranges[6][4] = { {  -2.700,  2.100, -2.100,  2.100 },
-                        {  -2.100, -1.700, -0.300,  0.300 },
-                        {  -1.540, -1.330, -0.175,  0.175 },
-                        {   0.250,  0.700, -1.000,  1.000 },
-                        {   0.250,  0.600,  0.700,  1.000 },
-                        {  -0.720, -0.695,  0.385,  0.410 } };
+cplx f(cplx z);  
+
+cplx f(cplx z) {
+  try {
+    //return (std::sin(z) - cplx(1))/(z*z*z - cplx(0.5)*z*z + z + cplx(1));
+    //return (std::sin(std::exp(z)) - cplx(1))/(std::cos(z*z) - cplx(2.0)*z*z + z + cplx(1));
+    //return (z - cplx(1))/(z*z*z - cplx(0.5)*z*z + z + cplx(1));
+    return z;
+  } catch(...) {
+    std::cout << "Something went wrong!!" << std::endl;
+    return 0;
+  }
+}
 
 int main(void) {
-  int count;
-  float a, b, zx, zy;
-  mjr::ramCanvas3c8b theRamCanvas(CSIZE, CSIZE);
-  for(int i=0; i<6; i++) {    
-    theRamCanvas.newRealCoords(ranges[i][0], ranges[i][1], ranges[i][2], ranges[i][3]);  
-    theRamCanvas.clrCanvasToBlack();
-    for(int y=0;y<theRamCanvas.get_numYpix();y++) {
-      if((y%(CSIZE/10))==0)
-        std::cout << "    CASE: " << i << " LINE: " << y << "/" << CSIZE << std::endl;
-      for(int x=0;x<theRamCanvas.get_numXpix();x++) {
-        for(a=theRamCanvas.int2realX(x),b=theRamCanvas.int2realY(y),zx=zy=0.0,count=0;
-            (zx*zx+zy*zy<100000)&&(count<=NUMITR);
-            count++,zx=zx*zx-zy*zy+a,zy=2*zx*zy+b) ;
-        if(count < NUMITR)
-          theRamCanvas.drawPoint(x, y, mjr::color3c8b().cmpFireRamp(mjr::intWrap(count*20, 767)));
-      }
+  const float cutDepth = 10.0;    // Range: $[1, ~30]$ Smaller means more contrast on cuts.  
+  const float argCuts  = 16;      // Number of grey cuts for arg
+  const int   argWrap  = 1;       // Number of times to wrap around the color ramp for arg
+  const float absCuts  = 2;       // Number of grey cuts for abs
+  const float ar       = 16/9.0;  // Aspect ratio
+  const int   hdLevel  = 2;       // 1=FHD, 2=4k, 4=8k
+  mjr::ramCanvas3c8b theRamCanvas(1920*hdLevel, 1080*hdLevel, -2.0*ar, 2.0*ar, -2.0, 2.0);
+  for(int y=0;y<theRamCanvas.get_numYpix();y++)  {
+    for(int x=0;x<theRamCanvas.get_numXpix();x++) {
+      cplx z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
+      cplx fz      = f(z);
+      float fzArg  = std::arg(fz);
+      float pfzArg = (fzArg < 0 ? 2*3.141592653589793+fzArg : fzArg) / (2*3.141592653589793);
+      float fzAbs  = std::abs(fz);
+      float lfzAbs = std::log(fzAbs);
+      mjr::color3c8b aColor;
+      aColor.cmpClrCubeRainbow(mjr::intWrap(mjr::unitTooIntLinMap(mjr::unitClamp(pfzArg), 1530*argWrap), 1530));
+      aColor.tfrmLinearGreyLevelScale(1.0 - fabs(int(pfzArg*argCuts) - pfzArg*argCuts)/cutDepth, 0);
+      aColor.tfrmLinearGreyLevelScale(1.0 - fabs(int(lfzAbs*absCuts) - lfzAbs*absCuts)/cutDepth, 0);
+      theRamCanvas.drawPoint(x, y, aColor);
     }
-    theRamCanvas.writeTIFFfile("tippets" + std::to_string(i) + ".tiff");
   }
+  theRamCanvas.writeTIFFfile("cplxColor.tiff");
 }

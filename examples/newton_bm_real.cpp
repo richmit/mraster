@@ -1,12 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
- @file      sic_search.cpp
+ @file      newton_bm_real.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Find parameters for SIC fractals that light up lots of pixels.@EOL
- @keywords  
- @std       C++11
- @see       sic.cpp
+ @brief     Benchmark drawing a Newton fractal using real types and arithmetic.@EOL
+ @std       C++98
  @copyright 
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -32,37 +30,45 @@
 
 #include "ramCanvas.hpp"
 
-#include <map>                                                           /* STL map                 C++11    */
-#include <random>                                                        /* C++ random numbers      C++11    */
-
-#define BSIZ 2048
+#define pi 3.14159265359
 
 int main(void) {
-  std::random_device rd;
-  std::mt19937 rEng(rd());
-  std::uniform_real_distribution<double> uniform_dist_float(-2.0, 2.0);
-  std::uniform_int_distribution<int>     uniform_dist_int(3, 7);
+  int MaxCount = 255;
+  int MultCol  = 15;
+  float Tol    = (.0001 * .0001);
+  mjr::ramCanvas3c8b theRamCanvas(4096, 4096, -2.0, 2, -2, 2); // -0.9, -0.7, -0.1, 0.1
+  
+  for(int y=0;y<theRamCanvas.get_numYpix();y++) {
+    for(int x=0;x<theRamCanvas.get_numXpix();x++) {
+      float zx = theRamCanvas.int2realX(x);
+      float zy = theRamCanvas.int2realY(y);
+      int count = 0;
+      while(count < MaxCount                                                  &&
+            ((zx-1) * (zx-1) + zy * zy >= Tol)                                &&
+            ((zx+.5) * (zx+.5) + (zy-sin(2*pi/3)) * (zy-sin(2*pi/3)) >= Tol)  &&
+            ((zx+.5) * (zx+.5) + (zy+sin(2*pi/3)) * (zy+sin(2*pi/3)) >= Tol)) {
+        float botx = 3*(zx * zx - zy * zy);
+        float boty = 3*(2 * zx * zy);
+        
+        float mag = botx * botx + boty * boty;
+        if (mag > 0) {
+          float topx = (zx*zx*zx+-3.0*zx*zy*zy-1)/mag;
+          float topy = (3.0*zx*zx*zy-zy*zy*zy)/mag;
+          
+          zx = zx - (topx * botx + topy * boty);
+          zy = zy - (topy * botx - topx * boty);
+        }
+        count++;
+      }
 
-  mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -2, 2, -2, 2); // Just used for coordinate conversion. ;)
-
-  uint64_t maxCnt = 0;
-  for(int j=0; j<100000; j++) {
-    std::map<uint64_t, uint64_t> ptcnt;
-    float lambda = uniform_dist_float(rEng);
-    float alpha  = uniform_dist_float(rEng);
-    float beta   = uniform_dist_float(rEng);
-    float gamma  = uniform_dist_float(rEng);
-    float w      = uniform_dist_float(rEng);
-    int n        = uniform_dist_int(rEng);
-    std::complex<float> z(.01,.01);
-    for(uint64_t i=0;i<10000;i++) { 
-      z = (lambda + alpha*z*std::conj(z)+beta*std::pow(z, n).real() + w*std::complex<float>(0,1))*z+gamma*std::pow(std::conj(z), n-1);
-      ptcnt[((uint64_t)theRamCanvas.real2intX(z.real()))<<32 | ((uint64_t)theRamCanvas.real2intY(z.imag()))] = 1;
-    }
-    if(ptcnt.size() > maxCnt) {
-      maxCnt = ptcnt.size();
-      std::cout << j << " " << maxCnt << " " << lambda << "," <<  alpha << "," <<  beta << "," <<  gamma << "," <<  w << "," << n << std::endl;
+      if((zx-1) * (zx-1) + zy * zy < Tol)
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b(255-count*MultCol, 0, 0));
+      else if((zx+.5) * (zx+.5) + (zy-sin(2*pi/3)) * (zy-sin(2*pi/3)) <= Tol)
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, 255-count*MultCol, 0));
+      else if((zx+.5) * (zx+.5) + (zy+sin(2*pi/3)) * (zy+sin(2*pi/3)) <= Tol)
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, 0, 255-count*MultCol));
     }
   }
-  return 0;
+  theRamCanvas.writeTIFFfile("newton.tiff");
 }
+

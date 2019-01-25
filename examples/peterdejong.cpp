@@ -29,13 +29,12 @@
 ***************************************************************************************************************************************************************/
 
 #include "ramCanvas.hpp"
-#include <math.h>
+
+#include <cmath>                                                         /* std:: C math.h          C++11    */
 
 //#define BSIZ 512
 #define BSIZ 7680
 #define NPR  18
-
-using namespace mjr;
 
 double params[NPR][9] = {
   /*        a         b         c         d          e          f          g         h     p */
@@ -60,10 +59,10 @@ double params[NPR][9] = {
 };
 
 int main(void) {
-  color1c16b aColor;
+  mjr::color1c16b aColor;
   aColor.setAll(1);
   for(int j=0; j<NPR; j++) {
-    ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -2, 2, -2, 2);
+    mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -2, 2, -2, 2);
 
     double a = params[j][0];
     double b = params[j][1];
@@ -81,7 +80,7 @@ int main(void) {
     double y       = 1.0;  
     uint64_t maxII = 0;
     for(uint64_t i=0;i<10000000000ul;i++) {
-      double xNew = sin(a*y + e) - cos(b*x + f);
+      double xNew = std::sin(a*y + e) - cos(b*x + f);
       double yNew = sin(c*x + g) - cos(d*y + h);
       theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColor(x, y).tfrmAdd(aColor));
       if(theRamCanvas.getPxColor(x, y).getRed() > maxII) {
@@ -100,22 +99,22 @@ int main(void) {
     theRamCanvas.writeRAWfile("peterdejong_" + std::to_string(j) + ".mrw");
 
     // Root image transform
-    theRamCanvas.applyHomoPixTfrm(&color1c16b::tfrmStdPow, 1/p);
+    theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmStdPow, 1/p);
     maxII = 65535.0 * pow(maxII/65535.0, 1/p);
 
     // Log image transform
-    // theRamCanvas.applyHomoPixTfrm(&color1c16b::tfrmLn);
+    // theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmLn);
     // maxII = log(maxII);
 
     /* Create a new image based on an integer color scale -- this one is 24-bit RGB color.  This isn't the most efficient technique from a RAM perspective in
-       that we could pass a conversion routine to writeTGAfile (see sic.cpp for an example of how to do just that). */
-    ramCanvas3c8b anotherRamCanvas(BSIZ, BSIZ);
-    color3c8b bColor;
+       that we could pass a conversion routine to writeTIFFfile (see sic.cpp for an example of how to do just that). */
+    mjr::ramCanvas3c8b anotherRamCanvas(BSIZ, BSIZ);
+    mjr::color3c8b bColor;
     for(int yi=0;yi<theRamCanvas.get_numYpix();yi++)
       for(int xi=0;xi<theRamCanvas.get_numXpix();xi++)
         anotherRamCanvas.drawPoint(xi, yi, bColor.cmpColorRamp(theRamCanvas.getPxColor(xi, yi).getRed() * 1275 / maxII, "0RYBCW"));
     
-    anotherRamCanvas.writeTGAfile("peterdejong_" + std::to_string(j) + ".tga");
+    anotherRamCanvas.writeTIFFfile("peterdejong_" + std::to_string(j) + ".tiff");
   }
   return 0;
 }
