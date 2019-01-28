@@ -13,6 +13,7 @@ Some examples of what can be done with this library:
 * [Newton Fractal](http://www.mitchr.me/SS/newton/index.html)
 * [Peter de Jong Fractal](http://www.mitchr.me/SS/swirl/index.html)
 * [Symmetric Fractals](http://www.mitchr.me/SS/sic/index.html)
+* [Chaos Game](http://www.mitchr.me/SS/ChaosGame/index.html)
 * [Apollonian Gasket](https://www.mitchr.me/SS/AGasket/index.html)
 
 Have fun.
