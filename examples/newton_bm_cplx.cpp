@@ -32,12 +32,11 @@
 
 #include <complex>                                                       /* STL algorithm           C++11    */
 
-#define pi 3.14159265359
-
 int main(void) {
-  int   MaxCount = 255;
-  int   MultCol  = 15;
-  float Tol      = .0001;
+  const float pi       = 3.14159265359;
+  int         MaxCount = 255;
+  int         MultCol  = 15;
+  float       Tol      = .0001;
   mjr::ramCanvas3c8b theRamCanvas(4096, 4096, -2.0, 2, -2, 2); // -0.9, -0.7, -0.1, 0.1
 
   std::complex<double> r1( 1.0,            0);

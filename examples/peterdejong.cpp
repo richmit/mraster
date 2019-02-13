@@ -32,9 +32,7 @@
 
 #include <cmath>                                                         /* std:: C math.h          C++11    */
 
-//#define BSIZ 512
-#define BSIZ 7680
-#define NPR  18
+const int NPR = 18;
 
 double params[NPR][9] = {
   /*        a         b         c         d          e          f          g         h     p */
@@ -59,6 +57,7 @@ double params[NPR][9] = {
 };
 
 int main(void) {
+  const int BSIZ = 7680;
   mjr::color1c16b aColor;
   aColor.setAll(1);
   for(int j=0; j<NPR; j++) {

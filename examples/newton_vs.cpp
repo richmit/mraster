@@ -87,20 +87,18 @@
 #include <vector>                                                        /* STL vector              C++11    */ 
 #include <iostream>                                                      /* C++ iostream            C++11    */
 
-#define pi 3.14159265359
-
 enum class whyStopNV { DIVZERO,   //!< Divide by zero (zeroTol)
                        TOOBIG,    //!< Iterate got too big (> escapeMod)
                        CONVERGEU, //!< Converged in the upper half plane
                        CONVERGEL, //!< Converged in the lower half plane
                        TOOLONG    //!< Too many iterations (> MaxCount)
-};
+                     };
 
 
-enum class solMethNV {NEWTON,    //!< Use Newton's method
-                      HALLEY,    //!< Use Halley's method
-                      LAGUERRE   //!< Use laguerre's method
-};
+enum class solMethNV { NEWTON,    //!< Use Newton's method
+                       HALLEY,    //!< Use Halley's method
+                       LAGUERRE   //!< Use laguerre's method
+                     };
 
 int main(void) {
   const double escapeMod = -32.0;

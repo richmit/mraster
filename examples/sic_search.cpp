@@ -35,9 +35,9 @@
 #include <map>                                                           /* STL map                 C++11    */
 #include <random>                                                        /* C++ random numbers      C++11    */
 
-#define BSIZ 2048
-
 int main(void) {
+  const int BSIZ = 2048;
+
   std::random_device rd;
   std::mt19937 rEng(rd());
   std::uniform_real_distribution<double> uniform_dist_float(-2.0, 2.0);

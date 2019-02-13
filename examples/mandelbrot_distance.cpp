@@ -42,7 +42,11 @@
 
 #include "ramCanvas.hpp"
 
-enum class whyStopMD {OUTSET, MAXCOUNT, INSET};
+/** Reasons iteration may stop */
+enum class whyStopMD { OUTSET,   //!< Not in set (|z|>BALL)
+                       MAXCOUNT, //!< Maximum iteration reached
+                       INSET     //!< In set (known region)
+                     };
 
 int main(void) {
   const double       DISTTH = 0.001;

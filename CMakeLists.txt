@@ -101,7 +101,7 @@ endif()
 
 ######################################################################################################################################################
 
-set(TARGETS_REQ_NONE   "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "biomorph2" "bmark" "chaos_game" "color_all" "color_lut_ramp_cube"  "dlaSeed" "cplxColor"
+set(TARGETS_REQ_NONE   "apollony" "circles" "apomorph" "bifurcation_diagram" "biomorph1" "biomorph2" "bmark" "chaos_game" "color_all" "color_lut_ramp_cube"  "dlaSeed" "cplxColor"
                        "color_lut_ramp_misc" "color_interp_hls_vs_rgb" "mandelbrot_distance" "level_curves" "mandelbrot_bm_cplx" "mandelbrot_bm_cplx_hyper"
                        "mandelbrot_bm_real" "newton_max_mod" "newton_z6" "newton_half" "newton_vs" "newton_bm_cplx" "newton_bm_real" "mandelbrot_binary"
                        "peterdejong" "peterdejongM" "mandelbrot_potential" "sic" "sic_search" "sierpinski_triangle" "test_draw_btriangle" "test_draw_color"
@@ -189,6 +189,9 @@ if(TIFF_FOUND)
     target_link_libraries(${CURTGT} ${TIFF_LIBRARIES})
   endforeach(CURTGT)
 endif()
+
+# The circles target needs drawing mode support
+target_compile_definitions(circles PUBLIC SUPPORT_DRAWING_MODE=1)
 
 ######################################################################################################################################################
 

@@ -39,14 +39,14 @@
 
 #include "ramCanvas.hpp"
 
-//#define CSIZE 4096
-#define CSIZE 1024
-#define MAXITR 6000
-#define BALL 10000000.0
-
-enum class whyStopMPO {OUTSET, MAXCOUNT, INSET};
+/** Reasons iteration may stop */
+enum class whyStopMPO { OUTSET,   //!< Not in set (|z|>BALL)
+                        MAXCOUNT, //!< Maximum iteration reached
+                        INSET     //!< In set (known region)
+                      };
 
 /* This is out here so that it will get allocated on the heap. I'm too lazy to use malloc just this moment. */
+const int CSIZE = 4096;
 double theValues[CSIZE][CSIZE];
 
 double ranges[3][4] = { { -2.0,        1.0,       -1.5,        1.5       },
@@ -54,11 +54,13 @@ double ranges[3][4] = { { -2.0,        1.0,       -1.5,        1.5       },
                         {  0.0353469,  0.5353469,  0.1153845,  0.6153845 } };
 
 int main(void) {
-  double             maxPot=0;
-  double             minPot=BALL;
+  const int          MAXITR = 6000;
+  const double       BALL   = 10000000.0;
+  double             maxPot = 0;
+  double             minPot = BALL;
   mjr::color3c8b     aColor;
   mjr::ramCanvas3c8b theRamCanvas(CSIZE, CSIZE);
-  whyStopMPO            why;           
+  whyStopMPO         why;           
 
   for(int i=0; i<3; i++) {
     //for(int i : { 0 } ) {

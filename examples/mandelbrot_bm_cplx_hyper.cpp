@@ -32,7 +32,14 @@
 
 #include <complex>                                                       /* STL algorithm           C++11    */
 
-enum class whyStopMCH {OUTSET, MAXCOUNT, PERIOD1, PERIOD2, CYCLE};
+/** Reasons iteration may stop */
+enum class whyStopMCH { OUTSET,   //!< Not in set (|z|>2)
+                        MAXCOUNT, //!< Maximum iteration reached
+                        PERIOD1,  //!< In set (known region)
+                        PERIOD2,  //!< In set (known region)
+                        CYCLE     //!< Found a cycle
+                      };
+
 int main(void) {
   mjr::color3c8b aColor;
 

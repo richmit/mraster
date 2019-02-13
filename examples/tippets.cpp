@@ -34,9 +34,6 @@
 
 #include <complex>                                                       /* STL algorithm           C++11    */
 
-#define NUMITR 2000
-#define CSIZE  3840
-
 double ranges[6][4] = { {  -2.700,  2.100, -2.100,  2.100 },
                         {  -2.100, -1.700, -0.300,  0.300 },
                         {  -1.540, -1.330, -0.175,  0.175 },
@@ -45,6 +42,9 @@ double ranges[6][4] = { {  -2.700,  2.100, -2.100,  2.100 },
                         {  -0.720, -0.695,  0.385,  0.410 } };
 
 int main(void) {
+  const int NUMITR = 2000;
+  const int CSIZE  = 3840;
+
   int count;
   float a, b, zx, zy;
   mjr::ramCanvas3c8b theRamCanvas(CSIZE, CSIZE);

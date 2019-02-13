@@ -40,10 +40,13 @@
 
 #include "ramCanvas.hpp"
 
-int MAXCOUNT = 10;
-#define MAXTRCNT 250000
 
 typedef struct { double x; double y; } complex;
+
+int MAXCOUNT;
+
+const int MAXTRCNT = 250000;
+complex thePath[MAXTRCNT];
 
 int inSet(complex tstPt);
 int findAlphaTriangle(int maxCnt, int ptA, int ptB, float slop, complex triangle[3]);
@@ -52,6 +55,7 @@ int orbCmp(complex tstPt);
 
 /* **************************************************************** */
 int main(void) {
+
   // Pick a triangle type and size..
 //  complex protoAlphaTriangle[3] = { {0.0, 0.0}, {0.50, 0.0}, {0.500, 0.50} };    // Big       right triangles
 //  complex protoAlphaTriangle[3] = { {0.0, 0.0}, {0.10, 0.0}, {0.100, 0.10} };    // Small     right triangles
@@ -66,8 +70,8 @@ int main(void) {
   // First we draw a greyscale Mandelbrot set for reference.
   mjr::color3c8b aColor;
   aColor.setToWhite();
-  MAXCOUNT=255;
-  std::cerr << "INFO(main): Draw reference set via fill algorithm." << std::endl;
+  MAXCOUNT = 255;
+  std::cout << "INFO(main): Draw reference set via fill algorithm." << std::endl;
   for(int yy=0;yy<theRamCanvas.get_numYpix();yy++) {
     for(int xx=0;xx<theRamCanvas.get_numXpix();xx++) {
       complex tpt;
@@ -79,14 +83,13 @@ int main(void) {
   }
 
   // Now we trace several set boundaries
-  for(MAXCOUNT = 1;  MAXCOUNT < 10;  MAXCOUNT += 1) {
-    std::cerr <<  "INFO(main): Curve: %d" << std::endl;
+  for(MAXCOUNT = 1;  MAXCOUNT < 10;  MAXCOUNT++) {
+    std::cout <<  "INFO(main): Curve: " << MAXCOUNT << std::endl;
     // Find alpha
     complex alphaTriangle[3];
     for(int i=0; i<3; i++) 
       alphaTriangle[i] = protoAlphaTriangle[i];
     if(findAlphaTriangle(MAXTRCNT, 0, 1, 0.0, alphaTriangle)) {
-      complex thePath[MAXTRCNT];
       int thePathLen;
       traceBoundry(MAXTRCNT, 0.00003, 0, alphaTriangle, thePath, &thePathLen);
       theRamCanvas.drawPLCurve(thePathLen+1, (mjr::ramCanvas3c8b::rcPointFlt *)thePath, mjr::color3c8b(255, 0, 255));
@@ -233,14 +236,13 @@ int traceBoundry(int maxCnt, float epsilon, int goOtherWay, complex alphaTriangl
     } /* end if/else */
   } /* end for */
 
-
   // Put the first point into the path array and increment pathLen.
   *pathLen = 0;
   thePath[*pathLen].x = (curTriangle[insIdx].x + curTriangle[outIdx].x)/2;
   thePath[*pathLen].y = (curTriangle[insIdx].y + curTriangle[outIdx].y)/2;  
 
   // Main iteration loop
-  for(int count=0;(count<maxCnt)||(maxCnt==0);count++) {    
+  for(int count=0;(count<(maxCnt-1))||(maxCnt==0);count++) {    
     //Update the coordinates for our next triangle
     curTriangle[unkIdx].x = curTriangle[insIdx].x + curTriangle[outIdx].x - curTriangle[unkIdx].x;
     curTriangle[unkIdx].y = curTriangle[insIdx].y + curTriangle[outIdx].y - curTriangle[unkIdx].y;

@@ -41,9 +41,28 @@ cplx f(cplx z);
 
 cplx f(cplx z) {
   try {
+    // z=z*cplx(1.5);
+    // return ((z-cplx(2))*(z-cplx(2))*(z+cplx(1,-2))*(z+cplx(2,2))/(z*z*z));
+
+    // z=z/cplx(5.5);
+    // return (std::sin(cplx(1)/z));
+
+    // z=z/cplx(2.3);
+    // for(int i=0; i<20; i++)
+    //   z = z*z-cplx(0.75, 0.2);
+    // return z;
+
+    // z=(z*cplx(0, 1)+cplx(1.8, 0))*cplx(0.6, 0);
+    // for(int i=0; i<3; i++)
+    //   z = (std::sin(std::exp(z)) - cplx(1))/(std::cos(z*z) - cplx(2.0)*z*z + z + cplx(1));
+    // return z;
+    
     //return (std::sin(z) - cplx(1))/(z*z*z - cplx(0.5)*z*z + z + cplx(1));
+    
     //return (std::sin(std::exp(z)) - cplx(1))/(std::cos(z*z) - cplx(2.0)*z*z + z + cplx(1));
+    
     //return (z - cplx(1))/(z*z*z - cplx(0.5)*z*z + z + cplx(1));
+    
     return z;
   } catch(...) {
     std::cout << "Something went wrong!!" << std::endl;
@@ -54,10 +73,12 @@ cplx f(cplx z) {
 int main(void) {
   const float cutDepth = 10.0;    // Range: $[1, ~30]$ Smaller means more contrast on cuts.  
   const float argCuts  = 16;      // Number of grey cuts for arg
-  const int   argWrap  = 1;       // Number of times to wrap around the color ramp for arg
+  const int   argWrap  = 3;       // Number of times to wrap around the color ramp for arg
   const float absCuts  = 2;       // Number of grey cuts for abs
   const float ar       = 16/9.0;  // Aspect ratio
   const int   hdLevel  = 2;       // 1=FHD, 2=4k, 4=8k
+  const int   numColor = 1530;
+  //const int   numColor = 765;
   mjr::ramCanvas3c8b theRamCanvas(1920*hdLevel, 1080*hdLevel, -2.0*ar, 2.0*ar, -2.0, 2.0);
   for(int y=0;y<theRamCanvas.get_numYpix();y++)  {
     for(int x=0;x<theRamCanvas.get_numXpix();x++) {
@@ -68,7 +89,8 @@ int main(void) {
       float fzAbs  = std::abs(fz);
       float lfzAbs = std::log(fzAbs);
       mjr::color3c8b aColor;
-      aColor.cmpClrCubeRainbow(mjr::intWrap(mjr::unitTooIntLinMap(mjr::unitClamp(pfzArg), 1530*argWrap), 1530));
+      aColor.cmpClrCubeRainbow(mjr::intWrap(mjr::unitTooIntLinMap(mjr::unitClamp(pfzArg), numColor*argWrap), numColor));
+      //aColor.cmpSumRampRGB(mjr::intWrap(mjr::unitTooIntLinMap(mjr::unitClamp(pfzArg), numColor*argWrap), numColor));
       aColor.tfrmLinearGreyLevelScale(1.0 - fabs(int(pfzArg*argCuts) - pfzArg*argCuts)/cutDepth, 0);
       aColor.tfrmLinearGreyLevelScale(1.0 - fabs(int(lfzAbs*absCuts) - lfzAbs*absCuts)/cutDepth, 0);
       theRamCanvas.drawPoint(x, y, aColor);

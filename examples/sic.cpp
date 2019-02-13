@@ -35,10 +35,7 @@
 
 #include "ramCanvas.hpp"
 
-#define BSIZ 7680
-
-#define NPR 27
-
+const int NPR = 27;
 typename mjr::ramCanvas1c16b::rcCordFlt params[NPR][12] = {
   /*  lambda       alpha      beta     gamma      omega   n    ipw   xmin  xmax   ymin  ymax    1=mean */
   { 1.375390, -0.4212800,  0.26969,  0.08352,  0.338347,  6, 15.00, -1.30, 1.30, -1.30, 1.30, 1.0}, // 0  |             
@@ -82,6 +79,7 @@ class g2rgb8 {
 };
 
 int main(void) {
+  const int BSIZ = 7680;
   mjr::color1c16b aColor;
   aColor.setAll(1);
   //for(int j=0; j<NPR; j++) {

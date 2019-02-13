@@ -35,9 +35,10 @@
 
 #include <cmath>                                                         /* std:: C math.h          C++11    */
 
-#define BSIZE 60
 
 int main(void) {
+  const int BSIZE = 60;
+
   mjr::ramCanvasRGB8b theRamCanvas(BSIZE, BSIZE, 0, BSIZE-1, 0, BSIZE-1);
   mjr::colorRGB8b aColor(mjr::colorRGB8b::cornerColor::RED);
   mjr::colorRGB8b bColor(mjr::colorRGB8b::cornerColor::GREEN);

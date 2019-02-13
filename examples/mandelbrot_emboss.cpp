@@ -51,9 +51,13 @@ double ranges[5][4] = { { -2.0,        1.0,       -1.5,        1.5       },
                         {  0.0353469,  0.5353469,  0.1153845,  0.6153845 },
                         {  -1.5,       -1.0,        -0.5,       0.0        },
                         {  0.0353469,  0.5353469,  0.1153845,  0.6153845 }
-};
+                      };
 
-enum class whyStop {OUTSET, MAXCOUNT, INSET};
+/** Reasons iteration may stop */
+enum class whyStop { OUTSET,   //!< Not in set (|z|>BALL)
+                     MAXCOUNT, //!< Maximum iteration reached
+                     INSET     //!< In set (known region)
+                   };
 
 int main(void)
 {
@@ -62,7 +66,7 @@ int main(void)
   double               lightHeight = 1.125;
   double               lightAngle = pi/4;
   std::complex<double> lightDirection = exp(lightAngle*std::complex<double>(0,1));
-  whyStop               why;           
+  whyStop              why;           
 
   for(int i=0; i<3; i++) {
     //for(int i : { 0 } ) {

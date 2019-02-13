@@ -55,10 +55,10 @@
 int main()
 {
   std::cout << "apollony start" << std::endl;
-  const int   CSIZE = 2160;       // Quad HD
-  const int ITRTOSS = 1000;       // Throw away first iterations
-  const long NUMITR = 500000000; // Needs to be big
-
+  const int   CSIZE = 1080*2;          // Quad HD
+  const int ITRTOSS = std::pow(2, 10); // Throw away first iterations
+  const long NUMITR = std::pow(2, 29); // Needs to be big
+                      
   mjr::ramCanvas3c8b theRamCanvas(CSIZE, CSIZE, -4.0, 4.0, -4.0, 4.0);
   theRamCanvas.set_drawMode(mjr::ramCanvas3c8b::drawModeType::ADDCLIP);
   
@@ -78,7 +78,7 @@ int main()
   const std::complex<double> c2 =  0.5*(si-1.0);
   const std::complex<double> c3 = -0.5*(si+1.0);
   const std::complex<double> c4 = 1.0+s;
-  const std::complex<double> c5(3.0, 0.05);
+  const std::complex<double> c5(3.0, 0.0);
   std::complex<double> z(0.1, 0.2);
   for (long n=0;n<NUMITR;n++) {
     std::complex<double> zNxt;

@@ -498,6 +498,33 @@ namespace mjr {
           @param xfactor The factor to scale down to -- must be a positive integer. */
       void scaleDownMean(int xfactor);
       //@}
+
+      /** @name Convolution */
+      //@{
+      /** Apply a convolution filter.  
+          The implementation for this method is quite naive and super slow!  Frankly, this kind of functionality should be pulled from an image processing
+          library tuned for this kind of work; however, sometimes you just need a convolution filter and you don't want to go to the extra effort of using yet
+          another external library.  So here it is.
+          @param kernel  The convolution kernel.   Must be of length kWide*kTall.
+          @param kWide   The width of the kernel.  Must be odd.
+          @param kTall   The height of the kernel. Must be odd. 
+          @param divisor Used to normalize dot product at each step.  i.e. one might say the kernel for the convolution is really kernel/divisor. */
+      void convolution(double *kernel, int kWide, int kTall, double divisor);
+      /** @overload */
+      void convolution(double *kernel, int kSize, double divisor);
+      /** @overload */
+      void convolution(double *kernel, int kSize);
+      /** Compute a Gaussian convolution kernel (use with divisor==1.0)
+          @param kernel  Pointer to space for the convolution kernel.   Must have at least space for kSize*kSize doubles
+          @param kSize   The width and height of the kernel.  Must be odd.
+          @param sd      The standard deviation. */
+      void computeConvolutionMatrixGausian(double *kernel, int kSize, double sd);
+      /** Compute a box blur convolution kernel (use with divisor==1.0)
+          @param kernel  Pointer to space for the convolution kernel.   Must have at least space for kSize*kSize doubles
+          @param kSize   The width and height of the kernel.  Must be odd. */
+      void computeConvolutionMatrixBox(double *kernel, int kSize);
+
+      //@}
       
       /** @name Iterators */
       //@{
@@ -1065,7 +1092,8 @@ namespace mjr {
           @param x The real x coordinate value to be converted.
           @return The integer x coordinate corresponding to the given x coordinate */
       int real2intX(fltCrdT x) const;
-      /** @param y The real y coordinate value to be converted.
+      /** Convert real y coordinate to integral y coordinate
+          @param y The real y coordinate value to be converted.
           @return The integer y coordinate corresponding to the given y coordinate */
       int real2intY(fltCrdT y) const;
       /** Convert integral x coordinate to real x coordinate
@@ -1075,9 +1103,21 @@ namespace mjr {
       /** Convert integral y coordinate to real y coordinate
           @param y The integer y coordinate value to be converted.
           @return The real y coordinate corresponding to the given y coordinate */
-      fltCrdT int2realY(intCrdT y);
+      fltCrdT int2realY(intCrdT y);      
       //@}
 
+      /** @name Coordinate Delta Conversions. */
+      //@{
+      /** Convert real distance on the x coordinate axis to an integral distance
+          @param x The real delta x to be converted
+          @return integer delta x */
+      int realDelta2intX(fltCrdT x) const;
+      /** Convert real distance on the y coordinate axis to an integral distance
+          @param y The real delta y to be converted
+          @return integer delta y */
+      int realDelta2intY(fltCrdT y) const;
+      //@}
+      
       /** @name Orientation of Real Coordinate Systems */
       //@{
       /** Get the real X axis orientation
@@ -2586,6 +2626,19 @@ namespace mjr {
     else
       return (int)((maxRealY - y) / yPixWid);
   }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::realDelta2intX(fltCrdT x) const {
+      return (int)(x/xPixWid);
+ }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::realDelta2intY(fltCrdT y) const {
+      return (int)(y/yPixWid);
+  }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   fltCrdT  ramCanvasTpl<colorT, intCrdT, fltCrdT>::int2realX(intCrdT x) {
@@ -3118,19 +3171,19 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawCircle(fltCrdT radiusX) {
-    drawCircle(dfltX, dfltY, real2intX(radiusX), dfltColor);
+    drawCircle(dfltX, dfltY, realDelta2intX(radiusX), dfltColor);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawCircle(rcPointFlt centerPoint, fltCrdT radiusX) {
-    drawCircle(real2intX(centerPoint.x), real2intY(centerPoint.y), real2intX(radiusX), dfltColor);
+    drawCircle(real2intX(centerPoint.x), real2intY(centerPoint.y), realDelta2intX(radiusX), dfltColor);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawCircle(rcPointFlt centerPoint, fltCrdT radiusX, colorT color) {
-    drawCircle(real2intX(centerPoint.x), real2intY(centerPoint.y), real2intX(radiusX), color);
+    drawCircle(real2intX(centerPoint.x), real2intY(centerPoint.y), realDelta2intX(radiusX), color);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3148,13 +3201,13 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawCircle(fltCrdT centerX, fltCrdT centerY, fltCrdT radiusX) {
-    drawCircle(real2intX(centerX), real2intY(centerY), real2intX(radiusX), dfltColor);
+    drawCircle(real2intX(centerX), real2intY(centerY), realDelta2intX(radiusX), dfltColor);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawCircle(fltCrdT centerX, fltCrdT centerY, fltCrdT radiusX, colorT  color) {
-    drawCircle(real2intX(centerX), real2intY(centerY), real2intX(radiusX), color);
+    drawCircle(real2intX(centerX), real2intY(centerY), realDelta2intX(radiusX), color);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3207,7 +3260,7 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillCircle(fltCrdT radiusX) {
-    drawFillCircle(dfltX, dfltY, real2intX(radiusX), dfltColor);
+    drawFillCircle(dfltX, dfltY, realDelta2intX(radiusX), dfltColor);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3219,13 +3272,13 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillCircle(rcPointFlt centerPoint, fltCrdT radiusX, colorT color) {
-    drawFillCircle(real2intX(centerPoint.x), real2intY(centerPoint.y), real2intX(radiusX), color);
+    drawFillCircle(real2intX(centerPoint.x), real2intY(centerPoint.y), realDelta2intX(radiusX), color);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillCircle(rcPointFlt centerPoint, fltCrdT radiusX) {
-    drawFillCircle(real2intX(centerPoint.x), real2intY(centerPoint.y), real2intX(radiusX), dfltColor);
+    drawFillCircle(real2intX(centerPoint.x), real2intY(centerPoint.y), realDelta2intX(radiusX), dfltColor);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3243,13 +3296,13 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillCircle(fltCrdT centerX, fltCrdT centerY, fltCrdT radiusX) {
-    drawFillCircle(real2intX(centerX), real2intY(centerY), real2intX(radiusX), dfltColor);
+    drawFillCircle(real2intX(centerX), real2intY(centerY), realDelta2intX(radiusX), dfltColor);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillCircle(fltCrdT centerX, fltCrdT centerY, fltCrdT radiusX, colorT  color) {
-    drawFillCircle(real2intX(centerX), real2intY(centerY), real2intX(radiusX), color);
+    drawFillCircle(real2intX(centerX), real2intY(centerY), realDelta2intX(radiusX), color);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3647,6 +3700,74 @@ namespace mjr {
     rePointPixels(new_pixels, new_numXpix_p, new_numYpix_p);
   }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::computeConvolutionMatrixGausian(double *kernel, int kSize, double sd) {
+    for(int yi=0, yis=-(kSize/2); yi<kSize; yi++, yis++)
+      for(int xi=0,xis=-(kSize/2); xi<kSize; xi++, xis++)
+        kernel[kSize * yi + xi] = exp(-(xis*xis+yis*yis)/(2*sd*sd))/(sd*sd*6.283185307179586477);
+    double divisor = 0;
+    for(int i=0; i<(kSize*kSize); i++)
+      divisor += kernel[i];
+    for(int i=0; i<(kSize*kSize); i++)
+      kernel[i] /= divisor;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::computeConvolutionMatrixBox(double *kernel, int kSize) {
+    for(int yi=0, yis=-(kSize/2); yi<kSize; yi++, yis++)
+      for(int xi=0,xis=-(kSize/2); xi<kSize; xi++, xis++)
+        kernel[kSize * yi + xi] = 1.0/(kSize*kSize);
+  }
+  
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::convolution(double *kernel, int kWide, int kTall, double divisor) {
+    colorT *new_pixels = new colorT[numXpix * numYpix];
+    double *tmp = new double[colorT::channelCount];
+    // Divisor is invalid, so we compute one to use
+    if(std::abs(divisor) < 0.0001) {
+      divisor = 0.0;
+      for(int i=0; i<(kWide*kTall); i++)
+        divisor += kernel[i];
+    }
+    // Aapply filter   
+    for(intCrdT y=0; y<numYpix; y++) {
+      for(intCrdT x=0; x<numXpix; x++) {
+        colorT newColor;
+        for(int chan=0; chan<colorT::channelCount; chan++) {
+          tmp[chan] = 0.0;
+          for(int yi=0, yis=-(kTall/2); yi<kTall; yi++, yis++) {
+            for(int xi=0,xis=-(kWide/2); xi<kWide; xi++, xis++) {
+              intCrdT icX = x + xis;
+              intCrdT icY = y + yis;
+              if (!(isCliped(icX, icY))) {
+                tmp[chan] += getPxColor(icX, icY).getChan(chan) * kernel[kWide * yi + xi];
+              }
+            }
+          }
+          tmp[chan] /= divisor;
+          newColor.setChan(chan, (int)tmp[chan]);
+        }
+        new_pixels[numXpix * y + x] = newColor;  
+      }
+    }
+    rePointPixels(new_pixels, numXpix, numYpix);
+    delete[] tmp;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::convolution(double *kernel, int kSize, double divisor) {
+      convolution(kernel, kSize, kSize, divisor);
+  }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::convolution(double *kernel, int kSize) {
+      convolution(kernel, kSize, kSize, 1.0);
+  }
+  
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawHersheyGlyph(int glyphNum, intCrdT x, intCrdT y, double magX, double magY, colorT aColor) {

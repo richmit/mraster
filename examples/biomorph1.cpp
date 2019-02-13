@@ -32,12 +32,10 @@
 
 #include <complex>                                                       /* STL algorithm           C++11    */
 
-#define NUMITR 2000
-#define CSIZE  7680
-//#define CSIZE  2000
-#define LIM  4
-
 int main(void) {
+  const int NUMITR = 2000;
+  const int CSIZE  = 7680;
+  const int LIM    = 4;
   int count;
   std::complex<float> oneone(1,1), z;
     

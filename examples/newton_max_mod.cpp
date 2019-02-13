@@ -33,12 +33,11 @@
 #include <complex>                                                       /* STL algorithm           C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
 
-#define pi 3.14159265359
-
 int main(void) {
-  int   MaxCount = 255;
-  int   MultCol  = 400; // 1, 400, 3000
-  float Tol      = .0001;
+  const double pi       = 3.14159265359;
+  int          MaxCount = 255;
+  int          MultCol  = 400; // 1, 400, 3000
+  float        Tol      = .0001;
   std::complex<double> r1(1,               0);
   std::complex<double> r2(-0.5,  sin(2*pi/3));
   std::complex<double> r3(-0.5, -sin(2*pi/3));

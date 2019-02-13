@@ -35,9 +35,10 @@
 
 #include <cmath>                                                         /* std:: C math.h          C++11    */
 
-#define BSIZE 20
 
 int main(void) {
+  const int BSIZE = 20;
+
   mjr::ramCanvasRGB8b theRamCanvas(BSIZE, BSIZE, 0, BSIZE-1, 0, BSIZE-1);
   theRamCanvas.set_yRealAxisOrientation(mjr::ramCanvasRGB8b::realAxisOrientation::INVERTED);
   mjr::colorRGB8b aColor(mjr::colorRGB8b::cornerColor::RED);

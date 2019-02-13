@@ -41,7 +41,10 @@
 #include "ramCanvas.hpp"
 
 
-enum class whyStopMO {OUTSET, MAXCOUNT};
+/** Reasons iteration may stop */
+enum class whyStopMO { OUTSET,   //!< Not in set (|z|>2)
+                       MAXCOUNT  //!< Maximum iteration reached
+                     };
 
 int main(void)
 {

@@ -35,45 +35,45 @@
    * gray: Shaded by the argument
    * quad: Like the traditional method, but different colors for each quadrant
 
+  This example demonstrates how to use some of the types defined in the ramCanvas object (integer coordinates, float coordinates, color, and color channel)
+
 ***************************************************************************************************************************************************************/
 
 #include "ramCanvas.hpp"
 
-const double pi     = 3.141592653589793238462643383279502884;
-const int    CSIZE  = 2048;
-const int    MAXITR = 2048;
-const double BALL   = 100;
-
-/* This is out here so that it will get allocated on the heap. I'm too lazy to use malloc just this moment. */
-double theValues[CSIZE][CSIZE];
+const int    MAXITR = 1024*1;
 
 double ranges[3][4] = { { -2.0,        1.0,       -1.5,        1.5       },
-                        { -0.12,      -0.03,      -0.92, -0.81 },
+                        { -0.12,      -0.03,      -0.92, -0.81           },
                         {  0.0353469,  0.5353469,  0.1153845,  0.6153845 }
-};
+                      };
 
 enum class whyStopMB {OUTSET, MAXCOUNT, INSET};
 
+typedef mjr::ramCanvas3c8b rc;    // The Ram Canvas type we will use
+typedef rc::rcColor        rcc;   // The color type in our Ram Canvas type
+
 int main(void)
 {
-  mjr::ramCanvas3c8b   binRamCanvas(CSIZE, CSIZE), grayRamCanvas(CSIZE, CSIZE), quadRamCanvas(CSIZE, CSIZE);
-  mjr::color3c8b       theColor;
-  whyStopMB               why;           
+  const int           CSIZE = 1024*1;
+  const rc::rcCordFlt BALL  = 100;
+  rc                  binRamCanvas(CSIZE, CSIZE), grayRamCanvas(CSIZE, CSIZE), quadRamCanvas(CSIZE, CSIZE);
+  rcc                 theColor;
+  whyStopMB           why;           
 
   for(int i=0; i<3; i++) {
-    //for(int i : { 0 } ) {
     binRamCanvas.newRealCoords(ranges[i][0], ranges[i][1], ranges[i][2], ranges[i][3]);
     binRamCanvas.clrCanvasToBlack();
-    std::complex<double> z;
-    for(int y=0;y<binRamCanvas.get_numYpix();y++) {
+    std::complex<rc::rcCordFlt> z;
+    for(rc::rcCordInt y=0;y<binRamCanvas.get_numYpix();y++) {
       if((y%(CSIZE/10))==0)
         std::cout << "    CASE: " << i << " LINE: " << y << "/" << CSIZE << std::endl;
-      for(int x=0;x<binRamCanvas.get_numXpix();x++) {
+      for(rc::rcCordInt x=0;x<binRamCanvas.get_numXpix();x++) {
         int count;
-        double cr = binRamCanvas.int2realX(x);
-        double ci = binRamCanvas.int2realY(y);
-        std::complex<double> c(cr, ci);
-        double p = std::abs(c-0.25);
+        rc::rcCordFlt cr = binRamCanvas.int2realX(x);
+        rc::rcCordFlt ci = binRamCanvas.int2realY(y);
+        std::complex<rc::rcCordFlt> c(cr, ci);
+        rc::rcCordFlt p = std::abs(c-0.25);
         if((cr >= p-2.0*p*p+0.25) && std::abs(c+1.0) >= 0.25) {
           z=c;
           for(count=0; ; count++) {
@@ -92,13 +92,13 @@ int main(void)
         }
 
         if(why == whyStopMB::OUTSET) {
-          double zAbs = std::abs(z);
+          rc::rcCordFlt zAbs = std::abs(z);
           if(zAbs > 0.001) {
-            int ns = ( std::imag(z) > 0 ? 0 : 255 );
-            int ew = ( std::real(z) > 0 ? 0 : 255 );
+            rcc::channelType ns = ( std::imag(z) > 0 ? 0 : 255 );
+            rcc::channelType ew = ( std::real(z) > 0 ? 0 : 255 );
             grayRamCanvas.drawPoint(x, y, theColor.cmpGrey(mjr::unitTooIntLinMap((std::real(z) / zAbs + 1.0) / 2.0, 255)));
-            binRamCanvas.drawPoint(x, y,  mjr::color3c8b( ns, ns, ns));
-            quadRamCanvas.drawPoint(x, y, mjr::color3c8b(ns, 255-(ns+ew)/2, ew));
+            binRamCanvas.drawPoint(x, y,  rcc(ns, ns, ns));
+            quadRamCanvas.drawPoint(x, y, rcc(ns, 255-(ns+ew)/2, ew));
           }
         } else {
           grayRamCanvas.drawPoint(x, y, "red");

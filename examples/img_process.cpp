@@ -28,15 +28,15 @@
 ***************************************************************************************************************************************************************/
 
 #include "ramCanvas.hpp"
+#include <chrono>
 
 /**************************************************************************************************************************************************************/
 int main(int argc, char *argv[]) {
-
   //mjr::ramCanvas3c8b *aRamCanvasPtr;
   //mjr::ramCanvas3c8b aRamCanvas;
-  //mjr::ramCanvas3c8b listOcanv[16];
+  mjr::ramCanvas3c8b listOcanv[16];
   //mjr::ramCanvas4c8b listOcanv[16];
-  mjr::ramCanvas1c16b listOcanv[16];
+  //mjr::ramCanvas1c16b listOcanv[16];
   //mjr::ramCanvas1c8b listOcanv[16];
   mjr::color3c8b aColor;
   int rRet;
@@ -58,34 +58,49 @@ int main(int argc, char *argv[]) {
     listOcanv[0].drawFillRectangle(206, 0, 305, 512, "green");
     listOcanv[0].drawFillRectangle(306, 0, 405, 512, "blue");
     listOcanv[0].drawFillRectangle(406, 0, 511, 512, "black");
+    char const *colors[5] = { "white", "red", "green", "blue", "black" };
+    for(int i=0; i<(512/32); i++)
+      listOcanv[0].drawLine(0,  i*32, 512,  i*32, colors[i%5]);
     listOcanv[0].writeTIFFfile("testImage1.tiff");
     listOcanv[0].flipTranspose();
     listOcanv[0].writeTIFFfile("testImage2.tiff");
     return 0;
   }
 
-  // if(numFiles==0) {
-  //   std::cout << "No images provided on command line.  Generateing test images" << std::endl;
-  //   listOcanv[0].resizeCanvas(3, 3);
-  //   listOcanv[0].drawPoint(0, 0, (uint16_t)0xffff);
-  //   listOcanv[0].drawPoint(1, 0, (uint16_t)0x0fff);
-  //   listOcanv[0].drawPoint(2, 0, (uint16_t)0xffff);
-  //   listOcanv[0].drawPoint(0, 1, (uint16_t)0x0000);
-  //   listOcanv[0].drawPoint(1, 1, (uint16_t)0x0000);
-  //   listOcanv[0].drawPoint(2, 1, (uint16_t)0x0000);
-  //   listOcanv[0].drawPoint(0, 2, (uint16_t)0x0fff);
-  //   listOcanv[0].drawPoint(1, 2, (uint16_t)0xffff);
-  //   listOcanv[0].drawPoint(2, 2, (uint16_t)0x0fff);
-  //   listOcanv[0].writeTIFFfile("testImage1.tiff");
-  //   return 0;
-  // }
-
-   listOcanv[0].writeTIFFfile("in1.tiff");
-   listOcanv[1].writeTIFFfile("in2.tiff");
+   // listOcanv[0].writeTIFFfile("in1.tiff");
+   // listOcanv[1].writeTIFFfile("in2.tiff");
   
   // for(auto& pix : listOcanv[0])
   //   //pix.setToRed();
   //   pix.tfrmNot();
+
+  /* **************************************************************************************************************************************************************** */
+  /* **************************************************************************************************************************************************************** */
+  /* Convolution.  Output image as conv.tiff.                                                                                                                         */
+  /* **************************************************************************************************************************************************************** */
+
+  // To use convolving, we need a kernel
+  // double edgeDetect1_3[9]  = { 1,  0, -1,  0,  0,  0, -1,  0,  1};
+  // double edgeDetect2_3[9]  = { 0,  1,  0,  1, -4,  1,  0,  1,  0};
+  // double edgeDetect3_3[9]  = {-1, -1, -1, -1,  8, -1, -1, -1, -1};
+  // double sharpen_3[9]      = { 0, -1,  0, -1,  5, -1,  0, -1,  0};
+  // double boxBlur_3[9]      = { 1,  1,  1,  1,  1,  1,  1,  1,  1}; // (d=9)
+  // double gaussianBlur_3[9] = { 1,  2,  1,  2,  4,  2,  1,  2,  1}; // (d=16)
+  // double gaussianBlur_5[25]    = {1, 4, 6, 4, 1, 4, 16, 24, 16, 4, 6, 24,   36, 24, 6, 4, 16, 24, 16, 4, 1, 4, 6, 4, 1}; // (d=256)
+  // double unsharpMmasking_5[25] = {1, 4, 6, 4, 1, 4, 16, 24, 16, 4, 6, 24, -476, 24, 6, 4, 16, 24, 16, 4, 1, 4, 6, 4, 1}; // (d=-256)
+
+  double kernel[51*51];
+  listOcanv[0].computeConvolutionMatrixGausian(kernel, 9, 10);
+  //listOcanv[0].computeConvolutionMatrixBox(kernel, 9);
+
+  std::cerr << "CONVOLUTION STARTING" << std::endl;
+  auto startTime = std::chrono::system_clock::now();
+  listOcanv[0].convolution(kernel, 9, 9, 1.0);
+  //listOcanv[0].convolution(edgeDetect2_3, 3, 3, 1.0);
+  //listOcanv[0].convolution(gaussianBlur_5, 5, 5, 256);
+  std::chrono::duration<double> elapsed_seconds = std::chrono::system_clock::now() - startTime;
+  std::cout << "CONVOLUTION TOOK " << elapsed_seconds.count() << " seconds" << std::endl;
+  listOcanv[0].writeTIFFfile("testImage1_c.tiff");
 
   /* **************************************************************************************************************************************************************** */
   /* **************************************************************************************************************************************************************** */
@@ -173,7 +188,7 @@ int main(int argc, char *argv[]) {
 
   /* **************************************************************************************************************************************************************** */
   /* **************************************************************************************************************************************************************** */
-  /* Rotate, Scale, Reflect                                                                           */
+  /* Rotate, Scale, Reflect                                                                                                                                           */
   /* **************************************************************************************************************************************************************** */
   //listOcanv[0].flipHorz();
   //listOcanv[0].flipVert();
