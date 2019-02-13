@@ -1,9 +1,9 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
- @file      test_draw_primatives.cpp
+ @file      circles.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Benchmark program for pixel draw rates with ramCanvas.@EOL
+ @brief     Mathematical art with circles.@EOL
  @copyright 
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -27,58 +27,156 @@
   @endparblock
  @filedetails   
 
-   We instantiate every drawing function in ramCanvas so that we can check for compile time errors and do some basic functionality testing.
-
 ***************************************************************************************************************************************************************/
 
 #include "ramCanvas.hpp"
 
 #include <cmath>                                                         /* std:: C math.h          C++11    */
 
-
 int main(void) {
-  const int    n       = 10000;
+  const int    n       = 200000;
   const double pi      = 3.141592653589793238462643383279502884;
-  const int    width   = 2736; // 1920;
-  const int    height  = 1824; // 1080;
+  const int    width   = 1920*2;
+  const int    height  = 1080*2;
   const double aspect  = 1.0*width/height;
   mjr::ramCanvas3c8b theRamCanvas(width*1, height*1, -1.2*aspect, 1.2*aspect, -1.2, 1.2);
-  // mjr::ramCanvas3c8b theRamCanvas(width*1, height*1, -0.6*aspect, 0.6*aspect, -0.6, 0.6);
 
   theRamCanvas.set_drawMode(mjr::ramCanvasRGB8b::drawModeType::ADDCLIP);
-  
-  // (let* ((n       12000)
-  //      (svgf    (mjr_svg_create "exp-svgCircles-OUT-frog.svg" :width 1000 :height 1000 :background "white" :xmin -1.2 :xmax 1.2 :ymin -1.2 :ymax 1.2)))
-  // (loop for k from 0 upto n
-  //       for x = (* (cos (/ (* 11 pi k) n)) (- 1 (* 3/4 (expt (cos (/ (* 10 pi k) n)) 2))))
-  //       for y = (- (* (sin (/ (* 17 pi k) n)) (- 1 (* 3/4 (expt (cos (/ (* 12 pi k) n)) 2)))))
-  //       for s = (+ 1/80 (* 1/10 (expt (sin (/ (* (* 56 ) pi k) n)) 2)))
-  //       for r = (* 255 (/ (+ 0.5 (expt (sin (/ (* (* 56 ) pi k) n)) 4)) 2))
-  //       for g = (* 255 (/ (+ 0.5 (expt (cos (/ (* (* 42 ) pi k) n)) 2)) 2))
-  //       for b = (* 255 (/ (+ 0.5 (expt (sin (/ (* (* 56 ) pi k) n)) 4)) 2))
-  //       do (mjr_svg_circle svgf x y s :stroke-opacity 0.6 :stroke (list r g b) :stroke-width 0.3))
-  // (mjr_svg_finish svgf))
 
   for(int k=0; k<n; k++) {
+    // v=017 n=120000
     double x =  (cos(11.0*pi*k/n))*(1.0-3.0/4.0*std::pow(cos(10.0*pi*k/n), 2));
     double y =  -((sin(17.0*pi*k/n))*(1.0-3.0/4.0*pow(cos(12.0*pi*k/n), 2)));
     double s =  1.0/80.0+1.0/10.0*pow(sin(56.0*pi*k/n), 2);
-    int r =  255.0*(0.5+pow(sin(56.0*pi*k/n), 4))/7.0;
-    int g =  255.0*(0.5+pow(cos(42.0*pi*k/n), 2))/7.0;
-    int b =  255.0*(0.5+pow(sin(56.0*pi*k/n), 4))/7.0;
+    int r =  255.0*(0.5+pow(sin(56.0*pi*k/n), 4))/100.0;
+    int g =  255.0*(0.5+pow(cos(42.0*pi*k/n), 2))/80.0;
+    int b =  255.0*(0.5+pow(sin(56.0*pi*k/n), 4))/125.0;
 
+    // // v=002 n=20000
+    // double x =  (sin(33.0*pi*k/n) * (cos(19.0*pi*k/n)))*2;
+    // double y =  (sin(20.0*pi*k/n) * (cos(33.0*pi*k/n)))*2;
+    // double s =  std::pow(sin(43.0*pi*k/n), 3)*0.75+0.5;
+    // int r =  255.0*(0.5+pow(sin(26.0*pi*k/n), 4))/10.0;
+    // int g =  255.0*(0.5+pow(cos(46.0*pi*k/n), 2))/17.0;
+    // int b =  255.0*(0.5+pow(sin(56.0*pi*k/n), 4))/17.0;
+
+    // // v=003 n=40000
+    // double x =  (sin(33.0*pi*k/n) * (cos(19.0*pi*k/n)))*1;
+    // double y =  (sin(20.0*pi*k/n) * (cos(33.0*pi*k/n)))*1;
+    // double s =  std::pow(sin(143.0*pi*k/n), 3)*.05+0.0;
+    // int r =  255.0*(0.5+pow(sin(26.0*pi*k/n), 4))/10.0;
+    // int g =  255.0*(0.5+pow(cos(46.0*pi*k/n), 2))/17.0;
+    // int b =  255.0*(0.5+pow(sin(56.0*pi*k/n), 4))/17.0;
+
+    // // v=004 n=40000
+    // double x =  (sin(33.0*pi*k/n) * (cos(19.0*pi*k/n)))*2;
+    // double y =  (sin(20.0*pi*k/n) * (cos(33.0*pi*k/n)))*1.2;
+    // double s =  std::pow(sin(33.0*pi*k/n), 3)*.15+0.0;
+    // int r =  255.0*(0.5+pow(sin(26.0*pi*k/n), 4))/10.0;
+    // int g =  255.0*(0.5+pow(cos(46.0*pi*k/n), 2))/17.0;
+    // int b =  255.0*(0.5+pow(sin(56.0*pi*k/n), 4))/17.0;
+
+    // // v=005 n=40000
+    // double x =  (sin(33.0*pi*k/n) * (cos(19.0*pi*k/n)))*2.3;
+    // double y =  (sin(20.0*pi*k/n) * (cos(33.0*pi*k/n)))*2;
+    // double s =  std::pow(sin(33.0*pi*k/n), 3)*.55+0.4;
+    // int r =  255.0*(0.5+pow(sin(26.0*pi*k/n), 4))/10.0;
+    // int g =  255.0*(0.5+pow(cos(46.0*pi*k/n), 2))/17.0;
+    // int b =  255.0*(0.5+pow(sin(56.0*pi*k/n), 4))/17.0;
+
+    // // v=006 n=10000
+    // double x =  (sin(133.0*pi*k/n) * (cos(19.0*pi*k/n)))*1;
+    // double y =  (sin(20.0*pi*k/n) * (cos(133.0*pi*k/n)))*1;
+    // double s =  std::pow(sin(33.0*pi*k/n), 3)*1.25+0.5;
+    // int r =  255.0*(0.5+pow(sin(26.0*pi*k/n), 4))/10.0;
+    // int g =  255.0*(0.5+pow(cos(46.0*pi*k/n), 2))/17.0;
+    // int b =  255.0*(0.5+pow(sin(56.0*pi*k/n), 4))/17.0;
+
+    // // v=007 n=10000
+    // double x =  (sin(133.0*pi*k/n) * (cos(19.0*pi*k/n)))*1.2;
+    // double y =  (sin(20.0*pi*k/n) * (cos(133.0*pi*k/n)))*.51;
+    // double s =  std::pow(sin(133.0*pi*k/n), 3)*1.25+0.5;
+    // int r =  255.0*(0.5+pow(sin(26.0*pi*k/n), 4))/10.0;
+    // int g =  255.0*(0.5+pow(cos(46.0*pi*k/n), 2))/17.0;
+    // int b =  255.0*(0.5+pow(sin(56.0*pi*k/n), 4))/17.0;
+
+    // // v=008 n=30000
+    // double x =  (sin(53.0*pi*k/n) * (1-cos(33.0*pi*k/n)))*1;
+    // double y =  (sin(33.0*pi*k/n) * (1+cos(33.0*pi*k/n)))*0.8;
+    // double s =  std::pow(sin(122.0*pi*k/n), 3)*0.0 + 0.1;
+    // int r =  255.0*(0.5+pow(sin(56.0*pi*k/n), 4))/17.0;
+    // int g =  255.0*(0.5+pow(cos(46.0*pi*k/n), 2))/17.0;
+    // int b =  255.0*(0.5+pow(sin(56.0*pi*k/n), 4))/17.0;
+
+    // // v=010 n=100000
+    // double x =  (cos(1.0*pi*k/n) * (sin(9.0*pi*k/n)))*1.;
+    // double y =  (sin(8.0*pi*k/n) * (cos(1.0*pi*k/n)))*1.;
+    // double s =  std::abs(sin(1.0*pi*k/n) * (cos(69.0*pi*k/n)))*1.22 + 1.1;
+    // int r =  255.0*(0.5+pow(sin(6.0*pi*k/n), 4))/90.0;
+    // int g =  255.0*(0.5+pow(cos(6.0*pi*k/n), 2))/87.0;
+    // int b =  255.0*(0.5+pow(sin(6.0*pi*k/n), 2))/87.0;
+
+    // // v=011 n=100000
+    // double x =  (cos(1.0*pi*k/n) * (sin(9.0*pi*k/n)))*1.;
+    // double y =  (sin(8.0*pi*k/n) * (cos(1.0*pi*k/n)))*1.;
+    // double s =  std::abs(sin(1.0*pi*k/n) * (cos(29.0*pi*k/n)))*.22 + .1;
+    // int r =  255.0*(0.5+pow(sin(6.0*pi*k/n), 4))/90.0;
+    // int g =  255.0*(0.5+pow(cos(6.0*pi*k/n), 2))/87.0;
+    // int b =  255.0*(0.5+pow(sin(6.0*pi*k/n), 2))/87.0;
+
+    // // v=012 n=120000
+    // double x =  (cos(1.0*pi*k*k/n) * (sin(9.0*pi*k/n)))*1.;
+    // double y =  (sin(8.0*pi*k/n) * (cos(1.0*pi*k*k/n)))*1.;
+    // double s =  std::abs(sin(1.0*pi*k/n) * (cos(29.0*pi*k/n)))*.92 + 1.1;
+    // int r =  255.0*(0.5+pow(sin(6.0*pi*k/n), 4))/90.0;
+    // int g =  255.0*(0.5+pow(cos(6.0*pi*k/n), 2))/97.0;
+    // int b =  255.0*(0.5+pow(sin(6.0*pi*k/n), 2))/97.0;
+
+    // // v=013 n=120000
+    // double x =  (cos(1.0*pi*k*k/n) * (sin(9.0*pi*k/n)))*2.0;
+    // double y =  (sin(8.0*pi*k/n) * (cos(1.0*pi*k*k/n)))*1.;
+    // double s =  std::abs(sin(1.0*pi*k*k/n) * (cos(2.0*pi*k/n)))*.92 + .1;
+    // int r =  255.0*(0.5+pow(sin(16.0*pi*k/n), 4))/90.0;
+    // int g =  255.0*(0.5+pow(cos(6.0*pi*k/n), 2))/100.0;
+    // int b =  255.0*(0.5+pow(sin(6.0*pi*k/n), 2))/100.0;
+
+    // // v=014 n=120000
+    // double x =  (cos(11.0*pi*k/n) * (sin(9.0*pi*k/n)))*2.0;
+    // double y =  (sin(8.0*pi*k/n) * (cos(11.0*pi*k/n)))*1.;
+    // double s =  std::abs(sin(9.0*pi*k/n) * (cos(11.0*pi*k/n)))*.4 + .51;
+    // int r =  255.0*(0.5+pow(sin(26.0*pi*k/n), 4))/200.0;
+    // int g =  255.0*(0.5+pow(cos(6.0*pi*k/n), 2))/220.0;
+    // int b =  255.0*(0.5+pow(sin(6.0*pi*k/n), 2))/220.0;
+
+    // // v=015 n=120000
+    // double x =  (cos(11.0*pi*k/n) * (sin(9.0*pi*k/n)))*2.5;
+    // double y =  (sin(8.0*pi*k/n) * (cos(11.0*pi*k/n)))*1.5;
+    // double s =  std::abs(sin(9.0*pi*k/n) * (cos(11.0*pi*k*k/n)))*.4 + .51;
+    // int r =  255.0*(0.5+pow(sin(26.0*pi*k/n), 4))/200.0;
+    // int g =  255.0*(0.5+pow(cos(6.0*pi*k/n), 2))/220.0;
+    // int b =  255.0*(0.5+pow(sin(6.0*pi*k/n), 2))/220.0;
+    
+    // // v=016 n=120000
     // double x =  (cos(11.0*pi*k/n))*(1.0-3.0/4.0*std::pow(cos(10.0*pi*k/n), 2));
     // double y =  -((sin(17.0*pi*k/n))*(1.0-3.0/4.0*pow(cos(12.0*pi*k/n), 2)));
     // double s =  1.0/80.0+1.0/10.0*pow(sin(56.0*pi*k/n), 2) + .5;
-    // int r =  255.0*(0.5+pow(sin(56.0*pi*k/n), 4))/7.0/4.0;
-    // int g =  255.0*(0.5+pow(cos(42.0*pi*k/n), 2))/7.0/8.0;
-    // int b =  255.0*(0.5+pow(sin(56.0*pi*k/n), 4))/7.0/8.0;
+    // int r =  255.0*(0.5+pow(sin(56.0*pi*k/n), 4))/7.0/54.0;
+    // int g =  255.0*(0.5+pow(cos(42.0*pi*k/n), 2))/7.0/38.0;
+    // int b =  255.0*(0.5+pow(sin(56.0*pi*k/n), 4))/7.0/48.0;
 
+    // // v=017 n=120000
+    // double x =  (cos(11.0*pi*k/n))*(1.0-3.0/4.0*std::pow(cos(10.0*pi*k/n), 2))*2.6;
+    // double y =  -((sin(17.0*pi*k/n))*(1.0-3.0/4.0*pow(cos(12.0*pi*k/n), 2)))*2.5+.3;
+    // double s =  1.0/80.0+1.0/10.0*pow(sin(56.0*pi*k/n), 2) + .5;
+    // int r =  255.0*(0.5+pow(sin(56.0*pi*k/n), 4))/7.0/54.0;
+    // int g =  255.0*(0.5+pow(cos(42.0*pi*k/n), 2))/7.0/38.0;
+    // int b =  255.0*(0.5+pow(sin(56.0*pi*k/n), 4))/7.0/48.0;
+    
     theRamCanvas.drawCircle(x, y, s, mjr::ramCanvasRGB8b::rcColor(r, g, b));
   } 
 
   // double kernel[51*51];
-  // int kSize = 3;
+  // int kSize = 9;
   // theRamCanvas.computeConvolutionMatrixGausian(kernel, kSize, 10);
   // theRamCanvas.convolution(kernel, kSize);
   theRamCanvas.writeTIFFfile("circles.tiff");

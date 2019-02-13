@@ -1,0 +1,15 @@
+TIME: 1
+DATA_FILE: mandelbrot_potential_b_0.mrd
+# The data size corresponds to NX,NY,NZ in the above example code.
+DATA_SIZE: 5000 5000 1
+# Allowable values for DATA_FORMAT are: BYTE,SHORT,INT,FLOAT,DOUBLE
+DATA_FORMAT: SHORT
+VARIABLE: mandpot
+# Endian : LITTLE or BIG
+DATA_ENDIAN: LITTLE
+# "zonal" -> 1 data value per zone. "centered"
+CENTERING: zonal
+# BRICK_ORIGIN coordinate system origin for mesh
+BRICK_ORIGIN: 0. 0. 0.
+# BRICK_SIZE size of the brick.
+BRICK_SIZE: 1. 1. 1.

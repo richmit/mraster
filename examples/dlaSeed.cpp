@@ -31,7 +31,7 @@
 #include "ramCanvas.hpp"
 
 int main(int argc, char *argv[]) {
-  mjr::ramCanvas3c8b theRamCanvas(7680/2, 4320/2, -2.2, 2.2, -2.2, 2.2);
+  mjr::ramCanvas3c8b theRamCanvas(7680/8, 4320/8, -2.2, 2.2, -2.2, 2.2);
 
   theRamCanvas.clrCanvas(mjr::color3c8b(255, 0, 0));
   theRamCanvas.drawLine(                            2,                            2, theRamCanvas.get_numXpix()-3,                            2, mjr::color3c8b(0, 0, 255));

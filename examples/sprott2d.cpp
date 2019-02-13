@@ -1,9 +1,9 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
- @file      peterdejong.cpp
+ @file      sprott2d.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Draw a Peter de Jong Attractor.@EOL
+ @brief     Draw a sprott Attractor.@EOL
  @std       C++98
  @copyright 
   @parblock
@@ -26,76 +26,48 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
+ @filedetails   
+
+  Inspired by http://paulbourke.net/fractals/starjulia/
 ***************************************************************************************************************************************************************/
 
 #include "ramCanvas.hpp"
 
 #include <cmath>                                                         /* std:: C math.h          C++11    */
-
-const int NPR = 18;
-
-double params[NPR][9] = {
-  /*        a         b         c         d          e          f          g         h     p */
-  {  -1.68661, -1.99168,  1.71743, -1.64958,  0.299086, -1.293460, -0.054505, -1.73135, 2.00},   //  0 128822725
-  {   1.50503, -1.44118, -1.23281,  1.78607,  1.709360,  1.794210,  1.893750, -1.38227, 2.10},   //  1 101379662
-  {   1.81390,  1.30705, -1.94400, -1.48629,  0.242144,  0.075625, -0.480636, -0.18518, 1.75},   //  2 139794084
-  {  -1.93281,  1.23020, -1.95848, -1.34156, -0.357486, -0.541028,  0.627957, -1.06337, 2.00},   //  3 118791871
-  {   1.96082, -1.85272, -1.86495, -1.58137, -0.545130, -1.883680, -0.839783, -1.95953, 2.00},   //  4 102197049
-  {   1.89361, -1.81593, -1.28357,  1.75597, -1.109410, -1.820460, -0.068557,  1.12429, 2.00},   //  5 107124786
-  {  -1.76096, -1.68857, -1.33290,  1.98759, -1.104940,  1.947970, -1.414330,  1.31909, 2.00},   //  6  85670760
-  {  -1.80149, -1.95335,  1.89633,  1.41626, -1.047470,  0.446659, -0.148925, -1.66114, 1.75},   //  7 224359045
-  {  -1.76161,  1.60748,  1.85472, -1.99701, -0.700920,  0.280207,  0.202521, -1.49941, 1.75},   //  8 168582830
-  {  -1.88084, -1.93071,  1.85293,  1.87725, -1.941150, -0.449833,  1.273380,  1.73451, 1.75},   //  9 230803868
-  {   1.81220, -1.66034, -1.77919,  1.81528, -1.256080, -1.517980, -1.055310,  1.76863, 1.75},   // 10 170641984
-  {  -1.90207, -1.56841, -1.59079, -1.71636, -1.586460,  1.792950, -1.161890, -1.14366, 1.50},   // 11 255341851
-  {   1.79278, -1.85710,  1.79287,  1.80201, -1.984930,  1.783520,  1.413990, -1.64555, 2.00},   // 12  82935309
-  {  -1.76690,  1.99947, -1.90106, -1.77759,  0.643333,  1.904950, -1.890230,  0.46540, 2.00},   // 13  56604946
-  {  -1.91813, -1.79012, -1.62624,  1.90787,  0.571077,  1.646480,  1.357700,  0.12230, 1.75},   // 14 215417412
-  {  -1.92361,  1.79491, -1.95131, -1.64915, -1.204090, -1.681380,  1.620420,  1.86234, 1.75},   // 15 252292873
-  {   1.67219, -1.66621, -1.82146,  1.89902, -0.842709,  1.419750,  0.696557, -0.81644, 1.75},   // 16 111744614 
-  {  -2.20000, -1.97000,  2.20200, -2.30000,  0.000000,  0.000000,  0.000000,  0.00000, 1.75}
-};
+#include <complex>                                                       /* STL algorithm           C++11    */
 
 int main(void) {
-  const int BSIZ = 7680;
+  const int BSIZ = 7680/8;
   mjr::color1c16b aColor;
   aColor.setAll(1);
-  for(int j=0; j<NPR; j++) {
-    mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -2, 2, -2, 2);
+  mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -1, 1, -1, 1);
+  double x=0.0, y=0.0, xNew, yNew;
 
-    double a = params[j][0];
-    double b = params[j][1];
-    double c = params[j][2];
-    double d = params[j][3];
-    double e = params[j][4];
-    double f = params[j][5];
-    double g = params[j][6];
-    double h = params[j][7];
-    double p = params[j][8];
+  float a[12] = {-0.6599, -0.2, 1.1, 0.2, -0.81, 0.61, -0.7, 0.71, 0.7, 0.28, 0.19, 0.89};
+  float p = 1.7;
 
     /* Draw the atractor on a 16-bit, greyscale canvas -- the grey level will be an integer represeting the hit count for that pixel.  This is a good example
        of how an image can have pixel values that are generic "data" as well as color information. */
-    double x       = 1.0;
-    double y       = 1.0;  
     uint64_t maxII = 0;
-    for(uint64_t i=0;i<10000000000ul;i++) {
-      double xNew = std::sin(a*y + e) - std::cos(b*x + f);
-      double yNew = std::sin(c*x + g) - std::cos(d*y + h);
-      theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColor(x, y).tfrmAdd(aColor));
-      if(theRamCanvas.getPxColor(x, y).getRed() > maxII) {
-        maxII = theRamCanvas.getPxColor(x, y).getRed();
+    for(uint64_t i=0;i<1000000000ul;i++) {
+
+      xNew = a[0] + a[1]*x + a[2]*x*x + a[3]*x*y + a[4]*y  + a[5]*y*y;
+      yNew = a[6] + a[7]*x + a[8]*x*x + a[9]*x*y + a[10]*y + a[11]*y*y;
+      theRamCanvas.drawPoint(xNew, yNew, theRamCanvas.getPxColor(xNew, yNew).tfrmAdd(aColor));
+      if(theRamCanvas.getPxColor(xNew, yNew).getRed() > maxII) {
+        maxII = theRamCanvas.getPxColor(xNew, yNew).getRed();
         if(maxII > 16384) { // 1/4 of max possible intensity
-          std::cout << "ITER(" << j <<  "): " << i << " MAXS: " << maxII << " EXIT: Maximum image intensity reached" << std::endl;
+          std::cout << "ITER(): " << i << " MAXS: " << maxII << " EXIT: Maximum image intensity reached" << std::endl;
           break;
         }
       }
       if((i % 10000000) == 0)
-        std::cout << "ITER(" << j <<  "): " << i << " MAXS: " << maxII << std::endl;
+        std::cout << "ITER: " << i << " MAXS: " << maxII << std::endl;
       x=xNew;
       y=yNew;
     }
 
-    theRamCanvas.writeRAWfile("peterdejong_" + std::to_string(j) + ".mrw");
+    theRamCanvas.writeRAWfile("sprott2d.mrw");
 
     // Root image transform
     theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmStdPow, 1/p);
@@ -113,7 +85,6 @@ int main(void) {
       for(int xi=0;xi<theRamCanvas.get_numXpix();xi++)
         anotherRamCanvas.drawPoint(xi, yi, bColor.cmpColorRamp(theRamCanvas.getPxColor(xi, yi).getRed() * 1275 / maxII, "0RYBCW"));
     
-    anotherRamCanvas.writeTIFFfile("peterdejong_" + std::to_string(j) + ".tiff");
-  }
+    anotherRamCanvas.writeTIFFfile("sprott2d.tiff");
   return 0;
 }

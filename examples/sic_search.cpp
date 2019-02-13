@@ -55,7 +55,7 @@ int main(void) {
     float w      = uniform_dist_float(rEng);
     int n        = uniform_dist_int(rEng);
     std::complex<float> z(.01,.01);
-    for(uint64_t i=0;i<10000;i++) { 
+    for(uint64_t i=0;i<1000;i++) { 
       z = (lambda + alpha*z*std::conj(z)+beta*std::pow(z, n).real() + w*std::complex<float>(0,1))*z+gamma*std::pow(std::conj(z), n-1);
       ptcnt[((uint64_t)theRamCanvas.real2intX(z.real()))<<32 | ((uint64_t)theRamCanvas.real2intY(z.imag()))] = 1;
     }

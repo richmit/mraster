@@ -1116,6 +1116,14 @@ namespace mjr {
           @param y The real delta y to be converted
           @return integer delta y */
       int realDelta2intY(fltCrdT y) const;
+      /** Convert integral distance on the x coordinate to a real distance
+          @param x The real x coordinate value to be converted.
+          @return The integer x coordinate corresponding to the given x coordinate */
+      fltCrdT intDelta2realX(intCrdT x);
+      /** Convert integral distance on the y coordinate to a real distance
+          @param y real y coordinate value to be converted.
+          @return The integer y coordinate corresponding to the given y coordinate */
+      fltCrdT intDelta2realY(intCrdT y);      
       //@}
       
       /** @name Orientation of Real Coordinate Systems */
@@ -1198,6 +1206,12 @@ namespace mjr {
       colorT getPxColor(intCrdT x, intCrdT y) const;
       /** @overload */
       colorT getPxColor(fltCrdT x, fltCrdT y) const;
+      /** @overload */
+      colorT getPxColor(rcPointInt thePoint) const;
+      /** @overload */
+      colorT getPxColor(rcPointFlt thePoint) const;
+      //@}
+      
       /** @param x The x coordinate of the upper left pixel to query
           @param y The y coordinate of the upper left pixel to query
           @param width The number of x pixels to query
@@ -2641,7 +2655,19 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
-  fltCrdT  ramCanvasTpl<colorT, intCrdT, fltCrdT>::int2realX(intCrdT x) {
+  fltCrdT ramCanvasTpl<colorT, intCrdT, fltCrdT>::intDelta2realX(intCrdT x) {
+    return (fltCrdT)(x*xPixWid);
+  }
+  
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  fltCrdT ramCanvasTpl<colorT, intCrdT, fltCrdT>::intDelta2realY(intCrdT y) {
+    return (fltCrdT)(y*yPixWid);
+  }
+  
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  fltCrdT ramCanvasTpl<colorT, intCrdT, fltCrdT>::int2realX(intCrdT x) {
     if(xRealAxOrientation == realAxisOrientation::NATURAL)
       return x * xPixWid + minRealX;
     else
@@ -2692,7 +2718,19 @@ namespace mjr {
   colorT ramCanvasTpl<colorT, intCrdT, fltCrdT>::getPxColor(fltCrdT x, fltCrdT y) const {
     return getPxColor(real2intX(x), real2intY(y));
   }
-  
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  colorT ramCanvasTpl<colorT, intCrdT, fltCrdT>::getPxColor(rcPointInt thePoint) const {
+    return getPxColor(thePoint.x, thePoint.y);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  colorT ramCanvasTpl<colorT, intCrdT, fltCrdT>::getPxColor(rcPointFlt thePoint) const {
+    return getPxColor(thePoint.x, thePoint.y);
+  }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   ramCanvasTpl<colorT, intCrdT, fltCrdT>*
