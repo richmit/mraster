@@ -1,9 +1,9 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
- @file      test_draw_primatives.cpp
+ @file      circles.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Benchmark program for pixel draw rates with ramCanvas.@EOL
+ @brief     Mathematical art with circles.@EOL
  @copyright 
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -26,8 +26,6 @@
   DAMAGE.
   @endparblock
  @filedetails   
-
-   We instantiate every drawing function in ramCanvas so that we can check for compile time errors and do some basic functionality testing.
 
 ***************************************************************************************************************************************************************/
 
