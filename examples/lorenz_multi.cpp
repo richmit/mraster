@@ -1,7 +1,7 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
- @file      chua.cpp
+ @file      lorenz_multi.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw a sprott Attractor.@EOL
  @std       C++98

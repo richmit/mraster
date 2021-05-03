@@ -1,7 +1,7 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
- @file      testColor.cc
+ @file      testColor.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Benchmark program for pixel draw rates with ramCanvas.@EOL
  @copyright 

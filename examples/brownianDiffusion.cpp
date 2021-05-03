@@ -1,7 +1,7 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
- @file      brownianDiffusion.cpp.cpp
+ @file      brownianDiffusion.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Read a TIFF image and simulate brownian diffusion.@EOL
  @keywords  dla fractal brownian motion brown 
