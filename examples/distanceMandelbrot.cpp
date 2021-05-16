@@ -37,21 +37,31 @@ using namespace mjr;
 #define BALLSIZE 100000.0
 
 int main(void) {
-  int x, y, count;
-  double xr, yr, zx, zy, tempx;
-  double dist;
-  double xder, yder, tder;
-  ramCanvas4c8b theRamCanvas = ramCanvas4c8b(1024, 1024, -2, 2, -2, 2);
+  ramCanvas4c8b theRamCanvas = ramCanvas4c8b(1024*2, 1024*2, -1.9, 0.5, -1.2, 1.2);
 
-  for(x=0;x<theRamCanvas.get_numXpix();x++) {
-    for(y=0;y<theRamCanvas.get_numYpix();y++) {
-      for(xr=theRamCanvas.int2realX(x),yr=theRamCanvas.int2realY(y),zx=zy=0.0,count=0,xder=0,yder=0;
-          (zx*zx+zy*zy<BALLSIZE)&&(count<MAXITR);
-          count++,tempx=zx*zx-zy*zy+xr,zy=2*zx*zy+yr,zx=tempx,tder=2*(zx*xder-zy*yder)+1,yder=2*(zy*xder+zx*yder),xder=tder) ;
+  for(int x=0; x<theRamCanvas.get_numXpix(); x++) {
+    for(int y=0; y<theRamCanvas.get_numYpix(); y++) {
+      double xr    = theRamCanvas.int2realX(x);
+      double yr    = theRamCanvas.int2realY(y);
+      double zx    = 0.0;
+      double zy    = 0.0;
+      int    count = 0;
+      double dx    = 0.0;
+      double dy    = 0.0;
+      double tdx, tzx;
+      while ((zx*zx+zy*zy<BALLSIZE) && (count<MAXITR)) {
+        count++;
+        tzx=zx*zx-zy*zy+xr;
+        zy=2*zx*zy+yr;
+        zx=tzx;
+        tdx=2*(zx*dx-zy*dy)+1;
+        dy=2*(zy*dx+zx*dy);
+        dx=tdx;
+      }
       if(count < MAXITR) {
-        dist=0.5*log(zx*zx+zy*zy)*sqrt(zx*zx+zy*zy)/sqrt(xder*xder+yder*yder);
+        double dist = 0.5*log(zx*zx+zy*zy)*sqrt(zx*zx+zy*zy)/sqrt(dx*dx+dy*dy);
         if(dist < 0.0000001)
-          theRamCanvas.drawPoint(x, y, color4c8b(255, 0, 0));
+          theRamCanvas.drawPoint(x, y, color4c8b(255, 0, count % 256));
       }
     }
   }
