@@ -29,8 +29,8 @@
   @endparblock
  @filedetails   
 
-  Pick an initial \f$z\in\mathbb{C}\f$, say \f$\frac{1}{10}+\frac{2}{10}i\f$.  Then iterate.  For each iteration let the next $z$ value be \f$f_n(z)\f$ where \f$n\f$ is
-  selected at random.  If we plot the \f$z\f$ points, we obtain the classical Apollony Gasket.
+  Pick an initial \f$z\in\mathbb{C}\f$, say \f$\frac{1}{10}+\frac{2}{10}i\f$.  Then iterate.  For each iteration let the next $z$ value be \f$f_n(z)\f$ where
+  \f$n\f$ is selected at random.  If we plot the \f$z\f$ points, we obtain the classical Apollony Gasket.
   
   \f[\begin{array}{rcl}
     f_1(z) &=& f(z)                         \\
