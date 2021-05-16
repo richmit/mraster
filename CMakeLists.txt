@@ -101,12 +101,12 @@ endif()
 
 ######################################################################################################################################################
 
-set(TARGETS_REQ_NONE   "apollony" "circles" "apomorph" "bifurcation_diagram" "biomorph1" "biomorph2" "bmark" "chaos_game" "color_all"
+set(TARGETS_REQ_NONE   "apollony" "circles" "apomorph" "bifurcation_diagram" "biomorph1" "biomorph2" "bmark" "chaos_game" "color_all" "distanceMandelbrot"
                        "color_lut_ramp_cube" "dlaSeed" "cplxColor" "color_lut_ramp_misc" "color_interp_hls_vs_rgb" "mandelbrot_distance" "level_curves"
                        "mandelbrot_bm_cplx" "mandelbrot_bm_cplx_hyper" "mandelbrot_bm_real" "newton_max_mod" "newton_z6" "newton_half" "newton_vs"
                        "newton_bm_cplx" "newton_bm_real" "mandelbrot_binary" "lorenz_fuz" "peterdejong" "peterdejongM" "mandelbrot_potential" "sic"
                        "sic_search" "sierpinski_triangle" "test_draw_btriangle" "test_draw_color" "test_draw_misc" "test_draw_primatives" "testPoint"
-                       "tippets" "mandelbrot_triangle" "mandelbrot_emboss" "mandelbrot_orbits" "sprott2d" "lorenz_multi"
+                       "tippets" "mandelbrot_triangle" "mandelbrot_emboss" "mandelbrot_orbits" "sprott2d" "lorenz_multi" "mandelbrot_cycles"
                        )
 set(TARGETS_REQ_MRRL   "test_draw_fonts" "test_draw_strings" "test_draw_glyph" "color_web_triangle" "color_web_rectangle" "color_lut_indexed"
                        "color_lut_rainbows"
