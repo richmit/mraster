@@ -1,9 +1,9 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
- @file      colorAll.cpp
+ @file      mandelbrot_distance_old.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Draw every possible color in 24-bit.@EOL
+ @brief     This program draws a mandelbrot set using the "distance".@EOL
  @std       C++98
  @copyright 
   @parblock
@@ -26,69 +26,47 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
-
-  This is a very simple program that plots a point of EVERY possible 24-bit color.  This program illustrates how to count by bytes, set colors in byte order,
-  how to avoid all the work and do it with simple integers via setColorFromPackedIntABGR, how to count via Grey code order, and how to reduce to 216 web safe
-  color.
-
 ***************************************************************************************************************************************************************/
 
 #include "ramCanvas.hpp"
+#include "math.h"
 
 using namespace mjr;
 
-unsigned long igray(unsigned long n);
+#define MAXITR 1000
+#define BALLSIZE 100000.0
 
 int main(void) {
-  ramCanvas4c8b theRamCanvas_iii = ramCanvas4c8b(4096, 4096);
-  ramCanvas4c8b theRamCanvas_int = ramCanvas4c8b(4096, 4096);
-  ramCanvas4c8b theRamCanvas_gry = ramCanvas4c8b(4096, 4096);
-  ramCanvas4c8b theRamCanvas_rgb = ramCanvas4c8b(4096, 4096);
-  ramCanvas4c8b theRamCanvas_web = ramCanvas4c8b(4096, 4096);
+  ramCanvas4c8b theRamCanvas = ramCanvas4c8b(1024*2, 1024*2, -1.9, 0.5, -1.2, 1.2);
 
-  int red=0, blue=0, green=0, count=0;
-  for(int y=0;y<theRamCanvas_int.get_numYpix();y++) {
-    for(int x=0;x<theRamCanvas_int.get_numXpix();x++) {
-      red++;
-      if(red>=256) {
-        red=0;
-        green++;
-        if(green>=256) {
-          green=0;
-          blue++;
-        }
+  for(int x=0; x<theRamCanvas.get_numXpix(); x++) {
+    for(int y=0; y<theRamCanvas.get_numYpix(); y++) {
+      double xr    = theRamCanvas.int2realX(x);
+      double yr    = theRamCanvas.int2realY(y);
+      double zx    = 0.0;
+      double zy    = 0.0;
+      int    count = 0;
+      double dx    = 0.0;
+      double dy    = 0.0;
+      double tdx, tzx;
+      while ((zx*zx+zy*zy<BALLSIZE) && (count<MAXITR)) {
+        count++;
+        tzx=zx*zx-zy*zy+xr;
+        zy=2*zx*zy+yr;
+        zx=tzx;
+        tdx=2*(zx*dx-zy*dy)+1;
+        dy=2*(zy*dx+zx*dy);
+        dx=tdx;
       }
-      color4c8b aColor;
-      aColor.setColorFromPackedInt(count, 0, 1, 2, 3);
-      theRamCanvas_iii.drawPoint(x, y, aColor);
-      aColor.setColorFromPackedIntABGR(count);    
-      theRamCanvas_int.drawPoint(x, y, aColor);
-      aColor.setColorFromPackedIntABGR(igray(count));
-      theRamCanvas_gry.drawPoint(x, y, aColor);
-      aColor.setColorRGB(red, green, blue);
-      theRamCanvas_rgb.drawPoint(x, y, aColor);
-      aColor.tfrmWebSafe216();
-      theRamCanvas_web.drawPoint(x, y, aColor);
-      count++;
+      if(count < MAXITR) {
+        double dist = 0.5*log(zx*zx+zy*zy)*sqrt(zx*zx+zy*zy)/sqrt(dx*dx+dy*dy);
+        if(dist < 0.0000001)
+          theRamCanvas.drawPoint(x, y, color4c8b(255, 0, count % 256));
+      }
     }
   }
-  theRamCanvas_int.writeTGAfile("colorAll_int.tga");
-  theRamCanvas_iii.writeTGAfile("colorAll_iii.tga");
-  theRamCanvas_gry.writeTGAfile("colorAll_gry.tga");
-  theRamCanvas_rgb.writeTGAfile("colorAll_rgb.tga");
-  theRamCanvas_web.writeTGAfile("colorAll_web.tga");
+
+  theRamCanvas.writeTGAfile("mandelbrot_distance_old.tga");
 }
 
-unsigned long igray(unsigned long n) {
-  unsigned long ans = n;
-  unsigned long idiv;
-  int ish = 1;
-  ans=n;
-  for(;;) {
-    ans ^= (idiv=ans>>ish);
-    if(idiv <=1 || ish == 16)
-      return ans;
-    ish <<=1;
-  }
-}
+

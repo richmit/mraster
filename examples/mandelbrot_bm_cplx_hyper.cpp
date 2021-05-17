@@ -32,19 +32,11 @@
 
 #include <complex>                                                       /* STL algorithm           C++11    */
 
-/** Reasons iteration may stop */
-enum class whyStopMCH { OUTSET,   //!< Not in set (|z|>2)
-                        MAXCOUNT, //!< Maximum iteration reached
-                        PERIOD1,  //!< In set (known region)
-                        PERIOD2,  //!< In set (known region)
-                        CYCLE     //!< Found a cycle
-                      };
-
 int main(void) {
   mjr::color3c8b aColor;
 
-  const int NUMITR = 1024;
-  const int CSIZE  = 7680/4;
+  const int NUMITR   = 16*16*4*4;
+  const int CSIZE    = 7680/2;
   //mjr::ramCanvas3c8b theRamCanvas(CSIZE, CSIZE, -2.2, 0.8, -1.5, 1.5);
   
   // double xCenter = -0.761574;
@@ -55,62 +47,61 @@ int main(void) {
   double yCenter = 0.0;
   double radius  = 1.3;
 
-
   mjr::ramCanvas3c8b theRamCanvas(CSIZE, CSIZE, xCenter-radius, xCenter+radius, yCenter-radius, yCenter+radius);
-  
+
+  theRamCanvas.clrCanvasToBlack();
+
   long int countPERIOD1  = 0;
   long int countPERIOD2  = 0;
   long int countMAXCOUNT = 0;
   long int countOUTSET   = 0;
-  long int countCYCLE    = 0;
+  long int countCYCORLIM = 0;
+  long int countREFLCT   = 0;
 
   for(int y=0;y<theRamCanvas.get_numYpix();y++) { 
     for(int x=0;x<theRamCanvas.get_numXpix();x++) {
-      whyStopMCH why;           
       int count;
       double cr = theRamCanvas.int2realX(x);
       double ci = theRamCanvas.int2realY(y);
-      std::complex<double> c(cr, ci), z(0, 0), zLast(5, 5);
+      std::complex<double> c(cr, ci), z(0, 0);
+      std::vector<std::complex<double>> lastZs(NUMITR+5);
       double p = std::abs(c-0.25);
-      if( false && (cr <= p-2.0*p*p+0.25)) {
-        why = whyStopMCH::PERIOD1;
+      if((cr <= p-2.0*p*p+0.25)) {
+        theRamCanvas.drawPoint(x, y, "blue");
         countPERIOD1++;
       } else {
-        if( false && (std::abs(c+1.0) <= 0.25)) {
-          why = whyStopMCH::PERIOD2;
+        if((std::abs(c+1.0) <= 0.25)) {
+          theRamCanvas.drawPoint(x, y, "green");
           countPERIOD2++;
         } else {
-          for(count=0; ; count++) {
-            if(count>=NUMITR) {
-              why = whyStopMCH::MAXCOUNT;
-              countMAXCOUNT++;
-              break;
+          if((theRamCanvas.getPxColor(std::conj(c)).colorSumIntensity()>0)) {
+            theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColor(std::conj(c)));
+            countREFLCT++;
+          } else {
+            for(count=0; ; count++) {
+              z = z * z + c;
+              lastZs[count] = z;
+              if(count>=NUMITR) {
+                theRamCanvas.drawPoint(x, y, "white");               
+                countMAXCOUNT++;
+                break;
+              }
+              if(std::norm(z)>4.0) {
+                //theRamCanvas.drawPoint(x, y, "red");
+                theRamCanvas.drawPoint(x, y, mjr::color3c8b((5*count+50)%256, 0, 0));
+                countOUTSET++;
+                break;
+              }
+              if(count>1 && std::any_of(lastZs.begin(), std::next(lastZs.begin(), count-1), [&z](std::complex<double> zl){return std::abs(zl-z)<0.0001;}) ) {
+                //theRamCanvas.drawPoint(x, y, "yellow");
+                theRamCanvas.drawPoint(x, y, mjr::color3c8b((5*count+50)%256, (count+50)%256, 0));
+                countCYCORLIM++;
+                break;
+              }
             }
-            if(std::norm(z)>4.0) {
-              why = whyStopMCH::OUTSET;
-              countOUTSET++;
-              break;
-            }
-            if( false && (std::abs(z-zLast)<0.0001)) {
-              why = whyStopMCH::CYCLE;
-              countCYCLE++;
-              break;
-            }
-            zLast = z;
-            z = z * z + c;
           }
         }
       }      
-      // switch (why) {
-      //   case whyStopMCH::MAXCOUNT : theRamCanvas.drawPoint(x, y, "red");                                                 break;
-      //   case whyStopMCH::OUTSET   : theRamCanvas.drawPoint(x, y, aColor.cmpGrey(mjr::intWrap(count*20, 256))); break;  // Disable to more clearly CYCLE points          
-      //   case whyStopMCH::PERIOD1  : theRamCanvas.drawPoint(x, y, "blue");                                                break;
-      //   case whyStopMCH::PERIOD2  : theRamCanvas.drawPoint(x, y, "green");                                               break;
-      //   case whyStopMCH::CYCLE    : theRamCanvas.drawPoint(x, y, "cyan");                                                break;
-      // }
-      if( (why == whyStopMCH::MAXCOUNT) || (why == whyStopMCH::CYCLE) ) {
-        theRamCanvas.drawPoint(std::real(z), std::imag(z), "white");
-      }
     }
 
     if( ((y%(CSIZE/32))==0) || (y==(CSIZE-1)) ) {
@@ -119,8 +110,10 @@ int main(void) {
       std::cout << "  countPERIOD2:  " << countPERIOD2  << std::endl;
       std::cout << "  countMAXCOUNT: " << countMAXCOUNT << std::endl;
       std::cout << "  countOUTSET:   " << countOUTSET   << std::endl;
-      std::cout << "  countCYCLE:    " << countCYCLE    << std::endl;
+      std::cout << "  countCYCORLIM: " << countCYCORLIM << std::endl;
+      std::cout << "  countREFLCT:   " << countREFLCT   << std::endl;
     }
+
   }
   theRamCanvas.writeTIFFfile("mandelbrot_bm_cplx_hyper.tiff");
 }

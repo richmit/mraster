@@ -101,18 +101,19 @@ endif()
 
 ######################################################################################################################################################
 
-set(TARGETS_REQ_NONE   "apollony" "circles" "apomorph" "bifurcation_diagram" "biomorph1" "biomorph2" "bmark" "chaos_game" "color_all" "distanceMandelbrot"
-                       "color_lut_ramp_cube" "dlaSeed" "cplxColor" "color_lut_ramp_misc" "color_interp_hls_vs_rgb" "mandelbrot_distance" "level_curves"
-                       "mandelbrot_bm_cplx" "mandelbrot_bm_cplx_hyper" "mandelbrot_bm_real" "newton_max_mod" "newton_z6" "newton_half" "newton_vs"
-                       "newton_bm_cplx" "newton_bm_real" "mandelbrot_binary" "lorenz_fuz" "peterdejong" "peterdejongM" "mandelbrot_potential" "sic"
-                       "sic_search" "sierpinski_triangle" "test_draw_btriangle" "test_draw_color" "test_draw_misc" "test_draw_primatives" "testPoint"
-                       "tippets" "mandelbrot_triangle" "mandelbrot_emboss" "mandelbrot_orbits" "sprott2d" "lorenz_multi" "mandelbrot_cycles"
+set(TARGETS_REQ_NONE   "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "biomorph2" "bmark" "chaos_game" "circles" "color_all"
+                       "color_interp_hls_vs_rgb" "color_lut_ramp_cube" "color_lut_ramp_misc" "cplxColor" "dlaSeed" "level_curves" "lorenz_fuz"
+                       "lorenz_multi" "mandelbrot_binary" "mandelbrot_bm_cplx" "mandelbrot_bm_cplx_hyper" "mandelbrot_bm_real" "mandelbrot_cycles"
+                       "mandelbrot_distance" "mandelbrot_distance_old" "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits"
+                       "mandelbrot_potential" "mandelbrot_triangle" "newton_bm_cplx" "newton_bm_real" "newton_half" "newton_max_mod" "newton_vs"
+                       "newton_z6" "peterdejong" "peterdejongM" "sic" "sic_search" "sierpinski_triangle" "sprott2d" "testPoint" "test_draw_btriangle"
+                       "test_draw_color" "test_draw_misc" "test_draw_primatives" "tippets"
                        )
-set(TARGETS_REQ_MRRL   "test_draw_fonts" "test_draw_strings" "test_draw_glyph" "color_web_triangle" "color_web_rectangle" "color_lut_indexed"
-                       "color_lut_rainbows"
+set(TARGETS_REQ_MRRL   "color_lut_indexed" "color_lut_rainbows" "color_web_rectangle" "color_web_triangle" "test_draw_fonts" "test_draw_glyph"
+                       "test_draw_strings"
                        )
 set(TARGETS_REQ_OPENGL "glut_image")
-set(TARGETS_REQ_TIFF   "img_process" "dlaBrownian" "dlaDrift" "brownianDiffusion")
+set(TARGETS_REQ_TIFF   "brownianDiffusion" "dlaBrownian" "dlaDrift" "img_process" )
 set(TARGETS_REQ_OPENMP "mandelbrot_bm_cplx_openmp")
 
 # Construct list of targets we can build
