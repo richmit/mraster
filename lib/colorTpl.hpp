@@ -1252,6 +1252,9 @@ namespace mjr {
       /** Returns non-zero if the given color is logically NOT the same as the current color.
           @return non-zero if the given color is logically the same as the current color*/
       int isNotEqual(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> aColor);
+      /** Returns non-zero if the given color is black (all componnets are zero)
+          @return non-zero if the given color is black (all componnets are zero) */
+      int isBlack();
       //@}
 
       /** @name Channel Clipping functions */
@@ -3936,6 +3939,31 @@ namespace mjr {
         daDist += abs((clrChanIArthT)theColor.thePartsA[i] - aColor.theColor.thePartsA[i]);
       return daDist;
     }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  int colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::isBlack() {
+    if(fastMask) {
+      return (theColor.theInt == 0);
+    } else {
+      if(theColor.theParts.red != 0)
+        return 0;
+      if(numChan > 1)
+        if(theColor.theParts.green != 0)
+          return 0;
+      if(numChan > 2)
+        if(theColor.theParts.blue != 0)
+          return 0;
+      if(numChan > 3)
+        if(theColor.theParts.alpha != 0)
+          return 0;
+      if(numChan > 4)
+        for(int i=4; i<numChan; i++)
+          if(theColor.thePartsA[i] != 0)
+            return 0;
+    }
+    return 1;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
