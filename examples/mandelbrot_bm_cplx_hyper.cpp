@@ -71,7 +71,7 @@ int main(void) {
   bool doCYCORLIM = true;
   bool doREFLCT   = true;
 
-  bool doStatusPrint = true;
+  bool doStatusPrint = false;
 
   std::vector<std::complex<double>> lastZs(LASTMAX);
   for(int y=0;y<theRamCanvas.get_numYpix();y++) { 
