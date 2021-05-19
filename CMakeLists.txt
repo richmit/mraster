@@ -107,7 +107,7 @@ set(TARGETS_REQ_NONE   "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "
                        "mandelbrot_distance" "mandelbrot_distance_old" "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits"
                        "mandelbrot_potential" "mandelbrot_triangle" "newton_bm_cplx" "newton_bm_real" "newton_half" "newton_max_mod" "newton_vs"
                        "newton_z6" "peterdejong" "peterdejongM" "sic" "sic_search" "sierpinski_triangle" "sprott2d" "testPoint" "test_draw_btriangle"
-                       "test_draw_color" "test_draw_misc" "test_draw_primatives" "tippets"
+                       "test_draw_color" "test_draw_misc" "test_draw_primatives" "tippets" "mandelbrot_bm_real_eqop"
                        )
 set(TARGETS_REQ_MRRL   "color_lut_indexed" "color_lut_rainbows" "color_web_rectangle" "color_web_triangle" "test_draw_fonts" "test_draw_glyph"
                        "test_draw_strings"
@@ -146,7 +146,7 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
     target_compile_options(${CURTGT} PUBLIC -Wstrict-overflow=0)
     target_compile_options(${CURTGT} PUBLIC -ffast-math)
     target_compile_options(${CURTGT} PUBLIC -Wall)
-    target_compile_options(${CURTGT} PUBLIC -O5)
+    target_compile_options(${CURTGT} PUBLIC -Ofast)
     if(CMAKE_CXX_PLATFORM_ID STREQUAL "MinGWx")
       target_compile_options(${CURTGT} PUBLIC -static-libgcc)
       target_compile_options(${CURTGT} PUBLIC -static-libstdc++)
