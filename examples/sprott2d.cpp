@@ -34,7 +34,7 @@
 #include "ramCanvas.hpp"
 
 #include <cmath>                                                         /* std:: C math.h          C++11    */
-#include <complex>                                                       /* STL algorithm           C++11    */
+#include <complex>                                                       /* Complex Numbers         C++11    */
 
 int main(void) {
   const int BSIZ = 7680/8;

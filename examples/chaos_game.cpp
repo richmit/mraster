@@ -36,7 +36,7 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 #include <iostream>                                                      /* C++ iostream            C++11    */
-#include <complex>                                                       /* STL algorithm           C++11    */
+#include <complex>                                                       /* Complex Numbers         C++11    */
 #include <random>                                                        /* C++ random numbers      C++11    */
 #include <vector>                                                        /* STL vector              C++11    */ 
 #include <list>                                                          /* STL list                C++11    */

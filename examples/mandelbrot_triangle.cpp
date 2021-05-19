@@ -65,20 +65,22 @@ int main(void) {
 //  complex protoAlphaTriangle[3] = { {0.0, 0.0}, {0.01, 0.0}, {0.001, 0.01} };    // Tiny      non-right triangles
   complex protoAlphaTriangle[3] = { {0.0, 0.0}, {0.001, 0.0}, {0.0001, 0.001} }; // Tiny-Tiny non-right triangles
 
-  mjr::ramCanvas3c8b theRamCanvas(1024, 1024, -2.1, 1.1, -1.5, 1.5);
+  mjr::ramCanvas3c8b theRamCanvas(7680/4, 7680/4, -2.1, 1.1, -1.5, 1.5);
 
   // First we draw a greyscale Mandelbrot set for reference.
-  mjr::color3c8b aColor;
-  aColor.setToWhite();
-  MAXCOUNT = 255;
-  std::cout << "INFO(main): Draw reference set via fill algorithm." << std::endl;
-  for(int yy=0;yy<theRamCanvas.get_numYpix();yy++) {
-    for(int xx=0;xx<theRamCanvas.get_numXpix();xx++) {
-      complex tpt;
-      tpt.x = theRamCanvas.int2realX(xx);
-      tpt.y = theRamCanvas.int2realY(yy);
-      int clr = orbCmp(tpt);
-      theRamCanvas.drawPoint(xx, yy, aColor.cmpGrey3x((100*clr)%768));
+  if(true) {
+    mjr::color3c8b aColor;
+    aColor.setToWhite();
+    MAXCOUNT = 255;
+    std::cout << "INFO(main): Draw reference set via fill algorithm." << std::endl;
+    for(int yy=0;yy<theRamCanvas.get_numYpix();yy++) {
+      for(int xx=0;xx<theRamCanvas.get_numXpix();xx++) {
+        complex tpt;
+        tpt.x = theRamCanvas.int2realX(xx);
+        tpt.y = theRamCanvas.int2realY(yy);
+        int clr = orbCmp(tpt);
+        theRamCanvas.drawPoint(xx, yy, aColor.cmpGrey3x((100*clr)%768));
+      }
     }
   }
 

@@ -32,7 +32,7 @@
 
 #include "ramCanvas.hpp"
 
-#include <complex>                                                       /* STL algorithm           C++11    */
+#include <complex>                                                       /* Complex Numbers         C++11    */
 
 double ranges[6][4] = { {  -2.700,  2.100, -2.100,  2.100 },
                         {  -2.100, -1.700, -0.300,  0.300 },

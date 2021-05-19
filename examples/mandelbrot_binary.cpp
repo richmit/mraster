@@ -29,14 +29,13 @@
   @endparblock
  @filedetails   
 
-  We use the "binary" method with a twist.  
+ We use the "binary" method with a twist.  
 
-   * bin: The traditional binary method
-   * gray: Shaded by the argument
-   * quad: Like the traditional method, but different colors for each quadrant
+  - bin: The traditional binary method
+  - gray: Shaded by the argument
+  - quad: Like the traditional method, but different colors for each quadrant
 
-  This example demonstrates how to use some of the types defined in the ramCanvas object (integer coordinates, float coordinates, color, and color channel)
-
+ This example demonstrates how to use some of the types defined in the ramCanvas object (integer coordinates, float coordinates, color, and color channel)
 ***************************************************************************************************************************************************************/
 
 #include "ramCanvas.hpp"

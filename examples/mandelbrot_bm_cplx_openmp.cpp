@@ -26,11 +26,14 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
+ @filedetails   
+
+  Basic benchmark.  Uses complex numbers.  Uses OpenMP.
 ***************************************************************************************************************************************************************/
 
 #include "ramCanvas.hpp"
 
-#include <complex>                                                       /* STL algorithm           C++11    */
+#include <complex>                                                       /* Complex Numbers         C++11    */
 
 int main(void) {
   int count;

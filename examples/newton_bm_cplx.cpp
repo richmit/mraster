@@ -30,7 +30,7 @@
 
 #include "ramCanvas.hpp"
 
-#include <complex>                                                       /* STL algorithm           C++11    */
+#include <complex>                                                       /* Complex Numbers         C++11    */
 
 int main(void) {
   const float pi       = 3.14159265359;

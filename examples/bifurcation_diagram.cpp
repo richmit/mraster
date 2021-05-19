@@ -30,7 +30,7 @@
 
 #include "ramCanvas.hpp"
 
-#include <complex>                                                       /* STL algorithm           C++11    */
+#include <complex>                                                       /* Complex Numbers         C++11    */
 
 int main(void) {
   mjr::ramCanvas1c16b theRamCanvas(7680, 7680, 2.5, 4, -0.1, 1.1);

@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     This program draws a mandelbrot set using the "distance".@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -26,9 +26,9 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
-  We draw the boundary using the Milnor and Thurston distance estimator as presented in 'The Science of Fractal Images'.  
+  We draw the boundary using the Milnor and Thurston distance estimator as presented in 'The Science of Fractal Images'.
 
   Color scheme:
     - blue:  points found to be outside (iterated bigger than BALL), but very close to set.
@@ -42,19 +42,12 @@
 
 #include "ramCanvas.hpp"
 
-/** Reasons iteration may stop */
-enum class whyStopMD { OUTSET,   //!< Not in set (|z|>BALL)
-                       MAXCOUNT, //!< Maximum iteration reached
-                       INSET     //!< In set (known region)
-                     };
-
 int main(void) {
-  const double       DISTTH = 0.001;
+  const double       DISTTH = 0.0002;
   const int          MAXITR = 2048;
   const double       BALL   = 10000.0;
   double             dist;
   mjr::ramCanvas3c8b theRamCanvas(1080*2, 1080*2, -1.9, 0.5, -1.2, 1.2);
-  whyStopMD            why;           
 
   for(int y=0; y<theRamCanvas.get_numYpix(); y++) {
     for(int x=0; x<theRamCanvas.get_numXpix(); x++) {
@@ -63,43 +56,35 @@ int main(void) {
       double ci = theRamCanvas.int2realY(y);
       std::complex<double> c(cr, ci), der(0, 0), z(0, 0);
       double p = std::abs(c-0.25);
-      if((cr >= p-2.0*p*p+0.25) && std::abs(c+1.0) >= 0.25) {
-        for(count=0; ; count++) {            
+      if((cr < p-2.0*p*p+0.25) || (std::abs(c+1.0) < 0.25)) {
+        theRamCanvas.drawPoint(x, y, "green");
+      } else {
+        for(count=0; ; count++) {
           if(count>=MAXITR) {
-            why = whyStopMD::MAXCOUNT;
+            theRamCanvas.drawPoint(x, y, "cyan");
             break;
           }
           if(std::abs(z)>BALL) {
-            why = whyStopMD::OUTSET;
+            double der_mag = std::abs(der);
+            if(der_mag > 0.00001) {
+              dist=2.0*std::log(std::abs(z))*std::abs(z)/der_mag;
+              if(dist < DISTTH) {
+                theRamCanvas.drawPoint(x, y, "blue");
+                //theRamCanvas.drawPoint(x, y, mjr::color3c8b(int(100000*dist)%156+100, int(150000*dist)%156+100, 0));
+              } else {
+                theRamCanvas.drawPoint(x, y, "yellow");
+                //theRamCanvas.drawPoint(x, y, mjr::color3c8b(255-int(40*dist)%156+100, int(75*dist)%256, 0));
+              }
+            } else {
+              theRamCanvas.drawPoint(x, y, "white");
+            }
             break;
           }
           der = 2.0 * z * der + 1.0;
           z   = z * z + c;
         }
-      } else {
-        why = whyStopMD::INSET;
       }
-      if(why == whyStopMD::OUTSET) {
-        double der_mag = std::abs(der);
-        if(der_mag > 0.00001) {
-          dist=2.0*std::log(std::abs(z))*std::abs(z)/der_mag;
-          if(dist < DISTTH) {
-            theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, 0, 255));
-          } else {
-            theRamCanvas.drawPoint(x, y, mjr::color3c8b(255, 255, 0));
-          }        
-        } else {
-          theRamCanvas.drawPoint(x, y, mjr::color3c8b(255, 255, 255));
-        }        
-      } else {
-        if(why == whyStopMD::INSET) {
-          theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, 255, 0));
-        } else {
-          theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, 255, 255));
-        }        
-      }
-    }      
+    }
   }
-
   theRamCanvas.writeTIFFfile("mandelbrot_distance.tiff");
 }

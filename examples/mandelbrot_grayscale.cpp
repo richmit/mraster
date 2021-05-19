@@ -26,22 +26,31 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
+ @filedetails   
+
+  The escape time Mandelbrot rendering algorithm delivers us a single data point, the iteration count, per pixel.  Niavely this maps directly to a monochrome
+  image; however, the iteration counts used are frequently beyond 256 -- the limit for most display technology.  Additionally the spatial distribution of
+  these counts is quite compressed near the edige of the Mandelbrot set leading to visually unsatsifying results.  In responce a great many schemes have been
+  developed to colorize the results, and the vast majoritiy of these schemes can be broken down into standard image processing steps used in scientific image
+  analyssis.  This program takes a very directrect approach and produces a deep (16-bit) greyscale TIFF image.  This image may then be loaded up in your
+  favroith scietific image analysis pacakger (Mine is Fiji an ImageJ derivative), where one may then quickly play with various coloring schemes.  Most of thje
+  classic ones can be reporduced in one or two steps -- a LUT and perhaps a homogenious mathematical filter.  This is a great way to expore known coloring
+  schemes, and to develop new ones.
+  
+  Notes:
+    - Uses a deep, greyscale image.
+    - Outputs a TIFF
+    - Optimization to avoid the main cardioid boundry and period 2 disk
+    - Uses an automatic histogram streach to expand the visual contract.   I leave this step off when using Fiji.
 ***************************************************************************************************************************************************************/
-
-// Draw a grayscale Mandelbrot set.
-// We illustrate:
-//   - How to create and use a grayscale canvas
-//   - An optimization to make drawing the set faster
-//   - How to losslessly stretch an image histogram to the limits
-
 #include "ramCanvas.hpp"
 
-#include <complex>                                                       /* STL algorithm           C++11    */
+#include <complex>                                                       /* Complex Numbers         C++11    */
 
 int main(void) {
   mjr::ramCanvas1c16b theRamCanvas(7680, 7680, -2.2, 0.8, -1.5, 1.5);
   int count;
-  const int NUMITR = mjr::ramCanvas1c16b::rcColor::maxChanVal / 32;
+  const int NUMITR = mjr::ramCanvas1c16b::rcColor::maxChanVal;
   float cr, ci;
   std::complex<float> c, z, zero(0.0, 0.0);  
   for(int y=0;y<theRamCanvas.get_numYpix();y++) {
@@ -51,10 +60,10 @@ int main(void) {
       c  = std::complex<float>(cr, ci);
       float p = abs(c-0.25f);
       if((cr >= p-2.0f*p*p+0.25f) && abs(c+1.0f) >= 0.25f) {
-        for(z=zero,count=0; (std::norm(z)<4)&&(count<=NUMITR); count++,z=z*z+c)
+        for(z=zero,count=0; (std::norm(z)<4)&&(count<NUMITR); count++,z=z*z+c)
           ;
         if(count < NUMITR)
-          theRamCanvas.drawPoint(x, y, count*100);
+          theRamCanvas.drawPoint(x, y, count);
       }
     }
   }
