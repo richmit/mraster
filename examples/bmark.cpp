@@ -33,8 +33,6 @@
 
 #include "ramCanvas.hpp"
 
-#include <cmath>                                                         /* std:: C math.h          C++11    */
-
 #define DO_LINE      1
 #define DO_CLIP_LINE 1
 #define DO_POINT     1

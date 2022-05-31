@@ -30,8 +30,6 @@
 
 #include "ramCanvas.hpp"
 
-#include <cmath>                                                         /* std:: C math.h          C++11    */
-
 const int NPR = 18;
 
 double params[NPR][9] = {

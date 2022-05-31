@@ -33,7 +33,6 @@
 
 #include <iostream>                                                      /* C++ iostream            C++11    */
 #include <complex>                                                       /* Complex Numbers         C++11    */
-#include <cmath>                                                         /* std:: C math.h          C++11    */
 
 using cplx = std::complex<float>;
 

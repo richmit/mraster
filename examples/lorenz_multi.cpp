@@ -33,7 +33,6 @@
 
 #include "ramCanvas.hpp"
 
-#include <cmath>                                                         /* std:: C math.h          C++11    */
 #include <complex>                                                       /* Complex Numbers         C++11    */
 #include <random>                                                        /* C++ random numbers      C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */

@@ -31,8 +31,6 @@
 
 #include "ramCanvas.hpp"
 
-#include <cmath>                                                         /* std:: C math.h          C++11    */
-
 int main(void) {
   const int    n       = 200000;
   const double pi      = 3.141592653589793238462643383279502884;

@@ -33,9 +33,6 @@
 
 #include "ramCanvas.hpp"
 
-#include <cmath>                                                         /* std:: C math.h          C++11    */
-
-
 int main(void) {
   const int BSIZE = 60;
 

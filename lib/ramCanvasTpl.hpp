@@ -35,20 +35,21 @@
 #include "config.hpp"
 
 #ifdef TIFF_FOUND
-#include <unistd.h>  /* Required by tiffio.h */
-#include <tiffio.h>
+#include <unistd.h>                                                      /* UNIX std stf            POSIX    */
+#include <tiffio.h>                                                      /* libTIFF                 libTIFF  */
 #endif
 
-#include <functional>
-#include <sstream>
-#include <iomanip>
-#include <iostream>
-#include <fstream>
-#include <string>
+#include <functional>                                                    /* STL funcs               C++98    */
+#include <sstream>                                                       /* C++ string stream       C++      */
+#include <iomanip>                                                       /* C++ stream formatting   C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+#include <fstream>                                                       /* C++ fstream             C++98    */
+#include <string>                                                        /* C++ strings             C++11    */
 #include <utility> 
-#include <vector>
+#include <vector>                                                        /* STL vector              C++11    */ 
 #include <type_traits>
-#include <cstdint>
+#include <cstdint>                                                       /* std:: C stdint.h        C++11    */
+#include <cmath>                                                         /* std:: C math.h          C++11    */
 
 #include "color.hpp"
 #include "ramConfig.hpp"
@@ -1225,6 +1226,15 @@ namespace mjr {
           of the current ramCanvasTpl in it's entirety.
           @retval NULL If no pixels are sampled.  This will happen, for example, if the x and y coordinates given are beyond the ramCanvasTpl. */
       ramCanvasTpl *getSubCanvas(intCrdT x, intCrdT y, intCrdT width, intCrdT height);
+      //@}
+
+      /** @name Pixel Value Accessor with Interpolation Methods */
+      //@{
+      /** Returns the bilinear interpolated color value at the the given coordinates
+          @param x The x coordinate (the type is double, but the coordinate is in the integer coordinate space.  i.e. x=1.5 is between x=1 and x=2)
+          @param y The y coordinate
+          @return Interpolated color value */
+      colorT getPxColorInterpBLin(double x, double y);
       //@}
 
       /** @name NC stands for No Checks and No Clipping */
@@ -2751,6 +2761,43 @@ namespace mjr {
         subRamCanvas->drawPointNC(xi-x, yi-y, getPxColor(xi, yi));
 
     return subRamCanvas;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  colorT  ramCanvasTpl<colorT, intCrdT, fltCrdT>::getPxColorInterpBLin(double x, double y) {
+    double x1 = std::floor(x);
+    double y1 = std::floor(y);
+    double x2 = std::ceil(x);
+    double y2 = std::ceil(y);
+
+    intCrdT x1i = (intCrdT)x1;
+    intCrdT y1i = (intCrdT)y1;
+    intCrdT x2i = (intCrdT)x2;
+    intCrdT y2i = (intCrdT)y2;
+
+    if ((x1i >= 0) && (y1i >= 0) && (x2i < numXpix) && (y2i < numYpix)) {
+      double eps = 0.00001;
+      double xD21 = x2 - x1;
+      double yD21 = y2 - y1;
+      double wH = 1.0;
+      if (xD21 > eps) 
+        wH = (x  - x1) / xD21;
+      double wV = 1.0;
+      if (yD21 > eps)
+        wV = (y  - y1) / yD21;
+
+      colorT c1;
+      colorT c2;
+      colorT cF;
+    
+      c1.interplColors(wH, pixels[numXpix * y1i + x1i], pixels[numXpix * y1i + x2i]);
+      c2.interplColors(wH, pixels[numXpix * y2i + x1i], pixels[numXpix * y2i + x2i]);
+      cF.interplColors(wV, c1, c2);
+      return cF;
+    } else {
+      return colorT().setToBlack();
+    }
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

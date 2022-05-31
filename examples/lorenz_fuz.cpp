@@ -31,7 +31,6 @@
 #include "ramCanvas.hpp"
 
 #include <iostream>                                                      /* C++ iostream            C++11    */
-#include <cmath>                                                         /* std:: C math.h          C++11    */
 
 int main(void) {
   double p = 1.75;

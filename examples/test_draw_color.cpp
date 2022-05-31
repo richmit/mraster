@@ -33,8 +33,6 @@
 
 #include "ramCanvas.hpp"
 
-#include <cmath>                                                         /* std:: C math.h          C++11    */
-
 int main(void) {
   mjr::colorRGBA8b aColor(255, 200, 100);
   mjr::colorRGBA8b bColor(255, 200, 100, 20);
