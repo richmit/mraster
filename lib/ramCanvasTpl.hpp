@@ -45,9 +45,9 @@
 #include <iostream>                                                      /* C++ iostream            C++11    */
 #include <fstream>                                                       /* C++ fstream             C++98    */
 #include <string>                                                        /* C++ strings             C++11    */
-#include <utility> 
+#include <utility>                                                       /* STL Misc Utilities      C++11    */
 #include <vector>                                                        /* STL vector              C++11    */ 
-#include <type_traits>
+#include <type_traits>                                                   /* C++ metaprogramming     C++11    */
 #include <cstdint>                                                       /* std:: C stdint.h        C++11    */
 #include <cmath>                                                         /* std:: C math.h          C++11    */
 
