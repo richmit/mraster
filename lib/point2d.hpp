@@ -29,13 +29,13 @@
 
 #ifndef MJR_INCLUDE_point2d
 
-#include <iomanip>
-#include <iostream>
+#include <iomanip>                                                       /* C++ stream formatting   C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
 
-#include <type_traits>
-#include <complex>
-#include <vector>
-#include <tuple>
+#include <type_traits>                                                   /* C++ metaprogramming     C++11    */
+#include <complex>                                                       /* Complex Numbers         C++11    */
+#include <vector>                                                        /* STL vector              C++11    */ 
+#include <tuple>                                                         /* STL tuples              C++11    */
 
 // Put everything in the mjr namespace
 namespace mjr {

@@ -39,9 +39,9 @@
 
 /* Apple puts GLUT into a framework named GLUT, while the rest of the world just sticks GLUT into the GL include directory... */
 #ifdef __APPLE__
-#include <GLUT/glut.h>          /* Open GL Util    APPLE */
+#include <GLUT/glut.h>                                                   /* Open GL Util            APPLE    */
 #else
-#include <GL/glut.h>            /* Open GL Util    OpenGL*/
+#include <GL/glut.h>                                                     /* Open GL Util            OpenGL   */
 #endif
 
 int XSIZE = 1024;

@@ -27,7 +27,7 @@
   @endparblock
 ***************************************************************************************************************************************************************/
 
-#include <cstdint>
+#include <cstdint>                                                       /* std:: C stdint.h        C++11    */
 
 // Put everything in the mjr namespace
 namespace mjr {

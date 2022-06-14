@@ -35,18 +35,18 @@
 #include "mapclamp.hpp"
 #include "colorData.hpp"
 
-#include <cmath>
-#include <cstring>
-#include <climits>
+#include <cmath>                                                         /* std:: C math.h          C++11    */
+#include <cstring>                                                       /* std:: C string.h        C++11    */
+#include <climits>                                                       /* std:: C limits.h        C++11    */
 
-#include <iostream>
-#include <sstream>
-#include <iomanip>
-#include <string>
-#include <algorithm>
+#include <iostream>                                                      /* C++ iostream            C++11    */
+#include <sstream>                                                       /* C++ string stream       C++      */
+#include <iomanip>                                                       /* C++ stream formatting   C++11    */
+#include <string>                                                        /* C++ strings             C++11    */
+#include <algorithm>                                                     /* STL algorithm           C++11    */
 
-#include <type_traits>
-#include <limits>
+#include <type_traits>                                                   /* C++ metaprogramming     C++11    */
+#include <limits>                                                        /* C++ Numeric limits      C++11    */
 
 // Put everything in the mjr namespace
 namespace mjr {

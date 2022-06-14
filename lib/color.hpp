@@ -29,9 +29,9 @@
 
 #ifndef MJR_INCLUDE_color
 
-#include <cstdint>
-#include <cfloat>
-#include <limits>
+#include <cstdint>                                                       /* std:: C stdint.h        C++11    */
+#include <cfloat>                                                        /* std:: C float.h         C++11    */
+#include <limits>                                                        /* C++ Numeric limits      C++11    */
 
 #include "ramConfig.hpp"
 #include "colorTpl.hpp"
