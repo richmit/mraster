@@ -96,8 +96,8 @@ int main(void) {
     theRamCanvas.writeRAWfile("peterdejong_" + std::to_string(j) + ".mrw");
 
     // Root image transform
-    theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmStdPow, 1/p);
-    maxII = 65535.0 * pow(maxII/65535.0, 1/p);
+    theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmStdPow, static_cast<float>(1.0/p));
+    maxII = static_cast<uint64_t>(65535.0 * pow(static_cast<double>(maxII)/65535.0, 1/p));
 
     // Log image transform
     // theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmLn);
@@ -109,7 +109,7 @@ int main(void) {
     mjr::color3c8b bColor;
     for(int yi=0;yi<theRamCanvas.get_numYpix();yi++)
       for(int xi=0;xi<theRamCanvas.get_numXpix();xi++)
-        anotherRamCanvas.drawPoint(xi, yi, bColor.cmpColorRamp(theRamCanvas.getPxColor(xi, yi).getRed() * 1275 / maxII, "0RYBCW"));
+        anotherRamCanvas.drawPoint(xi, yi, bColor.cmpColorRamp(static_cast<int>(theRamCanvas.getPxColor(xi, yi).getRed() * 1275 / maxII), "0RYBCW"));
     
     anotherRamCanvas.writeTIFFfile("peterdejong_" + std::to_string(j) + ".tiff");
   }

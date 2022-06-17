@@ -97,7 +97,7 @@ int main(void)
             rcc::channelType ew = ( std::real(z) > 0 ? 0 : 255 );
             grayRamCanvas.drawPoint(x, y, theColor.cmpGrey(mjr::unitTooIntLinMap((std::real(z) / zAbs + 1.0) / 2.0, 255)));
             binRamCanvas.drawPoint(x, y,  rcc(ns, ns, ns));
-            quadRamCanvas.drawPoint(x, y, rcc(ns, 255-(ns+ew)/2, ew));
+            quadRamCanvas.drawPoint(x, y, rcc(ns, static_cast<rcc::channelType>(255-(ns+ew)/2), ew));
           }
         } else {
           grayRamCanvas.drawPoint(x, y, "red");

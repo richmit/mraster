@@ -104,7 +104,7 @@ int main()
   }
   std::cout << "|" << std::endl;
   std::cout << "apollony dump" << std::endl;
-  theRamCanvas.applyHomoPixTfrm(&mjr::color3c8b::tfrmStdPow, 1/5.0);
+  theRamCanvas.applyHomoPixTfrm(&mjr::color3c8b::tfrmStdPow, 1/5.0F);
   theRamCanvas.writeTIFFfile("apollony.tiff");
   std::cout << "apollony finish" << std::endl;
   return 0;

@@ -71,7 +71,7 @@ class g2rgb8 {
   private:
     int factor;
   public:
-    g2rgb8(int newFactor) { factor = newFactor; }
+    g2rgb8(uint64_t newFactor) { factor = static_cast<int>(newFactor); }
     mjr::colorRGB8b operator() (mjr::ramCanvas1c16b::rcColor c) {
       mjr::colorRGB8b retColor;
       return retColor.cmpColorRamp(c.getRed() * 1275 / factor, "0RYBCW");
@@ -90,9 +90,9 @@ int main(void) {
     typename mjr::ramCanvas1c16b::rcCordFlt beta   = params[j][2];
     typename mjr::ramCanvas1c16b::rcCordFlt gamma  = params[j][3];
     typename mjr::ramCanvas1c16b::rcCordFlt w      = params[j][4];
-    int n        = params[j][5];
-    float ipw    = params[j][6];
-    int filter   = params[j][11];
+    int n        = static_cast<int>(  params[j][5]);
+    float ipw    = static_cast<float>(params[j][6]);
+    int filter   = static_cast<int>(  params[j][11]);
 
     std::complex<typename mjr::ramCanvas1c16b::rcCordFlt> cplxi (0,1);
 
@@ -102,7 +102,7 @@ int main(void) {
     uint64_t maxII = 0;
     for(uint64_t i=0;i<maxitr;i++) { 
       z = (lambda + alpha*z*std::conj(z)+beta*std::pow(z, n).real() + w*cplxi)*z+gamma*std::pow(std::conj(z), n-1);
-      float x=z.real(), y=z.imag();
+      typename mjr::ramCanvas1c16b::rcCordFlt x=z.real(), y=z.imag();
       if(i>1000)
         theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColor(x, y).tfrmAdd(aColor));
       if(theRamCanvas.getPxColor(x, y).getRed() > maxII) {

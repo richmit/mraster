@@ -103,7 +103,7 @@ enum class solMethNV { NEWTON,    //!< Use Newton's method
 int main(void) {
   const double escapeMod = -32.0;
   const int    MaxCount  = 64;
-  const float  Tol       = 0.0001;
+  const float  Tol       = 0.0001F;
   const int    numToKeep = 1;
   whyStopNV why;           
   mjr::ramCanvas3c8b theRamCanvas(3840, 2160, -1.5, 1.5, -1.5, 1.5);

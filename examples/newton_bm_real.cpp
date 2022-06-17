@@ -31,41 +31,41 @@
 #include "ramCanvas.hpp"
 
 int main(void) {
-  const float pi       = 3.14159265359;
-  int         MaxCount = 255;
-  int         MultCol  = 15;
-  float       Tol      = (.0001 * .0001);
-  mjr::ramCanvas3c8b theRamCanvas(4096, 4096, -2.0, 2, -2, 2); // -0.9, -0.7, -0.1, 0.1
-  
+  const mjr::ramCanvas3c8b::rcCordFlt pi       = 3.14159265359;
+  int                                 MaxCount = 255;
+  int                                 MultCol  = 15;
+  mjr::ramCanvas3c8b::rcCordFlt       Tol      = (.0001 * .0001);
+  mjr::ramCanvas3c8b                  theRamCanvas(4096, 4096, -2.0, 2, -2, 2); // -0.9, -0.7, -0.1, 0.1  
   for(int y=0;y<theRamCanvas.get_numYpix();y++) {
     for(int x=0;x<theRamCanvas.get_numXpix();x++) {
-      float zx = theRamCanvas.int2realX(x);
-      float zy = theRamCanvas.int2realY(y);
+      mjr::ramCanvas3c8b::rcCordFlt zx = theRamCanvas.int2realX(x);
+      mjr::ramCanvas3c8b::rcCordFlt zy = theRamCanvas.int2realY(y);
       int count = 0;
       while(count < MaxCount                                                  &&
             ((zx-1) * (zx-1) + zy * zy >= Tol)                                &&
             ((zx+.5) * (zx+.5) + (zy-sin(2*pi/3)) * (zy-sin(2*pi/3)) >= Tol)  &&
             ((zx+.5) * (zx+.5) + (zy+sin(2*pi/3)) * (zy+sin(2*pi/3)) >= Tol)) {
-        float botx = 3*(zx * zx - zy * zy);
-        float boty = 3*(2 * zx * zy);
+        mjr::ramCanvas3c8b::rcCordFlt botx = 3*(zx * zx - zy * zy);
+        mjr::ramCanvas3c8b::rcCordFlt boty = 3*(2 * zx * zy);
         
-        float mag = botx * botx + boty * boty;
+        mjr::ramCanvas3c8b::rcCordFlt mag = botx * botx + boty * boty;
         if (mag > 0) {
-          float topx = (zx*zx*zx+-3.0*zx*zy*zy-1)/mag;
-          float topy = (3.0*zx*zx*zy-zy*zy*zy)/mag;
+          mjr::ramCanvas3c8b::rcCordFlt topx = (zx*zx*zx+-3.0*zx*zy*zy-1)/mag;
+          mjr::ramCanvas3c8b::rcCordFlt topy = (3.0*zx*zx*zy-zy*zy*zy)/mag;
           
           zx = zx - (topx * botx + topy * boty);
           zy = zy - (topy * botx - topx * boty);
         }
         count++;
       }
+      mjr::color3c8b::channelType cCol = static_cast<mjr::color3c8b::channelType>(255-count*MultCol);
 
       if((zx-1) * (zx-1) + zy * zy < Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(255-count*MultCol, 0, 0));
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b(cCol, 0, 0));
       else if((zx+.5) * (zx+.5) + (zy-sin(2*pi/3)) * (zy-sin(2*pi/3)) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, 255-count*MultCol, 0));
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, cCol, 0));
       else if((zx+.5) * (zx+.5) + (zy+sin(2*pi/3)) * (zy+sin(2*pi/3)) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, 0, 255-count*MultCol));
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, 0, cCol));
     }
   }
   theRamCanvas.writeTIFFfile("newton.tiff");

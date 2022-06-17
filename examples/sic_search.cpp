@@ -48,15 +48,15 @@ int main(void) {
   uint64_t maxCnt = 0;
   for(int j=0; j<100000; j++) {
     std::map<uint64_t, uint64_t> ptcnt;
-    float lambda = uniform_dist_float(rEng);
-    float alpha  = uniform_dist_float(rEng);
-    float beta   = uniform_dist_float(rEng);
-    float gamma  = uniform_dist_float(rEng);
-    float w      = uniform_dist_float(rEng);
+    float lambda = static_cast<float>(uniform_dist_float(rEng));
+    float alpha  = static_cast<float>(uniform_dist_float(rEng));
+    float beta   = static_cast<float>(uniform_dist_float(rEng));
+    float gamma  = static_cast<float>(uniform_dist_float(rEng));
+    float w      = static_cast<float>(uniform_dist_float(rEng));
     int n        = uniform_dist_int(rEng);
-    std::complex<float> z(.01,.01);
+    std::complex<float> z(0.01F,0.01F);
     for(uint64_t i=0;i<1000;i++) { 
-      z = (lambda + alpha*z*std::conj(z)+beta*std::pow(z, n).real() + w*std::complex<float>(0,1))*z+gamma*std::pow(std::conj(z), n-1);
+      z = (lambda + alpha*z*std::conj(z)+beta* static_cast<float>(std::pow(z, n).real()) + w*std::complex<float>(0,1))*z+gamma*static_cast<std::complex<float>>(std::pow(std::conj(z), n-1));
       ptcnt[((uint64_t)theRamCanvas.real2intX(z.real()))<<32 | ((uint64_t)theRamCanvas.real2intY(z.imag()))] = 1;
     }
     if(ptcnt.size() > maxCnt) {

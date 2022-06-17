@@ -33,7 +33,7 @@
 #include <iostream>                                                      /* C++ iostream            C++11    */
 
 int main(void) {
-  double p = 1.75;
+  float p = 1.75F;
   const int XSIZ = 7680/1;
   const int YSIZ = 4320/1;
   uint64_t maxII = 0;
@@ -133,8 +133,8 @@ int main(void) {
   theRamCanvas.writeRAWfile("lorenz_fuz.mrw");
 
   // Root image transform
-  theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmStdPow, 1/p);
-  maxII = 65535.0 * pow(maxII/65535.0, 1/p);
+  theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmStdPow, 1.0F / p);
+  maxII = static_cast<uint64_t>(65535.0 * std::pow(static_cast<float>(maxII) / 65535.0F, 1.0F / p));
 
   // Log image transform
   // theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmLn);
@@ -146,7 +146,7 @@ int main(void) {
   mjr::color3c8b bColor;
   for(int yi=0;yi<theRamCanvas.get_numYpix();yi++)
     for(int xi=0;xi<theRamCanvas.get_numXpix();xi++) {
-      anotherRamCanvas.drawPoint(xi, yi, bColor.cmpColorRamp(theRamCanvas.getPxColor(xi, yi).getRed() * 1275 / maxII, "0RYBCW"));
+      anotherRamCanvas.drawPoint(xi, yi, bColor.cmpColorRamp(static_cast<int>(theRamCanvas.getPxColor(xi, yi).getRed() * 1275 / maxII), "0RYBCW"));
       if( (anotherRamCanvas.getPxColor(xi, yi).getRed() > 0) && (anotherRamCanvas.getPxColor(xi, yi).getRed() < 255) )
         anotherRamCanvas.getPxColorRefNC(xi, yi).setRed(255);
     }

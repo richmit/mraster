@@ -94,7 +94,7 @@ int main()
     }
     std::cout << "|" << std::endl;
     std::cout << "apomorph dump" << std::endl;
-    theRamCanvas.applyHomoPixTfrm(&mjr::color3c8b::tfrmStdPow, 1/5.0);
+    theRamCanvas.applyHomoPixTfrm(&mjr::color3c8b::tfrmStdPow, 1/5.0F);
     std::ostringstream stringStream;
     stringStream << "apomorph" << std::setfill('0') << std::setw(3) << frame << ".tiff";
     theRamCanvas.writeTIFFfile(stringStream.str());

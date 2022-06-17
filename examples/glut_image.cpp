@@ -65,7 +65,9 @@ void idleCall() {
   static int offset;
   for(int x=0; x<theRC.get_numXpix(); x++)
     for(int y=0; y<theRC.get_numXpix(); y++)
-      theRC.drawPoint(x, y, mjr::color3c8b(offset+y-x,offset+x+y,offset+x-y));
+      theRC.drawPoint(x, y, mjr::color3c8b(static_cast<mjr::color3c8b::channelType>(offset+y-x),
+                                           static_cast<mjr::color3c8b::channelType>(offset+x+y),
+                                           static_cast<mjr::color3c8b::channelType>(offset+x-y)));
   offset+=1;
   glutPostRedisplay();
 } /* end func idleCall */
@@ -84,18 +86,21 @@ void displayCall() {
   glRasterPos2i(0,0);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-  xMag = 1.0 * XSIZE / theRC.get_numXpix();
-  yMag = 1.0 * YSIZE / theRC.get_numYpix();
+  xMag = static_cast<float>(XSIZE) / static_cast<float>(theRC.get_numXpix());
+  yMag = static_cast<float>(YSIZE) / static_cast<float>(theRC.get_numYpix());
 
   glPixelZoom(xMag, yMag);
   glDrawPixels(theRC.get_numXpix(), theRC.get_numYpix(), GL_RGBA, GL_UNSIGNED_BYTE, (GLubyte*)image);
   glFlush();
 }  /* end func displayCall */
-
+ 
 int main(int argc, char *argv[]) {
   for(int x=0; x<theRC.get_numXpix(); x++)
     for(int y=0; y<theRC.get_numXpix(); y++)
-      theRC.drawPoint(x, y, mjr::color3c8b(y-x,x+y,x-y));
+      theRC.drawPoint(x, y, mjr::color3c8b(static_cast<mjr::color3c8b::channelType>(y-x),
+                                           static_cast<mjr::color3c8b::channelType>(x+y),
+                                           static_cast<mjr::color3c8b::channelType>(x-y)));
+
 
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);

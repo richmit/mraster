@@ -33,10 +33,10 @@
 #include <complex>                                                       /* Complex Numbers         C++11    */
 
 int main(void) {
-  const float pi       = 3.14159265359;
+  const float pi       = 3.14159265359F;
   int         MaxCount = 255;
   int         MultCol  = 15;
-  float       Tol      = .0001;
+  float       Tol      = .0001F;
   mjr::ramCanvas3c8b theRamCanvas(4096, 4096, -2.0, 2, -2, 2); // -0.9, -0.7, -0.1, 0.1
 
   std::complex<double> r1( 1.0,            0);
@@ -53,13 +53,14 @@ int main(void) {
           z = z-(z*z*z-1.0)/(z*z*3.0);
         count++;
       }
+      mjr::color3c8b::channelType cCol = static_cast<mjr::color3c8b::channelType>(255-count*MultCol);
 
       if(abs(z-r1) < Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(255-count*MultCol, 0, 0));
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b(cCol, 0,    0));
       else if(abs(z-r2) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, 255-count*MultCol, 0));
-      else if(abs(z-r3) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, 0, 255-count*MultCol));
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0,    cCol, 0));
+      else if(abs(z-r3) <= Tol)                          
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0,    0,    cCol));
     }
   }
   theRamCanvas.writeTIFFfile("newton_bm_cplx.tiff");

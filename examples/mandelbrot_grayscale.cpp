@@ -51,19 +51,20 @@ int main(void) {
   mjr::ramCanvas1c16b theRamCanvas(7680, 7680, -2.2, 0.8, -1.5, 1.5);
   int count;
   const int NUMITR = mjr::ramCanvas1c16b::rcColor::maxChanVal;
-  float cr, ci;
-  std::complex<float> c, z, zero(0.0, 0.0);  
+
+  mjr::ramCanvas1c16b::rcCordFlt cr, ci;
+  std::complex<mjr::ramCanvas1c16b::rcCordFlt> c, z, zero(0.0, 0.0);  
   for(int y=0;y<theRamCanvas.get_numYpix();y++) {
     for(int x=0;x<theRamCanvas.get_numXpix();x++) {
       cr = theRamCanvas.int2realX(x);
       ci = theRamCanvas.int2realY(y);
-      c  = std::complex<float>(cr, ci);
-      float p = abs(c-0.25f);
-      if((cr >= p-2.0f*p*p+0.25f) && abs(c+1.0f) >= 0.25f) {
+      c  = std::complex<mjr::ramCanvas1c16b::rcCordFlt>(cr, ci);
+      mjr::ramCanvas1c16b::rcCordFlt p = abs(c-0.25);
+      if((cr >= p-2.0*p*p+0.25) && abs(c+1.0) >= 0.25) {
         for(z=zero,count=0; (std::norm(z)<4)&&(count<NUMITR); count++,z=z*z+c)
           ;
         if(count < NUMITR)
-          theRamCanvas.drawPoint(x, y, count);
+          theRamCanvas.drawPoint(x, y, static_cast<mjr::ramCanvas1c16b::rcColor::channelType>(count));
       }
     }
   }

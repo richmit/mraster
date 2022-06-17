@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
     MAXCOUNT = std::stoi(argv[3]);
 
   for(int tgtLumPct=1;tgtLumPct<=100;tgtLumPct+=10) {
-    float tgtLum=tgtLumPct/100.0;
+    float tgtLum=static_cast<float>(tgtLumPct) / 100.0F;
 
     for(int numItr=1;numItr<MAXCOUNT;numItr++) {
       mjr::ramCanvas3c8b::rcCordInt xC, yC;
@@ -120,5 +120,5 @@ int main(int argc, char *argv[]) {
 
   return 1;
 
-  std::cout << "Runtime " << (std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - timestamp_time_t)/(60.0) << " min" << std::endl;
+  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - timestamp_time_t)/(60.0) << " min" << std::endl;
 }

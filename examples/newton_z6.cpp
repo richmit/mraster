@@ -34,10 +34,10 @@
 #include <iostream>                                                      /* C++ iostream            C++11    */
 
 int main(void) {
-  const float pi       = 3.14159265359;
+  const float pi       = 3.14159265359F;
   int         MaxCount = 155;
   int         MultCol  = 25;
-  const float Tol      = .0001;
+  const float Tol      = .0001F;
   std::complex<double> r1( 1.0,  0);
   std::complex<double> r2(-0.5,  sin(2*pi/3));
   std::complex<double> r3(-0.5, -sin(2*pi/3));
@@ -60,22 +60,24 @@ int main(void) {
         }
         count++;
       }
+      mjr::color3c8b::channelType cCol = static_cast<mjr::color3c8b::channelType>(255-count*MultCol);
+
       if(abs(z-r1) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(int(255-count*MultCol), 0,                       0));
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b(cCol, 0,                       0));
       if(abs(z-r2) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0,                       int(255-count*MultCol), 0));
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0,                       cCol, 0));
       if(abs(z-r3) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0,                       0,                       int(255-count*MultCol)));
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0,                       0,                       cCol));
       if(abs(z-r4) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(int(255-count*MultCol), int(255-count*MultCol), 0));
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b(cCol, cCol, 0));
       if(abs(z-r5) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0,                       int(255-count*MultCol), int(255-count*MultCol)));
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0,                       cCol, cCol));
       if(abs(z-r6) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(int(255-count*MultCol), 0,                       int(255-count*MultCol)));
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b(cCol, 0,                       cCol));
     }
   }
   /* The biggest reason homogeneous transforms are in the library is to support color scale correction.  */
-  theRamCanvas.applyHomoPixTfrm(&mjr::color3c8b::tfrmLinearGreyLevelScale, 255.0/155, 0.0);
+  theRamCanvas.applyHomoPixTfrm(&mjr::color3c8b::tfrmLinearGreyLevelScale, 255.0F / 155, 0.0);
   theRamCanvas.autoHistStrech();
   theRamCanvas.writeTIFFfile("newton_z6.tiff");
 }

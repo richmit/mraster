@@ -52,14 +52,14 @@ int main(void) {
 
   mjr::colorRGB8b corners[8];
 
-  corners[0].setColorFromF(  4.735895e-04, -3.803366e-04,  6.188242e-03);
-  corners[1].setColorFromF(  2.408992e-02, -3.213844e-02,  6.140333e-01);
-  corners[2].setColorFromF( -1.389196e-03,  2.282020e-03,  1.000000e+00);
-  corners[3].setColorFromF( -1.405614e-01,  5.221071e-01,  1.304521e-01);
-  corners[4].setColorFromF(  1.692925e-01,  1.000000e+00, -8.184450e-03);
-  corners[5].setColorFromF(  1.000000e+00,  2.463630e-01, -2.764747e-03);
-  corners[6].setColorFromF(  2.693146e-02, -6.494247e-04,  7.366005e-06);
-  corners[7].setColorFromF(  1.436555e-06, -2.633831e-09,  4.411618e-11);
+  corners[0].setColorFromF(  4.735895e-04F, -3.803366e-04F,  6.188242e-03F);
+  corners[1].setColorFromF(  2.408992e-02F, -3.213844e-02F,  6.140333e-01F);
+  corners[2].setColorFromF( -1.389196e-03F,  2.282020e-03F,  1.000000e+00F);
+  corners[3].setColorFromF( -1.405614e-01F,  5.221071e-01F,  1.304521e-01F);
+  corners[4].setColorFromF(  1.692925e-01F,  1.000000e+00F, -8.184450e-03F);
+  corners[5].setColorFromF(  1.000000e+00F,  2.463630e-01F, -2.764747e-03F);
+  corners[6].setColorFromF(  2.693146e-02F, -6.494247e-04F,  7.366005e-06F);
+  corners[7].setColorFromF(  1.436555e-06F, -2.633831e-09F,  4.411618e-11F);
 
   for(int x=0;x<theRamCanvas.get_numXpix();x++)
 	for(int y=0;y<theRamCanvas.get_numYpix();y++)

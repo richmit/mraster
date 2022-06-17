@@ -36,7 +36,7 @@
 int main(void) {
   int count;
   const int NUMITR = 1024;
-  float xr, yr, zx, zy, tempx;
+  mjr::ramCanvas3c8b::rcCordFlt xr, yr, zx, zy, tempx;
   mjr::ramCanvas3c8b theRamCanvas(7680, 7680, -2.2, 0.8, -1.5, 1.5);
 
   for(int x=0;x<theRamCanvas.get_numXpix();x++) {

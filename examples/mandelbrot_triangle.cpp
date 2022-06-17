@@ -93,7 +93,7 @@ int main(void) {
       alphaTriangle[i] = protoAlphaTriangle[i];
     if(findAlphaTriangle(MAXTRCNT, 0, 1, 0.0, alphaTriangle)) {
       int thePathLen;
-      traceBoundry(MAXTRCNT, 0.00003, 0, alphaTriangle, thePath, &thePathLen);
+      traceBoundry(MAXTRCNT, 0.00003F, 0, alphaTriangle, thePath, &thePathLen);
       theRamCanvas.drawPLCurve(thePathLen+1, (mjr::ramCanvas3c8b::rcPointFlt *)thePath, mjr::color3c8b(255, 0, 255));
     }
   }
@@ -103,10 +103,10 @@ int main(void) {
 
 /* **************************************************************** */
 int orbCmp(complex tstPt) {
-  float zx = 0.0;
-  float zy = 0.0;
+  mjr::ramCanvas3c8b::rcCordFlt zx = 0.0;
+  mjr::ramCanvas3c8b::rcCordFlt zy = 0.0;
   int count = 0;
-  float tempx;
+  mjr::ramCanvas3c8b::rcCordFlt  tempx;
   while(1) {
     if(zx * zx + zy * zy >= 4) 
       return count;
@@ -133,8 +133,8 @@ int findAlphaTriangle(int maxCnt, int ptA, int ptB, float slop, complex triangle
   int printDebug=2;
   int hitCount;
   int count = 0;
-  float xDelta = triangle[ptB].x - triangle[ptA].x;
-  float yDelta = triangle[ptB].y - triangle[ptA].y;
+  mjr::ramCanvas3c8b::rcCordFlt xDelta = triangle[ptB].x - triangle[ptA].x;
+  mjr::ramCanvas3c8b::rcCordFlt yDelta = triangle[ptB].y - triangle[ptA].y;
 
   // Shrink the delta some....
   xDelta = (xDelta - xDelta * slop);

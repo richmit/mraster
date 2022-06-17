@@ -31,21 +31,23 @@
 
 #include "ramCanvas.hpp"
 
-float f(float x, float y);  
-void drawLevelCurves(int numBand, float bandWidth, float zMin, float zMax, float minRealX, float maxRealX, float minRealY, float maxRealY, const char *file);
+typedef mjr::ramCanvas3c8b::rcCordFlt drT;
+
+drT f(drT x, drT y);  
+void drawLevelCurves(int numBand, drT bandWidth, drT zMin, drT zMax, drT minRealX, drT maxRealX, drT minRealY, drT maxRealY, const char *file);
 
 int main(void) {
   drawLevelCurves(10, 0.0, 0, 0, -20, 20, -20, 20, "level_curves_l.tiff");
   drawLevelCurves( 0, 0.0, 0, 0, -20, 20, -20, 20, "level_curves_c.tiff");
 }
 
-float f(float x, float y) {
+drT f(drT x, drT y) {
   return sin(x)+cos(y)+sqrt(x*x+y*y)*.05;
 }
 
-void drawLevelCurves(int numBand, float bandWidth, float zMin, float zMax, float minRealX, float maxRealX, float minRealY, float maxRealY, const char *file) {
+void drawLevelCurves(int numBand, drT bandWidth, drT zMin, drT zMax, drT minRealX, drT maxRealX, drT minRealY, drT maxRealY, const char *file) {
   int x, y, clr, foundBand;
-  float fxy, bandGap, band, minDist, minBand;
+  drT fxy, bandGap, band, minDist, minBand;
 
   mjr::ramCanvas3c8b theRamCanvas(1024, 1024, minRealX, maxRealX, minRealY, maxRealY);
 

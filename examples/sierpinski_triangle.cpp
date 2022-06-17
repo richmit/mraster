@@ -33,16 +33,16 @@
 typedef float PointType[2];
 
 int main() {
-  PointType cpt = {0.0, 0.0};
+  PointType cpt = {0.0F, 0.0F};
   mjr::color3c8b aColor[] = { mjr::color3c8b(255, 0, 0), mjr::color3c8b(0, 255, 0), mjr::color3c8b(0, 0, 255) };
-  PointType pts[] = {{0,0.8}, {-0.8,-0.8}, {0.8,-0.8}};
+  PointType pts[] = {{0.0F, 0.8F}, {-0.8F, -0.8F}, {0.8F, -0.8F}};
   int NumPts = 3;
   
   mjr::ramCanvas3c8b theRamCanvas(2048, 2048, -1, 1, -1, 1);
   for(int n=0;n<10000000;n++) {
     int ip = rand()%NumPts;
-    cpt[0] = (pts[ip][0] + cpt[0]) / 2.0;
-    cpt[1] = (pts[ip][1] + cpt[1]) / 2.0;
+    cpt[0] = (pts[ip][0] + cpt[0]) / 2.0F;
+    cpt[1] = (pts[ip][1] + cpt[1]) / 2.0F;
     if(n > 100000)
       theRamCanvas.drawPoint(cpt[0], cpt[1], aColor[ip]);
   }

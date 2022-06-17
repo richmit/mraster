@@ -39,11 +39,11 @@ int main(void) {
 
   for(int y=0;y<theRamCanvas.get_numYpix();y++) {
     for(int x=0;x<theRamCanvas.get_numXpix();x++) {
-        float xr = theRamCanvas.int2realX(x);
-        float yr = theRamCanvas.int2realY(y);
-        float zx = 0.0;
-        float zy = 0.0;
-        float zx2, zy2, tmp;
+        mjr::ramCanvas3c8b::rcCordFlt xr = theRamCanvas.int2realX(x);
+        mjr::ramCanvas3c8b::rcCordFlt yr = theRamCanvas.int2realY(y);
+        mjr::ramCanvas3c8b::rcCordFlt zx = 0.0;
+        mjr::ramCanvas3c8b::rcCordFlt zy = 0.0;
+        mjr::ramCanvas3c8b::rcCordFlt zx2, zy2, tmp;
         int count = 0;
         do {
           zx2 = zx * zx;

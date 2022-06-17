@@ -192,7 +192,7 @@ namespace mjr {
       const static clrChanT      minChanVal          = std::numeric_limits<clrChanT>::min();                          //!< maximum value for a channel
       const static clrChanT      meanChanVal         = (maxChanVal-minChanVal)/2;                                     //!< middle value for a channel
       const static int           numChanNonRGB       = (numChan>3 ? numChan-3 : 0);                                   //!< number of non-RGB channels
-      const static clrChanIArthT numValuesPerChan    = (clrChanIArthT)(1u<<bitsPerChan);                              //!< unique channel value approximation
+      const static clrChanIArthT numValuesPerChan    = static_cast<clrChanIArthT>(1u<<bitsPerChan);                              //!< unique channel value approximation
       const static int           channelCount        = numChan;                                                       //!< Number of channels
       
       typedef clrChanT      channelType;          //!< Type for the channels (clrChanT)
@@ -1262,15 +1262,15 @@ namespace mjr {
       /** Clamp a value on the top end such that it will fit into a clrChanT type. Input values larger than the maximum channel value are mapped to the maximum
           channel value.  Values less than the minimum (0) are not clamped.
           @param anArithComp The value to clamp */
-      clrChanIArthT clipTop(clrChanIArthT anArithComp);
+      clrChanT clipTop(clrChanIArthT anArithComp);
       /** Clamp a value on the bottom end such that it will fit into a clrChanT type. Input values less than the minimum (0), are mapped to 0.  Note values
           greater than the maximum channel value are NOT clamped.
           @param anArithComp The value to clam    p */
-      clrChanIArthT clipBot(clrChanIArthT anArithComp);
+      clrChanT clipBot(clrChanIArthT anArithComp);
       /** Clamp a value such that it will fit into a clrChanT type. Input values less than zero are mapped to zero, and input values larger than the maximum
           channel value are mapped to the maximum q channel value.
           @param anArithComp The value to clamp */
-      clrChanIArthT clipAll(clrChanIArthT anArithComp);
+      clrChanT clipAll(clrChanIArthT anArithComp);
       //@}
 
   };
@@ -1374,35 +1374,35 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   clrChanFArthT
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getRedF() const {
-    return theColor.theParts.red / double(maxChanVal);
+    return theColor.theParts.red / static_cast<float>(maxChanVal);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   clrChanFArthT
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getBlueF() const {
-    return theColor.theParts.blue / double(maxChanVal);
+    return theColor.theParts.blue / static_cast<float>(maxChanVal);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   clrChanFArthT
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getGreenF() const {
-    return theColor.theParts.green / double(maxChanVal);
+    return theColor.theParts.green / static_cast<float>(maxChanVal);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   clrChanFArthT
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getAlphaF() const {
-    return theColor.theParts.alpha / double(maxChanVal);
+    return theColor.theParts.alpha / static_cast<float>(maxChanVal);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   clrChanFArthT
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getChanF(int chan) const {
-    return theColor.thePartsA[chan] / double(maxChanVal);
+    return theColor.thePartsA[chan] / static_cast<float>(maxChanVal);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1578,9 +1578,12 @@ namespace mjr {
     if(numChan > 3)
       theColor.theParts.alpha = aComp;
     if(numChan > 4)
+#pragma warning( push )
+#pragma warning( disable : 6294 )
       for(int i=4; i<numChan; i++)
         theColor.thePartsA[i] = aComp;
-    return *this;
+#pragma warning( pop )
+      return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1588,7 +1591,7 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setChanF(int chan, clrChanFArthT cVal) {
     if((chan >= 0) && (chan <= numChan))
-      theColor.thePartsA[chan] = clrChanT(cVal * maxChanVal);
+      theColor.thePartsA[chan] = static_cast<clrChanT>(cVal * maxChanVal);
     return *this;
   }
 
@@ -1596,7 +1599,7 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setRedF(clrChanFArthT r) {
-    theColor.theParts.red = clrChanT(r * maxChanVal);
+    theColor.theParts.red = static_cast<clrChanT>(r * maxChanVal);
     return *this;
   }
 
@@ -1604,7 +1607,7 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setBlueF(clrChanFArthT b) {
-    theColor.theParts.blue = clrChanT(b * maxChanVal);
+    theColor.theParts.blue = static_cast<clrChanT>(b * maxChanVal);
     return *this;
   }
 
@@ -1612,7 +1615,7 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setGreenF(clrChanFArthT g) {
-    theColor.theParts.green = clrChanT(g * maxChanVal);
+    theColor.theParts.green = static_cast<clrChanT>(g * maxChanVal);
     return *this;
   }
 
@@ -1620,7 +1623,7 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setAlphaF(clrChanFArthT a) {
-    theColor.theParts.alpha = clrChanT(a * maxChanVal);
+    theColor.theParts.alpha = static_cast<clrChanT>(a * maxChanVal);
     return *this;
   }
 
@@ -1628,16 +1631,16 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setAllF(clrChanFArthT aComp) {
-    theColor.theParts.red     = clrChanT(aComp * maxChanVal);
+    theColor.theParts.red     = static_cast<clrChanT>(aComp * maxChanVal);
     if(numChan > 1)
-      theColor.theParts.green = clrChanT(aComp * maxChanVal);
+      theColor.theParts.green = static_cast<clrChanT>(aComp * maxChanVal);
     if(numChan > 2)
-      theColor.theParts.blue  = clrChanT(aComp * maxChanVal);
+      theColor.theParts.blue  = static_cast<clrChanT>(aComp * maxChanVal);
     if(numChan > 3)
-      theColor.theParts.alpha = clrChanT(aComp * maxChanVal);
+      theColor.theParts.alpha = static_cast<clrChanT>(aComp * maxChanVal);
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i] = clrChanT(aComp * maxChanVal);
+        theColor.thePartsA[i] = static_cast<clrChanT>(aComp * maxChanVal);
     return *this;
   }
 
@@ -1647,9 +1650,9 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setChan64bit(int chan, uint64_t cVal, uint64_t maxv) {
     if((chan >= 0) && (chan <= numChan)) {
       if(maxChanVal == maxv)
-        theColor.thePartsA[chan] = clrChanT(cVal);
+        theColor.thePartsA[chan] = static_cast<clrChanT>(cVal);
       else
-        theColor.thePartsA[chan] = clrChanT(1.0 * maxChanVal * cVal / maxv);
+        theColor.thePartsA[chan] = static_cast<clrChanT>(1.0 * maxChanVal * static_cast<double>(cVal) / static_cast<double>(maxv));
     }
     return *this;
   }
@@ -1659,9 +1662,9 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setRed64bit(uint64_t r, uint64_t maxv) {
     if(maxChanVal == maxv)
-      theColor.theParts.red = clrChanT(r);
+      theColor.theParts.red = static_cast<clrChanT>(r);
     else
-      theColor.theParts.red = clrChanT(1.0 * maxChanVal * r / maxv);
+      theColor.theParts.red = static_cast<clrChanT>(1.0 * maxChanVal * static_cast<double>(r) / static_cast<double>(maxv));
     return *this;
   }
 
@@ -1670,9 +1673,9 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setBlue64bit(uint64_t b, uint64_t maxv) {
     if(maxChanVal == maxv)
-      theColor.theParts.blue = clrChanT(b);
+      theColor.theParts.blue = static_cast<clrChanT>(b);
     else
-      theColor.theParts.blue = clrChanT(1.0 * maxChanVal * b / maxv);
+      theColor.theParts.blue = static_cast<clrChanT>(1.0 * maxChanVal * static_cast<double>(b) / static_cast<double>(maxv));
     return *this;
   }
 
@@ -1681,9 +1684,9 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setGreen64bit(uint64_t g, uint64_t maxv) {
     if(maxChanVal == maxv)
-      theColor.theParts.green = clrChanT(g);
+      theColor.theParts.green = static_cast<clrChanT>(g);
     else
-      theColor.theParts.green = clrChanT(1.0 * maxChanVal * g / maxv);
+      theColor.theParts.green = static_cast<clrChanT>(1.0 * maxChanVal * static_cast<double>(g) / static_cast<double>(maxv));
     return *this;
   }
 
@@ -1692,9 +1695,9 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setAlpha64bit(uint64_t a, uint64_t maxv) {
     if(maxChanVal == maxv)
-      theColor.theParts.alpha = clrChanT(a);
+      theColor.theParts.alpha = static_cast<clrChanT>(a);
     else
-      theColor.theParts.alpha = clrChanT(1.0 * maxChanVal * a / maxv);
+      theColor.theParts.alpha = static_cast<clrChanT>(1.0 * maxChanVal * static_cast<double>(a) / static_cast<double>(maxv));
     return *this;
   }
 
@@ -1704,9 +1707,9 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setAll64bit(uint64_t aComp, uint64_t maxv) {
     clrChanT convertedValue;
     if(maxChanVal == maxv)
-      convertedValue = clrChanT(aComp);
+      convertedValue = static_cast<clrChanT>(aComp);
     else
-      convertedValue = clrChanT(1.0 * maxChanVal * aComp / maxv);
+      convertedValue = static_cast<clrChanT>(1.0 * maxChanVal * static_cast<double>(aComp) / static_cast<double>(maxv));
     theColor.theParts.red     = convertedValue;
     if(numChan > 1)
       theColor.theParts.green = convertedValue;
@@ -1726,9 +1729,9 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setChan8bit(int chan, uint8_t cVal) {
     if((chan >= 0) && (chan <= numChan)) {
       if(channelType8bitInt)
-        theColor.thePartsA[chan] = clrChanT(cVal);
+        theColor.thePartsA[chan] = static_cast<clrChanT>(cVal);
       else
-        theColor.thePartsA[chan] = clrChanT(maxChanVal * cVal / 255.0);
+        theColor.thePartsA[chan] = static_cast<clrChanT>(maxChanVal * cVal / 255.0);
     }
     return *this;
   }
@@ -1738,9 +1741,9 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setRed8bit(uint8_t r) {
     if(channelType8bitInt)
-      theColor.theParts.red = clrChanT(r);
+      theColor.theParts.red = static_cast<clrChanT>(r);
     else
-      theColor.theParts.red = clrChanT(maxChanVal * r / 255.0);
+      theColor.theParts.red = static_cast<clrChanT>(maxChanVal * r / 255.0);
     return *this;
   }
 
@@ -1749,9 +1752,9 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setBlue8bit(uint8_t b) {
     if(channelType8bitInt)
-      theColor.theParts.blue = clrChanT(b);
+      theColor.theParts.blue = static_cast<clrChanT>(b);
     else
-      theColor.theParts.blue = clrChanT(maxChanVal * b / 255.0);
+      theColor.theParts.blue = static_cast<clrChanT>(maxChanVal * b / 255.0);
     return *this;
   }
 
@@ -1760,9 +1763,9 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setGreen8bit(uint8_t g) {
     if(channelType8bitInt)
-      theColor.theParts.green = clrChanT(g);
+      theColor.theParts.green = static_cast<clrChanT>(g);
     else
-      theColor.theParts.green = clrChanT(maxChanVal * g / 255.0);
+      theColor.theParts.green = static_cast<clrChanT>(maxChanVal * g / 255.0);
     return *this;
   }
 
@@ -1771,9 +1774,9 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setAlpha8bit(uint8_t a) {
     if(channelType8bitInt)
-      theColor.theParts.alpha = clrChanT(a);
+      theColor.theParts.alpha = static_cast<clrChanT>(a);
     else
-      theColor.theParts.alpha = clrChanT(maxChanVal * a / 255.0);
+      theColor.theParts.alpha = static_cast<clrChanT>(maxChanVal * a / 255.0);
     return *this;
   }
 
@@ -1783,9 +1786,9 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setAll8bit(uint8_t aComp) {
     clrChanT convertedValue;
     if(channelType8bitInt)
-      convertedValue = clrChanT(aComp);
+      convertedValue = static_cast<clrChanT>(aComp);
     else
-      convertedValue = clrChanT(maxChanVal * aComp / 255.0);
+      convertedValue = static_cast<clrChanT>(maxChanVal * aComp / 255.0);
     theColor.theParts.red     = convertedValue;
     if(numChan > 1)
       theColor.theParts.green = convertedValue;
@@ -2023,16 +2026,16 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmGmeanClp(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
-    theColor.theParts.red     = clipTop(sqrt((clrChanIArthT)theColor.theParts.red   * color.theColor.theParts.red));
+    theColor.theParts.red     = clipTop(static_cast<clrChanIArthT>(std::sqrt(theColor.theParts.red   * color.theColor.theParts.red)));
     if(numChan > 1)
-      theColor.theParts.green = clipTop(sqrt((clrChanIArthT)theColor.theParts.green * color.theColor.theParts.green));
+      theColor.theParts.green = clipTop(static_cast<clrChanIArthT>(std::sqrt(theColor.theParts.green * color.theColor.theParts.green)));
     if(numChan > 2)
-      theColor.theParts.blue  = clipTop(sqrt((clrChanIArthT)theColor.theParts.blue  * color.theColor.theParts.blue));
+      theColor.theParts.blue  = clipTop(static_cast<clrChanIArthT>(std::sqrt(theColor.theParts.blue  * color.theColor.theParts.blue)));
     if(numChan > 3)
-      theColor.theParts.alpha = clipTop(sqrt((clrChanIArthT)theColor.theParts.alpha * color.theColor.theParts.alpha));
+      theColor.theParts.alpha = clipTop(static_cast<clrChanIArthT>(std::sqrt(theColor.theParts.alpha * color.theColor.theParts.alpha)));
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i] = clipTop(sqrt((clrChanIArthT)theColor.thePartsA[i]   * color.theColor.thePartsA[i]));
+        theColor.thePartsA[i] = clipTop(static_cast<clrChanIArthT>(std::sqrt(theColor.thePartsA[i]   * color.theColor.thePartsA[i])));
     return *this;
   }
 
@@ -2109,16 +2112,16 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmAbsDiff(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
-    theColor.theParts.red     = abs(theColor.theParts.red   - color.theColor.theParts.red);
+    theColor.theParts.red     = static_cast<clrChanT>(std::abs(theColor.theParts.red   - color.theColor.theParts.red));
     if(numChan > 1)
-      theColor.theParts.green = abs(theColor.theParts.green - color.theColor.theParts.green);
+      theColor.theParts.green = static_cast<clrChanT>(std::abs(theColor.theParts.green - color.theColor.theParts.green));
     if(numChan > 2)
-      theColor.theParts.blue  = abs(theColor.theParts.blue  - color.theColor.theParts.blue);
+      theColor.theParts.blue  = static_cast<clrChanT>(std::abs(theColor.theParts.blue  - color.theColor.theParts.blue));
     if(numChan > 3)
-      theColor.theParts.alpha = abs(theColor.theParts.alpha - color.theColor.theParts.alpha);
+      theColor.theParts.alpha = static_cast<clrChanT>(std::abs(theColor.theParts.alpha - color.theColor.theParts.alpha));
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i] = abs(theColor.thePartsA[i]   - color.theColor.thePartsA[i]);
+        theColor.thePartsA[i] = static_cast<clrChanT>(std::abs(theColor.thePartsA[i]   - color.theColor.thePartsA[i]));
     return *this;
   }
 
@@ -2126,21 +2129,16 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmSqDiff(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
-    theColor.theParts.red     = (theColor.theParts.red   - color.theColor.theParts.red) *
-      (theColor.theParts.red   - color.theColor.theParts.red);
+    theColor.theParts.red     = static_cast<clrChanT>((theColor.theParts.red   - color.theColor.theParts.red)   * (theColor.theParts.red   - color.theColor.theParts.red));
     if(numChan > 1)
-      theColor.theParts.green = (theColor.theParts.green - color.theColor.theParts.green) *
-        (theColor.theParts.green - color.theColor.theParts.green);
+      theColor.theParts.green = static_cast<clrChanT>((theColor.theParts.green - color.theColor.theParts.green) * (theColor.theParts.green - color.theColor.theParts.green));
     if(numChan > 2)
-      theColor.theParts.blue  = (theColor.theParts.blue  - color.theColor.theParts.blue) *
-        (theColor.theParts.blue  - color.theColor.theParts.blue);
+      theColor.theParts.blue  = static_cast<clrChanT>((theColor.theParts.blue  - color.theColor.theParts.blue)  * (theColor.theParts.blue  - color.theColor.theParts.blue));
     if(numChan > 3)
-      theColor.theParts.alpha = (theColor.theParts.alpha - color.theColor.theParts.alpha) *
-        (theColor.theParts.alpha - color.theColor.theParts.alpha);
+      theColor.theParts.alpha = static_cast<clrChanT>((theColor.theParts.alpha - color.theColor.theParts.alpha) * (theColor.theParts.alpha - color.theColor.theParts.alpha));
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i] = (theColor.thePartsA[i]   - color.theColor.thePartsA[i]) *
-          (theColor.thePartsA[i]   - color.theColor.thePartsA[i]);
+        theColor.thePartsA[i] = static_cast<clrChanT>((theColor.thePartsA[i]   - color.theColor.thePartsA[i])   * (theColor.thePartsA[i]   - color.theColor.thePartsA[i]));
     return *this;
   }
 
@@ -2193,16 +2191,16 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmAdd(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
 
-    theColor.theParts.red     = (theColor.theParts.red   + color.theColor.theParts.red);
+    theColor.theParts.red     = static_cast<clrChanT>(theColor.theParts.red   + color.theColor.theParts.red);
     if(numChan > 1)
-      theColor.theParts.green = (theColor.theParts.green + color.theColor.theParts.green);
+      theColor.theParts.green = static_cast<clrChanT>(theColor.theParts.green + color.theColor.theParts.green);
     if(numChan > 2)
-      theColor.theParts.blue  = (theColor.theParts.blue  + color.theColor.theParts.blue);
+      theColor.theParts.blue  = static_cast<clrChanT>(theColor.theParts.blue  + color.theColor.theParts.blue);
     if(numChan > 3)
-      theColor.theParts.alpha = (theColor.theParts.alpha + color.theColor.theParts.alpha);
+      theColor.theParts.alpha = static_cast<clrChanT>(theColor.theParts.alpha + color.theColor.theParts.alpha);
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i] = (theColor.thePartsA[i]   + color.theColor.thePartsA[i]);
+        theColor.thePartsA[i] = static_cast<clrChanT>(theColor.thePartsA[i]   + color.theColor.thePartsA[i]);
     return *this;
   }
 
@@ -2210,16 +2208,16 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmDiv(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
-    theColor.theParts.red     = (theColor.theParts.red   / color.theColor.theParts.red);
+    theColor.theParts.red     = static_cast<clrChanT>(theColor.theParts.red   / color.theColor.theParts.red);
     if(numChan > 1)
-      theColor.theParts.green = (theColor.theParts.green / color.theColor.theParts.green);
+      theColor.theParts.green = static_cast<clrChanT>(theColor.theParts.green / color.theColor.theParts.green);
     if(numChan > 2)
-      theColor.theParts.blue  = (theColor.theParts.blue  / color.theColor.theParts.blue);
+      theColor.theParts.blue  = static_cast<clrChanT>(theColor.theParts.blue  / color.theColor.theParts.blue);
     if(numChan > 3)
-      theColor.theParts.alpha = (theColor.theParts.alpha / color.theColor.theParts.alpha);
+      theColor.theParts.alpha = static_cast<clrChanT>(theColor.theParts.alpha / color.theColor.theParts.alpha);
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i] = (theColor.thePartsA[i]   / color.theColor.thePartsA[i]);
+        theColor.thePartsA[i] = static_cast<clrChanT>(theColor.thePartsA[i]   / color.theColor.thePartsA[i]);
     return *this;
   }
 
@@ -2227,16 +2225,16 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmMult(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
-    theColor.theParts.red   = (theColor.theParts.red   * color.theColor.theParts.red);
+    theColor.theParts.red     = static_cast<clrChanT>(theColor.theParts.red   * color.theColor.theParts.red);
     if(numChan > 1)
-      theColor.theParts.green = (theColor.theParts.green  * color.theColor.theParts.green);
+      theColor.theParts.green = static_cast<clrChanT>(theColor.theParts.green  * color.theColor.theParts.green);
     if(numChan > 2)
-      theColor.theParts.blue  = (theColor.theParts.blue   * color.theColor.theParts.blue);
+      theColor.theParts.blue  = static_cast<clrChanT>(theColor.theParts.blue   * color.theColor.theParts.blue);
     if(numChan > 3)
-      theColor.theParts.alpha  = (theColor.theParts.alpha * color.theColor.theParts.alpha);
+      theColor.theParts.alpha  = static_cast<clrChanT>(theColor.theParts.alpha * color.theColor.theParts.alpha);
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i]  = (theColor.thePartsA[i]   * color.theColor.thePartsA[i]);
+        theColor.thePartsA[i]  = static_cast<clrChanT>(theColor.thePartsA[i]   * color.theColor.thePartsA[i]);
     return *this;
   }
 
@@ -2244,16 +2242,16 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmGmean(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
-    theColor.theParts.red     = sqrt((clrChanIArthT)theColor.theParts.red   * color.theColor.theParts.red);
+    theColor.theParts.red     = static_cast<clrChanT>(std::sqrt(theColor.theParts.red   * color.theColor.theParts.red));
     if(numChan > 1)
-      theColor.theParts.green = sqrt((clrChanIArthT)theColor.theParts.green * color.theColor.theParts.green);
+      theColor.theParts.green = static_cast<clrChanT>(std::sqrt(theColor.theParts.green * color.theColor.theParts.green));
     if(numChan > 2)
-      theColor.theParts.blue  = sqrt((clrChanIArthT)theColor.theParts.blue  * color.theColor.theParts.blue);
+      theColor.theParts.blue  = static_cast<clrChanT>(std::sqrt(theColor.theParts.blue  * color.theColor.theParts.blue));
     if(numChan > 3)
-      theColor.theParts.alpha = sqrt((clrChanIArthT)theColor.theParts.alpha * color.theColor.theParts.alpha);
+      theColor.theParts.alpha = static_cast<clrChanT>(std::sqrt(theColor.theParts.alpha * color.theColor.theParts.alpha));
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i] = sqrt((clrChanIArthT)theColor.thePartsA[i]   * color.theColor.thePartsA[i]);
+        theColor.thePartsA[i] = static_cast<clrChanT>(std::sqrt(theColor.thePartsA[i]   * color.theColor.thePartsA[i]));
     return *this;
   }
 
@@ -2262,16 +2260,16 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmMean(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
     // Note the 2's will convert everything to integers so we get a good mean.
-    theColor.theParts.red     = (theColor.theParts.red   + color.theColor.theParts.red)   /2;
+    theColor.theParts.red     = static_cast<clrChanT>((theColor.theParts.red   + color.theColor.theParts.red)   / 2);
     if(numChan > 1)
-      theColor.theParts.green = (theColor.theParts.green + color.theColor.theParts.green) /2;
+      theColor.theParts.green = static_cast<clrChanT>((theColor.theParts.green + color.theColor.theParts.green) / 2);
     if(numChan > 2)
-      theColor.theParts.blue  = (theColor.theParts.blue  + color.theColor.theParts.blue)  /2;
+      theColor.theParts.blue  = static_cast<clrChanT>((theColor.theParts.blue  + color.theColor.theParts.blue)  / 2);
     if(numChan > 3)
-      theColor.theParts.alpha = (theColor.theParts.alpha + color.theColor.theParts.alpha) /2;
+      theColor.theParts.alpha = static_cast<clrChanT>((theColor.theParts.alpha + color.theColor.theParts.alpha) / 2);
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i] = (theColor.thePartsA[i]   + color.theColor.thePartsA[i])   /2;
+        theColor.thePartsA[i] = static_cast<clrChanT>((theColor.thePartsA[i]   + color.theColor.thePartsA[i])   / 2);
     return *this;
   }
 
@@ -2279,16 +2277,16 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmDiff(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
-    theColor.theParts.red     = (theColor.theParts.red   - color.theColor.theParts.red);
+    theColor.theParts.red     = static_cast<clrChanT>(theColor.theParts.red   - color.theColor.theParts.red);
     if(numChan > 1)
-      theColor.theParts.green = (theColor.theParts.green - color.theColor.theParts.green);
+      theColor.theParts.green = static_cast<clrChanT>(theColor.theParts.green - color.theColor.theParts.green);
     if(numChan > 2)
-      theColor.theParts.blue  = (theColor.theParts.blue  - color.theColor.theParts.blue);
+      theColor.theParts.blue  = static_cast<clrChanT>(theColor.theParts.blue  - color.theColor.theParts.blue);
     if(numChan > 3)
-      theColor.theParts.alpha = (theColor.theParts.alpha - color.theColor.theParts.alpha);
+      theColor.theParts.alpha = static_cast<clrChanT>(theColor.theParts.alpha - color.theColor.theParts.alpha);
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i] = (theColor.thePartsA[i]   - color.theColor.thePartsA[i]);
+        theColor.thePartsA[i] = static_cast<clrChanT>(theColor.thePartsA[i]   - color.theColor.thePartsA[i]);
     return *this;
   }
 
@@ -2296,16 +2294,16 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmMod(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
-    theColor.theParts.red     = (theColor.theParts.red   % color.theColor.theParts.red);
+    theColor.theParts.red     = static_cast<clrChanT>(theColor.theParts.red   % color.theColor.theParts.red);
     if(numChan > 1)
-      theColor.theParts.green = (theColor.theParts.green % color.theColor.theParts.green);
+      theColor.theParts.green = static_cast<clrChanT>(theColor.theParts.green % color.theColor.theParts.green);
     if(numChan > 1)
-      theColor.theParts.blue  = (theColor.theParts.blue  % color.theColor.theParts.blue);
+      theColor.theParts.blue  = static_cast<clrChanT>(theColor.theParts.blue  % color.theColor.theParts.blue);
     if(numChan > 1)
-      theColor.theParts.alpha = (theColor.theParts.alpha % color.theColor.theParts.alpha);
+      theColor.theParts.alpha = static_cast<clrChanT>(theColor.theParts.alpha % color.theColor.theParts.alpha);
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i] = (theColor.thePartsA[i]   % color.theColor.thePartsA[i]);
+        theColor.thePartsA[i] = static_cast<clrChanT>(theColor.thePartsA[i]   % color.theColor.thePartsA[i]);
     return *this;
   }
 
@@ -2415,11 +2413,11 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorRGB(clrChanT r, clrChanT g, clrChanT b) {
-    theColor.theParts.red = r;
+    theColor.theParts.red     = r;
     if(numChan > 1)
       theColor.theParts.green = g;
     if(numChan > 2)
-      theColor.theParts.blue = b;
+      theColor.theParts.blue  = b;
     if(numChan > 3)
       theColor.theParts.alpha = minChanVal;
     if(numChan > 4)
@@ -2432,11 +2430,11 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorRGBA(clrChanT r, clrChanT g, clrChanT b, clrChanT a) {
-    theColor.theParts.red = r;
+    theColor.theParts.red     = r;
     if(numChan > 1)
       theColor.theParts.green = g;
     if(numChan > 2)
-      theColor.theParts.blue = b;
+      theColor.theParts.blue  = b;
     if(numChan > 3)
       theColor.theParts.alpha = a;
     if(numChan > 4)
@@ -2505,7 +2503,7 @@ namespace mjr {
         for(int i=0; i<std::min(numChan, numChanGiven); i++) {
           curHexStr[0] = colorString[1+2*i];
           curHexStr[1] = colorString[1+2*i+1];
-          curCmp = clrChanT(strtol(curHexStr, NULL, 16));
+          curCmp = static_cast<clrChanT>(strtol(curHexStr, NULL, 16));
           setChan(i, curCmp);
         }
       }
@@ -2522,15 +2520,15 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFrom8bit(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
     clrChanT convertedValueR, convertedValueG, convertedValueB, convertedValueA;
     if(channelType8bitInt) {
-      convertedValueR = clrChanT(r);
-      convertedValueG = clrChanT(g);
-      convertedValueB = clrChanT(b);
-      convertedValueA = clrChanT(a);
+      convertedValueR = static_cast<clrChanT>(r);
+      convertedValueG = static_cast<clrChanT>(g);
+      convertedValueB = static_cast<clrChanT>(b);
+      convertedValueA = static_cast<clrChanT>(a);
     } else {
-      convertedValueR = clrChanT(maxChanVal * r / 255.0);
-      convertedValueG = clrChanT(maxChanVal * g / 255.0);
-      convertedValueB = clrChanT(maxChanVal * b / 255.0);
-      convertedValueA = clrChanT(maxChanVal * a / 255.0);
+      convertedValueR = static_cast<clrChanT>(maxChanVal * r / 255.0);
+      convertedValueG = static_cast<clrChanT>(maxChanVal * g / 255.0);
+      convertedValueB = static_cast<clrChanT>(maxChanVal * b / 255.0);
+      convertedValueA = static_cast<clrChanT>(maxChanVal * a / 255.0);
     }
     setColorRGBA(convertedValueR, convertedValueG, convertedValueB, convertedValueA);
     return *this;
@@ -2542,13 +2540,13 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFrom8bit(uint8_t r, uint8_t g, uint8_t b) {
     clrChanT convertedValueR, convertedValueG, convertedValueB;
     if(channelType8bitInt) {
-      convertedValueR = clrChanT(r);
-      convertedValueG = clrChanT(g);
-      convertedValueB = clrChanT(b);
+      convertedValueR = static_cast<clrChanT>(r);
+      convertedValueG = static_cast<clrChanT>(g);
+      convertedValueB = static_cast<clrChanT>(b);
     } else {
-      convertedValueR = clrChanT(maxChanVal * r / 255.0);
-      convertedValueG = clrChanT(maxChanVal * g / 255.0);
-      convertedValueB = clrChanT(maxChanVal * b / 255.0);
+      convertedValueR = static_cast<clrChanT>(maxChanVal * r / 255.0);
+      convertedValueG = static_cast<clrChanT>(maxChanVal * g / 255.0);
+      convertedValueB = static_cast<clrChanT>(maxChanVal * b / 255.0);
     }
     setColorRGB(convertedValueR, convertedValueG, convertedValueB);
     return *this;
@@ -2558,7 +2556,7 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromF(clrChanFArthT r, clrChanFArthT g, clrChanFArthT b, clrChanFArthT a) {
-    setColorRGBA(clrChanT(r*maxChanVal), clrChanT(g*maxChanVal), clrChanT(b*maxChanVal), clrChanT(a*maxChanVal));
+    setColorRGBA(static_cast<clrChanT>(r*maxChanVal), static_cast<clrChanT>(g*maxChanVal), static_cast<clrChanT>(b*maxChanVal), static_cast<clrChanT>(a*maxChanVal));
     return *this;
   }
 
@@ -2566,7 +2564,7 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromF(clrChanFArthT r, clrChanFArthT g, clrChanFArthT b) {
-    setColorRGB(clrChanT(r*maxChanVal), clrChanT(g*maxChanVal), clrChanT(b*maxChanVal));
+    setColorRGB(static_cast<clrChanT>(r*maxChanVal), static_cast<clrChanT>(g*maxChanVal), static_cast<clrChanT>(b*maxChanVal));
     return *this;
   }
 
@@ -2611,16 +2609,16 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmLinearGreyLevelScale(float c, float b) {
-    theColor.theParts.red     = clrChanT(c * theColor.theParts.red   + b);
+    theColor.theParts.red     = static_cast<clrChanT>(c * theColor.theParts.red   + b);
     if(numChan > 1)
-      theColor.theParts.green = clrChanT(c * theColor.theParts.green + b);
+      theColor.theParts.green = static_cast<clrChanT>(c * theColor.theParts.green + b);
     if(numChan > 2)
-      theColor.theParts.blue  = clrChanT(c * theColor.theParts.blue  + b);
+      theColor.theParts.blue  = static_cast<clrChanT>(c * theColor.theParts.blue  + b);
     if(numChan > 3)
-      theColor.theParts.alpha = clrChanT(c * theColor.theParts.alpha + b);
+      theColor.theParts.alpha = static_cast<clrChanT>(c * theColor.theParts.alpha + b);
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i] = clrChanT(c * theColor.thePartsA[i] + b);
+        theColor.thePartsA[i] = static_cast<clrChanT>(c * theColor.thePartsA[i] + b);
     return *this;
   }
 
@@ -2633,27 +2631,27 @@ namespace mjr {
                                                                                                           colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> to2) {
     float c = 1.0*(to1.getRed()-to2.getRed())/(from1.getRed()-from2.getRed());
     float b = to1.getRed() - 1.0*c*from1.getRed();
-    theColor.theParts.red     = clrChanT(c * theColor.theParts.red   + b);
+    theColor.theParts.red     = static_cast<clrChanT>(c * theColor.theParts.red   + b);
     if(numChan > 1) {
       float c = 1.0*(to1.getGreen()-to2.getGreen())/(from1.getGreen()-from2.getGreen());
       float b = to1.getGreen() - 1.0*c*from1.getGreen();
-      theColor.theParts.green = clrChanT(c * theColor.theParts.green + b);
+      theColor.theParts.green = static_cast<clrChanT>(c * theColor.theParts.green + b);
     }
     if(numChan > 2) {
       float c = 1.0*(to1.getBlue()-to2.getBlue())/(from1.getBlue()-from2.getBlue());
       float b = to1.getBlue() - 1.0*c*from1.getBlue();
-      theColor.theParts.blue  = clrChanT(c * theColor.theParts.blue  + b);
+      theColor.theParts.blue  = static_cast<clrChanT>(c * theColor.theParts.blue  + b);
     }
     if(numChan > 3) {
       float c = 1.0*(to1.getAlpha()-to2.getAlpha())/(from1.getAlpha()-from2.getAlpha());
       float b = to1.getAlpha() - 1.0*c*from1.getAlpha();
-      theColor.theParts.alpha = clrChanT(c * theColor.theParts.alpha + b);
+      theColor.theParts.alpha = static_cast<clrChanT>(c * theColor.theParts.alpha + b);
     }
     if(numChan > 4)
       for(int i=4; i<numChan; i++) {
         float c = 1.0*(to1.getChan(i)-to2.getChan(i))/(from1.getChan(i)-from2.getChan(i));
         float b = to1.getChan(i) - 1.0*c*from1.getChan(i);
-        theColor.thePartsA[i] = clrChanT(c * theColor.thePartsA[i] + b);
+        theColor.thePartsA[i] = static_cast<clrChanT>(c * theColor.thePartsA[i] + b);
       }
     return *this;
   }
@@ -2662,13 +2660,13 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmLinearGreyLevelScale(float rc, float rb, float gc, float gb, float bc, float bb) {
-    theColor.theParts.red     = clrChanT(rc * theColor.theParts.red   + rb);
+    theColor.theParts.red     = static_cast<clrChanT>(rc * theColor.theParts.red   + rb);
     if(numChan > 1)
-      theColor.theParts.green = clrChanT(gc * theColor.theParts.green + gb);
+      theColor.theParts.green = static_cast<clrChanT>(gc * theColor.theParts.green + gb);
     if(numChan > 2)
-      theColor.theParts.blue  = clrChanT(bc * theColor.theParts.blue  + bb);
+      theColor.theParts.blue  = static_cast<clrChanT>(bc * theColor.theParts.blue  + bb);
     if(numChan > 3)
-      theColor.theParts.alpha = clrChanT(bc * theColor.theParts.alpha + bb);
+      theColor.theParts.alpha = static_cast<clrChanT>(bc * theColor.theParts.alpha + bb);
     return *this;
   }
 
@@ -2679,16 +2677,16 @@ namespace mjr {
     double theGreyLevel = theColor.theParts.red   * 0.2126 +
       theColor.theParts.green * 0.7152 +
       theColor.theParts.blue  * 0.0722;
-    theColor.theParts.red     = clrChanT(theGreyLevel);
+    theColor.theParts.red     = static_cast<clrChanT>(theGreyLevel);
     if(numChan > 1)
-      theColor.theParts.green = clrChanT(theGreyLevel);
+      theColor.theParts.green = static_cast<clrChanT>(theGreyLevel);
     if(numChan > 2)
-      theColor.theParts.blue  = clrChanT(theGreyLevel);
+      theColor.theParts.blue  = static_cast<clrChanT>(theGreyLevel);
     if(numChan > 3)
-      theColor.theParts.alpha = clrChanT(theGreyLevel);
+      theColor.theParts.alpha = static_cast<clrChanT>(theGreyLevel);
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i] = clrChanT(theGreyLevel);
+        theColor.thePartsA[i] = static_cast<clrChanT>(theGreyLevel);
     return *this;
   }
 
@@ -2730,16 +2728,16 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmStdPowSqrt(void) {
-    theColor.theParts.red     = (clrChanT)(sqrt(theColor.theParts.red/(double)maxChanVal)   * maxChanVal);
+    theColor.theParts.red     = (clrChanT)(std::sqrt(theColor.theParts.red/(double)maxChanVal)   * maxChanVal);
     if(numChan > 1)
-      theColor.theParts.green = (clrChanT)(sqrt(theColor.theParts.green/(double)maxChanVal) * maxChanVal);
+      theColor.theParts.green = (clrChanT)(std::sqrt(theColor.theParts.green/(double)maxChanVal) * maxChanVal);
     if(numChan > 2)
-      theColor.theParts.blue  = (clrChanT)(sqrt(theColor.theParts.blue/(double)maxChanVal)  * maxChanVal);
+      theColor.theParts.blue  = (clrChanT)(std::sqrt(theColor.theParts.blue/(double)maxChanVal)  * maxChanVal);
     if(numChan > 3)
-      theColor.theParts.alpha = (clrChanT)(sqrt(theColor.theParts.alpha/(double)maxChanVal) * maxChanVal);
+      theColor.theParts.alpha = (clrChanT)(std::sqrt(theColor.theParts.alpha/(double)maxChanVal) * maxChanVal);
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i] = (clrChanT)(sqrt(theColor.thePartsA[i]/(double)maxChanVal)   * maxChanVal);
+        theColor.thePartsA[i] = (clrChanT)(std::sqrt(theColor.thePartsA[i]/(double)maxChanVal)   * maxChanVal);
     return *this;
   }
 
@@ -2898,16 +2896,16 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmFuzzyDirac(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> ctrCol,
                                                                                                 colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> radCol) {
-    theColor.theParts.red     = ((abs(ctrCol.theColor.theParts.red   - theColor.theParts.red)   <= radCol.theColor.theParts.red  )?maxChanVal:0);
+    theColor.theParts.red     = ((std::abs(ctrCol.theColor.theParts.red   - theColor.theParts.red)   <= radCol.theColor.theParts.red  )?maxChanVal:0);
     if(numChan > 1)
-      theColor.theParts.green = ((abs(ctrCol.theColor.theParts.green - theColor.theParts.green)  <= radCol.theColor.theParts.green)?maxChanVal:0);
+      theColor.theParts.green = ((std::abs(ctrCol.theColor.theParts.green - theColor.theParts.green)  <= radCol.theColor.theParts.green)?maxChanVal:0);
     if(numChan > 2)
-      theColor.theParts.blue  = ((abs(ctrCol.theColor.theParts.blue  - theColor.theParts.blue)   <= radCol.theColor.theParts.blue )?maxChanVal:0);
+      theColor.theParts.blue  = ((std::abs(ctrCol.theColor.theParts.blue  - theColor.theParts.blue)   <= radCol.theColor.theParts.blue )?maxChanVal:0);
     if(numChan > 3)
-      theColor.theParts.alpha = ((abs(ctrCol.theColor.theParts.alpha  - theColor.theParts.alpha) <= radCol.theColor.theParts.alpha )?maxChanVal:0);
+      theColor.theParts.alpha = ((std::abs(ctrCol.theColor.theParts.alpha  - theColor.theParts.alpha) <= radCol.theColor.theParts.alpha )?maxChanVal:0);
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i] = ((abs(ctrCol.theColor.thePartsA[i]  - theColor.thePartsA[i]) <= radCol.theColor.thePartsA[i] )?maxChanVal:0);
+        theColor.thePartsA[i] = ((std::abs(ctrCol.theColor.thePartsA[i]  - theColor.thePartsA[i]) <= radCol.theColor.thePartsA[i] )?maxChanVal:0);
     return *this;
   }
 
@@ -3029,8 +3027,8 @@ namespace mjr {
     if( (anInt < 0) || (anInt > 65536) ) {
       SET_ERR_COLOR;
     } else {
-      setGreen8bit(anInt         & 0xff);
-      setRed8bit( (anInt >> 8)  & 0xff);
+      setGreen8bit(static_cast<clrChanT>( anInt        & 0xff));
+      setRed8bit(  static_cast<clrChanT>((anInt >> 8)  & 0xff));
     }
     return *this;
   }
@@ -3058,7 +3056,7 @@ namespace mjr {
     if( (anInt < minChanVal) || (anInt > base) )
       SET_ERR_COLOR;
     else 
-      setColorFromUnitHSV(1.0*anInt/base, 1.0, 1.0);
+      setColorFromUnitHSV(1.0F * static_cast<float>(anInt) / static_cast<float>(base), 1.0, 1.0);
     return *this;
   }
 
@@ -3070,7 +3068,7 @@ namespace mjr {
     if( (anInt < minChanVal) || (anInt > base) ) 
       SET_ERR_COLOR;
     else 
-      setColorFromWavelengthLA((1.0*anInt/base)*(maxWavelength-minWavelength)+minWavelength);
+      setColorFromWavelengthLA((1.0F * static_cast<float>(anInt) / static_cast<float>(base)) * (maxWavelength-minWavelength)+minWavelength);
     return *this;
   }
 
@@ -3094,7 +3092,7 @@ namespace mjr {
     if( (anInt < minChanVal) || (anInt > base) ) 
       SET_ERR_COLOR;
     else 
-      setColorFromWavelengthCM((1.0*anInt/base)*(maxWavelength-minWavelength)+minWavelength, INTRP);
+      setColorFromWavelengthCM((1.0F * static_cast<float>(anInt) / static_cast<float>(base))*(maxWavelength-minWavelength)+minWavelength, INTRP);
     return *this;
   }
 
@@ -3107,70 +3105,82 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRampGrey2R(int anInt) {
-    if( (anInt < 0) || (anInt > meanChanVal) ) 
-      SET_ERR_COLOR;
-    else 
-      setColorRGB(meanChanVal+anInt, meanChanVal-anInt, meanChanVal-anInt);
-    return *this;
+template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
+colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRampGrey2R(int anInt) {
+  if( (anInt < 0) || (anInt > meanChanVal) ) {
+    SET_ERR_COLOR;
+  } else {
+    clrChanT anIntNoMore = static_cast<clrChanT>(anInt);
+    setColorRGB(meanChanVal+anIntNoMore, meanChanVal-anIntNoMore, meanChanVal-anIntNoMore);
   }
+  return *this;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRampGrey2G(int anInt) {
-    if( (anInt < 0) || (anInt > meanChanVal) ) 
-      SET_ERR_COLOR;
-    else 
-      setColorRGB(meanChanVal-anInt, meanChanVal+anInt, meanChanVal-anInt);
-    return *this;
+template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
+colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRampGrey2G(int anInt) {
+  if( (anInt < 0) || (anInt > meanChanVal) ) {
+    SET_ERR_COLOR;
+  } else {
+    clrChanT anIntNoMore = static_cast<clrChanT>(anInt);
+    setColorRGB(meanChanVal-anIntNoMore, meanChanVal+anIntNoMore, meanChanVal-anIntNoMore);
   }
+  return *this;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRampGrey2B(int anInt) {
-    if( (anInt < 0) || (anInt > meanChanVal) ) 
-      SET_ERR_COLOR;
-    else 
-      setColorRGB(meanChanVal-anInt, meanChanVal-anInt, meanChanVal+anInt);
-    return *this;
+template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
+colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRampGrey2B(int anInt) {
+  if( (anInt < 0) || (anInt > meanChanVal) ) {
+    SET_ERR_COLOR;
+  } else {
+    clrChanT anIntNoMore = static_cast<clrChanT>(anInt);
+    setColorRGB(meanChanVal-anIntNoMore, meanChanVal-anIntNoMore, meanChanVal+anIntNoMore);
   }
+  return *this;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRampGrey2Y(int anInt) {
-    if( (anInt < 0) || (anInt > meanChanVal) ) 
-      SET_ERR_COLOR;
-    else 
-      setColorRGB(meanChanVal+anInt, meanChanVal+anInt, meanChanVal-anInt);
-    return *this;
+template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
+colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRampGrey2Y(int anInt) {
+  if( (anInt < 0) || (anInt > meanChanVal) ) {
+    SET_ERR_COLOR;
+  } else {
+    clrChanT anIntNoMore = static_cast<clrChanT>(anInt);
+    setColorRGB(meanChanVal+anIntNoMore, meanChanVal+anIntNoMore, meanChanVal-anIntNoMore);
   }
+  return *this;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRampGrey2C(int anInt) {
-    if( (anInt < 0) || (anInt > meanChanVal) ) 
-      SET_ERR_COLOR;
-    else 
-      setColorRGB(meanChanVal-anInt, meanChanVal+anInt, meanChanVal+anInt);
-    return *this;
+template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
+colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRampGrey2C(int anInt) {
+  if( (anInt < 0) || (anInt > meanChanVal) ) {
+    SET_ERR_COLOR;
+  } else {
+    clrChanT anIntNoMore = static_cast<clrChanT>(anInt);
+    setColorRGB(meanChanVal-anIntNoMore, meanChanVal+anIntNoMore, meanChanVal+anIntNoMore);
   }
+  return *this;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRampGrey2M(int anInt) {
-    if( (anInt < 0) || (anInt > meanChanVal) )
-      SET_ERR_COLOR;
-    else 
-      setColorRGB(meanChanVal+anInt, meanChanVal-anInt, meanChanVal+anInt);
-    return *this;
+template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
+colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRampGrey2M(int anInt) {
+  if( (anInt < 0) || (anInt > meanChanVal) ) {
+    SET_ERR_COLOR;
+  } else {
+    clrChanT anIntNoMore = static_cast<clrChanT>(anInt);
+    setColorRGB(meanChanVal+anIntNoMore, meanChanVal-anIntNoMore, meanChanVal+anIntNoMore);
   }
+  return *this;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
@@ -3180,7 +3190,7 @@ namespace mjr {
       SET_ERR_COLOR;
     else
       for(int i=0; i<numChan; i++)
-        theColor.thePartsA[i]  = clrChanT(anInt);
+        theColor.thePartsA[i]  = static_cast<clrChanT>(anInt);
     return *this;
   }
 
@@ -3237,9 +3247,9 @@ namespace mjr {
     if( (anInt < minChanVal) || (anInt > (3*maxChanVal)) ) {
       SET_ERR_COLOR;
     } else {
-      setColorRGB(clrChanT(anInt / 3 + (anInt%3==0?1:0)),
-                  clrChanT(anInt / 3 + (anInt%3==1?1:0)),
-                  clrChanT(anInt / 3 + (anInt%3==2?1:0)));
+      setColorRGB(static_cast<clrChanT>(anInt / 3 + (anInt%3==0?1:0)),
+                  static_cast<clrChanT>(anInt / 3 + (anInt%3==1?1:0)),
+                  static_cast<clrChanT>(anInt / 3 + (anInt%3==2?1:0)));
     }
     return *this;
   }
@@ -3251,9 +3261,9 @@ namespace mjr {
     if( (anInt < minChanVal) || (anInt > (4*maxChanVal)) ) {
       SET_ERR_COLOR;
     } else {
-      setColorRGB(clrChanT(anInt / 4 + ((anInt+1)%4==0?1:0)),
-                  clrChanT(anInt / 4 + ((anInt+2)%4==0?1:0)),
-                  clrChanT(anInt / 4 + ((anInt+3)%4==0?1:0)));
+      setColorRGB(static_cast<clrChanT>(anInt / 4 + ((anInt+1)%4==0?1:0)),
+                  static_cast<clrChanT>(anInt / 4 + ((anInt+2)%4==0?1:0)),
+                  static_cast<clrChanT>(anInt / 4 + ((anInt+3)%4==0?1:0)));
     }
     return *this;
   }
@@ -3278,8 +3288,8 @@ namespace mjr {
     } else {
       for(int i=0; i<(numColors-1); i++) {
         if(anchors == NULL) {
-          lowAnchor  = double(i)/(numColors-1);
-          highAnchor = double(i+1)/(numColors-1);
+          lowAnchor  = static_cast<double>(i)/(numColors-1);
+          highAnchor = static_cast<double>(i+1)/(numColors-1);
         } else {
           lowAnchor  = anchors[i];
           highAnchor = anchors[i+1];
@@ -3315,6 +3325,7 @@ namespace mjr {
       } else {
         for(int i=0; i<(numColors-1); i++) {
           if(anInt <= maxChanVal) {
+            clrChanT anIntNoMore = static_cast<clrChanT>(anInt);
             // Note: This could be MUCH better optimized!
             colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> c1;
             colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> c2;
@@ -3322,28 +3333,29 @@ namespace mjr {
             c2.setColorFromLetter(colChars[i+1]);
             clrChanT r, g, b;
             if(c1.getRed() > c2.getRed()) {
-              r = maxChanVal - anInt;
+              r = maxChanVal - anIntNoMore;
             } else if(c1.getRed() < c2.getRed()) {
-              r = anInt;
+              r = anIntNoMore;
             } else {
               r = c1.getRed();
             }
             if(c1.getGreen() > c2.getGreen()) {
-              g = maxChanVal - anInt;
+              g = maxChanVal - anIntNoMore;
             } else if(c1.getGreen() < c2.getGreen()) {
-              g = anInt;
+              g = anIntNoMore;
             } else {
               g = c1.getGreen();
             }
             if(c1.getBlue() > c2.getBlue()) {
-              b = maxChanVal - anInt;
+              b = maxChanVal - anIntNoMore;
             } else if(c1.getBlue() < c2.getBlue()) {
-              b = anInt;
+              b = anIntNoMore;
             } else {
               b = c1.getBlue();
             }
             return setColorRGB(r, g, b);
           } else {
+//  MJR SCM NOTE <2022-06-15T12:12:20-0500> colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpColorRamp: What is this fore? 
             anInt = anInt - maxChanVal;
           }
         }
@@ -3364,16 +3376,16 @@ namespace mjr {
     if( (aDouble < 0.0) || (aDouble > 1.0) ) {
       SET_ERR_COLOR;
     } else {
-      theColor.theParts.red      = clrChanT((col2.theColor.theParts.red   - col1.theColor.theParts.red  )*aDouble + col1.theColor.theParts.red);
+      theColor.theParts.red      = static_cast<clrChanT>((col2.theColor.theParts.red   - col1.theColor.theParts.red  )*aDouble + col1.theColor.theParts.red);
       if(numChan > 1)
-        theColor.theParts.green  = clrChanT((col2.theColor.theParts.green - col1.theColor.theParts.green)*aDouble + col1.theColor.theParts.green);
+        theColor.theParts.green  = static_cast<clrChanT>((col2.theColor.theParts.green - col1.theColor.theParts.green)*aDouble + col1.theColor.theParts.green);
       if(numChan > 2)
-        theColor.theParts.blue   = clrChanT((col2.theColor.theParts.blue  - col1.theColor.theParts.blue )*aDouble + col1.theColor.theParts.blue);
+        theColor.theParts.blue   = static_cast<clrChanT>((col2.theColor.theParts.blue  - col1.theColor.theParts.blue )*aDouble + col1.theColor.theParts.blue);
       if(numChan > 3)
-        theColor.theParts.alpha  = clrChanT((col2.theColor.theParts.alpha - col1.theColor.theParts.alpha)*aDouble + col1.theColor.theParts.alpha);
+        theColor.theParts.alpha  = static_cast<clrChanT>((col2.theColor.theParts.alpha - col1.theColor.theParts.alpha)*aDouble + col1.theColor.theParts.alpha);
       if(numChan > 4)
         for(int i=4; i<numChan; i++)
-          theColor.thePartsA[i]  = clrChanT((col2.theColor.thePartsA[i]   - col1.theColor.thePartsA[i]  )*aDouble + col1.theColor.thePartsA[i]);
+          theColor.thePartsA[i]  = static_cast<clrChanT>((col2.theColor.thePartsA[i]   - col1.theColor.thePartsA[i]  )*aDouble + col1.theColor.thePartsA[i]);
     }
     return *this;
   }
@@ -3389,16 +3401,16 @@ namespace mjr {
     if((w1 < 0) || (w2 < 0) || (w3 < 0) || (w1 > 1) || (w2 > 1) || (w3 > 1) || (std::abs(w1+w2+w3-1) > 0.001)) {
       return SET_ERR_COLOR;
     } else {
-      theColor.theParts.red     = (col1.theColor.theParts.red   * w1) + (col2.theColor.theParts.red   * w2) + (col3.theColor.theParts.red   * w3);
+      theColor.theParts.red     = static_cast<clrChanT>((col1.theColor.theParts.red   * w1) + (col2.theColor.theParts.red   * w2) + (col3.theColor.theParts.red   * w3));
       if(numChan > 1)
-        theColor.theParts.green = (col1.theColor.theParts.green * w1) + (col2.theColor.theParts.green * w2) + (col3.theColor.theParts.green * w3);
+        theColor.theParts.green = static_cast<clrChanT>((col1.theColor.theParts.green * w1) + (col2.theColor.theParts.green * w2) + (col3.theColor.theParts.green * w3));
       if(numChan > 2)
-        theColor.theParts.blue  = (col1.theColor.theParts.blue  * w1) + (col2.theColor.theParts.blue  * w2) + (col3.theColor.theParts.blue  * w3);
+        theColor.theParts.blue  = static_cast<clrChanT>((col1.theColor.theParts.blue  * w1) + (col2.theColor.theParts.blue  * w2) + (col3.theColor.theParts.blue  * w3));
       if(numChan > 3)
-        theColor.theParts.alpha = (col1.theColor.theParts.alpha * w1) + (col2.theColor.theParts.alpha * w2) + (col3.theColor.theParts.alpha * w3);
+        theColor.theParts.alpha = static_cast<clrChanT>((col1.theColor.theParts.alpha * w1) + (col2.theColor.theParts.alpha * w2) + (col3.theColor.theParts.alpha * w3));
       if(numChan > 4)
         for(int i=4; i<numChan; i++)
-          theColor.thePartsA[i] = (col1.theColor.thePartsA[i]   * w1) + (col2.theColor.thePartsA[i]   * w2) + (col3.theColor.thePartsA[i]   * w3);
+          theColor.thePartsA[i] = static_cast<clrChanT>((col1.theColor.thePartsA[i]   * w1) + (col2.theColor.thePartsA[i]   * w2) + (col3.theColor.thePartsA[i]   * w3));
       return *this;
     }
   }
@@ -3459,9 +3471,9 @@ namespace mjr {
     col2.rgb2hls(&H2, &L2, &S2);
 
     // Interpolate in HLS space..
-    float Hi = (H2 - H1) * aDouble + H1;
-    float Li = (L2 - L1) * aDouble + L1;
-    float Si = (S2 - S1) * aDouble + S1;
+    float Hi = (H2 - H1) * static_cast<float>(aDouble) + H1;
+    float Li = (L2 - L1) * static_cast<float>(aDouble) + L1;
+    float Si = (S2 - S1) * static_cast<float>(aDouble) + S1;
 
     // Set the current color and return.
     setColorFromNaturalHLS(Hi, Li, Si);
@@ -3476,16 +3488,16 @@ namespace mjr {
     if( (aDouble < 0.0) || (aDouble > 1.0) ) {
       SET_ERR_COLOR;
     } else {
-      theColor.theParts.red      = clrChanT((tooCol.theColor.theParts.red   - theColor.theParts.red  )*aDouble + theColor.theParts.red);
+      theColor.theParts.red      = static_cast<clrChanT>((tooCol.theColor.theParts.red   - theColor.theParts.red  )*aDouble + theColor.theParts.red);
       if(numChan > 1)
-        theColor.theParts.green  = clrChanT((tooCol.theColor.theParts.green - theColor.theParts.green)*aDouble + theColor.theParts.green);
+        theColor.theParts.green  = static_cast<clrChanT>((tooCol.theColor.theParts.green - theColor.theParts.green)*aDouble + theColor.theParts.green);
       if(numChan > 2)
-        theColor.theParts.blue   = clrChanT((tooCol.theColor.theParts.blue  - theColor.theParts.blue )*aDouble + theColor.theParts.blue);
+        theColor.theParts.blue   = static_cast<clrChanT>((tooCol.theColor.theParts.blue  - theColor.theParts.blue )*aDouble + theColor.theParts.blue);
       if(numChan > 3)
-        theColor.theParts.alpha  = clrChanT((tooCol.theColor.theParts.alpha - theColor.theParts.alpha)*aDouble + theColor.theParts.alpha);
+        theColor.theParts.alpha  = static_cast<clrChanT>((tooCol.theColor.theParts.alpha - theColor.theParts.alpha)*aDouble + theColor.theParts.alpha);
       if(numChan > 4)
         for(int i=4; i<numChan; i++)
-          theColor.thePartsA[i]  = clrChanT((tooCol.theColor.thePartsA[i]   - theColor.thePartsA[i]  )*aDouble + theColor.thePartsA[i]);
+          theColor.thePartsA[i]  = static_cast<clrChanT>((tooCol.theColor.thePartsA[i]   - theColor.thePartsA[i]  )*aDouble + theColor.thePartsA[i]);
     }
     return *this;
   }
@@ -3723,8 +3735,8 @@ namespace mjr {
     minDist = charCompVal;
     minCol = 0;
     for(int i=1;i<6;i++)
-      if( abs(charCompVal - posValue[i]) < minDist ) {
-        minDist = abs(charCompVal - posValue[i]);
+      if( std::abs(charCompVal - posValue[i]) < minDist ) {
+        minDist = std::abs(charCompVal - posValue[i]);
         minCol = posValue[i];
       }
     return(minCol);
@@ -3738,8 +3750,8 @@ namespace mjr {
     int minDist = maxChanVal;
     // Find the closest of the discreetVals
     for(int i=0;i<numVals;i++)
-      if( abs(aColorComp - discreetVals[i]) < minDist ) {
-        minDist = abs(aColorComp - discreetVals[i]);
+      if( std::abs(aColorComp - discreetVals[i]) < minDist ) {
+        minDist = std::abs(aColorComp - discreetVals[i]);
         minCol = discreetVals[i];
       }
     return(minCol);
@@ -3917,26 +3929,26 @@ namespace mjr {
     colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> aColor) {
 
     if(numChan == 1) {                                      // 1 channel
-      return (abs((clrChanIArthT)theColor.theParts.red   - aColor.theColor.theParts.red));
+      return (std::abs((clrChanIArthT)theColor.theParts.red   - aColor.theColor.theParts.red));
     } else if(numChan == 2) {                               // 2 channels
-      return (abs((clrChanIArthT)theColor.theParts.red   - aColor.theColor.theParts.red) +
-              abs((clrChanIArthT)theColor.theParts.green - aColor.theColor.theParts.green));
+      return (std::abs((clrChanIArthT)theColor.theParts.red   - aColor.theColor.theParts.red) +
+              std::abs((clrChanIArthT)theColor.theParts.green - aColor.theColor.theParts.green));
     } else if(numChan == 3) {                               // 3 channels
-      return (abs((clrChanIArthT)theColor.theParts.red   - aColor.theColor.theParts.red)   +
-              abs((clrChanIArthT)theColor.theParts.green - aColor.theColor.theParts.green) +
-              abs((clrChanIArthT)theColor.theParts.blue  - aColor.theColor.theParts.blue));
+      return (std::abs((clrChanIArthT)theColor.theParts.red   - aColor.theColor.theParts.red)   +
+              std::abs((clrChanIArthT)theColor.theParts.green - aColor.theColor.theParts.green) +
+              std::abs((clrChanIArthT)theColor.theParts.blue  - aColor.theColor.theParts.blue));
     } else if(numChan == 4) {                               // 4 channels
-      return (abs((clrChanIArthT)theColor.theParts.red   - aColor.theColor.theParts.red)   +
-              abs((clrChanIArthT)theColor.theParts.green - aColor.theColor.theParts.green) +
-              abs((clrChanIArthT)theColor.theParts.blue  - aColor.theColor.theParts.blue)  +
-              abs((clrChanIArthT)theColor.theParts.alpha - aColor.theColor.theParts.alpha));
+      return (std::abs((clrChanIArthT)theColor.theParts.red   - aColor.theColor.theParts.red)   +
+              std::abs((clrChanIArthT)theColor.theParts.green - aColor.theColor.theParts.green) +
+              std::abs((clrChanIArthT)theColor.theParts.blue  - aColor.theColor.theParts.blue)  +
+              std::abs((clrChanIArthT)theColor.theParts.alpha - aColor.theColor.theParts.alpha));
     } else {                                                // 5 or more channels
-      clrChanIArthT daDist = (abs((clrChanIArthT)theColor.theParts.red   - aColor.theColor.theParts.red)   +
-                              abs((clrChanIArthT)theColor.theParts.green - aColor.theColor.theParts.green) +
-                              abs((clrChanIArthT)theColor.theParts.blue  - aColor.theColor.theParts.blue)  +
-                              abs((clrChanIArthT)theColor.theParts.alpha - aColor.theColor.theParts.alpha));
+      clrChanIArthT daDist = (std::abs((clrChanIArthT)theColor.theParts.red   - aColor.theColor.theParts.red)   +
+                              std::abs((clrChanIArthT)theColor.theParts.green - aColor.theColor.theParts.green) +
+                              std::abs((clrChanIArthT)theColor.theParts.blue  - aColor.theColor.theParts.blue)  +
+                              std::abs((clrChanIArthT)theColor.theParts.alpha - aColor.theColor.theParts.alpha));
       for(int i=4; i<numChan; i++)
-        daDist += abs((clrChanIArthT)theColor.thePartsA[i] - aColor.theColor.thePartsA[i]);
+        daDist += std::abs((clrChanIArthT)theColor.thePartsA[i] - aColor.theColor.thePartsA[i]);
       return daDist;
     }
   }
@@ -4003,10 +4015,10 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromUnitHSV(float h, float s, float v) {
     float f, p, q;
     float rf, gf, bf;
-    double t;
+    float t;
 
-    f = std::modf(h * 6.0, &t);
-    int i = ((int) t) % 6;
+    f = static_cast<float>(std::modf(h * 6.0F, &t));
+    int i = static_cast<int>(t) % 6;
 
     p = v * (1 - s);
     q = v * (1 - s * f);
@@ -4021,9 +4033,9 @@ namespace mjr {
     case 5:   rf = v; gf = p; bf = q; break;
     default:  rf = 0; gf = 0; bf = 0; break;
     }
-    setColorRGB(clrChanT(rf*maxChanVal),
-                clrChanT(gf*maxChanVal),
-                clrChanT(bf*maxChanVal));
+    setColorRGB(static_cast<clrChanT>(rf*maxChanVal),
+                static_cast<clrChanT>(gf*maxChanVal),
+                static_cast<clrChanT>(bf*maxChanVal));
     return *this;
   }
 
@@ -4044,25 +4056,25 @@ namespace mjr {
       SET_ERR_COLOR;
     } else {
       // Wrap h into the range [0, 360)
-      double hFrac, hTmp;
-      hFrac = std::modf(H, &hTmp);
-      int hInt = ((int)hTmp) % 360;
-      H = hFrac + hInt;
+      float hFrac, hTmp;
+      hFrac = static_cast<float>(std::modf(H, &hTmp));
+      int hInt = static_cast<int>(hTmp) % 360;
+      H = hFrac + static_cast<float>(hInt);
       // Compute the magic numbers..
-      const double epsilon = 0.000001;
-      double m1, m2;
-      if(L<=0.5)
-        m2 = L*(1+S);
+      const float epsilon = 0.000001F;
+      float m1, m2;
+      if(L <= 0.5F)
+        m2 = L * (1.0F + S);
       else
-        m2 = L+S-L*S;
-      m1 = 2.0*L-m2;
+        m2 = L + S - L * S;
+      m1 = 2.0F * L - m2;
       // Finish up the computation
       if(S<epsilon) {
         setAllF(L);
       } else {
-        setColorRGB(clrChanT(maxChanVal * hslHelperVal(m1, m2, H+120)),
-                    clrChanT(maxChanVal * hslHelperVal(m1, m2, H)),
-                    clrChanT(maxChanVal * hslHelperVal(m1, m2, H-120)));
+        setColorRGB(static_cast<clrChanT>(maxChanVal * hslHelperVal(m1, m2, H+120)),
+                    static_cast<clrChanT>(maxChanVal * hslHelperVal(m1, m2, H)),
+                    static_cast<clrChanT>(maxChanVal * hslHelperVal(m1, m2, H-120)));
       }
     }
     return *this;
@@ -4141,12 +4153,12 @@ namespace mjr {
 
     // Data about the color matching function table used. This should be abstracted away so that other color matching functions may be used.  Going to the
     // trouble of abstracting the color match function concept may not be worth the effort...
-    const double minWL = 390;     // Min wavelength in table
-    const double maxWL = 830;     // Max wavelength in table
-    const int    numPT = 89;      // Number fo points in the table
-    const double rScl  = 3.1673;  // Scale factors for color function
-    const double gScl  = 1.0517;
-    const double bScl  = 1.0019;
+    const float minWL = 390.0F;     // Min wavelength in table
+    const float maxWL = 830.0F;     // Max wavelength in table
+    const int   numPT = 89;      // Number fo points in the table
+    const float rScl  = 3.1673F;  // Scale factors for color function
+    const float gScl  = 1.0517F;
+    const float bScl  = 1.0019F;
 
     // Clip the wavelength to be in range
     if(wavelength < minWL)
@@ -4155,13 +4167,13 @@ namespace mjr {
       wavelength = maxWL;
 
     // Figure out where we are in our color function table
-    float fIdx  = (wavelength-minWL)/(maxWL-minWL)*(numPT-1);
-    int   iIdx1 = int(fIdx);
+    float fIdx  = (wavelength-minWL)/(maxWL-minWL)*(numPT-1.0F);
+    int   iIdx1 = static_cast<int>(fIdx);
     int   iIdx2 = iIdx1+1;
 
     // If we fell off the edge, then we set our indexes to the appropriate edge
-    if(iIdx2>(numPT-1)) { iIdx1 = numPT-2; iIdx2 = numPT-1; fIdx = iIdx1; }
-    if(iIdx1<0)         { iIdx1 = 0;       iIdx2 = 1;       fIdx = iIdx1; }
+    if(iIdx2>(numPT-1)) { iIdx1 = numPT-2; iIdx2 = numPT-1; fIdx = static_cast<float>(iIdx1); }
+    if(iIdx1<0)         { iIdx1 = 0;       iIdx2 = 1;       fIdx = static_cast<float>(iIdx1); }
 
     // Interpolate using our tabulated color matching function
     switch(INTRP) {
@@ -4187,24 +4199,24 @@ namespace mjr {
       }
       break;
     case 3 : // Linear interpolation between data points
-      rf = (fIdx-iIdx1) * (colMatchPoints[iIdx2][1] - colMatchPoints[iIdx1][1]) + colMatchPoints[iIdx1][1];
-      gf = (fIdx-iIdx1) * (colMatchPoints[iIdx2][2] - colMatchPoints[iIdx1][2]) + colMatchPoints[iIdx1][2];
-      bf = (fIdx-iIdx1) * (colMatchPoints[iIdx2][3] - colMatchPoints[iIdx1][3]) + colMatchPoints[iIdx1][3];
+      rf = (fIdx-static_cast<float>(iIdx1)) * (colMatchPoints[iIdx2][1] - colMatchPoints[iIdx1][1]) + colMatchPoints[iIdx1][1];
+      gf = (fIdx-static_cast<float>(iIdx1)) * (colMatchPoints[iIdx2][2] - colMatchPoints[iIdx1][2]) + colMatchPoints[iIdx1][2];
+      bf = (fIdx-static_cast<float>(iIdx1)) * (colMatchPoints[iIdx2][3] - colMatchPoints[iIdx1][3]) + colMatchPoints[iIdx1][3];
       break;
     case 4 : // Use exponential hump functions -- MJR developed algorithm 2007
-      rf = 3.07/std::exp(0.0005*(wavelength-600)*(wavelength-600)) + 0.09/exp(0.005*(wavelength-425)*(wavelength-425));
-      gf = 1.05/std::exp(0.0004*(wavelength-540)*(wavelength-540));
-      bf = 1.00/std::exp(0.0010*(wavelength-450)*(wavelength-450));
+      rf = 3.07F / static_cast<float>(std::exp(0.0005F * (wavelength-600.0F)*(wavelength-600.0F))) + 0.09F / static_cast<float>(std::exp(0.005F * (wavelength-425.0F)*(wavelength-425.0F)));
+      gf = 1.05F / static_cast<float>(std::exp(0.0004F * (wavelength-540.0F)*(wavelength-540.0F)));
+      bf = 1.00F / static_cast<float>(std::exp(0.0010F * (wavelength-450.0F)*(wavelength-450.0F)));
       break;
     default:
-      rf = gf = bf = 0.0;
+      rf = gf = bf = 0.0F;
       break;
     }
 
     // Make them positive and scale to a [0,1] range
-    rf=(rf>0?rf:0)/rScl;
-    gf=(gf>0?gf:0)/gScl;
-    bf=(bf>0?bf:0)/bScl;
+    rf=(rf>0.0F ? rf : 0.0F)/rScl;
+    gf=(gf>0.0F ? gf : 0.0F)/gScl;
+    bf=(bf>0.0F ? bf : 0.0F)/bScl;
 
     // We are done.  Set the color and exit.
     setColorFromF(rf, gf, bf);
@@ -4215,7 +4227,7 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromNaturalHSV(float h, float s, float v) {
-    setColorFromUnitHSV(h/360.0, s/100.0, v/100.0);
+    setColorFromUnitHSV(h/360.0F, s/100.0F, v/100.0F);
     return *this;
   }
 
@@ -4225,8 +4237,8 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromWavelengthLA(float wavelength) {
     float rf, gf, bf;
 
-    const double minWL = 380;     // Min wavelength in table
-    const double maxWL = 780;     // Max wavelength in table
+    const float minWL = 380.0F;     // Min wavelength in table
+    const float maxWL = 780.0F;     // Max wavelength in table
 
     // Clip the wavelength to be in range
     if(wavelength < minWL)
@@ -4238,38 +4250,38 @@ namespace mjr {
     rf = gf = bf = 0;
     if       ( (wavelength >= 380) && (wavelength < 440)) {
       rf = (440-wavelength)/(440-380);
-      gf = 0;
-      bf = 1;
+      gf = 0.0F;
+      bf = 1.0F;
     } else if( (wavelength >= 440) && (wavelength < 490)) {
-      rf = 0;
+      rf = 0.0F;
       gf = (wavelength-440)/(490-440);
-      bf = 1;
+      bf = 1.0F;
     } else if( (wavelength >= 490) && (wavelength < 510)) {
-      rf = 0;
-      gf = 1;
+      rf = 0.0F;
+      gf = 1.0F;
       bf = (510-wavelength)/(510-490);
     } else if( (wavelength >= 510) && (wavelength < 580)) {
       rf = (wavelength-510)/(580-510);
-      gf = 1;
-      bf = 0;
+      gf = 1.0F;
+      bf = 0.0F;
     } else if( (wavelength >= 580) && (wavelength < 645)) {
-      rf = 1;
+      rf = 1.0F;
       gf = (645-wavelength)/(645-580);
-      bf = 0;
+      bf = 0.0F;
     } else if( (wavelength >= 645) && (wavelength <= 780)) {
-      rf = 1;
-      gf = 0;
-      bf = 0;
+      rf = 1.0F;
+      gf = 0.0F;
+      bf = 0.0F;
     }
 
     /* Lower the intensity near edges of vision. */
     float edgeIntensityAdj;
-    if(wavelength > 700) {
-      edgeIntensityAdj=0.3+0.7* (780-wavelength)/(780-700);
-    } else if(wavelength < 420) {
-      edgeIntensityAdj=0.3+0.7*(wavelength - 380)/(420-380);
+    if(wavelength > 700.0F) {
+      edgeIntensityAdj=0.3F + 0.7F * (780-wavelength)/(780-700);
+    } else if(wavelength < 420.0F) {
+      edgeIntensityAdj=0.3F + 0.7F * (wavelength - 380)/(420-380);
     } else {
-      edgeIntensityAdj=1;
+      edgeIntensityAdj=1.0F;
     }
 
     setColorFromF(edgeIntensityAdj*rf, edgeIntensityAdj*gf, edgeIntensityAdj*bf);
@@ -4278,30 +4290,30 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  clrChanIArthT colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::clipTop(clrChanIArthT anArithComp) {
+  clrChanT colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::clipTop(clrChanIArthT anArithComp) {
     if(anArithComp > maxChanVal)
       return maxChanVal;
     else
-      return anArithComp;
+      return static_cast<clrChanT>(anArithComp);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  clrChanIArthT colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::clipBot(clrChanIArthT anArithComp) {
+  clrChanT colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::clipBot(clrChanIArthT anArithComp) {
     if(anArithComp < minChanVal)
       return minChanVal;
     else
-      return anArithComp;
+      return static_cast<clrChanT>(anArithComp);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  clrChanIArthT colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::clipAll(clrChanIArthT anArithComp) {
+  clrChanT colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::clipAll(clrChanIArthT anArithComp) {
     if(anArithComp > maxChanVal)
       return maxChanVal;
     if(anArithComp < minChanVal)
       return minChanVal;
-    return anArithComp;
+    return static_cast<clrChanT>(anArithComp);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4342,14 +4354,14 @@ namespace mjr {
       clrChanT rgbMaxI = getMaxRGB();
       clrChanT rgbMinI = getMinRGB();
 
-      float rgbMaxF = 1.0 * rgbMaxI / maxChanVal;
-      float rgbMinF = 1.0 * rgbMinI / maxChanVal;
+      float rgbMaxF = 1.0F * rgbMaxI / maxChanVal;
+      float rgbMinF = 1.0F * rgbMinI / maxChanVal;
 
       float rangeF = rgbMaxF - rgbMinF;
       float sumF   = rgbMaxF + rgbMinF;
 
       // Compute L
-      *L = sumF / 2.0;
+      *L = sumF / 2.0F;
 
       // Compute S & L
       if(rgbMaxI == rgbMinI) {
@@ -4361,7 +4373,7 @@ namespace mjr {
         if(*L <= 0.5)
           *S = rangeF / sumF;
         else
-          *S = rangeF / ( 2.0 - sumF);
+          *S = rangeF / ( 2.0F - sumF);
         // Compute H -- This is terrible from an optimization standpoint; however, it saves some typing. :)
         *H = rgb2h();
       }
@@ -4382,8 +4394,8 @@ namespace mjr {
       clrChanT rgbMaxI = getMaxRGB();
       clrChanT rgbMinI = getMinRGB();
 
-      float rgbMaxF = 1.0 * rgbMaxI / maxChanVal;
-      float rgbMinF = 1.0 * rgbMinI / maxChanVal;
+      float rgbMaxF = 1.0F * rgbMaxI / maxChanVal;
+      float rgbMinF = 1.0F * rgbMinI / maxChanVal;
 
       float rangeF = rgbMaxF - rgbMinF;
 
@@ -4394,20 +4406,20 @@ namespace mjr {
         float H;
         // We use the rgbMaxI to avoid round off error in comparing floating point values.
         if(theColor.theParts.red == rgbMaxI)
-          H = 0.0 + (gf - bf) / rangeF;
+          H = 0.0F + (gf - bf) / rangeF;
         else if(theColor.theParts.green == rgbMaxI)
-          H = 2.0 + (bf - rf) / rangeF;
+          H = 2.0F + (bf - rf) / rangeF;
         else if(theColor.theParts.blue == rgbMaxI)
-          H = 4.0 + (rf - gf) / rangeF;
+          H = 4.0F + (rf - gf) / rangeF;
         else {
           return -2.0; // ERROR
         }
 
-        H = H * 60.0;
+        H = H * 60.0F;
         while(H<0)
-          H += 360.0;
-        while(H>=360.0)
-          H -= 360.0;
+          H += 360.0F;
+        while(H>=360.0F)
+          H -= 360.0F;
         return H;
       }
     }

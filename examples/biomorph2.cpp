@@ -48,7 +48,7 @@ int main(void) {
     if((y%(CSIZE/10))==0)
       std::cout << " LINE: " << y << "/" << CSIZE << std::endl;
     for(int x=0;x<theRamCanvasA.get_numXpix();x++) {
-      for(z=std::complex<float>(theRamCanvasA.int2realX(x),theRamCanvasA.int2realY(y)),count=0;
+      for(z=std::complex<double>(theRamCanvasA.int2realX(x),theRamCanvasA.int2realY(y)),count=0;
           ((std::abs(std::real(z))<LIM)||(std::abs(std::imag(z))<LIM))&&(count<=NUMITR);
           count++,z=std::sin(z)+oneone) ;
       if(count < NUMITR) {
@@ -60,12 +60,12 @@ int main(void) {
         else
           theRamCanvasE.drawPoint(x, y, mjr::color3c8b("blue"));
         // K
-        theRamCanvasK.drawPoint(x, y, mjr::color3c8b().cmpClrCubeRainbow(mjr::intWrap((std::arg(z)+3.14)*255, 255*6+1)));
+        theRamCanvasK.drawPoint(x, y, mjr::color3c8b().cmpClrCubeRainbow(mjr::intWrap(static_cast<int>((std::arg(z)+3.14)*255), 255*6+1)));
         // L
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
-          theRamCanvasL.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intClamp(std::abs(std::real(z))*15, 255*1-1), "0R"));
+          theRamCanvasL.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intClamp(static_cast<int>(std::abs(std::real(z))*15), 255*1-1), "0R"));
         else
-          theRamCanvasL.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intClamp(std::abs(std::imag(z))*15, 255*1-1), "0B"));
+          theRamCanvasL.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intClamp(static_cast<int>(std::abs(std::imag(z))*15), 255*1-1), "0B"));
       }
     }
   }

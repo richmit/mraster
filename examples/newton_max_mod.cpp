@@ -37,7 +37,7 @@ int main(void) {
   const double pi       = 3.14159265359;
   int          MaxCount = 255;
   int          MultCol  = 400; // 1, 400, 3000
-  float        Tol      = .0001;
+  float        Tol      = .0001F;
   std::complex<double> r1(1,               0);
   std::complex<double> r2(-0.5,  sin(2*pi/3));
   std::complex<double> r3(-0.5, -sin(2*pi/3));
@@ -55,13 +55,14 @@ int main(void) {
           maxMod=abs(z);
         count++;
       }
+      mjr::color3c8b::channelType cCol = static_cast<mjr::color3c8b::channelType>(255-maxMod*MultCol);
 
       if(abs(z-r1) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(int(255-maxMod*MultCol), 0, 0));
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b(cCol, 0, 0));
       else if(abs(z-r2) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, int(255-maxMod*MultCol), 0));
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, cCol, 0));
       else if(abs(z-r3) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, 0, int(255-maxMod*MultCol)));
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, 0, cCol));
     }
   }
   theRamCanvas.writeTIFFfile("newton_max_mod.tiff");

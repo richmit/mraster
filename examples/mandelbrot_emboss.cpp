@@ -118,7 +118,9 @@ int main(void)
               potNormal = potNormal/std::abs(potNormal);  // normalize potNormal
               double potShade = std::real(potNormal * std::conj(lightDirection)) + lightHeight;  // dot product with the incoming light
               potShade = mjr::unitClamp(potShade/(1+lightHeight));  // rescale so <=1, and then clamp to keep >=0
-              potRamCanvas.drawPoint(x, y, mjr::color3c8b(mjr::unitTooIntLinMap(potShade, 255), mjr::unitTooIntLinMap(potShade, 255), mjr::unitTooIntLinMap(potShade, 255)));
+              potRamCanvas.drawPoint(x, y, mjr::color3c8b(static_cast<mjr::ramCanvas3c8b::rcColor::channelType>(mjr::unitTooIntLinMap(potShade, 255)), 
+                                                          static_cast<mjr::ramCanvas3c8b::rcColor::channelType>(mjr::unitTooIntLinMap(potShade, 255)), 
+                                                          static_cast<mjr::ramCanvas3c8b::rcColor::channelType>(mjr::unitTooIntLinMap(potShade, 255))));
             }
           }
         } else {

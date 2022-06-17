@@ -104,7 +104,7 @@ int main(void) {
               }
               if(doBOUND && (std::norm(z)>4.0)) {
                 //theRamCanvas.drawPoint(x, y, "red");
-                theRamCanvas.drawPoint(x, y, mjr::color3c8b((5*count+50)%256, 0, 0));
+                theRamCanvas.drawPoint(x, y, mjr::color3c8b(static_cast<mjr::color3c8b::channelType>((5*count+50)%256), 0, 0));
                 countBOUND++;
                 break;
               }

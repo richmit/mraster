@@ -78,9 +78,9 @@ int main(void) {
 #if DO_CLIP_LINE
   for(int i=0;i<REPS/16;i++)
     for(int j=0; j<BSIZE*2; j++) {
-      float a = j*6.2831/(BSIZE*2);
-      int  x1 = BSIZE * std::cos(a);
-      int  y1 = BSIZE * std::sin(a);
+      float a = static_cast<float>(j) * 6.2831F / (BSIZE * 2.0F);
+      int  x1 = static_cast<int>(BSIZE * std::cos(a));
+      int  y1 = static_cast<int>(BSIZE * std::sin(a));
       if(j%2)
         theRamCanvas.drawLine(-x1+xMax/2, -y1+yMax/2, x1+xMax/2, y1+yMax/2, aColor);
       else

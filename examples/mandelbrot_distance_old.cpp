@@ -61,7 +61,7 @@ int main(void) {
       if(count < MAXITR) {
         double dist = 0.5*log(zx*zx+zy*zy)*sqrt(zx*zx+zy*zy)/sqrt(dx*dx+dy*dy);
         if(dist < 0.0000001)
-          theRamCanvas.drawPoint(x, y, color4c8b(255, 0, count % 256));
+          theRamCanvas.drawPoint(x, y, color4c8b(255, 0, static_cast<mjr::ramCanvas4c8b::rcColor::channelType>(count % 256)));
       }
     }
   }

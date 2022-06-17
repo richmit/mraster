@@ -107,7 +107,7 @@ int main() {
   mjr::ramCanvas3c8b theRamCanvas(2160, 2160);
   theRamCanvas.set_drawMode(mjr::ramCanvas3c8b::drawModeType::ADDCLIP);
   std::vector<mjr::color3c8b> aColor{ mjr::color3c8b(1, 1, 1)};
-  int numCol = aColor.size();
+  auto numCol = aColor.size();
 
   std::random_device rd;
   std::minstd_rand0 rEng(rd());
@@ -146,7 +146,7 @@ int main() {
     }
     std::cout << "max mag: " << maxMag << std::endl;
 
-    theRamCanvas.applyHomoPixTfrm(&mjr::color3c8b::tfrmStdPow, 1/5.0);
+    theRamCanvas.applyHomoPixTfrm(&mjr::color3c8b::tfrmStdPow, 1.0F/5.0F);
   
     std::ostringstream stringStream;
     stringStream << "chaos_game";

@@ -34,7 +34,7 @@
 #include <iostream>                                                      /* C++ iostream            C++11    */
 #include <complex>                                                       /* Complex Numbers         C++11    */
 
-using cplx = std::complex<float>;
+using cplx = std::complex<mjr::ramCanvas3c8b::rcCordFlt>;
 
 cplx f(cplx z);  
 
@@ -56,13 +56,13 @@ cplx f(cplx z) {
     //   z = (std::sin(std::exp(z)) - cplx(1))/(std::cos(z*z) - cplx(2.0)*z*z + z + cplx(1));
     // return z;
     
-    //return (std::sin(z) - cplx(1))/(z*z*z - cplx(0.5)*z*z + z + cplx(1));
+    return (std::sin(z) - cplx(1))/(z*z*z - cplx(0.5)*z*z + z + cplx(1));
     
     //return (std::sin(std::exp(z)) - cplx(1))/(std::cos(z*z) - cplx(2.0)*z*z + z + cplx(1));
     
     //return (z - cplx(1))/(z*z*z - cplx(0.5)*z*z + z + cplx(1));
     
-    return z;
+    //return z;
   } catch(...) {
     std::cout << "Something went wrong!!" << std::endl;
     return 0;
@@ -70,28 +70,28 @@ cplx f(cplx z) {
 }
 
 int main(void) {
-  const float cutDepth = 10.0;    // Range: $[1, ~30]$ Smaller means more contrast on cuts.  
-  const float argCuts  = 16;      // Number of grey cuts for arg
+  const double cutDepth = 10.0;   // Range: $[1, ~30]$ Smaller means more contrast on cuts.  
+  const double argCuts  = 16.0;   // Number of grey cuts for arg
   const int   argWrap  = 3;       // Number of times to wrap around the color ramp for arg
-  const float absCuts  = 2;       // Number of grey cuts for abs
-  const float ar       = 16/9.0;  // Aspect ratio
+  const double absCuts  = 2.0;    // Number of grey cuts for abs
+  const double ar       = 16/9.0; // Aspect ratio
   const int   hdLevel  = 2;       // 1=FHD, 2=4k, 4=8k
   const int   numColor = 1530;
   //const int   numColor = 765;
   mjr::ramCanvas3c8b theRamCanvas(1920*hdLevel, 1080*hdLevel, -2.0*ar, 2.0*ar, -2.0, 2.0);
   for(int y=0;y<theRamCanvas.get_numYpix();y++)  {
     for(int x=0;x<theRamCanvas.get_numXpix();x++) {
-      cplx z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
+      cplx z { theRamCanvas.int2realX(x), theRamCanvas.int2realY(y) };
       cplx fz      = f(z);
-      float fzArg  = std::arg(fz);
-      float pfzArg = (fzArg < 0 ? 2*3.141592653589793+fzArg : fzArg) / (2*3.141592653589793);
-      float fzAbs  = std::abs(fz);
+      float fzArg  = static_cast<float>(std::arg(fz));
+      float pfzArg = (fzArg < 0.0F ? 2.0F *3.141592653589793F + fzArg : fzArg) / (2.0F * 3.141592653589793F);
+      float fzAbs  = static_cast<float>(std::abs(fz));
       float lfzAbs = std::log(fzAbs);
       mjr::color3c8b aColor;
       aColor.cmpClrCubeRainbow(mjr::intWrap(mjr::unitTooIntLinMap(mjr::unitClamp(pfzArg), numColor*argWrap), numColor));
       //aColor.cmpSumRampRGB(mjr::intWrap(mjr::unitTooIntLinMap(mjr::unitClamp(pfzArg), numColor*argWrap), numColor));
-      aColor.tfrmLinearGreyLevelScale(1.0 - fabs(int(pfzArg*argCuts) - pfzArg*argCuts)/cutDepth, 0);
-      aColor.tfrmLinearGreyLevelScale(1.0 - fabs(int(lfzAbs*absCuts) - lfzAbs*absCuts)/cutDepth, 0);
+      aColor.tfrmLinearGreyLevelScale(1.0F - static_cast<float>(std::fabs(int(pfzArg*argCuts) - pfzArg*argCuts)/cutDepth), 0);
+      aColor.tfrmLinearGreyLevelScale(1.0F - static_cast<float>(std::fabs(int(lfzAbs*absCuts) - lfzAbs*absCuts)/cutDepth), 0);
       theRamCanvas.drawPoint(x, y, aColor);
     }
   }

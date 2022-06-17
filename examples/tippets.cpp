@@ -46,7 +46,7 @@ int main(void) {
   const int CSIZE  = 3840;
 
   int count;
-  float a, b, zx, zy;
+  mjr::ramCanvas3c8b::rcCordFlt a, b, zx, zy;
   mjr::ramCanvas3c8b theRamCanvas(CSIZE, CSIZE);
   for(int i=0; i<6; i++) {    
     theRamCanvas.newRealCoords(ranges[i][0], ranges[i][1], ranges[i][2], ranges[i][3]);  

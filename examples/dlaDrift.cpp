@@ -120,5 +120,5 @@ int main(int argc, char *argv[]) {
     return 1;
   }
   
-  std::cout << "Runtime " << (std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - timestamp_time_t)/(60.0) << " min" << std::endl;
+  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - timestamp_time_t)/(60.0) << " min" << std::endl;
 }

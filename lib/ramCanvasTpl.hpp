@@ -142,9 +142,12 @@ namespace mjr {
       typedef point2d<fltCrdT> rcPointFlt;     //!< Real coordinate pair type
       typedef point2d<intCrdT> rcPointInt;     //!< Integer coordinate pair type
 
-      typedef intCrdT rcCordInt;  //!< Integer type for coordinates
-      typedef fltCrdT rcCordFlt;  //!< Real type for coordinates
-      typedef colorT  rcColor;    //!< Color type for pixels
+      typedef          intCrdT                     rcCordInt;           //!< Integer type for coordinates
+      typedef          fltCrdT                     rcCordFlt;           //!< Real type for coordinates
+      typedef          colorT                      rcColor;             //!< Color type for pixels
+      // typedef typename colorT::channelType         rcColorChan;         //!< Channel type for color type for pixels
+      // typedef typename colorT::channelIntArithType rcColorChanIntArith; //!< Type for integer channel arithmetic (clrChanIArthT)
+      // typedef typename colorT::channelFltArithType rcColorChanFltArith; //!< Type for floating point channel arithmetic (clrChanFArthT)
 
       /** Enum for real axis orientation */
       enum class realAxisOrientation { INVERTED,  //!< Real axis is inverted with respect to the integer axis
@@ -1396,7 +1399,6 @@ namespace mjr {
     yPixWid = yWid / numYpix;
   }
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::clrCanvasToBlack() {
@@ -1441,8 +1443,8 @@ namespace mjr {
       }
     }
     if(cmax-cmin > 0) {
-      float c = 1.0*(colorT::maxChanVal-colorT::minChanVal)/(cmax-cmin);
-      float b = colorT::maxChanVal - 1.0*c*cmax;
+      float c = 1.0F * (colorT::maxChanVal-colorT::minChanVal)/(cmax-cmin);
+      float b = colorT::maxChanVal - 1.0F * c * cmax;
       applyHomoPixTfrm(&colorT::tfrmLinearGreyLevelScale, c, b);
     }
   }
@@ -2354,7 +2356,15 @@ namespace mjr {
           oStream.put(bColor.getGreen());
           oStream.put(bColor.getBlue());          
           if(ch4isAlpha)
+
+#pragma warning( push )
+#pragma warning( disable : 4309 )
+#pragma warning( disable : 4068 )
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
             oStream.put(255);
+#pragma GCC diagnostic pop
+#pragma warning( pop )
         }
       }
     }
@@ -3072,7 +3082,7 @@ namespace mjr {
           triangleEdger(x3, y3, x1, y1, true,  minPts);      /* 2---1 */
         }
       } else {
-        intCrdT xli = 1.0*(x1*y3-x3*y1+(x3-x1)*y2)/(y3-y1);  /*       */ 
+        intCrdT xli = (x1*y3-x3*y1+(x3-x1)*y2)/(y3-y1);      /*       */ 
         if(xli == x2) {                                      /*       */
           //drawLine(x1, y1, x3, y3, c1);                    /*  1    */
           return;                                            /*   \   */
@@ -3095,22 +3105,18 @@ namespace mjr {
         for(intCrdT y=y3; y<=y1; y++) 
           drawLine(minPts[y], y, maxPts[y], y, c1);
       } else {
-        typename colorT::channelFltArithType y12 = y1 - y2;
-        typename colorT::channelFltArithType y31 = y3 - y1;
-        typename colorT::channelFltArithType y23 = y2 - y3;
-        typename colorT::channelFltArithType a = std::abs(x1 * y23 + x2 * y31 + x3 * y12);
+        typename colorT::channelIntArithType y12 = (y1 - y2);
+        typename colorT::channelIntArithType y31 = (y3 - y1);
+        typename colorT::channelIntArithType y23 = (y2 - y3);
         for(intCrdT y=y3; y<=y1; y++) {
-          //typename colorT::channelFltArithType y20 = y2 - y;
-          //typename colorT::channelFltArithType y01 = y  - y1;
-          typename colorT::channelFltArithType y03 = y  - y3;
-          typename colorT::channelFltArithType y10 = y1 - y;
-          typename colorT::channelFltArithType y30 = y3 - y;
-          typename colorT::channelFltArithType y02 = y  - y2;
+          typename colorT::channelIntArithType y03 = (y - y3);
+          typename colorT::channelIntArithType y10 = (y1 - y);
+          typename colorT::channelIntArithType y30 = (y3 - y);
+          typename colorT::channelIntArithType y02 = (y - y2);
           for(intCrdT x=minPts[y]; x<=maxPts[y]; x++) {
-            typename colorT::channelFltArithType w1 = std::abs(x  * y23 + x2 * y30 + x3 * y02);
-            typename colorT::channelFltArithType w2 = std::abs(x1 * y03 + x  * y31 + x3 * y10);
-            //typename colorT::channelFltArithType w3 = std::abs(x1 * y20 + x2 * y01 + x  * y12);
-            //drawPoint(x, y, colorT().wMean(w1, w2, w3, c1, c2, c3));
+            typename colorT::channelFltArithType w1 = static_cast<typename colorT::channelFltArithType>(std::abs(x  * y23 + x2 * y30 + x3 * y02));
+            typename colorT::channelFltArithType w2 = static_cast<typename colorT::channelFltArithType>(std::abs(x1 * y03 + x  * y31 + x3 * y10));
+            typename colorT::channelFltArithType a  = static_cast<typename colorT::channelFltArithType>(std::abs(x1 * y23 + x2 * y31 + x3 * y12));
             drawPoint(x, y, colorT().wMean(w1/a, w2/a, c1, c2, c3));
           }
         }
@@ -3760,7 +3766,10 @@ namespace mjr {
         sumr /= (xfactor*xfactor);
         sumg /= (xfactor*xfactor);
         sumb /= (xfactor*xfactor);
-        new_pixels[new_numXpix_p * (y/*y-crd*/) + (x/*x-crd*/)] = colorT(sumr, sumg, sumb);
+
+        new_pixels[new_numXpix_p * (y/*y-crd*/) + (x/*x-crd*/)] = colorT(static_cast<typename colorT::channelType>(sumr), 
+                                                                         static_cast<typename colorT::channelType>(sumg), 
+                                                                         static_cast<typename colorT::channelType>(sumb));
       }
 
     rePointPixels(new_pixels, new_numXpix_p, new_numYpix_p);
@@ -3833,7 +3842,7 @@ namespace mjr {
             }
           }
           tmp[chan] /= divisor;
-          newColor.setChan(chan, (int)tmp[chan]);
+          newColor.setChan(chan, static_cast<typename colorT::channelType>(tmp[chan]));
         }
         new_pixels[numXpix * y + x] = newColor;  
       }
@@ -3868,14 +3877,14 @@ namespace mjr {
         actionIsMoveTo = 1;
       } else {
         if(xIntAxOrientation == intAxisOrientation::INVERTED)
-          x1 = magX * ('R'  -  (theHerChars[glyphNum]).components[2*i]);
+          x1 = static_cast<intCrdT>(magX * ('R'  -  (theHerChars[glyphNum]).components[2*i]));
         else
-          x1 = magX * ((theHerChars[glyphNum]).components[2*i]  -  'R');
+          x1 = static_cast<intCrdT>(magX * ((theHerChars[glyphNum]).components[2*i]  -  'R'));
         
         if(yIntAxOrientation == intAxisOrientation::NATURAL)
-          y1 = magY * ('R' - (theHerChars[glyphNum]).components[2*i+1]);
+          y1 = static_cast<intCrdT>(magY * ('R' - (theHerChars[glyphNum]).components[2*i+1]));
         else
-          y1 = magY * ((theHerChars[glyphNum]).components[2*i+1] - 'R');
+          y1 = static_cast<intCrdT>(magY * ((theHerChars[glyphNum]).components[2*i+1] - 'R'));
         
         if(actionIsMoveTo) {
           moveTo(x1+x, y1+y);
@@ -3890,8 +3899,9 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawString(const char *aString, hersheyFont aFont, intCrdT x, intCrdT y, colorT aColor, double cex, intCrdT spc) {
+//  MJR TODO NOTE <2022-06-15> drawString: Use std::string instead of C-style string
     int strLength = (int)strlen(aString);
-    for(int i=0; i<strLength; i++,x+=spc*cex) {
+    for(int i=0; i<strLength; i++,x+=static_cast<intCrdT>(spc*cex)) {
       int glyphNum = 0;
       int c = aString[i];
       if((c>=32) && (c<=126))
@@ -3907,6 +3917,7 @@ namespace mjr {
                                                              intCrdT x, intCrdT y,
                                                              colorT stringColor, colorT boxColor,
                                                              double cex, intCrdT spc) {
+//  MJR TODO NOTE <2022-06-15> drawStringBox: Use std::string instead of C-style string
     drawFillRectangle((intCrdT)(x-spc*cex),
                       (intCrdT)(y-spc*cex),
                       (intCrdT)(x+spc*cex*strlen(aString)),
@@ -4042,7 +4053,7 @@ namespace mjr {
             }
             if(samp < sppRC) {
               if(bpsTIFF == bpsRC) {
-                getPxColorRefNC(x, y).setChan(samp, d);
+                getPxColorRefNC(x, y).setChan(samp, static_cast<typename colorT::channelType>(d));
               } else {
                 getPxColorRefNC(x, y).setChan64bit(samp, d, cmTIFF);
               }

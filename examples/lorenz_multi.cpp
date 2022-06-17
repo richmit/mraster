@@ -52,13 +52,13 @@ int main(void) {
   int numCurves          = 100;
   int numPtsPerCurve     = 105000;
   int numPtsPerCurveToss = 700;
-  float tDelta           = 0.00001;
+  float tDelta           = 0.00001F;
 
-  float a = 10;
-  float b = 28;
-  float c = 8.0 / 3;
+  float a = 10.0F;
+  float b = 28.0F;
+  float c = 8.0F / 3;
     
-  float p = 1.7;
+  float p = 1.7F;
 
   /* Draw the atractor on a 16-bit, greyscale canvas -- the grey level will be an integer represeting the hit count for that pixel.  This is a good example
      of how an image can have pixel values that are generic "data" as well as color information. */
@@ -90,7 +90,7 @@ int main(void) {
 
   // Root image transform
   theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmStdPow, 1/p);
-  maxII = 65535.0 * pow(maxII/65535.0, 1/p);
+  maxII = static_cast<uint64_t>(65535.0 * std::pow(static_cast<float>(maxII) / 65535.0F, 1.0F / p));
 
   // Log image transform
   // theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmLn);
@@ -102,7 +102,7 @@ int main(void) {
   mjr::color3c8b bColor;
   for(int yi=0;yi<theRamCanvas.get_numYpix();yi++)
     for(int xi=0;xi<theRamCanvas.get_numXpix();xi++) {
-      anotherRamCanvas.drawPoint(xi, yi, bColor.cmpColorRamp(theRamCanvas.getPxColor(xi, yi).getRed() * 1275 / maxII, "0RYBCW"));
+      anotherRamCanvas.drawPoint(xi, yi, bColor.cmpColorRamp(static_cast<int>(theRamCanvas.getPxColor(xi, yi).getRed() * 1275 / maxII), "0RYBCW"));
        if( (anotherRamCanvas.getPxColor(xi, yi).getRed() > 0) && (anotherRamCanvas.getPxColor(xi, yi).getRed() < 255/2) )
          anotherRamCanvas.getPxColorRefNC(xi, yi).setRed(255/2);
     }
