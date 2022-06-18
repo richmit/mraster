@@ -15,5 +15,7 @@ Some examples of what can be done with this library:
 * [Symmetric Fractals](http://www.mitchr.me/SS/sic/index.html)
 * [Chaos Game](http://www.mitchr.me/SS/ChaosGame/index.html)
 * [Apollonian Gasket](https://www.mitchr.me/SS/AGasket/index.html)
+* [Circle Art](https://www.mitchr.me/SS/circles/index.html)
+* [Several of my desktop backgrounds were made with mraster](https://www.mitchr.me/SS/desktops/index.html)
 
 Have fun.
