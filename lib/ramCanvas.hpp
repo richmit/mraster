@@ -4,7 +4,7 @@
  @file      ramCanvas.hpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     User include file for ramCanvas types.@EOL@EOL
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -44,8 +44,8 @@ namespace mjr {
 
   /** @name Simple Color Canvas Types (3 and 4 channels at 8 bits per channel) */
   //@{
-  typedef ramCanvasTpl<color4c8b,    INT_CORD, REAL_CORD> ramCanvas4c8b;       //!< Canvas type: generic 32-bit with 4 channels at 8-bit uint per channel. 
-  typedef ramCanvasTpl<color3c8b,    INT_CORD, REAL_CORD> ramCanvas3c8b;       //!< Canvas type: generic 24-bit with 3 channels at 8-bit uint per channel. 
+  typedef ramCanvasTpl<color4c8b,    INT_CORD, REAL_CORD> ramCanvas4c8b;       //!< Canvas type: generic 32-bit with 4 channels at 8-bit uint per channel.
+  typedef ramCanvasTpl<color3c8b,    INT_CORD, REAL_CORD> ramCanvas3c8b;       //!< Canvas type: generic 24-bit with 3 channels at 8-bit uint per channel.
   typedef ramCanvasTpl<colorRGBA8b,  INT_CORD, REAL_CORD> ramCanvasRGBA8b;     //!< Canvas type: 24-bit true color with alpha last (RGBA)  -- 4 channels at 8-bit uint per channel.
   typedef ramCanvasTpl<colorRGB8b,   INT_CORD, REAL_CORD> ramCanvasRGB8b;      //!< Canvas type: 24-bit true color without alpha (RGB)     -- 3 channels at 8-bit uint per channel.
   //@}
@@ -53,7 +53,7 @@ namespace mjr {
   /** @name Simple Color Canvas Types (3 and 4 channels at 16 bits per channel) */
   //@{
   typedef ramCanvasTpl<color4c16b,   INT_CORD, REAL_CORD> ramCanvas4c16b;      //!< Canvas type: Generic 64-bit with 4 channels at 16-bit uint per channel.
-  typedef ramCanvasTpl<color3c16b,   INT_CORD, REAL_CORD> ramCanvas3c16b;      //!< Canvas type: Generic 48-bit with 4 channels at 16-bit uint per channel. 
+  typedef ramCanvasTpl<color3c16b,   INT_CORD, REAL_CORD> ramCanvas3c16b;      //!< Canvas type: Generic 48-bit with 4 channels at 16-bit uint per channel.
   typedef ramCanvasTpl<colorRGBA16b, INT_CORD, REAL_CORD> ramCanvasRGBA16b;    //!< Canvas type: 48-bit true color with alpha (RGBA)   -- 4 channels at 16-bit uint per channel.
   typedef ramCanvasTpl<colorRGBA16b, INT_CORD, REAL_CORD> ramCanvasRGB16b;     //!< Canvas type: 48-bit true color without alpha (RGB) -- 3 channels at 16-bit uint per channel.
   //@}

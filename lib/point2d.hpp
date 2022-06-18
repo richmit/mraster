@@ -34,7 +34,7 @@
 
 #include <type_traits>                                                   /* C++ metaprogramming     C++11    */
 #include <complex>                                                       /* Complex Numbers         C++11    */
-#include <vector>                                                        /* STL vector              C++11    */ 
+#include <vector>                                                        /* STL vector              C++11    */
 #include <tuple>                                                         /* STL tuples              C++11    */
 
 // Put everything in the mjr namespace
@@ -45,15 +45,15 @@ namespace mjr {
 
       static_assert(std::is_arithmetic<coordT>::value,
                     "ERROR: coordT parameter of point2d template must be a numeric type.");
-      
+
     public:
       coordT x; //!< X coordinate
       coordT y; //!< Y coordinate
 
       /** @name Constructors */
-      //@{  
+      //@{
       point2d() = default;
-      point2d(std::initializer_list<coordT> iList) { auto p=iList.begin();  x=*p; y=*(++p);         }      
+      point2d(std::initializer_list<coordT> iList) { auto p=iList.begin();  x=*p; y=*(++p);         }
       point2d(const point2d &aPoint)               { x=aPoint.x;            y=aPoint.y;             }
       point2d(coordT newX, coordT newY)            { x=newX;                y=newY;                 }
       point2d(std::complex<coordT> aComplex)       { x=aComplex.real();     y=aComplex.imag();      }

@@ -29,10 +29,9 @@ if [ -e examples -a -e lib -a -e CMakeLists.txt ] ; then
     else
       cmake ../
     fi
-      
+
     echo "Now: 'cd build' & make soemthing!"
   fi
 else
     echo "Can't find one or more of examples/, lib/, or CMakeLists.txt.  Are you in the correct directory?"
 fi
-

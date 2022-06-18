@@ -3,8 +3,8 @@
 /**
  @file      ramConfig.hpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Header defining several compile options.@EOL 
- @copyright 
+ @brief     Header defining several compile options.@EOL
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -46,7 +46,7 @@
 #endif
 
 /** @brief Keep track of dirty parts of the canvis.@EOL
-    A rectangle is maintained that contains the dirty region of the canvas.  
+    A rectangle is maintained that contains the dirty region of the canvas.
     @todo Add other dirty mark methods like a dirty pixels list, list of dirty rectangels, dirty bit mask.
     @warning This option can impose as much as a 2x penalty on drawing operations.
         - 0 none  No dirty lists
@@ -76,14 +76,14 @@
 #define INT_CORD int
 #endif
 
-/** @brief Always keep the Alpha color safe@EOL 
-    If this non-zero, then the library will preserve the alpha color for normal draw operations.  
+/** @brief Always keep the Alpha color safe@EOL
+    If this non-zero, then the library will preserve the alpha color for normal draw operations.
     @warning Imposes a small performance impact. */
 #ifndef SUPPORT_ALWAYS_PRESERVE_ALPHA
 #define SUPPORT_ALWAYS_PRESERVE_ALPHA 0
 #endif
 
-/** @brief Support drawing modes@EOL 
+/** @brief Support drawing modes@EOL
     If this non-zero, then the library will support drawMode in ramCanvas objects.
     @warning Imposes a small performance impact. */
 #ifndef SUPPORT_DRAWING_MODE
@@ -96,7 +96,7 @@ namespace mjr {
   /**@brief Class providing run time access to compile time parameters.@EOL */
   class ramConfig {
     public:
-      
+
     /** @name Run time detection of compile time options */
     //@{
       static int support_always_preserve_alpha() { return SUPPORT_ALWAYS_PRESERVE_ALPHA; }

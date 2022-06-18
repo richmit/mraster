@@ -5,8 +5,8 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @file      colorData.hpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Header for the colorData array declaration@EOL 
- @copyright 
+ @brief     Header for the colorData array declaration@EOL
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 

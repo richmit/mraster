@@ -4,7 +4,7 @@
  @file      mapclamp.hpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Include file defining several mapping and clamping functions.@EOL @EOL
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 

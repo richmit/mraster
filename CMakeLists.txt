@@ -18,7 +18,7 @@
 # Other "O" options include: O_DOXYGEN, O_TIFF, O_OPENGL, O_OPENMP, O_PNG, O_IM, & O_STATIC
 #
 # Leave off the -DCMAKE_CXX_COMPILER... option to use the default compiler
-# 
+#
 
 ######################################################################################################################################################
 cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
@@ -109,7 +109,7 @@ set(TARGETS_REQ_NONE   "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "
                        "mandelbrot_distance" "mandelbrot_distance_old" "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits"
                        "mandelbrot_potential" "mandelbrot_triangle" "newton_bm_cplx" "newton_bm_real" "newton_half" "newton_max_mod" "newton_vs"
                        "newton_z6" "peterdejong" "peterdejongM" "sic" "sic_search" "sierpinski_triangle" "sprott2d" "testPoint" "test_draw_btriangle"
-                       "test_draw_color" "test_draw_misc" "test_draw_primatives" "tippets" "mandelbrot_bm_real_eqop" 
+                       "test_draw_color" "test_draw_misc" "test_draw_primatives" "tippets" "mandelbrot_bm_real_eqop"
                        )
 set(TARGETS_REQ_MRRL   "color_lut_indexed" "color_lut_rainbows" "color_web_rectangle" "color_web_triangle" "test_draw_fonts" "test_draw_glyph"
                        "test_draw_strings"
@@ -147,7 +147,7 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
   if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     target_compile_options(${CURTGT} PUBLIC -Wstrict-overflow=0)
     target_compile_options(${CURTGT} PUBLIC -ffast-math)
-    target_compile_options(${CURTGT} PUBLIC -Wall -Wconversion -Wno-unknown-pragmas -Wextra -Wno-deprecated-copy) # 
+    target_compile_options(${CURTGT} PUBLIC -Wall -Wconversion -Wno-unknown-pragmas -Wextra -Wno-deprecated-copy) #
     target_compile_options(${CURTGT} PUBLIC -Ofast)
     if(CMAKE_CXX_PLATFORM_ID STREQUAL "MinGWx")
       target_compile_options(${CURTGT} PUBLIC -static-libgcc)
@@ -184,7 +184,7 @@ if (OPENMP_FOUND)
   foreach(CURTGT IN LISTS TARGETS_REQ_OPENMP)
     target_compile_options(${CURTGT} PUBLIC ${OpenMP_CXX_FLAGS})
     target_include_directories(${CURTGT} PRIVATE ${OpenMP_INCLUDE_PATH})
-    target_link_libraries(${CURTGT} ${OpenMP_CXX_LIBRARIES}) # ${PROJECT_LINK_LIBS}). 
+    target_link_libraries(${CURTGT} ${OpenMP_CXX_LIBRARIES}) # ${PROJECT_LINK_LIBS}).
   endforeach(CURTGT)
 endif()
 
@@ -220,7 +220,7 @@ add_custom_target(clean-images
 # Add targets making movies
 
 ######################################################################################################################################################
-# Generate an include file with various methdata about the build.  
+# Generate an include file with various methdata about the build.
 
 CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/config.hpp.cmake ${CMAKE_BINARY_DIR}/config.hpp)
 
@@ -240,4 +240,3 @@ if(Doxygen_FOUND)
 else()
   message("Warning: Doxygen not found.  No documentation targets!")
 endif()
-
