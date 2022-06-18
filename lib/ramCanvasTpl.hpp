@@ -1846,106 +1846,104 @@ namespace mjr {
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, colorT color) {
     intCrdT x, y;
     if(y1 == y2) {                                                            // slope = 0
-      if( (y1 < 0) || (y1 >= numYpix) )                                       //    Line off canvas case
+      if( (y1 < 0) || (y1 >= numYpix) )                                       // . Line off canvas case
         return;
-      if(x1 > x2) {                                                           //    Fix point ordering
+      if(x1 > x2)                                                             // . Fix point ordering
         std::swap(x1, x2);
-      }
-      if(x1 < 0)                                                              //    Clip left
+      if(x1 < 0)                                                              // . Clip left
         x1 = 0;
-      if(x2 >= numXpix)                                                       //    Clip right
+      if(x2 >= numXpix)                                                       // . Clip right
         x2 = numXpix - 1;
-      for(x=x1; x<=x2; x++)                                                   //    Draw Pixels: drawHorzLineNC(x1, x2, y1, color);
-        drawPointNC(x, y1, color);
+      drawHorzLineNC(x1, x2, y1, color);                                      // . Draw Pixels
     } else if(x1 == x2) {                                                     // slope = infinity
-      if( (x1 < 0) || (x1 >= numXpix) )                                       //    Line off canvas case
+      if( (x1 < 0) || (x1 >= numXpix) )                                       // . Line off canvas case
         return;
-      if(y1 > y2)                                                             //    Fix point ordering
+      if(y1 > y2)                                                             // . Fix point ordering
         std::swap(y1, y2);
-      if(y1 < 0)                                                              //    Clip top
+      if(y1 < 0)                                                              // . Clip top
         y1 = 0;
-      if(y2 >= numYpix)                                                       //    Clip bottom
+      if(y2 >= numYpix)                                                       // . Clip bottom
         y2 = numYpix - 1;
-      for(y=y1; y<=y2; y++)                                                   //    Draw Pixels: drawVertLineNC(y1, y2, x1, color);
-        drawPointNC(x1, y, color);
+      drawVertLineNC(y1, y2, x1, color);                                      // . Draw Pixels
     } else {                                                                  // Slope is not infinity or 0...
       int dx, dy;
-      if(x1 > x2) {                                                           // Fix point ordering
+      if(x1 > x2) {                                                           // . Fix point ordering
         std::swap(x1, x2);
         std::swap(y1, y2);
       }
-      dx = x2 - x1;                                                           // Compute the slope
+      dx = x2 - x1;                                                           // . Compute the slope
       dy = y2 - y1;
-      if(dx == dy) {                                                          // Slope = 1
-        if( (y2 < 0) || (x2 < 0) || (x1 >= numXpix) || (y1 >= numYpix) )      //    Line off canvas case
+      if(dx == dy) {                                                          // . Slope = 1
+        if( (y2 < 0) || (x2 < 0) || (x1 >= numXpix) || (y1 >= numYpix) )      // .. Line off canvas case
           return;
-        if(x1 < 0) {                                                          //    Clip left
+        if(x1 < 0) {                                                          // .. Clip left
           y1 = y1 - x1;
           x1 = 0;
         }
-        if(y1 < 0) {                                                          //    Clip top
+        if(y1 < 0) {                                                          // .. Clip top
           x1 = x1 - y1;
           y1 = 0;
         }
-        if(x2 >= numXpix) {                                                   //    Clip right
+        if(x2 >= numXpix) {                                                   // .. Clip right
           y2 = y2 - (x2 - numXpix) - 1;
           x2 = numXpix - 1;
         }
-        if(y2 >= numYpix) {                                                   //    Clip bottom
+        if(y2 >= numYpix) {                                                   // .. Clip bottom
           x2 = x2 - (y2 - numYpix) - 1;
           y2 = numYpix - 1;
         }
-        for(x=x1,y=y1;x<=x2;y++,x++)                                          //    Draw Pixels
+        for(x=x1,y=y1;x<=x2;y++,x++)                                          // .. Draw Pixels
           drawPointNC(x, y, color);
-      } else if(dx == -dy) {                                                  // Slope = -1
-        if( (x2 < 0) || (y2 >= numYpix) || (x1 >= numXpix) || (y1 < 0) )      //    Line off canvas case
+      } else if(dx == -dy) {                                                  // . Slope = -1
+        if( (x2 < 0) || (y2 >= numYpix) || (x1 >= numXpix) || (y1 < 0) )      // .. Line off canvas case
           return;
-        if(x1 < 0) {                                                          //    Clip left
+        if(x1 < 0) {                                                          // .. Clip left
           y1 = y1 + x1;
           x1 = 0;
         }
-        if(x2 >= numXpix) {                                                   //    Clip right
+        if(x2 >= numXpix) {                                                   // .. Clip right
           y2 = y2 + (x2 - (numXpix - 1));
           x2 = numXpix - 1;
         }
-        if(y2 < 0) {                                                          //    Clip top
+        if(y2 < 0) {                                                          // .. Clip top
           x2 = x2 + y2;
           y2 = 0;
         }
-        if(y1 >= numYpix) {                                                   //    Clip bottom
+        if(y1 >= numYpix) {                                                   // .. Clip bottom
           x1 = x1 + (y1 - (numYpix - 1));
           y1 = numYpix - 1;
         }
-        for(x=x1,y=y1;x<=x2;y--,x++)                                          //    Draw Pixels
+        for(x=x1,y=y1;x<=x2;y--,x++)                                          // .. Draw Pixels
           drawPointNC(x, y, color);
-      } else {                                                                // Slope != 1, -1, 0, \infinity
+      } else {                                                                // . Slope != 1, -1, 0, \infinity
         int s, dx2, dy2;
         dx2 = 2*dx;
         dy2 = 2*dy;
-        if(dy > 0) {                                                          // Positive Slope
-          if( (y2 < 0) || (x2 < 0) || (x1 >= numXpix) || (y1 >= numYpix) )    // Line off canvas case
+        if(dy > 0) {                                                          // .. Positive Slope
+          if( (y2 < 0) || (x2 < 0) || (x1 >= numXpix) || (y1 >= numYpix) )    // ... Line off canvas case
             return;
-          if(x1 < 0) {                                                        // Clip left
+          if(x1 < 0) {                                                        // ... Clip left
             y1 = (int)(1.0*y1-x1*dy/dx);
             x1 = 0;
           }
-          if(y1 < 0) {                                                        // Clip top
+          if(y1 < 0) {                                                        // ... Clip top
             x1 = (int)(1.0*x1-y1*dx/dy);
             y1 = 0;
           }
-          if(x2 >= numXpix) {                                                 // Clip right
+          if(x2 >= numXpix) {                                                 // ... Clip right
             y2 = (int)((1.0*dy*(numXpix-1)+y1*dx-x1*dy)/dx);
             x2 = numXpix - 1;
           }
-          if(y2 >= numYpix) {                                                 // Clip bottom
+          if(y2 >= numYpix) {                                                 // ... Clip bottom
             x2 = (int)(((numYpix-1)*dx-y2*dx+x2*dy)/dy);
             y2 = numYpix - 1;
           }
-          if(dx > dy) {                                                       // 0 < Slope < 1
+//  MJR TODO NOTE <2022-06-18T13:11:56-0500> ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine: We use drawPoint instead of drawPointNC, can we make an off canvas decesion instead? Similar case down below.  
+          if(dx > dy) {                                                       // ... 0 < Slope < 1
             s = dy2 - dx;
             x=x1;
             y=y1;
-            while(x<=x2) {                                                    // Draw Line
+            while(x<=x2) {                                                    // .... Draw Line
               drawPoint(x, y, color);
               if(s < 0) {
                 s += dy2;
@@ -1955,11 +1953,11 @@ namespace mjr {
               }
               x++;
             }
-          } else {                                                            // 1 < Slope < infinity
+          } else {                                                            // ... 1 < Slope < infinity
             s = dy - dx2;
             x=x1;
             y=y1;
-            while(y<=y2) {                                                    // Draw Line
+            while(y<=y2) {                                                    // .... Draw Line
               drawPoint(x, y, color);
               if(s > 0) {
                 s -= dx2;
@@ -1970,30 +1968,30 @@ namespace mjr {
               y++;
             }
           }
-        } else {                                                              // Negative Slope
-          if( (x2 < 0) || (y2 >= numYpix) || (x1 >= numXpix) || (y1 < 0) )    // Line off canvas case
+        } else {                                                              // .. Negative Slope
+          if( (x2 < 0) || (y2 >= numYpix) || (x1 >= numXpix) || (y1 < 0) )    // ... Line off canvas case
             return;
-          if(x1 < 0) {                                                        // Clip left
+          if(x1 < 0) {                                                        // ... Clip left
             y1 = (int)(1.0*y1-x1*dy/dx);
             x1 = 0;
           }
-          if(y2 < 0) {                                                        // Clip top
+          if(y2 < 0) {                                                        // ... Clip top
             x2 = (int)(1.0*x2-y2*dx/dy);
             y2 = 0;
           }
-          if(x2 >= numXpix) {                                                 // Clip right
+          if(x2 >= numXpix) {                                                 // ... Clip right
             y2 = (int)((1.0*dy*(numXpix-1)+y2*dx-x2*dy)/dx);
             x2 = numXpix - 1;
           }
-          if(y1 >= numYpix) {                                                 // Clip bottom
+          if(y1 >= numYpix) {                                                 // ... Clip bottom
             x1 = (int)(((numYpix-1)*dx-y1*dx+x1*dy)/dy);
             y1 = numYpix - 1;
           }
-          if(dx > -dy) {                                                      // 0 > Slope > -infinity
+          if(dx > -dy) {                                                      // ... 0 > Slope > -infinity
             s = dy2 + dx;
             x=x1;
             y=y1;
-            while(x<=x2) {                                                    // Draw Line
+            while(x<=x2) {                                                    // .... Draw Line
               drawPoint(x, y, color);
               if(s > 0) {
                 s += dy2;
@@ -2003,11 +2001,11 @@ namespace mjr {
               }
               x++;
             }
-          } else {                                                            // -1 > Slope > -inf
+          } else {                                                            // ... -1 > Slope > -inf
             s = dy + dx2;
             x=x1;
             y=y1;
-            while(y>=y2) {                                                    // Draw Line
+            while(y>=y2) {                                                    // .... Draw Line
               drawPoint(x, y, color);
               if(s < 0) {
                 s += dx2;
