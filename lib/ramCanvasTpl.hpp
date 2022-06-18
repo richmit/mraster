@@ -1194,14 +1194,14 @@ namespace mjr {
 
       /** @name Accessor Methods */
       //@{
-      fltCrdT get_minRealX() { return minRealX; }    //!< x coord of min (real coord)
-      fltCrdT get_maxRealX() { return maxRealX; }    //!< x coord of max (real coord)
-      fltCrdT get_minRealY() { return minRealY; }    //!< y coord of min (real coord)
-      fltCrdT get_maxRealY() { return maxRealY; }    //!< y coord of max (real coord)
-      fltCrdT get_xPixWid()  { return xPixWid;  }      //!< Width of a pixel (real coord)
-      fltCrdT get_yPixWid()  { return yPixWid;  }      //!< Height of a pixel (real coord)
-      fltCrdT get_xWid()     { return xWid;     }         //!< Width of the display (real coord)
-      fltCrdT get_yWid()     { return yWid;     }         //!< height of the display(real coord)
+      fltCrdT get_minRealX() { return minRealX; } //!< x coord of min (real coord)
+      fltCrdT get_maxRealX() { return maxRealX; } //!< x coord of max (real coord)
+      fltCrdT get_minRealY() { return minRealY; } //!< y coord of min (real coord)
+      fltCrdT get_maxRealY() { return maxRealY; } //!< y coord of max (real coord)
+      fltCrdT get_xPixWid()  { return xPixWid;  } //!< Width of a pixel (real coord)
+      fltCrdT get_yPixWid()  { return yPixWid;  } //!< Height of a pixel (real coord)
+      fltCrdT get_xWid()     { return xWid;     } //!< Width of the display (real coord)
+      fltCrdT get_yWid()     { return yWid;     } //!< height of the display(real coord)
       //@}
 
       /** @name Pixel Value Accessor Methods */

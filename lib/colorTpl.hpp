@@ -166,8 +166,8 @@ namespace mjr {
           clrChanT thePartsA[numChan];
       } theColor;
 
-      const static int minWavelength = 360;     //!< Minimum wavelength for wavelength conversion
-      const static int maxWavelength = 830;     //!< Maximum wavelength for wavelength conversion
+      const static int minWavelength = 360; //!< Minimum wavelength for wavelength conversion
+      const static int maxWavelength = 830; //!< Maximum wavelength for wavelength conversion
       
       /** Is theInt is larger than thePartsA array? */
       const static int  fastMask                = (sizeof(clrMaskT)>=sizeof(clrChanT)*numChan);
@@ -185,15 +185,15 @@ namespace mjr {
 
     public:
 
-      const static int           bitsPerChan         = (int)(sizeof(clrChanT)*CHAR_BIT);                              //!< Number of bits in clrChanT
-      const static bool          channelType8bitInt  = bitsPerChan==8;                                                //!< is clrChanT an 8-bit int?
-      const static int           bitsPerPixel        = numChan*bitsPerChan;                                           //!< Number of color data bits
-      const static clrChanT      maxChanVal          = std::numeric_limits<clrChanT>::max();                          //!< maximum value for a channel
-      const static clrChanT      minChanVal          = std::numeric_limits<clrChanT>::min();                          //!< maximum value for a channel
-      const static clrChanT      meanChanVal         = (maxChanVal-minChanVal)/2;                                     //!< middle value for a channel
-      const static int           numChanNonRGB       = (numChan>3 ? numChan-3 : 0);                                   //!< number of non-RGB channels
-      const static clrChanIArthT numValuesPerChan    = static_cast<clrChanIArthT>(1u<<bitsPerChan);                              //!< unique channel value approximation
-      const static int           channelCount        = numChan;                                                       //!< Number of channels
+      const static int           bitsPerChan         = (int)(sizeof(clrChanT)*CHAR_BIT);            //!< Number of bits in clrChanT
+      const static bool          channelType8bitInt  = bitsPerChan==8;                              //!< is clrChanT an 8-bit int?
+      const static int           bitsPerPixel        = numChan*bitsPerChan;                         //!< Number of color data bits
+      const static clrChanT      maxChanVal          = std::numeric_limits<clrChanT>::max();        //!< maximum value for a channel
+      const static clrChanT      minChanVal          = std::numeric_limits<clrChanT>::min();        //!< maximum value for a channel
+      const static clrChanT      meanChanVal         = (maxChanVal-minChanVal)/2;                   //!< middle value for a channel
+      const static int           numChanNonRGB       = (numChan>3 ? numChan-3 : 0);                 //!< number of non-RGB channels
+      const static clrChanIArthT numValuesPerChan    = static_cast<clrChanIArthT>(1u<<bitsPerChan); //!< unique channel value approximation
+      const static int           channelCount        = numChan;                                     //!< Number of channels
       
       typedef clrChanT      channelType;          //!< Type for the channels (clrChanT)
       typedef clrChanIArthT channelIntArithType;  //!< Type for integer channel arithmetic (clrChanIArthT)
@@ -201,19 +201,19 @@ namespace mjr {
       /** @name Public Constants */
       //@{
       /** Named colors the corners of the RGB color cube. */
-      enum class cornerColor { BLACK,     //!< Color cube corner color with RGB=000
-                               RED,       //!< Color cube corner color with RGB=100
-                               GREEN,     //!< Color cube corner color with RGB=010
-                               BLUE,      //!< Color cube corner color with RGB=001
-                               YELLOW,    //!< Color cube corner color with RGB=110
-                               CYAN,      //!< Color cube corner color with RGB=011
-                               MAGENTA,   //!< Color cube corner color with RGB=101
-                               WHITE      //!< Color cube corner color with RGB=111
+      enum class cornerColor { BLACK,   //!< Color cube corner color with RGB=000
+                               RED,     //!< Color cube corner color with RGB=100
+                               GREEN,   //!< Color cube corner color with RGB=010
+                               BLUE,    //!< Color cube corner color with RGB=001
+                               YELLOW,  //!< Color cube corner color with RGB=110
+                               CYAN,    //!< Color cube corner color with RGB=011
+                               MAGENTA, //!< Color cube corner color with RGB=101
+                               WHITE    //!< Color cube corner color with RGB=111
       };
 
       /** Color space interpolation methods */
-      enum colorInterpMethEnum {CINTRP_RGB,     //!< RGB-space interpolation
-                                CINTRP_HLS      //!< HLS-space interpolation
+      enum colorInterpMethEnum {CINTRP_RGB, //!< RGB-space interpolation
+                                CINTRP_HLS  //!< HLS-space interpolation
 
       };
       //@}
@@ -221,33 +221,33 @@ namespace mjr {
       /** @name Constructors: C++ Utility */
       //@{
       /** The no arg constructor is a noop -- no need to initialize millions of pixels for no good reason. */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>();
+      colorTpl();
       /** Copy constructor (heavily used for assignment in the ramCanvas library). */      
-      colorTpl(const colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& aColor);
+      colorTpl(const colorTpl& aColor);
       //@}
 
       /** @name Constructors: RGB/RGBA */
       //@{
       /** This constructor directly sets the first three channels of the color object */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>(clrChanT r, clrChanT g, clrChanT b);
+      colorTpl(clrChanT r, clrChanT g, clrChanT b);
       /** This constructor directly sets the four channels of the color object. */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>(clrChanT r, clrChanT g, clrChanT b, clrChanT a);
+      colorTpl(clrChanT r, clrChanT g, clrChanT b, clrChanT a);
       //@}
 
       /** @name Constructors: Data Conversion Focused */
       //@{
       /** Uses setAll method to set all channels to the given value */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>(clrChanT r);
+      colorTpl(clrChanT r);
       /** Uses the setColorFromCorner method to set the initialize the object. */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>(cornerColor ccolor);
+      colorTpl(cornerColor ccolor);
       /** Uses the setColorFromString method to set the initialize the object. */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>(const char *colorString);      
+      colorTpl(const char *colorString);      
       //@}
       
       /** @name Destructor */
       //@{
       /** The destructor for this class is a no-op. */
-      ~colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>();
+      ~colorTpl();
       //@}
 
       /** @name Component access */
@@ -316,27 +316,27 @@ namespace mjr {
       /** Sets the red component of the current object.
           @param r The value to set the red component to
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setRed(clrChanT r);
+      colorTpl& setRed(clrChanT r);
       /** Sets the given channel to the value given.
           @param chan The channel to set
           @param cVal The value to set the channel to */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setChan(int chan, clrChanT cVal);
+      colorTpl& setChan(int chan, clrChanT cVal);
       /** Sets the green component of the current object.
           @param g The value to set the green component to
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setGreen(clrChanT g);
+      colorTpl& setGreen(clrChanT g);
       /** Sets the blue component of the current object.
           @param b The value to set the blue component to
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setBlue(clrChanT b);
+      colorTpl& setBlue(clrChanT b);
       /** Sets the alpha component of the current object.
           @param a The value to set the alpha component to
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setAlpha(clrChanT a);
+      colorTpl& setAlpha(clrChanT a);
       /** Sets all components of the current object.
           @param a The value to set each channel to
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setAll(clrChanT a);
+      colorTpl& setAll(clrChanT a);
       //@}
 
       /** @name component setting with floating point numbers. */
@@ -344,27 +344,27 @@ namespace mjr {
       /** Sets the red component of the current object from a floating point value in the unit interval, [0,1].
           @param r The value to set the red component to
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setRedF(clrChanFArthT r);
+      colorTpl& setRedF(clrChanFArthT r);
       /** Sets the given channel of the current object from a floating point value in the unit interval, [0,1].
           @param chan The channel to set
           @param cVal The value to set the channel to */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setChanF(int chan, clrChanFArthT cVal);
+      colorTpl& setChanF(int chan, clrChanFArthT cVal);
       /** Sets the green component of the current object from a floating point value in the unit interval, [0,1].
           @param g The value to set the green component to
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setGreenF(clrChanFArthT g);
+      colorTpl& setGreenF(clrChanFArthT g);
       /** Sets the blue component of the current object from a floating point value in the unit interval, [0,1].
           @param b The value to set the blue component to
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setBlueF(clrChanFArthT b);
+      colorTpl& setBlueF(clrChanFArthT b);
       /** Sets the alpha component of the current object from a floating point value in the unit interval, [0,1].
           @param a The value to set the alpha component to
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setAlphaF(clrChanFArthT a);
+      colorTpl& setAlphaF(clrChanFArthT a);
       /** Sets all components of the current object from a floating point value in the unit interval, [0,1].
           @param a The value to set each channel to
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setAllF(clrChanFArthT a);
+      colorTpl& setAllF(clrChanFArthT a);
       //@}
 
       /** @name component setting with 8-bit, unsigned integers*/
@@ -372,27 +372,27 @@ namespace mjr {
       /** Sets the red component of the current object from an uint8_t value in the interval [0,255].
           @param r The value to set the red component to
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setRed8bit(uint8_t r);
+      colorTpl& setRed8bit(uint8_t r);
       /** Sets the given channel of the current object from an uint8_t value in the interval [0,255].
           @param chan The channel to set
           @param cVal The value to set the channel to */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setChan8bit(int chan, uint8_t cVal);
+      colorTpl& setChan8bit(int chan, uint8_t cVal);
       /** Sets the green component of the current object from an uint8_t value in the interval [0,255].
           @param g The value to set the green component to
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setGreen8bit(uint8_t g);
+      colorTpl& setGreen8bit(uint8_t g);
       /** Sets the blue component of the current object from an uint8_t value in the interval [0,255].
           @param b The value to set the blue component to
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setBlue8bit(uint8_t b);
+      colorTpl& setBlue8bit(uint8_t b);
       /** Sets the alpha component of the current object from an uint8_t value in the interval [0,255].
           @param a The value to set the alpha component to
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setAlpha8bit(uint8_t a);
+      colorTpl& setAlpha8bit(uint8_t a);
       /** Sets all components of the current object from an uint8_t value in the interval [0,255].
           @param a The value to set each channel to
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setAll8bit(uint8_t a);
+      colorTpl& setAll8bit(uint8_t a);
       //@}
 
       /** @name component setting with 64-bit, unsigned integers. */
@@ -402,37 +402,37 @@ namespace mjr {
           @param r The value to set the red component to
           @param maxv Floating point value corresponding to maxChanVal
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setRed64bit(uint64_t r, uint64_t maxv=std::numeric_limits<uint64_t>::max());
+      colorTpl& setRed64bit(uint64_t r, uint64_t maxv=std::numeric_limits<uint64_t>::max());
       /** Sets the given channel of the current object from an uint64_t value in the interval [0,maxv].  Avoids round off error as much as possible by
           moving scale computations till the last moment; also avoids tedious and unsightly prescaling in application code.
           @param chan The channel to set
           @param cVal The value to set the channel to
           @param maxv Floating point value corresponding to maxChanVal */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setChan64bit(int chan, uint64_t cVal, uint64_t maxv=std::numeric_limits<uint64_t>::max());
+      colorTpl& setChan64bit(int chan, uint64_t cVal, uint64_t maxv=std::numeric_limits<uint64_t>::max());
       /** Sets the green component of the current object from an uint64_t value in the interval [0,maxv].  Avoids round off error as much as possible by
           moving scale computations till the last moment; also avoids tedious and unsightly prescaling in application code.
           @param g    The value to set the green component to
           @param maxv Floating point value corresponding to maxChanVal
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setGreen64bit(uint64_t g, uint64_t maxv=std::numeric_limits<uint64_t>::max());
+      colorTpl& setGreen64bit(uint64_t g, uint64_t maxv=std::numeric_limits<uint64_t>::max());
       /** Sets the blue component of the current object from an uint64_t value in the interval [0,maxv].  Avoids round off error as much as possible by
           moving scale computations till the last moment; also avoids tedious and unsightly prescaling in application code.
           @param b The value to set the blue component to
           @param maxv Floating point value corresponding to maxChanVal
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setBlue64bit(uint64_t b, uint64_t maxv=std::numeric_limits<uint64_t>::max());
+      colorTpl& setBlue64bit(uint64_t b, uint64_t maxv=std::numeric_limits<uint64_t>::max());
       /** Sets the alpha component of the current object from an uint64_t value in the interval [0,maxv].  Avoids round off error as much as possible by
           moving scale computations till the last moment; also avoids tedious and unsightly prescaling in application code.
           @param a The value to set the alpha component to
           @param maxv Floating point value corresponding to maxChanVal
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setAlpha64bit(uint64_t a, uint64_t maxv=std::numeric_limits<uint64_t>::max());
+      colorTpl& setAlpha64bit(uint64_t a, uint64_t maxv=std::numeric_limits<uint64_t>::max());
       /** Sets all components of the current object from an uint64_t value in the interval [0,maxv].  Avoids round off error as much as possible by moving
           scale computations till the last moment; also avoids tedious and unsightly prescaling in application code.
           @param a The value to set each channel to
           @param maxv Floating point value corresponding to maxChanVal
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setAll64bit(uint64_t a, uint64_t maxv=std::numeric_limits<uint64_t>::max());
+      colorTpl& setAll64bit(uint64_t a, uint64_t maxv=std::numeric_limits<uint64_t>::max());
       //@}
 
       /** @name RGB/RGBA color setting methods */
@@ -442,22 +442,22 @@ namespace mjr {
           @param g The value to set the green component to
           @param b The value to set the blue component to
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setColorRGB(clrChanT r, clrChanT g, clrChanT b);
+      colorTpl& setColorRGB(clrChanT r, clrChanT g, clrChanT b);
       /** Sets the red, green, blue, and alpha components of the current object.
           @param r The value to set the red component to
           @param g The value to set the green component to
           @param b The value to set the blue component to
           @param a The value to set the alpha component to
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setColorRGBA(clrChanT r, clrChanT g, clrChanT b, clrChanT a);
+      colorTpl& setColorRGBA(clrChanT r, clrChanT g, clrChanT b, clrChanT a);
       //@}
 
       /** @name Multi-component color setting methods with data conversion */
       //@{
       /** Set the current color to one specified in the given color object.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      setColorFromColor(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      setColorFromColor(colorTpl color);
       /** Sets the current color based upon the contents of the given C-string.  The colorString argument may take one of three forms:
            - A C-string containing a single character. Ex: "0" 
            - A C-string containing an HTML-style, hex color specification. Ex: \#FFAABB
@@ -466,15 +466,15 @@ namespace mjr {
           Black is the result if an unsupported color string is specified.
           @param colorString C-string specifying a color.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setColorFromString(const char *colorString);
+      colorTpl& setColorFromString(const char *colorString);
       /** This function sets the current color based upon the single character given (0==black, R, G, B, M, C, Y, W=white).  This function is relatively well
           optimized.
           @param colorChar Character specifying the color
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setColorFromLetter(char colorChar);
+      colorTpl& setColorFromLetter(char colorChar);
       /** Set the color to one of the named corner colors.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setColorFromCorner(cornerColor ccolor);
+      colorTpl& setColorFromCorner(cornerColor ccolor);
       /** This function sets color based upon three uint8_t values in the range [0,255].  Note that a 255 indicates to set to a fully saturated value --
           i.e. a component given a 255 will be set to maxChanVal.
           @param r The value to set the red component to
@@ -482,14 +482,14 @@ namespace mjr {
           @param b The value to set the blue component to
           @param a The value to set the alpha component to
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setColorFrom8bit(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+      colorTpl& setColorFrom8bit(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
       /** This function sets color based upon three uint8_t values in the range [0,255].  Note that a 255 indicates to set to a fully saturated value --
           i.e. a component given a 255 will be set to maxChanVal.
           @param r The value to set the red component to
           @param g The value to set the green component to
           @param b The value to set the blue component to
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setColorFrom8bit(uint8_t r, uint8_t g, uint8_t b);
+      colorTpl& setColorFrom8bit(uint8_t r, uint8_t g, uint8_t b);
       /** This function sets color based upon three floating point values in the range [0,1].  Note that a 1 indicates to set to a fully saturated value --
           i.e. a component given a 1 will be set to maxChanVal.
           @param r The value to set the red component to
@@ -497,30 +497,28 @@ namespace mjr {
           @param b The value to set the blue component to
           @param a The value to set the alpha component to
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setColorFromF(clrChanFArthT r, clrChanFArthT g, clrChanFArthT b, clrChanFArthT a);
+      colorTpl& setColorFromF(clrChanFArthT r, clrChanFArthT g, clrChanFArthT b, clrChanFArthT a);
       /** @overload */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setColorFromF(clrChanFArthT r, clrChanFArthT g, clrChanFArthT b);
+      colorTpl& setColorFromF(clrChanFArthT r, clrChanFArthT g, clrChanFArthT b);
       /** This function sets color based upon the bytes of the given integer.  The LSB (lest significant byte) of the given integer will be used to set red.
           If the integer is at least two bytes long, then the next byte will be green. Green and alpha are filled next if enough bytes exist.  Note that the
           bytes are interpreted as by setColorFrom8bit.  
           @param anInt The integer from which to extract bytes to set color
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setColorFromPackedIntABGR(uint32_t anInt);
+      colorTpl& setColorFromPackedIntABGR(uint32_t anInt);
       /** This function sets color based upon the bytes of the given integer.  The LSB (lest significant byte) of the given integer will be used to set blue.
           If the integer is at least two bytes long, then the next byte will be green. Green and alpha are filled next if enough bytes exist.  Note that the
           bytes are interpreted as by setColorFrom8bit.  
           @param anInt The integer from which to extract bytes to set color
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setColorFromPackedIntARGB(uint32_t anInt);
+      colorTpl& setColorFromPackedIntARGB(uint32_t anInt);
       /** @overload 
           @param anInt The integer from which to extract bytes to set color
           @param rIdx Location of red byte in anInt
           @param gIdx Location of green byte in anInt
           @param bIdx Location of blue byte in anInt
           @param aIdx Location of alpha byte in anInt*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setColorFromPackedInt(uint32_t anInt,
-                                                                                                           uint8_t rIdx, uint8_t gIdx,
-                                                                                                           uint8_t bIdx, uint8_t aIdx);
+      colorTpl& setColorFromPackedInt(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx, uint8_t aIdx);
       //@}
 
       /** @name Set to special colors */
@@ -531,28 +529,28 @@ namespace mjr {
       void setChanToMax();
       /** Set the color to black.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setToBlack();
+      colorTpl& setToBlack();
       /** Set the color to white.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setToWhite();
+      colorTpl& setToWhite();
       /** Set the color to red.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setToRed();
+      colorTpl& setToRed();
       /** Set the color to blue.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setToBlue();
+      colorTpl& setToBlue();
       /** Set the color to green.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setToGreen();
+      colorTpl& setToGreen();
       /** Set the color to cyan (RGB=011).
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setToCyan();
+      colorTpl& setToCyan();
       /** Set the color to yellow (RGB=110).
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setToYellow();
+      colorTpl& setToYellow();
       /** Set the color to magenta (RGB=101).
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setToMagenta();
+      colorTpl& setToMagenta();
       //@}
       
       /** @name Setting colors based upon other color spaces */
@@ -562,26 +560,26 @@ namespace mjr {
           @param h The Hue.
           @param s The Saturation.
           @param v The Value */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setColorFromUnitHSV(float h, float s, float v);
+      colorTpl& setColorFromUnitHSV(float h, float s, float v);
       /** Set the color indicated by the given HSV values.  The 'natural' in the name indicates that The ranges for h, s, and v are the natural ones.  i.e. H is
           in [0,360], s and v are in the range [0,100]
           @param h The Hue.
           @param s The Saturation.
           @param v The Value */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setColorFromNaturalHSV(float h, float s, float v);
+      colorTpl& setColorFromNaturalHSV(float h, float s, float v);
       /** Set the color indicated by the given HLS values.  The 'unit' in the name indicates that The ranges for h, s, and v are the the unit interval --
           i.e. [0,1].  The algorithm is that presented in Computer Graphics by Foley, Van Dam, Feiner, and Hughes -- 2nd edition page 596.  I have corrected a
           typeo in the text algorithm.
           @param H The Hue.
           @param L The Lightness or Luminescence
           @param S The Saturation. */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&  setColorFromUnitHLS(float H, float L, float S);
+      colorTpl&  setColorFromUnitHLS(float H, float L, float S);
       /** Set the color indicated by the given HLS values.  The 'natural' in the name indicates that The ranges for h, s, and v are the natural ones.  i.e. H is
           in [0,360], s and v are in the range [0,1].  This simply normalizes the H, and calls setColorFromNaturalHLS.
           @param H The Hue.
           @param L The Lightness or Luminescence
           @param S The Saturation. */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&  setColorFromNaturalHLS(float H, float L, float S);
+      colorTpl&  setColorFromNaturalHLS(float H, float L, float S);
       /** Set the color indicated by the given wavelength.  This function uses an algorithm based upon the color matching functions as as tabulated in table 3
           from Stockman and Sharpe (2000) -- I believe they are taken from Stiles and Burch 10-degree (1959).  Four of the algorithms are based upon simple
           linear interpolation, while one is based upon exponential bump functions closely matching the color matching functions.  The method of interpolation
@@ -593,14 +591,14 @@ namespace mjr {
           2 = closest, 
           3 linear interpolation,
           4 = exponential bump map interpolation*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setColorFromWavelengthCM(float wavelength, int INTRP);
+      colorTpl& setColorFromWavelengthCM(float wavelength, int INTRP);
       /** overload */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setColorFromWavelengthCM(float wavelength);
+      colorTpl& setColorFromWavelengthCM(float wavelength);
       /** Set the color indicated by the given wavelength. This function uses an algorithm based upon linear approximations to the color match functions.  I
           believe the original algorithm is due to Dan Bruton, and his FORTRAN version is available (at least as of 1997) at
           http://www.physics.sfasu.edu/astro/color.html
           @param wavelength to convert */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& setColorFromWavelengthLA(float wavelength);
+      colorTpl& setColorFromWavelengthLA(float wavelength);
       //@}
 
       /** @name Set color based an indexed color scheme */
@@ -611,13 +609,13 @@ namespace mjr {
           and the last color, at 217, is white.
           @param anInt An integer
           @return A reference to the current object */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& icpWebSafe216(int anInt);
+      colorTpl& icpWebSafe216(int anInt);
       /** Sets the color based upon an indexed color pallet.  As with all icp functions, 0 is black and the last color, at 217, is white.
           @param anInt An integer
           @param icpArray The pallet data
           @return A reference to the current object */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& icpSetColor(int anInt, const char **icpArray);
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& icpSetColor(int anInt, const uint32_t* icpArray);
+      colorTpl& icpSetColor(int anInt, const char **icpArray);
+      colorTpl& icpSetColor(int anInt, const uint32_t* icpArray);
       //@}
 
       /** @name Set color based upon color maps */
@@ -625,177 +623,177 @@ namespace mjr {
       /** This computes a 24-bit truecolor value intended for use in producing 16-bit greyscale TGA.  This is the color scheme that should be sued for
           POVray 16-bit height files
           @param anInt An integer */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpGreyTGA16bit(int anInt);
+      colorTpl& cmpGreyTGA16bit(int anInt);
       /** This computes a 24-bit truecolor value intended for use in producing 24-bit greyscale TGA.
           @param anInt An integer */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpGreyTGA24bit(int anInt);
+      colorTpl& cmpGreyTGA24bit(int anInt);
       /** This computes a color value based upon a linear approximation of the color match functions used to approximate wavelength to RGB conversion.  The
           linear color function approximation is not very accurate, but it is quite attractive.
           @param base The maximum number of colors
           @param anInt The index of the desired color */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpRainbowLA(int base, int anInt);
+      colorTpl& cmpRainbowLA(int base, int anInt);
       /** This computes a color value based upon an algorithm to convert wavelength to RGB that uses the Color Matching functions (setColorFromWavelengthCM).
           @param base The maximum number of colors
           @param anInt The index of the desired color
           @param INTRP Used as in setColorFromWavelengthCM() */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpRainbowCM(int base, int anInt, int INTRP);
+      colorTpl& cmpRainbowCM(int base, int anInt, int INTRP);
       /** overload */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpRainbowCM(int base, int anInt);
+      colorTpl& cmpRainbowCM(int base, int anInt);
       /** Computes a color value based upon a common rainbow-like color scheme based upon the HSV or HLS color space.  This rainbow is not natural in that the
           colors on the ends match each other, and the colors move in the wrong direction (red to violet).  This function uses floating point arithmetic and is
           thus prone to round off errors.  For a precise rainbow with integer arithmetic, see the function cmpClrCubeRainbow().
           @param base The maximum number of colors
           @param anInt The index of the desired color */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpRainbowHSV(int base, int anInt);
+      colorTpl& cmpRainbowHSV(int base, int anInt);
       /** This computes a color value based upon a common rainbow-like color scheme based upon an edge traversal of the RGB color cube.  It is thus the same as
           using cmpColorRamp with a corner sequence of "RYGCBMR".  At least one color component is always maximal in RGB space, and one is minimum.  This
           sequence of colors corresponds to an HSV sequence from h=0 to h=360, with s=100 and v=100.  This is simply a more precise version of cmpRainbowHSV
           that is immune to round off errors as it doesn't require any floating point conversions.  This function will generate 6*maxChanVal+1 different colors.
           @param anInt The index of the desired color */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpClrCubeRainbow(int anInt);
+      colorTpl& cmpClrCubeRainbow(int anInt);
       /** Returns a grey color given an index.  This is a true grey.  Provides (maxChanVal) different colors.  This function is NOT always the same as
           cmpColorRamp with a string of "0W" because cmpColorRamp is based upon a three channel space, while this function is based upon the number of channels
           in the current color.  For example, this function sets the alpha value of an RGBA color.  For an RGB based grey ramp, use cmpGreyRGB -- which is the
           same as cmpColorRamp with a corner string of "0W".  Supports input conditioning.
           @param anInt An integer */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpGrey(int anInt);
+      colorTpl& cmpGrey(int anInt);
       /** Returns an RGB based (won't set any components beyond RGB) grey color given an index.  This is a true grey.  Provides (maxChanVal) different colors.
           This This function is is always the same as cmpColorRamp with a string of "0W".  Supports input conditioning.
           @param anInt An integer */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpGreyRGB(int anInt);
+      colorTpl& cmpGreyRGB(int anInt);
       /** A grey-like color scheme with 3*maxChanVal colors, [0,3*maxChanVal-1].  It is not a true grey, but most people can't tell when used with reasonable
           channel depths.  Supports input conditioning.
           @param anInt An integer */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpGrey3x(int anInt);
+      colorTpl& cmpGrey3x(int anInt);
       /** A grey-like color scheme with 4*maxChanVal colors, [0,4*maxChanVal-1].  It is not a true grey, but most people can't tell when used with reasonable
           channel depths.  Supports input conditioning.
           @param anInt An integer */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpGrey4x(int anInt);
+      colorTpl& cmpGrey4x(int anInt);
       /** Converts an integer into a color based upon a traversal of the diagonal of the color cube from cyan to red.  This is the same as the saturation based
           HLS ramp joining the same two colors.  The result is just as if cmpColorRamp had been called with string of "CR".  Provides about (maxChanVal*1+1)
           unique colors.  Supports input conditioning.
           @param anInt     An integer
           @return A reference to the current object. */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpDiagRampCR(int anInt);
+      colorTpl& cmpDiagRampCR(int anInt);
       /** Converts an integer into a color based upon a traversal of the diagonal of the color cube from magenta to green.  This is the same as the saturation
           based HLS ramp joining the same two colors.  The result is just as if cmpColorRamp had been called with string of "MG".  Provides about
           (maxChanVal*1+1) unique colors.  Supports input conditioning.
           @param anInt     An integer
           @return A reference to the current object. */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpDiagRampMG(int anInt);
+      colorTpl& cmpDiagRampMG(int anInt);
       /** Converts an integer into a color based upon a traversal of the diagonal of the color cube from yellow to blue.  This is the same as the saturation
           based HLS ramp joining the same two colors.  The result is just as if cmpColorRamp had been called with string of "YB".  Provides about
           (maxChanVal*1+1) unique colors.  Supports input conditioning.
           @param anInt     An integer
           @return A reference to the current object. */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpDiagRampYB(int anInt);
+      colorTpl& cmpDiagRampYB(int anInt);
       /** Converts an integer into a color based upon a color cycle around the cube with constant constant brightness of two.  The result is just as if
           cmpColorRamp had been called with string of "CMYC".  Provides about (maxChanVal*3+1) unique colors.  Supports input conditioning.
           @param anInt     An integer
           @return A reference to the current object. */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpConstTwoRamp(int anInt);
+      colorTpl& cmpConstTwoRamp(int anInt);
       /** Converts an integer into a color based upon a color cycle around the cube with constant constant brightness of two.  The result is just as if
           cmpColorRamp had been called with string of "BRGB".  Provides about (maxChanVal*3+1) unique colors.  Supports input conditioning.
           @param anInt     An integer
           @return A reference to the current object. */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpConstOneRamp(int anInt);
+      colorTpl& cmpConstOneRamp(int anInt);
       /** Same as cmpSumRampRGB
           @param anInt An integer to convert to a color. */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpFireRamp(int anInt);
+      colorTpl& cmpFireRamp(int anInt);
       /** Convert and integer into a color based upon the classical cold to hot ramp.  This is the same as cmpColorRamp with a corner list of "BCGYR" Provides
           (maxChanVal*4+1) unique colors.  Supports input conditioning.
           @param anInt The integer to convert
           @return A reference to the current object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpColdToHot(int anInt);
+      colorTpl& cmpColdToHot(int anInt);
       /** Convert and integer into a color based upon a modified version of the classical cold to hot ramp.  This modified version corresponds to using
           cmpColorRamp with a corner list of "WCBYR" -- i.e. it starts at white (ice), moves up to blue (cold), then yellow through red (hot).  Provides
           (maxChanVal*4+1) unique colors.  Supports input conditioning.
           @param anInt The integer to convert
           @return A reference to the current object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpIceToWaterToHot(int anInt);
+      colorTpl& cmpIceToWaterToHot(int anInt);
       /** Convert and integer into a color based upon the popular saturation based HLS color scheme extending from the center of the HLS color space to the red
           vertex.  The same result can be obtained via a ramp from the center of the RGB color cube to the appropriate RGB vertex.  Provides (meanChanVal)
           unique colors.  Supports input conditioning.
           @param anInt The integer to convert
           @return A reference to the current object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpRampGrey2R(int anInt);
+      colorTpl& cmpRampGrey2R(int anInt);
       /** Convert and integer into a color based upon the popular saturation based HLS color scheme extending from the center of the HLS color space to the
           green vertex.  The same result can be obtained via a ramp from the center of the RGB color cube to the appropriate RGB vertex.  Provides (meanChanVal)
           unique colors.  Supports input conditioning.
           @param anInt The integer to convert
           @return A reference to the current object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpRampGrey2G(int anInt);
+      colorTpl& cmpRampGrey2G(int anInt);
       /** Convert and integer into a color based upon the popular saturation based HLS color scheme extending from the center of the HLS color space to the blue
           vertex.  The same result can be obtained via a ramp from the center of the RGB color cube to the appropriate RGB vertex.  Provides (meanChanVal)
           unique colors.  Supports input conditioning.
           @param anInt The integer to convert
           @return A reference to the current object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpRampGrey2B(int anInt);
+      colorTpl& cmpRampGrey2B(int anInt);
       /** Convert and integer into a color based upon the popular saturation based HLS color scheme extending from the center of the HLS color space to the cyan
           vertex.  The same result can be obtained via a ramp from the center of the RGB color cube to the appropriate RGB vertex.  Provides (meanChanVal)
           unique colors.  Supports input conditioning.
           @param anInt The integer to convert
           @return A reference to the current object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpRampGrey2C(int anInt);
+      colorTpl& cmpRampGrey2C(int anInt);
       /** Convert and integer into a color based upon the popular saturation based HLS color scheme extending from the center of the HLS color space to the
           magenta vertex.  The same result can be obtained via a ramp from the center of the RGB color cube to the appropriate RGB vertex.  Provides
           (meanChanVal) unique colors.  Supports input conditioning.
           @param anInt The integer to convert
           @return A reference to the current object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpRampGrey2M(int anInt);
+      colorTpl& cmpRampGrey2M(int anInt);
       /** Convert and integer into a color based upon the popular saturation based HLS color scheme extending from the center of the HLS color space to the
           yellow vertex.  The same result can be obtained via a ramp from the center of the RGB color cube to the appropriate RGB vertex.  Provides
           (meanChanVal) unique colors.  Supports input conditioning.
           @param anInt The integer to convert
           @return A reference to the current object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpRampGrey2Y(int anInt);
+      colorTpl& cmpRampGrey2Y(int anInt);
       /** Converts an integer into a color based upon a color up-down ramp: Gg == Green Up and Green Down == cyan -> magenta.  Provides (maxChanVal) different
           colors.  Supports input conditioning.
           @param anInt An integer */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpUpDownRampRg(int anInt);
+      colorTpl& cmpUpDownRampRg(int anInt);
       /** Converts an integer into a color based upon a color up-down ramp: Rb == Red Up and Blue Down == cyan -> yellow.  Provides (maxChanVal) different
           colors.  Supports input conditioning.
           @param anInt An integer */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpUpDownRampRb(int anInt);
+      colorTpl& cmpUpDownRampRb(int anInt);
       /** Converts an integer into a color based upon a color up-down ramp: Gr == Green Up and Red Down == magenta -> cyan.  Provides (maxChanVal) different
           colors.  Supports input conditioning.
           @param anInt An integer */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpUpDownRampGr(int anInt);
+      colorTpl& cmpUpDownRampGr(int anInt);
       /** Converts an integer into a color based upon a color up-down ramp: Gb == Green Up and Blue Down == magenta -> yellow.  Provides (maxChanVal) different
           colors.  Supports input conditioning.
           @param anInt An integer */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpUpDownRampGb(int anInt);
+      colorTpl& cmpUpDownRampGb(int anInt);
       /** Converts an integer into a color based upon a color up-down ramp: Br == Blue Up and Red Down == yellow -> cyan.  Provides (maxChanVal) different
           colors.  Supports input conditioning.
           @param anInt An integer */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpUpDownRampBr(int anInt);
+      colorTpl& cmpUpDownRampBr(int anInt);
       /** Converts an integer into a color based upon a color up-down ramp: Bg == Blue Up and Green Down == yellow -> magenta.  Provides (maxChanVal) different
           colors.  Supports input conditioning.
           @param anInt An integer */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpUpDownRampBg(int anInt);
+      colorTpl& cmpUpDownRampBg(int anInt);
       /** Converts an integer into a color based upon a color sum-ramp: RGB == Black -> Red -> Yellow -> White.  Same as cmpColorRamp with a corner list of
           "0RYW".  Provides (3*maxChanVal+1) different colors.  Supports input conditioning.
           @param anInt An integer */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpSumRampRGB(int anInt);
+      colorTpl& cmpSumRampRGB(int anInt);
       /** Converts an integer into a color based upon a color sum-ramp: BGR == Black -> Blue -> cyan -> White.  Same as cmpColorRamp with a corner list of
           "0BCW" Provides (3*maxChanVal+1) different colors.  Supports input conditioning.
           @param anInt An integer */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpSumRampBGR(int anInt);
+      colorTpl& cmpSumRampBGR(int anInt);
       /** Converts an integer into a color based upon a color sum-ramp: GRB == Black -> Green -> yellow -> White.  Same as cmpColorRamp with a corner list of
           "0GYW" Provides (3*maxChanVal+1) different colors.  Supports input conditioning.
           @param anInt An integer */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpSumRampGRB(int anInt);
+      colorTpl& cmpSumRampGRB(int anInt);
       /** Converts an integer into a color based upon a color sum-ramp: GBR == Black -> Green -> cyan -> White.  Same as cmpColorRamp with a corner list of
           "0GCW" Provides (3*maxChanVal+1) different colors.  Supports input conditioning.
           @param anInt An integer */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpSumRampGBR(int anInt);
+      colorTpl& cmpSumRampGBR(int anInt);
       /** Converts an integer into a color based upon a color sum-ramp: BRG == Black -> Blue -> magenta -> White.  Same as cmpColorRamp with a corner list of
           "0BMW" Provides (3*maxChanVal+1) different colors.  Supports input conditioning.
           @param anInt An integer */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpSumRampBRG(int anInt);
+      colorTpl& cmpSumRampBRG(int anInt);
       /** Converts an integer into a color based upon a color sum-ramp: RBG Black -> Red -> Magenta -> White.  Same as cmpColorRamp with a corner list of
           "0RMW".  Provides (3*maxChanVal+1) different colors.  Supports input conditioning.  @param anInt An integer */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpSumRampRBG(int anInt);
+      colorTpl& cmpSumRampRBG(int anInt);
       //@}
 
       /** @name Binary, threshold color schemes */
@@ -803,27 +801,27 @@ namespace mjr {
       /** Converts an integer into a color based upon a binary color ramp -- red if the integer is less than the threshold and green otherwise.
           @param anInt     An integer
           @param threshold The threshold */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpBinaryColorRampRG(int anInt, int threshold);
+      colorTpl& cmpBinaryColorRampRG(int anInt, int threshold);
       /** Converts an integer into a color based upon a binary color ramp -- red if the integer is less than the threshold and blue otherwise.
           @param anInt     An integer
           @param threshold The threshold */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpBinaryColorRampRB(int anInt, int threshold);
+      colorTpl& cmpBinaryColorRampRB(int anInt, int threshold);
       /** Converts an integer into a color based upon a binary color ramp -- green if the integer is less than the threshold and red otherwise.
           @param anInt     An integer
           @param threshold The threshold */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpBinaryColorRampGR(int anInt, int threshold);
+      colorTpl& cmpBinaryColorRampGR(int anInt, int threshold);
       /** Converts an integer into a color based upon a binary color ramp -- green if the integer is less than the threshold and blue otherwise.
           @param anInt     An integer
           @param threshold The threshold */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpBinaryColorRampGB(int anInt, int threshold);
+      colorTpl& cmpBinaryColorRampGB(int anInt, int threshold);
       /** Converts an integer into a color based upon a binary color ramp -- blue if the integer is less than the threshold and red otherwise.
           @param anInt     An integer
           @param threshold The threshold */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpBinaryColorRampBR(int anInt, int threshold);
+      colorTpl& cmpBinaryColorRampBR(int anInt, int threshold);
       /** Converts an integer into a color based upon a binary color ramp -- blue if the integer is less than the threshold and green otherwise.
           @param anInt     An integer
           @param threshold The threshold */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpBinaryColorRampBG(int anInt, int threshold);
+      colorTpl& cmpBinaryColorRampBG(int anInt, int threshold);
       //@}
       
       /** @name Color ramps, gradients, interpolation, binary thresholds. 
@@ -838,16 +836,13 @@ namespace mjr {
           @param anchors Doubles for which color equals the corresponding corner. If anchors == NULL, then equidistant points on the unit interval will be used.
           @param colors  An array of colors to use
           @return A reference to this object */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpColorRamp(double aDouble,
-                                                                                                  int numColors,
-                                                                                                  double *anchors,
-                                                                                                  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> *colors);
+      colorTpl& cmpColorRamp(double aDouble, int numColors, double *anchors, colorTpl *colors);
       /** This is simply a version of cmpColorRamp that computes the length of the final argument as a C-string.  Unlike the version of cmpColorRamp specifying
           numColors, this one requires the final argument to be a real C-string -- i.e. it must have a terminating NULL.
           @param anInt The value to convert
           @param colChars Characters specifying color (as used by setColor)
           @return A reference to this object */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpColorRamp(int anInt, const char *colChars);
+      colorTpl& cmpColorRamp(int anInt, const char *colChars);
       /** Convert an integer to a color value based upon a color ramp passing through the given sequence of corner colors at equal intervals along [0,
           (maxChanVal*(numColors-1)+1)].  At 0, the color will be the first specified color.  At (maxChanVal*(numColors-1)+1) it will be the last color
           specified color.  This function is similar to the one taking doubles. This version doesn't allow for the specification of anchor points, but uses
@@ -857,16 +852,14 @@ namespace mjr {
           @param numColors The number of colors
           @param colChars Characters specifying color (as used by setColor)
           @return A reference to this object */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& cmpColorRamp(int anInt, int numColors, const char *colChars);
+      colorTpl& cmpColorRamp(int anInt, int numColors, const char *colChars);
       /** Set the current color to a value linearly interpolated between the two given colors.  When aDouble is 0, the color is col1.  When aDouble is 1 the new
           value is col2.
           @param aDouble The distance from col1
           @param col1 The starting color
           @param col2 The ending color
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& interplColors(double aDouble,
-                                                                                   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col1,
-                                                                                   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col2);
+      colorTpl& interplColors(double aDouble, colorTpl col1, colorTpl col2);
       /** Set the current color to a value linearly interpolated between the two given colors.  When aDouble is 0, the color is col1.  When aDouble is 1 the new
           value is col2.  The interpolation is done in HLS space -- i.e. the given colors are converted to HLS, the interpolation is done, and the result is
           converted back to RGB and the current color is set.  Unlike interplColors, this function will NOT interpolate every channel.  Rather, as this function
@@ -875,9 +868,7 @@ namespace mjr {
           @param col1 The starting color
           @param col2 The ending color
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& interplColorsHLS(double aDouble,
-                                                                                      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col1,
-                                                                                      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col2);
+      colorTpl& interplColorsHLS(double aDouble, colorTpl col1, colorTpl col2);
       /** Compute the weighted mean of the given colors.  w1,w2,w3 in [0,1] and w1+w2+w3=1.
           @param w1   The first weight
           @param w2   The second weight
@@ -885,58 +876,48 @@ namespace mjr {
           @param col1 The first color
           @param col2 The second color
           @param col3 The third color */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& wMean(clrChanFArthT w1, clrChanFArthT w2, clrChanFArthT w3,
-                                                                                           colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col1,
-                                                                                           colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col2,
-                                                                                           colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col3);
+      colorTpl& wMean(clrChanFArthT w1, clrChanFArthT w2, clrChanFArthT w3, colorTpl col1, colorTpl col2, colorTpl col3);
       /** overload */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& wMean(clrChanFArthT w1, clrChanFArthT w2, 
-                                                                                           colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col1,
-                                                                                           colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col2,
-                                                                                           colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col3);
+      colorTpl& wMean(clrChanFArthT w1, clrChanFArthT w2, colorTpl col1, colorTpl col2, colorTpl col3);
       /** Compute the weighted mean of the given colors.  w1,w2,w3 in [0,1] and w1+w2+w3=1.  Same as interplColors(wq, col1, col2).
           @param w1   The first weight
           @param w2   The second weight
           @param col1 The first color
           @param col2 The second color */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& wMean(clrChanFArthT w1, clrChanFArthT w2,
-                                                                                           colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col1,
-                                                                                           colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col2);
+      colorTpl& wMean(clrChanFArthT w1, clrChanFArthT w2, colorTpl col1, colorTpl col2);
       /** overload */
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& wMean(clrChanFArthT w1, 
-                                                                                           colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col1,
-                                                                                           colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col2);
+      colorTpl& wMean(clrChanFArthT w1, colorTpl col1, colorTpl col2);
       //@}
       
       /** @name Logical Operators. */
       //@{
       /** Performs a logical OR with the current object and the given object and places the value in the current object.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmOr(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmOr(colorTpl color);
       /** Performs a logical NOR with the current object and the given object and places the value in the current object.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmNor(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmNor(colorTpl color);
       /** Performs a logical AND with the current object and the given object and places the value in the current object.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmAnd(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmAnd(colorTpl color);
       /** Performs a logical NAND with the current object and the given object and places the value in the current object.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmNand(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmNand(colorTpl color);
       /** Performs a logical EXCLUSIVE OR (XOR) with the current object and the given object and places the value in the current object.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmXor(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmXor(colorTpl color);
       /** Performs a logical NOT EXCLUSIVE OR (NXOR) with the current object and the given object and places the value in the current object.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmNxor(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmNxor(colorTpl color);
       /** Performs logical (bit-wise) negation of current object.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& tfrmNot(void);
+      colorTpl& tfrmNot(void);
       //@}
 
       /** @name Arithmetic Operators. */
@@ -944,70 +925,69 @@ namespace mjr {
       /** Computes the square of the difference for each channel between the given color and the current color object.
           @param color The color to compute the sqDiff with.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmSqDiff(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmSqDiff(colorTpl color);
       /** Computes the absolute value of the difference for each channel between the given color and the current color object.
           @param color The color to compute the absDiff with.
           @return Returns the absolute value of the difference for each channel.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmAbsDiff(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmAbsDiff(colorTpl color);
       /** Computes the arithmetic sum of the given color and the current one.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmAdd(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmAdd(colorTpl color);
       /** Computes the arithmetic division of the current color by the given color.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmDiv(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmDiv(colorTpl color);
       /** Computes the arithmetic product of the given color and the current one.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmMult(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmMult(colorTpl color);
       /** Computes the product of the given color and the current one.  If the result of a multiplication is too large, it will be set to the maximum component
           value.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmMultClp(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmMultClp(colorTpl color);
       /** Modifies the current color by performing a component wise scaled sign of the difference between the current color and the given one. As an example of
           the computation, the red component of the current color is computed like this:
           - R=minChanVal  iff(R<color.R)
           - R=meanChanVal iff(R==color.R)
           - R=maxChanVal  iff(R>color.R)
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      ScaleSignDiff(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      ScaleSignDiff(colorTpl color);
       /** Computes the arithmetic difference of the given color from the current one. If the result a differences is negative, then that component will be set
           to zero.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmDiffClp(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmDiffClp(colorTpl color);
       /** Computes the negative of the arithmetic difference of the given color from the current one -- that is the same as the arithmetic difference of the
           current color from the given color.  If the result a differences is negative, then that component will be set to zero.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmNegDiffClp(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmNegDiffClp(colorTpl color);
       /** Computes the arithmetic sum of the given color from the current one.  If the result of a sum is greater than the maximum value, then that component
           will be set to the maximum value.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmAddClp(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmAddClp(colorTpl color);
       /** Computes the arithmetic sum of the given color from the current one.  If the result of a sum is greater than the maximum value, then that component
           will be set to the maximum value.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmAddDivClp(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color,
-                    colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> dcolor);
+      colorTpl&
+      tfrmAddDivClp(colorTpl color, colorTpl dcolor);
       /** Computes the arithmetic difference of the given color from the current one.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmDiff(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmDiff(colorTpl color);
       /** Computes the arithmetic modulus of the current by the given one.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmMod(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmMod(colorTpl color);
       /** Transforms the color: r=maxChanVal-r, g=maxChanVal-r, and b=maxChanVal-b
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
+      colorTpl&
       tfrmInvert();
       //@}
 
@@ -1015,97 +995,94 @@ namespace mjr {
       //@{
       /** Modifies the current color adding 1 and taking the natural logarithm.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& tfrmLn();
+      colorTpl& tfrmLn();
       /** Modifies the current color by linearly interpolating between the current color and the given color (at a point scaled the unit interval).  If aDouble
           is 0, then the current color will not change.  If aDouble is 1, then the current color will be tooCol.
           @param aDouble Distance from the current color (on a unit interval)
           @param tooCol  The color we are interpolating with.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      interplColors(double aDouble, colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> tooCol);
+      colorTpl&
+      interplColors(double aDouble, colorTpl tooCol);
       /** Copies the given argument into the current color object.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmCopy(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmCopy(colorTpl color);
       /** Makes the current color the maximum of the current color or the given color. Colors are ordered by intensity (thus the 'I' in the name)
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmMaxI(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmMaxI(colorTpl color);
       /** Makes the current color the minimum of the current color or the given color. Colors are ordered by intensity (thus the 'I' in the name)
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmMinI(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmMinI(colorTpl color);
       /** Makes each component of the current color the maximum of that component and the corresponding component of the given color.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmMax(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmMax(colorTpl color);
       /** Makes each component of the current color the minimum of that component and the corresponding component of the given color.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmMin(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmMin(colorTpl color);
       /** The Shift Left Transform modifies the current color
           @param aCol Number of bits to shift left
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmShiftL(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> aCol);
+      colorTpl&
+      tfrmShiftL(colorTpl aCol);
       /** The Shift Right Transform modifies the current color
           @param aCol How many bits to shift.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmShiftR(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> aCol);
+      colorTpl&
+      tfrmShiftR(colorTpl aCol);
       /** The Saw Transform modifies the current color
           R=R iff(ra<=R<=rb), G=G iff(ga<=G<=gb), B=B iff(ba<=B<=bb)
           @param lowCol lower cutoff value
           @param highCol upper cutoff value
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmSaw(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> lowCol,
-              colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> highCol);
+      colorTpl&
+      tfrmSaw(colorTpl lowCol, colorTpl highCol);
       /** The Saw Transform modifies the current color
           R=maxChanVal iff(ra<=R<=rb), G=maxChanVal iff(ga<=G<=gb), B=maxChanVal iff(ba<=B<=bb)
           @param lowCol lower cutoff value
           @param highCol upper cutoff value
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmStep(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> lowCol,
-               colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> highCol);
+      colorTpl&
+      tfrmStep(colorTpl lowCol, colorTpl highCol);
       /** The DiracTot (total) Transform modifies the current color:
           R=MAX,G=MAX, B=MAX iff ((R==aCol.R)&&(G==aCol.G)&&(B==aCol.B))
           @param aCol Dirac trigger value
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmDiracTot(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> aCol);
+      colorTpl&
+      tfrmDiracTot(colorTpl aCol);
       /** The Dirac Transform modifies the current color:
           R=MAX iff(R==aCol.R), G=MAX iff(G==aCol.G), B=MAX iff(B==aCol.B)
           @param aCol Dirac trigger value
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmDirac(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> aCol);
+      colorTpl&
+      tfrmDirac(colorTpl aCol);
       /** The Fuzzy Dirac Transform modifies the current color:
           R=MAX iff(|R-ctrCol.R|<=radCol.R), G=MAX iff(|G-ctrCol.G|<=radCol.G), B=MAX iff(|B-ctrCol.B|<=radCol.B)
           @param ctrCol Center Color
           @param radCol Radius Color
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmFuzzyDirac(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> ctrCol,
-                     colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> radCol);
+      colorTpl&
+      tfrmFuzzyDirac(colorTpl ctrCol, colorTpl radCol);
       /** Computes the arithmetic mean of the given color and the current one.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmMean(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmMean(colorTpl color);
       /** Computes the arithmetic geometric mean of the given color and the current one.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmGmean(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmGmean(colorTpl color);
       /** Computes the arithmetic geometric mean of the given color and the current one.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmGmeanClp(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color);
+      colorTpl&
+      tfrmGmeanClp(colorTpl color);
       /** Grey Scale transform modifies the current color by rendering it into a true grey via the same method used by the colorLuminance function.  Note, the
           colorLuminance function is NOT used internally within this function for performance reasons.  This function will do the best job it can within the
           current color depth.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& tfrmGreyScale(void);
+      colorTpl& tfrmGreyScale(void);
       //@}
 
       
@@ -1114,16 +1091,16 @@ namespace mjr {
       //@{
       /** The 216 Palate Web Safe Transform modifies the current color into the closest web safe color from the 216 color web safe pallet.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& tfrmWebSafe216();
+      colorTpl& tfrmWebSafe216();
       /** Transforms the current color into the nearest web safe color, and then transforms it into what a person with Protanopia might see.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& tfrmWebSafePro216();
+      colorTpl& tfrmWebSafePro216();
       /** Transforms the current color into the nearest web safe color, and then transforms it into what a person with Deutanopia might see.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& tfrmWebSafeDeu216();
+      colorTpl& tfrmWebSafeDeu216();
       /** Transforms the current color into the nearest web safe color, and then transforms it into what a person with Tritanoptia might see.
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& tfrmWebSafeTri216();
+      colorTpl& tfrmWebSafeTri216();
       //@}
 
       /** @name Alternate color space stuff */
@@ -1141,7 +1118,7 @@ namespace mjr {
           @param c The "contrast" value
           @param b The "brightness" value
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
+      colorTpl&
       tfrmLinearGreyLevelScale(float c, float b);
       /** The Linear Grey Level Scale transform defined by the control points to each channel of the current color.  The linear Grey Level Scale transform is
           defined by the control points, such that the "from" points are mapped into the "to" points.  For example, from1.red will map onto to1.red and
@@ -1152,11 +1129,8 @@ namespace mjr {
           @param to1 Control point mapped from argument from1
           @param to2 Control point mapped from argument from2
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmLinearGreyLevelScale(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> from1,
-                               colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> from2,
-                               colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> to1,
-                               colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> to2);
+      colorTpl&
+      tfrmLinearGreyLevelScale(colorTpl from1, colorTpl from2, colorTpl to1, colorTpl to2);
       /** The Linear Grey Level Scale transform modifies the current color such that:
           R=rc*R+rb, G=gc*G+gb, B=bc*B+bb.
           This function ONLY transforms the red, green, and blue channels.
@@ -1167,29 +1141,27 @@ namespace mjr {
           @param bc The "contrast" value for blue
           @param bb The "brightness" value for blue
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-      tfrmLinearGreyLevelScale(float rc, float rb,
-                               float gc, float gb,
-                               float bc, float bb);
+      colorTpl&
+      tfrmLinearGreyLevelScale(float rc, float rb, float gc, float gb, float bc, float bb);
       /** The Standard Power Transform modifies the current color such that:
           R=maxChanVal*(R/maxChanVal)**p, G=maxChanVal*(G/maxChanVal)**p, B=maxChanVal*(B/maxChanVal)**p
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
+      colorTpl&
       tfrmStdPow(float p);
       /** The Standard Power Transform modifies the current color such that:
           R=maxChanVal*(R/maxChanVal)**rp, B=maxChanVal*(B/maxChanVal)**gp, B=maxChanVal*(B/maxChanVal)**bp
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
+      colorTpl&
       tfrmStdPow(float rp, float gp, float bp);
       /** The Standard Power Transform with p=2. The new color will be:
           R=maxChanVal*(R/maxChanVal)**2, G=maxChanVal*(G/maxChanVal)**2, B=maxChanVal*(B/maxChanVal)**2
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
+      colorTpl&
       tfrmStdPowSqr(void);
       /** The Standard Power Transform with p=1/2. The new color will be:
           R=maxChanVal*(R/maxChanVal)**(1/2), G=maxChanVal*(G/maxChanVal)**(1/2), B=maxChanVal*(B/maxChanVal)**(1/2)
           @return Returns a reference to the current color object.*/
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
+      colorTpl&
       tfrmStdPowSqrt(void);
       //@}
 
@@ -1237,21 +1209,21 @@ namespace mjr {
       /** Compute the dot product between the current color and the given color. i.e. c1.r*c2.r+c1.g*c2.g+...
           @param aColor the given color
           @return Returns dot product.*/
-      int dotProd(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> aColor);
+      int dotProd(colorTpl aColor);
       /** Distance between current color and given one (sum squares) Returns the sum of the squares of the differences of the components.  Returns |c1-c2|^2
           @param aColor The given color
           @return Returns distance squared.*/
-      int distP2sq(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> aColor);
+      int distP2sq(colorTpl aColor);
       /** Distance between current color and given one (absolute difference) Returns sum of the absolute value of the differences of the components
           @param aColor the given color
           @return Returns absolute distance squared.*/
-      int distAbs(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> aColor);
+      int distAbs(colorTpl aColor);
       /** Returns non-zero if the given color is logically the same as the current color.
           @return non-zero if the given color is logically the same as the current color*/
-      int isEqual(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> aColor);
+      int isEqual(colorTpl aColor);
       /** Returns non-zero if the given color is logically NOT the same as the current color.
           @return non-zero if the given color is logically the same as the current color*/
-      int isNotEqual(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> aColor);
+      int isNotEqual(colorTpl aColor);
       /** Returns non-zero if the given color is black (all componnets are zero)
           @return non-zero if the given color is black (all componnets are zero) */
       int isBlack();
