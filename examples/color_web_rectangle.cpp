@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Produce an image showing an array of the 216 web safe colors -- a pallet of colors once considered "safe" for internet use.@EOL
  @std       C++11
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -33,7 +33,7 @@
 int main(void) {
   mjr::ramCanvas3c8b theRamCanvas(795, 795);
   for(int i=0; i<=225; i++) {
-    mjr::color3c8b color;	
+    mjr::color3c8b color;
     int x = (i % 15) * 50;
     int y = (i / 15) * 50;
     color.icpWebSafe216(i);
@@ -41,4 +41,3 @@ int main(void) {
   }
   theRamCanvas.writeTIFFfile("color_web_rectangle.tiff");
 }
- 

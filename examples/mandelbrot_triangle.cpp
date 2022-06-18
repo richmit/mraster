@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw a Mandelbrot set using an edge detection algorithm.@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -26,7 +26,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
   The ramCanvas library has a very rich (some would say bloated) collection of functions that do essentially the same thing just in slightly different ways.
   The reason for this is so that the library can support legacy code directly, and generally bend itself to different programming styles and needs.
@@ -89,7 +89,7 @@ int main(void) {
     std::cout <<  "INFO(main): Curve: " << MAXCOUNT << std::endl;
     // Find alpha
     complex alphaTriangle[3];
-    for(int i=0; i<3; i++) 
+    for(int i=0; i<3; i++)
       alphaTriangle[i] = protoAlphaTriangle[i];
     if(findAlphaTriangle(MAXTRCNT, 0, 1, 0.0, alphaTriangle)) {
       int thePathLen;
@@ -108,7 +108,7 @@ int orbCmp(complex tstPt) {
   int count = 0;
   mjr::ramCanvas3c8b::rcCordFlt  tempx;
   while(1) {
-    if(zx * zx + zy * zy >= 4) 
+    if(zx * zx + zy * zy >= 4)
       return count;
     if(count > MAXCOUNT)
       return 0;
@@ -116,7 +116,7 @@ int orbCmp(complex tstPt) {
     zy = 2 * zx * zy + tstPt.y;
     zx = tempx;
     count++;
-  } 
+  }
 }
 
 /* **************************************************************** */
@@ -211,7 +211,7 @@ int traceBoundry(int maxCnt, float epsilon, int goOtherWay, complex alphaTriangl
   } /* end if */
 
   // Set insIdx, unkIdx, and outIdx for the first triangle
-  insIdx = unkIdx = outIdx = -1;      
+  insIdx = unkIdx = outIdx = -1;
   for(int i=0; i<3; i++) {
     if(pInState[i]) {
       if(insIdx == -1) {
@@ -227,7 +227,7 @@ int traceBoundry(int maxCnt, float epsilon, int goOtherWay, complex alphaTriangl
     } else {
       if(outIdx == -1) {
         outIdx = i;
-      } else { 
+      } else {
         if(goOtherWay) {
           if(printDebug>1)
             std::cerr <<  "WARNING(traceBoundry): goOtherWay is ineffective in this case!" << std::endl;
@@ -241,10 +241,10 @@ int traceBoundry(int maxCnt, float epsilon, int goOtherWay, complex alphaTriangl
   // Put the first point into the path array and increment pathLen.
   *pathLen = 0;
   thePath[*pathLen].x = (curTriangle[insIdx].x + curTriangle[outIdx].x)/2;
-  thePath[*pathLen].y = (curTriangle[insIdx].y + curTriangle[outIdx].y)/2;  
+  thePath[*pathLen].y = (curTriangle[insIdx].y + curTriangle[outIdx].y)/2;
 
   // Main iteration loop
-  for(int count=0;(count<(maxCnt-1))||(maxCnt==0);count++) {    
+  for(int count=0;(count<(maxCnt-1))||(maxCnt==0);count++) {
     //Update the coordinates for our next triangle
     curTriangle[unkIdx].x = curTriangle[insIdx].x + curTriangle[outIdx].x - curTriangle[unkIdx].x;
     curTriangle[unkIdx].y = curTriangle[insIdx].y + curTriangle[outIdx].y - curTriangle[unkIdx].y;
@@ -263,7 +263,7 @@ int traceBoundry(int maxCnt, float epsilon, int goOtherWay, complex alphaTriangl
     // Update the path array
     (*pathLen)++;
     thePath[*pathLen].x = (curTriangle[insIdx].x + curTriangle[outIdx].x)/2;
-    thePath[*pathLen].y = (curTriangle[insIdx].y + curTriangle[outIdx].y)/2;  
+    thePath[*pathLen].y = (curTriangle[insIdx].y + curTriangle[outIdx].y)/2;
 
     // Figure out if we have come back upon the alpha triangle.
     if( (fabs(thePath[*pathLen].x - thePath[0].x) + fabs(thePath[*pathLen].y - thePath[0].y)) < epsilon) {

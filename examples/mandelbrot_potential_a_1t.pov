@@ -4,7 +4,7 @@
  @file      mandelbrot_potential.pov
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Render height field in mandelbrot_potential_2.tga.@EOL
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 2001-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -30,7 +30,7 @@
 
 global_settings { assumed_gamma 1 }
 
-camera { 
+camera {
   location <-0.65, 8, 0>
   right z*7/7
   sky    <0,0,1>
@@ -48,7 +48,7 @@ light_source { < 100,14, 100>   White*0.5 }
 height_field {
   tga "mandelbrot_potential_a_0.tga"
   smooth
-  pigment { 
+  pigment {
     gradient y
     color_map {
       [0.00000 color Blue  ]
@@ -66,7 +66,7 @@ height_field {
     reflection 0.03
     specular 0.65
     roughness 0.011
-    phong 1 
+    phong 1
     phong_size 600
   }
   translate <-0.5, -0.96, -0.5>

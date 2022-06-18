@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     This little program draws a S. Gasket using an iterative, random algorithm.@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -37,7 +37,7 @@ int main() {
   mjr::color3c8b aColor[] = { mjr::color3c8b(255, 0, 0), mjr::color3c8b(0, 255, 0), mjr::color3c8b(0, 0, 255) };
   PointType pts[] = {{0.0F, 0.8F}, {-0.8F, -0.8F}, {0.8F, -0.8F}};
   int NumPts = 3;
-  
+
   mjr::ramCanvas3c8b theRamCanvas(2048, 2048, -1, 1, -1, 1);
   for(int n=0;n<10000000;n++) {
     int ip = rand()%NumPts;

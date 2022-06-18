@@ -4,7 +4,7 @@
  @file      dlaDrift.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Read a TIFF image and simulate diffusion limited aggregation with drift of blue pixels.@EOL
- @keywords  dla fractal brownian motion brown 
+ @keywords  dla fractal brownian motion brown
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
     std::cout << "ERROR: Problem with file: " << argv[2] << std::endl;
     return 1;
   }
-    
+
   if(argc > 3)
     MAXCOUNT = std::stoi(argv[3]);
   if(argc > 4)
@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
            theRamCanvas.getPxColor(x+1, y+1).getBlue() ||
            theRamCanvas.getPxColor(x+1, y-1).getBlue() ||
            theRamCanvas.getPxColor(x-1, y+1).getBlue() ||
-           theRamCanvas.getPxColor(x-1, y-1).getBlue()         
+           theRamCanvas.getPxColor(x-1, y-1).getBlue()
           ) {
           theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, 0, 255));
           numHits++;
@@ -119,6 +119,6 @@ int main(int argc, char *argv[]) {
     std::cout << "ERROR: Problem with file: " << argv[2] << std::endl;
     return 1;
   }
-  
+
   std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - timestamp_time_t)/(60.0) << " min" << std::endl;
 }

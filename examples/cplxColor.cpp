@@ -4,9 +4,9 @@
  @file      cplxColor.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     draw complex function plots@EOL
- @keywords  
+ @keywords
  @std       C++11
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -36,7 +36,7 @@
 
 using cplx = std::complex<mjr::ramCanvas3c8b::rcCordFlt>;
 
-cplx f(cplx z);  
+cplx f(cplx z);
 
 cplx f(cplx z) {
   try {
@@ -55,13 +55,13 @@ cplx f(cplx z) {
     // for(int i=0; i<3; i++)
     //   z = (std::sin(std::exp(z)) - cplx(1))/(std::cos(z*z) - cplx(2.0)*z*z + z + cplx(1));
     // return z;
-    
+
     return (std::sin(z) - cplx(1))/(z*z*z - cplx(0.5)*z*z + z + cplx(1));
-    
+
     //return (std::sin(std::exp(z)) - cplx(1))/(std::cos(z*z) - cplx(2.0)*z*z + z + cplx(1));
-    
+
     //return (z - cplx(1))/(z*z*z - cplx(0.5)*z*z + z + cplx(1));
-    
+
     //return z;
   } catch(...) {
     std::cout << "Something went wrong!!" << std::endl;
@@ -70,7 +70,7 @@ cplx f(cplx z) {
 }
 
 int main(void) {
-  const double cutDepth = 10.0;   // Range: $[1, ~30]$ Smaller means more contrast on cuts.  
+  const double cutDepth = 10.0;   // Range: $[1, ~30]$ Smaller means more contrast on cuts.
   const double argCuts  = 16.0;   // Number of grey cuts for arg
   const int   argWrap  = 3;       // Number of times to wrap around the color ramp for arg
   const double absCuts  = 2.0;    // Number of grey cuts for abs

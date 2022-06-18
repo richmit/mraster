@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Benchmark drawing a mandelbrot set using floating point types and arithmetic only.@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -26,7 +26,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
   Basic benchmark.  Uses only real numbers.  Reduces operation count by rearranging the equations a bit.
 ***************************************************************************************************************************************************************/
@@ -59,5 +59,3 @@ int main(void) {
   }
   theRamCanvas.writeTIFFfile("mandelbrot_bm_real_eqop.tiff");
 }
-
-

@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw Fractals via Newton-like methods.@EOL
  @std       C++11
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, 2017, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -26,7 +26,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
      Maxima: f:sin(z); z-f/diff(f, z);
 
@@ -84,7 +84,7 @@
 #include "ramCanvas.hpp"
 
 #include <complex>                                                       /* Complex Numbers         C++11    */
-#include <vector>                                                        /* STL vector              C++11    */ 
+#include <vector>                                                        /* STL vector              C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
 
 enum class whyStopNV { DIVZERO,   //!< Divide by zero (zeroTol)
@@ -105,7 +105,7 @@ int main(void) {
   const int    MaxCount  = 64;
   const float  Tol       = 0.0001F;
   const int    numToKeep = 1;
-  whyStopNV why;           
+  whyStopNV why;
   mjr::ramCanvas3c8b theRamCanvas(3840, 2160, -1.5, 1.5, -1.5, 1.5);
   std::vector<solMethNV> methodsToDo({solMethNV::NEWTON, solMethNV::HALLEY, solMethNV::LAGUERRE});
 
@@ -137,14 +137,14 @@ int main(void) {
                 why = whyStopNV::DIVZERO;
                 break;
               }
-              z=z-f0v/f1v; 
+              z=z-f0v/f1v;
               break;
             }
             case solMethNV::HALLEY : {
               if(abs(f1v) < Tol) {
                 why = whyStopNV::DIVZERO;
                 break;
-              }                   
+              }
               std::complex<double> G=f0v/f1v;
               std::complex<double> b=1.0-G*f2v/f1v;
               if(abs(b) < Tol) {
@@ -159,7 +159,7 @@ int main(void) {
               std::complex<double> pdeg = 4.0;
               if(abs(f0v) < Tol) {
                 break;
-              }                   
+              }
               std::complex<double> G=f1v/f0v;
               std::complex<double> G2=G*G;
               std::complex<double> H=G2-f2v/f0v;
@@ -179,7 +179,7 @@ int main(void) {
               break;
             }
           }
-      
+
           double modz = abs(z);
           lastZs[count%numToKeep] = z;
           if(modz>maxMod) {
@@ -219,7 +219,7 @@ int main(void) {
         }
       }
     }
-  
+
     switch(method) {
       case solMethNV::NEWTON   : theRamCanvas.writeTIFFfile("newton_vs_newton.tiff"  ); break;
       case solMethNV::HALLEY   : theRamCanvas.writeTIFFfile("newton_vs_halley.tiff"  ); break;

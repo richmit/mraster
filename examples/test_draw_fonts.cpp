@@ -1,4 +1,3 @@
-
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /**************************************************************************************************************************************************************/
 /**
@@ -6,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draws all supported ASCII characters with all five Hershey fonts.@EOL
  @std       C++11
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 

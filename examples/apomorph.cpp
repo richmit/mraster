@@ -6,7 +6,7 @@
  @brief     Morph a IFS from an Apollony Gasket to a cloud.@EOL
  @keywords  mistake fractal
  @std       C++14
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015,2017, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -27,7 +27,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
   This code started as a programming error.  I was trying to generate an Apollony Gasket via an IFS, but had a cut-n-past error -- a 1 where I should have had
   a zero.  The result was something very unlike an Apollony Gasket. So I was curious what the results would be if the parameter was swept from 0 to 1.
@@ -52,12 +52,12 @@ int main()
 
   mjr::ramCanvas3c8b theRamCanvas(CSIZE, CSIZE, -4.0, 4.0, -4.0, 4.0);
   theRamCanvas.set_drawMode(mjr::ramCanvas3c8b::drawModeType::ADDCLIP);
-  
+
   mjr::color3c8b aColor[] = { mjr::color3c8b(1, 0, 0), mjr::color3c8b(0, 1, 0), mjr::color3c8b(0, 0, 1) };
 
   std::random_device rd;
   std::minstd_rand0 rEng(rd()); // Fast is better than high quality for this application.
-  
+
   const double s = 1.73205080757;
   const std::complex<double> i(0.0, 1.0);
   const std::complex<double> si(0.0, s);
@@ -73,9 +73,9 @@ int main()
     for (long n=0;n<NUMITR;n++) {
       std::complex<double> zNxt;
       if ((n % (NUMITR/100)) == 0) {
-        if ((n % (NUMITR/10)) == 0) 
+        if ((n % (NUMITR/10)) == 0)
           std::cout << "|" << std::flush;
-        else 
+        else
           std::cout << "." << std::flush;
       }
       std::complex<double> f = c5/(c4-z)-c1;
@@ -102,4 +102,3 @@ int main()
   }
   return 0;
 }
-

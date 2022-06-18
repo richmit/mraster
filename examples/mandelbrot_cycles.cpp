@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Benchmark drawing a mandelbrot set using the C++ complex type and excluding hypocycloids.@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015,2021 Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -26,7 +26,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
   Color points based on qualitative sequence behavior: Tends to infinity (reds), cyclic (blues), or converges (greens).  The method for detecting cycles and
   fixed points is not perfect, but makes a nice picture.  The color intensity is the length of time it took to make the behavior determination.
@@ -36,7 +36,7 @@
 
 #include <iostream>                                                      /* C++ iostream            C++11    */
 #include <complex>                                                       /* Complex Numbers         C++11    */
-#include <vector>                                                        /* STL vector              C++11    */ 
+#include <vector>                                                        /* STL vector              C++11    */
 #include <algorithm>                                                     /* STL algorithm           C++11    */
 
 int main(void) {
@@ -46,8 +46,8 @@ int main(void) {
   const int CSIZE    = 7680/2;
   const int LASTSIZE = 16*16*4;
   mjr::ramCanvas3c8b theRamCanvas(CSIZE, CSIZE, -1.45, 0.5, -1.05, 1.05);
-  
-  for(int y=0;y<theRamCanvas.get_numYpix();y++) { 
+
+  for(int y=0;y<theRamCanvas.get_numYpix();y++) {
     for(int x=0;x<theRamCanvas.get_numXpix();x++) {
       int count, lastIdx=0;
       double cr = theRamCanvas.int2realX(x);
@@ -77,7 +77,6 @@ int main(void) {
       }
     }
     std::cout << CSIZE << "/" << y << std::endl;
-  }      
+  }
   theRamCanvas.writeTIFFfile("mandelbrot_cycles.tiff");
 }
-

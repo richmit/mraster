@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw a Peter de Jong Attractor Movie.@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -41,11 +41,11 @@ int main(void) {
   const double            b         = -1.44118;
   const double            c         = -1.23281;
   const double            d         =  1.78607;
-  const double            e         =  1.709360; 
-  const double            f         =  1.794210; 
-  const double            g         =  1.893750; 
-  const double            h         = -1.38227;  
-  const double            p         =  2.10;     
+  const double            e         =  1.709360;
+  const double            f         =  1.794210;
+  const double            g         =  1.893750;
+  const double            h         = -1.38227;
+  const double            p         =  2.10;
 
   mjr::color1c16b aColor;
   aColor.setAll(1);
@@ -55,7 +55,7 @@ int main(void) {
     mjr::ramCanvas1c16b theRamCanvas(imageSize, imageSize, -2, 2, -2, 2);
     /* Draw the atractor on a 16-bit, greyscale canvas -- the grey level will be an integer represeting the hit count for that pixel. */
     double x       = 1.0;
-    double y       = 1.0;  
+    double y       = 1.0;
     uint64_t maxII = 0;
     for(uint64_t i=0;i<maxIters;i++) {
       double xNew = sin((a + 0.09 * sin(frame * 2 * pi / numFrames))*y + e) - cos(b*x + f);
@@ -79,7 +79,7 @@ int main(void) {
       stringStream << "peterdejongM_" << std::setfill('0') << std::setw(3) << frame << ".mrw";
       theRamCanvas.writeRAWfile(stringStream.str());
     }
-    
+
     // Root image transform
     theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmStdPow, static_cast<float>(1/p));
     maxII = static_cast<uint64_t>(65535.0 * pow(static_cast<double>(maxII)/65535.0, 1.0/p));

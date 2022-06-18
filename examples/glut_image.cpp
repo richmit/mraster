@@ -5,7 +5,7 @@
    @author    Mitch Richling <https://www.mitchr.me>
    @brief     One way to get images from a ramCanvas into OpenGL@EOL
    @std       C++98
-   @copyright 
+   @copyright
    @parblock
    Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -26,7 +26,7 @@
    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
    DAMAGE.
    @endparblock
-   @filedetails   
+   @filedetails
 
    We illustrate how to use the exportRasterData() member to get data suitable for use as an OpenGL image.  Note that ramCanvas.h also supports directly an
    internal representation that is the same as that used by OpenGL --- so one can actually use the raw pixel store in the ramCanvas as OpenGL image data.  This
@@ -93,7 +93,7 @@ void displayCall() {
   glDrawPixels(theRC.get_numXpix(), theRC.get_numYpix(), GL_RGBA, GL_UNSIGNED_BYTE, (GLubyte*)image);
   glFlush();
 }  /* end func displayCall */
- 
+
 int main(int argc, char *argv[]) {
   for(int x=0; x<theRC.get_numXpix(); x++)
     for(int y=0; y<theRC.get_numXpix(); y++)

@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw a sprott Attractor.@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -26,7 +26,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
   Inspired by http://paulbourke.net/fractals/starjulia/
 ***************************************************************************************************************************************************************/
@@ -83,7 +83,7 @@ int main(void) {
     for(int yi=0;yi<theRamCanvas.get_numYpix();yi++)
       for(int xi=0;xi<theRamCanvas.get_numXpix();xi++)
         anotherRamCanvas.drawPoint(xi, yi, bColor.cmpColorRamp(static_cast<int>(theRamCanvas.getPxColor(xi, yi).getRed() * 1275 / maxII), "0RYBCW"));
-    
+
     anotherRamCanvas.writeTIFFfile("sprott2d.tiff");
   return 0;
 }

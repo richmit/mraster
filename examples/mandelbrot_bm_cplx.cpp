@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Benchmark drawing a mandelbrot set using the C++ complex type.@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -26,7 +26,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
   Basic benchmark.  Uses complex numbers.
 ***************************************************************************************************************************************************************/
@@ -37,14 +37,14 @@
 int main(void) {
   int count;
   const int NUMITR = 1024;
-  std::complex<float> c, z, zero(0.0, 0.0);  
+  std::complex<float> c, z, zero(0.0, 0.0);
   mjr::ramCanvas3c8b theRamCanvas(7680, 7680, -2.2, 0.8, -1.5, 1.5);
 
   for(int y=0;y<theRamCanvas.get_numYpix();y++) {
     for(int x=0;x<theRamCanvas.get_numXpix();x++) {
       for(c=std::complex<mjr::ramCanvas3c8b::rcCordFlt>(theRamCanvas.int2realX(x),theRamCanvas.int2realY(y)),z=zero,count=0; (std::norm(z)<4)&&(count<=NUMITR); count++,z=z*z+c)
         ;
-	  if(count < NUMITR)
+      if(count < NUMITR)
         theRamCanvas.drawPoint(x, y, mjr::color3c8b().cmpFireRamp(mjr::intWrap(count*20, 767)));
     }
   }

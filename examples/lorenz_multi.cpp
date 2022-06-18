@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw a sprott Attractor.@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -26,7 +26,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
   Inspired by http://paulbourke.net/fractals/starjulia/
 ***************************************************************************************************************************************************************/
@@ -57,7 +57,7 @@ int main(void) {
   float a = 10.0F;
   float b = 28.0F;
   float c = 8.0F / 3;
-    
+
   float p = 1.7F;
 
   /* Draw the atractor on a 16-bit, greyscale canvas -- the grey level will be an integer represeting the hit count for that pixel.  This is a good example
@@ -70,7 +70,7 @@ int main(void) {
     z=30+0*uniform_dist_float(rEng);
 
     std::cout << "y: " << y << std::endl;
-    
+
     for(int i=0;i<numPtsPerCurve;i++) {
       xNew = x + a * (y - x) * tDelta;
       yNew = y + (x * (b - z) - y) * tDelta;

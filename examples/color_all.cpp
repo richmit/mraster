@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw every possible color in 24-bit.@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -26,7 +26,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
   This is a very simple program that plots a point of EVERY possible 24-bit color.  This program illustrates how to count by bytes, set colors in byte order,
   how to avoid all the work and do it with simple integers via setColorFromPackedIntABGR, how to count via Grey code order, and how to reduce to 216 web safe
@@ -45,22 +45,14 @@ int main(void) {
   mjr::ramCanvas3c8b theRamCanvas_rgb(4096, 4096);
   mjr::ramCanvas3c8b theRamCanvas_web(4096, 4096);
 
-  mjr::ramCanvasRGB8b::rcColor::channelType red=0, blue=0, green=0, count=0;
+  mjr::ramCanvasRGB8b::rcColor::channelType red=0, blue=0, green=0;
+  uint32_t count=0;
+  mjr::color3c8b aColor;
   for(int y=0;y<theRamCanvas_int.get_numYpix();y++) {
     for(int x=0;x<theRamCanvas_int.get_numXpix();x++) {
-      red++;
-      if(red>=256) {
-        red=0;
-        green++;
-        if(green>=256) {
-          green=0;
-          blue++;
-        }
-      }
-      mjr::color3c8b aColor;
       aColor.setColorFromPackedInt(count, 0, 1, 2, 3);
       theRamCanvas_iii.drawPoint(x, y, aColor);
-      aColor.setColorFromPackedIntABGR(count);    
+      aColor.setColorFromPackedIntABGR(count);
       theRamCanvas_int.drawPoint(x, y, aColor);
       aColor.setColorFromPackedIntABGR(igray(count));
       theRamCanvas_gry.drawPoint(x, y, aColor);
@@ -69,6 +61,18 @@ int main(void) {
       aColor.tfrmWebSafe216();
       theRamCanvas_web.drawPoint(x, y, aColor);
       count++;
+      if(red < 255) {
+        red++;
+      } else {
+        red = 0;
+        if (green < 255) {
+          green++;
+        } else {
+          green = 0;
+          blue++;
+        }
+      }
+
     }
   }
   theRamCanvas_int.writeTIFFfile("color_all_int.tiff");

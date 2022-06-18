@@ -6,7 +6,7 @@
  @brief     Play the chaos Game.@EOL
  @keywords  fractal ifs
  @std       C++14
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015,2017, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -27,7 +27,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
   See: https://en.wikipedia.org/wiki/Chaos_game
 
@@ -38,7 +38,7 @@
 #include <iostream>                                                      /* C++ iostream            C++11    */
 #include <complex>                                                       /* Complex Numbers         C++11    */
 #include <random>                                                        /* C++ random numbers      C++11    */
-#include <vector>                                                        /* STL vector              C++11    */ 
+#include <vector>                                                        /* STL vector              C++11    */
 #include <list>                                                          /* STL list                C++11    */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -123,7 +123,7 @@ int main() {
       points.push_back(std::complex<double>{cos(curAngle), sin(curAngle)});
       curAngle += 2*pi/theIFS.numPts;
     }
-  
+
     std::complex<double> z{0.1, 0.2};
     int lastPoint = -1;
     double maxMag = 0;
@@ -147,7 +147,7 @@ int main() {
     std::cout << "max mag: " << maxMag << std::endl;
 
     theRamCanvas.applyHomoPixTfrm(&mjr::color3c8b::tfrmStdPow, 1.0F/5.0F);
-  
+
     std::ostringstream stringStream;
     stringStream << "chaos_game";
     stringStream << "," << theIFS.numPts;

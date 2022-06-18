@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw the John Tippetts variant of the Mandelbrot set.@EOL
  @std       C++14
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -48,8 +48,8 @@ int main(void) {
   int count;
   mjr::ramCanvas3c8b::rcCordFlt a, b, zx, zy;
   mjr::ramCanvas3c8b theRamCanvas(CSIZE, CSIZE);
-  for(int i=0; i<6; i++) {    
-    theRamCanvas.newRealCoords(ranges[i][0], ranges[i][1], ranges[i][2], ranges[i][3]);  
+  for(int i=0; i<6; i++) {
+    theRamCanvas.newRealCoords(ranges[i][0], ranges[i][1], ranges[i][2], ranges[i][3]);
     theRamCanvas.clrCanvasToBlack();
     for(int y=0;y<theRamCanvas.get_numYpix();y++) {
       if((y%(CSIZE/10))==0)

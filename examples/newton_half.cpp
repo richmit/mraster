@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw various Newton-like Fracticals.@EOL
  @std       C++11
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, 2017, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -35,7 +35,7 @@
 #include "ramCanvas.hpp"
 
 #include <complex>                                                       /* Complex Numbers         C++11    */
-#include <vector>                                                        /* STL vector              C++11    */ 
+#include <vector>                                                        /* STL vector              C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
 
 /** Enum identifying why iteration stopped */
@@ -58,7 +58,7 @@ int main(void) {
   //mjr::ramCanvas3c8b theRamCanvas(3840/1, 2160/1, -4.72, -0.5, -1.0, 1.0);
   //mjr::ramCanvas3c8b theRamCanvas(3840/4, 2160/4, -3.0, 3.0, -3.0, 3.0);
   mjr::ramCanvas3c8b theRamCanvas(1080*4, 1080*4, 0.6, 1.1, -0.4, 0.4);
-  
+
   mjr::color3c8b aColor(255, 255, 255);
 
   for(int y=0;y<theRamCanvas.get_numYpix();y++) {

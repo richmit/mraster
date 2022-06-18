@@ -6,7 +6,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Mandelbrot orbits.@EOL
  @std       C++11
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -27,7 +27,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
   Explores the orbits of the iteration
 
@@ -62,7 +62,7 @@ int main(void)
       std::cout << "LINE: " << y << "/" << (CSIZE*SCALE) << std::endl;
     for(int x=0;x<inhRamCanvas.get_numXpix();x++) {
       //std::cout << x << " " << y << std::endl;
-      whyStopMO why;           
+      whyStopMO why;
       std::complex<double> z;
       int count;
       double cr = inhRamCanvas.int2realX(x);
@@ -109,5 +109,4 @@ int main(void)
   mRamCanvas.writeTIFFfile("mandelbrot_orbits_m.tiff");
   incRamCanvas.scaleDownMax(SCALE);
   incRamCanvas.writeTIFFfile("mandelbrot_orbits_in_c.tiff");
-}  
-
+}

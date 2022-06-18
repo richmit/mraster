@@ -4,7 +4,7 @@
  @file      circles.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Mathematical art with circles.@EOL
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -25,7 +25,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
 ***************************************************************************************************************************************************************/
 
@@ -153,7 +153,7 @@ int main(void) {
     // double r =  255.0*(0.5+pow(sin(26.0*pi*k/n), 4))/200.0;
     // double g =  255.0*(0.5+pow(cos(6.0*pi*k/n), 2))/220.0;
     // double b =  255.0*(0.5+pow(sin(6.0*pi*k/n), 2))/220.0;
-    
+
     // // v=016 n=120000
     // double x =  (cos(11.0*pi*k/n))*(1.0-3.0/4.0*std::pow(cos(10.0*pi*k/n), 2));
     // double y =  -((sin(17.0*pi*k/n))*(1.0-3.0/4.0*pow(cos(12.0*pi*k/n), 2)));
@@ -173,9 +173,9 @@ int main(void) {
     mjr::ramCanvasRGB8b::rcColor::channelType ri = static_cast<mjr::ramCanvasRGB8b::rcColor::channelType>(r);
     mjr::ramCanvasRGB8b::rcColor::channelType gi = static_cast<mjr::ramCanvasRGB8b::rcColor::channelType>(g);
     mjr::ramCanvasRGB8b::rcColor::channelType bi = static_cast<mjr::ramCanvasRGB8b::rcColor::channelType>(b);
-    
+
     theRamCanvas.drawCircle(x, y, s, mjr::ramCanvasRGB8b::rcColor(ri, gi, bi));
-  } 
+  }
 
   // double kernel[51*51];
   // int kSize = 9;
@@ -183,6 +183,3 @@ int main(void) {
   // theRamCanvas.convolution(kernel, kSize);
   theRamCanvas.writeTIFFfile("circles.tiff");
 }
-
-
-

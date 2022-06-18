@@ -4,7 +4,7 @@
  @file      img_process.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Demo some image processing.@EOL
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
 
    // listOcanv[0].writeTIFFfile("in1.tiff");
    // listOcanv[1].writeTIFFfile("in2.tiff");
-  
+
   // for(auto& pix : listOcanv[0])
   //   //pix.setToRed();
   //   pix.tfrmNot();
@@ -108,11 +108,11 @@ int main(int argc, char *argv[]) {
   /* **************************************************************************************************************************************************************** */
   // listOcanv[0].writeTIFFfile("in1.tiff");
   // listOcanv[1].writeTIFFfile("in2.tiff");
-  // listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmAnd, color3c8b(0xF0, 0xF0, 0xF0)); 
+  // listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmAnd, color3c8b(0xF0, 0xF0, 0xF0));
   // listOcanv[1].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmShiftR, color3c8b(4, 4, 4));
   // listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmOr, listOcanv[1]);
   // listOcanv[0].writeTIFFfile("cmb.tiff");
-  
+
   /* **************************************************************************************************************************************************************** */
   /* **************************************************************************************************************************************************************** */
   /* Extract two images that have been combined.                                                      */
@@ -139,7 +139,7 @@ int main(int argc, char *argv[]) {
   //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmNot);
   //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmStdPow, 0.7);
   //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmStdPow, 0.9, 0.8, 0.7);
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmLinearGreyLevelScale, 2.0, 150.0);  
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmLinearGreyLevelScale, 2.0, 150.0);
   //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmLinearGreyLevelScale, 2, 150, 0, 0, 1, 0); // no workie
   //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmDirac, color3c8b(0xF0, 0x0F, 0x0F));
   //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmFuzzyDirac, color3c8b(0xF0, 0x0F, 0x0F), color3c8b(0x0F, 0x0F, 0x0F));
@@ -207,4 +207,3 @@ int main(int argc, char *argv[]) {
 
   return 0;
 }
-

@@ -6,7 +6,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     This program draws a Mandelbrot the binary method.@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -27,9 +27,9 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
- We use the "binary" method with a twist.  
+ We use the "binary" method with a twist.
 
   - bin: The traditional binary method
   - gray: Shaded by the argument
@@ -58,7 +58,7 @@ int main(void)
   const rc::rcCordFlt BALL  = 100;
   rc                  binRamCanvas(CSIZE, CSIZE), grayRamCanvas(CSIZE, CSIZE), quadRamCanvas(CSIZE, CSIZE);
   rcc                 theColor;
-  whyStopMB           why;           
+  whyStopMB           why;
 
   for(int i=0; i<3; i++) {
     binRamCanvas.newRealCoords(ranges[i][0], ranges[i][1], ranges[i][2], ranges[i][3]);
@@ -84,7 +84,7 @@ int main(void)
               why = whyStopMB::OUTSET;
               break;
             }
-            z = z * z + c;    
+            z = z * z + c;
           }
         } else {
           why = whyStopMB::INSET;
@@ -106,9 +106,9 @@ int main(void)
         }
       }
     }
-    
+
     binRamCanvas.writeTIFFfile("mandelbrot_binary_bin_"    + std::to_string(i) + ".tiff");
     grayRamCanvas.writeTIFFfile("mandelbrot_binary_gray_"  + std::to_string(i) + ".tiff");
     quadRamCanvas.writeTIFFfile("mandelbrot_binary_quad_"  + std::to_string(i) + ".tiff");
-  }  
+  }
 }

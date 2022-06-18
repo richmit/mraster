@@ -4,7 +4,7 @@
  @file      brownianDiffusion.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Read a TIFF image and simulate brownian diffusion.@EOL
- @keywords  dla fractal brownian motion brown 
+ @keywords  dla fractal brownian motion brown
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
   int stenX[8] = {1, -1, 0,  0, 1,  1, -1, -1};
   int stenY[8] = {0,  0, 1, -1, 1, -1,  1, -1};
 
-  
+
   if((argc < 3) || (argc > 4)) {
     std::cout << "ERROR: Useage: dlaBrownian inFile.tiff outFile_without_extension [ITERATIONS]" << std::endl;
   }
@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
     std::cout << "ERROR: Problem with file: " << argv[2] << std::endl;
     return 1;
   }
-    
+
   if(argc > 3)
     MAXCOUNT = std::stoi(argv[3]);
 
@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
             maxDir = curDir;
           }
         }
-        
+
         if(maxDir > -1) {
           mjr::ramCanvas3c8b::rcCordInt xN, yN;
           xN = xC+stenX[maxDir];
@@ -116,7 +116,7 @@ int main(int argc, char *argv[]) {
     theRamCanvas.writeTIFFfile(stringStream.str());
     std::cout << "Write: " << stringStream.str() << std::endl;
   }
-  
+
 
   return 1;
 

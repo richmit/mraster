@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw a Lorenz Attractor histogram.@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -49,8 +49,8 @@ int main(void) {
   double minMovDelta = idealJumpDist / 6.0; /* The minimum delta for the function. */
 
 
-  double minTdelta        = 0.000001;  	/* Minimum value for tDelta */
-  double maxTdelta        = 0.01;      	/* Maximum value for tDelta */
+  double minTdelta        = 0.000001;   /* Minimum value for tDelta */
+  double maxTdelta        = 0.01;       /* Maximum value for tDelta */
   double tDeltaZeroThresh = 0.00000001; /* Episolon ball for zero. */
   double maxNumBisect     = 10;         /* Max bisections on tDelta. */
 
@@ -68,7 +68,7 @@ int main(void) {
     double z = 25;
 
     std::cout << "y: " << y << std::endl;
-    
+
     /*  Solve the equations..... */
     numBalls = 0;
     tDelta = maxTdelta;
@@ -129,7 +129,7 @@ int main(void) {
         maxII = theRamCanvas.getPxColor(x, z).getRed();
     }
   }
-  
+
   theRamCanvas.writeRAWfile("lorenz_fuz.mrw");
 
   // Root image transform
@@ -150,8 +150,8 @@ int main(void) {
       if( (anotherRamCanvas.getPxColor(xi, yi).getRed() > 0) && (anotherRamCanvas.getPxColor(xi, yi).getRed() < 255) )
         anotherRamCanvas.getPxColorRefNC(xi, yi).setRed(255);
     }
-    
+
   anotherRamCanvas.writeTIFFfile("lorenz_fuz.tiff");
-  
+
   return 0;
 }

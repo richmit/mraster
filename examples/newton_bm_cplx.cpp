@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Benchmark drawing a Newton Fractical.  Use complex class.@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -42,7 +42,7 @@ int main(void) {
   std::complex<double> r1( 1.0,            0);
   std::complex<double> r2(-0.5,  sin(2*pi/3));
   std::complex<double> r3(-0.5, -sin(2*pi/3));
-  
+
   for(int y=0;y<theRamCanvas.get_numYpix();y++) {
     for(int x=0;x<theRamCanvas.get_numXpix();x++) {
       std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
@@ -59,10 +59,9 @@ int main(void) {
         theRamCanvas.drawPoint(x, y, mjr::color3c8b(cCol, 0,    0));
       else if(abs(z-r2) <= Tol)
         theRamCanvas.drawPoint(x, y, mjr::color3c8b(0,    cCol, 0));
-      else if(abs(z-r3) <= Tol)                          
+      else if(abs(z-r3) <= Tol)
         theRamCanvas.drawPoint(x, y, mjr::color3c8b(0,    0,    cCol));
     }
   }
   theRamCanvas.writeTIFFfile("newton_bm_cplx.tiff");
 }
-

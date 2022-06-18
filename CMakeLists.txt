@@ -147,7 +147,7 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
   if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     target_compile_options(${CURTGT} PUBLIC -Wstrict-overflow=0)
     target_compile_options(${CURTGT} PUBLIC -ffast-math)
-    target_compile_options(${CURTGT} PUBLIC -Wall -Wconversion -Wno-unknown-pragmas ) # -Wextra 
+    target_compile_options(${CURTGT} PUBLIC -Wall -Wconversion -Wno-unknown-pragmas -Wextra -Wno-deprecated-copy) # 
     target_compile_options(${CURTGT} PUBLIC -Ofast)
     if(CMAKE_CXX_PLATFORM_ID STREQUAL "MinGWx")
       target_compile_options(${CURTGT} PUBLIC -static-libgcc)

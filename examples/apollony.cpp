@@ -6,7 +6,7 @@
  @brief     Draw the Apollony Gasket via an ifs.@EOL
  @keywords  apollony fractal gasket
  @std       C++14
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015,2017, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -27,11 +27,11 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
   Pick an initial \f$z\in\mathbb{C}\f$, say \f$\frac{1}{10}+\frac{2}{10}i\f$.  Then iterate.  For each iteration let the next $z$ value be \f$f_n(z)\f$ where
   \f$n\f$ is selected at random.  If we plot the \f$z\f$ points, we obtain the classical Apollony Gasket.
-  
+
   \f[\begin{array}{rcl}
     f_1(z) &=& f(z)                         \\
     f_2(z) &=& \frac{-1 + i\sqrt{3}}{2f(z)} \\
@@ -58,19 +58,19 @@ int main()
   const int   CSIZE = 1080*2;          // Quad HD
   const int ITRTOSS = std::pow(2, 10); // Throw away first iterations
   const long NUMITR = std::pow(2, 29); // Needs to be big
-                      
+
   mjr::ramCanvas3c8b theRamCanvas(CSIZE, CSIZE, -4.0, 4.0, -4.0, 4.0);
   theRamCanvas.set_drawMode(mjr::ramCanvas3c8b::drawModeType::ADDCLIP);
-  
+
 #if SUPPORT_DRAWING_MODE
   mjr::color3c8b aColor[] = { mjr::color3c8b(1, 0, 0), mjr::color3c8b(0, 1, 0), mjr::color3c8b(0, 0, 1) };
 #else
   mjr::color3c8b aColor[] = { mjr::color3c8b(255, 0, 0), mjr::color3c8b(0, 255, 0), mjr::color3c8b(0, 0, 255) };
-#endif  
+#endif
 
   std::random_device rd;
   std::minstd_rand0 rEng(rd()); // Fast is better than high quality for this application.
-  
+
   const double s = 1.73205080757;
   const std::complex<double> i(0.0, 1.0);
   const std::complex<double> si(0.0, s);
@@ -83,9 +83,9 @@ int main()
   for (long n=0;n<NUMITR;n++) {
     std::complex<double> zNxt;
     if ((n % (NUMITR/100)) == 0) {
-      if ((n % (NUMITR/10)) == 0) 
+      if ((n % (NUMITR/10)) == 0)
         std::cout << "|" << std::flush;
-      else 
+      else
         std::cout << "." << std::flush;
     }
     std::complex<double> f = c5/(c4-z)-c1;
@@ -109,4 +109,3 @@ int main()
   std::cout << "apollony finish" << std::endl;
   return 0;
 }
-

@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw several examples of indexed color pallets.@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -94,5 +94,3 @@ int main(void) {
     theRamCanvas.writeTIFFfile(std::string("color_lut_indexed") + (doWS?"WS":"TC") + ".tiff");
   }
 }
-
-

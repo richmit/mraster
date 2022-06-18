@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw a Peter de Jong Attractor.@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -50,7 +50,7 @@ double params[NPR][9] = {
   {  -1.76690,  1.99947, -1.90106, -1.77759,  0.643333,  1.904950, -1.890230,  0.46540, 2.00},   // 13  56604946
   {  -1.91813, -1.79012, -1.62624,  1.90787,  0.571077,  1.646480,  1.357700,  0.12230, 1.75},   // 14 215417412
   {  -1.92361,  1.79491, -1.95131, -1.64915, -1.204090, -1.681380,  1.620420,  1.86234, 1.75},   // 15 252292873
-  {   1.67219, -1.66621, -1.82146,  1.89902, -0.842709,  1.419750,  0.696557, -0.81644, 1.75},   // 16 111744614 
+  {   1.67219, -1.66621, -1.82146,  1.89902, -0.842709,  1.419750,  0.696557, -0.81644, 1.75},   // 16 111744614
   {  -2.20000, -1.97000,  2.20200, -2.30000,  0.000000,  0.000000,  0.000000,  0.00000, 1.75}
 };
 
@@ -74,7 +74,7 @@ int main(void) {
     /* Draw the atractor on a 16-bit, greyscale canvas -- the grey level will be an integer represeting the hit count for that pixel.  This is a good example
        of how an image can have pixel values that are generic "data" as well as color information. */
     double x       = 1.0;
-    double y       = 1.0;  
+    double y       = 1.0;
     uint64_t maxII = 0;
     for(uint64_t i=0;i<10000000000ul;i++) {
       double xNew = std::sin(a*y + e) - std::cos(b*x + f);
@@ -110,7 +110,7 @@ int main(void) {
     for(int yi=0;yi<theRamCanvas.get_numYpix();yi++)
       for(int xi=0;xi<theRamCanvas.get_numXpix();xi++)
         anotherRamCanvas.drawPoint(xi, yi, bColor.cmpColorRamp(static_cast<int>(theRamCanvas.getPxColor(xi, yi).getRed() * 1275 / maxII), "0RYBCW"));
-    
+
     anotherRamCanvas.writeTIFFfile("peterdejong_" + std::to_string(j) + ".tiff");
   }
   return 0;

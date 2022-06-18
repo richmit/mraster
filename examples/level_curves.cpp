@@ -4,9 +4,9 @@
  @file      level_curves.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw level curves for a real valued function on two real variables.@EOL
- @keywords  
+ @keywords
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -33,7 +33,7 @@
 
 typedef mjr::ramCanvas3c8b::rcCordFlt drT;
 
-drT f(drT x, drT y);  
+drT f(drT x, drT y);
 void drawLevelCurves(int numBand, drT bandWidth, drT zMin, drT zMax, drT minRealX, drT maxRealX, drT minRealY, drT maxRealY, const char *file);
 
 int main(void) {
@@ -116,5 +116,3 @@ void drawLevelCurves(int numBand, drT bandWidth, drT zMin, drT zMax, drT minReal
 
   theRamCanvas.writeTIFFfile(file);
 }
-
-

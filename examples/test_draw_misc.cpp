@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Illustrate and test simple drawing functions.@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -56,13 +56,13 @@ int main(void) {
     theRamCanvas.drawLine(400, 200, 400+y,   200+150);
     theRamCanvas.drawLine(400, 200, 400+y,   200-150);
   }
- 
+
   theRamCanvas.drawLine(-20, -10, 70, 60);
- 
+
   for(int y=-10;y<50;y+=5) {
     theRamCanvas.drawTriangle(20, 200, y, 200+30, 30, 300);
   }
- 
+
   theRamCanvas.setDfltColor(mjr::color3c8b("green"));
   for(int r=10;r<50;r+=5)
     theRamCanvas.drawCircle(200, 250, r);

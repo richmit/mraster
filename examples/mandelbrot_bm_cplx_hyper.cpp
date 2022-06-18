@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Benchmark drawing a mandelbrot set using the C++ complex type and excluding hypocycloids.@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -26,7 +26,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
   Basic benchmark.  Uses complex numbers.  Has several algorithmic optimizations.
 
@@ -74,7 +74,7 @@ int main(void) {
   bool doStatusPrint = false;
 
   std::vector<std::complex<double>> lastZs(LASTMAX);
-  for(int y=0;y<theRamCanvas.get_numYpix();y++) { 
+  for(int y=0;y<theRamCanvas.get_numYpix();y++) {
     for(int x=0;x<theRamCanvas.get_numXpix();x++) {
       int count;
       double cr = theRamCanvas.int2realX(x);
@@ -98,7 +98,7 @@ int main(void) {
               z = z * z + c;
 
               if(count>=NUMITR) {
-                theRamCanvas.drawPoint(x, y, "white");               
+                theRamCanvas.drawPoint(x, y, "white");
                 countMAXCOUNT++;
                 break;
               }
@@ -118,7 +118,7 @@ int main(void) {
             }
           }
         }
-      }      
+      }
     }
 
     if( doStatusPrint && (((y%(CSIZE/32))==0) || (y==(CSIZE-1))) ) {

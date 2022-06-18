@@ -4,7 +4,7 @@
  @file      test_draw_color.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Benchmark program for pixel draw rates with ramCanvas.@EOL
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -25,7 +25,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
   We instantiate every member function in colorTpl so that we can check for compile time errors and do some basic functionality testing.
 
@@ -42,35 +42,35 @@ int main(void) {
   std::cout << "red 8b: " << (int)aColor.getRed8bit() << std::endl;
   std::cout << "red F:  " << (double)aColor.getRedF() << std::endl;
 
-  std::cout << "MaxC:   " << (int)aColor.getMaxC()    << std::endl;  
-  std::cout << "MinC:   " << (int)aColor.getMinC()    << std::endl;  
-  std::cout << "MaxRGB: " << (int)aColor.getMaxRGB()  << std::endl;  
-  std::cout << "MinRGB: " << (int)aColor.getMinRGB()  << std::endl;  
+  std::cout << "MaxC:   " << (int)aColor.getMaxC()    << std::endl;
+  std::cout << "MinC:   " << (int)aColor.getMinC()    << std::endl;
+  std::cout << "MaxRGB: " << (int)aColor.getMaxRGB()  << std::endl;
+  std::cout << "MinRGB: " << (int)aColor.getMinRGB()  << std::endl;
 
   aColor.setChan(0, 0);                                            std::cout << "aColor.setChan(0, 0);                        " << aColor << std::endl;
   aColor.setRed(0);                                                std::cout << "aColor.setRed(0);                            " << aColor << std::endl;
   aColor.setGreen(0);                                              std::cout << "aColor.setGreen(0);                          " << aColor << std::endl;
   aColor.setAlpha(0);                                              std::cout << "aColor.setAlpha(0);                          " << aColor << std::endl;
   aColor.setAll(2);                                                std::cout << "aColor.setAll(2);                            " << aColor << std::endl;
-                                                                                                                              
+
   aColor.setChanF(0, 0.0);                                         std::cout << "aColor.setChanF(0, 0.0);                     " << aColor << std::endl;
   aColor.setRedF(0.0);                                             std::cout << "aColor.setRedF(0.0);                         " << aColor << std::endl;
   aColor.setGreenF(0.0);                                           std::cout << "aColor.setGreenF(0.0);                       " << aColor << std::endl;
   aColor.setAlphaF(0.0);                                           std::cout << "aColor.setAlphaF(0.0);                       " << aColor << std::endl;
   aColor.setAllF(0.8F);                                            std::cout << "aColor.setAllF(0.8F);                        " << aColor << std::endl;
-                                                                                                                              
+
   aColor.setChan64bit(0, 255, 255);                                std::cout << "aColor.setChan64bit(0, 255, 255);            " << aColor << std::endl;
   aColor.setRed64bit(255, 255);                                    std::cout << "aColor.setRed64bit(255, 255);                " << aColor << std::endl;
   aColor.setGreen64bit(255, 255);                                  std::cout << "aColor.setGreen64bit(255, 255);              " << aColor << std::endl;
   aColor.setAlpha64bit(255, 255);                                  std::cout << "aColor.setAlpha64bit(255, 255);              " << aColor << std::endl;
   aColor.setAll64bit(255, 255);                                    std::cout << "aColor.setAll64bit(255, 255);                " << aColor << std::endl;
-                                                                                                                              
+
   aColor.setChan8bit(0, 0);                                        std::cout << "aColor.setChan8bit(0, 0);                    " << aColor << std::endl;
   aColor.setRed8bit(50);                                           std::cout << "aColor.setRed8bit(50);                       " << aColor << std::endl;
   aColor.setGreen8bit(200);                                        std::cout << "aColor.setGreen8bit(200);                    " << aColor << std::endl;
   aColor.setAlpha8bit(0);                                          std::cout << "aColor.setAlpha8bit(0);                      " << aColor << std::endl;
   aColor.setAll8bit(123);                                          std::cout << "aColor.setAll8bit(123);                      " << aColor << std::endl;
-                                                                                                                              
+
   aColor.ScaleSignDiff(bColor);                                    std::cout << "aColor.ScaleSignDiff(bColor);                " << aColor << std::endl;
   aColor.tfrmOr(bColor);                                           std::cout << "aColor.tfrmOr(bColor);                       " << aColor << std::endl;
   aColor.tfrmNor(bColor);                                          std::cout << "aColor.tfrmNor(bColor);                      " << aColor << std::endl;
@@ -99,8 +99,8 @@ int main(void) {
   aColor.tfrmMod(bColor);                                          std::cout << "aColor.tfrmMod(bColor);                      " << aColor << std::endl;
   aColor.tfrmMaxI(bColor);                                         std::cout << "aColor.tfrmMaxI(bColor);                     " << aColor << std::endl;
   aColor.tfrmMinI(bColor);                                         std::cout << "aColor.tfrmMinI(bColor);                     " << aColor << std::endl;
-                                                                                                                              
-  aColor.setColorRGB(100, 200, 210);                               std::cout << "aColor.setColorRGB(100, 200, 210);           " << aColor << std::endl; 
+
+  aColor.setColorRGB(100, 200, 210);                               std::cout << "aColor.setColorRGB(100, 200, 210);           " << aColor << std::endl;
   aColor.setColorRGBA(100, 200, 210, 0);                           std::cout << "aColor.setColorRGBA(100, 200, 210, 0);       " << aColor << std::endl;
   bColor.setColorRGBA(0, 0, 0, 0);                                 std::cout << "bColor.setColorRGBA(0, 0, 0, 0);             " << bColor << std::endl;
   aColor.setColorFromColor(bColor);                                std::cout << "aColor.setColorFromColor(bColor);            " << aColor << std::endl;
@@ -111,7 +111,7 @@ int main(void) {
   aColor.setColorFromF(0.5, 0.5, 0.5, 0.5);                        std::cout << "aColor.setColorFromF(0.5, 0.5, 0.5, 0.5);    " << aColor << std::endl;
   aColor.setColorFromF(0.5, 0.5, 0.5);                             std::cout << "aColor.setColorFromF(0.5, 0.5, 0.5);         " << aColor << std::endl;
   aColor.setColorFromPackedIntABGR(123);                           std::cout << "aColor.setColorFromPackedIntABGR(123);       " << aColor << std::endl;
-  
+
   aColor.tfrmLinearGreyLevelScale(0.5F, 0.1F);                     std::cout << "aColor.tfrmLinearGreyLevelScale(0.5F, 0.1F); " << aColor << std::endl;
 
   aColor.setChanToMin();                                           std::cout << "aColor.setChanToMin();                       " << aColor << std::endl;
@@ -124,7 +124,7 @@ int main(void) {
   aColor.setToCyan();                                              std::cout << "aColor.setToCyan();                          " << aColor << std::endl;
   aColor.setToYellow();                                            std::cout << "aColor.setToYellow();                        " << aColor << std::endl;
   aColor.setToMagenta();                                           std::cout << "aColor.setToMagenta();                       " << aColor << std::endl;
-                                                                                                                              
+
   aColor.setColorFromCorner(mjr::colorRGBA8b::cornerColor::BLACK); std::cout << "aColor.setColorFromCorner(::BLACK);          " << aColor << std::endl;
   aColor.cmpGreyTGA16bit(1);                                       std::cout << "aColor.cmpGreyTGA16bit(1);                   " << aColor << std::endl;
 }

@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw a grayscale Mandelbrot Set.@EOL
  @std       C++14
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015,2018 Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -26,7 +26,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
   The escape time Mandelbrot rendering algorithm delivers us a single data point, the iteration count, per pixel.  Niavely this maps directly to a monochrome
   image; however, the iteration counts used are frequently beyond 256 -- the limit for most display technology.  Additionally the spatial distribution of
@@ -36,7 +36,7 @@
   favroith scietific image analysis pacakger (Mine is Fiji an ImageJ derivative), where one may then quickly play with various coloring schemes.  Most of thje
   classic ones can be reporduced in one or two steps -- a LUT and perhaps a homogenious mathematical filter.  This is a great way to expore known coloring
   schemes, and to develop new ones.
-  
+
   Notes:
     - Uses a deep, greyscale image.
     - Outputs a TIFF
@@ -53,7 +53,7 @@ int main(void) {
   const int NUMITR = mjr::ramCanvas1c16b::rcColor::maxChanVal;
 
   mjr::ramCanvas1c16b::rcCordFlt cr, ci;
-  std::complex<mjr::ramCanvas1c16b::rcCordFlt> c, z, zero(0.0, 0.0);  
+  std::complex<mjr::ramCanvas1c16b::rcCordFlt> c, z, zero(0.0, 0.0);
   for(int y=0;y<theRamCanvas.get_numYpix();y++) {
     for(int x=0;x<theRamCanvas.get_numXpix();x++) {
       cr = theRamCanvas.int2realX(x);

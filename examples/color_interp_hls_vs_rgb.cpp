@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Illistrate the diffrence in interpolion in HLS vs RGB spaec.@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -26,7 +26,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
   In some cases, interpolating in HLS spaces can lead to an entirely different result from interpolating in RGB space.  This program illustrates on such
   example.  Note that in many of the most important cases, interpolating leads to the same results in both color spaces.
@@ -45,4 +45,3 @@ int main(void) {
   }
   theRamCanvas.writeTIFFfile("color_interp_hls_vs_rgb.tiff");
 }
-

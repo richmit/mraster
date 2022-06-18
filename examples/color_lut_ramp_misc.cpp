@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Demonstrate the cmpColorRamp (general color ramp) function
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -34,14 +34,14 @@ int main(void) {
   mjr::ramCanvasRGB8b theRamCanvas(1024, 1024);
   mjr::colorRGB8b aColor(0,0,0);
 
-//  mjr::color3c8b corners[7] = { color3c8b("red"),   color3c8b("yellow"), 
-//                           color3c8b("green"), color3c8b("cyan"), 
-//                           color3c8b("blue"),  color3c8b("magenta"), 
+//  mjr::color3c8b corners[7] = { color3c8b("red"),   color3c8b("yellow"),
+//                           color3c8b("green"), color3c8b("cyan"),
+//                           color3c8b("blue"),  color3c8b("magenta"),
 //                           color3c8b("red")};
 //
-//  mjr::color3c8b corners2[7] = { color3c8b(color3c8b::cornerColors::RED),   color3c8b(color3c8b::cornerColors::YELLOW), 
-//                            color3c8b(color3c8b::cornerColors::GREEN), color3c8b(color3c8b::cornerColors::CYAN), 
-//                            color3c8b(color3c8b::cornerColors::BLUE),  color3c8b(color3c8b::cornerColors::MAGENTA), 
+//  mjr::color3c8b corners2[7] = { color3c8b(color3c8b::cornerColors::RED),   color3c8b(color3c8b::cornerColors::YELLOW),
+//                            color3c8b(color3c8b::cornerColors::GREEN), color3c8b(color3c8b::cornerColors::CYAN),
+//                            color3c8b(color3c8b::cornerColors::BLUE),  color3c8b(color3c8b::cornerColors::MAGENTA),
 //                            color3c8b(color3c8b::cornerColors::RED)};
 //
 //  double anchors[7] = {0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
@@ -62,10 +62,8 @@ int main(void) {
   corners[7].setColorFromF(  1.436555e-06F, -2.633831e-09F,  4.411618e-11F);
 
   for(int x=0;x<theRamCanvas.get_numXpix();x++)
-	for(int y=0;y<theRamCanvas.get_numYpix();y++)
+    for(int y=0;y<theRamCanvas.get_numYpix();y++)
       theRamCanvas.drawPoint(x, y, aColor.cmpColorRamp(x, 8, anchors, corners));
 
   theRamCanvas.writeTIFFfile("color_lut_ramp_misc.tiff");
 }
-
-

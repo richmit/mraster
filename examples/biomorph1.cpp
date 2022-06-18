@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw some classical versions of Clifford Pickover's biomorph fractals.@EOL
  @std       C++14
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -38,7 +38,7 @@ int main(void) {
   const int LIM    = 4;
   int count;
   std::complex<float> oneone(1,1), z;
-    
+
   mjr::ramCanvas3c8b theRamCanvasA(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
   mjr::ramCanvas3c8b theRamCanvasB(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
   mjr::ramCanvas3c8b theRamCanvasC(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
@@ -123,21 +123,21 @@ int main(void) {
         if(std::real(z) < 0) {
           if(std::imag(z) < 0) {
             if(std::imag(z) < std::real(z) ) {
-              theRamCanvasJ.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(static_cast<int>(std::abs(std::real(z))), 255*1-1), "0R")); 
+              theRamCanvasJ.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(static_cast<int>(std::abs(std::real(z))), 255*1-1), "0R"));
             } else {
-              theRamCanvasJ.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(static_cast<int>(std::abs(std::real(z))), 255*1-1), "0Y")); 
+              theRamCanvasJ.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(static_cast<int>(std::abs(std::real(z))), 255*1-1), "0Y"));
             }
           } else {
-            theRamCanvasJ.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(static_cast<int>(std::abs(std::real(z))), 255*1-1), "0B"));   
+            theRamCanvasJ.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(static_cast<int>(std::abs(std::real(z))), 255*1-1), "0B"));
           }
         } else {
           if(std::imag(z) < 0) {
-            theRamCanvasJ.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(static_cast<int>(std::abs(std::real(z))), 255*1-1), "0M"));   
+            theRamCanvasJ.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(static_cast<int>(std::abs(std::real(z))), 255*1-1), "0M"));
           } else {
             if(std::imag(z) < std::real(z) ) {
-              theRamCanvasJ.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(static_cast<int>(std::abs(std::real(z))), 255*1-1), "0C")); 
+              theRamCanvasJ.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(static_cast<int>(std::abs(std::real(z))), 255*1-1), "0C"));
             } else {
-              theRamCanvasJ.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(static_cast<int>(std::abs(std::real(z))), 255*1-1), "0G")); 
+              theRamCanvasJ.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intWrap(static_cast<int>(std::abs(std::real(z))), 255*1-1), "0G"));
             }
           }
         }

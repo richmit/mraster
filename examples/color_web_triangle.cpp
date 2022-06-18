@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Plot the full range of RGB colors along with various reduced color spaces.@EOL
  @std       C++11
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -26,7 +26,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
   This is a very simple program that plots a point of EVERY possible color for a 24-bit display.  It also produces versions for various types of color blind
   vision and the 216 color web safe version.
@@ -39,7 +39,7 @@ int main(void) {
   int x, y;
   int redX=512, redY=512, blueX=1024, blueY=512, greenX=768, greenY=956;
   float sLength = 512;
-  mjr::color3c8b color;	
+  mjr::color3c8b color;
   mjr::ramCanvas3c8b theRamCanvas_tru(1536, 1536);
   mjr::ramCanvas3c8b theRamCanvas_web(1536, 1536);
   mjr::ramCanvas3c8b theRamCanvas_Pro(1536, 1536);
@@ -48,24 +48,24 @@ int main(void) {
 
   for(y=0;y<theRamCanvas_web.get_numYpix();y++) {
     for(x=0;x<theRamCanvas_web.get_numXpix();x++) {
-	  if( (sqrt(double((x-redX)  *(x-redX)  +(y-redY)  *(y-redY)))    < sLength) ||
-		  (sqrt(double((x-blueX) *(x-blueX) +(y-blueY) *(y-blueY)))   < sLength) ||
+      if( (sqrt(double((x-redX)  *(x-redX)  +(y-redY)  *(y-redY)))    < sLength) ||
+          (sqrt(double((x-blueX) *(x-blueX) +(y-blueY) *(y-blueY)))   < sLength) ||
           (sqrt(double((x-greenX)*(x-greenX)+(y-greenY)*(y-greenY)))) < sLength) {
-		color.setColorRGB((mjr::colChan8)(255-sqrt(double((x-redX)  *(x-redX)   +(y-redY) *(y-redY))  /sLength*255)),
+        color.setColorRGB((mjr::colChan8)(255-sqrt(double((x-redX)  *(x-redX)   +(y-redY) *(y-redY))  /sLength*255)),
                           (mjr::colChan8)(255-sqrt(double((x-blueX) *(x-blueX)  +(y-blueY)*(y-blueY)) /sLength*255)),
                           (mjr::colChan8)(255-sqrt(double((x-greenX)*(x-greenX)+(y-greenY)*(y-greenY))/sLength*255)));
         mjr::color3c8b tmpColor;
         tmpColor = color;
-		theRamCanvas_tru.drawPoint(x, y, tmpColor);
+        theRamCanvas_tru.drawPoint(x, y, tmpColor);
         tmpColor = color;
-		theRamCanvas_web.drawPoint(x, y, tmpColor.tfrmWebSafe216());
+        theRamCanvas_web.drawPoint(x, y, tmpColor.tfrmWebSafe216());
         tmpColor = color;
-		theRamCanvas_Pro.drawPoint(x, y, tmpColor.tfrmWebSafePro216());
+        theRamCanvas_Pro.drawPoint(x, y, tmpColor.tfrmWebSafePro216());
         tmpColor = color;
-		theRamCanvas_Deu.drawPoint(x, y, tmpColor.tfrmWebSafeDeu216());
+        theRamCanvas_Deu.drawPoint(x, y, tmpColor.tfrmWebSafeDeu216());
         tmpColor = color;
-		theRamCanvas_Tri.drawPoint(x, y, tmpColor.tfrmWebSafeTri216());
-	  }
+        theRamCanvas_Tri.drawPoint(x, y, tmpColor.tfrmWebSafeTri216());
+      }
     }
   }
   theRamCanvas_tru.writeTIFFfile("color_web_triangle_tru.tiff");

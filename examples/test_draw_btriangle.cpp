@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Illustrate and test barycentric interpolation.@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -34,7 +34,7 @@ int main(void) {
   const int s = 1; // Set to 10 for high res image (test smoothness), set to 1 for low resolution (test pixel level detail)
   const int c = 11 - s;
   static_assert(s<11 && s>0, "ERROR: s must be in [1, 10].");
- 
+
   mjr::ramCanvas3c8b theRamCanvas(s*170, s*100);
   mjr::ramCanvas3c8b::rcCordInt x = 0, y = 0;
   x = 0;

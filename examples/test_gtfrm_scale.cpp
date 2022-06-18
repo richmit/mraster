@@ -4,7 +4,7 @@
  @file      test_gtfrm_scale.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Quick test program for getPxColorInterpBLin.@EOL
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -34,7 +34,12 @@ int main(int argc, char *argv[]) {
   mjr::ramCanvas3c8b aRamCanvas;
   mjr::ramCanvas3c8b::rcColor aColor("red");
   int rRet;
-  
+
+  if (argc < 2) {
+    fprintf(stderr, "ERROR argument required!\n");
+    exit(1);
+  }
+
   if((rRet=aRamCanvas.readTIFFfile(argv[1]))) {
     fprintf(stderr, "ERROR(%d) reading file %s\n", rRet, argv[1]);
     exit(1);
@@ -68,4 +73,3 @@ int main(int argc, char *argv[]) {
 
   return 0;
 }
-

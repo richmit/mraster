@@ -4,7 +4,7 @@
  @file      testPoint.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Benchmark program for pixel draw rates with ramCanvas.@EOL
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -25,7 +25,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
    One of the points of the point classes is to provide an easy way to specify points using existing data structures.
 
@@ -43,7 +43,7 @@ int main(void) {
   mjr::colorRGB8b cColor(mjr::colorRGB8b::cornerColor::MAGENTA);
   mjr::colorRGB8b dColor(mjr::colorRGB8b::cornerColor::CYAN);
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointInt({2, 2}),                      aColor);  // Initializeer list
   theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointInt(4, 2),                        bColor);  // two arg
   theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointInt(std::tuple<int,int>(6, 2)),   aColor);  // tuple<int,int>
@@ -58,12 +58,12 @@ int main(void) {
   int aArS[2] = {18, 2};
   theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointInt(aArS),                        aColor);  // array of short
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   theRamCanvas.drawPoint(std::complex<int>(2, 4),     bColor);  // complex<int>    -- complex<short>   no work
   theRamCanvas.drawPoint(std::tuple<int,int>(4, 4),   aColor);  // tuple<int,int>  -- tuple<int,short> no work
   theRamCanvas.drawPoint(std::vector<int>({6, 4}),    bColor);  // vector<int>
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointFlt({2, 2}),                       cColor);  // Initializeer list
   theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointFlt(4, 2),                         dColor);  // two arg
   theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointFlt(std::tuple<int,int>(6, 2)),    cColor);  // tuple<int,int>
@@ -74,11 +74,11 @@ int main(void) {
   double aArD[2] = {16, 2};
   theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointFlt(aArD),                         dColor);  // array of double
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   theRamCanvas.drawPoint(std::complex<double>(2, 4),       dColor);  // complex<double>   -- complex<float> no work
   theRamCanvas.drawPoint(std::tuple<double,double>(4, 4),  cColor);  // tuple<double,double>  -- tuple<float,float> no work
   theRamCanvas.drawPoint(std::vector<double>({6, 4}),      dColor);  // vector<double>
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   theRamCanvas.scaleUpProximal(10);
   theRamCanvas.writeTIFFfile("testPoint.tiff");

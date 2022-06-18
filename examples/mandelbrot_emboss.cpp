@@ -6,7 +6,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     This program draws a Mandelbrot set using the "potential"@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -27,7 +27,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
   This example program computes some "surfaces" related to the Mandelbrot set, and a pseudo-3D rendering of same.
 
@@ -66,7 +66,7 @@ int main(void)
   double               lightHeight = 1.125;
   double               lightAngle = pi/4;
   std::complex<double> lightDirection = exp(lightAngle*std::complex<double>(0,1));
-  whyStop              why;           
+  whyStop              why;
 
   for(int i=0; i<3; i++) {
     //for(int i : { 0 } ) {
@@ -82,7 +82,7 @@ int main(void)
         double cr = potRamCanvas.int2realX(x);
         double ci = potRamCanvas.int2realY(y);
         std::complex<double> c(cr, ci);
-        std::complex<double> dc = 1.0; 
+        std::complex<double> dc = 1.0;
         std::complex<double> pder = dc;
         std::complex<double> dder1 = 1.0;
         std::complex<double> dder2 = 0.0;
@@ -101,7 +101,7 @@ int main(void)
             dder2 = 2.0 * (dder2 * z + dder1 * dder1);
             dder1 = 2.0 * dder1 * z + 1.0;
             pder = pder * 2.0 * z + dc;
-            z   = z * z + c;    
+            z   = z * z + c;
           }
         } else {
           why = whyStop::INSET;
@@ -109,17 +109,17 @@ int main(void)
 
         if(why == whyStop::OUTSET) {
           if(std::abs(pder) < 0.00001) { // Should never happen...
-            potRamCanvas.drawPoint(x, y, "blue"); 
+            potRamCanvas.drawPoint(x, y, "blue");
           } else {
             if(std::abs(z) < 0.00001) { // This can't happen...
-              potRamCanvas.drawPoint(x, y, "green"); 
+              potRamCanvas.drawPoint(x, y, "green");
             } else {
               std::complex<double> potNormal = z/pder;
               potNormal = potNormal/std::abs(potNormal);  // normalize potNormal
               double potShade = std::real(potNormal * std::conj(lightDirection)) + lightHeight;  // dot product with the incoming light
               potShade = mjr::unitClamp(potShade/(1+lightHeight));  // rescale so <=1, and then clamp to keep >=0
-              potRamCanvas.drawPoint(x, y, mjr::color3c8b(static_cast<mjr::ramCanvas3c8b::rcColor::channelType>(mjr::unitTooIntLinMap(potShade, 255)), 
-                                                          static_cast<mjr::ramCanvas3c8b::rcColor::channelType>(mjr::unitTooIntLinMap(potShade, 255)), 
+              potRamCanvas.drawPoint(x, y, mjr::color3c8b(static_cast<mjr::ramCanvas3c8b::rcColor::channelType>(mjr::unitTooIntLinMap(potShade, 255)),
+                                                          static_cast<mjr::ramCanvas3c8b::rcColor::channelType>(mjr::unitTooIntLinMap(potShade, 255)),
                                                           static_cast<mjr::ramCanvas3c8b::rcColor::channelType>(mjr::unitTooIntLinMap(potShade, 255))));
             }
           }
@@ -132,7 +132,7 @@ int main(void)
           std::complex<double> distNormal = z*dder1*((1.0+zLogMod)*std::conj(dder1*dder1)-zLogMod*std::conj(z*dder2));
           double distNormalAbs = std::abs(distNormal);
           if(distNormalAbs < 0.00001) { // Should never happen...
-            distRamCanvas.drawPoint(x, y, "blue"); 
+            distRamCanvas.drawPoint(x, y, "blue");
           } else {
             distNormal = distNormal/distNormalAbs;  // normalize distNormal
             double distShade = std::real(distNormal * std::conj(lightDirection)) + lightHeight;  // dot product with the incoming light
@@ -144,8 +144,8 @@ int main(void)
         }
       }
     }
-    
+
     potRamCanvas.writeTIFFfile("mandelbrot_emboss_pot_"   + std::to_string(i) + ".tiff");
     distRamCanvas.writeTIFFfile("mandelbrot_emboss_dist_" + std::to_string(i) + ".tiff");
-  }  
+  }
 }

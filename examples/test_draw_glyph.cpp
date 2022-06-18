@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draws all supported ASCII characters with all five Hershey fonts.@EOL
  @std       C++11
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -31,7 +31,7 @@
 #include "ramCanvas.hpp"
 
 int main(void) {
-  
+
   mjr::ramCanvas3c8b theRamCanvasNN(511, 511);
   theRamCanvasNN.set_xIntAxisOrientation(mjr::ramCanvas3c8b::intAxisOrientation::NATURAL);
   theRamCanvasNN.set_yIntAxisOrientation(mjr::ramCanvas3c8b::intAxisOrientation::NATURAL);

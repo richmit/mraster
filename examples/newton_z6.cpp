@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw a Newton Fractical for \f$z^6\f$.@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -51,7 +51,7 @@ int main(void) {
     for(int x=0;x<theRamCanvas.get_numXpix();x++) {
       std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
       int  count = 0;
-      while((count < MaxCount) && 
+      while((count < MaxCount) &&
             (abs(z-r1) >= Tol) && (abs(z-r2) >= Tol) && (abs(z-r3) >= Tol) &&
             (abs(z-r4) >= Tol) && (abs(z-r5) >= Tol) && (abs(z-r6) >= Tol)) {
         if(abs(z) > 0) {

@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Test string rendering both with a box and without.@EOL
  @std       C++11
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -37,13 +37,13 @@ int main(void) {
   theRamCanvas1.set_yIntAxisOrientation(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
   theRamCanvas1.drawLine(100, 0,  100, 512, "blue");
   y = 50;
-  theRamCanvas1.drawLine(0, y,   1024, y, "blue");  
+  theRamCanvas1.drawLine(0, y,   1024, y, "blue");
   theRamCanvas1.drawString("Hello, World!", mjr::hersheyFont::ROMAN_SL_SANSERIF, 100, y, "red",  1, 16);
   y+=50;
-  theRamCanvas1.drawLine(0, y,   1024, y, "blue");  
+  theRamCanvas1.drawLine(0, y,   1024, y, "blue");
   theRamCanvas1.drawString("Hello, World!", mjr::hersheyFont::ROMAN_SL_SANSERIF, 100, y, "red",  2, 15);
   y+=75;
-  theRamCanvas1.drawLine(0, y,   1024, y, "blue");  
+  theRamCanvas1.drawLine(0, y,   1024, y, "blue");
   theRamCanvas1.drawString("Hello, World!", mjr::hersheyFont::ROMAN_SL_SANSERIF, 100, y, "red",  3, 15);
   theRamCanvas1.writeTIFFfile("test_draw_strings_1.tiff");
 
@@ -51,13 +51,13 @@ int main(void) {
   theRamCanvas2.set_yIntAxisOrientation(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
   y = 50;
   theRamCanvas2.drawStringBox("Hello, World!", mjr::hersheyFont::ROMAN_SL_SANSERIF, 100, y, "red", "green",  1, 16);
-  theRamCanvas2.drawLine(0, y,   1024, y, "blue");  
+  theRamCanvas2.drawLine(0, y,   1024, y, "blue");
   y+=100;
   theRamCanvas2.drawStringBox("Hello, World!", mjr::hersheyFont::ROMAN_SL_SANSERIF, 100, y, "red", "green",  2, 15);
-  theRamCanvas2.drawLine(0, y,   1024, y, "blue");  
+  theRamCanvas2.drawLine(0, y,   1024, y, "blue");
   y+=160;
   theRamCanvas2.drawStringBox("Hello, World!", mjr::hersheyFont::ROMAN_SL_SANSERIF, 100, y, "red", "green",  3, 15);
-  theRamCanvas2.drawLine(0, y,   2024, y, "blue");  
+  theRamCanvas2.drawLine(0, y,   2024, y, "blue");
   theRamCanvas2.drawLine(100, 0,  100, 512, "blue");
   theRamCanvas2.writeTIFFfile("test_draw_strings_2.tiff");
 }

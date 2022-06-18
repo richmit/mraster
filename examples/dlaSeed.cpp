@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Produces seed images for diffusion limited aggregation (DLA) simulations.@EOL
  @std       C++11
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -30,7 +30,7 @@
 
 #include "ramCanvas.hpp"
 
-int main(int argc, char *argv[]) {
+int main() {
   mjr::ramCanvas3c8b theRamCanvas(7680/8, 4320/8, -2.2, 2.2, -2.2, 2.2);
 
   theRamCanvas.clrCanvas(mjr::color3c8b(255, 0, 0));
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
   theRamCanvas.drawLine(                            2,                            2,                            2, theRamCanvas.get_numYpix()-3, mjr::color3c8b(0, 0, 255));
   theRamCanvas.drawLine( theRamCanvas.get_numXpix()-3,                            2, theRamCanvas.get_numXpix()-3, theRamCanvas.get_numYpix()-3, mjr::color3c8b(0, 0, 255));
   theRamCanvas.writeTIFFfile("dlaSeed_border.tiff");
-  
+
   theRamCanvas.clrCanvas(mjr::color3c8b(255, 0, 0));
   theRamCanvas.drawPoint(theRamCanvas.get_numXpix()/2, theRamCanvas.get_numYpix()/2, mjr::color3c8b(0, 0, 255));
   theRamCanvas.writeTIFFfile("dlaSeed_center.tiff");

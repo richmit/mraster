@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Benchmark drawing a mandelbrot set using floating point types and arithmetic only.@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -26,7 +26,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
   Basic benchmark.  Uses only real numbers.
 ***************************************************************************************************************************************************************/
@@ -43,11 +43,9 @@ int main(void) {
     for(int y=0;y<theRamCanvas.get_numYpix();y++) {
       for(xr=theRamCanvas.int2realX(x),yr=theRamCanvas.int2realY(y),zx=zy=0.0,count=0; (zx*zx+zy*zy<4)&&(count<=NUMITR); count++,tempx=zx*zx-zy*zy+xr,zy=2*zx*zy+yr,zx=tempx)
         ;
-	  if(count < NUMITR)
+      if(count < NUMITR)
         theRamCanvas.drawPoint(x, y, mjr::color3c8b().cmpFireRamp(mjr::intWrap(count*20, 767)));
     }
   }
   theRamCanvas.writeTIFFfile("mandelbrot_bm_real.tiff");
 }
-
-

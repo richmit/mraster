@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     This program draws a Mandelbrot set using the "potential"@EOL
  @std       C++98
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -26,7 +26,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
   This example program computes the potential function of the Mandelbrot set over various regions of the complex plane.  For each region it produces three
   images -- two POV-Ray height fields and a 16-bit greyscale images.
@@ -60,7 +60,7 @@ int main(void) {
   double             minPot = BALL;
   mjr::color3c8b     aColor;
   mjr::ramCanvas3c8b theRamCanvas(CSIZE, CSIZE);
-  whyStopMPO         why;           
+  whyStopMPO         why;
 
   for(int i=0; i<3; i++) {
     //for(int i : { 0 } ) {
@@ -88,7 +88,7 @@ int main(void) {
               why = whyStopMPO::OUTSET;
               break;
             }
-            z = z * z + c;    
+            z = z * z + c;
           }
         } else {
           why = whyStopMPO::INSET;
@@ -107,7 +107,7 @@ int main(void) {
         } else {
           theValues[x][y] = -1;
         }
-      }      
+      }
     }
 
     std::cout << "MIN: " << minPot << " MAX:" << maxPot << std::endl;
@@ -134,8 +134,8 @@ int main(void) {
     /* Draw a POV-Ray height field from the potential data.  This one will have the Mandelbrot set itself set the maximum height.  This allows us to render
        plateau-like images. */
     std::cout << "TGA_2" << std::endl;
-    for(int x=0;x<theRamCanvas.get_numXpix();x++) 
-      for(int y=0;y<theRamCanvas.get_numYpix();y++) 
+    for(int x=0;x<theRamCanvas.get_numXpix();x++)
+      for(int y=0;y<theRamCanvas.get_numYpix();y++)
         if(theValues[x][y] <  0)
           theRamCanvas.drawPoint(x, y, aColor.cmpGreyTGA16bit(0xffff-1));
     theRamCanvas.writeTGAfile("mandelbrot_potential_b_" + std::to_string(i) + ".tga");
@@ -162,5 +162,5 @@ int main(void) {
     theRamCanvasG.writeRAWfile("mandelbrot_potential_" + std::to_string(i) + ".mrw");
     theRamCanvasG.autoHistStrech();
     theRamCanvasG.writeTIFFfile("mandelbrot_potential_" + std::to_string(i) + ".tiff");
-  }  
+  }
 }

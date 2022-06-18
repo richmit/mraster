@@ -4,7 +4,7 @@
  @file      colorTpl.hpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Header for the ramColor class@EOL
- @copyright 
+ @copyright
    @parblock
    Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -158,7 +158,7 @@ namespace mjr {
 
       static_assert(numChan>0,
                     "ERROR: the numChan parameter must be greater than zero.");
-      
+
       /** Used to overlay variables based upon types provided as template parameters leading to dramatic performance improvements for common color types. */
       union {
           clrMaskT theInt;
@@ -168,7 +168,7 @@ namespace mjr {
 
       const static int minWavelength = 360; //!< Minimum wavelength for wavelength conversion
       const static int maxWavelength = 830; //!< Maximum wavelength for wavelength conversion
-      
+
       /** Is theInt is larger than thePartsA array? */
       const static int  fastMask                = (sizeof(clrMaskT)>=sizeof(clrChanT)*numChan);
 
@@ -194,7 +194,7 @@ namespace mjr {
       const static int           numChanNonRGB       = (numChan>3 ? numChan-3 : 0);                 //!< number of non-RGB channels
       const static clrChanIArthT numValuesPerChan    = static_cast<clrChanIArthT>(1u<<bitsPerChan); //!< unique channel value approximation
       const static int           channelCount        = numChan;                                     //!< Number of channels
-      
+
       typedef clrChanT      channelType;          //!< Type for the channels (clrChanT)
       typedef clrChanIArthT channelIntArithType;  //!< Type for integer channel arithmetic (clrChanIArthT)
       typedef clrChanFArthT channelFltArithType;  //!< Type for floating point channel arithmetic (clrChanFArthT)
@@ -222,8 +222,8 @@ namespace mjr {
       //@{
       /** The no arg constructor is a noop -- no need to initialize millions of pixels for no good reason. */
       colorTpl();
-      /** Copy constructor (heavily used for assignment in the ramCanvas library). */      
-      colorTpl(const colorTpl& aColor);
+      /** Copy constructor (heavily used for assignment in the ramCanvas library). */
+       colorTpl(const colorTpl& aColor);
       //@}
 
       /** @name Constructors: RGB/RGBA */
@@ -241,9 +241,9 @@ namespace mjr {
       /** Uses the setColorFromCorner method to set the initialize the object. */
       colorTpl(cornerColor ccolor);
       /** Uses the setColorFromString method to set the initialize the object. */
-      colorTpl(const char *colorString);      
+      colorTpl(const char *colorString);
       //@}
-      
+
       /** @name Destructor */
       //@{
       /** The destructor for this class is a no-op. */
@@ -459,7 +459,7 @@ namespace mjr {
       colorTpl&
       setColorFromColor(colorTpl color);
       /** Sets the current color based upon the contents of the given C-string.  The colorString argument may take one of three forms:
-           - A C-string containing a single character. Ex: "0" 
+           - A C-string containing a single character. Ex: "0"
            - A C-string containing an HTML-style, hex color specification. Ex: \#FFAABB
              Note: Each channel is set from two hex digits (0-255).
            - A C-string containing the name of a color.  Ex: "yellow"
@@ -502,17 +502,17 @@ namespace mjr {
       colorTpl& setColorFromF(clrChanFArthT r, clrChanFArthT g, clrChanFArthT b);
       /** This function sets color based upon the bytes of the given integer.  The LSB (lest significant byte) of the given integer will be used to set red.
           If the integer is at least two bytes long, then the next byte will be green. Green and alpha are filled next if enough bytes exist.  Note that the
-          bytes are interpreted as by setColorFrom8bit.  
+          bytes are interpreted as by setColorFrom8bit.
           @param anInt The integer from which to extract bytes to set color
           @return Returns a reference to the current color object.*/
       colorTpl& setColorFromPackedIntABGR(uint32_t anInt);
       /** This function sets color based upon the bytes of the given integer.  The LSB (lest significant byte) of the given integer will be used to set blue.
           If the integer is at least two bytes long, then the next byte will be green. Green and alpha are filled next if enough bytes exist.  Note that the
-          bytes are interpreted as by setColorFrom8bit.  
+          bytes are interpreted as by setColorFrom8bit.
           @param anInt The integer from which to extract bytes to set color
           @return Returns a reference to the current color object.*/
       colorTpl& setColorFromPackedIntARGB(uint32_t anInt);
-      /** @overload 
+      /** @overload
           @param anInt The integer from which to extract bytes to set color
           @param rIdx Location of red byte in anInt
           @param gIdx Location of green byte in anInt
@@ -552,7 +552,7 @@ namespace mjr {
           @return Returns a reference to the current color object.*/
       colorTpl& setToMagenta();
       //@}
-      
+
       /** @name Setting colors based upon other color spaces */
       //@{
       /** Set the color indicated by the given HSV values.  The 'unit' in the name indicates that the values for h, s, and v are the unit interval, [0,1].  This
@@ -586,9 +586,9 @@ namespace mjr {
           may be specified via the final argument.
           @param wavelength The wavelength to convert into RGB
           @param INTRP      Specify the interpolation method:
-          0 = closest lower, 
+          0 = closest lower,
           1 = closest upper,
-          2 = closest, 
+          2 = closest,
           3 linear interpolation,
           4 = exponential bump map interpolation*/
       colorTpl& setColorFromWavelengthCM(float wavelength, int INTRP);
@@ -823,8 +823,8 @@ namespace mjr {
           @param threshold The threshold */
       colorTpl& cmpBinaryColorRampBG(int anInt, int threshold);
       //@}
-      
-      /** @name Color ramps, gradients, interpolation, binary thresholds. 
+
+      /** @name Color ramps, gradients, interpolation, binary thresholds.
           Members in this section form the computational foundation for many of the named color schemes found in this class. */
       //@{
       /** Convert a double to a color value based upon a color ramp passing through the given sequence of corner colors at the given anchor points.  i.e. the
@@ -888,7 +888,7 @@ namespace mjr {
       /** overload */
       colorTpl& wMean(clrChanFArthT w1, colorTpl col1, colorTpl col2);
       //@}
-      
+
       /** @name Logical Operators. */
       //@{
       /** Performs a logical OR with the current object and the given object and places the value in the current object.
@@ -1085,7 +1085,7 @@ namespace mjr {
       colorTpl& tfrmGreyScale(void);
       //@}
 
-      
+
 
       /** @name Color Reduction Transformations */
       //@{
@@ -1165,7 +1165,7 @@ namespace mjr {
       tfrmStdPowSqrt(void);
       //@}
 
-      /** @name Mathematical operations on color(s) 
+      /** @name Mathematical operations on color(s)
           Members in this section produce non-color results. i.e. They consume the current, and possibly other colors and arguments, to produce a non-color
           result. */
       //@{
@@ -1261,7 +1261,7 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::colorTpl(clrChanT r) {
     setAll(r);
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /* constructor */
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
@@ -1285,12 +1285,12 @@ namespace mjr {
   /* copy constructor */
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::colorTpl(const colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& aColor) {
-    if(fastMask) 
+    if(fastMask)
       theColor.theInt = aColor.theColor.theInt;
     else
       std::copy_n(aColor.theColor.thePartsA, numChan, theColor.thePartsA);
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /* constructor */
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
@@ -1807,7 +1807,7 @@ namespace mjr {
         theColor.thePartsA[i] = log(1 + theColor.thePartsA[i]);
     return *this;
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
@@ -2523,7 +2523,7 @@ namespace mjr {
     setColorRGB(convertedValueR, convertedValueG, convertedValueB);
     return *this;
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
@@ -2886,7 +2886,7 @@ namespace mjr {
   inline void colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setChanToMin() {
     if(fastMask)
       theColor.theInt = 0;
-    else 
+    else
       std::fill_n(theColor.thePartsA, numChan, minChanVal);
   }
 
@@ -2895,11 +2895,11 @@ namespace mjr {
   inline void colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setChanToMax() {
     if(fastMaskUnsignedInt)
       theColor.theInt = ~0;
-    else 
+    else
       std::fill_n(theColor.thePartsA, numChan, maxChanVal);
   }
 
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
@@ -3019,7 +3019,7 @@ namespace mjr {
     }
     return *this;
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
@@ -3027,7 +3027,7 @@ namespace mjr {
     anInt = IDXCOND(anInt, base);
     if( (anInt < minChanVal) || (anInt > base) )
       SET_ERR_COLOR;
-    else 
+    else
       setColorFromUnitHSV(1.0F * static_cast<float>(anInt) / static_cast<float>(base), 1.0, 1.0);
     return *this;
   }
@@ -3037,9 +3037,9 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRainbowLA(int base, int anInt) {
     anInt = IDXCOND(anInt, base);
-    if( (anInt < minChanVal) || (anInt > base) ) 
+    if( (anInt < minChanVal) || (anInt > base) )
       SET_ERR_COLOR;
-    else 
+    else
       setColorFromWavelengthLA((1.0F * static_cast<float>(anInt) / static_cast<float>(base)) * (maxWavelength-minWavelength)+minWavelength);
     return *this;
   }
@@ -3049,9 +3049,9 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRainbowCM(int base, int anInt) {
     anInt = IDXCOND(anInt, base);
-    if( (anInt < minChanVal) || (anInt > base) ) 
+    if( (anInt < minChanVal) || (anInt > base) )
       SET_ERR_COLOR;
-    else 
+    else
       setColorFromWavelengthCM((1.0*anInt/base)*(maxWavelength-minWavelength)+minWavelength, 3);
     return *this;
   }
@@ -3061,9 +3061,9 @@ namespace mjr {
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRainbowCM(int base, int anInt, int INTRP) {
     anInt = IDXCOND(anInt, base);
-    if( (anInt < minChanVal) || (anInt > base) ) 
+    if( (anInt < minChanVal) || (anInt > base) )
       SET_ERR_COLOR;
-    else 
+    else
       setColorFromWavelengthCM((1.0F * static_cast<float>(anInt) / static_cast<float>(base))*(maxWavelength-minWavelength)+minWavelength, INTRP);
     return *this;
   }
@@ -3327,7 +3327,7 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
             }
             return setColorRGB(r, g, b);
           } else {
-//  MJR SCM NOTE <2022-06-15T12:12:20-0500> colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpColorRamp: What is this fore? 
+//  MJR SCM NOTE <2022-06-15T12:12:20-0500> colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpColorRamp: What is this fore?
             anInt = anInt - maxChanVal;
           }
         }
@@ -3390,18 +3390,18 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::wMean(clrChanFArthT w1, clrChanFArthT w2, 
+  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::wMean(clrChanFArthT w1, clrChanFArthT w2,
                                                                                        colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col1,
                                                                                        colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col2,
                                                                                        colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col3) {
     return wMean(w1, w2, 1-w1-w2, col1, col2, col3);
   }
 
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::wMean(clrChanFArthT w1, 
+  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::wMean(clrChanFArthT w1,
                                                                                        colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col1,
                                                                                        colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col2) {
     return wMean(w1, 1-w1, col1, col2);
@@ -3429,7 +3429,7 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
       return *this;
     }
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
@@ -4109,7 +4109,7 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
     }
     return *this;
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
@@ -4405,7 +4405,7 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
       out << (uint64_t)color.getChan(i) << " ";
     return out;
   }
-  
+
 } // end namespace mjr
 
 #define MJR_INCLUDE_colorTpl

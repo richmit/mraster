@@ -4,7 +4,7 @@
  @file      bmark.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Benchmark program for pixel draw rates with ramCanvas.@EOL
- @copyright 
+ @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -25,7 +25,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
   Simple benchmark.  Select what you want to test via the define statements.
 
@@ -33,23 +33,26 @@
 
 #include "ramCanvas.hpp"
 
-#define DO_LINE      1
-#define DO_CLIP_LINE 1
-#define DO_POINT     1
-#define DO_CLR       1
-#define DO_FFTRI     1
-#define DO_FGTRI     1
-#define DO_RECT      1
-#define DO_HLINE     1
-#define DO_VLINE     1
-#define DO_45LINE    1
+#define DO_LINE      0
+#define DO_CLIP_LINE 0
+#define DO_POINT     0
+#define DO_CLR       0
+#define DO_FFTRI     0
+#define DO_FGTRI     0
+#define DO_RECT      0
+#define DO_HLINE_NC  0
+#define DO_HLINE     0
+#define DO_VLINE_NC  1
+#define DO_VLINE     0
+#define DO_45LINE    0
 #define DO_TRIVLN    0
 
-#define DO_OUT       0
+#define DO_OUT_TIF   0
+#define DO_OUT_RAW   0
 
 #define REPS  128
 
-#define BSIZE 2024
+#define BSIZE 2024*2
 
 int main(void) {
   mjr::ramCanvasRGB8b theRamCanvas(BSIZE, BSIZE);
@@ -59,16 +62,18 @@ int main(void) {
   mjr::colorRGB8b bColor(  0, 255, 0);
 
 #if DO_POINT
+  std::cout << "Starting DO_POINT" << std::endl;
   for(int i=0;i<REPS;i++)
     for(int y=0;y<=xMax;y++)
       for(int x=0;x<=yMax;x++)
-        if((x*y)%2) 
+        if((x*y)%2)
           theRamCanvas.drawPoint(x, y, aColor);
         else
           theRamCanvas.drawPoint(x, y, bColor);
 #endif
 
 #if DO_CLR
+  std::cout << "Starting DO_CLR" << std::endl;
   theRamCanvas.setDfltColor(aColor);
   for(int i=0;i<REPS*4;i++) {
     theRamCanvas.clrCanvasToBlack();
@@ -76,6 +81,7 @@ int main(void) {
 #endif
 
 #if DO_CLIP_LINE
+  std::cout << "Starting DO_CLIP_LINE" << std::endl;
   for(int i=0;i<REPS/16;i++)
     for(int j=0; j<BSIZE*2; j++) {
       float a = static_cast<float>(j) * 6.2831F / (BSIZE * 2.0F);
@@ -89,14 +95,15 @@ int main(void) {
 #endif
 
 #if DO_LINE
+  std::cout << "Starting DO_LINE" << std::endl;
   for(int i=0;i<REPS/16;i++) {
     for(int y=0;y<=yMax;y+=1)
-      if(y%2) 
+      if(y%2)
         theRamCanvas.drawLine(0, y, xMax, yMax-y, aColor);
       else
         theRamCanvas.drawLine(0, y, xMax, yMax-y, bColor);
     for(int x=0;x<=xMax;x+=1)
-      if(x%2) 
+      if(x%2)
         theRamCanvas.drawLine(x, 0, xMax-x, yMax, aColor);
       else
         theRamCanvas.drawLine(x, 0, xMax-x, yMax, bColor);
@@ -104,68 +111,104 @@ int main(void) {
 #endif
 
 #if DO_FFTRI
+  std::cout << "Starting DO_FFTRI" << std::endl;
   for(int i=0;i<REPS/16;i++)
     for(int x1=xMax,j=0;x1>=0;x1-=BSIZE/128,j++)
-      if(j%2) 
+      if(j%2)
         theRamCanvas.drawFillTriangle(x1, x1, x1+BSIZE/2, x1, x1, x1+yMax/2, aColor);
       else
         theRamCanvas.drawFillTriangle(x1, x1, x1+BSIZE/2, x1, x1, x1+yMax/2, bColor);
 #endif
 
 #if DO_FGTRI
+  std::cout << "Starting DO_FGTRI" << std::endl;
   for(int i=0;i<REPS/128;i++)
     for(int x1=xMax,j=0;x1>=0;x1-=BSIZE/128,j++)
-      if(j%2) 
+      if(j%2)
         theRamCanvas.drawFillTriangle(x1, yMax/2, x1+BSIZE/2, yMax/2+x1, x1+BSIZE/2, yMax/2-x1, aColor);
       else
         theRamCanvas.drawFillTriangle(x1, yMax/2, x1+BSIZE/2, yMax/2+x1, x1+BSIZE/2, yMax/2-x1, bColor);
 #endif
 
 #if DO_RECT
+  std::cout << "Starting DO_RECT" << std::endl;
   for(int i=0;i<REPS/32;i++)
     for(int xy=0, j=0;xy<yMax && xy<=xMax;xy+=BSIZE/128, j++)
-      if(j%2) 
+      if(j%2)
         theRamCanvas.drawFillRectangle(xy, xy, xMax-xy, yMax-xy, aColor);
       else
         theRamCanvas.drawFillRectangle(xy, xy, xMax-xy, yMax-xy, bColor);
 #endif
 
+#if DO_HLINE_NC
+  std::cout << "Starting DO_HLINE_NC" << std::endl;
+  for(int i=0;i<REPS;i++)
+    for(int y=0;y<=yMax;y+=1)
+      if(y%2)
+        theRamCanvas.drawHorzLineNC(0, xMax, y, aColor);
+      else
+        theRamCanvas.drawHorzLineNC(0, xMax, y, bColor);
+#endif
+
 #if DO_HLINE
+  std::cout << "Starting DO_HLINE" << std::endl;
   for(int i=0;i<REPS;i++)
     for(int y=0;y<=yMax;y++)
-      if(y%2) 
+      if(y%2)
         theRamCanvas.drawLine(0, y, xMax, y, aColor);
       else
         theRamCanvas.drawLine(0, y, xMax, y, bColor);
 #endif
 
 #if DO_VLINE
+  std::cout << "Starting DO_VLINE" << std::endl;
   for(int i=0;i<REPS;i++)
     for(int x=0;x<=xMax;x++)
-      if(x%2) 
+      if(x%2)
         theRamCanvas.drawLine(x, 0, x, yMax, aColor);
       else
-        theRamCanvas.drawLine(x, 0, x, yMax, bColor); 
+        theRamCanvas.drawLine(x, 0, x, yMax, bColor);
+#endif
+
+#if DO_VLINE_NC
+  std::cout << "Starting DO_VLINE_NC" << std::endl;
+  for(int i=0;i<REPS;i++)
+    for(int x=0;x<=xMax;x++)
+      if(x%2)
+        theRamCanvas.drawVertLineNC(0, yMax, x, aColor);
+      else
+        theRamCanvas.drawVertLineNC(0, yMax, x, bColor);
 #endif
 
 #if DO_45LINE
+  std::cout << "Starting DO_45LINE" << std::endl;
   for(int i=0;i<REPS;i++)
     for(int y=0;y<=yMax;y++)
-      if(y%2) 
+      if(y%2)
         theRamCanvas.drawLine(0, y, xMax, xMax+y, aColor);
       else
         theRamCanvas.drawLine(0, y, xMax, xMax+y, bColor);
 #endif
 
 #if DO_TRIVLN
+  std::cout << "Starting DO_TRIVLN" << std::endl;
   theRamCanvas.drawLine(     0,      0, xMax/2, yMax/2, aColor);
   theRamCanvas.drawLine(xMax/2, yMax/2,   xMax,   yMax, bColor);
   theRamCanvas.autoHistStrech();
 #endif
-  
-#if DO_OUT
+
+#if DO_OUT_TIF
+  std::cout << "Starting DO_OUT_TIF" << std::endl;
   theRamCanvas.writeTIFFfile("bmark.tiff");
+#endif
+
+#if DO_OUT_RAW
+  std::cout << "Starting DO_OUT_RAW" << std::endl;
   theRamCanvas.writeRAWfile("bmark.mrw");
 #endif
-  
+
+std::cout << "Print Complete" << std::endl;
+std::cout << "Center Red:   " << static_cast<int>(theRamCanvas.getPxColor(BSIZE/2, BSIZE/2).getRed()) << std::endl;
+std::cout << "Center Green: " << static_cast<int>(theRamCanvas.getPxColor(BSIZE/2, BSIZE/2).getGreen()) << std::endl;
+
 }

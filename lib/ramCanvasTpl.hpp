@@ -4,7 +4,7 @@
  @file      ramCanvasTpl.hpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Internal include file for ramCanvas types.@EOL
- @copyright 
+ @copyright
    @parblock
    Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
@@ -46,7 +46,7 @@
 #include <fstream>                                                       /* C++ fstream             C++98    */
 #include <string>                                                        /* C++ strings             C++11    */
 #include <utility>                                                       /* STL Misc Utilities      C++11    */
-#include <vector>                                                        /* STL vector              C++11    */ 
+#include <vector>                                                        /* STL vector              C++11    */
 #include <type_traits>                                                   /* C++ metaprogramming     C++11    */
 #include <cstdint>                                                       /* std:: C stdint.h        C++11    */
 #include <cmath>                                                         /* std:: C math.h          C++11    */
@@ -59,7 +59,7 @@
 // Put everything in the mjr namespace
 namespace mjr {
 
-  /** @brief Class providing off-screen drawing functionality.@EOL 
+  /** @brief Class providing off-screen drawing functionality.@EOL
 
       This class essentially manages a 2D array of pixels (represented as colorTpl objects).
       Both integer and floating point coordinates are supported.
@@ -75,21 +75,21 @@ namespace mjr {
 
 
                  ^ y (increasing upward)
-                 | 
-                 . (0, 1) 
-                 | 
-                 | 
-                 | 
+                 |
+                 . (0, 1)
+                 |
+                 |
+                 |
         (-1,0)   | (0,0)        x (increasing to the right)
       <-.--------+--------.----->
                  |        (1,0)
                  |
-                 | 
+                 |
                  |
                  . (0, -1)
                  |
                  v
-        
+
       Traditional Computer Graphics Coordinate System
       -----------------------------------------------
 
@@ -97,7 +97,7 @@ namespace mjr {
       left, and the x and y coordinates increasing to the right and down.  This is a very natural choice given the discrete nature of digital displays and the
       typical layout of 2D arrays in RAM.
 
-                               
+
       (0,0)   +------------+ (numXpix-1, 0)
               |            |
               |            |
@@ -136,7 +136,7 @@ namespace mjr {
                     "ERROR: intCrdT parameter of ramCanvasTpl template must be a signed type.");
       static_assert(std::is_floating_point<fltCrdT>::value,
                     "ERROR: fltCrdT parameter of ramCanvasTpl template must be a floating point type.");
-      
+
     public:
 
       typedef point2d<fltCrdT> rcPointFlt;     //!< Real coordinate pair type
@@ -158,7 +158,7 @@ namespace mjr {
       enum class intAxisOrientation  { INVERTED,  //!< Zero is to the right or bottom
                                        NATURAL    //!< Zero is to the left or top
       };
-      
+
       /** Enum for drawing Mode */
       enum class drawModeType { SET,
                                 XOR,
@@ -168,7 +168,7 @@ namespace mjr {
                                 DIFFCLIP,
                                 MULTCLIP
       };
-      
+
       //const static intCrdT intCrdMax = std::sqrt(std::numeric_limits<intCrdT>::max()) - 1; // Some compilers don't think sqrt(const) is const
       const static intCrdT intCrdMax = (1ul << ((sizeof(intCrdT)*CHAR_BIT-1)/2)) - 3;        //!< maximum "on canvas" integer coordinate
       const static intCrdT intCrdMin = 0;                                                    //!< maximum "on canvas" integer coordinate
@@ -181,24 +181,24 @@ namespace mjr {
         LITTLE,  //!< Intel
         AUTO     //!< Whatever the platform uses
       };
-      
+
       /** Image File Types. */
       enum class imgFileType { TGA,      //!< 24-bit (8-bit/chan) truecolor.      See: writeTGAstream()
                                TIFF,     //!< TIFF file                           See: writeTIFFstream()
                                BINARY,   //!< The data part of a MJR RAW file.    See: writeBINstream()
                                RAW,      //!< MJR RAW file.                       See: writeRAWstream()
       };
-      
+
       const static intCrdT intCrdGrdMax = intCrdMax+1; //!< Large sentinel value (always off canvas)
       const static intCrdT intCrdGrdMin = intCrdMin-1; //!< Small sentinel value (always off canvas)
-      
+
       /** @name Canvas integer coordinates */
       //@{
       intCrdT numXpix;     //!< Number of x pixels
       intCrdT numYpix;     //!< Number of y pixels
       intCrdT numPix;      //!< Number of pixels
       //@}
-      
+
       /** @name Canvas real coordinates */
       //@{
       fltCrdT minRealX;    //!< x coord of min (real coord)
@@ -249,27 +249,27 @@ namespace mjr {
           @param y3 The y coordinate of the third point
           @param c1 The color of the first point (x1, y1)
           @param c2 The color of the second point (x2, y2)
-          @param c3 The color of the third point (x3, y3) 
+          @param c3 The color of the third point (x3, y3)
           @param solid Use only c1 if true, otherwise use barycentric interpolation */
       void  drawFillTriangleUtl(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3, colorT c1, colorT c2, colorT c3, bool solid);
       //@}
 
       /** @name File Writing Utility Methods */
       //@{
-      /** Write an unsigned integer to a stream with given length and endianness. 
+      /** Write an unsigned integer to a stream with given length and endianness.
           @param oStream    The ostream object to which to write
           @param endianness The endianness to use for the integer.
           @param numBytes   The number of bytes of the data parameter to use (logically the least significant bits)
-          @param data       The integer to write */      
+          @param data       The integer to write */
       void writeUIntToStream(std::ostream& oStream, endianType endianness, int numBytes, unsigned long int data);
-      /** Determine the platform's endianness. */      
+      /** Determine the platform's endianness. */
       endianType platformEndianness();
-      /** Write a truecolor TIFF image to the given ostream 
+      /** Write a truecolor TIFF image to the given ostream
 
           This is the work horse image write function in mraster.
 
-          Why TIFF? TIFF is both broadly supported and flexible enough to represent every ramCanvas image types.  
-          
+          Why TIFF? TIFF is both broadly supported and flexible enough to represent every ramCanvas image types.
+
           Use Cases (In order of priority)
               - Write a bit perfect TIFF representation of ramCanvas images
               - Simultaneously convert any ramCanvas into 24-bit truecolor RGB and write the resulting TIFF
@@ -297,7 +297,7 @@ namespace mjr {
           @param toTRU      A functor used to transform native pixels into truecolor RGB pixels.
           @param filter     A functor used to transform each pixel. */
       int writeTGAstream(std::ostream& oStream, std::function<colorRGB8b (colorT&)> toTRU, std::function<colorT (colorT&)> filter);
-      /** Write the an MJR RAW format image to the given ostream 
+      /** Write the an MJR RAW format image to the given ostream
 
           Why? This simple file format is designed to house the more exotic images this library supports, and be easily consumed by many image processing and
           data visualization tools -- usually via a feature referred to as a raw importer.  VisIT, ParaView, and ImageJ all can read this type of data. The
@@ -326,13 +326,13 @@ namespace mjr {
           @param oStream  The ostream object to which to write
           @param filter   A functor used to transform each pixel. */
       int writeRAWstream(std::ostream& oStream, std::function<colorT (colorT&)> filter);
-      /** Write the binary data for the image to the given ostream 
+      /** Write the binary data for the image to the given ostream
           @param oStream  The ostream object to which to write
           @param filter   A functor used to transform each pixel. */
       int writeBINstream(std::ostream& oStream, std::function<colorT (colorT&)> filter);
       /** Write an image file with the given format and filters.  This is the work horse driver behind all the public write*file functions.
           @param fileName   The file name to write data to
-          @param fileType   The type of file to write. 
+          @param fileType   The type of file to write.
           @param ch4isAlpha If true, write a 32-bit RGBA file.  Otherwise write a 24-bit RGB file.  If toTRU!=NULL, then alpha is 255.
           @param toTRU      A functor used to transform native pixels into truecolor RGB pixels.
           @param filter     A functor used to transform each pixel. */
@@ -348,17 +348,17 @@ namespace mjr {
       /** Change the logical coordinate sizes.  It is important that the specified coordinate sizes describe an image with FEWER pixels than the previous
           sizes.  This function will NOT allocate a new pixel array, so the previous array contents will be interpreted as valid data -- just at different
           coordinates.  This function causes no memory leaks.  This function will NOT update the internal parameters related to real coordinate systems and so
-          updRealCoords() should be called after this function in most cases.  This function is intended for internal use and provides no safety checks.  
+          updRealCoords() should be called after this function in most cases.  This function is intended for internal use and provides no safety checks.
           @param numXpix_p The width of the new canvas
           @param numYpix_p The height of the new canvas */
       void newIntCoordsNC(intCrdT numXpix_p, intCrdT numYpix_p);
       //@}
-      
+
       /** @name Plane Manipulation Methods */
       //@{
       /** Destroy the current pixel memory and reallocate a new pixel space of the given size.  This will not clear the canvas.  IT will not reallocate the
           canvas unless the new size is different from the current size.  It will not allocate a new canvas if either argument is zero or less.  Updates
-          coordinates.  
+          coordinates.
           @param numXpix_p The width of the new canvas
           @param numYpix_p The height of the new canvas */
       void reallocCanvas(intCrdT numXpix_p, intCrdT numYpix_p);
@@ -373,12 +373,12 @@ namespace mjr {
       /** Used to find the left and right edges of a triangle. */
       void triangleEdger(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, bool minSide, intCrdT* pts);
       //@}
-      
+
     public:
 
       /** @name Raster Data Import And Export. */
       //@{
-      /** Extract raster data from the image, and pack it into a typical form used by imaging applications.  
+      /** Extract raster data from the image, and pack it into a typical form used by imaging applications.
 
           Each pixel is packed into a 1, 2, 3, or 4 byte memory block with the location of each channel given by redChan, blueChan, greenChan, and alphaChan.
           If one of these values is -1, then that channel is not extracted.  For example, all of them set to -1 except redChan (set to 0), an 8-bit gray scale
@@ -435,14 +435,14 @@ namespace mjr {
           @param new_numYpix_p The height of the new canvas */
       void resizeCanvas(intCrdT new_numXpix_p, intCrdT new_numYpix_p);
       /** Expand the current canvas.  The current image will appear within the new canvas at the specified location.  All pixels not set by the previous image
-          will be set to the given color. 
+          will be set to the given color.
           @param new_numXpix_p The width of the new canvas
           @param new_numYpix_p The height of the new canvas
           @param x1            Coord at which the left of the old image will appear in the new image
           @param y1            Coord at which the top of the old image will appear in the new image
           @param color         Color to use for the background of the new image. */
       void expandCanvas(intCrdT new_numXpix_p, intCrdT new_numYpix_p, intCrdT x1 = 0, intCrdT y1 = 0, colorT color = colorT(0,0,0));
-      /** This function will crop the canvas to the given rectangular region. 
+      /** This function will crop the canvas to the given rectangular region.
           @param x1 Left, or right, edge of region to keep.
           @param x2 Right, or left, edge of region to keep.
           @param y1 Left, or right, edge of region to keep.
@@ -505,13 +505,13 @@ namespace mjr {
 
       /** @name Convolution */
       //@{
-      /** Apply a convolution filter.  
+      /** Apply a convolution filter.
           The implementation for this method is quite naive and super slow!  Frankly, this kind of functionality should be pulled from an image processing
           library tuned for this kind of work; however, sometimes you just need a convolution filter and you don't want to go to the extra effort of using yet
           another external library.  So here it is.
           @param kernel  The convolution kernel.   Must be of length kWide*kTall.
           @param kWide   The width of the kernel.  Must be odd.
-          @param kTall   The height of the kernel. Must be odd. 
+          @param kTall   The height of the kernel. Must be odd.
           @param divisor Used to normalize dot product at each step.  i.e. one might say the kernel for the convolution is really kernel/divisor. */
       void convolution(double *kernel, int kWide, int kTall, double divisor);
       /** @overload */
@@ -529,13 +529,13 @@ namespace mjr {
       void computeConvolutionMatrixBox(double *kernel, int kSize);
 
       //@}
-      
+
       /** @name Iterators */
       //@{
       colorT *begin() { return pixels;  }
       colorT *end()   { return pixelsE; }
       //@}
-      
+
       /** @name Homogeneous Pixel Transformations (point operators) */
       //@{
       /** Homogeneous pixel transformations don't vary based upon the coordinates of the pixel in question, but depend only upon the value of the pixel.
@@ -771,7 +771,7 @@ namespace mjr {
 
       /** @name Filled Triangle Drawing Methods */
       //@{
-      /** Draw a triangle filled with a solid color using a nicely optimized, horizontal scan conversion algorithm.  
+      /** Draw a triangle filled with a solid color using a nicely optimized, horizontal scan conversion algorithm.
           @bug Triangles not entirely on the canvas are not rendered.
           @bug Degenerate trainagles are not rendered
           @param x1 The x coordinate of the first point
@@ -993,7 +993,7 @@ namespace mjr {
       void drawHersheyGlyph(int glyphNum, intCrdT x, intCrdT y, double magX, double magY, colorT aColor);
       //@}
 
-      /** @name ASCII Character Rendering 
+      /** @name ASCII Character Rendering
           What are font rendering functions doing in a raster graphics library? Sometimes I like to put a label on image. :)*/
       //@{
       /** Render an ASCII C-string using Hershey ASCII Fonts.  While the string is rendered with fixed font spacing, the Hershey fonts are not fixed width fonts.
@@ -1004,7 +1004,7 @@ namespace mjr {
           @param aColor  The color with which to render the glyphs
           @param cex     A factor by which to expand the size of each glyph -- 1 is a good value (the name comes from R).
           @param spc     Space to jump for each charcter -- 20 for SL fonts, 23 for DL fonts, and 25 for TL fonts.  Scaled with cex. */
-      void drawString(std::string aString, hersheyFont aFont, intCrdT x, intCrdT y, colorT aColor, double cex, intCrdT spc);    
+      void drawString(std::string aString, hersheyFont aFont, intCrdT x, intCrdT y, colorT aColor, double cex, intCrdT spc);
       /** Renders a filled, bounding box for the given string as rendered via drawString.
           @param aString     A string to render
           @param aFont       The font to set the default with
@@ -1014,9 +1014,9 @@ namespace mjr {
           @param boxColor    The color with which to render the BOX
           @param cex         A factor by which to expand the size of each glyph -- 1 is a good value (the name comes from R).
           @param spc         Space to jump for each charcter -- 20 for SL fonts, 23 for DL fonts, and 25 for TL fonts.  Scaled with cex. */
-      void drawStringBox(std::string aString, hersheyFont aFont, intCrdT x, intCrdT y, colorT stringColor, colorT boxColor, double cex, intCrdT spc);    
+      void drawStringBox(std::string aString, hersheyFont aFont, intCrdT x, intCrdT y, colorT stringColor, colorT boxColor, double cex, intCrdT spc);
       //@}
-      
+
       /** @name File Reading and Writing Methods */
       //@{
       /** Is libTIFF supported? i.e. will the readTIFFfile() method do anything? */
@@ -1035,7 +1035,7 @@ namespace mjr {
              - Some effort is taken to do the right thing with respect to aRamCanvas axis orientation
 
           @param fileName The file name from which to read data from.
-          @retval  0 Image file loaded successfully  
+          @retval  0 Image file loaded successfully
           @retval  1 File open (TIFFOpen) failure
           @retval  2 File missing TIFF tag: IMAGEWIDTH
           @retval  3 File missing TIFF tag: IMAGELENGTH
@@ -1073,7 +1073,7 @@ namespace mjr {
           \see writeRAWstream
 
           @param fileName The file name name to write data to
-          @param filter   A functor used to transform each pixel. 
+          @param filter   A functor used to transform each pixel.
           @retval 0 The write was successful.
           @retval 1 Could not open file. */
       int writeRAWfile(std::string fileName, std::function<colorT (colorT&)> filter = NULL);
@@ -1107,7 +1107,7 @@ namespace mjr {
       /** Convert integral y coordinate to real y coordinate
           @param y The integer y coordinate value to be converted.
           @return The real y coordinate corresponding to the given y coordinate */
-      fltCrdT int2realY(intCrdT y);      
+      fltCrdT int2realY(intCrdT y);
       //@}
 
       /** @name Coordinate Delta Conversions. */
@@ -1127,9 +1127,9 @@ namespace mjr {
       /** Convert integral distance on the y coordinate to a real distance
           @param y real y coordinate value to be converted.
           @return The integer y coordinate corresponding to the given y coordinate */
-      fltCrdT intDelta2realY(intCrdT y);      
+      fltCrdT intDelta2realY(intCrdT y);
       //@}
-      
+
       /** @name Orientation of Real Coordinate Systems */
       //@{
       /** Get the real X axis orientation
@@ -1145,7 +1145,7 @@ namespace mjr {
           @param orientation The orientation (INVERTED or NATURAL) */
       void set_yRealAxisOrientation(realAxisOrientation orientation);
       /** Set the real axis orientation to default (NATURAL for both X and Y axes) */
-      void set_realAxisDefaultOrientation();      
+      void set_realAxisDefaultOrientation();
       //@}
 
       /** @name Drawing Mode */
@@ -1159,7 +1159,7 @@ namespace mjr {
       /** Set the default draw mode */
       void set_DefaultDrawMode();
       //@}
-      
+
       /** @name Orientation of Integer Coordinate Systems */
       //@{
       /** Get the integer X axis orientation
@@ -1215,7 +1215,7 @@ namespace mjr {
       /** @overload */
       colorT getPxColor(rcPointFlt thePoint) const;
       //@}
-      
+
       /** @param x The x coordinate of the upper left pixel to query
           @param y The y coordinate of the upper left pixel to query
           @param width The number of x pixels to query
@@ -1354,7 +1354,7 @@ namespace mjr {
   ramCanvasTpl<colorT, intCrdT, fltCrdT>::get_drawMode() {
     return drawMode;
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void ramCanvasTpl<colorT, intCrdT, fltCrdT>::newIntCoordsNC(intCrdT numXpix_p, intCrdT numYpix_p) {
@@ -1406,7 +1406,7 @@ namespace mjr {
       for(intCrdT x=0; x<numXpix; x++)
         getPxColorRefNC(x, y).setToBlack();
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::clrCanvas() {
@@ -1606,7 +1606,7 @@ namespace mjr {
     // Figure out real default width
     if(wide < 0)
       wide = numXpix-trgX;
-    
+
     // Make sure wide is not wider than current canvas.
     if(wide > (numXpix-srcX))
       wide = theCanvas.get_numXpix()-srcX;
@@ -1633,7 +1633,7 @@ namespace mjr {
       for(intCrdT x=trgX, xs=srcX; x<xMax; x++, xs++)
         (getPxColorRefNC(x, y).*HPT)(theCanvas.getPxColor(xs, ys));
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::moveTo(intCrdT x, intCrdT y) {
@@ -1846,28 +1846,28 @@ namespace mjr {
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, colorT color) {
     intCrdT x, y;
     if(y1 == y2) {                                                            // slope = 0
-      if( (y1 < 0) || (y1 >= numYpix) )                                       // Line off canvas case
+      if( (y1 < 0) || (y1 >= numYpix) )                                       //    Line off canvas case
         return;
-      if(x1 > x2) {                                                           // Fix point ordering
+      if(x1 > x2) {                                                           //    Fix point ordering
         std::swap(x1, x2);
       }
-      if(x1 < 0)                                                              // Clip left
+      if(x1 < 0)                                                              //    Clip left
         x1 = 0;
-      if(x2 >= numXpix)                                                       // Clip right
+      if(x2 >= numXpix)                                                       //    Clip right
         x2 = numXpix - 1;
-      for(x=x1; x<=x2; x++)                                                   // Draw Pixels: drawHorzLineNC(x1, x2, y1, color);
-        drawPointNC(x, y1, color); 
+      for(x=x1; x<=x2; x++)                                                   //    Draw Pixels: drawHorzLineNC(x1, x2, y1, color);
+        drawPointNC(x, y1, color);
     } else if(x1 == x2) {                                                     // slope = infinity
-      if( (x1 < 0) || (x1 >= numXpix) )                                       // Line off canvas case
+      if( (x1 < 0) || (x1 >= numXpix) )                                       //    Line off canvas case
         return;
-      if(y1 > y2)                                                             // Fix point ordering
+      if(y1 > y2)                                                             //    Fix point ordering
         std::swap(y1, y2);
-      if(y1 < 0)                                                              // Clip top
+      if(y1 < 0)                                                              //    Clip top
         y1 = 0;
-      if(y2 >= numYpix)                                                       // Clip bottom
-        y2 = numYpix - 1;      
-      for(y=y1; y<=y2; y++)                                                   // Draw Pixels: drawVertLineNC(y1, y2, x1, color);
-        drawPointNC(x1, y, color); 
+      if(y2 >= numYpix)                                                       //    Clip bottom
+        y2 = numYpix - 1;
+      for(y=y1; y<=y2; y++)                                                   //    Draw Pixels: drawVertLineNC(y1, y2, x1, color);
+        drawPointNC(x1, y, color);
     } else {                                                                  // Slope is not infinity or 0...
       int dx, dy;
       if(x1 > x2) {                                                           // Fix point ordering
@@ -1877,46 +1877,46 @@ namespace mjr {
       dx = x2 - x1;                                                           // Compute the slope
       dy = y2 - y1;
       if(dx == dy) {                                                          // Slope = 1
-        if( (y2 < 0) || (x2 < 0) || (x1 >= numXpix) || (y1 >= numYpix) )      // Line off canvas case
+        if( (y2 < 0) || (x2 < 0) || (x1 >= numXpix) || (y1 >= numYpix) )      //    Line off canvas case
           return;
-        if(x1 < 0) {                                                          // Clip left
+        if(x1 < 0) {                                                          //    Clip left
           y1 = y1 - x1;
           x1 = 0;
         }
-        if(y1 < 0) {                                                          // Clip top
+        if(y1 < 0) {                                                          //    Clip top
           x1 = x1 - y1;
           y1 = 0;
         }
-        if(x2 >= numXpix) {                                                   // Clip right
+        if(x2 >= numXpix) {                                                   //    Clip right
           y2 = y2 - (x2 - numXpix) - 1;
           x2 = numXpix - 1;
         }
-        if(y2 >= numYpix) {                                                   // Clip bottom
+        if(y2 >= numYpix) {                                                   //    Clip bottom
           x2 = x2 - (y2 - numYpix) - 1;
           y2 = numYpix - 1;
         }
-        for(x=x1,y=y1;x<=x2;y++,x++)                                          // Draw Pixels
-          drawPointNC(x, y, color); 
+        for(x=x1,y=y1;x<=x2;y++,x++)                                          //    Draw Pixels
+          drawPointNC(x, y, color);
       } else if(dx == -dy) {                                                  // Slope = -1
-        if( (x2 < 0) || (y2 >= numYpix) || (x1 >= numXpix) || (y1 < 0) )      // Line off canvas case
+        if( (x2 < 0) || (y2 >= numYpix) || (x1 >= numXpix) || (y1 < 0) )      //    Line off canvas case
           return;
-        if(x1 < 0) {                                                          // Clip left
+        if(x1 < 0) {                                                          //    Clip left
           y1 = y1 + x1;
           x1 = 0;
         }
-        if(x2 >= numXpix) {                                                   // Clip right
+        if(x2 >= numXpix) {                                                   //    Clip right
           y2 = y2 + (x2 - (numXpix - 1));
           x2 = numXpix - 1;
         }
-        if(y2 < 0) {                                                          // Clip top
+        if(y2 < 0) {                                                          //    Clip top
           x2 = x2 + y2;
           y2 = 0;
         }
-        if(y1 >= numYpix) {                                                   // Clip bottom
+        if(y1 >= numYpix) {                                                   //    Clip bottom
           x1 = x1 + (y1 - (numYpix - 1));
           y1 = numYpix - 1;
         }
-        for(x=x1,y=y1;x<=x2;y--,x++)                                          // Draw Pixels
+        for(x=x1,y=y1;x<=x2;y--,x++)                                          //    Draw Pixels
           drawPointNC(x, y, color);
       } else {                                                                // Slope != 1, -1, 0, \infinity
         int s, dx2, dy2;
@@ -2068,7 +2068,7 @@ namespace mjr {
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::resizeCanvas(intCrdT new_numXpix_p, intCrdT new_numYpix_p) {
     reallocCanvas(new_numXpix_p, new_numYpix_p);
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::expandCanvas(intCrdT new_numXpix_p, intCrdT new_numYpix_p, intCrdT x1, intCrdT y1, colorT color) {
@@ -2216,7 +2216,7 @@ namespace mjr {
       if(endiannessToUse ==  endianType::LITTLE) {
         for(int curByte=0; curByte<numBytes; curByte++) {
           uint8_t tmp = ((data >> (8*curByte)) & 0xff);
-          oStream.write((const char *)&tmp, 1);          
+          oStream.write((const char *)&tmp, 1);
         }
       } else {
         for(int curByte=(numBytes-1); curByte>=0; curByte--) {
@@ -2226,7 +2226,7 @@ namespace mjr {
       }
     }
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   int ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeTIFFstream(std::ostream& oStream,
@@ -2241,7 +2241,7 @@ namespace mjr {
     } else {
       writeUIntToStream(oStream, fe, 2, 0x4d4d); // Write big endian magic number
     }
-    
+
     writeUIntToStream(oStream, fe, 2, 42);     // Write TIFF magic number
     writeUIntToStream(oStream, fe, 4, 8);      // IDF offset
 
@@ -2249,10 +2249,10 @@ namespace mjr {
     uint32_t tifLength = (uint32_t)numYpix;              // ImageLength & RowsPerStrip
     uint16_t tifBPS    = (uint32_t)colorT::bitsPerChan;  // BitsPerSample
     uint32_t tifSPP    = (uint32_t)colorT::channelCount; // SamplesPerPixel
-    
+
     if(toTRU) {
-      tifBPS = 8; 
-      tifSPP = 3; 
+      tifBPS = 8;
+      tifSPP = 3;
     } else {
       if(colorT::bitsPerChan < 8)                                                           // channels too thin
         return 2;
@@ -2263,18 +2263,18 @@ namespace mjr {
       if(colorT::channelCount > 0xffff)                                                     // too many channels
         return 5;
       if(numXpix < 1)                                                                       // too skinny
-        return 6;        
+        return 6;
       if(numXpix > 0x7fffffff)                                                              // too wide
         return 7;
       if(numYpix < 1)                                                                       // too short
-        return 8;        
+        return 8;
       if(numYpix > 0x7fffffff)                                                              // too tall
         return 9;
       if(numXpix * colorT::bitsPerChan / 8ul * colorT::channelCount > 0xffffffff)           // rows too big
         return 10;
       if(numXpix * numYpix * colorT::channelCount * colorT::bitsPerChan / 8ul > 0xffffffff) // image too big
         return 11;
-    } 
+    }
 
     uint32_t bytePerSmp  = tifBPS / 8;                                 // Bytes per sample
     uint32_t tifSBC      = tifLength * tifWidth * bytePerSmp * tifSPP; // StripByteCounts
@@ -2285,7 +2285,7 @@ namespace mjr {
     bool     haveManyXS  = tifSPP>4;                                   // TRUE if this image has MORE THAN ONE ExtraSamples data
     uint16_t numTags     = 1+14 + (haveXS ? 1 : 0);                    // Number fo tags in this image
     bool     haveManyBPS = tifSPP>1;                                   // TRUE if this image has MORE THAN ONE BitsPerSample data
-    uint32_t numXS       = tifSPP - numImgSmp;                         // Number of extra samples    
+    uint32_t numXS       = tifSPP - numImgSmp;                         // Number of extra samples
     uint32_t xResOff     = 14 + 12 * numTags;                          // XResolution offset
     uint32_t yResOff     = xResOff + 8;                                // YResolution offset
     uint32_t bpsOff      = yResOff + 8;                                // BitsPerSample offset
@@ -2293,47 +2293,47 @@ namespace mjr {
     uint32_t imgOff      = xsOff + (haveManyXS  ? 2 * numXS : 0);      // Image Data offset
 
     writeUIntToStream(oStream, fe, 2, numTags);                                                                                                                         // Tag Count
-    writeUIntToStream(oStream, fe, 2, 0x100); writeUIntToStream(oStream, fe, 2, 4); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, tifWidth);  // ImageWidth      
-    writeUIntToStream(oStream, fe, 2, 0x101); writeUIntToStream(oStream, fe, 2, 4); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, tifLength); // ImageLength     
-    writeUIntToStream(oStream, fe, 2, 0x102); writeUIntToStream(oStream, fe, 2, 3); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 2, tifBPS);    writeUIntToStream(oStream, fe, 2, 0);// BitsPerSample   
-    writeUIntToStream(oStream, fe, 2, 0x103); writeUIntToStream(oStream, fe, 2, 3); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 2, 1);         writeUIntToStream(oStream, fe, 2, 0);// Compression     
-    writeUIntToStream(oStream, fe, 2, 0x106); writeUIntToStream(oStream, fe, 2, 3); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 2, tifPMI);    writeUIntToStream(oStream, fe, 2, 0);// PhotometricIn   
-    writeUIntToStream(oStream, fe, 2, 0x111); writeUIntToStream(oStream, fe, 2, 4); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, imgOff);    // StripOffsets    
-    writeUIntToStream(oStream, fe, 2, 0x112); writeUIntToStream(oStream, fe, 2, 3); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 2, 1);         writeUIntToStream(oStream, fe, 2, 0);// Orientation     
-    writeUIntToStream(oStream, fe, 2, 0x115); writeUIntToStream(oStream, fe, 2, 3); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 2, tifSPP); writeUIntToStream(oStream, fe, 2, 0);    // SamplesPerPixel    
-    writeUIntToStream(oStream, fe, 2, 0x116); writeUIntToStream(oStream, fe, 2, 4); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, tifLength); // RowsPerStrip    
-    writeUIntToStream(oStream, fe, 2, 0x117); writeUIntToStream(oStream, fe, 2, 4); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, tifSBC);    // StripByteCounts 
-    writeUIntToStream(oStream, fe, 2, 0x11A); writeUIntToStream(oStream, fe, 2, 5); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, xResOff);   // XResolution     
-    writeUIntToStream(oStream, fe, 2, 0x11B); writeUIntToStream(oStream, fe, 2, 5); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, yResOff);   // YResolution     
-    writeUIntToStream(oStream, fe, 2, 0x11C); writeUIntToStream(oStream, fe, 2, 3); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 2, 1);         writeUIntToStream(oStream, fe, 2, 0);// PlanarConf      
+    writeUIntToStream(oStream, fe, 2, 0x100); writeUIntToStream(oStream, fe, 2, 4); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, tifWidth);  // ImageWidth
+    writeUIntToStream(oStream, fe, 2, 0x101); writeUIntToStream(oStream, fe, 2, 4); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, tifLength); // ImageLength
+    writeUIntToStream(oStream, fe, 2, 0x102); writeUIntToStream(oStream, fe, 2, 3); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 2, tifBPS);    writeUIntToStream(oStream, fe, 2, 0);// BitsPerSample
+    writeUIntToStream(oStream, fe, 2, 0x103); writeUIntToStream(oStream, fe, 2, 3); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 2, 1);         writeUIntToStream(oStream, fe, 2, 0);// Compression
+    writeUIntToStream(oStream, fe, 2, 0x106); writeUIntToStream(oStream, fe, 2, 3); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 2, tifPMI);    writeUIntToStream(oStream, fe, 2, 0);// PhotometricIn
+    writeUIntToStream(oStream, fe, 2, 0x111); writeUIntToStream(oStream, fe, 2, 4); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, imgOff);    // StripOffsets
+    writeUIntToStream(oStream, fe, 2, 0x112); writeUIntToStream(oStream, fe, 2, 3); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 2, 1);         writeUIntToStream(oStream, fe, 2, 0);// Orientation
+    writeUIntToStream(oStream, fe, 2, 0x115); writeUIntToStream(oStream, fe, 2, 3); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 2, tifSPP); writeUIntToStream(oStream, fe, 2, 0);    // SamplesPerPixel
+    writeUIntToStream(oStream, fe, 2, 0x116); writeUIntToStream(oStream, fe, 2, 4); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, tifLength); // RowsPerStrip
+    writeUIntToStream(oStream, fe, 2, 0x117); writeUIntToStream(oStream, fe, 2, 4); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, tifSBC);    // StripByteCounts
+    writeUIntToStream(oStream, fe, 2, 0x11A); writeUIntToStream(oStream, fe, 2, 5); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, xResOff);   // XResolution
+    writeUIntToStream(oStream, fe, 2, 0x11B); writeUIntToStream(oStream, fe, 2, 5); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, yResOff);   // YResolution
+    writeUIntToStream(oStream, fe, 2, 0x11C); writeUIntToStream(oStream, fe, 2, 3); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 2, 1);         writeUIntToStream(oStream, fe, 2, 0);// PlanarConf
     writeUIntToStream(oStream, fe, 2, 0x128); writeUIntToStream(oStream, fe, 2, 3); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 2, 1);         writeUIntToStream(oStream, fe, 2, 0);// ResolutionUnit
     if(haveXS) {                                                                                                                                                        // ExtraSamples
       if(haveManyXS) {
-        writeUIntToStream(oStream, fe, 2, 0x152); writeUIntToStream(oStream, fe, 2, 3); writeUIntToStream(oStream, fe, 4, numXS); writeUIntToStream(oStream, fe, 4, xsOff);  
+        writeUIntToStream(oStream, fe, 2, 0x152); writeUIntToStream(oStream, fe, 2, 3); writeUIntToStream(oStream, fe, 4, numXS); writeUIntToStream(oStream, fe, 4, xsOff);
       } else {
         if(ch4isAlpha) {
-          writeUIntToStream(oStream, fe, 2, 0x152); writeUIntToStream(oStream, fe, 2, 3); writeUIntToStream(oStream, fe, 4, 1);        writeUIntToStream(oStream, fe, 4, 1);  
-        } else {                                                                                                                     
-          writeUIntToStream(oStream, fe, 2, 0x152); writeUIntToStream(oStream, fe, 2, 3); writeUIntToStream(oStream, fe, 4, 1);        writeUIntToStream(oStream, fe, 4, 0);  
+          writeUIntToStream(oStream, fe, 2, 0x152); writeUIntToStream(oStream, fe, 2, 3); writeUIntToStream(oStream, fe, 4, 1);        writeUIntToStream(oStream, fe, 4, 1);
+        } else {
+          writeUIntToStream(oStream, fe, 2, 0x152); writeUIntToStream(oStream, fe, 2, 3); writeUIntToStream(oStream, fe, 4, 1);        writeUIntToStream(oStream, fe, 4, 0);
         }
       }
     }
 
     writeUIntToStream(oStream, fe, 2, 0x153); writeUIntToStream(oStream, fe, 2, 3); writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 2, 1);         writeUIntToStream(oStream, fe, 2, 1);// SampleFormat
-    
+
     writeUIntToStream(oStream, fe, 4, 0);                                                                                                                               // IFD END
     writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, 1);                                                                                         // XResolutionData
     writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, 1);                                                                                         // YResolutionData
     if(haveManyBPS) {                                                                                                                                                   // YResolutionData
       for(unsigned int i=0; i<tifSPP; i++)
-        writeUIntToStream(oStream, fe, 2, tifBPS);  
+        writeUIntToStream(oStream, fe, 2, tifBPS);
     }
     if(haveManyXS) {                                                                                                                                                    // ExtraSamplesData
       for(unsigned int i=0; i<numXS; i++)
         if((i==numImgSmp) && ch4isAlpha) {
           writeUIntToStream(oStream, fe, 4, 1);
         } else {
-          writeUIntToStream(oStream, fe, 4, 0);  
+          writeUIntToStream(oStream, fe, 4, 0);
         }
     }
     // Image data
@@ -2354,7 +2354,7 @@ namespace mjr {
           colorRGB8b bColor = toTRU(aColor);
           oStream.put(bColor.getRed());
           oStream.put(bColor.getGreen());
-          oStream.put(bColor.getBlue());          
+          oStream.put(bColor.getBlue());
           if(ch4isAlpha)
 
 #pragma warning( push )
@@ -2471,7 +2471,7 @@ namespace mjr {
   int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeTGAfile(std::string fileName) {
     return writeFile(fileName, imgFileType::TGA, false, NULL, NULL);
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   int  ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeTIFFfile(std::string fileName,
@@ -2501,14 +2501,14 @@ namespace mjr {
         return 1;
       }
     }
-          
+
     switch(fileType) {
       case imgFileType::TGA    : writeTGAstream(*oStream,              toTRU, filter); break;
       case imgFileType::TIFF   : writeTIFFstream(*oStream, ch4isAlpha, toTRU, filter); break;
       case imgFileType::RAW    : writeRAWstream(*oStream, filter);                break;
       case imgFileType::BINARY : writeBINstream(*oStream, filter);                break;
     }
-    
+
     if(!useCout)
       oFileStream.close();
 
@@ -2536,7 +2536,7 @@ namespace mjr {
     int bytesPerPix = (redChan<0?0:1) + (greenChan<0?0:1) + (blueChan<0?0:1) + (alphaChan<0?0:1);
     if(bytesPerPix < 1) return 4; // Exit if no channels selected
 
-    if(rasterData == 0) // Allocate space if rasterData==NULL.  Caller must delete[] 
+    if(rasterData == 0) // Allocate space if rasterData==NULL.  Caller must delete[]
       rasterData = (uint8_t *) new uint8_t[(y2-y1+1)*(x2-x1+1)*bytesPerPix];
 
     if(rasterData == 0) return 5; // Exit if something went wrong with allocate...
@@ -2578,21 +2578,21 @@ namespace mjr {
     //return xRealAxOrientation
     // TODO -- CHECK ME OUT
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void
   ramCanvasTpl<colorT, intCrdT, fltCrdT>::set_xRealAxisOrientation(realAxisOrientation orientation) {
     xRealAxOrientation = orientation;
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   typename ramCanvasTpl<colorT, intCrdT, fltCrdT>::realAxisOrientation
   ramCanvasTpl<colorT, intCrdT, fltCrdT>::get_yRealAxisOrientation() {
     return xRealAxOrientation;
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void
@@ -2607,28 +2607,28 @@ namespace mjr {
     set_xRealAxisOrientation(realAxisOrientation::NATURAL);
     set_yRealAxisOrientation(realAxisOrientation::NATURAL);
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   typename ramCanvasTpl<colorT, intCrdT, fltCrdT>::intAxisOrientation
   ramCanvasTpl<colorT, intCrdT, fltCrdT>::get_xIntAxisOrientation() {
     return xIntAxOrientation;
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void
   ramCanvasTpl<colorT, intCrdT, fltCrdT>::set_xIntAxisOrientation(intAxisOrientation orientation) {
     xIntAxOrientation = orientation;
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   typename ramCanvasTpl<colorT, intCrdT, fltCrdT>::intAxisOrientation
   ramCanvasTpl<colorT, intCrdT, fltCrdT>::get_yIntAxisOrientation() {
     return yIntAxOrientation;
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void
@@ -2678,13 +2678,13 @@ namespace mjr {
   fltCrdT ramCanvasTpl<colorT, intCrdT, fltCrdT>::intDelta2realX(intCrdT x) {
     return (fltCrdT)(x*xPixWid);
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   fltCrdT ramCanvasTpl<colorT, intCrdT, fltCrdT>::intDelta2realY(intCrdT y) {
     return (fltCrdT)(y*yPixWid);
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   fltCrdT ramCanvasTpl<colorT, intCrdT, fltCrdT>::int2realX(intCrdT x) {
@@ -2791,7 +2791,7 @@ namespace mjr {
       double xD21 = x2 - x1;
       double yD21 = y2 - y1;
       double wH = 1.0;
-      if (xD21 > eps) 
+      if (xD21 > eps)
         wH = (x  - x1) / xD21;
       double wV = 1.0;
       if (yD21 > eps)
@@ -2800,7 +2800,7 @@ namespace mjr {
       colorT c1;
       colorT c2;
       colorT cF;
-    
+
       c1.interplColors(wH, pixels[numXpix * y1i + x1i], pixels[numXpix * y1i + x2i]);
       c2.interplColors(wH, pixels[numXpix * y2i + x1i], pixels[numXpix * y2i + x2i]);
       cF.interplColors(wV, c1, c2);
@@ -2889,7 +2889,7 @@ namespace mjr {
       if(y1 > y2)                                                             // Fix point ordering
         std::swap(y1, y2);
       for(y=y1; y<=y2; y++)                                                   // Draw PIxels: drawVertLineNC(y1, y2, x1, color);
-        if(minSide) { if(x1<pts[y]) pts[y]=x1; } else { if(x1>pts[y]) pts[y]=x1; }; 
+        if(minSide) { if(x1<pts[y]) pts[y]=x1; } else { if(x1>pts[y]) pts[y]=x1; };
     } else {                                                                  // Slope is not infinity or 0...
       int dx, dy;
       if(x1 > x2) {                                                           // Fix point ordering
@@ -2900,7 +2900,7 @@ namespace mjr {
       dy = y2 - y1;
       if(dx == dy) {                                                          // Slope = 1
         for(x=x1,y=y1;x<=x2;y++,x++)                                          // Draw Pixels
-          if(minSide) { if(x<pts[y]) pts[y]=x; } else { if(x>pts[y]) pts[y]=x; }; 
+          if(minSide) { if(x<pts[y]) pts[y]=x; } else { if(x>pts[y]) pts[y]=x; };
       } else if(dx == -dy) {                                                  // Slope = -1
         for(x=x1,y=y1;x<=x2;y--,x++)                                          // Draw Pixels
           if(minSide) { if(x<pts[y]) pts[y]=x; } else { if(x>pts[y]) pts[y]=x; };
@@ -2985,7 +2985,7 @@ namespace mjr {
                                                                  colorT color1, colorT color2, colorT color3) {
     drawFillTriangleUtl(x1, y1, x2, y2, x3, y3, color1, color2, color3, false);
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillTriangleUtl(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3,
@@ -2996,7 +2996,7 @@ namespace mjr {
 
     if( !(isCliped(x1, y1) || isCliped(x2, y2) || isCliped(x3, y3))) {
       ///////////////////////////////////////////////////////////////////////////////////
-      // Check our work space, and allocate/reallocate as required.    
+      // Check our work space, and allocate/reallocate as required.
       if(minPts == NULL) {               // First time in function -- allocate
         minPts = new intCrdT[numYpix];
         maxPts = new intCrdT[numYpix];
@@ -3018,40 +3018,40 @@ namespace mjr {
           if(y2 > y3) {         //             bot != 2    .      .     .    .   .
                                 //                         T      T     T    1   3   NOP
           } else {              //             bot != 3    .      .     .    .   .
-            std::swap(y2,y3);   //                         T      T     F    1   2   SWAP(2,3)                                                                        
-            std::swap(x2,x3);   //                         .      .     .    .   .                         
-            std::swap(c2,c3);   //                         .      .     .    .   .                         
-          }                     //                         .      .     .    .   .                         
-        } else {                // top != 1                .      .     .    .   .                         
-          std::swap(y1,y3);     //                         T      F     U    3   2   SWAP(1,3) SWAP(2,3)                                                                          
-          std::swap(y2,y3);     //                         .      .     .    .   .                   
-          std::swap(x1,x3);     //                         .      .     .    .   .                         
-          std::swap(x2,x3);     //                         .      .     .    .   .
-          if(!solid) {          //                         .      .     .    .   .
-            std::swap(c1,c3);   //                         .      .     .    .   .                         
+            std::swap(y2,y3);   //                         T      T     F    1   2   SWAP(2,3)
+            std::swap(x2,x3);   //                         .      .     .    .   .
             std::swap(c2,c3);   //                         .      .     .    .   .
           }                     //                         .      .     .    .   .
-        }                       //                         .      .     .    .   .                   
-      } else {                  // top != 1                .      .     .    .   .                   
-        if(y2 > y3) {           // top != 3 && bot != 2    .      .     .    .   .                   
-          if(y1 > y3) {         //             bot != 1    .      .     .    .   .                   
-            std::swap(y1,y2);   //                         F      T     T    2   3   SWAP(1,2)                                                                        
-            std::swap(x1,x2);   //                         .      .     .    .   .                         
-            std::swap(c1,c2);   //                         .      .     .    .   .                         
-          } else {              //             bot != 3    .      .     .    .   .                   
-            std::swap(y1,y2);   //                         F      F     T    2   1   SWAP(1,2) SWAP(2,3)                                                                        
-            std::swap(y2,y3);   //                         .      .     .    .   .                   
-            std::swap(x1,x2);   //                         .      .     .    .   .                         
-            std::swap(x2,x3);   //                         .      .     .    .   .                         
-            if(!solid) {        //                         .      .     .    .   .                         
-              std::swap(c1,c2); //                         .      .     .    .   .                         
+        } else {                // top != 1                .      .     .    .   .
+          std::swap(y1,y3);     //                         T      F     U    3   2   SWAP(1,3) SWAP(2,3)
+          std::swap(y2,y3);     //                         .      .     .    .   .
+          std::swap(x1,x3);     //                         .      .     .    .   .
+          std::swap(x2,x3);     //                         .      .     .    .   .
+          if(!solid) {          //                         .      .     .    .   .
+            std::swap(c1,c3);   //                         .      .     .    .   .
+            std::swap(c2,c3);   //                         .      .     .    .   .
+          }                     //                         .      .     .    .   .
+        }                       //                         .      .     .    .   .
+      } else {                  // top != 1                .      .     .    .   .
+        if(y2 > y3) {           // top != 3 && bot != 2    .      .     .    .   .
+          if(y1 > y3) {         //             bot != 1    .      .     .    .   .
+            std::swap(y1,y2);   //                         F      T     T    2   3   SWAP(1,2)
+            std::swap(x1,x2);   //                         .      .     .    .   .
+            std::swap(c1,c2);   //                         .      .     .    .   .
+          } else {              //             bot != 3    .      .     .    .   .
+            std::swap(y1,y2);   //                         F      F     T    2   1   SWAP(1,2) SWAP(2,3)
+            std::swap(y2,y3);   //                         .      .     .    .   .
+            std::swap(x1,x2);   //                         .      .     .    .   .
+            std::swap(x2,x3);   //                         .      .     .    .   .
+            if(!solid) {        //                         .      .     .    .   .
+              std::swap(c1,c2); //                         .      .     .    .   .
               std::swap(c2,c3); //                         .      .     .    .   .
-            }                   //                         .      .     .    .   .                   
-          }                     //                         .      .     .    .   .                   
-        } else {                // top != 2 && bot != 3    .      .     .    .   .                   
+            }                   //                         .      .     .    .   .
+          }                     //                         .      .     .    .   .
+        } else {                // top != 2 && bot != 3    .      .     .    .   .
           std::swap(y1,y3);     //                         F      U     F    3   1   SWAP(1,3)
-          std::swap(x1,x3);     //                         .      .     .    .   .                         
-          std::swap(c1,c3);     //                         .      .     .    .   .                         
+          std::swap(x1,x3);     //                         .      .     .    .   .
+          std::swap(c1,c3);     //                         .      .     .    .   .
         }
       }
       ///////////////////////////////////////////////////////////////////////////////////
@@ -3073,7 +3073,7 @@ namespace mjr {
       } else if(y2==y3) {                                    /*       */
         if(x2 == x3) {                                       /*   1   */
           //drawLine(x2, y2, x1, y1, c1);                    /*   |   */
-          return;                                            /*   3   */   
+          return;                                            /*   3   */
         } else if(x2 <= x3) {                                /*   3   */
           triangleEdger(x2, y2, x1, y1, true,  minPts);      /*  / \  */
           triangleEdger(x3, y3, x1, y1, false, maxPts);      /* 1---2 */
@@ -3082,17 +3082,17 @@ namespace mjr {
           triangleEdger(x3, y3, x1, y1, true,  minPts);      /* 2---1 */
         }
       } else {
-        intCrdT xli = (x1*y3-x3*y1+(x3-x1)*y2)/(y3-y1);      /*       */ 
+        intCrdT xli = (x1*y3-x3*y1+(x3-x1)*y2)/(y3-y1);      /*       */
         if(xli == x2) {                                      /*       */
           //drawLine(x1, y1, x3, y3, c1);                    /*  1    */
           return;                                            /*   \   */
                                                              /*    3  */
         } else if (xli < x2) {                               /*  1    Note: x1 need not equal x3 */
-          triangleEdger(x2, y2, x1, y1, false, maxPts);      /*  |\   */  
-          triangleEdger(x2, y2, x3, y3, false, maxPts);      /*  | 2  */  
-          triangleEdger(x1, y1, x3, y3, true,  minPts);      /*  |/   */  
+          triangleEdger(x2, y2, x1, y1, false, maxPts);      /*  |\   */
+          triangleEdger(x2, y2, x3, y3, false, maxPts);      /*  | 2  */
+          triangleEdger(x1, y1, x3, y3, true,  minPts);      /*  |/   */
                                                              /*  3    */
-        } else {                                             /*    1  Note: x1 need not equal x3 */  
+        } else {                                             /*    1  Note: x1 need not equal x3 */
           triangleEdger(x2, y2, x1, y1, true,  minPts);      /*   /|  */
           triangleEdger(x2, y2, x3, y3, true,  minPts);      /*  2 |  */
           triangleEdger(x1, y1, x3, y3, false, maxPts);      /*   \|  */
@@ -3102,7 +3102,7 @@ namespace mjr {
       ///////////////////////////////////////////////////////////////////////////////////
       // Fill between the left and right bits.
       if(solid) {
-        for(intCrdT y=y3; y<=y1; y++) 
+        for(intCrdT y=y3; y<=y1; y++)
           drawLine(minPts[y], y, maxPts[y], y, c1);
       } else {
         typename colorT::channelIntArithType y12 = (y1 - y2);
@@ -3691,13 +3691,19 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   inline void ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawHorzLineNC(intCrdT xMin, intCrdT xMax, intCrdT yConst, colorT color) {
+    // We could use a memory fill operation here if SUPPORT_ALWAYS_PRESERVE_ALPHA is OFF and SUPPORT_DRAWING_MODE is OFF or set to drawModeType::SET
+    // For long line this could be WAY faster.  Just use a memfill-type operation, or even the STD algroithm fill might do that inside...
+    // colorT* starti = pixels + numXpix * yConst + xMin;
+    // colorT* endi   = pixels + numXpix * yConst + xMax;
+    // std::fill(starti, endi, color);
+
     for(intCrdT x=xMin;x<=xMax;x++)
       drawPointNC(x, yConst, color);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
-  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawVertLineNC(intCrdT yMin, intCrdT yMax, intCrdT xConst, colorT color) {
+  inline void ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawVertLineNC(intCrdT yMin, intCrdT yMax, intCrdT xConst, colorT color) {
     for(intCrdT y=yMin;y<=yMax;y++)
       drawPointNC(xConst, y, color);
   }
@@ -3767,8 +3773,8 @@ namespace mjr {
         sumg /= (xfactor*xfactor);
         sumb /= (xfactor*xfactor);
 
-        new_pixels[new_numXpix_p * (y/*y-crd*/) + (x/*x-crd*/)] = colorT(static_cast<typename colorT::channelType>(sumr), 
-                                                                         static_cast<typename colorT::channelType>(sumg), 
+        new_pixels[new_numXpix_p * (y/*y-crd*/) + (x/*x-crd*/)] = colorT(static_cast<typename colorT::channelType>(sumr),
+                                                                         static_cast<typename colorT::channelType>(sumg),
                                                                          static_cast<typename colorT::channelType>(sumb));
       }
 
@@ -3814,7 +3820,7 @@ namespace mjr {
       for(int xi=0,xis=-(kSize/2); xi<kSize; xi++, xis++)
         kernel[kSize * yi + xi] = 1.0/(kSize*kSize);
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void ramCanvasTpl<colorT, intCrdT, fltCrdT>::convolution(double *kernel, int kWide, int kTall, double divisor) {
@@ -3826,7 +3832,7 @@ namespace mjr {
       for(int i=0; i<(kWide*kTall); i++)
         divisor += kernel[i];
     }
-    // Aapply filter   
+    // Aapply filter
     for(intCrdT y=0; y<numYpix; y++) {
       for(intCrdT x=0; x<numXpix; x++) {
         colorT newColor;
@@ -3844,7 +3850,7 @@ namespace mjr {
           tmp[chan] /= divisor;
           newColor.setChan(chan, static_cast<typename colorT::channelType>(tmp[chan]));
         }
-        new_pixels[numXpix * y + x] = newColor;  
+        new_pixels[numXpix * y + x] = newColor;
       }
     }
     rePointPixels(new_pixels, numXpix, numYpix);
@@ -3861,14 +3867,14 @@ namespace mjr {
   void ramCanvasTpl<colorT, intCrdT, fltCrdT>::convolution(double *kernel, int kSize) {
       convolution(kernel, kSize, kSize, 1.0);
   }
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawHersheyGlyph(int glyphNum, intCrdT x, intCrdT y, double magX, double magY, colorT aColor) {
     intCrdT x1, y1;
     int actionIsMoveTo;
 
-    if( (glyphNum < 0) || (glyphNum > 3934) ) 
+    if( (glyphNum < 0) || (glyphNum > 3934) )
       glyphNum = 699;
 
     actionIsMoveTo=1;
@@ -3880,12 +3886,12 @@ namespace mjr {
           x1 = static_cast<intCrdT>(magX * ('R'  -  (theHerChars[glyphNum]).components[2*i]));
         else
           x1 = static_cast<intCrdT>(magX * ((theHerChars[glyphNum]).components[2*i]  -  'R'));
-        
+
         if(yIntAxOrientation == intAxisOrientation::NATURAL)
           y1 = static_cast<intCrdT>(magY * ('R' - (theHerChars[glyphNum]).components[2*i+1]));
         else
           y1 = static_cast<intCrdT>(magY * ((theHerChars[glyphNum]).components[2*i+1] - 'R'));
-        
+
         if(actionIsMoveTo) {
           moveTo(x1+x, y1+y);
           actionIsMoveTo = 0;
@@ -3931,12 +3937,12 @@ namespace mjr {
 #ifndef TIFF_FOUND
     return 32;
 #else
-    TIFF* tif; 
+    TIFF* tif;
     uint32_t wTIFF, hTIFF;
     uint16_t pmTIFF, pcTIFF, sppTIFF, bpsTIFF;
 
     // Open our tiff image
-    if( !(tif = TIFFOpen(fileName.c_str(), "r"))) 
+    if( !(tif = TIFFOpen(fileName.c_str(), "r")))
       return 1;
 
     // All these tags are required -- bail if any are missing.
@@ -3954,7 +3960,7 @@ namespace mjr {
       return 7;
 
     uint64_t cmTIFF = (1ULL << bpsTIFF) - 1ULL;
-  
+
     // Dump out image metadata
     // std::cerr << "TIFF: "      << fileName << std::endl;
     // std::cerr << " T WIDTH:  " << wTIFF    << std::endl;
@@ -3964,11 +3970,11 @@ namespace mjr {
     // std::cerr << " T PHOM:   " << pmTIFF   << std::endl;
     // std::cerr << " T BPS:    " << bpsTIFF  << std::endl;
     // std::cerr << " T MAX:    " << cmTIFF   << std::endl;
-  
+
     // Check file image size and reallocate aRamCanvas
     if(wTIFF < 1)
       return 8;
-    
+
     if(hTIFF < 1)
       return 9;
 
@@ -3980,10 +3986,10 @@ namespace mjr {
       return 12;
 
     uint32_t hRC   = get_numYpix();
-    
+
     if(hTIFF != hRC)
       return 14;
-    
+
     uint16_t sppRC = colorT::channelCount;
 
     if(sppTIFF != sppRC)
@@ -4008,7 +4014,7 @@ namespace mjr {
         std::cerr << "WARNING: Converting non-RGB image (photometric tag of " << pmTIFF << ") to RGB: " << fileName << std::endl;
       size_t numPix = wTIFF * hTIFF;
       uint32_t* imageBuffer = (uint32_t*)_TIFFmalloc(numPix * sizeof(uint32_t));
-      if(imageBuffer == NULL) 
+      if(imageBuffer == NULL)
         return 10;
 
       if( !(TIFFReadRGBAImage(tif, wTIFF, hTIFF, imageBuffer, 0)))
@@ -4021,16 +4027,16 @@ namespace mjr {
       }
       _TIFFfree(imageBuffer);
     } else {
-      
+
       if( (bpsTIFF != 8) && (bpsTIFF != 16) && (bpsTIFF != 32) && (bpsTIFF != 64) )
         return 15;
 
       tsize_t scanlinesize = TIFFScanlineSize(tif);
       tdata_t scanLineBuffer = _TIFFmalloc(scanlinesize);
 
-      if(scanLineBuffer == NULL) 
+      if(scanLineBuffer == NULL)
         return 16;
-    
+
       for(uint32_t row=0; row<hTIFF; row++) {
         if( !(TIFFReadScanline(tif, scanLineBuffer, row)))
           return 17;
@@ -4077,7 +4083,7 @@ namespace mjr {
     return false;
 #endif
   }
-  
+
 } // end namespace mjr
 
 #define MJR_INCLUDE_ramCanvasTpl
