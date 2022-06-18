@@ -33,19 +33,19 @@
 
 #include "ramCanvas.hpp"
 
-#define DO_LINE      0
-#define DO_CLIP_LINE 0
-#define DO_POINT     0
-#define DO_CLR       0
-#define DO_FFTRI     0
-#define DO_FGTRI     0
-#define DO_RECT      0
-#define DO_HLINE_NC  0
-#define DO_HLINE     0
+#define DO_LINE      1
+#define DO_CLIP_LINE 1
+#define DO_POINT     1
+#define DO_CLR       1
+#define DO_FFTRI     1
+#define DO_FGTRI     1
+#define DO_RECT      1
+#define DO_HLINE_NC  1
+#define DO_HLINE     1
 #define DO_VLINE_NC  1
-#define DO_VLINE     0
-#define DO_45LINE    0
-#define DO_TRIVLN    0
+#define DO_VLINE     1
+#define DO_45LINE    1
+#define DO_TRIVLN    1
 
 #define DO_OUT_TIF   0
 #define DO_OUT_RAW   0
@@ -93,6 +93,8 @@ int main(void) {
         theRamCanvas.drawLine(-x1+xMax/2, -y1+yMax/2, x1+xMax/2, y1+yMax/2, bColor);
     }
 #endif
+
+//  MJR TODO NOTE <2022-06-18T14:01:26-0500> main: Add a test case for lines that are completely out of the drawing area.
 
 #if DO_LINE
   std::cout << "Starting DO_LINE" << std::endl;
@@ -142,7 +144,7 @@ int main(void) {
 
 #if DO_HLINE_NC
   std::cout << "Starting DO_HLINE_NC" << std::endl;
-  for(int i=0;i<REPS;i++)
+  for(int i=0;i<REPS*4;i++)
     for(int y=0;y<=yMax;y+=1)
       if(y%2)
         theRamCanvas.drawHorzLineNC(0, xMax, y, aColor);
@@ -162,7 +164,7 @@ int main(void) {
 
 #if DO_VLINE
   std::cout << "Starting DO_VLINE" << std::endl;
-  for(int i=0;i<REPS;i++)
+  for(int i=0;i<REPS/2;i++)
     for(int x=0;x<=xMax;x++)
       if(x%2)
         theRamCanvas.drawLine(x, 0, x, yMax, aColor);
@@ -172,7 +174,7 @@ int main(void) {
 
 #if DO_VLINE_NC
   std::cout << "Starting DO_VLINE_NC" << std::endl;
-  for(int i=0;i<REPS;i++)
+  for(int i=0;i<REPS/2;i++)
     for(int x=0;x<=xMax;x++)
       if(x%2)
         theRamCanvas.drawVertLineNC(0, yMax, x, aColor);
