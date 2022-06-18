@@ -23,13 +23,15 @@
 ######################################################################################################################################################
 cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
 
+set(CMAKE_CXX_STANDARD 11)
+
 ######################################################################################################################################################
 # Proejct meta data
 
 project(MRaster CXX)
 
-set(PROJECT_VERSION_DATE  20190120)
-set(PROJECT_VERSION_ID    2)
+set(PROJECT_VERSION_DATE  20220617)
+set(PROJECT_VERSION_ID    4)
 mark_as_advanced(PROJECT_VERSION_DATE PROJECT_VERSION_ID)
 
 ######################################################################################################################################################
@@ -141,11 +143,11 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
   target_include_directories(${CURTGT} PRIVATE lib)
   target_compile_features(${CURTGT} PUBLIC cxx_auto_type)
   target_include_directories(${CURTGT} PRIVATE ${CMAKE_BINARY_DIR})
-  
+
   if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     target_compile_options(${CURTGT} PUBLIC -Wstrict-overflow=0)
     target_compile_options(${CURTGT} PUBLIC -ffast-math)
-    target_compile_options(${CURTGT} PUBLIC -Wall -Wconversion)
+    target_compile_options(${CURTGT} PUBLIC -Wall -Wconversion -Wno-unknown-pragmas ) # -Wextra 
     target_compile_options(${CURTGT} PUBLIC -Ofast)
     if(CMAKE_CXX_PLATFORM_ID STREQUAL "MinGWx")
       target_compile_options(${CURTGT} PUBLIC -static-libgcc)
@@ -196,6 +198,11 @@ endif()
 
 # The circles target needs drawing mode support
 target_compile_definitions(circles PUBLIC SUPPORT_DRAWING_MODE=1)
+
+# Suppress GCC maybe-uninitialized warnings for level_curves
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  target_compile_options(level_curves PRIVATE -Wno-maybe-uninitialized)
+endif()
 
 ######################################################################################################################################################
 

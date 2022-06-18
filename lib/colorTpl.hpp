@@ -223,7 +223,7 @@ namespace mjr {
       /** The no arg constructor is a noop -- no need to initialize millions of pixels for no good reason. */
       colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>();
       /** Copy constructor (heavily used for assignment in the ramCanvas library). */      
-      colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>(const colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& aColor);
+      colorTpl(const colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& aColor);
       //@}
 
       /** @name Constructors: RGB/RGBA */
@@ -1310,7 +1310,7 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  /* constructor */
+  /* copy constructor */
   template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::colorTpl(const colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& aColor) {
     if(fastMask) 

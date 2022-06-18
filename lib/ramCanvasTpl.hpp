@@ -997,16 +997,16 @@ namespace mjr {
           What are font rendering functions doing in a raster graphics library? Sometimes I like to put a label on image. :)*/
       //@{
       /** Render an ASCII C-string using Hershey ASCII Fonts.  While the string is rendered with fixed font spacing, the Hershey fonts are not fixed width fonts.
-          @param aString The C-string to render -- make sure it is null terminated
+          @param aString The string
           @param aFont   The font to set the default with
           @param x       The x coordinate at which to render the first glyph
           @param y       The x coordinate at which to render the first glyph
           @param aColor  The color with which to render the glyphs
           @param cex     A factor by which to expand the size of each glyph -- 1 is a good value (the name comes from R).
           @param spc     Space to jump for each charcter -- 20 for SL fonts, 23 for DL fonts, and 25 for TL fonts.  Scaled with cex. */
-      void drawString(const char *aString, hersheyFont aFont, intCrdT x, intCrdT y, colorT aColor, double cex, intCrdT spc);    
+      void drawString(std::string aString, hersheyFont aFont, intCrdT x, intCrdT y, colorT aColor, double cex, intCrdT spc);    
       /** Renders a filled, bounding box for the given string as rendered via drawString.
-          @param aString     The C-string to render -- make sure it is null terminated
+          @param aString     A string to render
           @param aFont       The font to set the default with
           @param x           The x coordinate at which to render the first glyph
           @param y           The x coordinate at which to render the first glyph
@@ -1014,7 +1014,7 @@ namespace mjr {
           @param boxColor    The color with which to render the BOX
           @param cex         A factor by which to expand the size of each glyph -- 1 is a good value (the name comes from R).
           @param spc         Space to jump for each charcter -- 20 for SL fonts, 23 for DL fonts, and 25 for TL fonts.  Scaled with cex. */
-      void drawStringBox(const char *aString, hersheyFont aFont, intCrdT x, intCrdT y, colorT stringColor, colorT boxColor, double cex, intCrdT spc);    
+      void drawStringBox(std::string aString, hersheyFont aFont, intCrdT x, intCrdT y, colorT stringColor, colorT boxColor, double cex, intCrdT spc);    
       //@}
       
       /** @name File Reading and Writing Methods */
@@ -3898,30 +3898,28 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
-  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawString(const char *aString, hersheyFont aFont, intCrdT x, intCrdT y, colorT aColor, double cex, intCrdT spc) {
-//  MJR TODO NOTE <2022-06-15> drawString: Use std::string instead of C-style string
-    int strLength = (int)strlen(aString);
-    for(int i=0; i<strLength; i++,x+=static_cast<intCrdT>(spc*cex)) {
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawString(std::string aString, hersheyFont aFont, intCrdT x, intCrdT y, colorT aColor, double cex, intCrdT spc) {
+    for(auto &c : aString) {
       int glyphNum = 0;
-      int c = aString[i];
       if((c>=32) && (c<=126))
         glyphNum = hersheyFontAscii[(int)aFont][c-32];
       drawHersheyGlyph(glyphNum, x, y, cex, cex, aColor);
+      x+=static_cast<intCrdT>(spc*cex);
     }
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
-  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawStringBox(const char *aString,
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawStringBox(std::string aString,
                                                              hersheyFont aFont,
                                                              intCrdT x, intCrdT y,
                                                              colorT stringColor, colorT boxColor,
                                                              double cex, intCrdT spc) {
-//  MJR TODO NOTE <2022-06-15> drawStringBox: Use std::string instead of C-style string
-    drawFillRectangle((intCrdT)(x-spc*cex),
-                      (intCrdT)(y-spc*cex),
-                      (intCrdT)(x+spc*cex*strlen(aString)),
-                      (intCrdT)(y+spc*cex),
+
+    drawFillRectangle(static_cast<intCrdT>(x-spc*cex),
+                      static_cast<intCrdT>(y-spc*cex),
+                      static_cast<intCrdT>(x+spc*cex*static_cast<int>(aString.length())),
+                      static_cast<intCrdT>(y+spc*cex),
                       boxColor);
     drawString(aString, aFont, x, y, stringColor, cex, spc);
   }
