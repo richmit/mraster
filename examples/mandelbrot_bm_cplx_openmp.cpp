@@ -1,6 +1,5 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/**************************************************************************************************************************************************************/
-/**
+/***************************************************************************************************************************************************************
  @file      mandelbrot_bm_cplx_openmp.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Benchmark drawing a mandelbrot set using the C++ complex type with OpenMP.@EOL

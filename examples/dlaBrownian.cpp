@@ -1,6 +1,5 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/**************************************************************************************************************************************************************/
-/**
+/***************************************************************************************************************************************************************
  @file      dlaBrownian.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Read a TIFF image and simulate brownian diffusion limited aggregation of blue pixels.@EOL

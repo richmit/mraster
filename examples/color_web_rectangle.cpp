@@ -1,6 +1,5 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/**************************************************************************************************************************************************************/
-/**
+/***************************************************************************************************************************************************************
  @file      color_web_rectangle.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Produce an image showing an array of the 216 web safe colors -- a pallet of colors once considered "safe" for internet use.@EOL

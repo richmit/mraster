@@ -1,6 +1,5 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/**************************************************************************************************************************************************************/
-/**
+/***************************************************************************************************************************************************************
  @file      dlaDrift.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Read a TIFF image and simulate diffusion limited aggregation with drift of blue pixels.@EOL
