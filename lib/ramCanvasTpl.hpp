@@ -50,7 +50,6 @@
 #include <type_traits>                                                   /* C++ metaprogramming     C++11    */
 #include <cstdint>                                                       /* std:: C stdint.h        C++11    */
 #include <cmath>                                                         /* std:: C math.h          C++11    */
-//ctcmath
 
 #include "color.hpp"
 #include "ramConfig.hpp"
@@ -238,7 +237,7 @@ namespace mjr {
       intCrdT dfltX;         //!< x coordinate used by default.
       intCrdT dfltY;         //!< y coordinate used by default.
       //@}
-      
+
       /** @name Filled Triangle Utility Functions */
       //@{
       /** Utliity function behind the drawFillTriangle() functions.
@@ -486,8 +485,8 @@ namespace mjr {
 
       /** @name Canvas Scaling. */
       //@{
-      /** Scale up the image using proximal interpolation -- i.e. we create a xfactor*xfactor boxes filled with the color of the original pixel.  This
-          algorithm tends to make the resulting image a block, but the histograms stay accurate.  The algorithm is very fast as it is very simple.
+      /** Scale up the image using proximal interpolation -- i.e. for each source pixel we create an xfactor*xfactor box filled with the color of the original
+          pixel.  The resulting images are block, but the histograms stay accurate.  The algorithm is very fast as it is very simple.
           @param xfactor The factor to scale up to -- must be a positive integer. */
       void scaleUpProximal(int xfactor);
       /** Scale down using only the upper left pixel from each block.  This will tend to highlight horizontal and vertical detail and generally sharpen up the
@@ -1959,7 +1958,7 @@ namespace mjr {
             x2 = (int)(((numYpix-1)*dx-y2*dx+x2*dy)/dy);
             y2 = numYpix - 1;
           }
-//  MJR TODO NOTE <2022-06-18T13:11:56-0500> ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine: We use drawPoint instead of drawPointNC, can we make an off canvas decesion instead? Similar case down below.  
+//  MJR TODO NOTE <2022-06-18T13:11:56-0500> ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine: We use drawPoint instead of drawPointNC, can we make an off canvas decesion instead? Similar case down below.
           if(dx > dy) {                                                       // ... 0 < Slope < 1
             s = dy2 - dx;
             x=x1;
@@ -2857,7 +2856,7 @@ namespace mjr {
             newChanValue += getPxColor(icX, icY).getChan(chan);
           }
         }
-      }      
+      }
       newColor.setChan(chan, static_cast<typename colorT::channelType>(newChanValue / 9));
     }
     return newColor;
