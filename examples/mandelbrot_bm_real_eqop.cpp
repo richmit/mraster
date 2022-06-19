@@ -33,7 +33,11 @@
 
 #include "ramCanvas.hpp"
 
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+
 int main(void) {
+  auto startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
   const int NUMITR = 1024;
   mjr::ramCanvas3c8b theRamCanvas(7680, 7680, -2.2, 0.8, -1.5, 1.5);
 
@@ -58,4 +62,5 @@ int main(void) {
     }
   }
   theRamCanvas.writeTIFFfile("mandelbrot_bm_real_eqop.tiff");
+  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - startTime)/(60.0) << " min" << std::endl;
 }

@@ -42,10 +42,14 @@
 
 #include "ramCanvas.hpp"
 
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+
 int main(void) {
-  const double       DISTTH = 0.0002;
-  const int          MAXITR = 2048;
-  const double       BALL   = 10000.0;
+  auto               startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+  const double       DISTTH    = 0.0002;
+  const int          MAXITR    = 2048;
+  const double       BALL      = 10000.0;
   double             dist;
   mjr::ramCanvas3c8b theRamCanvas(1080*2, 1080*2, -1.9, 0.5, -1.2, 1.2);
 
@@ -87,4 +91,5 @@ int main(void) {
     }
   }
   theRamCanvas.writeTIFFfile("mandelbrot_distance.tiff");
+  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - startTime)/(60.0) << " min" << std::endl;
 }

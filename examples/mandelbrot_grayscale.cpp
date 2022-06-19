@@ -45,9 +45,12 @@
 ***************************************************************************************************************************************************************/
 #include "ramCanvas.hpp"
 
+#include <chrono>                                                        /* time                    C++11    */
 #include <complex>                                                       /* Complex Numbers         C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
 
 int main(void) {
+  auto startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
   mjr::ramCanvas1c16b theRamCanvas(7680, 7680, -2.2, 0.8, -1.5, 1.5);
   int count;
   const int NUMITR = mjr::ramCanvas1c16b::colorType::maxChanVal;
@@ -70,4 +73,5 @@ int main(void) {
   }
   theRamCanvas.autoHistStrech();
   theRamCanvas.writeTIFFfile("mandelbrot_grayscale.tiff");
+  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - startTime)/(60.0) << " min" << std::endl;
 }

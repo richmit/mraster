@@ -33,6 +33,9 @@
 
 #include "ramCanvas.hpp"
 
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+
 #define DO_LINE       0
 #define DO_CLIP_LINE  0
 #define DO_POINT      0
@@ -56,6 +59,7 @@
 #define BSIZE 2024*2
 
 int main(void) {
+  auto startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
   mjr::ramCanvasRGB8b theRamCanvas(BSIZE, BSIZE);
   int xMax = theRamCanvas.get_numXpix()-1;
   int yMax = theRamCanvas.get_numYpix()-1;
@@ -218,8 +222,8 @@ int main(void) {
   theRamCanvas.writeRAWfile("bmark.mrw");
 #endif
 
-std::cout << "Print Complete" << std::endl;
-std::cout << "Center Red:   " << static_cast<int>(theRamCanvas.getPxColor(BSIZE/2, BSIZE/2).getRed()) << std::endl;
-std::cout << "Center Green: " << static_cast<int>(theRamCanvas.getPxColor(BSIZE/2, BSIZE/2).getGreen()) << std::endl;
-
+  std::cout << "Print Complete" << std::endl;
+  std::cout << "Center Red:   " << static_cast<int>(theRamCanvas.getPxColor(BSIZE/2, BSIZE/2).getRed()) << std::endl;
+  std::cout << "Center Green: " << static_cast<int>(theRamCanvas.getPxColor(BSIZE/2, BSIZE/2).getGreen()) << std::endl;
+  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - startTime)/(60.0) << " min" << std::endl;
 }

@@ -38,6 +38,9 @@
 
 #include "ramCanvas.hpp"
 
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+
 const double pi     = 3.141592653589793238462643383279502884;
 const int    CSIZE  = 2048;
 const int    MAXITR = 2048;
@@ -61,6 +64,7 @@ enum class whyStop { OUTSET,   //!< Not in set (|z|>BALL)
 
 int main(void)
 {
+  auto                  startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
   mjr::ramCanvas3c8b   potRamCanvas(CSIZE, CSIZE), distRamCanvas(CSIZE, CSIZE);
   mjr::color3c8b       theColor;
   double               lightHeight = 1.125;
@@ -148,4 +152,5 @@ int main(void)
     potRamCanvas.writeTIFFfile("mandelbrot_emboss_pot_"   + std::to_string(i) + ".tiff");
     distRamCanvas.writeTIFFfile("mandelbrot_emboss_dist_" + std::to_string(i) + ".tiff");
   }
+  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - startTime)/(60.0) << " min" << std::endl;
 }

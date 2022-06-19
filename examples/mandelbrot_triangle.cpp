@@ -40,6 +40,8 @@
 
 #include "ramCanvas.hpp"
 
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
 
 typedef struct { double x; double y; } complex;
 
@@ -55,6 +57,7 @@ int orbCmp(complex tstPt);
 
 /* **************************************************************** */
 int main(void) {
+  auto startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 
   // Pick a triangle type and size..
 //  complex protoAlphaTriangle[3] = { {0.0, 0.0}, {0.50, 0.0}, {0.500, 0.50} };    // Big       right triangles
@@ -99,6 +102,7 @@ int main(void) {
   }
 
   theRamCanvas.writeTIFFfile("mandelbrot_triangle.tiff");
+  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - startTime)/(60.0) << " min" << std::endl;
 }
 
 /* **************************************************************** */

@@ -39,6 +39,9 @@
 
 #include "ramCanvas.hpp"
 
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+
 /** Reasons iteration may stop */
 enum class whyStopMPO { OUTSET,   //!< Not in set (|z|>BALL)
                         MAXCOUNT, //!< Maximum iteration reached
@@ -54,10 +57,11 @@ double ranges[3][4] = { { -2.0,        1.0,       -1.5,        1.5       },
                         {  0.0353469,  0.5353469,  0.1153845,  0.6153845 } };
 
 int main(void) {
-  const int          MAXITR = 6000;
-  const double       BALL   = 10000000.0;
-  double             maxPot = 0;
-  double             minPot = BALL;
+  auto               startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+  const int          MAXITR    = 6000;
+  const double       BALL      = 10000000.0;
+  double             maxPot    = 0;
+  double             minPot    = BALL;
   mjr::color3c8b     aColor;
   mjr::ramCanvas3c8b theRamCanvas(CSIZE, CSIZE);
   whyStopMPO         why;
@@ -160,4 +164,5 @@ int main(void) {
     theRamCanvasG.autoHistStrech();
     theRamCanvasG.writeTIFFfile("mandelbrot_potential_" + std::to_string(i) + ".tiff");
   }
+  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - startTime)/(60.0) << " min" << std::endl;
 }

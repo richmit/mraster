@@ -29,6 +29,9 @@
 ***************************************************************************************************************************************************************/
 
 #include "ramCanvas.hpp"
+
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
 #include <math.h>                                                        /* Math stuff              C89      */
 
 using namespace mjr;
@@ -37,6 +40,7 @@ using namespace mjr;
 #define BALLSIZE 100000.0
 
 int main(void) {
+  auto startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
   ramCanvas4c8b theRamCanvas = ramCanvas4c8b(1024*2, 1024*2, -1.9, 0.5, -1.2, 1.2);
 
   for(int x=0; x<theRamCanvas.get_numXpix(); x++) {
@@ -67,4 +71,5 @@ int main(void) {
   }
 
   theRamCanvas.writeTGAfile("mandelbrot_distance_old.tga");
+  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - startTime)/(60.0) << " min" << std::endl;
 }

@@ -38,6 +38,9 @@
  This example demonstrates how to use some of the types defined in the ramCanvas object (integer coordinates, double coordinates, color, and color channel)
 ***************************************************************************************************************************************************************/
 
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+
 #include "ramCanvas.hpp"
 
 const int    MAXITR = 1024*1;
@@ -54,6 +57,7 @@ typedef rc::colorType      rcc;   // The color type in our Ram Canvas type
 
 int main(void)
 {
+  auto                   startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
   const int              CSIZE = 1024*1;
   const rc::coordFltType BALL  = 100;
   rc                     binRamCanvas(CSIZE, CSIZE), grayRamCanvas(CSIZE, CSIZE), quadRamCanvas(CSIZE, CSIZE);
@@ -111,4 +115,5 @@ int main(void)
     grayRamCanvas.writeTIFFfile("mandelbrot_binary_gray_"  + std::to_string(i) + ".tiff");
     quadRamCanvas.writeTIFFfile("mandelbrot_binary_quad_"  + std::to_string(i) + ".tiff");
   }
+  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - startTime)/(60.0) << " min" << std::endl;
 }

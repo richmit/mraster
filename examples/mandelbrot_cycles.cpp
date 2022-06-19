@@ -34,12 +34,14 @@
 
 #include "ramCanvas.hpp"
 
-#include <iostream>                                                      /* C++ iostream            C++11    */
-#include <complex>                                                       /* Complex Numbers         C++11    */
-#include <vector>                                                        /* STL vector              C++11    */
 #include <algorithm>                                                     /* STL algorithm           C++11    */
+#include <chrono>                                                        /* time                    C++11    */
+#include <complex>                                                       /* Complex Numbers         C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+#include <vector>                                                        /* STL vector              C++11    */
 
 int main(void) {
+  auto startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
   mjr::color3c8b aColor;
 
   const int NUMITR   = 16*16*4*4;
@@ -79,4 +81,5 @@ int main(void) {
     std::cout << CSIZE << "/" << y << std::endl;
   }
   theRamCanvas.writeTIFFfile("mandelbrot_cycles.tiff");
+  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - startTime)/(60.0) << " min" << std::endl;
 }
