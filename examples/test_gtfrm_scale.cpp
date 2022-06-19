@@ -92,6 +92,5 @@ int main(int argc, char *argv[]) {
   }
   bRamCanvas.writeTIFFfile("test_gtfrm_scale_avg9.tiff");
 
-
   return 0;
 }

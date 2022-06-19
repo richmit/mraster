@@ -238,7 +238,7 @@ namespace mjr {
       intCrdT dfltX;         //!< x coordinate used by default.
       intCrdT dfltY;         //!< y coordinate used by default.
       //@}
-
+      
       /** @name Filled Triangle Utility Functions */
       //@{
       /** Utliity function behind the drawFillTriangle() functions.
@@ -2800,10 +2800,10 @@ namespace mjr {
     double x2 = std::ceil(x);
     double y2 = std::ceil(y);
 
-    intCrdT x1i = (intCrdT)x1;
-    intCrdT y1i = (intCrdT)y1;
-    intCrdT x2i = (intCrdT)x2;
-    intCrdT y2i = (intCrdT)y2;
+    intCrdT x1i = static_cast<intCrdT>(x1);
+    intCrdT y1i = static_cast<intCrdT>(y1);
+    intCrdT x2i = static_cast<intCrdT>(x2);
+    intCrdT y2i = static_cast<intCrdT>(y2);
 
     if ((x1i >= 0) && (y1i >= 0) && (x2i < numXpix) && (y2i < numYpix)) {
       double eps = 0.00001;
@@ -2850,9 +2850,9 @@ namespace mjr {
     for(int chan=0; chan<colorT::channelCount; chan++) {
       typename colorT::channelIntArithType newChanValue = 0;
       for(intCrdT ydi=-1; ydi<=1; ydi++) {
+        intCrdT icY = yi + ydi;
         for(intCrdT xdi=-1; xdi<=1; xdi++) {
           intCrdT icX = xi + xdi;
-          intCrdT icY = yi + ydi;
           if (!(isCliped(icX, icY))) {
             newChanValue += getPxColor(icX, icY).getChan(chan);
           }
@@ -2871,10 +2871,10 @@ namespace mjr {
     double x2 = std::ceil(x);
     double y2 = std::ceil(y);
 
-    intCrdT x1i = (intCrdT)x1;
-    intCrdT y1i = (intCrdT)y1;
-    intCrdT x2i = (intCrdT)x2;
-    intCrdT y2i = (intCrdT)y2;
+    intCrdT x1i = static_cast<intCrdT>(x1);
+    intCrdT y1i = static_cast<intCrdT>(y1);
+    intCrdT x2i = static_cast<intCrdT>(x2);
+    intCrdT y2i = static_cast<intCrdT>(y2);
 
     if ((x1i >= 0) && (y1i >= 0) && (x2i < numXpix) && (y2i < numYpix)) {
 
@@ -2894,7 +2894,7 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
-  void  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillTriangle(rcPointInt *thePoints, colorT color) {
+  void ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillTriangle(rcPointInt *thePoints, colorT color) {
     drawFillTriangle(thePoints[0].x, thePoints[0].y, thePoints[1].x, thePoints[1].y, thePoints[2].x, thePoints[2].y, color);
   }
 
