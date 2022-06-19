@@ -34,16 +34,6 @@
 
  This library delivers flexible and easy programmatic access to a broad range of low level, high performance raster graphics drawing techniques.
 
-  - Direct pixel setting
-
-  - Scan line conversion of geometric primitives (lines, triangles, rectangles, circles)
-
-  - Image processing transforms useful image conversion and image object creation
-
-    - Homogeneous image transformations
-
-    - 90 degree and center line reflection spatial image transformations
-
  The primary use case is direct image synthesis for visualization of mathematical objects
 
    - Raster based fractals like the Mandelbrot set
@@ -58,19 +48,21 @@
 
    - Continuous color schemes for 1) Drawing tools (Inkscape), 2) SVG files, 3) Scientific visualization tools (Visit)
 
- Secondary use cases include things like
+ Secondary use cases mostly include research topics
 
-   - Back end for a ray tracing package to visualize mathematical manifolds using non-linear optics in 4D euclidean space
+   - Back end for a my ray tracing manifolds with non-linear optics in 4D euclidean space
 
-   - Research in stenography
+   - Optical distortion correction
 
-   - Research in image encryption
+   - Stenography
 
-   - Research in image compression
+   - Image encryption
+
+   - Image compression
 
  Design goals:
 
-   - Extreme portability (ISO C++ only, minimal external libary requirements, etc...)
+   - Extreme portability (ISO C++ only, minimal external library requirements, etc...)
 
    - Ease of use and adaptability to many use cases
 
@@ -82,7 +74,6 @@
 
      When performance and portability are at odds, portability wins.
 
-
  History
  =======
 
@@ -91,16 +82,14 @@
 
  In the late 80s and early 90s I began to make use of HPC hardware (supercomputers) located at various sites around the globe and was faced with the new
  challenge of drawing pictures without the aid of a graphics device or underlying APIs.  In order to use remote supercomputers to draw pictures off screen, I
- added a "ram frame buffer" to this library.  Around the same time I began to take serious advantage of OpenGL hardware and software on RS/6000 and HP
- workstations.  This spelled the end for the library as it had existed before.  With good graphics hardware and OpenGL toolkits to take care of the
- interactive components of my programs, and the ram frame buffer of this library taking care of the image generation end of the game, this library slowly
- migrated into a ram frame buffer only library.
+ added a "RAM frame buffer" to this library.  Around the same time I began to take serious advantage of OpenGL hardware and software on RS/6000 and HP
+ workstations.  This spelled the end for the library as it had existed before, and started an evolution to exclusively supporting RAM frame buffers.
 
  Once the limitations of adapting to underlying GUI APIs was removed, I was free to provide better organization and capabilities for abstraction and extension
  within the library itself.  The natural answer to both was reimplementing the entire thing in C++.
 
  In the mid 90's I found myself moving beyond 32bit RGBA -- RAW camera images, astrophotographs from CCDs, microscope imagers, and digital film scanners
- produceing 16/32-bit greyscale and 48-bit RGB.  So I used templates to allow the ramCanvas to support such images, added quite a lot of image processing
+ producing 16/32-bit greyscale and 48-bit RGB.  So I used templates to allow the ramCanvas to support such images, added quite a lot of image processing
  functionality, and broadened image file support (non-standard TIFF and FITS).
 
  Later tools began to appear for high dynamic range images, and standard image formats began to become broadly supported.  Around this same time, FOSS image
@@ -151,7 +140,8 @@
 
  The code for this library all lives within the namespace of 'mjr' -- my initials.  This should help to avoid namespace conflicts.
 
- At this time everything is mostly implemented in header files with only large, static data sets placed into libraries.  This is a serious shift from the library based system used before.
+ At this time everything is mostly implemented in header files with only large, static data sets placed into libraries.  This is a serious shift from the
+ library based system used before.
 
  As far as I know this code infringes upon no patents or other IP.
 
@@ -164,14 +154,14 @@
 
  The include files:
 
-   - color.hpp ......... The include file most users will incldue for color support
-   - ramCanvas.hpp ..... The include file most users will incldue for ramCanvas support
+   - color.hpp ......... The include file most users will include for color support
+   - ramCanvas.hpp ..... The include file most users will include for ramCanvas support (includes color.hpp)
    - ramConfig.hpp ..... Common config macros
-   - colorTpl.hpp ...... Implimentation of the color/pixel object
-   - ramCanvasTpl.hpp .. Implimentation for ramCanvasTpl object
+   - colorTpl.hpp ...... Implementation of the color/pixel object
+   - ramCanvasTpl.hpp .. Implementation for ramCanvasTpl object
    - colorData.cpp ..... Constants for color computations and color schemes
    - colorData.hpp ..... Include file for colorData.cpp
-   - mapclamp.hpp ...... Fast functiosn used for clamping integers
+   - mapclamp.hpp ...... Fast functions used for clamping integers
    - mainPage.cpp ...... Documentation
 
  About Color Type Templates
@@ -187,7 +177,7 @@
            |---------+---------+------+-------+------------------+-------------------------------------------------|
            |       3 |       8 | RGB  |    24 | 24-bit truecolor | Very common format.                             |
            |       4 |       8 | RGBA |    32 | truecolor+alpha  | Very common format.                             |
-           |       3 |      16 | RGB  |    48 | 48-bit color     | High quality digial camera sensors.             |
+           |       3 |      16 | RGB  |    48 | 48-bit color     | High quality digital camera sensors.             |
            |       3 |      32 | RGB  |    96 | 96-bit color     | Usually a fusion from multiple CCDs             |
            |       1 |       8 | Grey |     8 | 8-bit greyscale  | Surveillance and Low Quality scientific imaging |
            |       1 |      16 | Grey |    16 | 16-bit greyscale | Typical scientific CCD equipment                |
@@ -294,7 +284,7 @@
  The color cube rainbow map is generated by the unique six segment (6 vertex) cycle in the face edge graph not involving white or black.  Also known
  as the "Color Cube Rainbow".
 
- This is color scheme is not suggested for general use; however, ignoreing this advice is so popular that a special method provides named support for the
+ This is color scheme is not suggested for general use; however, ignoring this advice is so popular that a special method provides named support for the
  color cube rainbow:
 
   - RYGCBMR -- cmpClrCubeRainbow()
@@ -349,7 +339,7 @@
    - 0RMBCW
    - 0RYGCW
 
-  The three segment trees from balck to white are useful, and methods exist to support them directly.  The three segment trees have the useful quality
+  The three segment trees from black to white are useful, and methods exist to support them directly.  The three segment trees have the useful quality
   that the intensity (sum of the components) is a monotone increasing function from zero up to three.  One of them (0RYW) is often called the "fire
   ramp" as it ranges from black (flame base), up to yellow, then red, and finally to white hot.
 
@@ -463,7 +453,7 @@
  Special Indexed Pallets
  -----------------------
 
- Some speical indexed color pallets exist in the library.  Some common ones are:
+ Some special indexed color pallets exist in the library.  Some common ones are:
 
   - Black and White
   - Web Safe 216
