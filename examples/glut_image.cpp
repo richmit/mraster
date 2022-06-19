@@ -65,9 +65,9 @@ void idleCall() {
   static int offset;
   for(int x=0; x<theRC.get_numXpix(); x++)
     for(int y=0; y<theRC.get_numXpix(); y++)
-      theRC.drawPoint(x, y, mjr::color3c8b(static_cast<mjr::color3c8b::channelType>(offset+y-x),
-                                           static_cast<mjr::color3c8b::channelType>(offset+x+y),
-                                           static_cast<mjr::color3c8b::channelType>(offset+x-y)));
+      theRC.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(static_cast<mjr::ramCanvas3c8b::colorChanType>(offset+y-x),
+                                           static_cast<mjr::ramCanvas3c8b::colorChanType>(offset+x+y),
+                                           static_cast<mjr::ramCanvas3c8b::colorChanType>(offset+x-y)));
   offset+=1;
   glutPostRedisplay();
 } /* end func idleCall */
@@ -97,9 +97,9 @@ void displayCall() {
 int main(int argc, char *argv[]) {
   for(int x=0; x<theRC.get_numXpix(); x++)
     for(int y=0; y<theRC.get_numXpix(); y++)
-      theRC.drawPoint(x, y, mjr::color3c8b(static_cast<mjr::color3c8b::channelType>(y-x),
-                                           static_cast<mjr::color3c8b::channelType>(x+y),
-                                           static_cast<mjr::color3c8b::channelType>(x-y)));
+      theRC.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(static_cast<mjr::ramCanvas3c8b::colorChanType>(y-x),
+                                           static_cast<mjr::ramCanvas3c8b::colorChanType>(x+y),
+                                           static_cast<mjr::ramCanvas3c8b::colorChanType>(x-y)));
 
 
   glutInit(&argc, argv);

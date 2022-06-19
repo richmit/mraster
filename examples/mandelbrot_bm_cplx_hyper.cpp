@@ -108,13 +108,13 @@ int main(void) {
               }
               if(doBOUND && (std::norm(z)>4.0)) {
                 //theRamCanvas.drawPoint(x, y, "red");
-                theRamCanvas.drawPoint(x, y, mjr::color3c8b(static_cast<mjr::color3c8b::channelType>((5*count+50)%256), 0, 0));
+                theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(static_cast<mjr::ramCanvas3c8b::colorChanType>((5*count+50)%256), 0, 0));
                 countBOUND++;
                 break;
               }
               if(doCYCORLIM && (count>LASTMAX) && std::any_of(lastZs.begin(), lastZs.end(), [&z](std::complex<double> zl){return std::abs(zl-z)<0.0001;}) ) {
                 theRamCanvas.drawPoint(x, y, "yellow");
-                //theRamCanvas.drawPoint(x, y, mjr::color3c8b((5*count+50)%256, (count+50)%256, 0));
+                //theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType((5*count+50)%256, (count+50)%256, 0));
                 countCYCORLIM++;
                 break;
               }

@@ -30,12 +30,16 @@
 
 #include "ramCanvas.hpp"
 
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+
 int main(void) {
-  const mjr::ramCanvas3c8b::coordFltType pi       = 3.14159265359;
-  int                                 MaxCount = 255;
-  int                                 MultCol  = 15;
-  mjr::ramCanvas3c8b::coordFltType       Tol      = (.0001 * .0001);
-  mjr::ramCanvas3c8b                  theRamCanvas(4096, 4096, -2.0, 2, -2, 2); // -0.9, -0.7, -0.1, 0.1
+  auto                                   startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+  const mjr::ramCanvas3c8b::coordFltType pi        = 3.14159265359;
+  int                                    MaxCount  = 255;
+  int                                    MultCol   = 15;
+  mjr::ramCanvas3c8b::coordFltType       Tol       = (.0001 * .0001);
+  mjr::ramCanvas3c8b                     theRamCanvas(4096, 4096, -2.0, 2, -2, 2); // -0.9, -0.7, -0.1, 0.1
   for(int y=0;y<theRamCanvas.get_numYpix();y++) {
     for(int x=0;x<theRamCanvas.get_numXpix();x++) {
       mjr::ramCanvas3c8b::coordFltType zx = theRamCanvas.int2realX(x);
@@ -58,15 +62,16 @@ int main(void) {
         }
         count++;
       }
-      mjr::color3c8b::channelType cCol = static_cast<mjr::color3c8b::channelType>(255-count*MultCol);
+      mjr::ramCanvas3c8b::colorChanType cCol = static_cast<mjr::ramCanvas3c8b::colorChanType>(255-count*MultCol);
 
       if((zx-1) * (zx-1) + zy * zy < Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(cCol, 0, 0));
+        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(cCol, 0, 0));
       else if((zx+.5) * (zx+.5) + (zy-sin(2*pi/3)) * (zy-sin(2*pi/3)) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, cCol, 0));
+        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0, cCol, 0));
       else if((zx+.5) * (zx+.5) + (zy+sin(2*pi/3)) * (zy+sin(2*pi/3)) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, 0, cCol));
+        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0, 0, cCol));
     }
   }
   theRamCanvas.writeTIFFfile("newton.tiff");
+  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - startTime)/(60.0) << " min" << std::endl;
 }

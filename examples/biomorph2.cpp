@@ -53,19 +53,19 @@ int main(void) {
           count++,z=std::sin(z)+oneone) ;
       if(count < NUMITR) {
         // A
-        theRamCanvasA.drawPoint(x, y, mjr::color3c8b().cmpClrCubeRainbow(mjr::intWrap(count*500, 255*6+1)));
+        theRamCanvasA.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpClrCubeRainbow(mjr::intWrap(count*500, 255*6+1)));
         // E
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
-          theRamCanvasE.drawPoint(x, y, mjr::color3c8b("red"));
+          theRamCanvasE.drawPoint(x, y, mjr::ramCanvas3c8b::colorType("red"));
         else
-          theRamCanvasE.drawPoint(x, y, mjr::color3c8b("blue"));
+          theRamCanvasE.drawPoint(x, y, mjr::ramCanvas3c8b::colorType("blue"));
         // K
-        theRamCanvasK.drawPoint(x, y, mjr::color3c8b().cmpClrCubeRainbow(mjr::intWrap(static_cast<int>((std::arg(z)+3.14)*255), 255*6+1)));
+        theRamCanvasK.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpClrCubeRainbow(mjr::intWrap(static_cast<int>((std::arg(z)+3.14)*255), 255*6+1)));
         // L
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
-          theRamCanvasL.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intClamp(static_cast<int>(std::abs(std::real(z))*15), 255*1-1), "0R"));
+          theRamCanvasL.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpColorRamp(mjr::intClamp(static_cast<int>(std::abs(std::real(z))*15), 255*1-1), "0R"));
         else
-          theRamCanvasL.drawPoint(x, y, mjr::color3c8b().cmpColorRamp(mjr::intClamp(static_cast<int>(std::abs(std::imag(z))*15), 255*1-1), "0B"));
+          theRamCanvasL.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpColorRamp(mjr::intClamp(static_cast<int>(std::abs(std::imag(z))*15), 255*1-1), "0B"));
       }
     }
   }

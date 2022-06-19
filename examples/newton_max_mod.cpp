@@ -55,14 +55,14 @@ int main(void) {
           maxMod=abs(z);
         count++;
       }
-      mjr::color3c8b::channelType cCol = static_cast<mjr::color3c8b::channelType>(255-maxMod*MultCol);
+      mjr::ramCanvas3c8b::colorChanType cCol = static_cast<mjr::ramCanvas3c8b::colorChanType>(255-maxMod*MultCol);
 
       if(abs(z-r1) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(cCol, 0, 0));
+        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(cCol, 0, 0));
       else if(abs(z-r2) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, cCol, 0));
+        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0, cCol, 0));
       else if(abs(z-r3) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, 0, cCol));
+        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0, 0, cCol));
     }
   }
   theRamCanvas.writeTIFFfile("newton_max_mod.tiff");

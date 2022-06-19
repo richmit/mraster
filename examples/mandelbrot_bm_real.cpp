@@ -48,7 +48,7 @@ int main(void) {
       for(xr=theRamCanvas.int2realX(x),yr=theRamCanvas.int2realY(y),zx=zy=0.0,count=0; (zx*zx+zy*zy<4)&&(count<=NUMITR); count++,tempx=zx*zx-zy*zy+xr,zy=2*zx*zy+yr,zx=tempx)
         ;
       if(count < NUMITR)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b().cmpFireRamp(mjr::intWrap(count*20, 767)));
+        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpFireRamp(mjr::intWrap(count*20, 767)));
     }
   }
   theRamCanvas.writeTIFFfile("mandelbrot_bm_real.tiff");

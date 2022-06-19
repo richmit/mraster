@@ -66,7 +66,7 @@ int main(void)
 {
   auto                  startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
   mjr::ramCanvas3c8b   potRamCanvas(CSIZE, CSIZE), distRamCanvas(CSIZE, CSIZE);
-  mjr::color3c8b       theColor;
+  mjr::ramCanvas3c8b::colorType       theColor;
   double               lightHeight = 1.125;
   double               lightAngle = pi/4;
   std::complex<double> lightDirection = exp(lightAngle*std::complex<double>(0,1));
@@ -122,7 +122,7 @@ int main(void)
               potNormal = potNormal/std::abs(potNormal);  // normalize potNormal
               double potShade = std::real(potNormal * std::conj(lightDirection)) + lightHeight;  // dot product with the incoming light
               potShade = mjr::unitClamp(potShade/(1+lightHeight));  // rescale so <=1, and then clamp to keep >=0
-              potRamCanvas.drawPoint(x, y, mjr::color3c8b(static_cast<mjr::ramCanvas3c8b::colorChanType>(mjr::unitTooIntLinMap(potShade, 255)),
+              potRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(static_cast<mjr::ramCanvas3c8b::colorChanType>(mjr::unitTooIntLinMap(potShade, 255)),
                                                           static_cast<mjr::ramCanvas3c8b::colorChanType>(mjr::unitTooIntLinMap(potShade, 255)),
                                                           static_cast<mjr::ramCanvas3c8b::colorChanType>(mjr::unitTooIntLinMap(potShade, 255))));
             }

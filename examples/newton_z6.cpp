@@ -60,24 +60,24 @@ int main(void) {
         }
         count++;
       }
-      mjr::color3c8b::channelType cCol = static_cast<mjr::color3c8b::channelType>(255-count*MultCol);
+      mjr::ramCanvas3c8b::colorChanType cCol = static_cast<mjr::ramCanvas3c8b::colorChanType>(255-count*MultCol);
 
       if(abs(z-r1) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(cCol, 0,                       0));
+        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(cCol, 0,                       0));
       if(abs(z-r2) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0,                       cCol, 0));
+        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0,                       cCol, 0));
       if(abs(z-r3) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0,                       0,                       cCol));
+        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0,                       0,                       cCol));
       if(abs(z-r4) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(cCol, cCol, 0));
+        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(cCol, cCol, 0));
       if(abs(z-r5) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0,                       cCol, cCol));
+        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0,                       cCol, cCol));
       if(abs(z-r6) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(cCol, 0,                       cCol));
+        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(cCol, 0,                       cCol));
     }
   }
   /* The biggest reason homogeneous transforms are in the library is to support color scale correction.  */
-  theRamCanvas.applyHomoPixTfrm(&mjr::color3c8b::tfrmLinearGreyLevelScale, 255.0 / 155, 0.0);
+  theRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmLinearGreyLevelScale, 255.0 / 155, 0.0);
   theRamCanvas.autoHistStrech();
   theRamCanvas.writeTIFFfile("newton_z6.tiff");
 }

@@ -34,14 +34,12 @@
 #include <iostream>                                                      /* C++ iostream            C++11    */
 #include <math.h>                                                        /* Math stuff              C89      */
 
-using namespace mjr;
-
 #define MAXITR 1000
 #define BALLSIZE 100000.0
 
 int main(void) {
   auto startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-  ramCanvas4c8b theRamCanvas = ramCanvas4c8b(1024*2, 1024*2, -1.9, 0.5, -1.2, 1.2);
+  mjr::ramCanvas4c8b theRamCanvas = mjr::ramCanvas4c8b(1024*2, 1024*2, -1.9, 0.5, -1.2, 1.2);
 
   for(int x=0; x<theRamCanvas.get_numXpix(); x++) {
     for(int y=0; y<theRamCanvas.get_numYpix(); y++) {
@@ -65,7 +63,7 @@ int main(void) {
       if(count < MAXITR) {
         double dist = 0.5*log(zx*zx+zy*zy)*sqrt(zx*zx+zy*zy)/sqrt(dx*dx+dy*dy);
         if(dist < 0.0000001)
-          theRamCanvas.drawPoint(x, y, color4c8b(255, 0, static_cast<mjr::ramCanvas4c8b::colorChanType>(count % 256)));
+          theRamCanvas.drawPoint(x, y, mjr::ramCanvas4c8b::colorType(255, 0, static_cast<mjr::ramCanvas4c8b::colorChanType>(count % 256)));
       }
     }
   }

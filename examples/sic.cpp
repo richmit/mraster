@@ -80,7 +80,7 @@ class g2rgb8 {
 
 int main(void) {
   const int BSIZ = 7680;
-  mjr::color1c16b aColor;
+  mjr::ramCanvas1c16b::colorType aColor;
   aColor.setAll(1);
   //for(int j=0; j<NPR; j++) {
     for(int j : { 0 } ) {
@@ -122,8 +122,8 @@ int main(void) {
     // Root image transform
     std::cout << "ITER(" << j <<  "): " << "TFRM & SCALE" << std::endl;
     theRamCanvas.autoHistStrech();
-    //theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmLn);
-    theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmStdPow, 1/ipw);
+    //theRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas1c16b::colorType::tfrmLn);
+    theRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas1c16b::colorType::tfrmStdPow, 1/ipw);
     if(filter)
       theRamCanvas.scaleDownMean(4);
     else

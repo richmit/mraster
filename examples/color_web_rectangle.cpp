@@ -33,7 +33,7 @@
 int main(void) {
   mjr::ramCanvas3c8b theRamCanvas(795, 795);
   for(int i=0; i<=225; i++) {
-    mjr::color3c8b color;
+    mjr::ramCanvas3c8b::colorType color;
     int x = (i % 15) * 50;
     int y = (i / 15) * 50;
     color.icpWebSafe216(i);

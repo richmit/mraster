@@ -36,9 +36,9 @@
 int main(int argc, char *argv[]) {
   std::random_device rd;
   std::minstd_rand0 rEng(rd());
-  auto timestamp_time_t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+  auto startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
   mjr::ramCanvas3c8b theRamCanvas(7680/2, 4320/2, -2.2, 2.2, -2.2, 2.2);
-  theRamCanvas.clrCanvas(mjr::color3c8b(255, 0, 0));
+  theRamCanvas.clrCanvas(mjr::ramCanvas3c8b::colorType(255, 0, 0));
   int MAXCOUNT = 524288; // Number of times to try and find a point
 
   int stenX[8] = {1, -1, 0,  0, 1,  1, -1, -1};
@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
       xC = rEng() % theRamCanvas.get_numXpix();
       yC = rEng() % theRamCanvas.get_numYpix();
 
-      mjr::color3c8b aColor = theRamCanvas.getPxColor(xC, yC);
+      mjr::ramCanvas3c8b::colorType aColor = theRamCanvas.getPxColor(xC, yC);
       double lumC = aColor.colorLuminance();
 
       if((lumC > 0) && (lumC < tgtLum)) {
@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
           yN = yC+stenY[maxDir];
 
           theRamCanvas.getPxColorRefNC(xN, yN).tfrmAdd(aColor);
-          theRamCanvas.drawPoint(xC, yC, mjr::color3c8b(0, 0, 0));
+          theRamCanvas.drawPoint(xC, yC, mjr::ramCanvas3c8b::colorType(0, 0, 0));
         }
       }
     }
@@ -120,5 +120,5 @@ int main(int argc, char *argv[]) {
 
   return 1;
 
-  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - timestamp_time_t)/(60.0) << " min" << std::endl;
+  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - startTime)/(60.0) << " min" << std::endl;
 }

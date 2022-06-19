@@ -50,7 +50,7 @@ int main(void) {
       for(c=std::complex<mjr::ramCanvas3c8b::coordFltType>(theRamCanvas.int2realX(x),theRamCanvas.int2realY(y)),z=zero,count=0; (std::norm(z)<4)&&(count<=NUMITR); count++,z=z*z+c)
         ;
       if(count < NUMITR)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b().cmpFireRamp(mjr::intWrap(count*20, 767)));
+        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpFireRamp(mjr::intWrap(count*20, 767)));
     }
   }
   theRamCanvas.writeTIFFfile("mandelbrot_bm_cplx_openmp.tiff");

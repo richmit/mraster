@@ -33,21 +33,21 @@
 int main() {
   mjr::ramCanvas3c8b theRamCanvas(7680/8, 4320/8, -2.2, 2.2, -2.2, 2.2);
 
-  theRamCanvas.clrCanvas(mjr::color3c8b(255, 0, 0));
-  theRamCanvas.drawLine(                            2,                            2, theRamCanvas.get_numXpix()-3,                            2, mjr::color3c8b(0, 0, 255));
-  theRamCanvas.drawLine(                            2, theRamCanvas.get_numYpix()-3, theRamCanvas.get_numXpix()-3, theRamCanvas.get_numYpix()-3, mjr::color3c8b(0, 0, 255));
-  theRamCanvas.drawLine(                            2,                            2,                            2, theRamCanvas.get_numYpix()-3, mjr::color3c8b(0, 0, 255));
-  theRamCanvas.drawLine( theRamCanvas.get_numXpix()-3,                            2, theRamCanvas.get_numXpix()-3, theRamCanvas.get_numYpix()-3, mjr::color3c8b(0, 0, 255));
+  theRamCanvas.clrCanvas(mjr::ramCanvas3c8b::colorType(255, 0, 0));
+  theRamCanvas.drawLine(                            2,                            2, theRamCanvas.get_numXpix()-3,                            2, mjr::ramCanvas3c8b::colorType(0, 0, 255));
+  theRamCanvas.drawLine(                            2, theRamCanvas.get_numYpix()-3, theRamCanvas.get_numXpix()-3, theRamCanvas.get_numYpix()-3, mjr::ramCanvas3c8b::colorType(0, 0, 255));
+  theRamCanvas.drawLine(                            2,                            2,                            2, theRamCanvas.get_numYpix()-3, mjr::ramCanvas3c8b::colorType(0, 0, 255));
+  theRamCanvas.drawLine( theRamCanvas.get_numXpix()-3,                            2, theRamCanvas.get_numXpix()-3, theRamCanvas.get_numYpix()-3, mjr::ramCanvas3c8b::colorType(0, 0, 255));
   theRamCanvas.writeTIFFfile("dlaSeed_border.tiff");
 
-  theRamCanvas.clrCanvas(mjr::color3c8b(255, 0, 0));
-  theRamCanvas.drawPoint(theRamCanvas.get_numXpix()/2, theRamCanvas.get_numYpix()/2, mjr::color3c8b(0, 0, 255));
+  theRamCanvas.clrCanvas(mjr::ramCanvas3c8b::colorType(255, 0, 0));
+  theRamCanvas.drawPoint(theRamCanvas.get_numXpix()/2, theRamCanvas.get_numYpix()/2, mjr::ramCanvas3c8b::colorType(0, 0, 255));
   theRamCanvas.writeTIFFfile("dlaSeed_center.tiff");
 
-  theRamCanvas.clrCanvas(mjr::color3c8b(255, 0, 0));
-  theRamCanvas.drawCircle( theRamCanvas.get_numXpix()/2, theRamCanvas.get_numYpix()/2, theRamCanvas.get_numYpix()/4,   mjr::color3c8b(0, 0, 255));
-  theRamCanvas.drawCircle( theRamCanvas.get_numXpix()/2, theRamCanvas.get_numYpix()/2, theRamCanvas.get_numYpix()/2-3, mjr::color3c8b(0, 0, 255));
-  theRamCanvas.drawCircle( theRamCanvas.get_numXpix()/2, theRamCanvas.get_numYpix()/2, theRamCanvas.get_numXpix()/2-3, mjr::color3c8b(0, 0, 255));
-  theRamCanvas.drawCircle( theRamCanvas.get_numXpix()/2, theRamCanvas.get_numYpix()/2, (theRamCanvas.get_numYpix()+theRamCanvas.get_numXpix())/4-3, mjr::color3c8b(0, 0, 255));
+  theRamCanvas.clrCanvas(mjr::ramCanvas3c8b::colorType(255, 0, 0));
+  theRamCanvas.drawCircle( theRamCanvas.get_numXpix()/2, theRamCanvas.get_numYpix()/2, theRamCanvas.get_numYpix()/4,   mjr::ramCanvas3c8b::colorType(0, 0, 255));
+  theRamCanvas.drawCircle( theRamCanvas.get_numXpix()/2, theRamCanvas.get_numYpix()/2, theRamCanvas.get_numYpix()/2-3, mjr::ramCanvas3c8b::colorType(0, 0, 255));
+  theRamCanvas.drawCircle( theRamCanvas.get_numXpix()/2, theRamCanvas.get_numYpix()/2, theRamCanvas.get_numXpix()/2-3, mjr::ramCanvas3c8b::colorType(0, 0, 255));
+  theRamCanvas.drawCircle( theRamCanvas.get_numXpix()/2, theRamCanvas.get_numYpix()/2, (theRamCanvas.get_numYpix()+theRamCanvas.get_numXpix())/4-3, mjr::ramCanvas3c8b::colorType(0, 0, 255));
   theRamCanvas.writeTIFFfile("dlaSeed_circles.tiff");
 }

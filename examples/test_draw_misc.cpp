@@ -31,23 +31,23 @@
 #include "ramCanvas.hpp"
 
 int main(void) {
-  mjr::color3c8b aColor;
+  mjr::ramCanvas3c8b::colorType aColor;
   mjr::ramCanvas3c8b theRamCanvas(1024, 1024, -1, 1, 2, 2);
 
-  theRamCanvas.setDfltColor(mjr::color3c8b("white"));
+  theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType("white"));
   theRamCanvas.drawRectangle(3, 3, 23, 23);
   theRamCanvas.drawRectangle(0, 0, 20, 20);
   theRamCanvas.drawRectangle(-10, -10, 50, 50);
 
-  theRamCanvas.setDfltColor(mjr::color3c8b("blue"));
+  theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType("blue"));
   theRamCanvas.drawFillRectangle(60, 60, 80, 80);
   theRamCanvas.drawFillRectangle(400, 400, 600, 600);
 
 
-  theRamCanvas.drawFillTriangle(10, 700, 20, 600, 50, 650, mjr::color3c8b("green"));
-  theRamCanvas.drawFillTriangle(50, 750, 60, 650, 20, 700, mjr::color3c8b("green"));
-  theRamCanvas.drawFillTriangle(100, 650, 150, 650, 120, 700, mjr::color3c8b("green"));
-  theRamCanvas.drawFillTriangle(150, 700, 200, 700, 180, 650, mjr::color3c8b("green"));
+  theRamCanvas.drawFillTriangle(10, 700, 20, 600, 50, 650, mjr::ramCanvas3c8b::colorType("green"));
+  theRamCanvas.drawFillTriangle(50, 750, 60, 650, 20, 700, mjr::ramCanvas3c8b::colorType("green"));
+  theRamCanvas.drawFillTriangle(100, 650, 150, 650, 120, 700, mjr::ramCanvas3c8b::colorType("green"));
+  theRamCanvas.drawFillTriangle(150, 700, 200, 700, 180, 650, mjr::ramCanvas3c8b::colorType("green"));
 
   theRamCanvas.setDfltColor("red");
   for(int y=-75;y<75;y+=3) {
@@ -63,7 +63,7 @@ int main(void) {
     theRamCanvas.drawTriangle(20, 200, y, 200+30, 30, 300);
   }
 
-  theRamCanvas.setDfltColor(mjr::color3c8b("green"));
+  theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType("green"));
   for(int r=10;r<50;r+=5)
     theRamCanvas.drawCircle(200, 250, r);
 
@@ -72,8 +72,8 @@ int main(void) {
   // Check out some of they ways to specify color (more exist)!
   theRamCanvas.drawFillCircle(70, 400, 50, "red");
   theRamCanvas.drawFillCircle(70, 400, 40, "#ff00ff");
-  theRamCanvas.drawFillCircle(70, 400, 30, mjr::color3c8b::cornerColor::BLUE);
-  theRamCanvas.drawFillCircle(70, 400, 10, mjr::color3c8b(0xff, 0xff, 0x00));
+  theRamCanvas.drawFillCircle(70, 400, 30, mjr::ramCanvas3c8b::colorType::cornerColor::BLUE);
+  theRamCanvas.drawFillCircle(70, 400, 10, mjr::ramCanvas3c8b::colorType(0xff, 0xff, 0x00));
 
   theRamCanvas.writeTIFFfile("test_draw_misc.tiff");
 }

@@ -62,7 +62,7 @@ int main(void) {
   const double       BALL      = 10000000.0;
   double             maxPot    = 0;
   double             minPot    = BALL;
-  mjr::color3c8b     aColor;
+  mjr::ramCanvas3c8b::colorType     aColor;
   mjr::ramCanvas3c8b theRamCanvas(CSIZE, CSIZE);
   whyStopMPO         why;
 

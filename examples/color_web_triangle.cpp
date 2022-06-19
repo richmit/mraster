@@ -39,7 +39,7 @@ int main(void) {
   int x, y;
   int redX=512, redY=512, blueX=1024, blueY=512, greenX=768, greenY=956;
   double sLength = 512;
-  mjr::color3c8b color;
+  mjr::ramCanvas3c8b::colorType color;
   mjr::ramCanvas3c8b theRamCanvas_tru(1536, 1536);
   mjr::ramCanvas3c8b theRamCanvas_web(1536, 1536);
   mjr::ramCanvas3c8b theRamCanvas_Pro(1536, 1536);
@@ -54,7 +54,7 @@ int main(void) {
         color.setColorRGB((mjr::colChan8)(255-sqrt(double((x-redX)  *(x-redX)   +(y-redY) *(y-redY))  /sLength*255)),
                           (mjr::colChan8)(255-sqrt(double((x-blueX) *(x-blueX)  +(y-blueY)*(y-blueY)) /sLength*255)),
                           (mjr::colChan8)(255-sqrt(double((x-greenX)*(x-greenX)+(y-greenY)*(y-greenY))/sLength*255)));
-        mjr::color3c8b tmpColor;
+        mjr::ramCanvas3c8b::colorType tmpColor;
         tmpColor = color;
         theRamCanvas_tru.drawPoint(x, y, tmpColor);
         tmpColor = color;

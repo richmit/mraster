@@ -72,7 +72,7 @@ int main(void) {
 
   // First we draw a greyscale Mandelbrot set for reference.
   if(true) {
-    mjr::color3c8b aColor;
+    mjr::ramCanvas3c8b::colorType aColor;
     aColor.setToWhite();
     MAXCOUNT = 255;
     std::cout << "INFO(main): Draw reference set via fill algorithm." << std::endl;
@@ -97,7 +97,7 @@ int main(void) {
     if(findAlphaTriangle(MAXTRCNT, 0, 1, 0.0, alphaTriangle)) {
       int thePathLen;
       traceBoundry(MAXTRCNT, 0.00003, 0, alphaTriangle, thePath, &thePathLen);
-      theRamCanvas.drawPLCurve(thePathLen+1, (mjr::ramCanvas3c8b::pointFltType *)thePath, mjr::color3c8b(255, 0, 255));
+      theRamCanvas.drawPLCurve(thePathLen+1, (mjr::ramCanvas3c8b::pointFltType *)thePath, mjr::ramCanvas3c8b::colorType(255, 0, 255));
     }
   }
 

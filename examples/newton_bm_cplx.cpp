@@ -30,13 +30,16 @@
 
 #include "ramCanvas.hpp"
 
+#include <chrono>                                                        /* time                    C++11    */
 #include <complex>                                                       /* Complex Numbers         C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
 
 int main(void) {
-  const double pi       = 3.14159265359;
-  int         MaxCount = 255;
-  int         MultCol  = 15;
-  double       Tol      = .0001;
+  auto         startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+  const double pi        = 3.14159265359;
+  int          MaxCount  = 255;
+  int          MultCol   = 15;
+  double       Tol       = .0001;
   mjr::ramCanvas3c8b theRamCanvas(4096, 4096, -2.0, 2, -2, 2); // -0.9, -0.7, -0.1, 0.1
 
   std::complex<double> r1( 1.0,            0);
@@ -53,15 +56,16 @@ int main(void) {
           z = z-(z*z*z-1.0)/(z*z*3.0);
         count++;
       }
-      mjr::color3c8b::channelType cCol = static_cast<mjr::color3c8b::channelType>(255-count*MultCol);
+      mjr::ramCanvas3c8b::colorChanType cCol = static_cast<mjr::ramCanvas3c8b::colorChanType>(255-count*MultCol);
 
       if(abs(z-r1) < Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(cCol, 0,    0));
+        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(cCol, 0,    0));
       else if(abs(z-r2) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0,    cCol, 0));
+        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0,    cCol, 0));
       else if(abs(z-r3) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b(0,    0,    cCol));
+        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0,    0,    cCol));
     }
   }
   theRamCanvas.writeTIFFfile("newton_bm_cplx.tiff");
+  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - startTime)/(60.0) << " min" << std::endl;
 }

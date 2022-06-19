@@ -42,7 +42,7 @@
 
 int main(void) {
   auto startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-  mjr::color3c8b aColor;
+  mjr::ramCanvas3c8b::colorType aColor;
 
   const int NUMITR   = 16*16*4*4;
   const int CSIZE    = 7680/2;
@@ -63,15 +63,15 @@ int main(void) {
           break;
         }
         if(std::norm(z)>2.0) {                                                                                         // Got too big
-          theRamCanvas.drawPoint(x, y, mjr::color3c8b(static_cast<mjr::ramCanvas3c8b::colorChanType>((2*count+20>255 ? 255 : count+20)), 0, 0));
+          theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(static_cast<mjr::ramCanvas3c8b::colorChanType>((2*count+20>255 ? 255 : count+20)), 0, 0));
           break;
         }
         if(std::abs(z-lastZs[lastIdx])<0.01) {                                                                         // Converged
-          theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, static_cast<mjr::ramCanvas3c8b::colorChanType>((count+20>255 ? 255 : count+20)), 0));
+          theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0, static_cast<mjr::ramCanvas3c8b::colorChanType>((count+20>255 ? 255 : count+20)), 0));
           break;
         }
         if(std::any_of(lastZs.begin(), lastZs.end(), [&z](std::complex<double> zl){return std::abs(zl-z)<0.0001;}) ) { // Cycle
-          theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, 0, static_cast<mjr::ramCanvas3c8b::colorChanType>((count+50>255 ? 255 : count+50))));
+          theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0, 0, static_cast<mjr::ramCanvas3c8b::colorChanType>((count+50>255 ? 255 : count+50))));
           break;
         }
         lastIdx = (lastIdx+1)%LASTSIZE;

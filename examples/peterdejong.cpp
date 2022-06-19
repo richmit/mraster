@@ -56,7 +56,7 @@ double params[NPR][9] = {
 
 int main(void) {
   const int BSIZ = 7680;
-  mjr::color1c16b aColor;
+  mjr::ramCanvas1c16b::colorType aColor;
   aColor.setAll(1);
   for(int j=0; j<NPR; j++) {
     mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -2, 2, -2, 2);
@@ -96,17 +96,17 @@ int main(void) {
     theRamCanvas.writeRAWfile("peterdejong_" + std::to_string(j) + ".mrw");
 
     // Root image transform
-    theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmStdPow, 1.0/p);
+    theRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas1c16b::colorType::tfrmStdPow, 1.0/p);
     maxII = static_cast<uint64_t>(65535.0 * pow(static_cast<double>(maxII)/65535.0, 1/p));
 
     // Log image transform
-    // theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmLn);
+    // theRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas1c16b::colorType::tfrmLn);
     // maxII = log(maxII);
 
     /* Create a new image based on an integer color scale -- this one is 24-bit RGB color.  This isn't the most efficient technique from a RAM perspective in
        that we could pass a conversion routine to writeTIFFfile (see sic.cpp for an example of how to do just that). */
     mjr::ramCanvas3c8b anotherRamCanvas(BSIZ, BSIZ);
-    mjr::color3c8b bColor;
+    mjr::ramCanvas3c8b::colorType bColor;
     for(int yi=0;yi<theRamCanvas.get_numYpix();yi++)
       for(int xi=0;xi<theRamCanvas.get_numXpix();xi++)
         anotherRamCanvas.drawPoint(xi, yi, bColor.cmpColorRamp(static_cast<int>(theRamCanvas.getPxColor(xi, yi).getRed() * 1275 / maxII), "0RYBCW"));

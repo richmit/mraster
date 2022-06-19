@@ -47,7 +47,7 @@ int main(void) {
 
   mjr::ramCanvasRGB8b::colorChanType red=0, blue=0, green=0;
   uint32_t count=0;
-  mjr::color3c8b aColor;
+  mjr::ramCanvas3c8b::colorType aColor;
   for(int y=0;y<theRamCanvas_int.get_numYpix();y++) {
     for(int x=0;x<theRamCanvas_int.get_numXpix();x++) {
       aColor.setColorFromPackedInt(count, 0, 1, 2, 3);

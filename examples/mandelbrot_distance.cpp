@@ -74,10 +74,10 @@ int main(void) {
               dist=2.0*std::log(std::abs(z))*std::abs(z)/der_mag;
               if(dist < DISTTH) {
                 theRamCanvas.drawPoint(x, y, "blue");
-                //theRamCanvas.drawPoint(x, y, mjr::color3c8b(int(100000*dist)%156+100, int(150000*dist)%156+100, 0));
+                //theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(int(100000*dist)%156+100, int(150000*dist)%156+100, 0));
               } else {
                 theRamCanvas.drawPoint(x, y, "yellow");
-                //theRamCanvas.drawPoint(x, y, mjr::color3c8b(255-int(40*dist)%156+100, int(75*dist)%256, 0));
+                //theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(255-int(40*dist)%156+100, int(75*dist)%256, 0));
               }
             } else {
               theRamCanvas.drawPoint(x, y, "white");

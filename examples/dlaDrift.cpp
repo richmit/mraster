@@ -37,9 +37,9 @@ int main(int argc, char *argv[]) {
   int numHits = 1, numHitsRel = 0, numClipRel = 0, numCloseRel = 0, linesPrinted = 0;
   std::random_device rd;
   std::minstd_rand0 rEng(rd());
-  auto timestamp_time_t = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+  auto startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
   mjr::ramCanvas3c8b theRamCanvas(7680/2, 4320/2, -2.2, 2.2, -2.2, 2.2);
-  theRamCanvas.clrCanvas(mjr::color3c8b(255, 0, 0));
+  theRamCanvas.clrCanvas(mjr::ramCanvas3c8b::colorType(255, 0, 0));
   int MAXNUMPT = 524288; // Number of random points to pick
   int MAXCOUNT = 524288; // Number of times to move each random point
 
@@ -93,7 +93,7 @@ int main(int argc, char *argv[]) {
            theRamCanvas.getPxColor(x-1, y+1).getBlue() ||
            theRamCanvas.getPxColor(x-1, y-1).getBlue()
           ) {
-          theRamCanvas.drawPoint(x, y, mjr::color3c8b(0, 0, 255));
+          theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0, 0, 255));
           numHits++;
           numHitsRel++;
           break;
@@ -120,5 +120,5 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
-  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - timestamp_time_t)/(60.0) << " min" << std::endl;
+  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - startTime)/(60.0) << " min" << std::endl;
 }

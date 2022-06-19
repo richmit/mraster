@@ -37,11 +37,11 @@
 
 int main(void) {
   mjr::ramCanvas3c8b theRamCanvas(512, 512, -2.0, 2, -2, 2);
-  mjr::color3c8b aColor;
+  mjr::ramCanvas3c8b::colorType aColor;
 
   for(int x=0; x<512; x++) {
-    theRamCanvas.drawLine(x,   0, x, 250, aColor.interplColors(   x/512.0, mjr::color3c8b("R"), mjr::color3c8b("C")));
-    theRamCanvas.drawLine(x, 260, x, 512, aColor.interplColorsHLS(x/512.0, mjr::color3c8b("R"), mjr::color3c8b("C")));
+    theRamCanvas.drawLine(x,   0, x, 250, aColor.interplColors(   x/512.0, mjr::ramCanvas3c8b::colorType("R"), mjr::ramCanvas3c8b::colorType("C")));
+    theRamCanvas.drawLine(x, 260, x, 512, aColor.interplColorsHLS(x/512.0, mjr::ramCanvas3c8b::colorType("R"), mjr::ramCanvas3c8b::colorType("C")));
   }
   theRamCanvas.writeTIFFfile("color_interp_hls_vs_rgb.tiff");
 }

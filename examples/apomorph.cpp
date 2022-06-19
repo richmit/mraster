@@ -53,7 +53,7 @@ int main()
   mjr::ramCanvas3c8b theRamCanvas(CSIZE, CSIZE, -4.0, 4.0, -4.0, 4.0);
   theRamCanvas.set_drawMode(mjr::ramCanvas3c8b::drawModeType::ADDCLIP);
 
-  mjr::color3c8b aColor[] = { mjr::color3c8b(1, 0, 0), mjr::color3c8b(0, 1, 0), mjr::color3c8b(0, 0, 1) };
+  mjr::ramCanvas3c8b::colorType aColor[] = { mjr::ramCanvas3c8b::colorType(1, 0, 0), mjr::ramCanvas3c8b::colorType(0, 1, 0), mjr::ramCanvas3c8b::colorType(0, 0, 1) };
 
   std::random_device rd;
   std::minstd_rand0 rEng(rd()); // Fast is better than high quality for this application.
@@ -94,7 +94,7 @@ int main()
     }
     std::cout << "|" << std::endl;
     std::cout << "apomorph dump" << std::endl;
-    theRamCanvas.applyHomoPixTfrm(&mjr::color3c8b::tfrmStdPow, 1/5.0);
+    theRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmStdPow, 1/5.0);
     std::ostringstream stringStream;
     stringStream << "apomorph" << std::setfill('0') << std::setw(3) << frame << ".tiff";
     theRamCanvas.writeTIFFfile(stringStream.str());

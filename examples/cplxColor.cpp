@@ -87,7 +87,7 @@ int main(void) {
       double pfzArg = (fzArg < 0.0 ? 2.0 *3.141592653589793 + fzArg : fzArg) / (2.0 * 3.141592653589793);
       double fzAbs  = std::abs(fz);
       double lfzAbs = std::log(fzAbs);
-      mjr::color3c8b aColor;
+      mjr::ramCanvas3c8b::colorType aColor;
       aColor.cmpClrCubeRainbow(mjr::intWrap(mjr::unitTooIntLinMap(mjr::unitClamp(pfzArg), numColor*argWrap), numColor));
       //aColor.cmpSumRampRGB(mjr::intWrap(mjr::unitTooIntLinMap(mjr::unitClamp(pfzArg), numColor*argWrap), numColor));
       aColor.tfrmLinearGreyLevelScale(1.0 - std::fabs(int(pfzArg*argCuts) - pfzArg*argCuts)/cutDepth, 0);

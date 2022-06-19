@@ -34,7 +34,7 @@ typedef double PointType[2];
 
 int main() {
   PointType cpt = {0.0, 0.0};
-  mjr::color3c8b aColor[] = { mjr::color3c8b(255, 0, 0), mjr::color3c8b(0, 255, 0), mjr::color3c8b(0, 0, 255) };
+  mjr::ramCanvas3c8b::colorType aColor[] = { mjr::ramCanvas3c8b::colorType(255, 0, 0), mjr::ramCanvas3c8b::colorType(0, 255, 0), mjr::ramCanvas3c8b::colorType(0, 0, 255) };
   PointType pts[] = {{0.0, 0.8}, {-0.8, -0.8}, {0.8, -0.8}};
   int NumPts = 3;
 

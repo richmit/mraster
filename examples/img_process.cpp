@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
   //mjr::ramCanvas4c8b listOcanv[16];
   //mjr::ramCanvas1c16b listOcanv[16];
   //mjr::ramCanvas1c8b listOcanv[16];
-  mjr::color3c8b aColor;
+  mjr::ramCanvas3c8b::colorType aColor;
   int rRet;
 
   int numFiles=argc-1;
@@ -108,8 +108,8 @@ int main(int argc, char *argv[]) {
   /* **************************************************************************************************************************************************************** */
   // listOcanv[0].writeTIFFfile("in1.tiff");
   // listOcanv[1].writeTIFFfile("in2.tiff");
-  // listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmAnd, color3c8b(0xF0, 0xF0, 0xF0));
-  // listOcanv[1].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmShiftR, color3c8b(4, 4, 4));
+  // listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmAnd, mjr::ramCanvas3c8b::colorType(0xF0, 0xF0, 0xF0));
+  // listOcanv[1].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmShiftR, mjr::ramCanvas3c8b::colorType(4, 4, 4));
   // listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmOr, listOcanv[1]);
   // listOcanv[0].writeTIFFfile("cmb.tiff");
 
@@ -119,8 +119,8 @@ int main(int argc, char *argv[]) {
   /* **************************************************************************************************************************************************************** */
   // listOcanv[1].reallocCanvas(listOcanv[0].get_numXpix(), listOcanv[0].get_numYpix());
   // listOcanv[1].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmCopy, listOcanv[0]);
-  // listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmAnd, color3c8b(0xF0, 0xF0, 0xF0));
-  // listOcanv[1].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmShiftL, color3c8b(4, 4, 4));
+  // listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmAnd, mjr::ramCanvas3c8b::colorType(0xF0, 0xF0, 0xF0));
+  // listOcanv[1].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmShiftL, mjr::ramCanvas3c8b::colorType(4, 4, 4));
   // listOcanv[0].writeTIFFfile("out1.tiff");
   // listOcanv[1].writeTIFFfile("out2.tiff");
 
@@ -128,22 +128,22 @@ int main(int argc, char *argv[]) {
   /* **************************************************************************************************************************************************************** */
   /* Various homogenious transformations                                                              */
   /* **************************************************************************************************************************************************************** */
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmStep, color3c8b(150, 150, 150), color3c8b(200, 200, 200));
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmSaw, color3c8b(150, 150, 150), color3c8b(200, 200, 200));
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmShiftL, color3c8b(4, 4, 4));
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmShiftR, color3c8b(4, 4, 4));
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmAnd, color3c8b(0x00, 0xFF, 0x00));
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmOr, color3c8b(0xFF, 0x00, 0x00));
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmXor, color3c8b(0xF0, 0x0F, 0x0F));
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmStep, mjr::ramCanvas3c8b::colorType(150, 150, 150), mjr::ramCanvas3c8b::colorType(200, 200, 200));
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmSaw, mjr::ramCanvas3c8b::colorType(150, 150, 150), mjr::ramCanvas3c8b::colorType(200, 200, 200));
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmShiftL, mjr::ramCanvas3c8b::colorType(4, 4, 4));
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmShiftR, mjr::ramCanvas3c8b::colorType(4, 4, 4));
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmAnd, mjr::ramCanvas3c8b::colorType(0x00, 0xFF, 0x00));
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmOr, mjr::ramCanvas3c8b::colorType(0xFF, 0x00, 0x00));
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmXor, mjr::ramCanvas3c8b::colorType(0xF0, 0x0F, 0x0F));
   //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmInvert);
   //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmNot);
   //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmStdPow, 0.7);
   //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmStdPow, 0.9, 0.8, 0.7);
   //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmLinearGreyLevelScale, 2.0, 150.0);
   //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmLinearGreyLevelScale, 2, 150, 0, 0, 1, 0); // no workie
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmDirac, color3c8b(0xF0, 0x0F, 0x0F));
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmFuzzyDirac, color3c8b(0xF0, 0x0F, 0x0F), color3c8b(0x0F, 0x0F, 0x0F));
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmDiracTot, color3c8b(0xF0, 0x0F, 0x0F));
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmDirac, mjr::ramCanvas3c8b::colorType(0xF0, 0x0F, 0x0F));
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmFuzzyDirac, mjr::ramCanvas3c8b::colorType(0xF0, 0x0F, 0x0F), mjr::ramCanvas3c8b::colorType(0x0F, 0x0F, 0x0F));
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmDiracTot, mjr::ramCanvas3c8b::colorType(0xF0, 0x0F, 0x0F));
   //listOcanv[0].writeTIFFfile("img_process.tiff");
 
   /* **************************************************************************************************************************************************************** */

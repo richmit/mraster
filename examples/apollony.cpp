@@ -63,9 +63,9 @@ int main()
   theRamCanvas.set_drawMode(mjr::ramCanvas3c8b::drawModeType::ADDCLIP);
 
 #if SUPPORT_DRAWING_MODE
-  mjr::color3c8b aColor[] = { mjr::color3c8b(1, 0, 0), mjr::color3c8b(0, 1, 0), mjr::color3c8b(0, 0, 1) };
+  mjr::ramCanvas3c8b::colorType aColor[] = { mjr::ramCanvas3c8b::colorType(1, 0, 0), mjr::ramCanvas3c8b::colorType(0, 1, 0), mjr::ramCanvas3c8b::colorType(0, 0, 1) };
 #else
-  mjr::color3c8b aColor[] = { mjr::color3c8b(255, 0, 0), mjr::color3c8b(0, 255, 0), mjr::color3c8b(0, 0, 255) };
+  mjr::ramCanvas3c8b::colorType aColor[] = { mjr::ramCanvas3c8b::colorType(255, 0, 0), mjr::ramCanvas3c8b::colorType(0, 255, 0), mjr::ramCanvas3c8b::colorType(0, 0, 255) };
 #endif
 
   std::random_device rd;
@@ -104,7 +104,7 @@ int main()
   }
   std::cout << "|" << std::endl;
   std::cout << "apollony dump" << std::endl;
-  theRamCanvas.applyHomoPixTfrm(&mjr::color3c8b::tfrmStdPow, 1/5.0);
+  theRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmStdPow, 1/5.0);
   theRamCanvas.writeTIFFfile("apollony.tiff");
   std::cout << "apollony finish" << std::endl;
   return 0;

@@ -34,15 +34,15 @@ int main(void) {
   mjr::ramCanvasRGB8b theRamCanvas(1024, 1024);
   mjr::colorRGB8b aColor(0,0,0);
 
-//  mjr::color3c8b corners[7] = { color3c8b("red"),   color3c8b("yellow"),
-//                           color3c8b("green"), color3c8b("cyan"),
-//                           color3c8b("blue"),  color3c8b("magenta"),
-//                           color3c8b("red")};
+//  mjr::ramCanvas3c8b::colorType corners[7] = { mjr::ramCanvas3c8b::colorType("red"),   mjr::ramCanvas3c8b::colorType("yellow"),
+//                           mjr::ramCanvas3c8b::colorType("green"), mjr::ramCanvas3c8b::colorType("cyan"),
+//                           mjr::ramCanvas3c8b::colorType("blue"),  mjr::ramCanvas3c8b::colorType("magenta"),
+//                           mjr::ramCanvas3c8b::colorType("red")};
 //
-//  mjr::color3c8b corners2[7] = { color3c8b(color3c8b::cornerColors::RED),   color3c8b(color3c8b::cornerColors::YELLOW),
-//                            color3c8b(color3c8b::cornerColors::GREEN), color3c8b(color3c8b::cornerColors::CYAN),
-//                            color3c8b(color3c8b::cornerColors::BLUE),  color3c8b(color3c8b::cornerColors::MAGENTA),
-//                            color3c8b(color3c8b::cornerColors::RED)};
+//  mjr::ramCanvas3c8b::colorType corners2[7] = { mjr::ramCanvas3c8b::colorType(mjr::ramCanvas3c8b::colorType::cornerColors::RED),   mjr::ramCanvas3c8b::colorType(mjr::ramCanvas3c8b::colorType::cornerColors::YELLOW),
+//                            mjr::ramCanvas3c8b::colorType(mjr::ramCanvas3c8b::colorType::cornerColors::GREEN), mjr::ramCanvas3c8b::colorType(mjr::ramCanvas3c8b::colorType::cornerColors::CYAN),
+//                            mjr::ramCanvas3c8b::colorType(mjr::ramCanvas3c8b::colorType::cornerColors::BLUE),  mjr::ramCanvas3c8b::colorType(mjr::ramCanvas3c8b::colorType::cornerColors::MAGENTA),
+//                            mjr::ramCanvas3c8b::colorType(mjr::ramCanvas3c8b::colorType::cornerColors::RED)};
 //
 //  double anchors[7] = {0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
 //  for(int i=0; i<7; i++)

@@ -34,7 +34,7 @@
 
 int main(void) {
   mjr::ramCanvas3c8b theRamCanvas(450, 832);
-  mjr::color3c8b aColor;
+  mjr::ramCanvas3c8b::colorType aColor;
   for(int doWS=0; doWS<2; doWS++) {
     int i = 0;
     for(int x=0;x<48;x++) {

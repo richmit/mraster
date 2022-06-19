@@ -110,7 +110,7 @@ int main(void) {
   std::vector<solMethNV> methodsToDo({solMethNV::NEWTON, solMethNV::HALLEY, solMethNV::LAGUERRE});
 
   for(auto method : methodsToDo) {
-    mjr::color3c8b aColor(255, 255, 255);
+    mjr::ramCanvas3c8b::colorType aColor(255, 255, 255);
 
     for(int y=0;y<theRamCanvas.get_numYpix();y++) {
       if(y%512==0)
@@ -214,7 +214,7 @@ int main(void) {
           case whyStopNV::TOOLONG   : theRamCanvas.drawPoint(x, y, aColor.cmpColorRamp((mcol)%(2*256),      "MWM")); break;
           case whyStopNV::CONVERGEU : theRamCanvas.drawPoint(x, y, aColor.cmpColorRamp((mcol+ccol)%(2*256), "BWB")); break;
           case whyStopNV::CONVERGEL : theRamCanvas.drawPoint(x, y, aColor.cmpColorRamp((mcol+ccol)%(2*256), "RWR")); break;
-          case whyStopNV::TOOBIG    : theRamCanvas.drawPoint(x, y, mjr::color3c8b(0,        0,        0));           break;
+          case whyStopNV::TOOBIG    : theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0,        0,        0));           break;
           case whyStopNV::DIVZERO   : theRamCanvas.drawPoint(x, y, aColor.cmpColorRamp((mcol+ccol)%(2*256), "CWC")); break;
         }
       }

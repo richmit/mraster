@@ -70,17 +70,17 @@ void drawLevelCurves(int numBand, drT bandWidth, drT zMin, drT zMax, drT minReal
     for(x=0;x<theRamCanvas.get_numXpix();x++) {
       fxy = f(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
       if(fxy < zMin) {
-        theRamCanvas.setDfltColor(mjr::color3c8b(255, 0, 0));
+        theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType(255, 0, 0));
       } else {
         if(fxy > zMax) {
-        theRamCanvas.setDfltColor(mjr::color3c8b(0, 255, 0));
+        theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType(0, 255, 0));
         } else {
           if(numBand == 0) {
             clr = (int)((zMax-fxy)/(zMax-zMin)*250);
-            theRamCanvas.setDfltColor(mjr::color3c8b().cmpGrey(clr));
+            theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType().cmpGrey(clr));
           } else {
             if(bandWidth == 0) {
-              theRamCanvas.setDfltColor(mjr::color3c8b(0, 0, 255));
+              theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType(0, 0, 255));
               foundBand=0;
               minDist = (zMax-zMin+1);
               minBand = 0.0;
@@ -93,15 +93,15 @@ void drawLevelCurves(int numBand, drT bandWidth, drT zMin, drT zMax, drT minReal
               }
               if(foundBand) {
                 clr = (int)((zMax-minBand)/(zMax-zMin)*250);
-                theRamCanvas.setDfltColor(mjr::color3c8b().cmpGrey(clr));
+                theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType().cmpGrey(clr));
               }
             } else {
-              theRamCanvas.setDfltColor(mjr::color3c8b(0, 0, 255));
+              theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType(0, 0, 255));
               foundBand=0;
               for(band=zMax; band>zMin; band=band-bandGap) {
                 if(fabs(band-fxy) < bandWidth) {
                   clr = (int)((zMax-fxy)/(zMax-zMin)*250);
-                  theRamCanvas.setDfltColor(mjr::color3c8b(255, 255, 255));
+                  theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType(255, 255, 255));
                   foundBand = 1;
                   break;
                 }

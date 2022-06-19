@@ -59,7 +59,7 @@ int main(void) {
   //mjr::ramCanvas3c8b theRamCanvas(3840/4, 2160/4, -3.0, 3.0, -3.0, 3.0);
   mjr::ramCanvas3c8b theRamCanvas(1080*4, 1080*4, 0.6, 1.1, -0.4, 0.4);
 
-  mjr::color3c8b aColor(255, 255, 255);
+  mjr::ramCanvas3c8b::colorType aColor(255, 255, 255);
 
   for(int y=0;y<theRamCanvas.get_numYpix();y++) {
     std::cout << "Line: " << y << std::endl;
@@ -124,7 +124,7 @@ int main(void) {
         case whyStopNH::TOOLONG   : theRamCanvas.drawPoint(x, y, aColor.cmpColorRamp((mcol)%(2*256),      "MWM")); break;
         case whyStopNH::CONVERGEU : theRamCanvas.drawPoint(x, y, aColor.cmpColorRamp((mcol+ccol)%(2*256), "BWB")); break;
         case whyStopNH::CONVERGEL : theRamCanvas.drawPoint(x, y, aColor.cmpColorRamp((mcol+ccol)%(2*256), "RWR")); break;
-        case whyStopNH::TOOBIG    : theRamCanvas.drawPoint(x, y, mjr::color3c8b(0,        0,        0));           break;
+        case whyStopNH::TOOBIG    : theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0,        0,        0));           break;
         case whyStopNH::DIVZERO   : theRamCanvas.drawPoint(x, y, aColor.cmpColorRamp((mcol+ccol)%(2*256), "CWC")); break;
       }
     }
