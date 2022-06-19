@@ -37,7 +37,7 @@ int main(void) {
   const int CSIZE  = 7680;
   const int LIM    = 4;
   int count;
-  std::complex<float> oneone(1,1), z;
+  std::complex<double> oneone(1,1), z;
 
   mjr::ramCanvas3c8b theRamCanvasA(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
   mjr::ramCanvas3c8b theRamCanvasB(CSIZE, CSIZE, 0.2, 1.2, 0.2, 1.2);
@@ -58,7 +58,7 @@ int main(void) {
     for(int x=0;x<theRamCanvasA.get_numXpix();x++) {
       for(z=std::complex<double>(theRamCanvasA.int2realX(x),theRamCanvasA.int2realY(y)),count=0;
           ((std::abs(std::real(z))<LIM)||(std::abs(std::imag(z))<LIM))&&(count<=NUMITR);
-          count++,z=static_cast<std::complex<float>>(std::pow(z, 5))+oneone) ;
+          count++,z=static_cast<std::complex<double>>(std::pow(z, 5))+oneone) ;
       if(count < NUMITR) {
         // A
         theRamCanvasA.drawPoint(x, y, mjr::color3c8b().cmpClrCubeRainbow(mjr::intWrap(count*500, 255*6+1)));

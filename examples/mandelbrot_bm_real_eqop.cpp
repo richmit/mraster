@@ -3,7 +3,7 @@
 /**
  @file      mandelbrot_bm_real_eqop.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Benchmark drawing a mandelbrot set using floating point types and arithmetic only.@EOL
+ @brief     Benchmark drawing a mandelbrot set using doubleing point types and arithmetic only.@EOL
  @std       C++98
  @copyright
   @parblock
@@ -39,11 +39,11 @@ int main(void) {
 
   for(int y=0;y<theRamCanvas.get_numYpix();y++) {
     for(int x=0;x<theRamCanvas.get_numXpix();x++) {
-        mjr::ramCanvas3c8b::rcCordFlt xr = theRamCanvas.int2realX(x);
-        mjr::ramCanvas3c8b::rcCordFlt yr = theRamCanvas.int2realY(y);
-        mjr::ramCanvas3c8b::rcCordFlt zx = 0.0;
-        mjr::ramCanvas3c8b::rcCordFlt zy = 0.0;
-        mjr::ramCanvas3c8b::rcCordFlt zx2, zy2, tmp;
+        mjr::ramCanvas3c8b::coordFltType xr = theRamCanvas.int2realX(x);
+        mjr::ramCanvas3c8b::coordFltType yr = theRamCanvas.int2realY(y);
+        mjr::ramCanvas3c8b::coordFltType zx = 0.0;
+        mjr::ramCanvas3c8b::coordFltType zy = 0.0;
+        mjr::ramCanvas3c8b::coordFltType zx2, zy2, tmp;
         int count = 0;
         do {
           zx2 = zx * zx;

@@ -44,19 +44,19 @@ int main(void) {
   mjr::colorRGB8b dColor(mjr::colorRGB8b::cornerColor::CYAN);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointInt({2, 2}),                      aColor);  // Initializeer list
-  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointInt(4, 2),                        bColor);  // two arg
-  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointInt(std::tuple<int,int>(6, 2)),   aColor);  // tuple<int,int>
-  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointInt(std::tuple<int,short>(8, 2)), bColor);  // tuple<int,short>
-  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointInt(std::complex<int>(10, 2)),    aColor);  // complex<int>
+  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointIntType({2, 2}),                      aColor);  // Initializeer list
+  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointIntType(4, 2),                        bColor);  // two arg
+  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointIntType(std::tuple<int,int>(6, 2)),   aColor);  // tuple<int,int>
+  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointIntType(std::tuple<int,short>(8, 2)), bColor);  // tuple<int,short>
+  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointIntType(std::complex<int>(10, 2)),    aColor);  // complex<int>
 #ifndef __clang__
-  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointInt(std::complex<short>(12, 2)),  bColor);  // complex<short>
+  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointIntType(std::complex<short>(12, 2)),  bColor);  // complex<short>
 #endif
-  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointInt(std::vector<int>({14, 2})),   aColor);  // vector<int)
+  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointIntType(std::vector<int>({14, 2})),   aColor);  // vector<int)
   int aArI[2] = {16, 2};
-  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointInt(aArI),                        bColor);  // array of int
+  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointIntType(aArI),                        bColor);  // array of int
   int aArS[2] = {18, 2};
-  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointInt(aArS),                        aColor);  // array of short
+  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointIntType(aArS),                        aColor);  // array of short
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   theRamCanvas.drawPoint(std::complex<int>(2, 4),     bColor);  // complex<int>    -- complex<short>   no work
@@ -64,19 +64,19 @@ int main(void) {
   theRamCanvas.drawPoint(std::vector<int>({6, 4}),    bColor);  // vector<int>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointFlt({2, 2}),                       cColor);  // Initializeer list
-  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointFlt(4, 2),                         dColor);  // two arg
-  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointFlt(std::tuple<int,int>(6, 2)),    cColor);  // tuple<int,int>
-  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointFlt(std::tuple<int,short>(8, 2)),  dColor);  // tuple<int,short>
-  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointFlt(std::complex<float>(10, 2)),   cColor);  // complex<float>
-  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointFlt(std::complex<double>(12, 2)),  dColor);  // complex<float>
-  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointFlt(std::vector<double>({14, 2})), cColor);  // vector<double>
+  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType({2, 2}),                       cColor);  // Initializeer list
+  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(4, 2),                         dColor);  // two arg
+  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(std::tuple<int,int>(6, 2)),    cColor);  // tuple<int,int>
+  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(std::tuple<int,short>(8, 2)),  dColor);  // tuple<int,short>
+  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(std::complex<double>(10, 2)),   cColor);  // complex<double>
+  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(std::complex<double>(12, 2)),  dColor);  // complex<double>
+  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(std::vector<double>({14, 2})), cColor);  // vector<double>
   double aArD[2] = {16, 2};
-  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::rcPointFlt(aArD),                         dColor);  // array of double
+  theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(aArD),                         dColor);  // array of double
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  theRamCanvas.drawPoint(std::complex<double>(2, 4),       dColor);  // complex<double>   -- complex<float> no work
-  theRamCanvas.drawPoint(std::tuple<double,double>(4, 4),  cColor);  // tuple<double,double>  -- tuple<float,float> no work
+  theRamCanvas.drawPoint(std::complex<double>(2, 4),       dColor);  // complex<double>   -- complex<double> no work
+  theRamCanvas.drawPoint(std::tuple<double,double>(4, 4),  cColor);  // tuple<double,double>  -- tuple<double,double> no work
   theRamCanvas.drawPoint(std::vector<double>({6, 4}),      dColor);  // vector<double>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

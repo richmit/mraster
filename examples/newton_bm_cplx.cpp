@@ -33,10 +33,10 @@
 #include <complex>                                                       /* Complex Numbers         C++11    */
 
 int main(void) {
-  const float pi       = 3.14159265359F;
+  const double pi       = 3.14159265359;
   int         MaxCount = 255;
   int         MultCol  = 15;
-  float       Tol      = .0001F;
+  double       Tol      = .0001;
   mjr::ramCanvas3c8b theRamCanvas(4096, 4096, -2.0, 2, -2, 2); // -0.9, -0.7, -0.1, 0.1
 
   std::complex<double> r1( 1.0,            0);

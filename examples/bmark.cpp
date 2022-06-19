@@ -85,7 +85,7 @@ int main(void) {
   std::cout << "Starting DO_CLIP_LINE" << std::endl;
   for(int i=0;i<REPS/16;i++)
     for(int j=0; j<BSIZE*2; j++) {
-      float a = static_cast<float>(j) * 6.2831F / (BSIZE * 2.0F);
+      double a = static_cast<double>(j) * 6.2831 / (BSIZE * 2.0);
       int  x1 = static_cast<int>(BSIZE * std::cos(a));
       int  y1 = static_cast<int>(BSIZE * std::sin(a));
       if(j%2)

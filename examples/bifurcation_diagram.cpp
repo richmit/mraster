@@ -34,14 +34,14 @@
 
 int main(void) {
   mjr::ramCanvas1c16b theRamCanvas(7680, 7680, 2.5, 4, -0.1, 1.1);
-  for(mjr::ramCanvas1c16b::rcCordFlt r=theRamCanvas.get_minRealX(); r<theRamCanvas.get_maxRealX(); r+=theRamCanvas.get_xPixWid()/20) {
-    mjr::ramCanvas1c16b::rcCordFlt f = 0.5;
-    mjr::ramCanvas1c16b::rcCordInt x  = theRamCanvas.real2intX(r);
+  for(mjr::ramCanvas1c16b::coordFltType r=theRamCanvas.get_minRealX(); r<theRamCanvas.get_maxRealX(); r+=theRamCanvas.get_xPixWid()/20) {
+    mjr::ramCanvas1c16b::coordFltType f = 0.5;
+    mjr::ramCanvas1c16b::coordIntType x = theRamCanvas.real2intX(r);
     for(int i=0; i<5000 && std::abs(f)<100; i++) {
       f = r*f*(1-f);
       if(i>1000) {
-        mjr::ramCanvas1c16b::rcCordInt y = theRamCanvas.real2intY(f);
-        theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColor(x, y).tfrmAddClp(mjr::color1c16b(600)));
+        mjr::ramCanvas1c16b::coordIntType y = theRamCanvas.real2intY(f);
+        theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColor(x, y).tfrmAddClp(mjr::ramCanvas1c16b::colorType(600)));
       }
     }
   }

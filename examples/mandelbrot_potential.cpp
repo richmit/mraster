@@ -150,10 +150,7 @@ int main(void) {
         if(pot >= 0) {
           pot = pot - minPot;
           pot=(0x8000-1)-pot*(0x8000-2)/(maxPot-minPot);
-          theRamCanvasG.drawPoint(x, y, static_cast<mjr::ramCanvas1c16b::rcColor::channelType>(pot));
-
-
-
+          theRamCanvasG.drawPoint(x, y, static_cast<mjr::ramCanvas1c16b::colorChanType>(pot));
         } else {
           theRamCanvasG.drawPoint(x, y, 0x8000-1);
         }

@@ -31,27 +31,27 @@
 #include "ramCanvas.hpp"
 
 int main(void) {
-  const mjr::ramCanvas3c8b::rcCordFlt pi       = 3.14159265359;
+  const mjr::ramCanvas3c8b::coordFltType pi       = 3.14159265359;
   int                                 MaxCount = 255;
   int                                 MultCol  = 15;
-  mjr::ramCanvas3c8b::rcCordFlt       Tol      = (.0001 * .0001);
+  mjr::ramCanvas3c8b::coordFltType       Tol      = (.0001 * .0001);
   mjr::ramCanvas3c8b                  theRamCanvas(4096, 4096, -2.0, 2, -2, 2); // -0.9, -0.7, -0.1, 0.1
   for(int y=0;y<theRamCanvas.get_numYpix();y++) {
     for(int x=0;x<theRamCanvas.get_numXpix();x++) {
-      mjr::ramCanvas3c8b::rcCordFlt zx = theRamCanvas.int2realX(x);
-      mjr::ramCanvas3c8b::rcCordFlt zy = theRamCanvas.int2realY(y);
+      mjr::ramCanvas3c8b::coordFltType zx = theRamCanvas.int2realX(x);
+      mjr::ramCanvas3c8b::coordFltType zy = theRamCanvas.int2realY(y);
       int count = 0;
       while(count < MaxCount                                                  &&
             ((zx-1) * (zx-1) + zy * zy >= Tol)                                &&
             ((zx+.5) * (zx+.5) + (zy-sin(2*pi/3)) * (zy-sin(2*pi/3)) >= Tol)  &&
             ((zx+.5) * (zx+.5) + (zy+sin(2*pi/3)) * (zy+sin(2*pi/3)) >= Tol)) {
-        mjr::ramCanvas3c8b::rcCordFlt botx = 3*(zx * zx - zy * zy);
-        mjr::ramCanvas3c8b::rcCordFlt boty = 3*(2 * zx * zy);
+        mjr::ramCanvas3c8b::coordFltType botx = 3*(zx * zx - zy * zy);
+        mjr::ramCanvas3c8b::coordFltType boty = 3*(2 * zx * zy);
 
-        mjr::ramCanvas3c8b::rcCordFlt mag = botx * botx + boty * boty;
+        mjr::ramCanvas3c8b::coordFltType mag = botx * botx + boty * boty;
         if (mag > 0) {
-          mjr::ramCanvas3c8b::rcCordFlt topx = (zx*zx*zx+-3.0*zx*zy*zy-1)/mag;
-          mjr::ramCanvas3c8b::rcCordFlt topy = (3.0*zx*zx*zy-zy*zy*zy)/mag;
+          mjr::ramCanvas3c8b::coordFltType topx = (zx*zx*zx+-3.0*zx*zy*zy-1)/mag;
+          mjr::ramCanvas3c8b::coordFltType topy = (3.0*zx*zx*zy-zy*zy*zy)/mag;
 
           zx = zx - (topx * botx + topy * boty);
           zy = zy - (topy * botx - topx * boty);

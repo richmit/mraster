@@ -34,7 +34,7 @@
 #include <iostream>                                                      /* C++ iostream            C++11    */
 #include <complex>                                                       /* Complex Numbers         C++11    */
 
-using cplx = std::complex<mjr::ramCanvas3c8b::rcCordFlt>;
+using cplx = std::complex<mjr::ramCanvas3c8b::coordFltType>;
 
 cplx f(cplx z);
 
@@ -83,15 +83,15 @@ int main(void) {
     for(int x=0;x<theRamCanvas.get_numXpix();x++) {
       cplx z { theRamCanvas.int2realX(x), theRamCanvas.int2realY(y) };
       cplx fz      = f(z);
-      float fzArg  = static_cast<float>(std::arg(fz));
-      float pfzArg = (fzArg < 0.0F ? 2.0F *3.141592653589793F + fzArg : fzArg) / (2.0F * 3.141592653589793F);
-      float fzAbs  = static_cast<float>(std::abs(fz));
-      float lfzAbs = std::log(fzAbs);
+      double fzArg  = std::arg(fz);
+      double pfzArg = (fzArg < 0.0 ? 2.0 *3.141592653589793 + fzArg : fzArg) / (2.0 * 3.141592653589793);
+      double fzAbs  = std::abs(fz);
+      double lfzAbs = std::log(fzAbs);
       mjr::color3c8b aColor;
       aColor.cmpClrCubeRainbow(mjr::intWrap(mjr::unitTooIntLinMap(mjr::unitClamp(pfzArg), numColor*argWrap), numColor));
       //aColor.cmpSumRampRGB(mjr::intWrap(mjr::unitTooIntLinMap(mjr::unitClamp(pfzArg), numColor*argWrap), numColor));
-      aColor.tfrmLinearGreyLevelScale(1.0F - static_cast<float>(std::fabs(int(pfzArg*argCuts) - pfzArg*argCuts)/cutDepth), 0);
-      aColor.tfrmLinearGreyLevelScale(1.0F - static_cast<float>(std::fabs(int(lfzAbs*absCuts) - lfzAbs*absCuts)/cutDepth), 0);
+      aColor.tfrmLinearGreyLevelScale(1.0 - std::fabs(int(pfzArg*argCuts) - pfzArg*argCuts)/cutDepth, 0);
+      aColor.tfrmLinearGreyLevelScale(1.0 - std::fabs(int(lfzAbs*absCuts) - lfzAbs*absCuts)/cutDepth, 0);
       theRamCanvas.drawPoint(x, y, aColor);
     }
   }

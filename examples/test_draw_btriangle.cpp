@@ -36,7 +36,7 @@ int main(void) {
   static_assert(s<11 && s>0, "ERROR: s must be in [1, 10].");
 
   mjr::ramCanvas3c8b theRamCanvas(s*170, s*100);
-  mjr::ramCanvas3c8b::rcCordInt x = 0, y = 0;
+  mjr::ramCanvas3c8b::coordIntType x = 0, y = 0;
   x = 0;
   theRamCanvas.drawFillTriangle(90*s+x, 40*s+y, 10*s+x, 10*s+y, 60*s+x, 90*s+y, "green", "red",   "blue");
   theRamCanvas.drawTriangle    (90*s+x, 40*s+y, 10*s+x, 10*s+y, 60*s+x, 90*s+y, "white");

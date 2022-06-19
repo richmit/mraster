@@ -45,7 +45,7 @@ int main(void) {
   mjr::ramCanvas3c8b theRamCanvas_rgb(4096, 4096);
   mjr::ramCanvas3c8b theRamCanvas_web(4096, 4096);
 
-  mjr::ramCanvasRGB8b::rcColor::channelType red=0, blue=0, green=0;
+  mjr::ramCanvasRGB8b::colorChanType red=0, blue=0, green=0;
   uint32_t count=0;
   mjr::color3c8b aColor;
   for(int y=0;y<theRamCanvas_int.get_numYpix();y++) {

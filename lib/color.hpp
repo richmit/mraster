@@ -30,7 +30,6 @@
 #ifndef MJR_INCLUDE_color
 
 #include <cstdint>                                                       /* std:: C stdint.h        C++11    */
-#include <cfloat>                                                        /* std:: C float.h         C++11    */
 #include <limits>                                                        /* C++ Numeric limits      C++11    */
 
 #include "ramConfig.hpp"
@@ -38,11 +37,6 @@
 
 // Put everything in the mjr namespace
 namespace mjr {
-
-  /** @name Simple Color Floating Point Types */
-  //@{
-  typedef REAL_CHAN simpleFltCompT; //!< Floating point type used for simple color types
-  //@}
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /** @name Channel Types */
@@ -95,25 +89,25 @@ namespace mjr {
       The following types define the most commonly used color/pixel types used today, and are what most users of will actually use in practice. */
   //@{
   /* uint types */
-  typedef colorTpl<colChanCont4x8,   colChan8,   colChanArth8,   REAL_CHAN, colChanNamesRGBA4x8,  4> colorRGBA8b;  //!< colorTpl: 24-bit truecolor with alpha (RGBA)
-  typedef colorTpl<colChanCont4x16,  colChan16,  colChanArth16,  REAL_CHAN, colChanNamesRGBA4x16, 4> colorRGBA16b; //!< colorTpl: 48-bit truecolor with alpha (RGBA)
+  typedef colorTpl<colChanCont4x8,   colChan8,   colChanArth8,  colChanNamesRGBA4x8,  4> colorRGBA8b;  //!< colorTpl: 24-bit truecolor with alpha (RGBA)
+  typedef colorTpl<colChanCont4x16,  colChan16,  colChanArth16, colChanNamesRGBA4x16, 4> colorRGBA16b; //!< colorTpl: 48-bit truecolor with alpha (RGBA)
 
-  typedef colorRGBA8b   color4c8b;                                                                                 //!< colorTpl: Generic 4 channel  (8-bit/channel)
-  typedef colorRGBA16b  color4c16b;                                                                                //!< colorTpl: Generic 4 channel (16-bit/channel)
+  typedef colorRGBA8b   color4c8b;                                                                     //!< colorTpl: Generic 4 channel  (8-bit/channel)
+  typedef colorRGBA16b  color4c16b;                                                                    //!< colorTpl: Generic 4 channel (16-bit/channel)
 
-  typedef colorTpl<colChanCont4x8,   colChan8,   colChanArth8,   REAL_CHAN, colChanNamesRGBA4x8,  3> colorRGB8b;   //!< colorTpl: 24-bit truecolor without alpha (RGB)
-  typedef colorTpl<colChanCont4x16,  colChan16,  colChanArth16,  REAL_CHAN, colChanNamesRGBA4x16, 3> colorRGB16b;  //!< colorTpl: 48-bit truecolor with alpha (RGB)
+  typedef colorTpl<colChanCont4x8,   colChan8,   colChanArth8,  colChanNamesRGBA4x8,  3> colorRGB8b;   //!< colorTpl: 24-bit truecolor without alpha (RGB)
+  typedef colorTpl<colChanCont4x16,  colChan16,  colChanArth16, colChanNamesRGBA4x16, 3> colorRGB16b;  //!< colorTpl: 48-bit truecolor with alpha (RGB)
 
-  typedef colorRGB8b   color3c8b;                                                                                  //!< colorTpl: Generic 3 channel  (8-bit/channel)
-  typedef colorRGB16b  color3c16b;                                                                                 //!< colorTpl: Generic 3 channel (16-bit/channel)
+  typedef colorRGB8b   color3c8b;                                                                      //!< colorTpl: Generic 3 channel  (8-bit/channel)
+  typedef colorRGB16b  color3c16b;                                                                     //!< colorTpl: Generic 3 channel (16-bit/channel)
 
-  typedef colorTpl<colChanCont4x8,   colChan8,   colChanArth8,   REAL_CHAN, colChanNamesRGBA4x8,  2> color2c8b;    //!< colorTpl: 2 channels at  8-bits/channel
-  typedef colorTpl<colChanCont4x16,  colChan16,  colChanArth16,  REAL_CHAN, colChanNamesRGBA4x16, 2> color2c16b;   //!< colorTpl: 2 channels at 16-bits/channel
+  typedef colorTpl<colChanCont4x8,   colChan8,   colChanArth8,  colChanNamesRGBA4x8,  2> color2c8b;    //!< colorTpl: 2 channels at  8-bits/channel
+  typedef colorTpl<colChanCont4x16,  colChan16,  colChanArth16, colChanNamesRGBA4x16, 2> color2c16b;   //!< colorTpl: 2 channels at 16-bits/channel
 
-  typedef colorTpl<colChanCont1x8,   colChan8,   colChanArth8,   REAL_CHAN, colChanNames1x8,      1> color1c8b;    //!< colorTpl:  8-bit uint grey-scale
-  typedef colorTpl<colChanCont1x16,  colChan16,  colChanArth16,  REAL_CHAN, colChanNames1x16,     1> color1c16b;   //!< colorTpl: 16-bit uint grey-scale
-  typedef colorTpl<colChanCont1x32,  colChan32,  colChanArth32,  REAL_CHAN, colChanNames1x32,     1> color1c32b;   //!< colorTpl: 32-bit uint grey-scale
-  typedef colorTpl<colChanCont1x64,  colChan64,  colChanArth64,  REAL_CHAN, colChanNames1x64,     1> color1c64b;   //!< colorTpl: 64-bit uint grey-scale
+  typedef colorTpl<colChanCont1x8,   colChan8,   colChanArth8,  colChanNames1x8,      1> color1c8b;    //!< colorTpl:  8-bit uint grey-scale
+  typedef colorTpl<colChanCont1x16,  colChan16,  colChanArth16, colChanNames1x16,     1> color1c16b;   //!< colorTpl: 16-bit uint grey-scale
+  typedef colorTpl<colChanCont1x32,  colChan32,  colChanArth32, colChanNames1x32,     1> color1c32b;   //!< colorTpl: 32-bit uint grey-scale
+  typedef colorTpl<colChanCont1x64,  colChan64,  colChanArth64, colChanNames1x64,     1> color1c64b;   //!< colorTpl: 64-bit uint grey-scale
   //@}
 
 } // end namespace mjr

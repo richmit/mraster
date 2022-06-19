@@ -42,8 +42,8 @@ int main(void) {
   mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -1, 1, -1, 1);
   double x=0.0, y=0.0, xNew, yNew;
 
-  float a[12] = {-0.6599F, -0.2F, 1.1F, 0.2F, -0.81F, 0.61F, -0.7F, 0.71F, 0.7F, 0.28F, 0.19F, 0.89F};
-  float p = 1.7F;
+  double a[12] = {-0.6599, -0.2, 1.1, 0.2, -0.81, 0.61, -0.7, 0.71, 0.7, 0.28, 0.19, 0.89};
+  double p = 1.7;
 
     /* Draw the atractor on a 16-bit, greyscale canvas -- the grey level will be an integer represeting the hit count for that pixel.  This is a good example
        of how an image can have pixel values that are generic "data" as well as color information. */

@@ -58,10 +58,10 @@ int main(int argc, char *argv[]) {
     MAXCOUNT = std::stoi(argv[3]);
 
   for(int tgtLumPct=1;tgtLumPct<=100;tgtLumPct+=10) {
-    float tgtLum=static_cast<float>(tgtLumPct) / 100.0F;
+    double tgtLum=tgtLumPct / 100.0;
 
     for(int numItr=1;numItr<MAXCOUNT;numItr++) {
-      mjr::ramCanvas3c8b::rcCordInt xC, yC;
+      mjr::ramCanvas3c8b::coordIntType xC, yC;
       xC = rEng() % theRamCanvas.get_numXpix();
       yC = rEng() % theRamCanvas.get_numYpix();
 
@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
         int    maxDir = -1;
         int    lum0ct = 0;
         for(int curDir=0; curDir<8; curDir++) {
-          mjr::ramCanvas3c8b::rcCordInt xN, yN;
+          mjr::ramCanvas3c8b::coordIntType xN, yN;
           xN = xC+stenX[curDir];
           yN = yC+stenY[curDir];
           if(xN>=0 && yN>=0 && xN<theRamCanvas.get_numXpix() && yN<theRamCanvas.get_numYpix()) {
@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
         // If sourounted by zeros, then random move
         if(lum0ct==8) {
           int curDir = rEng() % 8;
-          mjr::ramCanvas3c8b::rcCordInt xN, yN;
+          mjr::ramCanvas3c8b::coordIntType xN, yN;
           xN = xC+stenX[curDir];
           yN = yC+stenY[curDir];
           if(xN>=0 && yN>=0 && xN<theRamCanvas.get_numXpix() && yN<theRamCanvas.get_numYpix()) {
@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
         }
 
         if(maxDir > -1) {
-          mjr::ramCanvas3c8b::rcCordInt xN, yN;
+          mjr::ramCanvas3c8b::coordIntType xN, yN;
           xN = xC+stenX[maxDir];
           yN = yC+stenY[maxDir];
 

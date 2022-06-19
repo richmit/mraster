@@ -38,7 +38,7 @@
 int main(void) {
   int x, y;
   int redX=512, redY=512, blueX=1024, blueY=512, greenX=768, greenY=956;
-  float sLength = 512;
+  double sLength = 512;
   mjr::color3c8b color;
   mjr::ramCanvas3c8b theRamCanvas_tru(1536, 1536);
   mjr::ramCanvas3c8b theRamCanvas_web(1536, 1536);

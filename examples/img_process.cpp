@@ -108,9 +108,9 @@ int main(int argc, char *argv[]) {
   /* **************************************************************************************************************************************************************** */
   // listOcanv[0].writeTIFFfile("in1.tiff");
   // listOcanv[1].writeTIFFfile("in2.tiff");
-  // listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmAnd, color3c8b(0xF0, 0xF0, 0xF0));
-  // listOcanv[1].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmShiftR, color3c8b(4, 4, 4));
-  // listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmOr, listOcanv[1]);
+  // listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmAnd, color3c8b(0xF0, 0xF0, 0xF0));
+  // listOcanv[1].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmShiftR, color3c8b(4, 4, 4));
+  // listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmOr, listOcanv[1]);
   // listOcanv[0].writeTIFFfile("cmb.tiff");
 
   /* **************************************************************************************************************************************************************** */
@@ -118,9 +118,9 @@ int main(int argc, char *argv[]) {
   /* Extract two images that have been combined.                                                      */
   /* **************************************************************************************************************************************************************** */
   // listOcanv[1].reallocCanvas(listOcanv[0].get_numXpix(), listOcanv[0].get_numYpix());
-  // listOcanv[1].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmCopy, listOcanv[0]);
-  // listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmAnd, color3c8b(0xF0, 0xF0, 0xF0));
-  // listOcanv[1].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmShiftL, color3c8b(4, 4, 4));
+  // listOcanv[1].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmCopy, listOcanv[0]);
+  // listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmAnd, color3c8b(0xF0, 0xF0, 0xF0));
+  // listOcanv[1].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmShiftL, color3c8b(4, 4, 4));
   // listOcanv[0].writeTIFFfile("out1.tiff");
   // listOcanv[1].writeTIFFfile("out2.tiff");
 
@@ -128,54 +128,54 @@ int main(int argc, char *argv[]) {
   /* **************************************************************************************************************************************************************** */
   /* Various homogenious transformations                                                              */
   /* **************************************************************************************************************************************************************** */
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmStep, color3c8b(150, 150, 150), color3c8b(200, 200, 200));
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmSaw, color3c8b(150, 150, 150), color3c8b(200, 200, 200));
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmShiftL, color3c8b(4, 4, 4));
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmShiftR, color3c8b(4, 4, 4));
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmAnd, color3c8b(0x00, 0xFF, 0x00));
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmOr, color3c8b(0xFF, 0x00, 0x00));
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmXor, color3c8b(0xF0, 0x0F, 0x0F));
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmInvert);
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmNot);
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmStdPow, 0.7);
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmStdPow, 0.9, 0.8, 0.7);
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmLinearGreyLevelScale, 2.0, 150.0);
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmLinearGreyLevelScale, 2, 150, 0, 0, 1, 0); // no workie
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmDirac, color3c8b(0xF0, 0x0F, 0x0F));
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmFuzzyDirac, color3c8b(0xF0, 0x0F, 0x0F), color3c8b(0x0F, 0x0F, 0x0F));
-  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::rcColor::tfrmDiracTot, color3c8b(0xF0, 0x0F, 0x0F));
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmStep, color3c8b(150, 150, 150), color3c8b(200, 200, 200));
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmSaw, color3c8b(150, 150, 150), color3c8b(200, 200, 200));
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmShiftL, color3c8b(4, 4, 4));
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmShiftR, color3c8b(4, 4, 4));
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmAnd, color3c8b(0x00, 0xFF, 0x00));
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmOr, color3c8b(0xFF, 0x00, 0x00));
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmXor, color3c8b(0xF0, 0x0F, 0x0F));
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmInvert);
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmNot);
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmStdPow, 0.7);
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmStdPow, 0.9, 0.8, 0.7);
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmLinearGreyLevelScale, 2.0, 150.0);
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmLinearGreyLevelScale, 2, 150, 0, 0, 1, 0); // no workie
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmDirac, color3c8b(0xF0, 0x0F, 0x0F));
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmFuzzyDirac, color3c8b(0xF0, 0x0F, 0x0F), color3c8b(0x0F, 0x0F, 0x0F));
+  //listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmDiracTot, color3c8b(0xF0, 0x0F, 0x0F));
   //listOcanv[0].writeTIFFfile("img_process.tiff");
 
   /* **************************************************************************************************************************************************************** */
   /* **************************************************************************************************************************************************************** */
   /* Various canvas combination functions                                                             */
   /* **************************************************************************************************************************************************************** */
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmXor,      listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmAnd,      listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmOr,       listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmCopy,     listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmAbsDiff,  listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmSqDiff,   listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmSum,      listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmSumClp,   listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmDiv,      listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmMult,     listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmMultClp,  listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmMean,     listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmMean,     listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmGmean,    listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmGmeanClp, listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmDiff,     listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmDiffClp,  listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmMod,      listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmMaxL,     listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmMinL,     listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmMax,      listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmMin,      listOcanv[1]);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmMean,     listOcanv[1], 10, 20);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmMean,     listOcanv[1], 20, 10, 50, 40);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmMean,     listOcanv[1], 10, 20, 50, 60, 100, 100);
-  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::rcColor::tfrmMean,     listOcanv[1], 400, 450, 150, 60, 100, 100);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmXor,      listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmAnd,      listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmOr,       listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmCopy,     listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmAbsDiff,  listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmSqDiff,   listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmSum,      listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmSumClp,   listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmDiv,      listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmMult,     listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmMultClp,  listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmMean,     listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmMean,     listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmGmean,    listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmGmeanClp, listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmDiff,     listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmDiffClp,  listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmMod,      listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmMaxL,     listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmMinL,     listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmMax,      listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmMin,      listOcanv[1]);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmMean,     listOcanv[1], 10, 20);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmMean,     listOcanv[1], 20, 10, 50, 40);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmMean,     listOcanv[1], 10, 20, 50, 60, 100, 100);
+  //listOcanv[0].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmMean,     listOcanv[1], 400, 450, 150, 60, 100, 100);
   //listOcanv[0].writeTIFFfile("img_process.tiff");
 
   /* **************************************************************************************************************************************************************** */

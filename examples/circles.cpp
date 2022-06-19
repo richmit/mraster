@@ -170,11 +170,11 @@ int main(void) {
     // double g =  255.0*(0.5+pow(cos(42.0*pi*k/n), 2))/7.0/38.0;
     // double b =  255.0*(0.5+pow(sin(56.0*pi*k/n), 4))/7.0/48.0;
 
-    mjr::ramCanvasRGB8b::rcColor::channelType ri = static_cast<mjr::ramCanvasRGB8b::rcColor::channelType>(r);
-    mjr::ramCanvasRGB8b::rcColor::channelType gi = static_cast<mjr::ramCanvasRGB8b::rcColor::channelType>(g);
-    mjr::ramCanvasRGB8b::rcColor::channelType bi = static_cast<mjr::ramCanvasRGB8b::rcColor::channelType>(b);
+    mjr::ramCanvasRGB8b::colorChanType ri = static_cast<mjr::ramCanvasRGB8b::colorChanType>(r);
+    mjr::ramCanvasRGB8b::colorChanType gi = static_cast<mjr::ramCanvasRGB8b::colorChanType>(g);
+    mjr::ramCanvasRGB8b::colorChanType bi = static_cast<mjr::ramCanvasRGB8b::colorChanType>(b);
 
-    theRamCanvas.drawCircle(x, y, s, mjr::ramCanvasRGB8b::rcColor(ri, gi, bi));
+    theRamCanvas.drawCircle(x, y, s, mjr::ramCanvasRGB8b::colorType(ri, gi, bi));
   }
 
   // double kernel[51*51];

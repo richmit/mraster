@@ -45,30 +45,9 @@
 #define SET_ERR_COLOR setToBlack()
 #endif
 
-/** @brief Keep track of dirty parts of the canvis.@EOL
-    A rectangle is maintained that contains the dirty region of the canvas.
-    @todo Add other dirty mark methods like a dirty pixels list, list of dirty rectangels, dirty bit mask.
-    @warning This option can impose as much as a 2x penalty on drawing operations.
-        - 0 none  No dirty lists
-        - 1 one   Single dirty/not dirty
-        - 2 box   The coordinates of a single dirty box are stored */
-#ifndef DIRTY_LIST
-#define DIRTY_LIST 0
-#endif
-
-/** @brief The type to use for the dirty change index.@EOL */
-#ifndef DIRTY_INDEX_TYPE
-#define DIRTY_INDEX_TYPE unsigned int
-#endif
-
 /** @brief Float type used for fltCrdT in predefiend ramCanvasTpl types defined in ramCanvas.hpp.@EOL*/
 #ifndef REAL_CORD
 #define REAL_CORD double
-#endif
-
-/** @brief Float type used for fltCompT in predefiend colorTpl types defined in color.hpp.@EOL */
-#ifndef REAL_CHAN
-#define REAL_CHAN float
 #endif
 
 /** @brief Int type used for intCrdT in predefined ramCanvasTpl types defined in ramCanvas.hpp.@EOL */
@@ -101,7 +80,6 @@ namespace mjr {
     //@{
       static int support_always_preserve_alpha() { return SUPPORT_ALWAYS_PRESERVE_ALPHA; }
       static int support_drawing_mode()          { return SUPPORT_DRAWING_MODE; }
-      static int dirty_list()                    { return DIRTY_LIST; }
     //@}
   };
 

@@ -81,7 +81,7 @@ int main(void) {
     }
 
     // Root image transform
-    theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmStdPow, static_cast<float>(1/p));
+    theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmStdPow, 1.0/p);
     maxII = static_cast<uint64_t>(65535.0 * pow(static_cast<double>(maxII)/65535.0, 1.0/p));
 
     /* Create a new image based on an integer color scale -- this one is 24-bit RGB color.  This isn't the most efficient technique from a RAM perspective in

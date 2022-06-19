@@ -72,9 +72,9 @@ int main()
   std::minstd_rand0 rEng(rd()); // Fast is better than high quality for this application.
 
   const double s = 1.73205080757;
-  const std::complex<double> i(0.0, 1.0);
-  const std::complex<double> si(0.0, s);
-  const std::complex<double> c1 = (1.0+s)/(2.0+s);
+  const std::complex<double> i(0, 1);
+  const std::complex<double> si(0, s);
+  const std::complex<double> c1 = (1+s)/(2+s);
   const std::complex<double> c2 =  0.5*(si-1.0);
   const std::complex<double> c3 = -0.5*(si+1.0);
   const std::complex<double> c4 = 1.0+s;
@@ -104,7 +104,7 @@ int main()
   }
   std::cout << "|" << std::endl;
   std::cout << "apollony dump" << std::endl;
-  theRamCanvas.applyHomoPixTfrm(&mjr::color3c8b::tfrmStdPow, 1/5.0F);
+  theRamCanvas.applyHomoPixTfrm(&mjr::color3c8b::tfrmStdPow, 1/5.0);
   theRamCanvas.writeTIFFfile("apollony.tiff");
   std::cout << "apollony finish" << std::endl;
   return 0;

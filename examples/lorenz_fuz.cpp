@@ -33,7 +33,7 @@
 #include <iostream>                                                      /* C++ iostream            C++11    */
 
 int main(void) {
-  float p = 1.75F;
+  double p = 1.75;
   const int XSIZ = 7680/1;
   const int YSIZ = 4320/1;
   uint64_t maxII = 0;
@@ -133,8 +133,8 @@ int main(void) {
   theRamCanvas.writeRAWfile("lorenz_fuz.mrw");
 
   // Root image transform
-  theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmStdPow, 1.0F / p);
-  maxII = static_cast<uint64_t>(65535.0 * std::pow(static_cast<float>(maxII) / 65535.0F, 1.0F / p));
+  theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmStdPow, 1.0 / p);
+  maxII = static_cast<uint64_t>(65535.0 * std::pow(static_cast<double>(maxII) / 65535.0, 1.0 / p));
 
   // Log image transform
   // theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmLn);

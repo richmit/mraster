@@ -3,7 +3,7 @@
 /**
  @file      mandelbrot_bm_real.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Benchmark drawing a mandelbrot set using floating point types and arithmetic only.@EOL
+ @brief     Benchmark drawing a mandelbrot set using doubleing point types and arithmetic only.@EOL
  @std       C++98
  @copyright
   @parblock
@@ -36,7 +36,7 @@
 int main(void) {
   int count;
   const int NUMITR = 1024;
-  mjr::ramCanvas3c8b::rcCordFlt xr, yr, zx, zy, tempx;
+  mjr::ramCanvas3c8b::coordFltType xr, yr, zx, zy, tempx;
   mjr::ramCanvas3c8b theRamCanvas(7680, 7680, -2.2, 0.8, -1.5, 1.5);
 
   for(int x=0;x<theRamCanvas.get_numXpix();x++) {

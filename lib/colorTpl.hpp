@@ -129,15 +129,14 @@ namespace mjr {
             but not larger than, an array of clrChanT that is numChan long.
     @tparam clrChanT Type to contain the channel information.  This type should be a unsigned integral type.  Be warned that some
             functions only make since for integeral types.
-    @tparam clrChanIArthT A SIGNED arithmetic type capable of holding arithmetic operations on clrChanT types.  At a minimum this type should be able to hold the
+    @tparam clrChanArthT A SIGNED arithmetic type capable of holding arithmetic operations on clrChanT types.  At a minimum this type should be able to hold the
             sum and difference of two such values, and at best it should be able to hold products of such types.
-    @tparam clrChanFArthT A floating point arithmetic type used for various computations with clrChanFArthT and clrChanIArthT, and clrChanT values.
     @tparam clrNameT This is a struct or union that has .red, .green, .blue, and .alpha components that are memory aligned with the elements of the component
             array.  This is used when a channel name is used.  This makes RGB and RGBA channel access VERY fast and provides a significant performance boost.
 
     @tparam numChan The number of channels this color will have.  Common choices are 1 for greyscale, 3 for RGB, and 4 for RGBA.
 */
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   class colorTpl {
 
     private:
@@ -148,13 +147,13 @@ namespace mjr {
       static_assert((std::is_unsigned<clrChanT>::value && std::is_integral<clrChanT>::value),
                     "ERROR: clrChanT parameter of colorTpl template must be an unsigned integral type.");
 
-      static_assert(std::is_arithmetic<clrChanIArthT>::value,
-                    "ERROR: clrChanIArthT parameter of colorTpl template must be an arithmetic type");
-      static_assert(std::is_floating_point<clrChanIArthT>::value || std::is_integral<clrChanIArthT>::value,
-                    "ERROR: clrChanIArthT parameter of colorTpl template must be an unsigned integral type or a floating point type.");
+      static_assert(std::is_arithmetic<clrChanArthT>::value,
+                    "ERROR: clrChanArthT parameter of colorTpl template must be an arithmetic type");
+      static_assert(std::is_floating_point<clrChanArthT>::value || std::is_integral<clrChanArthT>::value,
+                    "ERROR: clrChanArthT parameter of colorTpl template must be an unsigned integral type or a floating point type.");
 
-      static_assert(sizeof(clrChanIArthT)>=sizeof(clrChanT),
-                    "ERROR: sizeof clrChanIArthT parameter of colorTpl template must at least as large as sizeof clrChanT parameter.");
+      static_assert(sizeof(clrChanArthT)>=sizeof(clrChanT),
+                    "ERROR: sizeof clrChanArthT parameter of colorTpl template must at least as large as sizeof clrChanT parameter.");
 
       static_assert(numChan>0,
                     "ERROR: the numChan parameter must be greater than zero.");
@@ -192,12 +191,19 @@ namespace mjr {
       const static clrChanT      minChanVal          = std::numeric_limits<clrChanT>::min();        //!< maximum value for a channel
       const static clrChanT      meanChanVal         = (maxChanVal-minChanVal)/2;                   //!< middle value for a channel
       const static int           numChanNonRGB       = (numChan>3 ? numChan-3 : 0);                 //!< number of non-RGB channels
-      const static clrChanIArthT numValuesPerChan    = static_cast<clrChanIArthT>(1u<<bitsPerChan); //!< unique channel value approximation
+      const static clrChanArthT  numValuesPerChan    = static_cast<clrChanArthT>(1u<<bitsPerChan);  //!< unique channel value approximation
       const static int           channelCount        = numChan;                                     //!< Number of channels
 
-      typedef clrChanT      channelType;          //!< Type for the channels (clrChanT)
-      typedef clrChanIArthT channelIntArithType;  //!< Type for integer channel arithmetic (clrChanIArthT)
-      typedef clrChanFArthT channelFltArithType;  //!< Type for floating point channel arithmetic (clrChanFArthT)
+      /* New typedefs */
+      typedef clrChanT     channelType;       //!< Type for the channels (clrChanT)
+      typedef clrChanArthT channelArithType;  //!< Type for integer channel arithmetic (clrChanArthT)
+
+      /* Old typedefs */
+      typedef clrChanArthT clrChanIArthT;       //!< Deprecated! \deprecated Use channelType instead 
+      typedef clrChanArthT channelIntArithType; //!< Deprecated! \deprecated Use channelType instead
+      typedef double       clrChanFArthT;       //!< Deprecated! \deprecated Use double instead
+      typedef double       channelFltArithType; //!< Deprecated! \deprecated Use double instead
+
       /** @name Public Constants */
       //@{
       /** Named colors the corners of the RGB color cube. */
@@ -275,20 +281,20 @@ namespace mjr {
       //@{
       /** Provides access to the red component of a color as a floating point value in the unit interval, [0,1].
           @return The red value of the color currently stored.*/
-      clrChanFArthT getRedF() const;
+      double getRedF() const;
       /** Provides access to the green component of a color as a floating point value in the unit interval, [0,1].
           @return The green value of the color currently stored.*/
-      clrChanFArthT getGreenF() const;
+      double getGreenF() const;
       /** Provides access to the blue component of a color as a floating point value in the unit interval, [0,1].
           @return The blue value of the color currently stored.*/
-      clrChanFArthT getBlueF() const;
+      double getBlueF() const;
       /** Provides access to the alpha component of a color as a floating point value in the unit interval, [0,1].
           @return The alpha value of the color currently stored.*/
-      clrChanFArthT getAlphaF() const;
+      double getAlphaF() const;
       /** Provides access to the indexed component of a color as a floating point value in the unit interval, [0,1].
           @param chan The channel index
           @return The the value of the indexed channel. */
-      clrChanFArthT getChanF(int chan) const;
+      double getChanF(int chan) const;
       /** Provides access to the red component of a color as an unsigned 8-bit integer value in the range [0,255].
           @return The red value of the color currently stored.*/
       //@}
@@ -344,27 +350,27 @@ namespace mjr {
       /** Sets the red component of the current object from a floating point value in the unit interval, [0,1].
           @param r The value to set the red component to
           @return Returns a reference to the current color object.*/
-      colorTpl& setRedF(clrChanFArthT r);
+      colorTpl& setRedF(double r);
       /** Sets the given channel of the current object from a floating point value in the unit interval, [0,1].
           @param chan The channel to set
           @param cVal The value to set the channel to */
-      colorTpl& setChanF(int chan, clrChanFArthT cVal);
+      colorTpl& setChanF(int chan, double cVal);
       /** Sets the green component of the current object from a floating point value in the unit interval, [0,1].
           @param g The value to set the green component to
           @return Returns a reference to the current color object.*/
-      colorTpl& setGreenF(clrChanFArthT g);
+      colorTpl& setGreenF(double g);
       /** Sets the blue component of the current object from a floating point value in the unit interval, [0,1].
           @param b The value to set the blue component to
           @return Returns a reference to the current color object.*/
-      colorTpl& setBlueF(clrChanFArthT b);
+      colorTpl& setBlueF(double b);
       /** Sets the alpha component of the current object from a floating point value in the unit interval, [0,1].
           @param a The value to set the alpha component to
           @return Returns a reference to the current color object.*/
-      colorTpl& setAlphaF(clrChanFArthT a);
+      colorTpl& setAlphaF(double a);
       /** Sets all components of the current object from a floating point value in the unit interval, [0,1].
           @param a The value to set each channel to
           @return Returns a reference to the current color object.*/
-      colorTpl& setAllF(clrChanFArthT a);
+      colorTpl& setAllF(double a);
       //@}
 
       /** @name component setting with 8-bit, unsigned integers*/
@@ -456,8 +462,7 @@ namespace mjr {
       //@{
       /** Set the current color to one specified in the given color object.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      setColorFromColor(colorTpl color);
+      colorTpl& setColorFromColor(colorTpl color);
       /** Sets the current color based upon the contents of the given C-string.  The colorString argument may take one of three forms:
            - A C-string containing a single character. Ex: "0"
            - A C-string containing an HTML-style, hex color specification. Ex: \#FFAABB
@@ -497,9 +502,9 @@ namespace mjr {
           @param b The value to set the blue component to
           @param a The value to set the alpha component to
           @return Returns a reference to the current color object.*/
-      colorTpl& setColorFromF(clrChanFArthT r, clrChanFArthT g, clrChanFArthT b, clrChanFArthT a);
+      colorTpl& setColorFromF(double r, double g, double b, double a);
       /** @overload */
-      colorTpl& setColorFromF(clrChanFArthT r, clrChanFArthT g, clrChanFArthT b);
+      colorTpl& setColorFromF(double r, double g, double b);
       /** This function sets color based upon the bytes of the given integer.  The LSB (lest significant byte) of the given integer will be used to set red.
           If the integer is at least two bytes long, then the next byte will be green. Green and alpha are filled next if enough bytes exist.  Note that the
           bytes are interpreted as by setColorFrom8bit.
@@ -560,26 +565,26 @@ namespace mjr {
           @param h The Hue.
           @param s The Saturation.
           @param v The Value */
-      colorTpl& setColorFromUnitHSV(float h, float s, float v);
+      colorTpl& setColorFromUnitHSV(double h, double s, double v);
       /** Set the color indicated by the given HSV values.  The 'natural' in the name indicates that The ranges for h, s, and v are the natural ones.  i.e. H is
           in [0,360], s and v are in the range [0,100]
           @param h The Hue.
           @param s The Saturation.
           @param v The Value */
-      colorTpl& setColorFromNaturalHSV(float h, float s, float v);
+      colorTpl& setColorFromNaturalHSV(double h, double s, double v);
       /** Set the color indicated by the given HLS values.  The 'unit' in the name indicates that The ranges for h, s, and v are the the unit interval --
           i.e. [0,1].  The algorithm is that presented in Computer Graphics by Foley, Van Dam, Feiner, and Hughes -- 2nd edition page 596.  I have corrected a
           typeo in the text algorithm.
           @param H The Hue.
           @param L The Lightness or Luminescence
           @param S The Saturation. */
-      colorTpl&  setColorFromUnitHLS(float H, float L, float S);
+      colorTpl&  setColorFromUnitHLS(double H, double L, double S);
       /** Set the color indicated by the given HLS values.  The 'natural' in the name indicates that The ranges for h, s, and v are the natural ones.  i.e. H is
           in [0,360], s and v are in the range [0,1].  This simply normalizes the H, and calls setColorFromNaturalHLS.
           @param H The Hue.
           @param L The Lightness or Luminescence
           @param S The Saturation. */
-      colorTpl&  setColorFromNaturalHLS(float H, float L, float S);
+      colorTpl&  setColorFromNaturalHLS(double H, double L, double S);
       /** Set the color indicated by the given wavelength.  This function uses an algorithm based upon the color matching functions as as tabulated in table 3
           from Stockman and Sharpe (2000) -- I believe they are taken from Stiles and Burch 10-degree (1959).  Four of the algorithms are based upon simple
           linear interpolation, while one is based upon exponential bump functions closely matching the color matching functions.  The method of interpolation
@@ -591,14 +596,14 @@ namespace mjr {
           2 = closest,
           3 linear interpolation,
           4 = exponential bump map interpolation*/
-      colorTpl& setColorFromWavelengthCM(float wavelength, int INTRP);
+      colorTpl& setColorFromWavelengthCM(double wavelength, int INTRP);
       /** overload */
-      colorTpl& setColorFromWavelengthCM(float wavelength);
+      colorTpl& setColorFromWavelengthCM(double wavelength);
       /** Set the color indicated by the given wavelength. This function uses an algorithm based upon linear approximations to the color match functions.  I
           believe the original algorithm is due to Dan Bruton, and his FORTRAN version is available (at least as of 1997) at
           http://www.physics.sfasu.edu/astro/color.html
           @param wavelength to convert */
-      colorTpl& setColorFromWavelengthLA(float wavelength);
+      colorTpl& setColorFromWavelengthLA(double wavelength);
       //@}
 
       /** @name Set color based an indexed color scheme */
@@ -876,45 +881,39 @@ namespace mjr {
           @param col1 The first color
           @param col2 The second color
           @param col3 The third color */
-      colorTpl& wMean(clrChanFArthT w1, clrChanFArthT w2, clrChanFArthT w3, colorTpl col1, colorTpl col2, colorTpl col3);
+      colorTpl& wMean(double w1, double w2, double w3, colorTpl col1, colorTpl col2, colorTpl col3);
       /** overload */
-      colorTpl& wMean(clrChanFArthT w1, clrChanFArthT w2, colorTpl col1, colorTpl col2, colorTpl col3);
+      colorTpl& wMean(double w1, double w2, colorTpl col1, colorTpl col2, colorTpl col3);
       /** Compute the weighted mean of the given colors.  w1,w2,w3 in [0,1] and w1+w2+w3=1.  Same as interplColors(wq, col1, col2).
           @param w1   The first weight
           @param w2   The second weight
           @param col1 The first color
           @param col2 The second color */
-      colorTpl& wMean(clrChanFArthT w1, clrChanFArthT w2, colorTpl col1, colorTpl col2);
+      colorTpl& wMean(double w1, double w2, colorTpl col1, colorTpl col2);
       /** overload */
-      colorTpl& wMean(clrChanFArthT w1, colorTpl col1, colorTpl col2);
+      colorTpl& wMean(double w1, colorTpl col1, colorTpl col2);
       //@}
 
       /** @name Logical Operators. */
       //@{
       /** Performs a logical OR with the current object and the given object and places the value in the current object.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmOr(colorTpl color);
+      colorTpl& tfrmOr(colorTpl color);
       /** Performs a logical NOR with the current object and the given object and places the value in the current object.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmNor(colorTpl color);
+      colorTpl& tfrmNor(colorTpl color);
       /** Performs a logical AND with the current object and the given object and places the value in the current object.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmAnd(colorTpl color);
+      colorTpl& tfrmAnd(colorTpl color);
       /** Performs a logical NAND with the current object and the given object and places the value in the current object.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmNand(colorTpl color);
+      colorTpl& tfrmNand(colorTpl color);
       /** Performs a logical EXCLUSIVE OR (XOR) with the current object and the given object and places the value in the current object.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmXor(colorTpl color);
+      colorTpl& tfrmXor(colorTpl color);
       /** Performs a logical NOT EXCLUSIVE OR (NXOR) with the current object and the given object and places the value in the current object.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmNxor(colorTpl color);
+      colorTpl& tfrmNxor(colorTpl color);
       /** Performs logical (bit-wise) negation of current object.
           @return Returns a reference to the current color object.*/
       colorTpl& tfrmNot(void);
@@ -925,70 +924,56 @@ namespace mjr {
       /** Computes the square of the difference for each channel between the given color and the current color object.
           @param color The color to compute the sqDiff with.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmSqDiff(colorTpl color);
+      colorTpl& tfrmSqDiff(colorTpl color);
       /** Computes the absolute value of the difference for each channel between the given color and the current color object.
           @param color The color to compute the absDiff with.
           @return Returns the absolute value of the difference for each channel.*/
-      colorTpl&
-      tfrmAbsDiff(colorTpl color);
+      colorTpl& tfrmAbsDiff(colorTpl color);
       /** Computes the arithmetic sum of the given color and the current one.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmAdd(colorTpl color);
+      colorTpl& tfrmAdd(colorTpl color);
       /** Computes the arithmetic division of the current color by the given color.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmDiv(colorTpl color);
+      colorTpl& tfrmDiv(colorTpl color);
       /** Computes the arithmetic product of the given color and the current one.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmMult(colorTpl color);
+      colorTpl& tfrmMult(colorTpl color);
       /** Computes the product of the given color and the current one.  If the result of a multiplication is too large, it will be set to the maximum component
           value.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmMultClp(colorTpl color);
+      colorTpl& tfrmMultClp(colorTpl color);
       /** Modifies the current color by performing a component wise scaled sign of the difference between the current color and the given one. As an example of
           the computation, the red component of the current color is computed like this:
           - R=minChanVal  iff(R<color.R)
           - R=meanChanVal iff(R==color.R)
           - R=maxChanVal  iff(R>color.R)
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      ScaleSignDiff(colorTpl color);
+      colorTpl& ScaleSignDiff(colorTpl color);
       /** Computes the arithmetic difference of the given color from the current one. If the result a differences is negative, then that component will be set
           to zero.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmDiffClp(colorTpl color);
+      colorTpl& tfrmDiffClp(colorTpl color);
       /** Computes the negative of the arithmetic difference of the given color from the current one -- that is the same as the arithmetic difference of the
           current color from the given color.  If the result a differences is negative, then that component will be set to zero.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmNegDiffClp(colorTpl color);
+      colorTpl& tfrmNegDiffClp(colorTpl color);
       /** Computes the arithmetic sum of the given color from the current one.  If the result of a sum is greater than the maximum value, then that component
           will be set to the maximum value.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmAddClp(colorTpl color);
+      colorTpl& tfrmAddClp(colorTpl color);
       /** Computes the arithmetic sum of the given color from the current one.  If the result of a sum is greater than the maximum value, then that component
           will be set to the maximum value.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmAddDivClp(colorTpl color, colorTpl dcolor);
+      colorTpl& tfrmAddDivClp(colorTpl color, colorTpl dcolor);
       /** Computes the arithmetic difference of the given color from the current one.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmDiff(colorTpl color);
+      colorTpl& tfrmDiff(colorTpl color);
       /** Computes the arithmetic modulus of the current by the given one.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmMod(colorTpl color);
+      colorTpl& tfrmMod(colorTpl color);
       /** Transforms the color: r=maxChanVal-r, g=maxChanVal-r, and b=maxChanVal-b
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmInvert();
+      colorTpl& tfrmInvert();
       //@}
 
       /** @name Named Operators. */
@@ -1001,83 +986,67 @@ namespace mjr {
           @param aDouble Distance from the current color (on a unit interval)
           @param tooCol  The color we are interpolating with.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      interplColors(double aDouble, colorTpl tooCol);
+      colorTpl& interplColors(double aDouble, colorTpl tooCol);
       /** Copies the given argument into the current color object.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmCopy(colorTpl color);
+      colorTpl& tfrmCopy(colorTpl color);
       /** Makes the current color the maximum of the current color or the given color. Colors are ordered by intensity (thus the 'I' in the name)
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmMaxI(colorTpl color);
+      colorTpl& tfrmMaxI(colorTpl color);
       /** Makes the current color the minimum of the current color or the given color. Colors are ordered by intensity (thus the 'I' in the name)
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmMinI(colorTpl color);
+      colorTpl& tfrmMinI(colorTpl color);
       /** Makes each component of the current color the maximum of that component and the corresponding component of the given color.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmMax(colorTpl color);
+      colorTpl& tfrmMax(colorTpl color);
       /** Makes each component of the current color the minimum of that component and the corresponding component of the given color.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmMin(colorTpl color);
+      colorTpl& tfrmMin(colorTpl color);
       /** The Shift Left Transform modifies the current color
           @param aCol Number of bits to shift left
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmShiftL(colorTpl aCol);
+      colorTpl& tfrmShiftL(colorTpl aCol);
       /** The Shift Right Transform modifies the current color
           @param aCol How many bits to shift.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmShiftR(colorTpl aCol);
+      colorTpl& tfrmShiftR(colorTpl aCol);
       /** The Saw Transform modifies the current color
           R=R iff(ra<=R<=rb), G=G iff(ga<=G<=gb), B=B iff(ba<=B<=bb)
           @param lowCol lower cutoff value
           @param highCol upper cutoff value
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmSaw(colorTpl lowCol, colorTpl highCol);
+      colorTpl& tfrmSaw(colorTpl lowCol, colorTpl highCol);
       /** The Saw Transform modifies the current color
           R=maxChanVal iff(ra<=R<=rb), G=maxChanVal iff(ga<=G<=gb), B=maxChanVal iff(ba<=B<=bb)
           @param lowCol lower cutoff value
           @param highCol upper cutoff value
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmStep(colorTpl lowCol, colorTpl highCol);
+      colorTpl& tfrmStep(colorTpl lowCol, colorTpl highCol);
       /** The DiracTot (total) Transform modifies the current color:
           R=MAX,G=MAX, B=MAX iff ((R==aCol.R)&&(G==aCol.G)&&(B==aCol.B))
           @param aCol Dirac trigger value
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmDiracTot(colorTpl aCol);
+      colorTpl& tfrmDiracTot(colorTpl aCol);
       /** The Dirac Transform modifies the current color:
           R=MAX iff(R==aCol.R), G=MAX iff(G==aCol.G), B=MAX iff(B==aCol.B)
           @param aCol Dirac trigger value
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmDirac(colorTpl aCol);
+      colorTpl& tfrmDirac(colorTpl aCol);
       /** The Fuzzy Dirac Transform modifies the current color:
           R=MAX iff(|R-ctrCol.R|<=radCol.R), G=MAX iff(|G-ctrCol.G|<=radCol.G), B=MAX iff(|B-ctrCol.B|<=radCol.B)
           @param ctrCol Center Color
           @param radCol Radius Color
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmFuzzyDirac(colorTpl ctrCol, colorTpl radCol);
+      colorTpl& tfrmFuzzyDirac(colorTpl ctrCol, colorTpl radCol);
       /** Computes the arithmetic mean of the given color and the current one.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmMean(colorTpl color);
+      colorTpl& tfrmMean(colorTpl color);
       /** Computes the geometric mean of the given color and the current one.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmGmean(colorTpl color);
+      colorTpl& tfrmGmean(colorTpl color);
       /** Computes the clipped  geometric mean of the given color and the current one.
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmGmeanClp(colorTpl color);
+      colorTpl& tfrmGmeanClp(colorTpl color);
       /** Grey Scale transform modifies the current color by rendering it into a true grey via the same method used by the colorLuminance function.  Note, the
           colorLuminance function is NOT used internally within this function for performance reasons.  This function will do the best job it can within the
           current color depth.
@@ -1105,9 +1074,9 @@ namespace mjr {
 
       /** @name Alternate color space stuff */
       //@{
-      int rgb2hsv(clrChanFArthT *H, clrChanFArthT *S, clrChanFArthT *V);
-      int rgb2hls(clrChanFArthT *H, clrChanFArthT *L, clrChanFArthT *S);
-      clrChanFArthT rgb2h();
+      int rgb2hsv(double *H, double *S, double *V);
+      int rgb2hls(double *H, double *L, double *S);
+      double rgb2h();
       //@}
 
       /** @name Color transformation functions */
@@ -1118,8 +1087,7 @@ namespace mjr {
           @param c The "contrast" value
           @param b The "brightness" value
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmLinearGreyLevelScale(float c, float b);
+      colorTpl& tfrmLinearGreyLevelScale(double c, double b);
       /** The Linear Grey Level Scale transform defined by the control points to each channel of the current color.  The linear Grey Level Scale transform is
           defined by the control points, such that the "from" points are mapped into the "to" points.  For example, from1.red will map onto to1.red and
           from2.red will .  Two points define a line for each channel, and thus define a linear grey level scale transform for each channel.  Note, this
@@ -1129,8 +1097,7 @@ namespace mjr {
           @param to1 Control point mapped from argument from1
           @param to2 Control point mapped from argument from2
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmLinearGreyLevelScale(colorTpl from1, colorTpl from2, colorTpl to1, colorTpl to2);
+      colorTpl& tfrmLinearGreyLevelScale(colorTpl from1, colorTpl from2, colorTpl to1, colorTpl to2);
       /** The Linear Grey Level Scale transform modifies the current color such that:
           R=rc*R+rb, G=gc*G+gb, B=bc*B+bb.
           This function ONLY transforms the red, green, and blue channels.
@@ -1141,28 +1108,23 @@ namespace mjr {
           @param bc The "contrast" value for blue
           @param bb The "brightness" value for blue
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmLinearGreyLevelScale(float rc, float rb, float gc, float gb, float bc, float bb);
+      colorTpl& tfrmLinearGreyLevelScale(double rc, double rb, double gc, double gb, double bc, double bb);
       /** The Standard Power Transform modifies the current color such that:
           R=maxChanVal*(R/maxChanVal)**p, G=maxChanVal*(G/maxChanVal)**p, B=maxChanVal*(B/maxChanVal)**p
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmStdPow(float p);
+      colorTpl& tfrmStdPow(double p);
       /** The Standard Power Transform modifies the current color such that:
           R=maxChanVal*(R/maxChanVal)**rp, B=maxChanVal*(B/maxChanVal)**gp, B=maxChanVal*(B/maxChanVal)**bp
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmStdPow(float rp, float gp, float bp);
+      colorTpl& tfrmStdPow(double rp, double gp, double bp);
       /** The Standard Power Transform with p=2. The new color will be:
           R=maxChanVal*(R/maxChanVal)**2, G=maxChanVal*(G/maxChanVal)**2, B=maxChanVal*(B/maxChanVal)**2
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmStdPowSqr(void);
+      colorTpl& tfrmStdPowSqr(void);
       /** The Standard Power Transform with p=1/2. The new color will be:
           R=maxChanVal*(R/maxChanVal)**(1/2), G=maxChanVal*(G/maxChanVal)**(1/2), B=maxChanVal*(B/maxChanVal)**(1/2)
           @return Returns a reference to the current color object.*/
-      colorTpl&
-      tfrmStdPowSqrt(void);
+      colorTpl& tfrmStdPowSqrt(void);
       //@}
 
       /** @name Mathematical operations on color(s)
@@ -1190,7 +1152,7 @@ namespace mjr {
       double colorLuminance(void);
       /** Compute the unscaled intensity (sum of the components) of the current color
           @return The unscaled intensity for the current object. */
-      clrChanIArthT colorSumIntensity(void);
+      clrChanArthT colorSumIntensity(void);
       /** Compute the scaled intensity (sum of the components divided by the maximum intensity possible) of the current color
           @return The scaled intensity for the current object. */
       double colorScaledIntensity(void);
@@ -1234,38 +1196,38 @@ namespace mjr {
       /** Clamp a value on the top end such that it will fit into a clrChanT type. Input values larger than the maximum channel value are mapped to the maximum
           channel value.  Values less than the minimum (0) are not clamped.
           @param anArithComp The value to clamp */
-      clrChanT clipTop(clrChanIArthT anArithComp);
+      clrChanT clipTop(clrChanArthT anArithComp);
       /** Clamp a value on the bottom end such that it will fit into a clrChanT type. Input values less than the minimum (0), are mapped to 0.  Note values
           greater than the maximum channel value are NOT clamped.
           @param anArithComp The value to clam    p */
-      clrChanT clipBot(clrChanIArthT anArithComp);
+      clrChanT clipBot(clrChanArthT anArithComp);
       /** Clamp a value such that it will fit into a clrChanT type. Input values less than zero are mapped to zero, and input values larger than the maximum
           channel value are mapped to the maximum q channel value.
           @param anArithComp The value to clamp */
-      clrChanT clipAll(clrChanIArthT anArithComp);
+      clrChanT clipAll(clrChanArthT anArithComp);
       //@}
 
   };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /* constructor */
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::colorTpl() {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::colorTpl() {
     // We don't do anything as this throws away resources.  If the color needs cleared, we have a method for that.  This is consistent with the tradition of
     // C/C++ not initializing concrete types like int and float.
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /* constructor */
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::colorTpl(clrChanT r) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::colorTpl(clrChanT r) {
     setAll(r);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /* constructor */
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::colorTpl(clrChanT r, clrChanT g, clrChanT b) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::colorTpl(clrChanT r, clrChanT g, clrChanT b) {
     theColor.theParts.red                   = r;
     if(numChan > 1) theColor.theParts.green = g;
     if(numChan > 2) theColor.theParts.blue  = b;
@@ -1273,8 +1235,8 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /* constructor */
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::colorTpl(clrChanT r, clrChanT g, clrChanT b, clrChanT a) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::colorTpl(clrChanT r, clrChanT g, clrChanT b, clrChanT a) {
     theColor.theParts.red                   = r;
     if(numChan > 1) theColor.theParts.green = g;
     if(numChan > 2) theColor.theParts.blue  = b;
@@ -1283,8 +1245,8 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /* copy constructor */
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::colorTpl(const colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>& aColor) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::colorTpl(const colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>& aColor) {
     if(fastMask)
       theColor.theInt = aColor.theColor.theInt;
     else
@@ -1293,94 +1255,97 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /* constructor */
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::colorTpl(const char *colorString) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::colorTpl(const char *colorString) {
     setColorFromString(colorString);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /* constructor */
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::colorTpl(cornerColor ccolor) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::colorTpl(cornerColor ccolor) {
     setColorFromCorner(ccolor);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::~colorTpl() {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::~colorTpl() {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  clrChanT colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getRed() const {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  clrChanT
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getRed() const {
     return theColor.theParts.red;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  clrChanT colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getBlue() const {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  clrChanT
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getBlue() const {
     return theColor.theParts.blue;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  clrChanT colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getGreen() const {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  clrChanT
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getGreen() const {
     return theColor.theParts.green;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   clrChanT
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getAlpha() const {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getAlpha() const {
     return theColor.theParts.alpha;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   clrChanT
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getChan(int chan) const {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getChan(int chan) const {
     return theColor.thePartsA[chan];
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  clrChanFArthT
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getRedF() const {
-    return theColor.theParts.red / static_cast<float>(maxChanVal);
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  double
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getRedF() const {
+    return theColor.theParts.red / static_cast<double>(maxChanVal);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  clrChanFArthT
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getBlueF() const {
-    return theColor.theParts.blue / static_cast<float>(maxChanVal);
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  double
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getBlueF() const {
+    return theColor.theParts.blue / static_cast<double>(maxChanVal);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  clrChanFArthT
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getGreenF() const {
-    return theColor.theParts.green / static_cast<float>(maxChanVal);
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  double
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getGreenF() const {
+    return theColor.theParts.green / static_cast<double>(maxChanVal);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  clrChanFArthT
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getAlphaF() const {
-    return theColor.theParts.alpha / static_cast<float>(maxChanVal);
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  double
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getAlphaF() const {
+    return theColor.theParts.alpha / static_cast<double>(maxChanVal);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  clrChanFArthT
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getChanF(int chan) const {
-    return theColor.thePartsA[chan] / static_cast<float>(maxChanVal);
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  double
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getChanF(int chan) const {
+    return theColor.thePartsA[chan] / static_cast<double>(maxChanVal);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   uint8_t
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getRed8bit() const {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getRed8bit() const {
     if(channelType8bitInt)
       return (uint8_t)(theColor.theParts.red);
     else
@@ -1388,9 +1353,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   uint8_t
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getBlue8bit() const {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getBlue8bit() const {
     if(channelType8bitInt)
       return (uint8_t)(theColor.theParts.blue);
     else
@@ -1398,9 +1363,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   uint8_t
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getGreen8bit() const {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getGreen8bit() const {
     if(channelType8bitInt)
       return (uint8_t)(theColor.theParts.green);
     else
@@ -1408,9 +1373,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   uint8_t
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getAlpha8bit() const {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getAlpha8bit() const {
     if(channelType8bitInt)
       return (uint8_t)(theColor.theParts.alpha);
     else
@@ -1418,9 +1383,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   uint8_t
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getChan8bit(int chan) const {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getChan8bit(int chan) const {
     if(channelType8bitInt)
       return (uint8_t)(theColor.thePartsA[chan]);
     else
@@ -1428,9 +1393,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   clrChanT
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getMaxC() {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getMaxC() {
     if(numChan == 1) {                                         // 1 channel
       return theColor.theParts.red;
     } else if(numChan == 2) {                                  // 2 channels
@@ -1454,9 +1419,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   clrChanT
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getMinC() {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getMinC() {
     if(numChan == 1) {                                         // 1 channel
       return theColor.theParts.red;
     } else if(numChan == 2) {                                  // 2 channels
@@ -1480,68 +1445,68 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   clrChanT
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getMaxRGB() {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getMaxRGB() {
     return std::max(std::max(theColor.theParts.red,
                              theColor.theParts.green),
                     theColor.theParts.blue);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   clrChanT
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::getMinRGB() {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getMinRGB() {
     return std::min(std::min(theColor.theParts.red,
                              theColor.theParts.green),
                     theColor.theParts.blue);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setChan(int chan, clrChanT cVal) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setChan(int chan, clrChanT cVal) {
     if((chan >= 0) && (chan <= numChan))
       theColor.thePartsA[chan] = cVal;
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setRed(clrChanT r) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setRed(clrChanT r) {
     theColor.theParts.red = r;
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setBlue(clrChanT b) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setBlue(clrChanT b) {
     theColor.theParts.blue = b;
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setGreen(clrChanT g) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setGreen(clrChanT g) {
     theColor.theParts.green = g;
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setAlpha(clrChanT a) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setAlpha(clrChanT a) {
     theColor.theParts.alpha = a;
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setAll(clrChanT aComp) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setAll(clrChanT aComp) {
     theColor.theParts.red     = aComp;
     if(numChan > 1)
       theColor.theParts.green = aComp;
@@ -1559,50 +1524,50 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setChanF(int chan, clrChanFArthT cVal) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setChanF(int chan, double cVal) {
     if((chan >= 0) && (chan <= numChan))
       theColor.thePartsA[chan] = static_cast<clrChanT>(cVal * maxChanVal);
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setRedF(clrChanFArthT r) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setRedF(double r) {
     theColor.theParts.red = static_cast<clrChanT>(r * maxChanVal);
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setBlueF(clrChanFArthT b) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setBlueF(double b) {
     theColor.theParts.blue = static_cast<clrChanT>(b * maxChanVal);
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setGreenF(clrChanFArthT g) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setGreenF(double g) {
     theColor.theParts.green = static_cast<clrChanT>(g * maxChanVal);
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setAlphaF(clrChanFArthT a) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setAlphaF(double a) {
     theColor.theParts.alpha = static_cast<clrChanT>(a * maxChanVal);
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setAllF(clrChanFArthT aComp) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setAllF(double aComp) {
     theColor.theParts.red     = static_cast<clrChanT>(aComp * maxChanVal);
     if(numChan > 1)
       theColor.theParts.green = static_cast<clrChanT>(aComp * maxChanVal);
@@ -1617,9 +1582,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setChan64bit(int chan, uint64_t cVal, uint64_t maxv) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setChan64bit(int chan, uint64_t cVal, uint64_t maxv) {
     if((chan >= 0) && (chan <= numChan)) {
       if(maxChanVal == maxv)
         theColor.thePartsA[chan] = static_cast<clrChanT>(cVal);
@@ -1630,9 +1595,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setRed64bit(uint64_t r, uint64_t maxv) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setRed64bit(uint64_t r, uint64_t maxv) {
     if(maxChanVal == maxv)
       theColor.theParts.red = static_cast<clrChanT>(r);
     else
@@ -1641,9 +1606,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setBlue64bit(uint64_t b, uint64_t maxv) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setBlue64bit(uint64_t b, uint64_t maxv) {
     if(maxChanVal == maxv)
       theColor.theParts.blue = static_cast<clrChanT>(b);
     else
@@ -1652,9 +1617,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setGreen64bit(uint64_t g, uint64_t maxv) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setGreen64bit(uint64_t g, uint64_t maxv) {
     if(maxChanVal == maxv)
       theColor.theParts.green = static_cast<clrChanT>(g);
     else
@@ -1663,9 +1628,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setAlpha64bit(uint64_t a, uint64_t maxv) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setAlpha64bit(uint64_t a, uint64_t maxv) {
     if(maxChanVal == maxv)
       theColor.theParts.alpha = static_cast<clrChanT>(a);
     else
@@ -1674,9 +1639,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setAll64bit(uint64_t aComp, uint64_t maxv) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setAll64bit(uint64_t aComp, uint64_t maxv) {
     clrChanT convertedValue;
     if(maxChanVal == maxv)
       convertedValue = static_cast<clrChanT>(aComp);
@@ -1696,9 +1661,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setChan8bit(int chan, uint8_t cVal) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setChan8bit(int chan, uint8_t cVal) {
     if((chan >= 0) && (chan <= numChan)) {
       if(channelType8bitInt)
         theColor.thePartsA[chan] = static_cast<clrChanT>(cVal);
@@ -1709,9 +1674,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setRed8bit(uint8_t r) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setRed8bit(uint8_t r) {
     if(channelType8bitInt)
       theColor.theParts.red = static_cast<clrChanT>(r);
     else
@@ -1720,9 +1685,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setBlue8bit(uint8_t b) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setBlue8bit(uint8_t b) {
     if(channelType8bitInt)
       theColor.theParts.blue = static_cast<clrChanT>(b);
     else
@@ -1731,9 +1696,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setGreen8bit(uint8_t g) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setGreen8bit(uint8_t g) {
     if(channelType8bitInt)
       theColor.theParts.green = static_cast<clrChanT>(g);
     else
@@ -1742,9 +1707,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setAlpha8bit(uint8_t a) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setAlpha8bit(uint8_t a) {
     if(channelType8bitInt)
       theColor.theParts.alpha = static_cast<clrChanT>(a);
     else
@@ -1753,9 +1718,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setAll8bit(uint8_t aComp) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setAll8bit(uint8_t aComp) {
     clrChanT convertedValue;
     if(channelType8bitInt)
       convertedValue = static_cast<clrChanT>(aComp);
@@ -1776,9 +1741,9 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /** @todo Optimize this function */
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::ScaleSignDiff(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::ScaleSignDiff(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     for(int i=0; i<numChan; i++) {
       if(theColor.thePartsA[i] < color.theColor.thePartsA[i]) {
         theColor.thePartsA[i] = minChanVal;
@@ -1792,9 +1757,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmLn() {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmLn() {
     theColor.theParts.red     = log(1 + theColor.theParts.red);
     if(numChan > 1)
       theColor.theParts.green = log(1 + theColor.theParts.green);
@@ -1809,9 +1774,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmOr(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmOr(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     if(fastMask)
       theColor.theInt |=  color.theColor.theInt;
     else {
@@ -1830,9 +1795,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmNor(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmNor(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     if(fastMask)
       theColor.theInt =  ~(theColor.theInt | color.theColor.theInt);
     else {
@@ -1852,9 +1817,9 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /** @todo This could be made faster with raw memory copy functions. */
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmCopy(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmCopy(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     if(fastMask)
       theColor.theInt = color.theColor.theInt;
     else {
@@ -1873,9 +1838,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmAnd(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmAnd(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     if(fastMask)
       theColor.theInt &= color.theColor.theInt;
     else {
@@ -1894,9 +1859,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmNand(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmNand(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     if(fastMask)
       theColor.theInt = ~(theColor.theInt & color.theColor.theInt);
     else {
@@ -1915,9 +1880,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmXor(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmXor(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     if(fastMask)
       theColor.theInt ^= color.theColor.theInt;
     else {
@@ -1936,9 +1901,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmNxor(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmNxor(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     if(fastMask)
       theColor.theInt = ~(theColor.theInt ^ color.theColor.theInt);
     else {
@@ -1957,9 +1922,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmNot(void) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmNot(void) {
     if(fastMask)
       theColor.theInt = ~(theColor.theInt);
     else {
@@ -1978,9 +1943,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmMultClp(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmMultClp(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     theColor.theParts.red     = clipTop(theColor.theParts.red   * color.theColor.theParts.red);
     if(numChan > 1)
       theColor.theParts.green = clipTop(theColor.theParts.green * color.theColor.theParts.green);
@@ -1995,26 +1960,26 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmGmeanClp(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
-    theColor.theParts.red     = clipTop(static_cast<clrChanIArthT>(std::sqrt(theColor.theParts.red   * color.theColor.theParts.red)));
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmGmeanClp(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
+    theColor.theParts.red     = clipTop(static_cast<clrChanArthT>(std::sqrt(theColor.theParts.red   * color.theColor.theParts.red)));
     if(numChan > 1)
-      theColor.theParts.green = clipTop(static_cast<clrChanIArthT>(std::sqrt(theColor.theParts.green * color.theColor.theParts.green)));
+      theColor.theParts.green = clipTop(static_cast<clrChanArthT>(std::sqrt(theColor.theParts.green * color.theColor.theParts.green)));
     if(numChan > 2)
-      theColor.theParts.blue  = clipTop(static_cast<clrChanIArthT>(std::sqrt(theColor.theParts.blue  * color.theColor.theParts.blue)));
+      theColor.theParts.blue  = clipTop(static_cast<clrChanArthT>(std::sqrt(theColor.theParts.blue  * color.theColor.theParts.blue)));
     if(numChan > 3)
-      theColor.theParts.alpha = clipTop(static_cast<clrChanIArthT>(std::sqrt(theColor.theParts.alpha * color.theColor.theParts.alpha)));
+      theColor.theParts.alpha = clipTop(static_cast<clrChanArthT>(std::sqrt(theColor.theParts.alpha * color.theColor.theParts.alpha)));
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i] = clipTop(static_cast<clrChanIArthT>(std::sqrt(theColor.thePartsA[i]   * color.theColor.thePartsA[i])));
+        theColor.thePartsA[i] = clipTop(static_cast<clrChanArthT>(std::sqrt(theColor.thePartsA[i]   * color.theColor.thePartsA[i])));
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmAddClp(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmAddClp(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     theColor.theParts.red     = clipTop(theColor.theParts.red   + color.theColor.theParts.red);
     if(numChan > 1)
       theColor.theParts.green = clipTop(theColor.theParts.green + color.theColor.theParts.green);
@@ -2029,10 +1994,10 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmAddDivClp(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color,
-                                                                                               colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> dcolor) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmAddDivClp(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color,
+                                                                                               colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> dcolor) {
     theColor.theParts.red     = clipTop((theColor.theParts.red   + color.theColor.theParts.red)   / dcolor.theColor.theParts.red);
     if(numChan > 1)
       theColor.theParts.green = clipTop((theColor.theParts.green + color.theColor.theParts.green) / dcolor.theColor.theParts.green);
@@ -2047,9 +2012,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmDiffClp(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmDiffClp(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     theColor.theParts.red     = clipBot(theColor.theParts.red   - color.theColor.theParts.red);
     if(numChan > 1)
       theColor.theParts.green = clipBot(theColor.theParts.green - color.theColor.theParts.green);
@@ -2064,9 +2029,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmNegDiffClp(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmNegDiffClp(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     theColor.theParts.red     = clipBot(color.theColor.theParts.red   - theColor.theParts.red);
     if(numChan > 1)
       theColor.theParts.green = clipBot(color.theColor.theParts.green - theColor.theParts.green);
@@ -2081,9 +2046,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmAbsDiff(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmAbsDiff(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     theColor.theParts.red     = static_cast<clrChanT>(std::abs(theColor.theParts.red   - color.theColor.theParts.red));
     if(numChan > 1)
       theColor.theParts.green = static_cast<clrChanT>(std::abs(theColor.theParts.green - color.theColor.theParts.green));
@@ -2098,9 +2063,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmSqDiff(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmSqDiff(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     theColor.theParts.red     = static_cast<clrChanT>((theColor.theParts.red   - color.theColor.theParts.red)   * (theColor.theParts.red   - color.theColor.theParts.red));
     if(numChan > 1)
       theColor.theParts.green = static_cast<clrChanT>((theColor.theParts.green - color.theColor.theParts.green) * (theColor.theParts.green - color.theColor.theParts.green));
@@ -2115,9 +2080,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmMax(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmMax(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     if(theColor.theParts.red < color.theColor.theParts.red)
       theColor.theParts.red = color.theColor.theParts.red;
     if(numChan > 1)
@@ -2137,9 +2102,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmMin(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmMin(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     if(theColor.theParts.red > color.theColor.theParts.red)
       theColor.theParts.red = color.theColor.theParts.red;
     if(numChan > 1)
@@ -2159,9 +2124,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmAdd(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmAdd(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
 
     theColor.theParts.red     = static_cast<clrChanT>(theColor.theParts.red   + color.theColor.theParts.red);
     if(numChan > 1)
@@ -2177,9 +2142,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmDiv(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmDiv(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     theColor.theParts.red     = static_cast<clrChanT>(theColor.theParts.red   / color.theColor.theParts.red);
     if(numChan > 1)
       theColor.theParts.green = static_cast<clrChanT>(theColor.theParts.green / color.theColor.theParts.green);
@@ -2194,9 +2159,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmMult(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmMult(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     theColor.theParts.red     = static_cast<clrChanT>(theColor.theParts.red   * color.theColor.theParts.red);
     if(numChan > 1)
       theColor.theParts.green = static_cast<clrChanT>(theColor.theParts.green  * color.theColor.theParts.green);
@@ -2211,9 +2176,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmGmean(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmGmean(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     theColor.theParts.red     = static_cast<clrChanT>(std::sqrt(theColor.theParts.red   * color.theColor.theParts.red));
     if(numChan > 1)
       theColor.theParts.green = static_cast<clrChanT>(std::sqrt(theColor.theParts.green * color.theColor.theParts.green));
@@ -2228,9 +2193,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmMean(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmMean(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     // Note the 2's will convert everything to integers so we get a good mean.
     theColor.theParts.red     = static_cast<clrChanT>((theColor.theParts.red   + color.theColor.theParts.red)   / 2);
     if(numChan > 1)
@@ -2246,9 +2211,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmDiff(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmDiff(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     theColor.theParts.red     = static_cast<clrChanT>(theColor.theParts.red   - color.theColor.theParts.red);
     if(numChan > 1)
       theColor.theParts.green = static_cast<clrChanT>(theColor.theParts.green - color.theColor.theParts.green);
@@ -2263,9 +2228,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmMod(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmMod(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     theColor.theParts.red     = static_cast<clrChanT>(theColor.theParts.red   % color.theColor.theParts.red);
     if(numChan > 1)
       theColor.theParts.green = static_cast<clrChanT>(theColor.theParts.green % color.theColor.theParts.green);
@@ -2280,9 +2245,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmMaxI(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmMaxI(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     if(numChan == 1) {                                         // 1 channel
       if((theColor.theParts.red) < (color.theColor.theParts.red)) {
         tfrmCopy(color);
@@ -2312,11 +2277,11 @@ namespace mjr {
         tfrmCopy(color);
       }
     } else {                                                   // 5 or more channels
-      clrChanIArthT thisSum = (theColor.theParts.red   +
+      clrChanArthT thisSum = (theColor.theParts.red   +
                                theColor.theParts.green +
                                theColor.theParts.blue  +
                                theColor.theParts.alpha);
-      clrChanIArthT thatSum = (color.theColor.theParts.red   +
+      clrChanArthT thatSum = (color.theColor.theParts.red   +
                                color.theColor.theParts.green +
                                color.theColor.theParts.blue  +
                                color.theColor.theParts.alpha);
@@ -2331,9 +2296,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmMinI(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmMinI(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     if(numChan == 1) {                                         // 1 channel
       if((theColor.theParts.red) > (color.theColor.theParts.red)) {
         tfrmCopy(color);
@@ -2363,11 +2328,11 @@ namespace mjr {
         tfrmCopy(color);
       }
     } else {                                                   // 5 or more channels
-      clrChanIArthT thisSum = (theColor.theParts.red   +
+      clrChanArthT thisSum = (theColor.theParts.red   +
                                theColor.theParts.green +
                                theColor.theParts.blue  +
                                theColor.theParts.alpha);
-      clrChanIArthT thatSum = (color.theColor.theParts.red   +
+      clrChanArthT thatSum = (color.theColor.theParts.red   +
                                color.theColor.theParts.green +
                                color.theColor.theParts.blue  +
                                color.theColor.theParts.alpha);
@@ -2382,9 +2347,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorRGB(clrChanT r, clrChanT g, clrChanT b) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorRGB(clrChanT r, clrChanT g, clrChanT b) {
     theColor.theParts.red     = r;
     if(numChan > 1)
       theColor.theParts.green = g;
@@ -2399,9 +2364,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorRGBA(clrChanT r, clrChanT g, clrChanT b, clrChanT a) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorRGBA(clrChanT r, clrChanT g, clrChanT b, clrChanT a) {
     theColor.theParts.red     = r;
     if(numChan > 1)
       theColor.theParts.green = g;
@@ -2416,9 +2381,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromColor(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromColor(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color) {
     if(fastMask)
       theColor.theInt = color.theColor.theInt;
     else
@@ -2428,9 +2393,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromLetter(char colorChar) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromLetter(char colorChar) {
     /* This case is ordered by the frequency in which colors are generally encountered.  This will vary for different applications. */
     switch(colorChar) {
     case '0': setToBlack();   break;
@@ -2454,9 +2419,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromString(const char *colorString) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromString(const char *colorString) {
     if( (colorString[0] == 'b') || (colorString[0] == 'B') ) {
       // Take care of blue and black (ambiguous first letter 'b')
       if( (colorString[2]=='u') || (colorString[2]=='U') )
@@ -2487,9 +2452,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFrom8bit(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFrom8bit(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
     clrChanT convertedValueR, convertedValueG, convertedValueB, convertedValueA;
     if(channelType8bitInt) {
       convertedValueR = static_cast<clrChanT>(r);
@@ -2507,9 +2472,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFrom8bit(uint8_t r, uint8_t g, uint8_t b) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFrom8bit(uint8_t r, uint8_t g, uint8_t b) {
     clrChanT convertedValueR, convertedValueG, convertedValueB;
     if(channelType8bitInt) {
       convertedValueR = static_cast<clrChanT>(r);
@@ -2525,25 +2490,25 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromF(clrChanFArthT r, clrChanFArthT g, clrChanFArthT b, clrChanFArthT a) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromF(double r, double g, double b, double a) {
     setColorRGBA(static_cast<clrChanT>(r*maxChanVal), static_cast<clrChanT>(g*maxChanVal), static_cast<clrChanT>(b*maxChanVal), static_cast<clrChanT>(a*maxChanVal));
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromF(clrChanFArthT r, clrChanFArthT g, clrChanFArthT b) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromF(double r, double g, double b) {
     setColorRGB(static_cast<clrChanT>(r*maxChanVal), static_cast<clrChanT>(g*maxChanVal), static_cast<clrChanT>(b*maxChanVal));
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromPackedIntABGR(uint32_t anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromPackedIntABGR(uint32_t anInt) {
     uint8_t aByte;
     aByte = 0xFF & anInt; setRed8bit(aByte);
     if(numChan > 1) { anInt = anInt >> 8; aByte = 0xFF & anInt; setGreen8bit(aByte); }
@@ -2553,9 +2518,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromPackedIntARGB(uint32_t anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromPackedIntARGB(uint32_t anInt) {
     uint8_t aByte;
     aByte = 0xFF & anInt; setBlue8bit(aByte);
     if(numChan > 1) { anInt = anInt >> 8; aByte = 0xFF & anInt; setGreen8bit(aByte); }
@@ -2565,9 +2530,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromPackedInt(uint32_t anInt,
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromPackedInt(uint32_t anInt,
                                                                                                        uint8_t rIdx, uint8_t gIdx, uint8_t bIdx, uint8_t aIdx) {
     uint8_t *curByte = (uint8_t *)(&anInt);
     theColor.theParts.red                    = curByte[rIdx];
@@ -2578,9 +2543,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmLinearGreyLevelScale(float c, float b) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmLinearGreyLevelScale(double c, double b) {
     theColor.theParts.red     = static_cast<clrChanT>(c * theColor.theParts.red   + b);
     if(numChan > 1)
       theColor.theParts.green = static_cast<clrChanT>(c * theColor.theParts.green + b);
@@ -2595,43 +2560,43 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmLinearGreyLevelScale(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> from1,
-                                                                                                          colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> from2,
-                                                                                                          colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> to1,
-                                                                                                          colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> to2) {
-    float c = 1.0*(to1.getRed()-to2.getRed())/(from1.getRed()-from2.getRed());
-    float b = to1.getRed() - 1.0*c*from1.getRed();
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmLinearGreyLevelScale(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> from1,
+                                                                                                          colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> from2,
+                                                                                                          colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> to1,
+                                                                                                          colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> to2) {
+    double c = 1.0*(to1.getRed()-to2.getRed())/(from1.getRed()-from2.getRed());
+    double b = to1.getRed() - 1.0*c*from1.getRed();
     theColor.theParts.red     = static_cast<clrChanT>(c * theColor.theParts.red   + b);
     if(numChan > 1) {
-      float c = 1.0*(to1.getGreen()-to2.getGreen())/(from1.getGreen()-from2.getGreen());
-      float b = to1.getGreen() - 1.0*c*from1.getGreen();
+      double c = 1.0*(to1.getGreen()-to2.getGreen())/(from1.getGreen()-from2.getGreen());
+      double b = to1.getGreen() - 1.0*c*from1.getGreen();
       theColor.theParts.green = static_cast<clrChanT>(c * theColor.theParts.green + b);
     }
     if(numChan > 2) {
-      float c = 1.0*(to1.getBlue()-to2.getBlue())/(from1.getBlue()-from2.getBlue());
-      float b = to1.getBlue() - 1.0*c*from1.getBlue();
+      double c = 1.0*(to1.getBlue()-to2.getBlue())/(from1.getBlue()-from2.getBlue());
+      double b = to1.getBlue() - 1.0*c*from1.getBlue();
       theColor.theParts.blue  = static_cast<clrChanT>(c * theColor.theParts.blue  + b);
     }
     if(numChan > 3) {
-      float c = 1.0*(to1.getAlpha()-to2.getAlpha())/(from1.getAlpha()-from2.getAlpha());
-      float b = to1.getAlpha() - 1.0*c*from1.getAlpha();
+      double c = 1.0*(to1.getAlpha()-to2.getAlpha())/(from1.getAlpha()-from2.getAlpha());
+      double b = to1.getAlpha() - 1.0*c*from1.getAlpha();
       theColor.theParts.alpha = static_cast<clrChanT>(c * theColor.theParts.alpha + b);
     }
     if(numChan > 4)
       for(int i=4; i<numChan; i++) {
-        float c = 1.0*(to1.getChan(i)-to2.getChan(i))/(from1.getChan(i)-from2.getChan(i));
-        float b = to1.getChan(i) - 1.0*c*from1.getChan(i);
+        double c = 1.0*(to1.getChan(i)-to2.getChan(i))/(from1.getChan(i)-from2.getChan(i));
+        double b = to1.getChan(i) - 1.0*c*from1.getChan(i);
         theColor.thePartsA[i] = static_cast<clrChanT>(c * theColor.thePartsA[i] + b);
       }
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmLinearGreyLevelScale(float rc, float rb, float gc, float gb, float bc, float bb) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmLinearGreyLevelScale(double rc, double rb, double gc, double gb, double bc, double bb) {
     theColor.theParts.red     = static_cast<clrChanT>(rc * theColor.theParts.red   + rb);
     if(numChan > 1)
       theColor.theParts.green = static_cast<clrChanT>(gc * theColor.theParts.green + gb);
@@ -2643,9 +2608,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmGreyScale(void) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmGreyScale(void) {
     double theGreyLevel = theColor.theParts.red   * 0.2126 +
       theColor.theParts.green * 0.7152 +
       theColor.theParts.blue  * 0.0722;
@@ -2663,96 +2628,96 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmStdPow(float p) {
-    theColor.theParts.red     = (clrChanT)(pow(theColor.theParts.red/(float)maxChanVal,   p) * maxChanVal);
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmStdPow(double p) {
+    theColor.theParts.red     = (clrChanT)(pow(theColor.theParts.red   / static_cast<double>(maxChanVal), p) * maxChanVal);
     if(numChan > 1)
-      theColor.theParts.green = (clrChanT)(pow(theColor.theParts.green/(float)maxChanVal, p) * maxChanVal);
+      theColor.theParts.green = (clrChanT)(pow(theColor.theParts.green / static_cast<double>(maxChanVal), p) * maxChanVal);
     if(numChan > 2)
-      theColor.theParts.blue  = (clrChanT)(pow(theColor.theParts.blue/(float)maxChanVal,  p) * maxChanVal);
+      theColor.theParts.blue  = (clrChanT)(pow(theColor.theParts.blue  / static_cast<double>(maxChanVal), p) * maxChanVal);
     if(numChan > 3)
-      theColor.theParts.alpha = (clrChanT)(pow(theColor.theParts.alpha/(float)maxChanVal, p) * maxChanVal);
+      theColor.theParts.alpha = (clrChanT)(pow(theColor.theParts.alpha / static_cast<double>(maxChanVal), p) * maxChanVal);
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i] = (clrChanT)(pow(theColor.thePartsA[i]/(float)maxChanVal,   p) * maxChanVal);
+        theColor.thePartsA[i] = (clrChanT)(pow(theColor.thePartsA[i]   / static_cast<double>(maxChanVal), p) * maxChanVal);
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmStdPowSqr(void) {
-    theColor.theParts.red     = (clrChanT)(theColor.theParts.red   * theColor.theParts.red   / (double)maxChanVal);
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmStdPowSqr(void) {
+    theColor.theParts.red     = (clrChanT)(theColor.theParts.red   * theColor.theParts.red   / static_cast<double>(maxChanVal));
     if(numChan > 1)
-      theColor.theParts.green = (clrChanT)(theColor.theParts.green * theColor.theParts.green / (double)maxChanVal);
+      theColor.theParts.green = (clrChanT)(theColor.theParts.green * theColor.theParts.green / static_cast<double>(maxChanVal));
     if(numChan > 2)
-      theColor.theParts.blue  = (clrChanT)(theColor.theParts.blue  * theColor.theParts.blue  / (double)maxChanVal);
+      theColor.theParts.blue  = (clrChanT)(theColor.theParts.blue  * theColor.theParts.blue  / static_cast<double>(maxChanVal));
     if(numChan > 3)
-      theColor.theParts.alpha = (clrChanT)(theColor.theParts.alpha * theColor.theParts.alpha / (double)maxChanVal);
+      theColor.theParts.alpha = (clrChanT)(theColor.theParts.alpha * theColor.theParts.alpha / static_cast<double>(maxChanVal));
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i] = (clrChanT)(theColor.thePartsA[i]   * theColor.thePartsA[i]   / (double)maxChanVal);
+        theColor.thePartsA[i] = (clrChanT)(theColor.thePartsA[i]   * theColor.thePartsA[i]   / static_cast<double>(maxChanVal));
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmStdPowSqrt(void) {
-    theColor.theParts.red     = (clrChanT)(std::sqrt(theColor.theParts.red/(double)maxChanVal)   * maxChanVal);
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmStdPowSqrt(void) {
+    theColor.theParts.red     = (clrChanT)(std::sqrt(theColor.theParts.red   / static_cast<double>(maxChanVal)) * maxChanVal);
     if(numChan > 1)
-      theColor.theParts.green = (clrChanT)(std::sqrt(theColor.theParts.green/(double)maxChanVal) * maxChanVal);
+      theColor.theParts.green = (clrChanT)(std::sqrt(theColor.theParts.green / static_cast<double>(maxChanVal)) * maxChanVal);
     if(numChan > 2)
-      theColor.theParts.blue  = (clrChanT)(std::sqrt(theColor.theParts.blue/(double)maxChanVal)  * maxChanVal);
+      theColor.theParts.blue  = (clrChanT)(std::sqrt(theColor.theParts.blue  / static_cast<double>(maxChanVal)) * maxChanVal);
     if(numChan > 3)
-      theColor.theParts.alpha = (clrChanT)(std::sqrt(theColor.theParts.alpha/(double)maxChanVal) * maxChanVal);
+      theColor.theParts.alpha = (clrChanT)(std::sqrt(theColor.theParts.alpha / static_cast<double>(maxChanVal)) * maxChanVal);
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i] = (clrChanT)(std::sqrt(theColor.thePartsA[i]/(double)maxChanVal)   * maxChanVal);
+        theColor.thePartsA[i] = (clrChanT)(std::sqrt(theColor.thePartsA[i]   / static_cast<double>(maxChanVal)) * maxChanVal);
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmStdPow(float rp, float gp, float bp) {
-    theColor.theParts.red     = (clrChanT)(pow(theColor.theParts.red/(float)maxChanVal,   rp) * maxChanVal);
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmStdPow(double rp, double gp, double bp) {
+    theColor.theParts.red     = (clrChanT)(pow(theColor.theParts.red   / static_cast<double>(maxChanVal), rp) * maxChanVal);
     if(numChan > 1)
-      theColor.theParts.green = (clrChanT)(pow(theColor.theParts.green/(float)maxChanVal, gp) * maxChanVal);
+      theColor.theParts.green = (clrChanT)(pow(theColor.theParts.green / static_cast<double>(maxChanVal), gp) * maxChanVal);
     if(numChan > 2)
-      theColor.theParts.blue  = (clrChanT)(pow(theColor.theParts.blue/(float)maxChanVal,  bp) * maxChanVal);
+      theColor.theParts.blue  = (clrChanT)(pow(theColor.theParts.blue  / static_cast<double>(maxChanVal), bp) * maxChanVal);
     if(numChan > 3)
-      theColor.theParts.alpha = (clrChanT)(pow(theColor.theParts.alpha/(float)maxChanVal, bp) * maxChanVal);
+      theColor.theParts.alpha = (clrChanT)(pow(theColor.theParts.alpha / static_cast<double>(maxChanVal), bp) * maxChanVal);
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i] = (clrChanT)(pow(theColor.thePartsA[i]/(float)maxChanVal, bp) * maxChanVal);
+        theColor.thePartsA[i] = (clrChanT)(pow(theColor.thePartsA[i]   / static_cast<double>(maxChanVal), bp) * maxChanVal);
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmSaw(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> lowCol,
-                                                                                         colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> highCol) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmSaw(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> lowCol,
+                                                                          colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> highCol) {
     theColor.theParts.red     = ((lowCol.theColor.theParts.red   <= theColor.theParts.red)   && (highCol.theColor.theParts.red   >= theColor.theParts.red)?theColor.theParts.red:0);
     if(numChan > 1)
       theColor.theParts.green = ((lowCol.theColor.theParts.green <= theColor.theParts.green) && (highCol.theColor.theParts.green >= theColor.theParts.green)?theColor.theParts.green:0);
     if(numChan > 2)
       theColor.theParts.blue  = ((lowCol.theColor.theParts.blue  <= theColor.theParts.blue)  && (highCol.theColor.theParts.blue  >= theColor.theParts.blue)?theColor.theParts.green:0);
     if(numChan > 3)
-      theColor.theParts.alpha = ((lowCol.theColor.theParts.alpha  <= theColor.theParts.alpha)  && (highCol.theColor.theParts.alpha  >= theColor.theParts.alpha)?theColor.theParts.green:0);
+      theColor.theParts.alpha = ((lowCol.theColor.theParts.alpha <= theColor.theParts.alpha) && (highCol.theColor.theParts.alpha >= theColor.theParts.alpha)?theColor.theParts.green:0);
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i]   = ((lowCol.theColor.thePartsA[i]  <= theColor.thePartsA[i])  && (highCol.theColor.thePartsA[i]  >= theColor.thePartsA[i])?theColor.theParts.green:0);
+        theColor.thePartsA[i]   = ((lowCol.theColor.thePartsA[i] <= theColor.thePartsA[i])   && (highCol.theColor.thePartsA[i]   >= theColor.thePartsA[i])?theColor.theParts.green:0);
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmStep(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> lowCol,
-                                                                                          colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> highCol) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmStep(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> lowCol,
+                                                                                          colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> highCol) {
     theColor.theParts.red     = ((lowCol.theColor.theParts.red   <= theColor.theParts.red)   && (highCol.theColor.theParts.red   >= theColor.theParts.red)?maxChanVal:0);
     if(numChan > 1)
       theColor.theParts.green = ((lowCol.theColor.theParts.green <= theColor.theParts.green) && (highCol.theColor.theParts.green >= theColor.theParts.green)?maxChanVal:0);
@@ -2767,9 +2732,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmShiftL(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> aCol) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmShiftL(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> aCol) {
     theColor.theParts.red     = theColor.theParts.red   << aCol.theColor.theParts.red;
     if(numChan > 1)
       theColor.theParts.green = theColor.theParts.green << aCol.theColor.theParts.green;
@@ -2784,9 +2749,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmShiftR(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> aCol) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmShiftR(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> aCol) {
     theColor.theParts.red     = theColor.theParts.red   >> aCol.theColor.theParts.red;
     if(numChan > 1)
       theColor.theParts.green = theColor.theParts.green >> aCol.theColor.theParts.green;
@@ -2801,9 +2766,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmDiracTot(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> aCol) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmDiracTot(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> aCol) {
     if(numChan == 1) {                                         // 1 channel
       if(aCol.theColor.theParts.red   == theColor.theParts.red)
         setToWhite();
@@ -2847,9 +2812,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmDirac(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> aCol) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmDirac(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> aCol) {
     theColor.theParts.red     = ((aCol.theColor.theParts.red   == theColor.theParts.red)?maxChanVal:0);
     if(numChan > 1)
       theColor.theParts.green = ((aCol.theColor.theParts.green == theColor.theParts.green)?maxChanVal:0);
@@ -2864,10 +2829,10 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmFuzzyDirac(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> ctrCol,
-                                                                                                colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> radCol) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmFuzzyDirac(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> ctrCol,
+                                                                                                colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> radCol) {
     theColor.theParts.red     = ((std::abs(ctrCol.theColor.theParts.red   - theColor.theParts.red)   <= radCol.theColor.theParts.red  )?maxChanVal:0);
     if(numChan > 1)
       theColor.theParts.green = ((std::abs(ctrCol.theColor.theParts.green - theColor.theParts.green)  <= radCol.theColor.theParts.green)?maxChanVal:0);
@@ -2882,8 +2847,8 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  inline void colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setChanToMin() {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  inline void colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setChanToMin() {
     if(fastMask)
       theColor.theInt = 0;
     else
@@ -2891,8 +2856,8 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  inline void colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setChanToMax() {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  inline void colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setChanToMax() {
     if(fastMaskUnsignedInt)
       theColor.theInt = ~0;
     else
@@ -2901,53 +2866,53 @@ namespace mjr {
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setToBlack() {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setToBlack() {
     setChanToMin();
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /** @todo Make this fast. */
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setToWhite() {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setToWhite() {
     setChanToMax();
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setToRed() {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setToRed() {
     setChanToMin();
     theColor.theParts.red = maxChanVal;
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setToGreen() {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setToGreen() {
     setChanToMin();
     theColor.theParts.green = maxChanVal;
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setToBlue() {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setToBlue() {
     setChanToMin();
     theColor.theParts.blue = maxChanVal;
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setToCyan() {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setToCyan() {
     setChanToMin();
     theColor.theParts.green = maxChanVal;
     theColor.theParts.blue  = maxChanVal;
@@ -2955,9 +2920,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setToYellow() {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setToYellow() {
     setChanToMin();
     theColor.theParts.red   = maxChanVal;
     theColor.theParts.green = maxChanVal;
@@ -2965,9 +2930,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setToMagenta() {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setToMagenta() {
     setChanToMin();
     theColor.theParts.red  = maxChanVal;
     theColor.theParts.blue = maxChanVal;
@@ -2975,9 +2940,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromCorner(cornerColor ccolor) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromCorner(cornerColor ccolor) {
     switch(ccolor) {
     case cornerColor::BLACK:    return setToBlack();   break;
     case cornerColor::WHITE:    return setToWhite();   break;
@@ -2992,9 +2957,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpGreyTGA16bit(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpGreyTGA16bit(int anInt) {
     anInt = IDXCOND(anInt, 65536);
     if( (anInt < 0) || (anInt > 65536) ) {
       SET_ERR_COLOR;
@@ -3006,9 +2971,9 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpGreyTGA24bit(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpGreyTGA24bit(int anInt) {
     anInt = IDXCOND(anInt, 16777216);
     if( (anInt < 0) || (anInt > 16777216) ) {
       SET_ERR_COLOR;
@@ -3021,33 +2986,33 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRainbowHSV(int base, int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRainbowHSV(int base, int anInt) {
     anInt = IDXCOND(anInt, base);
     if( (anInt < minChanVal) || (anInt > base) )
       SET_ERR_COLOR;
     else
-      setColorFromUnitHSV(1.0F * static_cast<float>(anInt) / static_cast<float>(base), 1.0, 1.0);
+      setColorFromUnitHSV(1.0F * static_cast<double>(anInt) / static_cast<double>(base), 1.0, 1.0);
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRainbowLA(int base, int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRainbowLA(int base, int anInt) {
     anInt = IDXCOND(anInt, base);
     if( (anInt < minChanVal) || (anInt > base) )
       SET_ERR_COLOR;
     else
-      setColorFromWavelengthLA((1.0F * static_cast<float>(anInt) / static_cast<float>(base)) * (maxWavelength-minWavelength)+minWavelength);
+      setColorFromWavelengthLA((1.0F * static_cast<double>(anInt) / static_cast<double>(base)) * (maxWavelength-minWavelength)+minWavelength);
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRainbowCM(int base, int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRainbowCM(int base, int anInt) {
     anInt = IDXCOND(anInt, base);
     if( (anInt < minChanVal) || (anInt > base) )
       SET_ERR_COLOR;
@@ -3057,29 +3022,29 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRainbowCM(int base, int anInt, int INTRP) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRainbowCM(int base, int anInt, int INTRP) {
     anInt = IDXCOND(anInt, base);
     if( (anInt < minChanVal) || (anInt > base) )
       SET_ERR_COLOR;
     else
-      setColorFromWavelengthCM((1.0F * static_cast<float>(anInt) / static_cast<float>(base))*(maxWavelength-minWavelength)+minWavelength, INTRP);
+      setColorFromWavelengthCM((1.0F * static_cast<double>(anInt) / static_cast<double>(base))*(maxWavelength-minWavelength)+minWavelength, INTRP);
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpClrCubeRainbow(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpClrCubeRainbow(int anInt) {
     cmpColorRamp(anInt, "RYGCBMR");
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRampGrey2R(int anInt) {
+template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2R(int anInt) {
   if( (anInt < 0) || (anInt > meanChanVal) ) {
     SET_ERR_COLOR;
   } else {
@@ -3090,9 +3055,9 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRampGrey2G(int anInt) {
+template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2G(int anInt) {
   if( (anInt < 0) || (anInt > meanChanVal) ) {
     SET_ERR_COLOR;
   } else {
@@ -3103,9 +3068,9 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRampGrey2B(int anInt) {
+template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2B(int anInt) {
   if( (anInt < 0) || (anInt > meanChanVal) ) {
     SET_ERR_COLOR;
   } else {
@@ -3116,9 +3081,9 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRampGrey2Y(int anInt) {
+template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2Y(int anInt) {
   if( (anInt < 0) || (anInt > meanChanVal) ) {
     SET_ERR_COLOR;
   } else {
@@ -3129,9 +3094,9 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRampGrey2C(int anInt) {
+template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2C(int anInt) {
   if( (anInt < 0) || (anInt > meanChanVal) ) {
     SET_ERR_COLOR;
   } else {
@@ -3142,9 +3107,9 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpRampGrey2M(int anInt) {
+template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int anInt) {
   if( (anInt < 0) || (anInt > meanChanVal) ) {
     SET_ERR_COLOR;
   } else {
@@ -3155,9 +3120,9 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpGrey(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpGrey(int anInt) {
     if( (anInt < minChanVal) || (anInt > maxChanVal) )
       SET_ERR_COLOR;
     else
@@ -3167,55 +3132,55 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpDiagRampCR(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpDiagRampCR(int anInt) {
     cmpColorRamp(anInt, "CR");
     return *this;
   }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpDiagRampMG(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpDiagRampMG(int anInt) {
     cmpColorRamp(anInt, "MG");
     return *this;
   }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpDiagRampYB(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpDiagRampYB(int anInt) {
     cmpColorRamp(anInt, "YB");
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpConstTwoRamp(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpConstTwoRamp(int anInt) {
     cmpColorRamp(anInt, "CMYC");
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpConstOneRamp(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpConstOneRamp(int anInt) {
     cmpColorRamp(anInt, "BRGB");
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpGreyRGB(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpGreyRGB(int anInt) {
     cmpColorRamp(anInt, "0W");
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpGrey3x(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpGrey3x(int anInt) {
     if( (anInt < minChanVal) || (anInt > (3*maxChanVal)) ) {
       SET_ERR_COLOR;
     } else {
@@ -3227,9 +3192,9 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpGrey4x(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpGrey4x(int anInt) {
     if( (anInt < minChanVal) || (anInt > (4*maxChanVal)) ) {
       SET_ERR_COLOR;
     } else {
@@ -3241,12 +3206,12 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpColorRamp(double aDouble,
-                                                                                              int numColors,
-                                                                                              double *anchors,
-                                                                                              colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> *colors) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpColorRamp(double aDouble,
+                                                                               int numColors,
+                                                                               double *anchors,
+                                                                               colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> *colors) {
     double lowAnchor, highAnchor;
     if(anchors == NULL) {
       lowAnchor  = 0.0;
@@ -3278,16 +3243,16 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpColorRamp(int anInt, const char *colChars) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpColorRamp(int anInt, const char *colChars) {
     return cmpColorRamp(anInt, (int)std::strlen(colChars), colChars);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpColorRamp(int anInt, int numColors, const char *colChars) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpColorRamp(int anInt, int numColors, const char *colChars) {
     anInt = IDXCOND(anInt, (maxChanVal*(numColors-1)+1));
     if( (anInt < 0) || (anInt > (maxChanVal*(numColors-1)+1)) ) {
       SET_ERR_COLOR;
@@ -3299,8 +3264,8 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
           if(anInt <= maxChanVal) {
             clrChanT anIntNoMore = static_cast<clrChanT>(anInt);
             // Note: This could be MUCH better optimized!
-            colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> c1;
-            colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> c2;
+            colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> c1;
+            colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> c2;
             c1.setColorFromLetter(colChars[i]);
             c2.setColorFromLetter(colChars[i+1]);
             clrChanT r, g, b;
@@ -3327,7 +3292,7 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
             }
             return setColorRGB(r, g, b);
           } else {
-//  MJR SCM NOTE <2022-06-15T12:12:20-0500> colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpColorRamp: What is this fore?
+//  MJR SCM NOTE <2022-06-15T12:12:20-0500> colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpColorRamp: What is this fore?
             anInt = anInt - maxChanVal;
           }
         }
@@ -3340,11 +3305,11 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::interplColors(double aDouble,
-                                                                                               colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col1,
-                                                                                               colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col2) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::interplColors(double aDouble,
+                                                                                               colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
+                                                                                               colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2) {
     if( (aDouble < 0.0) || (aDouble > 1.0) ) {
       SET_ERR_COLOR;
     } else {
@@ -3363,12 +3328,12 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::wMean(clrChanFArthT w1, clrChanFArthT w2, clrChanFArthT w3,
-                                                                                       colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col1,
-                                                                                       colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col2,
-                                                                                       colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col3) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::wMean(double w1, double w2, double w3,
+                                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
+                                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2,
+                                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col3) {
 
     if((w1 < 0) || (w2 < 0) || (w3 < 0) || (w1 > 1) || (w2 > 1) || (w3 > 1) || (std::abs(w1+w2+w3-1) > 0.001)) {
       return SET_ERR_COLOR;
@@ -3388,31 +3353,31 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::wMean(clrChanFArthT w1, clrChanFArthT w2,
-                                                                                       colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col1,
-                                                                                       colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col2,
-                                                                                       colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col3) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::wMean(double w1, double w2,
+                                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
+                                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2,
+                                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col3) {
     return wMean(w1, w2, 1-w1-w2, col1, col2, col3);
   }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::wMean(clrChanFArthT w1,
-                                                                                       colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col1,
-                                                                                       colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col2) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::wMean(double w1,
+                                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
+                                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2) {
     return wMean(w1, 1-w1, col1, col2);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::wMean(clrChanFArthT w1, clrChanFArthT w2,
-                                                                                       colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col1,
-                                                                                       colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col2) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::wMean(double w1, double w2,
+                                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
+                                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2) {
     if((w1 < 0) || (w2 < 0) || (w1 > 1) || (w2 > 1) || (std::abs(w1+w2-1) > 0.001)) {
       return SET_ERR_COLOR;
     } else {
@@ -3431,21 +3396,21 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::interplColorsHLS(double aDouble,
-                                                                                                  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col1,
-                                                                                                  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> col2) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::interplColorsHLS(double aDouble,
+                                                                                                  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
+                                                                                                  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2) {
     // Convert our given colors into HLS
-    float H1, L1, S1;
-    float H2, L2, S2;
+    double H1, L1, S1;
+    double H2, L2, S2;
     col1.rgb2hls(&H1, &L1, &S1);
     col2.rgb2hls(&H2, &L2, &S2);
 
     // Interpolate in HLS space..
-    float Hi = (H2 - H1) * static_cast<float>(aDouble) + H1;
-    float Li = (L2 - L1) * static_cast<float>(aDouble) + L1;
-    float Si = (S2 - S1) * static_cast<float>(aDouble) + S1;
+    double Hi = (H2 - H1) * static_cast<double>(aDouble) + H1;
+    double Li = (L2 - L1) * static_cast<double>(aDouble) + L1;
+    double Si = (S2 - S1) * static_cast<double>(aDouble) + S1;
 
     // Set the current color and return.
     setColorFromNaturalHLS(Hi, Li, Si);
@@ -3453,10 +3418,10 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::interplColors(double aDouble,
-                                                                                               colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> tooCol) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::interplColors(double aDouble,
+                                                                                               colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> tooCol) {
     if( (aDouble < 0.0) || (aDouble > 1.0) ) {
       SET_ERR_COLOR;
     } else {
@@ -3475,105 +3440,105 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpUpDownRampBr(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpUpDownRampBr(int anInt) {
     cmpColorRamp(anInt, "YC");
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpUpDownRampBg(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpUpDownRampBg(int anInt) {
     cmpColorRamp(anInt, "YM");
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpUpDownRampGr(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpUpDownRampGr(int anInt) {
     cmpColorRamp(anInt, "MC");
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpUpDownRampGb(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpUpDownRampGb(int anInt) {
     cmpColorRamp(anInt, "MY");
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpUpDownRampRg(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpUpDownRampRg(int anInt) {
     cmpColorRamp(anInt, "CM");
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpUpDownRampRb(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpUpDownRampRb(int anInt) {
     cmpColorRamp(anInt, "CY");
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpSumRampRGB(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpSumRampRGB(int anInt) {
     cmpColorRamp(anInt, "0RYW");
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpSumRampBGR(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpSumRampBGR(int anInt) {
     cmpColorRamp(anInt, "0BCW");
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpSumRampGRB(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpSumRampGRB(int anInt) {
     cmpColorRamp(anInt, "0GYW");
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpSumRampGBR(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpSumRampGBR(int anInt) {
     cmpColorRamp(anInt, "0GCW");
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpSumRampBRG(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpSumRampBRG(int anInt) {
     cmpColorRamp(anInt, "0BMW");
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpSumRampRBG(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpSumRampRBG(int anInt) {
     cmpColorRamp(anInt, "0RMW");
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpBinaryColorRampRG(int anInt, int threshold) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpBinaryColorRampRG(int anInt, int threshold) {
     anInt = IDXCOND(anInt, maxChanVal);
     if( (anInt < minChanVal) || (anInt > (maxChanVal)) ) {
       SET_ERR_COLOR;
@@ -3587,9 +3552,9 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpBinaryColorRampRB(int anInt, int threshold) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpBinaryColorRampRB(int anInt, int threshold) {
     anInt = IDXCOND(anInt, maxChanVal);
     if( (anInt < minChanVal) || (anInt > (maxChanVal)) ) {
       SET_ERR_COLOR;
@@ -3603,9 +3568,9 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpBinaryColorRampGR(int anInt, int threshold) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpBinaryColorRampGR(int anInt, int threshold) {
     anInt = IDXCOND(anInt, maxChanVal);
     if( (anInt < minChanVal) || (anInt > (maxChanVal)) ) {
       SET_ERR_COLOR;
@@ -3619,9 +3584,9 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpBinaryColorRampGB(int anInt, int threshold) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpBinaryColorRampGB(int anInt, int threshold) {
     anInt = IDXCOND(anInt, maxChanVal);
     if( (anInt < minChanVal) || (anInt > (maxChanVal)) ) {
       SET_ERR_COLOR;
@@ -3635,9 +3600,9 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpBinaryColorRampBR(int anInt, int threshold) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpBinaryColorRampBR(int anInt, int threshold) {
     anInt = IDXCOND(anInt, maxChanVal);
     if( (anInt < minChanVal) || (anInt > (maxChanVal)) ) {
       SET_ERR_COLOR;
@@ -3651,9 +3616,9 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpBinaryColorRampBG(int anInt, int threshold) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpBinaryColorRampBG(int anInt, int threshold) {
     anInt = IDXCOND(anInt, maxChanVal);
     if( (anInt < minChanVal) || (anInt > (maxChanVal)) ) {
       SET_ERR_COLOR;
@@ -3667,33 +3632,33 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpFireRamp(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpFireRamp(int anInt) {
     cmpSumRampRGB(anInt);
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpColdToHot(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpColdToHot(int anInt) {
     cmpColorRamp(anInt, "BCGYR");
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::cmpIceToWaterToHot(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpIceToWaterToHot(int anInt) {
     cmpColorRamp(anInt, "WCBYR");
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   clrChanT
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::colorComp2WebSafeColorComp(clrChanT aColorComp) {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::colorComp2WebSafeColorComp(clrChanT aColorComp) {
     clrChanT minCol;
     int minDist;
     uint8_t charCompVal;
@@ -3715,9 +3680,9 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   clrChanT
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::colorComp2CloseColorComp(clrChanT aColorComp, clrChanT *discreetVals, int numVals) {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::colorComp2CloseColorComp(clrChanT aColorComp, clrChanT *discreetVals, int numVals) {
     clrChanT minCol = -1;
     int minDist = maxChanVal;
     // Find the closest of the discreetVals
@@ -3730,9 +3695,9 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmWebSafe216() {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmWebSafe216() {
     theColor.theParts.red     = colorComp2WebSafeColorComp(theColor.theParts.red);
     if(numChan > 1)
       theColor.theParts.green = colorComp2WebSafeColorComp(theColor.theParts.green);
@@ -3747,9 +3712,9 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmWebSafePro216() {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmWebSafePro216() {
     tfrmWebSafe216();
     int colIdx = 36 * (getRed8bit() / 0x33) + 6 * (getGreen8bit() / 0x33) + 1 * (getBlue8bit() / 0x33) + 1;
     if( (colIdx < 0) || (colIdx >= 218) ) {
@@ -3761,9 +3726,9 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmWebSafeDeu216() {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmWebSafeDeu216() {
     tfrmWebSafe216();
     int colIdx = 36 * (getRed8bit() / 0x33) + 6 * (getGreen8bit() / 0x33) + 1 * (getBlue8bit() / 0x33) + 1;
     if( (colIdx < 0) || (colIdx >= 218) ) {
@@ -3775,9 +3740,9 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmWebSafeTri216() {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmWebSafeTri216() {
     tfrmWebSafe216();
     int colIdx = 36 * (getRed8bit() / 0x33) + 6 * (getGreen8bit() / 0x33) + 1 * (getBlue8bit() / 0x33) + 1;
     if( (colIdx < 0) || (colIdx >= 218) ) {
@@ -3789,9 +3754,9 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::tfrmInvert() {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmInvert() {
     theColor.theParts.red   = maxChanVal - theColor.theParts.red;
     theColor.theParts.green = maxChanVal - theColor.theParts.green;
     theColor.theParts.blue  = maxChanVal - theColor.theParts.blue;
@@ -3799,46 +3764,46 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   int
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::color2GreyDotProd(int redWt, int greenWt, int blueWt) {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::color2GreyDotProd(int redWt, int greenWt, int blueWt) {
     return (theColor.theParts.red   * redWt +
             theColor.theParts.green * greenWt +
             theColor.theParts.blue  * blueWt);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   double
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::colorLuminance(void) {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::colorLuminance(void) {
     return (theColor.theParts.red   * 0.2126 +
             theColor.theParts.green * 0.7152 +
             theColor.theParts.blue  * 0.0722) / maxChanVal;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  clrChanIArthT
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::colorSumIntensity(void) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  clrChanArthT
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::colorSumIntensity(void) {
     return (theColor.theParts.red   +
             theColor.theParts.green +
             theColor.theParts.blue);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   double
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::colorScaledIntensity(void) {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::colorScaledIntensity(void) {
     return (theColor.theParts.red   +
             theColor.theParts.green +
             theColor.theParts.blue)   / (numChan * maxChanVal);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   int
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::distP2sq(
-    colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> aColor) {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::distP2sq(
+    colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> aColor) {
     if(numChan == 1) {                                         // 1 channel
       return ((theColor.theParts.red   - aColor.theColor.theParts.red)   * (theColor.theParts.red   - aColor.theColor.theParts.red));
     } else if(numChan == 2) {                                  // 2 channels
@@ -3854,7 +3819,7 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
               (theColor.theParts.blue  - aColor.theColor.theParts.blue)  * (theColor.theParts.blue  - aColor.theColor.theParts.blue)  +
               (theColor.theParts.blue  - aColor.theColor.theParts.alpha) * (theColor.theParts.blue  - aColor.theColor.theParts.alpha));
     } else {                                                   // 5 or more channels
-      clrChanIArthT daDist = ((theColor.theParts.red   - aColor.theColor.theParts.red)   * (theColor.theParts.red   - aColor.theColor.theParts.red)   +
+      clrChanArthT daDist = ((theColor.theParts.red   - aColor.theColor.theParts.red)   * (theColor.theParts.red   - aColor.theColor.theParts.red)   +
                               (theColor.theParts.green - aColor.theColor.theParts.green) * (theColor.theParts.green - aColor.theColor.theParts.green) +
                               (theColor.theParts.blue  - aColor.theColor.theParts.blue)  * (theColor.theParts.blue  - aColor.theColor.theParts.blue)  +
                               (theColor.theParts.blue  - aColor.theColor.theParts.alpha) * (theColor.theParts.blue  - aColor.theColor.theParts.alpha));
@@ -3865,10 +3830,10 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   int
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::dotProd(
-    colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> aColor) {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::dotProd(
+    colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> aColor) {
     if(numChan == 1) {                                         // 1 channel
       return (theColor.theParts.red    * aColor.theColor.theParts.red);
     } else if(numChan == 2) {                                  // 2 channels
@@ -3895,39 +3860,39 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   int
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::distAbs(
-    colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> aColor) {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::distAbs(
+    colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> aColor) {
 
     if(numChan == 1) {                                      // 1 channel
-      return (std::abs((clrChanIArthT)theColor.theParts.red   - aColor.theColor.theParts.red));
+      return (std::abs((clrChanArthT)theColor.theParts.red   - aColor.theColor.theParts.red));
     } else if(numChan == 2) {                               // 2 channels
-      return (std::abs((clrChanIArthT)theColor.theParts.red   - aColor.theColor.theParts.red) +
-              std::abs((clrChanIArthT)theColor.theParts.green - aColor.theColor.theParts.green));
+      return (std::abs((clrChanArthT)theColor.theParts.red   - aColor.theColor.theParts.red) +
+              std::abs((clrChanArthT)theColor.theParts.green - aColor.theColor.theParts.green));
     } else if(numChan == 3) {                               // 3 channels
-      return (std::abs((clrChanIArthT)theColor.theParts.red   - aColor.theColor.theParts.red)   +
-              std::abs((clrChanIArthT)theColor.theParts.green - aColor.theColor.theParts.green) +
-              std::abs((clrChanIArthT)theColor.theParts.blue  - aColor.theColor.theParts.blue));
+      return (std::abs((clrChanArthT)theColor.theParts.red   - aColor.theColor.theParts.red)   +
+              std::abs((clrChanArthT)theColor.theParts.green - aColor.theColor.theParts.green) +
+              std::abs((clrChanArthT)theColor.theParts.blue  - aColor.theColor.theParts.blue));
     } else if(numChan == 4) {                               // 4 channels
-      return (std::abs((clrChanIArthT)theColor.theParts.red   - aColor.theColor.theParts.red)   +
-              std::abs((clrChanIArthT)theColor.theParts.green - aColor.theColor.theParts.green) +
-              std::abs((clrChanIArthT)theColor.theParts.blue  - aColor.theColor.theParts.blue)  +
-              std::abs((clrChanIArthT)theColor.theParts.alpha - aColor.theColor.theParts.alpha));
+      return (std::abs((clrChanArthT)theColor.theParts.red   - aColor.theColor.theParts.red)   +
+              std::abs((clrChanArthT)theColor.theParts.green - aColor.theColor.theParts.green) +
+              std::abs((clrChanArthT)theColor.theParts.blue  - aColor.theColor.theParts.blue)  +
+              std::abs((clrChanArthT)theColor.theParts.alpha - aColor.theColor.theParts.alpha));
     } else {                                                // 5 or more channels
-      clrChanIArthT daDist = (std::abs((clrChanIArthT)theColor.theParts.red   - aColor.theColor.theParts.red)   +
-                              std::abs((clrChanIArthT)theColor.theParts.green - aColor.theColor.theParts.green) +
-                              std::abs((clrChanIArthT)theColor.theParts.blue  - aColor.theColor.theParts.blue)  +
-                              std::abs((clrChanIArthT)theColor.theParts.alpha - aColor.theColor.theParts.alpha));
+      clrChanArthT daDist = (std::abs((clrChanArthT)theColor.theParts.red   - aColor.theColor.theParts.red)   +
+                              std::abs((clrChanArthT)theColor.theParts.green - aColor.theColor.theParts.green) +
+                              std::abs((clrChanArthT)theColor.theParts.blue  - aColor.theColor.theParts.blue)  +
+                              std::abs((clrChanArthT)theColor.theParts.alpha - aColor.theColor.theParts.alpha));
       for(int i=4; i<numChan; i++)
-        daDist += std::abs((clrChanIArthT)theColor.thePartsA[i] - aColor.theColor.thePartsA[i]);
+        daDist += std::abs((clrChanArthT)theColor.thePartsA[i] - aColor.theColor.thePartsA[i]);
       return daDist;
     }
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  int colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::isBlack() {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  int colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::isBlack() {
     if(fastMask) {
       return (theColor.theInt == 0);
     } else {
@@ -3951,8 +3916,8 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  int colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::isEqual(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> aColor) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  int colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::isEqual(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> aColor) {
     if(fastMask) {
       return (theColor.theInt == aColor.theColor.theInt);
     } else {
@@ -3976,20 +3941,20 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  int colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::isNotEqual(colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> aColor) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  int colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::isNotEqual(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> aColor) {
     return !(isEqual(aColor));
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromUnitHSV(float h, float s, float v) {
-    float f, p, q;
-    float rf, gf, bf;
-    float t;
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromUnitHSV(double h, double s, double v) {
+    double f, p, q;
+    double rf, gf, bf;
+    double t;
 
-    f = static_cast<float>(std::modf(h * 6.0F, &t));
+    f = static_cast<double>(std::modf(h * 6.0F, &t));
     int i = static_cast<int>(t) % 6;
 
     p = v * (1 - s);
@@ -4012,29 +3977,29 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromUnitHLS(float H, float L, float S) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromUnitHLS(double H, double L, double S) {
     setColorFromNaturalHLS(H*360, L, S);
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromNaturalHLS(float H, float L, float S) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromNaturalHLS(double H, double L, double S) {
     // Make sure we have appropriate L and S values
     if( (L < 0.0) || (L > 1.0) || (S < 0.0) || (S > 1.0) ) {
       SET_ERR_COLOR;
     } else {
       // Wrap h into the range [0, 360)
-      float hFrac, hTmp;
-      hFrac = static_cast<float>(std::modf(H, &hTmp));
+      double hFrac, hTmp;
+      hFrac = static_cast<double>(std::modf(H, &hTmp));
       int hInt = static_cast<int>(hTmp) % 360;
-      H = hFrac + static_cast<float>(hInt);
+      H = hFrac + static_cast<double>(hInt);
       // Compute the magic numbers..
-      const float epsilon = 0.000001F;
-      float m1, m2;
+      const double epsilon = 0.000001F;
+      double m1, m2;
       if(L <= 0.5F)
         m2 = L * (1.0F + S);
       else
@@ -4053,9 +4018,9 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   double
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::hslHelperVal(double n1, double n2, double hue) {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::hslHelperVal(double n1, double n2, double hue) {
     if(hue>360)
       hue -= 360;
     if(hue<0)
@@ -4071,9 +4036,9 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::icpWebSafe216(int anInt) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::icpWebSafe216(int anInt) {
     if( (anInt < 0) || (anInt > 217) ) {
       SET_ERR_COLOR;
     } else {
@@ -4083,9 +4048,9 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::icpSetColor(int anInt, const char **icpArray) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::icpSetColor(int anInt, const char **icpArray) {
     int numColorsInArray = (int)strtol(icpArray[0], NULL, 16) - 1;
     anInt++; // Increment anInt
     if( (anInt < 1) || (anInt > numColorsInArray) ) {
@@ -4097,9 +4062,9 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::icpSetColor(int anInt, const uint32_t* icpArray) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::icpSetColor(int anInt, const uint32_t* icpArray) {
     int numColorsInArray = icpArray[0];
     anInt++; // Increment anInt
     if( (anInt < 1) || (anInt > numColorsInArray) ) {
@@ -4111,26 +4076,26 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromWavelengthCM(float wavelength) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromWavelengthCM(double wavelength) {
     return setColorFromWavelengthCM(wavelength, 3);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromWavelengthCM(float wavelength, int INTRP) {
-    float rf, gf, bf;
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromWavelengthCM(double wavelength, int INTRP) {
+    double rf, gf, bf;
 
     // Data about the color matching function table used. This should be abstracted away so that other color matching functions may be used.  Going to the
     // trouble of abstracting the color match function concept may not be worth the effort...
-    const float minWL = 390.0F;     // Min wavelength in table
-    const float maxWL = 830.0F;     // Max wavelength in table
+    const double minWL = 390.0F;     // Min wavelength in table
+    const double maxWL = 830.0F;     // Max wavelength in table
     const int   numPT = 89;      // Number fo points in the table
-    const float rScl  = 3.1673F;  // Scale factors for color function
-    const float gScl  = 1.0517F;
-    const float bScl  = 1.0019F;
+    const double rScl  = 3.1673F;  // Scale factors for color function
+    const double gScl  = 1.0517F;
+    const double bScl  = 1.0019F;
 
     // Clip the wavelength to be in range
     if(wavelength < minWL)
@@ -4139,13 +4104,13 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
       wavelength = maxWL;
 
     // Figure out where we are in our color function table
-    float fIdx  = (wavelength-minWL)/(maxWL-minWL)*(numPT-1.0F);
+    double fIdx  = (wavelength-minWL)/(maxWL-minWL)*(numPT-1.0F);
     int   iIdx1 = static_cast<int>(fIdx);
     int   iIdx2 = iIdx1+1;
 
     // If we fell off the edge, then we set our indexes to the appropriate edge
-    if(iIdx2>(numPT-1)) { iIdx1 = numPT-2; iIdx2 = numPT-1; fIdx = static_cast<float>(iIdx1); }
-    if(iIdx1<0)         { iIdx1 = 0;       iIdx2 = 1;       fIdx = static_cast<float>(iIdx1); }
+    if(iIdx2>(numPT-1)) { iIdx1 = numPT-2; iIdx2 = numPT-1; fIdx = static_cast<double>(iIdx1); }
+    if(iIdx1<0)         { iIdx1 = 0;       iIdx2 = 1;       fIdx = static_cast<double>(iIdx1); }
 
     // Interpolate using our tabulated color matching function
     switch(INTRP) {
@@ -4171,14 +4136,14 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
       }
       break;
     case 3 : // Linear interpolation between data points
-      rf = (fIdx-static_cast<float>(iIdx1)) * (colMatchPoints[iIdx2][1] - colMatchPoints[iIdx1][1]) + colMatchPoints[iIdx1][1];
-      gf = (fIdx-static_cast<float>(iIdx1)) * (colMatchPoints[iIdx2][2] - colMatchPoints[iIdx1][2]) + colMatchPoints[iIdx1][2];
-      bf = (fIdx-static_cast<float>(iIdx1)) * (colMatchPoints[iIdx2][3] - colMatchPoints[iIdx1][3]) + colMatchPoints[iIdx1][3];
+      rf = (fIdx-static_cast<double>(iIdx1)) * (colMatchPoints[iIdx2][1] - colMatchPoints[iIdx1][1]) + colMatchPoints[iIdx1][1];
+      gf = (fIdx-static_cast<double>(iIdx1)) * (colMatchPoints[iIdx2][2] - colMatchPoints[iIdx1][2]) + colMatchPoints[iIdx1][2];
+      bf = (fIdx-static_cast<double>(iIdx1)) * (colMatchPoints[iIdx2][3] - colMatchPoints[iIdx1][3]) + colMatchPoints[iIdx1][3];
       break;
     case 4 : // Use exponential hump functions -- MJR developed algorithm 2007
-      rf = 3.07F / static_cast<float>(std::exp(0.0005F * (wavelength-600.0F)*(wavelength-600.0F))) + 0.09F / static_cast<float>(std::exp(0.005F * (wavelength-425.0F)*(wavelength-425.0F)));
-      gf = 1.05F / static_cast<float>(std::exp(0.0004F * (wavelength-540.0F)*(wavelength-540.0F)));
-      bf = 1.00F / static_cast<float>(std::exp(0.0010F * (wavelength-450.0F)*(wavelength-450.0F)));
+      rf = 3.07F / static_cast<double>(std::exp(0.0005F * (wavelength-600.0F)*(wavelength-600.0F))) + 0.09F / static_cast<double>(std::exp(0.005F * (wavelength-425.0F)*(wavelength-425.0F)));
+      gf = 1.05F / static_cast<double>(std::exp(0.0004F * (wavelength-540.0F)*(wavelength-540.0F)));
+      bf = 1.00F / static_cast<double>(std::exp(0.0010F * (wavelength-450.0F)*(wavelength-450.0F)));
       break;
     default:
       rf = gf = bf = 0.0F;
@@ -4196,21 +4161,21 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromNaturalHSV(float h, float s, float v) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromNaturalHSV(double h, double s, double v) {
     setColorFromUnitHSV(h/360.0F, s/100.0F, v/100.0F);
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::setColorFromWavelengthLA(float wavelength) {
-    float rf, gf, bf;
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromWavelengthLA(double wavelength) {
+    double rf, gf, bf;
 
-    const float minWL = 380.0F;     // Min wavelength in table
-    const float maxWL = 780.0F;     // Max wavelength in table
+    const double minWL = 380.0F;     // Min wavelength in table
+    const double maxWL = 780.0F;     // Max wavelength in table
 
     // Clip the wavelength to be in range
     if(wavelength < minWL)
@@ -4247,7 +4212,7 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
     }
 
     /* Lower the intensity near edges of vision. */
-    float edgeIntensityAdj;
+    double edgeIntensityAdj;
     if(wavelength > 700.0F) {
       edgeIntensityAdj=0.3F + 0.7F * (780-wavelength)/(780-700);
     } else if(wavelength < 420.0F) {
@@ -4261,8 +4226,8 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  clrChanT colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::clipTop(clrChanIArthT anArithComp) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  clrChanT colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::clipTop(clrChanArthT anArithComp) {
     if(anArithComp > maxChanVal)
       return maxChanVal;
     else
@@ -4270,8 +4235,8 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  clrChanT colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::clipBot(clrChanIArthT anArithComp) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  clrChanT colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::clipBot(clrChanArthT anArithComp) {
     if(anArithComp < minChanVal)
       return minChanVal;
     else
@@ -4279,8 +4244,8 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  clrChanT colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::clipAll(clrChanIArthT anArithComp) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  clrChanT colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::clipAll(clrChanArthT anArithComp) {
     if(anArithComp > maxChanVal)
       return maxChanVal;
     if(anArithComp < minChanVal)
@@ -4289,18 +4254,18 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  int colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::rgb2hsv(clrChanFArthT *H, clrChanFArthT *S, clrChanFArthT *V) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  int colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::rgb2hsv(double *H, double *S, double *V) {
     if(numChan < 3) {
       return 1;
     } else {
       clrChanT rgbMaxI = getMaxRGB();
       clrChanT rgbMinI = getMinRGB();
 
-      float rgbMaxF = 1.0 * rgbMaxI / maxChanVal;
-      float rgbMinF = 1.0 * rgbMinI / maxChanVal;
+      double rgbMaxF = 1.0 * rgbMaxI / maxChanVal;
+      double rgbMinF = 1.0 * rgbMinI / maxChanVal;
 
-      float rangeF = rgbMaxF - rgbMinF;
+      double rangeF = rgbMaxF - rgbMinF;
 
       // Compute V
       *V = rgbMaxF;
@@ -4318,19 +4283,19 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  int colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::rgb2hls(clrChanFArthT *H, clrChanFArthT *L, clrChanFArthT *S) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  int colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::rgb2hls(double *H, double *L, double *S) {
     if(numChan < 3) {
       return 1;
     } else {
       clrChanT rgbMaxI = getMaxRGB();
       clrChanT rgbMinI = getMinRGB();
 
-      float rgbMaxF = 1.0F * rgbMaxI / maxChanVal;
-      float rgbMinF = 1.0F * rgbMinI / maxChanVal;
+      double rgbMaxF = 1.0F * rgbMaxI / maxChanVal;
+      double rgbMinF = 1.0F * rgbMinI / maxChanVal;
 
-      float rangeF = rgbMaxF - rgbMinF;
-      float sumF   = rgbMaxF + rgbMinF;
+      double rangeF = rgbMaxF - rgbMinF;
+      double sumF   = rgbMaxF + rgbMinF;
 
       // Compute L
       *L = sumF / 2.0F;
@@ -4354,28 +4319,28 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  clrChanFArthT colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::rgb2h() {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  double colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::rgb2h() {
     if(numChan < 3) {
       return -1.0;
     } else {
-      clrChanFArthT rf = getRedF();
-      clrChanFArthT gf = getGreenF();
-      clrChanFArthT bf = getBlueF();
+      double rf = getRedF();
+      double gf = getGreenF();
+      double bf = getBlueF();
 
       clrChanT rgbMaxI = getMaxRGB();
       clrChanT rgbMinI = getMinRGB();
 
-      float rgbMaxF = 1.0F * rgbMaxI / maxChanVal;
-      float rgbMinF = 1.0F * rgbMinI / maxChanVal;
+      double rgbMaxF = 1.0F * rgbMaxI / maxChanVal;
+      double rgbMinF = 1.0F * rgbMinI / maxChanVal;
 
-      float rangeF = rgbMaxF - rgbMinF;
+      double rangeF = rgbMaxF - rgbMinF;
 
       // Compute H -- if rgbMaxI==0 ==> rgbMaxI==rgbMinI, but we write it for clarity.  Same as S==0.0 without the possibility for round off error.
       if( (rangeF == 0) || (rgbMaxI == 0) ) {
         return 0.0;
       } else {
-        float H;
+        double H;
         // We use the rgbMaxI to avoid round off error in comparing floating point values.
         if(theColor.theParts.red == rgbMaxI)
           H = 0.0F + (gf - bf) / rangeF;
@@ -4399,8 +4364,8 @@ colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan>::c
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /** I/O stream output operator for colorTpl types. */
-  template <class clrMaskT, class clrChanT, class clrChanIArthT, class clrChanFArthT, class clrNameT, int numChan>
-  std::ostream& operator<< (std::ostream &out, colorTpl<clrMaskT, clrChanT, clrChanIArthT, clrChanFArthT, clrNameT, numChan> &color) {
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  std::ostream& operator<< (std::ostream &out, colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> &color) {
     for(int i=0; i<numChan; i++)
       out << (uint64_t)color.getChan(i) << " ";
     return out;

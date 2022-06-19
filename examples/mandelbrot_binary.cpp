@@ -35,7 +35,7 @@
   - gray: Shaded by the argument
   - quad: Like the traditional method, but different colors for each quadrant
 
- This example demonstrates how to use some of the types defined in the ramCanvas object (integer coordinates, float coordinates, color, and color channel)
+ This example demonstrates how to use some of the types defined in the ramCanvas object (integer coordinates, double coordinates, color, and color channel)
 ***************************************************************************************************************************************************************/
 
 #include "ramCanvas.hpp"
@@ -50,29 +50,29 @@ double ranges[3][4] = { { -2.0,        1.0,       -1.5,        1.5       },
 enum class whyStopMB {OUTSET, MAXCOUNT, INSET};
 
 typedef mjr::ramCanvas3c8b rc;    // The Ram Canvas type we will use
-typedef rc::rcColor        rcc;   // The color type in our Ram Canvas type
+typedef rc::colorType      rcc;   // The color type in our Ram Canvas type
 
 int main(void)
 {
-  const int           CSIZE = 1024*1;
-  const rc::rcCordFlt BALL  = 100;
-  rc                  binRamCanvas(CSIZE, CSIZE), grayRamCanvas(CSIZE, CSIZE), quadRamCanvas(CSIZE, CSIZE);
-  rcc                 theColor;
-  whyStopMB           why;
+  const int              CSIZE = 1024*1;
+  const rc::coordFltType BALL  = 100;
+  rc                     binRamCanvas(CSIZE, CSIZE), grayRamCanvas(CSIZE, CSIZE), quadRamCanvas(CSIZE, CSIZE);
+  rcc                    theColor;
+  whyStopMB              why;
 
   for(int i=0; i<3; i++) {
     binRamCanvas.newRealCoords(ranges[i][0], ranges[i][1], ranges[i][2], ranges[i][3]);
     binRamCanvas.clrCanvasToBlack();
-    std::complex<rc::rcCordFlt> z;
-    for(rc::rcCordInt y=0;y<binRamCanvas.get_numYpix();y++) {
+    std::complex<rc::coordFltType> z;
+    for(rc::coordIntType y=0;y<binRamCanvas.get_numYpix();y++) {
       if((y%(CSIZE/10))==0)
         std::cout << "    CASE: " << i << " LINE: " << y << "/" << CSIZE << std::endl;
-      for(rc::rcCordInt x=0;x<binRamCanvas.get_numXpix();x++) {
+      for(rc::coordIntType x=0;x<binRamCanvas.get_numXpix();x++) {
         int count;
-        rc::rcCordFlt cr = binRamCanvas.int2realX(x);
-        rc::rcCordFlt ci = binRamCanvas.int2realY(y);
-        std::complex<rc::rcCordFlt> c(cr, ci);
-        rc::rcCordFlt p = std::abs(c-0.25);
+        rc::coordFltType cr = binRamCanvas.int2realX(x);
+        rc::coordFltType ci = binRamCanvas.int2realY(y);
+        std::complex<rc::coordFltType> c(cr, ci);
+        rc::coordFltType p = std::abs(c-0.25);
         if((cr >= p-2.0*p*p+0.25) && std::abs(c+1.0) >= 0.25) {
           z=c;
           for(count=0; ; count++) {
@@ -91,7 +91,7 @@ int main(void)
         }
 
         if(why == whyStopMB::OUTSET) {
-          rc::rcCordFlt zAbs = std::abs(z);
+          rc::coordFltType zAbs = std::abs(z);
           if(zAbs > 0.001) {
             rcc::channelType ns = ( std::imag(z) > 0 ? 0 : 255 );
             rcc::channelType ew = ( std::real(z) > 0 ? 0 : 255 );

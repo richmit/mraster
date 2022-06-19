@@ -36,7 +36,7 @@
 #include "ramCanvas.hpp"
 
 const int NPR = 27;
-typename mjr::ramCanvas1c16b::rcCordFlt params[NPR][12] = {
+typename mjr::ramCanvas1c16b::coordFltType params[NPR][12] = {
   /*  lambda       alpha      beta     gamma      omega   n    ipw   xmin  xmax   ymin  ymax    1=mean */
   { 1.375390, -0.4212800,  0.26969,  0.08352,  0.338347,  6, 15.00, -1.30, 1.30, -1.30, 1.30, 1.0}, // 0  |
   { 1.600230, -1.1340800, -0.17506,  0.67872,  0.049490,  6, 14.00,  0.10, 0.70,  0.43, 0.90, 0.0}, // 1  |  WACKY
@@ -72,7 +72,7 @@ class g2rgb8 {
     int factor;
   public:
     g2rgb8(uint64_t newFactor) { factor = static_cast<int>(newFactor); }
-    mjr::colorRGB8b operator() (mjr::ramCanvas1c16b::rcColor c) {
+    mjr::colorRGB8b operator() (mjr::ramCanvas1c16b::colorType c) {
       mjr::colorRGB8b retColor;
       return retColor.cmpColorRamp(c.getRed() * 1275 / factor, "0RYBCW");
     }
@@ -85,24 +85,24 @@ int main(void) {
   //for(int j=0; j<NPR; j++) {
     for(int j : { 0 } ) {
     mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, params[j][7], params[j][8], params[j][9], params[j][10]);
-    typename mjr::ramCanvas1c16b::rcCordFlt lambda = params[j][0];
-    typename mjr::ramCanvas1c16b::rcCordFlt alpha  = params[j][1];
-    typename mjr::ramCanvas1c16b::rcCordFlt beta   = params[j][2];
-    typename mjr::ramCanvas1c16b::rcCordFlt gamma  = params[j][3];
-    typename mjr::ramCanvas1c16b::rcCordFlt w      = params[j][4];
+    typename mjr::ramCanvas1c16b::coordFltType lambda = params[j][0];
+    typename mjr::ramCanvas1c16b::coordFltType alpha  = params[j][1];
+    typename mjr::ramCanvas1c16b::coordFltType beta   = params[j][2];
+    typename mjr::ramCanvas1c16b::coordFltType gamma  = params[j][3];
+    typename mjr::ramCanvas1c16b::coordFltType w      = params[j][4];
+    double ipw   = static_cast<double>(params[j][6]);
     int n        = static_cast<int>(  params[j][5]);
-    float ipw    = static_cast<float>(params[j][6]);
     int filter   = static_cast<int>(  params[j][11]);
 
-    std::complex<typename mjr::ramCanvas1c16b::rcCordFlt> cplxi (0,1);
+    std::complex<typename mjr::ramCanvas1c16b::coordFltType> cplxi (0,1);
 
     uint64_t maxitr = 10000000000ul;
 
-    std::complex<typename mjr::ramCanvas1c16b::rcCordFlt> z(.01,.01);
+    std::complex<typename mjr::ramCanvas1c16b::coordFltType> z(.01,.01);
     uint64_t maxII = 0;
     for(uint64_t i=0;i<maxitr;i++) {
       z = (lambda + alpha*z*std::conj(z)+beta*std::pow(z, n).real() + w*cplxi)*z+gamma*std::pow(std::conj(z), n-1);
-      typename mjr::ramCanvas1c16b::rcCordFlt x=z.real(), y=z.imag();
+      typename mjr::ramCanvas1c16b::coordFltType x=z.real(), y=z.imag();
       if(i>1000)
         theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColor(x, y).tfrmAdd(aColor));
       if(theRamCanvas.getPxColor(x, y).getRed() > maxII) {

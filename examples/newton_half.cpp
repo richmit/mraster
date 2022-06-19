@@ -49,7 +49,7 @@ enum class whyStopNH { DIVZERO,   //!< Divide by zero (zeroTol)
 int main(void) {
   const double escapeMod  = -32.0;
   const int    MaxCount   = 64;
-  const float  zeroTol    = 0.0001F;
+  const double  zeroTol    = 0.0001;
   const int    numToKeep  = 5;
   whyStopNH    why;
   //mjr::ramCanvas3c8b theRamCanvas(3840/1, 2160/1, 4.0, 8.0, -2.0, 2.0);

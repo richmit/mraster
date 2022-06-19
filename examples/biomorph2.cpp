@@ -37,7 +37,7 @@ int main(void) {
   const int CSIZE  = 7680;
   const int LIM    = 4;
   int count;
-  std::complex<float> oneone(1,1), z;
+  std::complex<double> oneone(1,1), z;
 
   mjr::ramCanvas3c8b theRamCanvasA(CSIZE, CSIZE, -1.0, 1.4, -1.0, 1.4);
   mjr::ramCanvas3c8b theRamCanvasE(CSIZE, CSIZE, -1.0, 1.4, -1.0, 1.4);

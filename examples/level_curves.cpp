@@ -31,7 +31,7 @@
 
 #include "ramCanvas.hpp"
 
-typedef mjr::ramCanvas3c8b::rcCordFlt drT;
+typedef mjr::ramCanvas3c8b::coordFltType drT;
 
 drT f(drT x, drT y);
 void drawLevelCurves(int numBand, drT bandWidth, drT zMin, drT zMax, drT minRealX, drT maxRealX, drT minRealY, drT maxRealY, const char *file);

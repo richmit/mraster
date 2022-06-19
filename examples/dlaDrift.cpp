@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
 
   for(int numPt=1;numPt<MAXNUMPT;numPt++) {
     // Get a random point not near the tree
-    mjr::ramCanvas3c8b::rcCordInt x, y;
+    mjr::ramCanvas3c8b::coordIntType x, y;
     x = rEng() % theRamCanvas.get_numXpix();
     y = rEng() % theRamCanvas.get_numYpix();
     if(theRamCanvas.getPxColor(x+0, y+0).getBlue()) {

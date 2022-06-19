@@ -40,7 +40,7 @@ int main(void) {
 
   std::random_device rd;
   std::mt19937 rEng(rd());
-  std::uniform_real_distribution<double> uniform_dist_float(-2.0, 2.0);
+  std::uniform_real_distribution<double> uniform_dist_double(-2.0, 2.0);
   std::uniform_int_distribution<int>     uniform_dist_int(3, 7);
 
   mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -2, 2, -2, 2); // Just used for coordinate conversion. ;)
@@ -48,15 +48,15 @@ int main(void) {
   uint64_t maxCnt = 0;
   for(int j=0; j<100000; j++) {
     std::map<uint64_t, uint64_t> ptcnt;
-    float lambda = static_cast<float>(uniform_dist_float(rEng));
-    float alpha  = static_cast<float>(uniform_dist_float(rEng));
-    float beta   = static_cast<float>(uniform_dist_float(rEng));
-    float gamma  = static_cast<float>(uniform_dist_float(rEng));
-    float w      = static_cast<float>(uniform_dist_float(rEng));
+    double lambda = uniform_dist_double(rEng);
+    double alpha  = uniform_dist_double(rEng);
+    double beta   = uniform_dist_double(rEng);
+    double gamma  = uniform_dist_double(rEng);
+    double w      = uniform_dist_double(rEng);
     int n        = uniform_dist_int(rEng);
-    std::complex<float> z(0.01F,0.01F);
+    std::complex<double> z(0.01,0.01);
     for(uint64_t i=0;i<1000;i++) {
-      z = (lambda + alpha*z*std::conj(z)+beta* static_cast<float>(std::pow(z, n).real()) + w*std::complex<float>(0,1))*z+gamma*static_cast<std::complex<float>>(std::pow(std::conj(z), n-1));
+      z = (lambda + alpha*z*std::conj(z)+beta* std::pow(z, n).real() + w*std::complex<double>(0,1))*z+gamma*static_cast<std::complex<double>>(std::pow(std::conj(z), n-1));
       ptcnt[((uint64_t)theRamCanvas.real2intX(z.real()))<<32 | ((uint64_t)theRamCanvas.real2intY(z.imag()))] = 1;
     }
     if(ptcnt.size() > maxCnt) {

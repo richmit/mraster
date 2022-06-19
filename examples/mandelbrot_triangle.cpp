@@ -49,8 +49,8 @@ const int MAXTRCNT = 250000;
 complex thePath[MAXTRCNT];
 
 int inSet(complex tstPt);
-int findAlphaTriangle(int maxCnt, int ptA, int ptB, float slop, complex triangle[3]);
-int traceBoundry(int maxCnt, float epsilon, int goOtherWay, complex alphaTriangle[3], complex thePath[], int *pathLen);
+int findAlphaTriangle(int maxCnt, int ptA, int ptB, double slop, complex triangle[3]);
+int traceBoundry(int maxCnt, double epsilon, int goOtherWay, complex alphaTriangle[3], complex thePath[], int *pathLen);
 int orbCmp(complex tstPt);
 
 /* **************************************************************** */
@@ -93,8 +93,8 @@ int main(void) {
       alphaTriangle[i] = protoAlphaTriangle[i];
     if(findAlphaTriangle(MAXTRCNT, 0, 1, 0.0, alphaTriangle)) {
       int thePathLen;
-      traceBoundry(MAXTRCNT, 0.00003F, 0, alphaTriangle, thePath, &thePathLen);
-      theRamCanvas.drawPLCurve(thePathLen+1, (mjr::ramCanvas3c8b::rcPointFlt *)thePath, mjr::color3c8b(255, 0, 255));
+      traceBoundry(MAXTRCNT, 0.00003, 0, alphaTriangle, thePath, &thePathLen);
+      theRamCanvas.drawPLCurve(thePathLen+1, (mjr::ramCanvas3c8b::pointFltType *)thePath, mjr::color3c8b(255, 0, 255));
     }
   }
 
@@ -103,10 +103,10 @@ int main(void) {
 
 /* **************************************************************** */
 int orbCmp(complex tstPt) {
-  mjr::ramCanvas3c8b::rcCordFlt zx = 0.0;
-  mjr::ramCanvas3c8b::rcCordFlt zy = 0.0;
+  mjr::ramCanvas3c8b::coordFltType zx = 0.0;
+  mjr::ramCanvas3c8b::coordFltType zy = 0.0;
   int count = 0;
-  mjr::ramCanvas3c8b::rcCordFlt  tempx;
+  mjr::ramCanvas3c8b::coordFltType  tempx;
   while(1) {
     if(zx * zx + zy * zy >= 4)
       return count;
@@ -129,12 +129,12 @@ int inSet(complex tstPt) {
 
 /* **************************************************************** */
 /* Return 1 if found, return 0 other wise. */
-int findAlphaTriangle(int maxCnt, int ptA, int ptB, float slop, complex triangle[3]) {
+int findAlphaTriangle(int maxCnt, int ptA, int ptB, double slop, complex triangle[3]) {
   int printDebug=2;
   int hitCount;
   int count = 0;
-  mjr::ramCanvas3c8b::rcCordFlt xDelta = triangle[ptB].x - triangle[ptA].x;
-  mjr::ramCanvas3c8b::rcCordFlt yDelta = triangle[ptB].y - triangle[ptA].y;
+  mjr::ramCanvas3c8b::coordFltType xDelta = triangle[ptB].x - triangle[ptA].x;
+  mjr::ramCanvas3c8b::coordFltType yDelta = triangle[ptB].y - triangle[ptA].y;
 
   // Shrink the delta some....
   xDelta = (xDelta - xDelta * slop);
@@ -182,7 +182,7 @@ int findAlphaTriangle(int maxCnt, int ptA, int ptB, float slop, complex triangle
     @return 1 Boundary came back upon self
     @return 2 Max iteration count reached
     @return 3 goOtherWay==1, and was of no use */
-int traceBoundry(int maxCnt, float epsilon, int goOtherWay, complex alphaTriangle[3], complex thePath[], int *pathLen) {
+int traceBoundry(int maxCnt, double epsilon, int goOtherWay, complex alphaTriangle[3], complex thePath[], int *pathLen) {
   complex curTriangle[3];
   int printDebug=2;
   int pInState[3], pInStateSum;

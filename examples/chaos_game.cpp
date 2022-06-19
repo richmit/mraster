@@ -146,7 +146,7 @@ int main() {
     }
     std::cout << "max mag: " << maxMag << std::endl;
 
-    theRamCanvas.applyHomoPixTfrm(&mjr::color3c8b::tfrmStdPow, 1.0F/5.0F);
+    theRamCanvas.applyHomoPixTfrm(&mjr::color3c8b::tfrmStdPow, 1.0/5.0);
 
     std::ostringstream stringStream;
     stringStream << "chaos_game";

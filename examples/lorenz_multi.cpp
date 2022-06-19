@@ -47,27 +47,27 @@ int main(void) {
 
   std::random_device rd;
   std::mt19937 rEng(rd());
-  std::uniform_real_distribution<double> uniform_dist_float(-15.0, 15.0);
+  std::uniform_real_distribution<double> uniform_dist_double(-15.0, 15.0);
 
   int numCurves          = 100;
   int numPtsPerCurve     = 105000;
   int numPtsPerCurveToss = 700;
-  float tDelta           = 0.00001F;
+  double tDelta           = 0.00001;
 
-  float a = 10.0F;
-  float b = 28.0F;
-  float c = 8.0F / 3;
+  double a = 10.0;
+  double b = 28.0;
+  double c = 8.0 / 3;
 
-  float p = 1.7F;
+  double p = 1.7;
 
   /* Draw the atractor on a 16-bit, greyscale canvas -- the grey level will be an integer represeting the hit count for that pixel.  This is a good example
      of how an image can have pixel values that are generic "data" as well as color information. */
   uint64_t maxII = 0;
   for(int j=0; j<numCurves; j++) {
-    x=0*uniform_dist_float(rEng);
-    //y=uniform_dist_float(rEng);
+    x=0*uniform_dist_double(rEng);
+    //y=uniform_dist_double(rEng);
     y=30.0*j/(numCurves-1)-15.0;
-    z=30+0*uniform_dist_float(rEng);
+    z=30+0*uniform_dist_double(rEng);
 
     std::cout << "y: " << y << std::endl;
 
@@ -90,7 +90,7 @@ int main(void) {
 
   // Root image transform
   theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmStdPow, 1/p);
-  maxII = static_cast<uint64_t>(65535.0 * std::pow(static_cast<float>(maxII) / 65535.0F, 1.0F / p));
+  maxII = static_cast<uint64_t>(65535.0 * std::pow(static_cast<double>(maxII) / 65535.0, 1.0 / p));
 
   // Log image transform
   // theRamCanvas.applyHomoPixTfrm(&mjr::color1c16b::tfrmLn);

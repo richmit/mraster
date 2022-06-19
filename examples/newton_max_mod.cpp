@@ -37,7 +37,7 @@ int main(void) {
   const double pi       = 3.14159265359;
   int          MaxCount = 255;
   int          MultCol  = 400; // 1, 400, 3000
-  float        Tol      = .0001F;
+  double        Tol      = .0001;
   std::complex<double> r1(1,               0);
   std::complex<double> r2(-0.5,  sin(2*pi/3));
   std::complex<double> r3(-0.5, -sin(2*pi/3));
