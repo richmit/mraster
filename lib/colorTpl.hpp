@@ -1070,11 +1070,11 @@ namespace mjr {
           @return Returns a reference to the current color object.*/
       colorTpl&
       tfrmMean(colorTpl color);
-      /** Computes the arithmetic geometric mean of the given color and the current one.
+      /** Computes the geometric mean of the given color and the current one.
           @return Returns a reference to the current color object.*/
       colorTpl&
       tfrmGmean(colorTpl color);
-      /** Computes the arithmetic geometric mean of the given color and the current one.
+      /** Computes the clipped  geometric mean of the given color and the current one.
           @return Returns a reference to the current color object.*/
       colorTpl&
       tfrmGmeanClp(colorTpl color);

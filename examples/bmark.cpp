@@ -33,19 +33,20 @@
 
 #include "ramCanvas.hpp"
 
-#define DO_LINE      1
-#define DO_CLIP_LINE 1
-#define DO_POINT     1
-#define DO_CLR       1
-#define DO_FFTRI     1
-#define DO_FGTRI     1
-#define DO_RECT      1
-#define DO_HLINE_NC  1
-#define DO_HLINE     1
-#define DO_VLINE_NC  1
-#define DO_VLINE     1
-#define DO_45LINE    1
-#define DO_TRIVLN    1
+#define DO_LINE       0
+#define DO_CLIP_LINE  0
+#define DO_POINT      0
+#define DO_CLR        0
+#define DO_FFTRI      0
+#define DO_FGTRI      0
+#define DO_RECT       0
+#define DO_HLINE_NC   0
+#define DO_HLINE      0
+#define DO_VLINE_NC   0
+#define DO_VLINE      0
+#define DO_45LINE     0
+#define DO_TRIVLN     0
+#define DO_INTRP_AVG9 1
 
 #define DO_OUT_TIF   0
 #define DO_OUT_RAW   0
@@ -197,6 +198,14 @@ int main(void) {
   theRamCanvas.drawLine(     0,      0, xMax/2, yMax/2, aColor);
   theRamCanvas.drawLine(xMax/2, yMax/2,   xMax,   yMax, bColor);
   theRamCanvas.autoHistStrech();
+#endif
+
+#if DO_INTRP_AVG9
+  std::cout << "Starting DO_INTRP_AVG9" << std::endl;
+  for(int i=0;i<REPS/16;i++)
+    for(int y=0;y<=yMax;y+=1)
+      for(int x=0;x<=xMax;x+=1)
+        theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColorInterpAvg9(x, y));
 #endif
 
 #if DO_OUT_TIF

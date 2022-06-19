@@ -50,6 +50,7 @@
 #include <type_traits>                                                   /* C++ metaprogramming     C++11    */
 #include <cstdint>                                                       /* std:: C stdint.h        C++11    */
 #include <cmath>                                                         /* std:: C math.h          C++11    */
+//ctcmath
 
 #include "color.hpp"
 #include "ramConfig.hpp"
@@ -508,7 +509,7 @@ namespace mjr {
       /** Apply a convolution filter.
           The implementation for this method is quite naive and super slow!  Frankly, this kind of functionality should be pulled from an image processing
           library tuned for this kind of work; however, sometimes you just need a convolution filter and you don't want to go to the extra effort of using yet
-          another external library.  So here it is.
+          another external library.  Pixels outside the canvas are considered black. So here it is.
           @param kernel  The convolution kernel.   Must be of length kWide*kTall.
           @param kWide   The width of the kernel.  Must be odd.
           @param kTall   The height of the kernel. Must be odd.
@@ -1238,6 +1239,26 @@ namespace mjr {
           @param y The y coordinate
           @return Interpolated color value */
       colorT getPxColorInterpBLin(double x, double y);
+      /** Returns the truncated interpolated color value at the the given coordinates
+          @param x The x coordinate (the type is double, but the coordinate is in the integer coordinate space.  i.e. x=1.5 is between x=1 and x=2)
+          @param y The y coordinate
+          @return Interpolated color value */
+      colorT getPxColorInterpTrunc(double x, double y);
+      /** Returns the nearest neighbor  interpolated color value at the the given coordinates
+          @param x The x coordinate (the type is double, but the coordinate is in the integer coordinate space.  i.e. x=1.5 is between x=1 and x=2)
+          @param y The y coordinate
+          @return Interpolated color value */
+      colorT getPxColorInterpNear(double x, double y);
+      /** Returns the average 4 interpolated color value at the the given coordinates
+          @param x The x coordinate (the type is double, but the coordinate is in the integer coordinate space.  i.e. x=1.5 is between x=1 and x=2)
+          @param y The y coordinate
+          @return Interpolated color value */
+      colorT getPxColorInterpAvg4(double x, double y);
+      /** Returns the average 9 interpolated color value at the the given coordinates
+          @param x The x coordinate (the type is double, but the coordinate is in the integer coordinate space.  i.e. x=1.5 is between x=1 and x=2)
+          @param y The y coordinate
+          @return Interpolated color value */
+      colorT getPxColorInterpAvg9(double x, double y);
       //@}
 
       /** @name NC stands for No Checks and No Clipping */
@@ -2773,7 +2794,7 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
-  colorT  ramCanvasTpl<colorT, intCrdT, fltCrdT>::getPxColorInterpBLin(double x, double y) {
+  colorT ramCanvasTpl<colorT, intCrdT, fltCrdT>::getPxColorInterpBLin(double x, double y) {
     double x1 = std::floor(x);
     double y1 = std::floor(y);
     double x2 = std::ceil(x);
@@ -2803,6 +2824,69 @@ namespace mjr {
       c2.interplColors(wH, pixels[numXpix * y2i + x1i], pixels[numXpix * y2i + x2i]);
       cF.interplColors(wV, c1, c2);
       return cF;
+    } else {
+      return colorT().setToBlack();
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  colorT ramCanvasTpl<colorT, intCrdT, fltCrdT>::getPxColorInterpTrunc(double x, double y) {
+    return getPxColor(static_cast<intCrdT>(std::trunc(x)), static_cast<intCrdT>(std::trunc(y)));
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  colorT ramCanvasTpl<colorT, intCrdT, fltCrdT>::getPxColorInterpNear(double x, double y) {
+    return getPxColor(static_cast<intCrdT>(std::round(x)), static_cast<intCrdT>(std::round(y)));
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  colorT ramCanvasTpl<colorT, intCrdT, fltCrdT>::getPxColorInterpAvg9(double x, double y) {
+    intCrdT xi = static_cast<intCrdT>(std::round(x));
+    intCrdT yi = static_cast<intCrdT>(std::round(y));
+    colorT newColor;
+    for(int chan=0; chan<colorT::channelCount; chan++) {
+      typename colorT::channelIntArithType newChanValue = 0;
+      for(intCrdT ydi=-1; ydi<=1; ydi++) {
+        for(intCrdT xdi=-1; xdi<=1; xdi++) {
+          intCrdT icX = xi + xdi;
+          intCrdT icY = yi + ydi;
+          if (!(isCliped(icX, icY))) {
+            newChanValue += getPxColor(icX, icY).getChan(chan);
+          }
+        }
+      }      
+      newColor.setChan(chan, static_cast<typename colorT::channelType>(newChanValue / 9));
+    }
+    return newColor;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  colorT ramCanvasTpl<colorT, intCrdT, fltCrdT>::getPxColorInterpAvg4(double x, double y) {
+    double x1 = std::floor(x);
+    double y1 = std::floor(y);
+    double x2 = std::ceil(x);
+    double y2 = std::ceil(y);
+
+    intCrdT x1i = (intCrdT)x1;
+    intCrdT y1i = (intCrdT)y1;
+    intCrdT x2i = (intCrdT)x2;
+    intCrdT y2i = (intCrdT)y2;
+
+    if ((x1i >= 0) && (y1i >= 0) && (x2i < numXpix) && (y2i < numYpix)) {
+
+      colorT c1 = pixels[numXpix * y1i + x1i];
+      c1.tfrmMean(pixels[numXpix * y1i + x2i]);
+
+      colorT c2 = pixels[numXpix * y2i + x1i];
+      c2.tfrmMean(pixels[numXpix * y2i + x2i]);
+
+      c1.tfrmMean(c2);
+
+      return c1;
     } else {
       return colorT().setToBlack();
     }
@@ -3830,7 +3914,7 @@ namespace mjr {
       for(int i=0; i<(kWide*kTall); i++)
         divisor += kernel[i];
     }
-    // Aapply filter
+    // Apply filter
     for(intCrdT y=0; y<numYpix; y++) {
       for(intCrdT x=0; x<numXpix; x++) {
         colorT newColor;
