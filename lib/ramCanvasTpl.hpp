@@ -38,17 +38,17 @@
 #include <tiffio.h>                                                      /* libTIFF                 libTIFF  */
 #endif
 
+#include <cmath>                                                         /* std:: C math.h          C++11    */
+#include <cstdint>                                                       /* std:: C stdint.h        C++11    */
+#include <fstream>                                                       /* C++ fstream             C++98    */
 #include <functional>                                                    /* STL funcs               C++98    */
-#include <sstream>                                                       /* C++ string stream       C++      */
 #include <iomanip>                                                       /* C++ stream formatting   C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
-#include <fstream>                                                       /* C++ fstream             C++98    */
+#include <sstream>                                                       /* C++ string stream       C++      */
 #include <string>                                                        /* C++ strings             C++11    */
+#include <type_traits>                                                   /* C++ metaprogramming     C++11    */
 #include <utility>                                                       /* STL Misc Utilities      C++11    */
 #include <vector>                                                        /* STL vector              C++11    */
-#include <type_traits>                                                   /* C++ metaprogramming     C++11    */
-#include <cstdint>                                                       /* std:: C stdint.h        C++11    */
-#include <cmath>                                                         /* std:: C math.h          C++11    */
 
 #include "color.hpp"
 #include "ramConfig.hpp"
@@ -60,8 +60,7 @@ namespace mjr {
 
   /** @brief Class providing off-screen drawing functionality.@EOL
 
-      This class essentially manages a 2D array of pixels (represented as colorTpl objects).
-      Both integer and floating point coordinates are supported.
+      This class essentially manages a 2D array of pixels (represented as colorTpl objects).  Both integer and floating point coordinates are supported.
 
       Coordinates
       ===========
@@ -1307,7 +1306,7 @@ namespace mjr {
       /** This function supports no special drawing options.  It simply sets the pixel to the given color.  In addition, no clipping or bounds checking is
           performed.  Thus, if an argument would cause something to be drawn beyond the bounds of the ramCanvasTpl, a core dump will most certainly result.
           The intent is to provide a less overhead for very careful code that handles clipping and error checking and drawing options by itself -- an image
-          filter algorithm for example.  The options expected to be taken care of are: SUPPORT_ALWAYS_PRESERVE_ALPHA, and SUPPORT_DRAWING_MODE.  IT is
+          filter algorithm for example.  The options expected to be taken care of are: SUPPORT_ALWAYS_PRESERVE_ALPHA, and SUPPORT_DRAWING_MODE.  It is
           conceivable that the other draw pixel functions could call this one, but a good optimizing compiler must be used in this case or a performance
           impact will be the result.
           @param x The x coordinate of the point
@@ -3911,7 +3910,6 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT>
   void ramCanvasTpl<colorT, intCrdT, fltCrdT>::convolution(double *kernel, int kWide, int kTall, double divisor) {
     colorT *new_pixels = new colorT[numXpix * numYpix];
-    double *tmp = new double[colorT::channelCount];
     // Divisor is invalid, so we compute one to use
     if(std::abs(divisor) < 0.0001) {
       divisor = 0.0;
@@ -3919,28 +3917,27 @@ namespace mjr {
         divisor += kernel[i];
     }
     // Apply filter
+    double tmp[colorT::channelCount];
     for(intCrdT y=0; y<numYpix; y++) {
       for(intCrdT x=0; x<numXpix; x++) {
         colorT newColor;
-        for(int chan=0; chan<colorT::channelCount; chan++) {
+        for(int chan=0; chan<colorT::channelCount; chan++) 
           tmp[chan] = 0.0;
-          for(int yi=0, yis=-(kTall/2); yi<kTall; yi++, yis++) {
-            for(int xi=0,xis=-(kWide/2); xi<kWide; xi++, xis++) {
-              intCrdT icX = x + xis;
-              intCrdT icY = y + yis;
-              if (!(isCliped(icX, icY))) {
+        for(int yi=0, yis=-(kTall/2); yi<kTall; yi++, yis++) {
+          intCrdT icY = y + yis;
+          for(int xi=0,xis=-(kWide/2); xi<kWide; xi++, xis++) {
+            intCrdT icX = x + xis;
+            if (!(isCliped(icX, icY))) {
+              for(int chan=0; chan<colorT::channelCount; chan++) 
                 tmp[chan] += getPxColor(icX, icY).getChan(chan) * kernel[kWide * yi + xi];
-              }
             }
           }
-          tmp[chan] /= divisor;
-          newColor.setChan(chan, static_cast<colorChanType>(tmp[chan]));
         }
-        new_pixels[numXpix * y + x] = newColor;
+        for(int chan=0; chan<colorT::channelCount; chan++) 
+          new_pixels[numXpix * y + x].setChan(chan, static_cast<colorChanType>(tmp[chan] / divisor));
       }
     }
     rePointPixels(new_pixels, numXpix, numYpix);
-    delete[] tmp;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

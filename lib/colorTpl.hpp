@@ -168,10 +168,10 @@ namespace mjr {
       const static int maxWavelength = 830; //!< Maximum wavelength for wavelength conversion
 
       /** Is theInt is larger than thePartsA array? */
-      const static int  fastMask                = (sizeof(clrMaskT)>=sizeof(clrChanT)*numChan);
+      const static int  fastMask            = (sizeof(clrMaskT)>=sizeof(clrChanT)*numChan);
 
       /** Is theInt an unsigned value and is fastMask true? */
-      const static bool fastMaskUnsignedInt     = std::is_integral<clrChanT>::value && fastMask;
+      const static bool fastMaskUnsignedInt = std::is_integral<clrChanT>::value && fastMask;
 
       /** Helper function for converting to web safe colors.  This function is highly optimized. */
       clrChanT colorComp2WebSafeColorComp(clrChanT aColorComp);
@@ -228,7 +228,7 @@ namespace mjr {
       /** The no arg constructor is a noop -- no need to initialize millions of pixels for no good reason. */
       colorTpl();
       /** Copy constructor (heavily used for assignment in the ramCanvas library). */
-       colorTpl(const colorTpl& aColor);
+      colorTpl(const colorTpl& aColor);
       //@}
 
       /** @name Constructors: RGB/RGBA */
@@ -318,6 +318,10 @@ namespace mjr {
 
       /** @name Component setting */
       //@{
+      colorTpl& setChan(int chan, clrChanT cVal);
+      /** Sets the green component of the current object.
+          @param g The value to set the green component to
+          @return Returns a reference to the current color object.*/
       /** Sets the red component of the current object.
           @param r The value to set the red component to
           @return Returns a reference to the current color object.*/
@@ -325,10 +329,6 @@ namespace mjr {
       /** Sets the given channel to the value given.
           @param chan The channel to set
           @param cVal The value to set the channel to */
-      colorTpl& setChan(int chan, clrChanT cVal);
-      /** Sets the green component of the current object.
-          @param g The value to set the green component to
-          @return Returns a reference to the current color object.*/
       colorTpl& setGreen(clrChanT g);
       /** Sets the blue component of the current object.
           @param b The value to set the blue component to
@@ -619,6 +619,7 @@ namespace mjr {
           @param icpArray The pallet data
           @return A reference to the current object */
       colorTpl& icpSetColor(int anInt, const char **icpArray);
+      /** @overload */
       colorTpl& icpSetColor(int anInt, const uint32_t* icpArray);
       //@}
 
@@ -1052,8 +1053,6 @@ namespace mjr {
           @return Returns a reference to the current color object.*/
       colorTpl& tfrmGreyScale(void);
       //@}
-
-
 
       /** @name Color Reduction Transformations */
       //@{

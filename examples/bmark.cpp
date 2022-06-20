@@ -35,20 +35,21 @@
 #include <chrono>                                                        /* time                    C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
 
-#define DO_LINE       0
-#define DO_CLIP_LINE  0
-#define DO_POINT      0
-#define DO_CLR        0
-#define DO_FFTRI      0
-#define DO_FGTRI      0
-#define DO_RECT       0
-#define DO_HLINE_NC   0
-#define DO_HLINE      0
-#define DO_VLINE_NC   0
-#define DO_VLINE      0
-#define DO_45LINE     0
-#define DO_TRIVLN     0
+#define DO_LINE       1
+#define DO_CLIP_LINE  1
+#define DO_POINT      1
+#define DO_CLR        1
+#define DO_FFTRI      1
+#define DO_FGTRI      1
+#define DO_RECT       1
+#define DO_HLINE_NC   1
+#define DO_HLINE      1
+#define DO_VLINE_NC   1
+#define DO_VLINE      1
+#define DO_45LINE     1
+#define DO_TRIVLN     1
 #define DO_INTRP_AVG9 1
+#define DO_CONV       1
 
 #define DO_OUT_TIF   0
 #define DO_OUT_RAW   0
@@ -211,6 +212,15 @@ int main(void) {
         theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColorInterpAvg9(x, y));
 #endif
 
+#if DO_CONV
+  std::cout << "Starting DO_CONV" << std::endl;
+  double kernel[10*10];
+  int kSize = 9;
+  theRamCanvas.computeConvolutionMatrixGausian(kernel, kSize, 10);
+  for(int i=0;i<REPS/64;i++)
+    theRamCanvas.convolution(kernel, kSize);
+#endif
+
 #if DO_OUT_TIF
   std::cout << "Starting DO_OUT_TIF" << std::endl;
   theRamCanvas.writeTIFFfile("bmark.tiff");
@@ -224,5 +234,5 @@ int main(void) {
   std::cout << "Print Complete" << std::endl;
   std::cout << "Center Red:   " << static_cast<int>(theRamCanvas.getPxColor(BSIZE/2, BSIZE/2).getRed()) << std::endl;
   std::cout << "Center Green: " << static_cast<int>(theRamCanvas.getPxColor(BSIZE/2, BSIZE/2).getGreen()) << std::endl;
-  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - startTime)/(60.0) << " min" << std::endl;
+  std::cout << "Runtime " << (std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - startTime) << " sec" << std::endl;
 }
