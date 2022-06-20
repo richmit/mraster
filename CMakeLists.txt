@@ -1,25 +1,4 @@
 ######################################################################################################################################################
-
-#
-# MSYS instructions
-#
-# From the msys2 shell use something like this:
-#
-#   mkdir build; cd build
-#
-# Then do this
-#
-#   echo "RUN CMAKE"; cmake -G "MSYS Makefiles" -DCMAKE_CXX_COMPILER=/mingw64/bin/clang++.exe -DO_TIFF=YES ..
-#
-# or this
-#
-#   echo "RUN CMAKE"; cmake -G "MSYS Makefiles" -DCMAKE_CXX_COMPILER=/mingw64/bin/g++.exe     -DO_TIFF=YES ..
-#
-# Other "O" options include: O_DOXYGEN, O_TIFF, O_OPENGL, O_OPENMP, O_PNG, O_IM, & O_STATIC
-#
-# Leave off the -DCMAKE_CXX_COMPILER... option to use the default compiler
-#
-
 ######################################################################################################################################################
 cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
 
@@ -30,8 +9,8 @@ set(CMAKE_CXX_STANDARD 11)
 
 project(MRaster CXX)
 
-set(PROJECT_VERSION_DATE  20220617)
-set(PROJECT_VERSION_ID    4)
+set(PROJECT_VERSION_DATE  2022-06-19)
+set(PROJECT_VERSION_ID    5)
 mark_as_advanced(PROJECT_VERSION_DATE PROJECT_VERSION_ID)
 
 ######################################################################################################################################################
@@ -147,7 +126,7 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
   if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     target_compile_options(${CURTGT} PUBLIC -Wstrict-overflow=0)
     target_compile_options(${CURTGT} PUBLIC -ffast-math)
-    target_compile_options(${CURTGT} PUBLIC -Wall -Wconversion -Wno-unknown-pragmas -Wextra -Wno-deprecated-copy) #
+    target_compile_options(${CURTGT} PUBLIC -Wall -Wconversion -Wno-unknown-pragmas -Wextra -Wno-deprecated-copy)
     target_compile_options(${CURTGT} PUBLIC -Ofast)
     if(CMAKE_CXX_PLATFORM_ID STREQUAL "MinGWx")
       target_compile_options(${CURTGT} PUBLIC -static-libgcc)
@@ -156,7 +135,7 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
   elseif((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang"))
     target_compile_options(${CURTGT} PUBLIC -Wstrict-overflow=0)
     target_compile_options(${CURTGT} PUBLIC -ffast-math)
-    target_compile_options(${CURTGT} PUBLIC -Wall)
+    target_compile_options(${CURTGT} PUBLIC -Wall -Wconversion -Wno-unknown-pragmas -Wextra -Wno-sign-conversion)
     target_compile_options(${CURTGT} PUBLIC -O3)
   elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
     target_compile_options(${CURTGT} PUBLIC -Wall)

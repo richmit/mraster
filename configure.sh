@@ -1,20 +1,50 @@
 #!/bin/bash
 
-if [[ "$1" == '-'* ]]; then
+
+#
+# MSYS instructions
+#
+# From the msys2 shell use something like this:
+#
+#   mkdir build; cd build
+#
+# Then do this
+#
+#   echo "RUN CMAKE"; cmake -G "MSYS Makefiles" -DCMAKE_CXX_COMPILER=clang++ -DO_TIFF=YES ..
+#
+# or this
+#
+#   echo "RUN CMAKE"; cmake -G "MSYS Makefiles" -DCMAKE_CXX_COMPILER=g++.exe -DO_TIFF=YES ..
+#
+# Other "O" options include: O_DOXYGEN, O_TIFF, O_OPENGL, O_OPENMP, O_PNG, O_IM, & O_STATIC
+#
+# Leave off the -DCMAKE_CXX_COMPILER... option to use the default compiler
+#
+
+CMD_LINE_ARGS="${@}"
+
+if [[ "$CMD_LINE_ARGS" == *'-h'* ]]; then
   cat <<EOF
 
-  Use: configure.sh [TARGET_TYPE]
-  
-       TARGET_TYPE is the cmake -G option
-        Some popular choices:
-          - 'MSYS Makefiles' 
-          - 'Visual Studio 17 2022'
-          - 'Unix Makefiles'
-          - Ninja          
-  
-       If TARGET_TYPE is not provided, then the system default will be
-       used unless $MSYSTEM is set in which case 'MSYS Makefiles' will
-       be used.
+  Use: configure.sh [cmake arguments]
+
+    Common Arguments:
+     * Target -- leave it off and get 'MSYS Makefiles'
+       - -G 'MSYS Makefiles' 
+       - -G 'Visual Studio 17 2022'
+       - -G 'Unix Makefiles'
+       - -G Ninja
+     * Compiler -- leave it off to get the default
+       - -DCMAKE_CXX_COMPILER=clang++
+       - -DCMAKE_CXX_COMPILER=g++
+     * Optional features -- leave them off to enable everythign
+       - -DO_DOXYGEN=[YES|NO]
+       - -DO_IM=[YES|NO]
+       - -DO_OPENGL=[YES|NO]
+       - -DO_OPENMP=[YES|NO]
+       - -DO_PNG=[YES|NO]
+       - -DO_STATIC=[YES|NO]
+       - -DO_TIFF=[YES|NO]
 
 EOF
 exit
@@ -27,17 +57,12 @@ if [ -e examples -a -e lib -a -e CMakeLists.txt ] ; then
     mkdir build
     cd build
 
-    if [ -n "$MSYSTEM" ] ; then
-      CMAKE_G='MSYS Makefiles'
-    fi
-    if [ -n "$1" ] ; then
-      CMAKE_G=$1
-    fi
-
-    if [ -n "$CMAKE_G" ] ; then
-      cmake -G "$CMAKE_G" ../
+    if [[ "$CMD_LINE_ARGS" == *'-G'* ]]; then
+      echo cmake "$@" ../
+      cmake "$@" ../
     else
-      cmake ../
+      echo cmake -G 'MSYS Makefiles' "$@" ../
+      cmake -G 'MSYS Makefiles' "$@" ../
     fi
 
     echo 'Now you can build with soemthing like this:'
