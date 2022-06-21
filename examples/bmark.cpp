@@ -38,6 +38,7 @@
 #define DO_LINE       1
 #define DO_CLIP_LINE  1
 #define DO_POINT      1
+#define DO_POINT_NC   1
 #define DO_CLR        1
 #define DO_FFTRI      1
 #define DO_FGTRI      1
@@ -54,41 +55,76 @@
 #define DO_OUT_TIF   0
 #define DO_OUT_RAW   0
 
-#define REPS  128
+#define REPS  1
 
 #define BSIZE 2024*2
 
+// typedef mjr::ramCanvas1c8b  canvasType;
+// typedef mjr::ramCanvas1c16b canvasType;
+// typedef mjr::ramCanvas1c32b canvasType;
+// typedef mjr::ramCanvas1c64b canvasType;
+// typedef mjr::ramCanvas3c8b  canvasType;
+typedef mjr::ramCanvas4c8b  canvasType;
+// typedef mjr::ramCanvas4c16b canvasType;
+// typedef mjr::ramCanvas8c8b  canvasType;
+
 int main(void) {
-  auto startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-  mjr::ramCanvasRGB8b theRamCanvas(BSIZE, BSIZE);
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
+  canvasType theRamCanvas(BSIZE, BSIZE);
   int xMax = theRamCanvas.get_numXpix()-1;
   int yMax = theRamCanvas.get_numYpix()-1;
-  mjr::colorRGB8b aColor(255,   0, 0);
-  mjr::colorRGB8b bColor(  0, 255, 0);
+  canvasType::colorType aColor(255,   0, 0);
+  canvasType::colorType bColor(  0, 255, 0);
+  std::chrono::time_point<std::chrono::system_clock> bmStartTime, bmEndTime;
+  std::chrono::duration<double> bmTime;
 
 #if DO_POINT
   std::cout << "Starting DO_POINT" << std::endl;
-  for(int i=0;i<REPS;i++)
+  bmStartTime = std::chrono::system_clock::now();
+  for(int i=0;i<REPS*256;i++)
     for(int y=0;y<=xMax;y++)
       for(int x=0;x<=yMax;x++)
         if((x*y)%2)
           theRamCanvas.drawPoint(x, y, aColor);
         else
           theRamCanvas.drawPoint(x, y, bColor);
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_POINT Runtime " << bmTime.count() << " sec" << std::endl;
+#endif
+
+#if DO_POINT_NC
+  std::cout << "Starting DO_POINT_NC" << std::endl;
+  bmStartTime = std::chrono::system_clock::now();
+  for(int i=0;i<REPS*512;i++)
+    for(int y=0;y<=xMax;y++)
+      for(int x=0;x<=yMax;x++)
+        if((x*y)%2)
+          theRamCanvas.drawPointNC(x, y, aColor);
+        else
+          theRamCanvas.drawPointNC(x, y, bColor);
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_POINT_NC Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
 
 #if DO_CLR
   std::cout << "Starting DO_CLR" << std::endl;
+  bmStartTime = std::chrono::system_clock::now();
   theRamCanvas.setDfltColor(aColor);
-  for(int i=0;i<REPS*4;i++) {
+  for(int i=0;i<REPS*4096;i++) {
     theRamCanvas.clrCanvasToBlack();
   }
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_CLR Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
 
 #if DO_CLIP_LINE
   std::cout << "Starting DO_CLIP_LINE" << std::endl;
-  for(int i=0;i<REPS/16;i++)
-    for(int j=0; j<BSIZE*2; j++) {
+  bmStartTime = std::chrono::system_clock::now();
+  for(int i=0;i<REPS*8;i++)
+    for(int j=0; j<BSIZE*4; j++) {
       double a = static_cast<double>(j) * 6.2831 / (BSIZE * 2.0);
       int  x1 = static_cast<int>(BSIZE * std::cos(a));
       int  y1 = static_cast<int>(BSIZE * std::sin(a));
@@ -97,13 +133,17 @@ int main(void) {
       else
         theRamCanvas.drawLine(-x1+xMax/2, -y1+yMax/2, x1+xMax/2, y1+yMax/2, bColor);
     }
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_CLIP_LINE Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
 
-//  MJR TODO NOTE <2022-06-18T14:01:26-0500> main: Add a test case for lines that are completely out of the drawing area.
+//  MJR TODO NOTE <2022-06-18> main: Add a test case for lines that are completely out of the drawing area.
 
 #if DO_LINE
   std::cout << "Starting DO_LINE" << std::endl;
-  for(int i=0;i<REPS/16;i++) {
+  bmStartTime = std::chrono::system_clock::now();
+  for(int i=0;i<REPS*16;i++) {
     for(int y=0;y<=yMax;y+=1)
       if(y%2)
         theRamCanvas.drawLine(0, y, xMax, yMax-y, aColor);
@@ -115,101 +155,144 @@ int main(void) {
       else
         theRamCanvas.drawLine(x, 0, xMax-x, yMax, bColor);
   }
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_LINE Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
 
 #if DO_FFTRI
   std::cout << "Starting DO_FFTRI" << std::endl;
-  for(int i=0;i<REPS/16;i++)
+  bmStartTime = std::chrono::system_clock::now();
+  for(int i=0;i<REPS*16;i++)
     for(int x1=xMax,j=0;x1>=0;x1-=BSIZE/128,j++)
       if(j%2)
         theRamCanvas.drawFillTriangle(x1, x1, x1+BSIZE/2, x1, x1, x1+yMax/2, aColor);
       else
         theRamCanvas.drawFillTriangle(x1, x1, x1+BSIZE/2, x1, x1, x1+yMax/2, bColor);
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_FFTRI Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
 
 #if DO_FGTRI
   std::cout << "Starting DO_FGTRI" << std::endl;
-  for(int i=0;i<REPS/128;i++)
+  bmStartTime = std::chrono::system_clock::now();
+  for(int i=0;i<REPS*16;i++)
     for(int x1=xMax,j=0;x1>=0;x1-=BSIZE/128,j++)
       if(j%2)
         theRamCanvas.drawFillTriangle(x1, yMax/2, x1+BSIZE/2, yMax/2+x1, x1+BSIZE/2, yMax/2-x1, aColor);
       else
         theRamCanvas.drawFillTriangle(x1, yMax/2, x1+BSIZE/2, yMax/2+x1, x1+BSIZE/2, yMax/2-x1, bColor);
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_FGTRI Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
 
 #if DO_RECT
   std::cout << "Starting DO_RECT" << std::endl;
-  for(int i=0;i<REPS/32;i++)
+  bmStartTime = std::chrono::system_clock::now();
+  for(int i=0;i<REPS*16;i++)
     for(int xy=0, j=0;xy<yMax && xy<=xMax;xy+=BSIZE/128, j++)
       if(j%2)
         theRamCanvas.drawFillRectangle(xy, xy, xMax-xy, yMax-xy, aColor);
       else
         theRamCanvas.drawFillRectangle(xy, xy, xMax-xy, yMax-xy, bColor);
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_RECT Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
 
 #if DO_HLINE_NC
   std::cout << "Starting DO_HLINE_NC" << std::endl;
-  for(int i=0;i<REPS*4;i++)
+  bmStartTime = std::chrono::system_clock::now();
+  for(int i=0;i<REPS*2048;i++)
     for(int y=0;y<=yMax;y+=1)
       if(y%2)
         theRamCanvas.drawHorzLineNC(0, xMax, y, aColor);
       else
         theRamCanvas.drawHorzLineNC(0, xMax, y, bColor);
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_HLINE_NC Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
 
 #if DO_HLINE
   std::cout << "Starting DO_HLINE" << std::endl;
-  for(int i=0;i<REPS;i++)
+  bmStartTime = std::chrono::system_clock::now();
+  for(int i=0;i<REPS*128;i++)
     for(int y=0;y<=yMax;y++)
       if(y%2)
         theRamCanvas.drawLine(0, y, xMax, y, aColor);
       else
         theRamCanvas.drawLine(0, y, xMax, y, bColor);
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_HLINE Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
 
 #if DO_VLINE
   std::cout << "Starting DO_VLINE" << std::endl;
-  for(int i=0;i<REPS/2;i++)
+  bmStartTime = std::chrono::system_clock::now();
+  for(int i=0;i<REPS*32;i++)
     for(int x=0;x<=xMax;x++)
       if(x%2)
         theRamCanvas.drawLine(x, 0, x, yMax, aColor);
       else
         theRamCanvas.drawLine(x, 0, x, yMax, bColor);
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_VLINE Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
 
 #if DO_VLINE_NC
   std::cout << "Starting DO_VLINE_NC" << std::endl;
-  for(int i=0;i<REPS/2;i++)
+  bmStartTime = std::chrono::system_clock::now();
+  for(int i=0;i<REPS*32;i++)
     for(int x=0;x<=xMax;x++)
       if(x%2)
         theRamCanvas.drawVertLineNC(0, yMax, x, aColor);
       else
         theRamCanvas.drawVertLineNC(0, yMax, x, bColor);
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_VLINE_NC Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
 
 #if DO_45LINE
   std::cout << "Starting DO_45LINE" << std::endl;
-  for(int i=0;i<REPS;i++)
+  bmStartTime = std::chrono::system_clock::now();
+  for(int i=0;i<REPS*128;i++)
     for(int y=0;y<=yMax;y++)
       if(y%2)
         theRamCanvas.drawLine(0, y, xMax, xMax+y, aColor);
       else
         theRamCanvas.drawLine(0, y, xMax, xMax+y, bColor);
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_45LINE Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
 
 #if DO_TRIVLN
   std::cout << "Starting DO_TRIVLN" << std::endl;
+  bmStartTime = std::chrono::system_clock::now();
   theRamCanvas.drawLine(     0,      0, xMax/2, yMax/2, aColor);
   theRamCanvas.drawLine(xMax/2, yMax/2,   xMax,   yMax, bColor);
   theRamCanvas.autoHistStrech();
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_TRIVLN Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
 
 #if DO_INTRP_AVG9
   std::cout << "Starting DO_INTRP_AVG9" << std::endl;
-  for(int i=0;i<REPS/16;i++)
+  bmStartTime = std::chrono::system_clock::now();
+  for(int i=0;i<REPS*8;i++)
     for(int y=0;y<=yMax;y+=1)
       for(int x=0;x<=xMax;x+=1)
         theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColorInterpAvg9(x, y));
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_INTRP_AVG9 Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
 
 #if DO_CONV
@@ -217,9 +300,18 @@ int main(void) {
   double kernel[10*10];
   int kSize = 9;
   theRamCanvas.computeConvolutionMatrixGausian(kernel, kSize, 10);
-  for(int i=0;i<REPS/64;i++)
+  bmStartTime = std::chrono::system_clock::now();
+  for(int i=0;i<REPS*2;i++)
     theRamCanvas.convolution(kernel, kSize);
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_CONV Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
+
+  std::cout << "Benchmarks Complete" << std::endl;
+  std::cout << "Center Pixel: " << theRamCanvas.getPxColor(BSIZE/2, BSIZE/2) << std::endl;
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 
 #if DO_OUT_TIF
   std::cout << "Starting DO_OUT_TIF" << std::endl;
@@ -231,8 +323,5 @@ int main(void) {
   theRamCanvas.writeRAWfile("bmark.mrw");
 #endif
 
-  std::cout << "Print Complete" << std::endl;
-  std::cout << "Center Red:   " << static_cast<int>(theRamCanvas.getPxColor(BSIZE/2, BSIZE/2).getRed()) << std::endl;
-  std::cout << "Center Green: " << static_cast<int>(theRamCanvas.getPxColor(BSIZE/2, BSIZE/2).getGreen()) << std::endl;
-  std::cout << "Runtime " << (std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - startTime) << " sec" << std::endl;
+  std::cout << "I/O Complete" << std::endl; 
 }

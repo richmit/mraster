@@ -56,7 +56,7 @@ double ranges[3][4] = { { -2.0,        1.0,       -1.5,        1.5       },
                         {  0.0353469,  0.5353469,  0.1153845,  0.6153845 } };
 
 int main(void) {
-  auto               startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int          MAXITR    = 6000;
   const double       BALL      = 10000000.0;
   double             maxPot    = 0;
@@ -163,5 +163,6 @@ int main(void) {
     theRamCanvasG.autoHistStrech();
     theRamCanvasG.writeTIFFfile("mandelbrot_potential_" + std::to_string(i) + ".tiff");
   }
-  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - startTime)/(60.0) << " min" << std::endl;
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

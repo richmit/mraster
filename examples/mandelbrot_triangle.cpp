@@ -56,7 +56,7 @@ int orbCmp(complex tstPt);
 
 /* **************************************************************** */
 int main(void) {
-  auto startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
 
   // Pick a triangle type and size..
 //  complex protoAlphaTriangle[3] = { {0.0, 0.0}, {0.50, 0.0}, {0.500, 0.50} };    // Big       right triangles
@@ -101,7 +101,8 @@ int main(void) {
   }
 
   theRamCanvas.writeTIFFfile("mandelbrot_triangle.tiff");
-  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - startTime)/(60.0) << " min" << std::endl;
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
 
 /* **************************************************************** */

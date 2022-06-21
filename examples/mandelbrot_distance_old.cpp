@@ -37,7 +37,7 @@
 #define BALLSIZE 100000.0
 
 int main(void) {
-  auto startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   mjr::ramCanvas4c8b theRamCanvas = mjr::ramCanvas4c8b(1024*2, 1024*2, -1.9, 0.5, -1.2, 1.2);
 
   for(int x=0; x<theRamCanvas.get_numXpix(); x++) {
@@ -68,5 +68,6 @@ int main(void) {
   }
 
   theRamCanvas.writeTGAfile("mandelbrot_distance_old.tga");
-  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - startTime)/(60.0) << " min" << std::endl;
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

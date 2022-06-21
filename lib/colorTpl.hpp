@@ -128,11 +128,11 @@ namespace mjr {
             but not larger than, an array of clrChanT that is numChan long.
     @tparam clrChanT Type to contain the channel information.  This type should be a unsigned integral type.  Be warned that some
             functions only make since for integeral types.
-    @tparam clrChanArthT A SIGNED arithmetic type capable of holding arithmetic operations on clrChanT types.  At a minimum this type should be able to hold the
-            sum and difference of two such values, and at best it should be able to hold products of such types.
+    @tparam clrChanArthT A SIGNED arithmetic type capable of holding arithmetic operations on clrChanT types.  At a minimum this type should be able to hold
+            the sum and difference of two such values (i.e. clrChanArthT at least 2x the width of clrChanT), and at best it should be able to hold products of
+            such types (i.e. clrChanArthT at least 4x the width of clrChanT).  Normally it is an integer, but it may be a floating point type.
     @tparam clrNameT This is a struct or union that has .red, .green, .blue, and .alpha components that are memory aligned with the elements of the component
             array.  This is used when a channel name is used.  This makes RGB and RGBA channel access VERY fast and provides a significant performance boost.
-
     @tparam numChan The number of channels this color will have.  Common choices are 1 for greyscale, 3 for RGB, and 4 for RGBA.
 */
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
@@ -141,21 +141,25 @@ namespace mjr {
     private:
 
       static_assert(std::is_arithmetic<clrChanT>::value,
-                    "ERROR: clrChanT parameter of colorTpl template must be an arithmetic type");
+                    "ERROR(colorTpl template): clrChanT must be an arithmetic type");
 
       static_assert((std::is_unsigned<clrChanT>::value && std::is_integral<clrChanT>::value),
-                    "ERROR: clrChanT parameter of colorTpl template must be an unsigned integral type.");
+                    "ERROR(colorTpl template): clrChanT must be an unsigned integral type.");
 
       static_assert(std::is_arithmetic<clrChanArthT>::value,
-                    "ERROR: clrChanArthT parameter of colorTpl template must be an arithmetic type");
-      static_assert(std::is_floating_point<clrChanArthT>::value || std::is_integral<clrChanArthT>::value,
-                    "ERROR: clrChanArthT parameter of colorTpl template must be an unsigned integral type or a floating point type.");
+                    "ERROR(colorTpl template): clrChanArthT must be an arithmetic type");
 
-      static_assert(sizeof(clrChanArthT)>=sizeof(clrChanT),
-                    "ERROR: sizeof clrChanArthT parameter of colorTpl template must at least as large as sizeof clrChanT parameter.");
+      static_assert(std::is_floating_point<clrChanArthT>::value || std::is_integral<clrChanArthT>::value,
+                    "ERROR(colorTpl template): clrChanArthT must be an integral or floating point type.");
+
+      static_assert(std::is_floating_point<clrChanArthT>::value || std::is_signed<clrChanArthT>::value,
+                    "ERROR(colorTpl template): When integral, clrChanArthT must be signed.");
+
+      static_assert(std::is_floating_point<clrChanArthT>::value || sizeof(clrChanArthT)>=sizeof(clrChanT),
+                    "ERROR(colorTpl template): When integral, clrChanArthT must be at least as large as clrChanT.");
 
       static_assert(numChan>0,
-                    "ERROR: the numChan parameter must be greater than zero.");
+                    "ERROR(colorTpl template): numChan must be greater than zero.");
 
       /** Used to overlay variables based upon types provided as template parameters leading to dramatic performance improvements for common color types. */
       union {
@@ -318,6 +322,9 @@ namespace mjr {
 
       /** @name Component setting */
       //@{
+      /** Sets the given channel of the current object to cVal
+          @param chan The channel to set -- if out of range, function is a NOP
+          @param cVal The value to set the channel to */
       colorTpl& setChan(int chan, clrChanT cVal);
       /** Sets the green component of the current object.
           @param g The value to set the green component to
@@ -351,7 +358,7 @@ namespace mjr {
           @return Returns a reference to the current color object.*/
       colorTpl& setRedF(double r);
       /** Sets the given channel of the current object from a floating point value in the unit interval, [0,1].
-          @param chan The channel to set
+          @param chan The channel to set -- if out of range, function is a NOP
           @param cVal The value to set the channel to */
       colorTpl& setChanF(int chan, double cVal);
       /** Sets the green component of the current object from a floating point value in the unit interval, [0,1].
@@ -379,7 +386,7 @@ namespace mjr {
           @return Returns a reference to the current color object.*/
       colorTpl& setRed8bit(uint8_t r);
       /** Sets the given channel of the current object from an uint8_t value in the interval [0,255].
-          @param chan The channel to set
+          @param chan The channel to set -- if out of range, function is a NOP
           @param cVal The value to set the channel to */
       colorTpl& setChan8bit(int chan, uint8_t cVal);
       /** Sets the green component of the current object from an uint8_t value in the interval [0,255].
@@ -410,7 +417,7 @@ namespace mjr {
       colorTpl& setRed64bit(uint64_t r, uint64_t maxv=std::numeric_limits<uint64_t>::max());
       /** Sets the given channel of the current object from an uint64_t value in the interval [0,maxv].  Avoids round off error as much as possible by
           moving scale computations till the last moment; also avoids tedious and unsightly prescaling in application code.
-          @param chan The channel to set
+          @param chan The channel to set -- if out of range, function is a NOP
           @param cVal The value to set the channel to
           @param maxv Floating point value corresponding to maxChanVal */
       colorTpl& setChan64bit(int chan, uint64_t cVal, uint64_t maxv=std::numeric_limits<uint64_t>::max());
@@ -1345,9 +1352,9 @@ namespace mjr {
   uint8_t
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getRed8bit() const {
     if(channelType8bitInt)
-      return (uint8_t)(theColor.theParts.red);
+      return static_cast<uint8_t>(theColor.theParts.red);
     else
-      return (uint8_t)(255.0 * theColor.theParts.red / maxChanVal);
+      return static_cast<uint8_t>(255.0 * theColor.theParts.red / maxChanVal);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1355,9 +1362,9 @@ namespace mjr {
   uint8_t
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getBlue8bit() const {
     if(channelType8bitInt)
-      return (uint8_t)(theColor.theParts.blue);
+      return static_cast<uint8_t>(theColor.theParts.blue);
     else
-      return (uint8_t)(255.0 * theColor.theParts.blue / maxChanVal);
+      return static_cast<uint8_t>(255.0 * theColor.theParts.blue / maxChanVal);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1365,9 +1372,9 @@ namespace mjr {
   uint8_t
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getGreen8bit() const {
     if(channelType8bitInt)
-      return (uint8_t)(theColor.theParts.green);
+      return static_cast<uint8_t>(theColor.theParts.green);
     else
-      return (uint8_t)(255.0 * theColor.theParts.green / maxChanVal);
+      return static_cast<uint8_t>(255.0 * theColor.theParts.green / maxChanVal);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1375,9 +1382,9 @@ namespace mjr {
   uint8_t
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getAlpha8bit() const {
     if(channelType8bitInt)
-      return (uint8_t)(theColor.theParts.alpha);
+      return static_cast<uint8_t>(theColor.theParts.alpha);
     else
-      return (uint8_t)(255.0 * theColor.theParts.alpha / maxChanVal);
+      return static_cast<uint8_t>(255.0 * theColor.theParts.alpha / maxChanVal);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1385,9 +1392,9 @@ namespace mjr {
   uint8_t
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getChan8bit(int chan) const {
     if(channelType8bitInt)
-      return (uint8_t)(theColor.thePartsA[chan]);
+      return static_cast<uint8_t>(theColor.thePartsA[chan]);
     else
-      return (uint8_t)(255.0 * theColor.thePartsA[chan] / maxChanVal);
+      return static_cast<uint8_t>(255.0 * theColor.thePartsA[chan] / maxChanVal);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1566,6 +1573,7 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setAllF(double aComp) {
+//  MJR TODO NOTE <2022-06-21> colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setAllF: The products can be optimized away.  Set remaining channels to red, or use a temp.
     theColor.theParts.red     = static_cast<clrChanT>(aComp * maxChanVal);
     if(numChan > 1)
       theColor.theParts.green = static_cast<clrChanT>(aComp * maxChanVal);
@@ -1995,7 +2003,7 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmAddDivClp(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> color,
-                                                                                               colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> dcolor) {
+                                                                               colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> dcolor) {
     theColor.theParts.red     = clipTop((theColor.theParts.red   + color.theColor.theParts.red)   / dcolor.theColor.theParts.red);
     if(numChan > 1)
       theColor.theParts.green = clipTop((theColor.theParts.green + color.theColor.theParts.green) / dcolor.theColor.theParts.green);
@@ -2531,7 +2539,7 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromPackedInt(uint32_t anInt,
-                                                                                                       uint8_t rIdx, uint8_t gIdx, uint8_t bIdx, uint8_t aIdx) {
+                                                                                       uint8_t rIdx, uint8_t gIdx, uint8_t bIdx, uint8_t aIdx) {
     uint8_t *curByte = (uint8_t *)(&anInt);
     theColor.theParts.red                    = curByte[rIdx];
     if(numChan > 1) theColor.theParts.green  = curByte[gIdx];
@@ -2544,16 +2552,16 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmLinearGreyLevelScale(double c, double b) {
-    theColor.theParts.red     = static_cast<clrChanT>(c * theColor.theParts.red   + b);
+    theColor.theParts.red     = static_cast<clrChanT>(c * static_cast<double>(theColor.theParts.red)   + b);
     if(numChan > 1)
-      theColor.theParts.green = static_cast<clrChanT>(c * theColor.theParts.green + b);
+      theColor.theParts.green = static_cast<clrChanT>(c * static_cast<double>(theColor.theParts.green) + b);
     if(numChan > 2)
-      theColor.theParts.blue  = static_cast<clrChanT>(c * theColor.theParts.blue  + b);
+      theColor.theParts.blue  = static_cast<clrChanT>(c * static_cast<double>(theColor.theParts.blue)  + b);
     if(numChan > 3)
-      theColor.theParts.alpha = static_cast<clrChanT>(c * theColor.theParts.alpha + b);
+      theColor.theParts.alpha = static_cast<clrChanT>(c * static_cast<double>(theColor.theParts.alpha) + b);
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i] = static_cast<clrChanT>(c * theColor.thePartsA[i] + b);
+        theColor.thePartsA[i] = static_cast<clrChanT>(c * static_cast<double>(theColor.thePartsA[i]) + b);
     return *this;
   }
 
@@ -2561,9 +2569,9 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmLinearGreyLevelScale(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> from1,
-                                                                                                          colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> from2,
-                                                                                                          colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> to1,
-                                                                                                          colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> to2) {
+                                                                                          colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> from2,
+                                                                                          colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> to1,
+                                                                                          colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> to2) {
     double c = 1.0*(to1.getRed()-to2.getRed())/(from1.getRed()-from2.getRed());
     double b = to1.getRed() - 1.0*c*from1.getRed();
     theColor.theParts.red     = static_cast<clrChanT>(c * theColor.theParts.red   + b);
@@ -2697,7 +2705,7 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmSaw(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> lowCol,
-                                                                          colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> highCol) {
+                                                                         colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> highCol) {
     theColor.theParts.red     = ((lowCol.theColor.theParts.red   <= theColor.theParts.red)   && (highCol.theColor.theParts.red   >= theColor.theParts.red)?theColor.theParts.red:0);
     if(numChan > 1)
       theColor.theParts.green = ((lowCol.theColor.theParts.green <= theColor.theParts.green) && (highCol.theColor.theParts.green >= theColor.theParts.green)?theColor.theParts.green:0);
@@ -2715,7 +2723,7 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmStep(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> lowCol,
-                                                                                          colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> highCol) {
+                                                                          colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> highCol) {
     theColor.theParts.red     = ((lowCol.theColor.theParts.red   <= theColor.theParts.red)   && (highCol.theColor.theParts.red   >= theColor.theParts.red)?maxChanVal:0);
     if(numChan > 1)
       theColor.theParts.green = ((lowCol.theColor.theParts.green <= theColor.theParts.green) && (highCol.theColor.theParts.green >= theColor.theParts.green)?maxChanVal:0);
@@ -2830,7 +2838,7 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::tfrmFuzzyDirac(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> ctrCol,
-                                                                                                colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> radCol) {
+                                                                                colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> radCol) {
     theColor.theParts.red     = ((std::abs(ctrCol.theColor.theParts.red   - theColor.theParts.red)   <= radCol.theColor.theParts.red  )?maxChanVal:0);
     if(numChan > 1)
       theColor.theParts.green = ((std::abs(ctrCol.theColor.theParts.green - theColor.theParts.green)  <= radCol.theColor.theParts.green)?maxChanVal:0);
@@ -2846,7 +2854,8 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  inline void colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setChanToMin() {
+  inline void 
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setChanToMin() {
     if(fastMask)
       theColor.theInt = 0;
     else
@@ -2865,7 +2874,7 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  inline colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setToBlack() {
     setChanToMin();
     return *this;
@@ -2991,7 +3000,7 @@ namespace mjr {
     if( (anInt < minChanVal) || (anInt > base) )
       SET_ERR_COLOR;
     else
-      setColorFromUnitHSV(1.0F * static_cast<double>(anInt) / static_cast<double>(base), 1.0, 1.0);
+      setColorFromUnitHSV(1.0 * static_cast<double>(anInt) / static_cast<double>(base), 1.0, 1.0);
     return *this;
   }
 
@@ -3003,7 +3012,7 @@ namespace mjr {
     if( (anInt < minChanVal) || (anInt > base) )
       SET_ERR_COLOR;
     else
-      setColorFromWavelengthLA((1.0F * static_cast<double>(anInt) / static_cast<double>(base)) * (maxWavelength-minWavelength)+minWavelength);
+      setColorFromWavelengthLA((1.0 * static_cast<double>(anInt) / static_cast<double>(base)) * (maxWavelength-minWavelength)+minWavelength);
     return *this;
   }
 
@@ -3027,7 +3036,7 @@ namespace mjr {
     if( (anInt < minChanVal) || (anInt > base) )
       SET_ERR_COLOR;
     else
-      setColorFromWavelengthCM((1.0F * static_cast<double>(anInt) / static_cast<double>(base))*(maxWavelength-minWavelength)+minWavelength, INTRP);
+      setColorFromWavelengthCM((1.0 * static_cast<double>(anInt) / static_cast<double>(base))*(maxWavelength-minWavelength)+minWavelength, INTRP);
     return *this;
   }
 
@@ -3207,9 +3216,9 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpColorRamp(double aDouble,
-                                                                               int numColors,
-                                                                               double *anchors,
-                                                                               colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> *colors) {
+                                                                              int numColors,
+                                                                              double *anchors,
+                                                                              colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> *colors) {
     double lowAnchor, highAnchor;
     if(anchors == NULL) {
       lowAnchor  = 0.0;
@@ -3290,7 +3299,7 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
             }
             return setColorRGB(r, g, b);
           } else {
-//  MJR SCM NOTE <2022-06-15T12:12:20-0500> colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpColorRamp: What is this fore?
+//  MJR TODO NOTE <2022-06-15T12:12:20-0500> colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpColorRamp: What is this fore?
             anInt = anInt - maxChanVal;
           }
         }
@@ -3306,8 +3315,8 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::interplColors(double aDouble,
-                                                                                               colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
-                                                                                               colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2) {
+                                                                               colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
+                                                                               colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2) {
     if( (aDouble < 0.0) || (aDouble > 1.0) ) {
       SET_ERR_COLOR;
     } else {
@@ -3329,23 +3338,23 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::wMean(double w1, double w2, double w3,
-                                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
-                                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2,
-                                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col3) {
+                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
+                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2,
+                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col3) {
 
     if((w1 < 0) || (w2 < 0) || (w3 < 0) || (w1 > 1) || (w2 > 1) || (w3 > 1) || (std::abs(w1+w2+w3-1) > 0.001)) {
       return SET_ERR_COLOR;
     } else {
-      theColor.theParts.red     = static_cast<clrChanT>((col1.theColor.theParts.red   * w1) + (col2.theColor.theParts.red   * w2) + (col3.theColor.theParts.red   * w3));
+      theColor.theParts.red     = static_cast<clrChanT>((static_cast<double>(col1.theColor.theParts.red)   * w1) + (static_cast<double>(col2.theColor.theParts.red)   * w2) + (static_cast<double>(col3.theColor.theParts.red)   * w3));
       if(numChan > 1)
-        theColor.theParts.green = static_cast<clrChanT>((col1.theColor.theParts.green * w1) + (col2.theColor.theParts.green * w2) + (col3.theColor.theParts.green * w3));
+        theColor.theParts.green = static_cast<clrChanT>((static_cast<double>(col1.theColor.theParts.green) * w1) + (static_cast<double>(col2.theColor.theParts.green) * w2) + (static_cast<double>(col3.theColor.theParts.green) * w3));
       if(numChan > 2)
-        theColor.theParts.blue  = static_cast<clrChanT>((col1.theColor.theParts.blue  * w1) + (col2.theColor.theParts.blue  * w2) + (col3.theColor.theParts.blue  * w3));
+        theColor.theParts.blue  = static_cast<clrChanT>((static_cast<double>(col1.theColor.theParts.blue)  * w1) + (static_cast<double>(col2.theColor.theParts.blue)  * w2) + (static_cast<double>(col3.theColor.theParts.blue)  * w3));
       if(numChan > 3)
-        theColor.theParts.alpha = static_cast<clrChanT>((col1.theColor.theParts.alpha * w1) + (col2.theColor.theParts.alpha * w2) + (col3.theColor.theParts.alpha * w3));
+        theColor.theParts.alpha = static_cast<clrChanT>((static_cast<double>(col1.theColor.theParts.alpha) * w1) + (static_cast<double>(col2.theColor.theParts.alpha) * w2) + (static_cast<double>(col3.theColor.theParts.alpha) * w3));
       if(numChan > 4)
         for(int i=4; i<numChan; i++)
-          theColor.thePartsA[i] = static_cast<clrChanT>((col1.theColor.thePartsA[i]   * w1) + (col2.theColor.thePartsA[i]   * w2) + (col3.theColor.thePartsA[i]   * w3));
+          theColor.thePartsA[i] = static_cast<clrChanT>((static_cast<double>(col1.theColor.thePartsA[i])   * w1) + (static_cast<double>(col2.theColor.thePartsA[i])   * w2) + (static_cast<double>(col3.theColor.thePartsA[i])   * w3));
       return *this;
     }
   }
@@ -3354,9 +3363,9 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::wMean(double w1, double w2,
-                                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
-                                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2,
-                                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col3) {
+                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
+                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2,
+                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col3) {
     return wMean(w1, w2, 1-w1-w2, col1, col2, col3);
   }
 
@@ -3365,8 +3374,8 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::wMean(double w1,
-                                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
-                                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2) {
+                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
+                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2) {
     return wMean(w1, 1-w1, col1, col2);
   }
 
@@ -3374,8 +3383,8 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::wMean(double w1, double w2,
-                                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
-                                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2) {
+                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
+                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2) {
     if((w1 < 0) || (w2 < 0) || (w1 > 1) || (w2 > 1) || (std::abs(w1+w2-1) > 0.001)) {
       return SET_ERR_COLOR;
     } else {
@@ -3397,8 +3406,8 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::interplColorsHLS(double aDouble,
-                                                                                                  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
-                                                                                                  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2) {
+                                                                                  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
+                                                                                  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2) {
     // Convert our given colors into HLS
     double H1, L1, S1;
     double H2, L2, S2;
@@ -3419,7 +3428,7 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::interplColors(double aDouble,
-                                                                                               colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> tooCol) {
+                                                                               colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> tooCol) {
     if( (aDouble < 0.0) || (aDouble > 1.0) ) {
       SET_ERR_COLOR;
     } else {
@@ -3664,7 +3673,7 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
     if(channelType8bitInt)
       charCompVal = aColorComp;
     else
-      charCompVal = (uint8_t)(255.0 * aColorComp / maxChanVal);
+      charCompVal = static_cast<uint8_t>(255.0 * aColorComp / maxChanVal);
     // Find the closest component
     uint8_t posValue[6] = { 0x0, 0x33, 0x66, 0x99, 0xCC, 0xFF };
     minDist = charCompVal;
@@ -3890,7 +3899,8 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  int colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::isBlack() {
+  int
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::isBlack() {
     if(fastMask) {
       return (theColor.theInt == 0);
     } else {
@@ -3915,7 +3925,8 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  int colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::isEqual(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> aColor) {
+  int
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::isEqual(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> aColor) {
     if(fastMask) {
       return (theColor.theInt == aColor.theColor.theInt);
     } else {
@@ -3940,7 +3951,8 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  int colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::isNotEqual(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> aColor) {
+  int
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::isNotEqual(colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> aColor) {
     return !(isEqual(aColor));
   }
 
@@ -3952,7 +3964,7 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
     double rf, gf, bf;
     double t;
 
-    f = static_cast<double>(std::modf(h * 6.0F, &t));
+    f = static_cast<double>(std::modf(h * 6.0, &t));
     int i = static_cast<int>(t) % 6;
 
     p = v * (1 - s);
@@ -3996,13 +4008,13 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
       int hInt = static_cast<int>(hTmp) % 360;
       H = hFrac + static_cast<double>(hInt);
       // Compute the magic numbers..
-      const double epsilon = 0.000001F;
+      const double epsilon = 0.000001;
       double m1, m2;
-      if(L <= 0.5F)
-        m2 = L * (1.0F + S);
+      if(L <= 0.5)
+        m2 = L * (1.0 + S);
       else
         m2 = L + S - L * S;
-      m1 = 2.0F * L - m2;
+      m1 = 2.0 * L - m2;
       // Finish up the computation
       if(S<epsilon) {
         setAllF(L);
@@ -4088,12 +4100,12 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
 
     // Data about the color matching function table used. This should be abstracted away so that other color matching functions may be used.  Going to the
     // trouble of abstracting the color match function concept may not be worth the effort...
-    const double minWL = 390.0F;     // Min wavelength in table
-    const double maxWL = 830.0F;     // Max wavelength in table
+    const double minWL = 390.0;     // Min wavelength in table
+    const double maxWL = 830.0;     // Max wavelength in table
     const int   numPT = 89;      // Number fo points in the table
-    const double rScl  = 3.1673F;  // Scale factors for color function
-    const double gScl  = 1.0517F;
-    const double bScl  = 1.0019F;
+    const double rScl  = 3.1673;  // Scale factors for color function
+    const double gScl  = 1.0517;
+    const double bScl  = 1.0019;
 
     // Clip the wavelength to be in range
     if(wavelength < minWL)
@@ -4102,7 +4114,7 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
       wavelength = maxWL;
 
     // Figure out where we are in our color function table
-    double fIdx  = (wavelength-minWL)/(maxWL-minWL)*(numPT-1.0F);
+    double fIdx  = (wavelength-minWL)/(maxWL-minWL)*(numPT-1.0);
     int   iIdx1 = static_cast<int>(fIdx);
     int   iIdx2 = iIdx1+1;
 
@@ -4139,19 +4151,19 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
       bf = (fIdx-static_cast<double>(iIdx1)) * (colMatchPoints[iIdx2][3] - colMatchPoints[iIdx1][3]) + colMatchPoints[iIdx1][3];
       break;
     case 4 : // Use exponential hump functions -- MJR developed algorithm 2007
-      rf = 3.07F / static_cast<double>(std::exp(0.0005F * (wavelength-600.0F)*(wavelength-600.0F))) + 0.09F / static_cast<double>(std::exp(0.005F * (wavelength-425.0F)*(wavelength-425.0F)));
-      gf = 1.05F / static_cast<double>(std::exp(0.0004F * (wavelength-540.0F)*(wavelength-540.0F)));
-      bf = 1.00F / static_cast<double>(std::exp(0.0010F * (wavelength-450.0F)*(wavelength-450.0F)));
+      rf = 3.07 / std::exp(0.0005 * (wavelength-600.0)*(wavelength-600.0)) + 0.09 / std::exp(0.005 * (wavelength-425.0)*(wavelength-425.0));
+      gf = 1.05 / std::exp(0.0004 * (wavelength-540.0)*(wavelength-540.0));
+      bf = 1.00 / std::exp(0.0010 * (wavelength-450.0)*(wavelength-450.0));
       break;
     default:
-      rf = gf = bf = 0.0F;
+      rf = gf = bf = 0.0;
       break;
     }
 
     // Make them positive and scale to a [0,1] range
-    rf=(rf>0.0F ? rf : 0.0F)/rScl;
-    gf=(gf>0.0F ? gf : 0.0F)/gScl;
-    bf=(bf>0.0F ? bf : 0.0F)/bScl;
+    rf=(rf>0.0 ? rf : 0.0)/rScl;
+    gf=(gf>0.0 ? gf : 0.0)/gScl;
+    bf=(bf>0.0 ? bf : 0.0)/bScl;
 
     // We are done.  Set the color and exit.
     setColorFromF(rf, gf, bf);
@@ -4162,7 +4174,7 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromNaturalHSV(double h, double s, double v) {
-    setColorFromUnitHSV(h/360.0F, s/100.0F, v/100.0F);
+    setColorFromUnitHSV(h/360.0, s/100.0, v/100.0);
     return *this;
   }
 
@@ -4172,8 +4184,8 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromWavelengthLA(double wavelength) {
     double rf, gf, bf;
 
-    const double minWL = 380.0F;     // Min wavelength in table
-    const double maxWL = 780.0F;     // Max wavelength in table
+    const double minWL = 380.0;     // Min wavelength in table
+    const double maxWL = 780.0;     // Max wavelength in table
 
     // Clip the wavelength to be in range
     if(wavelength < minWL)
@@ -4185,38 +4197,38 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
     rf = gf = bf = 0;
     if       ( (wavelength >= 380) && (wavelength < 440)) {
       rf = (440-wavelength)/(440-380);
-      gf = 0.0F;
-      bf = 1.0F;
+      gf = 0.0;
+      bf = 1.0;
     } else if( (wavelength >= 440) && (wavelength < 490)) {
-      rf = 0.0F;
+      rf = 0.0;
       gf = (wavelength-440)/(490-440);
-      bf = 1.0F;
+      bf = 1.0;
     } else if( (wavelength >= 490) && (wavelength < 510)) {
-      rf = 0.0F;
-      gf = 1.0F;
+      rf = 0.0;
+      gf = 1.0;
       bf = (510-wavelength)/(510-490);
     } else if( (wavelength >= 510) && (wavelength < 580)) {
       rf = (wavelength-510)/(580-510);
-      gf = 1.0F;
-      bf = 0.0F;
+      gf = 1.0;
+      bf = 0.0;
     } else if( (wavelength >= 580) && (wavelength < 645)) {
-      rf = 1.0F;
+      rf = 1.0;
       gf = (645-wavelength)/(645-580);
-      bf = 0.0F;
+      bf = 0.0;
     } else if( (wavelength >= 645) && (wavelength <= 780)) {
-      rf = 1.0F;
-      gf = 0.0F;
-      bf = 0.0F;
+      rf = 1.0;
+      gf = 0.0;
+      bf = 0.0;
     }
 
     /* Lower the intensity near edges of vision. */
     double edgeIntensityAdj;
-    if(wavelength > 700.0F) {
-      edgeIntensityAdj=0.3F + 0.7F * (780-wavelength)/(780-700);
-    } else if(wavelength < 420.0F) {
-      edgeIntensityAdj=0.3F + 0.7F * (wavelength - 380)/(420-380);
+    if(wavelength > 700.0) {
+      edgeIntensityAdj=0.3 + 0.7 * (780-wavelength)/(780-700);
+    } else if(wavelength < 420.0) {
+      edgeIntensityAdj=0.3 + 0.7 * (wavelength - 380)/(420-380);
     } else {
-      edgeIntensityAdj=1.0F;
+      edgeIntensityAdj=1.0;
     }
 
     setColorFromF(edgeIntensityAdj*rf, edgeIntensityAdj*gf, edgeIntensityAdj*bf);
@@ -4225,7 +4237,8 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  clrChanT colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::clipTop(clrChanArthT anArithComp) {
+  clrChanT 
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::clipTop(clrChanArthT anArithComp) {
     if(anArithComp > maxChanVal)
       return maxChanVal;
     else
@@ -4234,7 +4247,8 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  clrChanT colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::clipBot(clrChanArthT anArithComp) {
+  clrChanT
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::clipBot(clrChanArthT anArithComp) {
     if(anArithComp < minChanVal)
       return minChanVal;
     else
@@ -4243,7 +4257,8 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  clrChanT colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::clipAll(clrChanArthT anArithComp) {
+  clrChanT
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::clipAll(clrChanArthT anArithComp) {
     if(anArithComp > maxChanVal)
       return maxChanVal;
     if(anArithComp < minChanVal)
@@ -4253,7 +4268,8 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  int colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::rgb2hsv(double *H, double *S, double *V) {
+  int
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::rgb2hsv(double *H, double *S, double *V) {
     if(numChan < 3) {
       return 1;
     } else {
@@ -4282,21 +4298,22 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  int colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::rgb2hls(double *H, double *L, double *S) {
+  int
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::rgb2hls(double *H, double *L, double *S) {
     if(numChan < 3) {
       return 1;
     } else {
       clrChanT rgbMaxI = getMaxRGB();
       clrChanT rgbMinI = getMinRGB();
 
-      double rgbMaxF = 1.0F * rgbMaxI / maxChanVal;
-      double rgbMinF = 1.0F * rgbMinI / maxChanVal;
+      double rgbMaxF = 1.0 * rgbMaxI / maxChanVal;
+      double rgbMinF = 1.0 * rgbMinI / maxChanVal;
 
       double rangeF = rgbMaxF - rgbMinF;
       double sumF   = rgbMaxF + rgbMinF;
 
       // Compute L
-      *L = sumF / 2.0F;
+      *L = sumF / 2.0;
 
       // Compute S & L
       if(rgbMaxI == rgbMinI) {
@@ -4308,7 +4325,7 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
         if(*L <= 0.5)
           *S = rangeF / sumF;
         else
-          *S = rangeF / ( 2.0F - sumF);
+          *S = rangeF / ( 2.0 - sumF);
         // Compute H -- This is terrible from an optimization standpoint; however, it saves some typing. :)
         *H = rgb2h();
       }
@@ -4318,7 +4335,8 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  double colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::rgb2h() {
+  double
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::rgb2h() {
     if(numChan < 3) {
       return -1.0;
     } else {
@@ -4329,8 +4347,8 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
       clrChanT rgbMaxI = getMaxRGB();
       clrChanT rgbMinI = getMinRGB();
 
-      double rgbMaxF = 1.0F * rgbMaxI / maxChanVal;
-      double rgbMinF = 1.0F * rgbMinI / maxChanVal;
+      double rgbMaxF = 1.0 * rgbMaxI / maxChanVal;
+      double rgbMinF = 1.0 * rgbMinI / maxChanVal;
 
       double rangeF = rgbMaxF - rgbMinF;
 
@@ -4341,20 +4359,20 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
         double H;
         // We use the rgbMaxI to avoid round off error in comparing floating point values.
         if(theColor.theParts.red == rgbMaxI)
-          H = 0.0F + (gf - bf) / rangeF;
+          H = 0.0 + (gf - bf) / rangeF;
         else if(theColor.theParts.green == rgbMaxI)
-          H = 2.0F + (bf - rf) / rangeF;
+          H = 2.0 + (bf - rf) / rangeF;
         else if(theColor.theParts.blue == rgbMaxI)
-          H = 4.0F + (rf - gf) / rangeF;
+          H = 4.0 + (rf - gf) / rangeF;
         else {
           return -2.0; // ERROR
         }
 
-        H = H * 60.0F;
+        H = H * 60.0;
         while(H<0)
-          H += 360.0F;
-        while(H>=360.0F)
-          H -= 360.0F;
+          H += 360.0;
+        while(H>=360.0)
+          H -= 360.0;
         return H;
       }
     }
@@ -4363,9 +4381,12 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /** I/O stream output operator for colorTpl types. */
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  std::ostream& operator<< (std::ostream &out, colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> &color) {
-    for(int i=0; i<numChan; i++)
-      out << (uint64_t)color.getChan(i) << " ";
+  std::ostream& 
+  operator<< (std::ostream &out, colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> const& color) {
+    out << "<";
+    for(int i=0; i<(numChan-1); i++)
+      out << static_cast<uint64_t>(color.getChan(i)) << ", ";
+    out << static_cast<uint64_t>(color.getChan(numChan-1)) << ">";
     return out;
   }
 

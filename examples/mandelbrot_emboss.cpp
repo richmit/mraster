@@ -62,7 +62,7 @@ enum class whyStop { OUTSET,   //!< Not in set (|z|>BALL)
 
 int main(void)
 {
-  auto                  startTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   mjr::ramCanvas3c8b   potRamCanvas(CSIZE, CSIZE), distRamCanvas(CSIZE, CSIZE);
   mjr::ramCanvas3c8b::colorType       theColor;
   double               lightHeight = 1.125;
@@ -150,5 +150,6 @@ int main(void)
     potRamCanvas.writeTIFFfile("mandelbrot_emboss_pot_"   + std::to_string(i) + ".tiff");
     distRamCanvas.writeTIFFfile("mandelbrot_emboss_dist_" + std::to_string(i) + ".tiff");
   }
-  std::cout << "Runtime " << static_cast<double>(std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) - startTime)/(60.0) << " min" << std::endl;
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

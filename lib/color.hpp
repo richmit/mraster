@@ -40,7 +40,6 @@ namespace mjr {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /** @name Channel Types */
   //@{
-  /* uint types */
   typedef uint8_t      colChan8;
   typedef uint16_t     colChan16;
   typedef uint32_t     colChan32;
@@ -50,33 +49,32 @@ namespace mjr {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /** @name Types for arithmetic for various channel depths */
   //@{
-  /* uint types */
   typedef int32_t      colChanArth8;
-  typedef int32_t      colChanArth16;
-  typedef int64_t      colChanArth32;
-  typedef int64_t      colChanArth64;
-//@}
+  typedef int64_t      colChanArth16;
+  typedef int64_t      colChanArth32;  // Not big enough for *
+  typedef int64_t      colChanArth64;  // Not big enough for * + -
+  //@}
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /** @name Types for the masks */
   //@{
-  /* uint types */
+  typedef uint64_t     colChanCont8x8; // Not used by any other types defined here
   typedef uint32_t     colChanCont4x8;
   typedef uint64_t     colChanCont4x16;
-  typedef colChan8     colChanCont1x8;
-  typedef colChan16    colChanCont1x16;
-  typedef colChan32    colChanCont1x32;
-  typedef colChan64    colChanCont1x64;
+  typedef uint8_t      colChanCont1x8;
+  typedef uint16_t     colChanCont1x16;
+  typedef uint32_t     colChanCont1x32;
+  typedef uint64_t     colChanCont1x64;
   //@}
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /** @name Types for channel names */
   //@{
-  /* Types for the names (uint RGB and RGBA). */
+  /* Types for the names (RGB and RGBA). */
   typedef struct { colChan8   red;   colChan8   green; colChan8   blue;  colChan8   alpha; } colChanNamesRGBA4x8;
   typedef struct { colChan16  red;   colChan16  green; colChan16  blue;  colChan16  alpha; } colChanNamesRGBA4x16;
 
-  /* Types for the names (uint monochrome). */
+  /* Types for the names (monochrome). */
   typedef union  { colChan8   red;   colChan8   green; colChan8   blue;  colChan8   alpha; } colChanNames1x8;
   typedef union  { colChan16  red;   colChan16  green; colChan16  blue;  colChan16  alpha; } colChanNames1x16;
   typedef union  { colChan32  red;   colChan32  green; colChan32  blue;  colChan32  alpha; } colChanNames1x32;
@@ -85,20 +83,21 @@ namespace mjr {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /** @name Complete Color Types@EOL
-      The following types define the most commonly used color/pixel types used today, and are what most users of will actually use in practice. */
+      The following types define the most commonly used color/pixel combinations, and are what most users of will actually use in practice. */
   //@{
-  /* uint types */
+  typedef colorTpl<colChanCont8x8,   colChan8,   colChanArth8,  colChanNamesRGBA4x8,  8> color8c8b;    //!< colorTpl: 2 channels at  8-bits/channel
+
   typedef colorTpl<colChanCont4x8,   colChan8,   colChanArth8,  colChanNamesRGBA4x8,  4> colorRGBA8b;  //!< colorTpl: 24-bit truecolor with alpha (RGBA)
   typedef colorTpl<colChanCont4x16,  colChan16,  colChanArth16, colChanNamesRGBA4x16, 4> colorRGBA16b; //!< colorTpl: 48-bit truecolor with alpha (RGBA)
 
-  typedef colorRGBA8b   color4c8b;                                                                     //!< colorTpl: Generic 4 channel  (8-bit/channel)
-  typedef colorRGBA16b  color4c16b;                                                                    //!< colorTpl: Generic 4 channel (16-bit/channel)
+  typedef colorRGBA8b                                                                    color4c8b;    //!< colorTpl: Generic 4 channel  (8-bit/channel)
+  typedef colorRGBA16b                                                                   color4c16b;   //!< colorTpl: Generic 4 channel (16-bit/channel)
 
   typedef colorTpl<colChanCont4x8,   colChan8,   colChanArth8,  colChanNamesRGBA4x8,  3> colorRGB8b;   //!< colorTpl: 24-bit truecolor without alpha (RGB)
   typedef colorTpl<colChanCont4x16,  colChan16,  colChanArth16, colChanNamesRGBA4x16, 3> colorRGB16b;  //!< colorTpl: 48-bit truecolor with alpha (RGB)
 
-  typedef colorRGB8b   color3c8b;                                                                      //!< colorTpl: Generic 3 channel  (8-bit/channel)
-  typedef colorRGB16b  color3c16b;                                                                     //!< colorTpl: Generic 3 channel (16-bit/channel)
+  typedef colorRGB8b                                                                     color3c8b;    //!< colorTpl: Generic 3 channel  (8-bit/channel)
+  typedef colorRGB16b                                                                    color3c16b;   //!< colorTpl: Generic 3 channel (16-bit/channel)
 
   typedef colorTpl<colChanCont4x8,   colChan8,   colChanArth8,  colChanNamesRGBA4x8,  2> color2c8b;    //!< colorTpl: 2 channels at  8-bits/channel
   typedef colorTpl<colChanCont4x16,  colChan16,  colChanArth16, colChanNamesRGBA4x16, 2> color2c16b;   //!< colorTpl: 2 channels at 16-bits/channel

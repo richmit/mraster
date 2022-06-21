@@ -41,6 +41,11 @@ namespace mjr {
   typedef INT_CORD  simpleIntCrdT; //!< Integer coordinate type
   //@}
 
+  /** @name Simple Color Canvas Type (8 channels at 8 bits per channel) */
+  //@{
+  typedef ramCanvasTpl<color8c8b,    INT_CORD, REAL_CORD> ramCanvas8c8b;       //!< Canvas type: generic 64-bit with 8 channels at 8-bit uint per channel.
+  //@}
+
   /** @name Simple Color Canvas Types (3 and 4 channels at 8 bits per channel) */
   //@{
   typedef ramCanvasTpl<color4c8b,    INT_CORD, REAL_CORD> ramCanvas4c8b;       //!< Canvas type: generic 32-bit with 4 channels at 8-bit uint per channel.
