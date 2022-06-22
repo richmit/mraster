@@ -27,9 +27,16 @@
   @endparblock
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   int y;
 
   mjr::ramCanvas3c8b theRamCanvas1(700, 240);
@@ -59,4 +66,6 @@ int main(void) {
   theRamCanvas2.drawLine(0, y,   2024, y, "blue");
   theRamCanvas2.drawLine(100, 0,  100, 512, "blue");
   theRamCanvas2.writeTIFFfile("test_draw_strings_2.tiff");
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

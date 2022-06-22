@@ -27,12 +27,17 @@
   @endparblock
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
 #include <complex>                                                       /* Complex Numbers         C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const double pi       = 3.14159265359;
   int          MaxCount = 255;
   int          MultCol  = 400; // 1, 400, 3000
@@ -65,4 +70,6 @@ int main(void) {
     }
   }
   theRamCanvas.writeTIFFfile("newton_max_mod.tiff");
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

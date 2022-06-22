@@ -37,11 +37,14 @@
 
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include <chrono>                                                        /* time                    C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 typedef struct { double x; double y; } complex;
 
 int MAXCOUNT;
@@ -49,12 +52,13 @@ int MAXCOUNT;
 const int MAXTRCNT = 250000;
 complex thePath[MAXTRCNT];
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int inSet(complex tstPt);
 int findAlphaTriangle(int maxCnt, int ptA, int ptB, double slop, complex triangle[3]);
 int traceBoundry(int maxCnt, double epsilon, int goOtherWay, complex alphaTriangle[3], complex thePath[], int *pathLen);
 int orbCmp(complex tstPt);
 
-/* **************************************************************** */
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
 
@@ -105,7 +109,7 @@ int main(void) {
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
 
-/* **************************************************************** */
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int orbCmp(complex tstPt) {
   mjr::ramCanvas3c8b::coordFltType zx = 0.0;
   mjr::ramCanvas3c8b::coordFltType zy = 0.0;
@@ -123,7 +127,7 @@ int orbCmp(complex tstPt) {
   }
 }
 
-/* **************************************************************** */
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int inSet(complex tstPt) {
   if(orbCmp(tstPt)) // Transform "count" => 1 or zero for inSet return
     return 1;
@@ -131,7 +135,7 @@ int inSet(complex tstPt) {
     return 0;
 }
 
-/* **************************************************************** */
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 /* Return 1 if found, return 0 other wise. */
 int findAlphaTriangle(int maxCnt, int ptA, int ptB, double slop, complex triangle[3]) {
   int printDebug=2;
@@ -167,6 +171,7 @@ int findAlphaTriangle(int maxCnt, int ptA, int ptB, double slop, complex triangl
   }
 }
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 /*  This function finds an approximation to the boundary of a region in the plane.  The region is defined by an boolean-like valued function that accepting a
     point in the plane --- i.e. it returns 1 if the point is in the set, and 0 otherwise.  The approximation to the boundary is based upon a triangulation of
     the plane -- the triangulation is induced by the alphaTriangle argument.  The return is a list of line segments, each traversing individual triangles in

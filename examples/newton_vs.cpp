@@ -80,12 +80,16 @@
 
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
 #include <complex>                                                       /* Complex Numbers         C++11    */
-#include <vector>                                                        /* STL vector              C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
+#include <vector>                                                        /* STL vector              C++11    */
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 enum class whyStopNV { DIVZERO,   //!< Divide by zero (zeroTol)
                        TOOBIG,    //!< Iterate got too big (> escapeMod)
                        CONVERGEU, //!< Converged in the upper half plane
@@ -99,7 +103,9 @@ enum class solMethNV { NEWTON,    //!< Use Newton's method
                        LAGUERRE   //!< Use laguerre's method
                      };
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const double escapeMod = -32.0;
   const int    MaxCount  = 64;
   const double  Tol       = 0.0001;
@@ -225,4 +231,6 @@ int main(void) {
       case solMethNV::LAGUERRE : theRamCanvas.writeTIFFfile("newton_vs_laguerre.tiff"); break;
     }
   }
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

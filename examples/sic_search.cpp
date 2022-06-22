@@ -29,12 +29,18 @@
   @endparblock
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
 #include <map>                                                           /* STL map                 C++11    */
 #include <random>                                                        /* C++ random numbers      C++11    */
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int BSIZ = 2048;
 
   std::random_device rd;
@@ -63,5 +69,7 @@ int main(void) {
       std::cout << j << " " << maxCnt << " " << lambda << "," <<  alpha << "," <<  beta << "," <<  gamma << "," <<  w << "," << n << std::endl;
     }
   }
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
   return 0;
 }

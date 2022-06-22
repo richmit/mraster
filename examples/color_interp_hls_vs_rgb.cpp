@@ -32,9 +32,16 @@
 
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   mjr::ramCanvas3c8b theRamCanvas(512, 512, -2.0, 2, -2, 2);
   mjr::ramCanvas3c8b::colorType aColor;
 
@@ -43,4 +50,6 @@ int main(void) {
     theRamCanvas.drawLine(x, 260, x, 512, aColor.interplColorsHLS(x/512.0, mjr::ramCanvas3c8b::colorType("R"), mjr::ramCanvas3c8b::colorType("C")));
   }
   theRamCanvas.writeTIFFfile("color_interp_hls_vs_rgb.tiff");
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

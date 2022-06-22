@@ -32,9 +32,16 @@
 
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   int x, y;
   int redX=512, redY=512, blueX=1024, blueY=512, greenX=768, greenY=956;
   double sLength = 512;
@@ -72,4 +79,6 @@ int main(void) {
   theRamCanvas_Pro.writeTIFFfile("color_web_triangle_Pro.tiff");
   theRamCanvas_Deu.writeTIFFfile("color_web_triangle_Deu.tiff");
   theRamCanvas_Tri.writeTIFFfile("color_web_triangle_Tri.tiff");
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

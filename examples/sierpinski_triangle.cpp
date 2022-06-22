@@ -27,11 +27,19 @@
   @endparblock
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 typedef double PointType[2];
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main() {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   PointType cpt = {0.0, 0.0};
   mjr::ramCanvas3c8b::colorType aColor[] = { mjr::ramCanvas3c8b::colorType(255, 0, 0), mjr::ramCanvas3c8b::colorType(0, 255, 0), mjr::ramCanvas3c8b::colorType(0, 0, 255) };
   PointType pts[] = {{0.0, 0.8}, {-0.8, -0.8}, {0.8, -0.8}};
@@ -46,6 +54,9 @@ int main() {
       theRamCanvas.drawPoint(cpt[0], cpt[1], aColor[ip]);
   }
   theRamCanvas.writeTIFFfile("sierpinski_triangle.tiff");
+
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 
   return 0;
 }

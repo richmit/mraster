@@ -31,14 +31,17 @@
   fixed points is not perfect, but makes a nice picture.  The color intensity is the length of time it took to make the behavior determination.
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include <algorithm>                                                     /* STL algorithm           C++11    */
 #include <chrono>                                                        /* time                    C++11    */
 #include <complex>                                                       /* Complex Numbers         C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
 #include <vector>                                                        /* STL vector              C++11    */
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   mjr::ramCanvas3c8b::colorType aColor;

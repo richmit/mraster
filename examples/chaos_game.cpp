@@ -34,11 +34,15 @@
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
-#include <iostream>                                                      /* C++ iostream            C++11    */
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
 #include <complex>                                                       /* Complex Numbers         C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+#include <list>                                                          /* STL list                C++11    */
 #include <random>                                                        /* C++ random numbers      C++11    */
 #include <vector>                                                        /* STL vector              C++11    */
-#include <list>                                                          /* STL list                C++11    */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 struct ifs {
@@ -102,7 +106,7 @@ std::vector<ifs> ifsList {
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main() {
-
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   mjr::ramCanvas3c8b theRamCanvas(2160, 2160);
   theRamCanvas.set_drawMode(mjr::ramCanvas3c8b::drawModeType::ADDCLIP);
   std::vector<mjr::ramCanvas3c8b::colorType> aColor{ mjr::ramCanvas3c8b::colorType(1, 1, 1)};
@@ -157,6 +161,9 @@ int main() {
     stringStream << ".tiff";
     theRamCanvas.writeTIFFfile(stringStream.str());
   }
+
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 
   return 0;
 }

@@ -27,9 +27,16 @@
   @endparblock
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
 
   mjr::ramCanvas3c8b theRamCanvasNN(511, 511);
   theRamCanvasNN.set_xIntAxisOrientation(mjr::ramCanvas3c8b::intAxisOrientation::NATURAL);
@@ -78,4 +85,6 @@ int main(void) {
   theRamCanvasII.drawHersheyGlyph(518, 255, 255,  8,  8, "red");
   theRamCanvasII.drawHersheyGlyph(518, 255, 255, 16, 16, "red");
   theRamCanvasII.writeTIFFfile("test_draw_glyph_II.tiff");
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

@@ -30,16 +30,23 @@
 
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int BSIZE = 60;
 
   mjr::ramCanvasRGB8b theRamCanvas(BSIZE, BSIZE, 0, BSIZE-1, 0, BSIZE-1);
   mjr::colorRGB8b aColor(mjr::colorRGB8b::cornerColor::RED);
   mjr::colorRGB8b bColor(mjr::colorRGB8b::cornerColor::GREEN);
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
   theRamCanvas.drawPoint(1, 1, aColor);                                               // drawPoint(iCrd x, iCrd y, clr color);
   theRamCanvas.setDfltColor(bColor);
   theRamCanvas.moveTo(2, 1);
@@ -57,7 +64,7 @@ int main(void) {
   theRamCanvas.setDfltColor(aColor);
   theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType({9.0, 2.0}));                     // drawPoint(fPnt thePoint);
   theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType({10.0, 2.0}), bColor);            // drawPoint(fPnt thePoint, clr color);
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
   theRamCanvas.drawLine(1, 4, 1, 6, aColor);                                          // drawLine(iCrd x1, iCrd y1, iCrd x2, iCrd y2, clr color);
   theRamCanvas.setDfltColor(bColor);
   theRamCanvas.moveTo(2, 4);
@@ -95,7 +102,7 @@ int main(void) {
                         mjr::ramCanvasRGB8b::pointIntType({15, 6}));                         // drawLine(iPnt point1, iPnt point2);
   theRamCanvas.drawLine(mjr::ramCanvasRGB8b::pointIntType({16, 5}),
                         mjr::ramCanvasRGB8b::pointIntType({16, 6}), aColor);                 // drawLine(iPnt point1, iPnt point2, clr color);
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
   theRamCanvas.drawTriangle(1, 9, 4, 9, 4, 12,  aColor);                              // drawTriangle(iCrd x1, iCrd y1, iCrd x2, iCrd y2, iCrd x3, iCrd y3,
                                                                                       //              clr color);
   theRamCanvas.setDfltColor(bColor);
@@ -132,7 +139,7 @@ int main(void) {
                                          {19.0, 23.0} };
   theRamCanvas.setDfltColor(bColor);
   theRamCanvas.drawTriangle(ptl4);                                                    // drawTriangle(fPnt *thePoints);
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
   theRamCanvas.drawFillTriangle(21, 9, 24, 9, 24, 12,  aColor);                       // drawFillTriangle(iCrd x1, iCrd y1, iCrd x2, iCrd y2, iCrd x3, iCrd y3,
                                                                                       //                  clr color);
   theRamCanvas.setDfltColor(bColor);
@@ -169,7 +176,7 @@ int main(void) {
                                          {39.0, 23.0} };
   theRamCanvas.setDfltColor(bColor);
   theRamCanvas.drawFillTriangle(ptl8);                                                // drawFillTriangle(fPnt *thePoints);
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
   theRamCanvas.drawCircle(3, 27, 2, aColor);                                          // drawCircle(iCrd centerX, iCrd centerY, iCrd radiusX, clr color);
   theRamCanvas.setDfltColor(bColor);
   theRamCanvas.drawCircle(9, 27, 2);                                                  // drawCircle(iCrd centerX, iCrd centerY, iCrd radius);
@@ -188,7 +195,7 @@ int main(void) {
   theRamCanvas.drawCircle(mjr::ramCanvasRGB8b::pointFltType({51.0, 28.0}), 2.0, aColor);     // drawCircle(fPnt centerPoint, fCrd radiusX, clr color);
   theRamCanvas.setDfltColor(bColor);
   theRamCanvas.drawCircle(mjr::ramCanvasRGB8b::pointFltType({57.0, 28.0}), 2.0);             // drawCircle(fPnt centerPoint, fCrd radiusX);
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
   theRamCanvas.drawFillCircle(3, 33, 2, aColor);                                      // drawFillCircle(iCrd centerX, iCrd centerY, iCrd radiusX, clr color);
   theRamCanvas.setDfltColor(bColor);
   theRamCanvas.drawFillCircle(9, 33, 2);                                              // drawFillCircle(iCrd centerX, iCrd centerY, iCrd radiusX);
@@ -207,7 +214,7 @@ int main(void) {
   theRamCanvas.drawFillCircle(mjr::ramCanvasRGB8b::pointFltType({51.0, 34.0}), 2.0, aColor); // drawFillCircle(fPnt centerPoint, fCrd radiusX, clr color);
   theRamCanvas.setDfltColor(bColor);
   theRamCanvas.drawFillCircle(mjr::ramCanvasRGB8b::pointFltType({57.0, 34.0}), 2.0);         // drawFillCircle(fPnt centerPoint, fCrd radiusX);
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
   theRamCanvas.drawRectangle(2, 38, 4, 40, aColor);                                   // drawRectangle(iCrd x1, iCrd y1, iCrd x2, iCrd y2, clr color);
   theRamCanvas.setDfltColor(bColor);
   theRamCanvas.drawRectangle(6, 38, 8, 40);                                           // drawRectangle(iCrd x1, iCrd y1, iCrd x2, iCrd y2);
@@ -234,7 +241,7 @@ int main(void) {
   mjr::ramCanvasRGB8b::pointFltType ptl12[2] = { {46.0, 39.0}, {48.0, 41.0} };
   theRamCanvas.setDfltColor(bColor);
   theRamCanvas.drawRectangle(ptl12);                                                  // drawRectangle(fPnt *thePoints);
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
   theRamCanvas.drawFillRectangle(2, 42, 4, 44, aColor);                               // drawFillRectangle(iCrd x1, iCrd y1, iCrd x2, iCrd y2, clr color);
   theRamCanvas.setDfltColor(bColor);
   theRamCanvas.drawFillRectangle(6, 42, 8, 44);                                       // drawFillRectangle(fCrd x1, fCrd y1, fCrd x2, fCrd y2);
@@ -261,7 +268,7 @@ int main(void) {
   mjr::ramCanvasRGB8b::pointFltType ptl16[2] = { {46.0, 43.0}, {48.0, 45.0} };
   theRamCanvas.setDfltColor(bColor);
   theRamCanvas.drawFillRectangle(ptl16);                                              // drawFillRectangle(fPnt *thePoints);
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
   mjr::ramCanvasRGB8b::coordIntType icx1[3] = {  2,  4,  4 };
   mjr::ramCanvasRGB8b::coordIntType icy1[3] = { 46, 46, 48 };
   theRamCanvas.drawPLCurve(3, icx1, icy1, aColor);                                    // drawPLCurve(int numPoints, iCrd *x, iCrd *y, clr color);
@@ -295,7 +302,9 @@ int main(void) {
   theRamCanvas.setDfltColor(bColor);
   theRamCanvas.drawPLCurve(3, ptl20);                                                 // drawPLCurve(int numPoints, fPnt *thePoints);
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
   theRamCanvas.scaleUpProximal(5);
   theRamCanvas.writeTIFFfile("test_draw_primatives.tiff");
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

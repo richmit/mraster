@@ -32,8 +32,14 @@
 
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 const int NPR = 27;
 typename mjr::ramCanvas1c16b::coordFltType params[NPR][12] = {
   /*  lambda       alpha      beta     gamma      omega   n    ipw   xmin  xmax   ymin  ymax    1=mean */
@@ -66,6 +72,7 @@ typename mjr::ramCanvas1c16b::coordFltType params[NPR][12] = {
   { 2.600000, -2.0000000,  0.00000, -0.50000,  0.000000,  5,  4.75, -1.30, 1.30, -1.30, 1.30, 1.0}, // 26 | D5 SIC BOOK
 };
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 class g2rgb8 {
   private:
     int factor;
@@ -77,7 +84,9 @@ class g2rgb8 {
     }
 };
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int BSIZ = 7680;
   mjr::ramCanvas1c16b::colorType aColor;
   aColor.setAll(1);
@@ -143,5 +152,7 @@ int main(void) {
        that requires no extra RAM.  We give the writeTIFFfile member a functor telling it how to convert each pixel as it is required. */
     theRamCanvas.writeTIFFfile("sicC_" + std::to_string(j) + ".tiff", g2rgb8(maxII));
   }
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
   return 0;
 }

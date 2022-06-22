@@ -34,8 +34,10 @@
 
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 /* Apple puts GLUT into a framework named GLUT, while the rest of the world just sticks GLUT into the GL include directory... */
 #ifdef __APPLE__
 #include <GLUT/glut.h>                                                   /* Open GL Util            APPLE    */
@@ -43,11 +45,14 @@
 #include <GL/glut.h>                                                     /* Open GL Util            OpenGL   */
 #endif
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int XSIZE = 1024;
 int YSIZE = 1024;
 
-mjr::ramCanvas3c8b theRC = mjr::ramCanvas3c8b(XSIZE, YSIZE, -1, 1, -1, 1);
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+mjr::ramCanvas3c8b theRamCanvas = mjr::ramCanvas3c8b(XSIZE, YSIZE, -1, 1, -1, 1);
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 void reshapeCall(int h, int w) {
   XSIZE = h;
   YSIZE = w;
@@ -60,23 +65,25 @@ void reshapeCall(int h, int w) {
   glutPostRedisplay();
 } /* end func reshapeCall */
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 void idleCall() {
   static int offset;
-  for(int x=0; x<theRC.get_numXpix(); x++)
-    for(int y=0; y<theRC.get_numXpix(); y++)
-      theRC.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(static_cast<mjr::ramCanvas3c8b::colorChanType>(offset+y-x),
-                                           static_cast<mjr::ramCanvas3c8b::colorChanType>(offset+x+y),
-                                           static_cast<mjr::ramCanvas3c8b::colorChanType>(offset+x-y)));
+  for(int x=0; x<theRamCanvas.get_numXpix(); x++)
+    for(int y=0; y<theRamCanvas.get_numXpix(); y++)
+      theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(static_cast<mjr::ramCanvas3c8b::colorChanType>(offset+y-x),
+                                                                 static_cast<mjr::ramCanvas3c8b::colorChanType>(offset+x+y),
+                                                                 static_cast<mjr::ramCanvas3c8b::colorChanType>(offset+x-y)));
   offset+=1;
   glutPostRedisplay();
 } /* end func idleCall */
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 void displayCall() {
   static void *image;
   float xMag, yMag;
 
   int retVal;
-  if((retVal=theRC.exportRasterData(image, 0, 0, theRC.get_numXpix()-1, theRC.get_numYpix()-1, 0, 1, 2, 3))) {
+  if((retVal=theRamCanvas.exportRasterData(image, 0, 0, theRamCanvas.get_numXpix()-1, theRamCanvas.get_numYpix()-1, 0, 1, 2, 3))) {
     printf("ERROR: Nonzero return from exportRasterData(): %d\n", retVal);
     return;
   }
@@ -85,22 +92,21 @@ void displayCall() {
   glRasterPos2i(0,0);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-  xMag = static_cast<float>(XSIZE) / static_cast<float>(theRC.get_numXpix());
-  yMag = static_cast<float>(YSIZE) / static_cast<float>(theRC.get_numYpix());
+  xMag = static_cast<float>(XSIZE) / static_cast<float>(theRamCanvas.get_numXpix());
+  yMag = static_cast<float>(YSIZE) / static_cast<float>(theRamCanvas.get_numYpix());
 
   glPixelZoom(xMag, yMag);
-  glDrawPixels(theRC.get_numXpix(), theRC.get_numYpix(), GL_RGBA, GL_UNSIGNED_BYTE, (GLubyte*)image);
+  glDrawPixels(theRamCanvas.get_numXpix(), theRamCanvas.get_numYpix(), GL_RGBA, GL_UNSIGNED_BYTE, (GLubyte*)image);
   glFlush();
 }  /* end func displayCall */
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(int argc, char *argv[]) {
-  for(int x=0; x<theRC.get_numXpix(); x++)
-    for(int y=0; y<theRC.get_numXpix(); y++)
-      theRC.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(static_cast<mjr::ramCanvas3c8b::colorChanType>(y-x),
-                                           static_cast<mjr::ramCanvas3c8b::colorChanType>(x+y),
-                                           static_cast<mjr::ramCanvas3c8b::colorChanType>(x-y)));
-
-
+  for(int x=0; x<theRamCanvas.get_numXpix(); x++)
+    for(int y=0; y<theRamCanvas.get_numXpix(); y++)
+      theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(static_cast<mjr::ramCanvas3c8b::colorChanType>(y-x),
+                                                                 static_cast<mjr::ramCanvas3c8b::colorChanType>(x+y),
+                                                                 static_cast<mjr::ramCanvas3c8b::colorChanType>(x-y)));
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
   glutInitWindowSize(XSIZE, YSIZE);

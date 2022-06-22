@@ -43,16 +43,17 @@
 ***************************************************************************************************************************************************************/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-#include <iostream>                                                      /* C++ iostream            C++11    */
-#include <complex>                                                       /* Complex Numbers         C++11    */
-#include <random>                                                        /* C++ random numbers      C++11    */
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-int main()
-{
+#include <chrono>                                                        /* time                    C++11    */
+#include <complex>                                                       /* Complex Numbers         C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+#include <random>                                                        /* C++ random numbers      C++11    */
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+int main() {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   std::cout << "apollony start" << std::endl;
   const int   CSIZE = 1080*2;          // Quad HD
   const int ITRTOSS = std::pow(2, 10); // Throw away first iterations
@@ -106,5 +107,7 @@ int main()
   theRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmStdPow, 1/5.0);
   theRamCanvas.writeTIFFfile("apollony.tiff");
   std::cout << "apollony finish" << std::endl;
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
   return 0;
 }

@@ -30,11 +30,14 @@
 
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include <chrono>                                                        /* time                    C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #define DO_LINE       1
 #define DO_CLIP_LINE  1
 #define DO_POINT      1
@@ -59,6 +62,7 @@
 
 #define BSIZE 2024*2
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // typedef mjr::ramCanvas1c8b  canvasType;
 // typedef mjr::ramCanvas1c16b canvasType;
 // typedef mjr::ramCanvas1c32b canvasType;
@@ -68,6 +72,7 @@ typedef mjr::ramCanvas4c8b  canvasType;
 // typedef mjr::ramCanvas4c16b canvasType;
 // typedef mjr::ramCanvas8c8b  canvasType;
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   canvasType theRamCanvas(BSIZE, BSIZE);
@@ -310,8 +315,8 @@ int main(void) {
 
   std::cout << "Benchmarks Complete" << std::endl;
   std::cout << "Center Pixel: " << theRamCanvas.getPxColor(BSIZE/2, BSIZE/2) << std::endl;
-  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
-  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
+  std::chrono::duration<double> tbmRunTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Benchmark Runtime " << tbmRunTime.count() << " sec" << std::endl;
 
 #if DO_OUT_TIF
   std::cout << "Starting DO_OUT_TIF" << std::endl;
@@ -324,4 +329,6 @@ int main(void) {
 #endif
 
   std::cout << "I/O Complete" << std::endl; 
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

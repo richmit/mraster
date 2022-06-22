@@ -28,22 +28,35 @@
   @endparblock
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 typedef mjr::ramCanvas3c8b::coordFltType drT;
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 drT f(drT x, drT y);
 void drawLevelCurves(int numBand, drT bandWidth, drT zMin, drT zMax, drT minRealX, drT maxRealX, drT minRealY, drT maxRealY, const char *file);
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   drawLevelCurves(10, 0.0, 0, 0, -20, 20, -20, 20, "level_curves_l.tiff");
   drawLevelCurves( 0, 0.0, 0, 0, -20, 20, -20, 20, "level_curves_c.tiff");
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 drT f(drT x, drT y) {
   return sin(x)+cos(y)+sqrt(x*x+y*y)*.05;
 }
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 void drawLevelCurves(int numBand, drT bandWidth, drT zMin, drT zMax, drT minRealX, drT maxRealX, drT minRealY, drT maxRealY, const char *file) {
   int x, y, clr, foundBand;
   drT fxy, bandGap, band, minDist, minBand;

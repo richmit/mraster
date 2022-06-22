@@ -27,10 +27,15 @@
   @endparblock
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
-int main(void) {
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
 
+int main(void) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   int numRamps = 45, rampGap = 5, rampWidth = 50;
 
   mjr::ramCanvas3c8b theRamCanvas(1536+rampGap, (2+numRamps)*rampWidth+rampGap);
@@ -104,4 +109,6 @@ int main(void) {
       }
     }
   theRamCanvas.writeTIFFfile("color_lut_ramp_cube.tiff");
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

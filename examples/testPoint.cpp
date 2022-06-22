@@ -30,11 +30,18 @@
 
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   const int BSIZE = 20;
 
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   mjr::ramCanvasRGB8b theRamCanvas(BSIZE, BSIZE, 0, BSIZE-1, 0, BSIZE-1);
   theRamCanvas.set_yRealAxisOrientation(mjr::ramCanvasRGB8b::realAxisOrientation::INVERTED);
   mjr::colorRGB8b aColor(mjr::colorRGB8b::cornerColor::RED);
@@ -42,7 +49,7 @@ int main(void) {
   mjr::colorRGB8b cColor(mjr::colorRGB8b::cornerColor::MAGENTA);
   mjr::colorRGB8b dColor(mjr::colorRGB8b::cornerColor::CYAN);
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
   theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointIntType({2, 2}),                      aColor);  // Initializeer list
   theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointIntType(4, 2),                        bColor);  // two arg
   theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointIntType(std::tuple<int,int>(6, 2)),   aColor);  // tuple<int,int>
@@ -57,12 +64,12 @@ int main(void) {
   int aArS[2] = {18, 2};
   theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointIntType(aArS),                        aColor);  // array of short
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
   theRamCanvas.drawPoint(std::complex<int>(2, 4),     bColor);  // complex<int>    -- complex<short>   no work
   theRamCanvas.drawPoint(std::tuple<int,int>(4, 4),   aColor);  // tuple<int,int>  -- tuple<int,short> no work
   theRamCanvas.drawPoint(std::vector<int>({6, 4}),    bColor);  // vector<int>
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
   theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType({2, 2}),                       cColor);  // Initializeer list
   theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(4, 2),                         dColor);  // two arg
   theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(std::tuple<int,int>(6, 2)),    cColor);  // tuple<int,int>
@@ -73,12 +80,14 @@ int main(void) {
   double aArD[2] = {16, 2};
   theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(aArD),                         dColor);  // array of double
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
   theRamCanvas.drawPoint(std::complex<double>(2, 4),       dColor);  // complex<double>   -- complex<double> no work
   theRamCanvas.drawPoint(std::tuple<double,double>(4, 4),  cColor);  // tuple<double,double>  -- tuple<double,double> no work
   theRamCanvas.drawPoint(std::vector<double>({6, 4}),      dColor);  // vector<double>
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
   theRamCanvas.scaleUpProximal(10);
   theRamCanvas.writeTIFFfile("testPoint.tiff");
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

@@ -27,12 +27,17 @@
   @endparblock
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
 #include <complex>                                                       /* Complex Numbers         C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const double pi       = 3.14159265359;
   int         MaxCount = 155;
   int         MultCol  = 25;
@@ -79,4 +84,6 @@ int main(void) {
   theRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmLinearGreyLevelScale, 255.0 / 155, 0.0);
   theRamCanvas.autoHistStrech();
   theRamCanvas.writeTIFFfile("newton_z6.tiff");
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

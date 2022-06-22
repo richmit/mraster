@@ -30,9 +30,16 @@
 
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   mjr::colorRGBA8b aColor(255, 200, 100);
   mjr::colorRGBA8b bColor(255, 200, 100, 20);
   mjr::colorRGBA8b cColor(255, 200, 100, 100);
@@ -126,4 +133,7 @@ int main(void) {
 
   aColor.setColorFromCorner(mjr::colorRGBA8b::cornerColor::BLACK); std::cout << "aColor.setColorFromCorner(::BLACK);         " << aColor << std::endl;
   aColor.cmpGreyTGA16bit(1);                                       std::cout << "aColor.cmpGreyTGA16bit(1);                  " << aColor << std::endl;
+
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

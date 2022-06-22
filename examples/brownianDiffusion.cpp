@@ -26,16 +26,19 @@
   @endparblock
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include <chrono>                                                        /* time                    C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
 #include <random>                                                        /* C++ random numbers      C++11    */
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(int argc, char *argv[]) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   std::random_device rd;
   std::minstd_rand0 rEng(rd());
-  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   mjr::ramCanvas3c8b theRamCanvas(7680/2, 4320/2, -2.2, 2.2, -2.2, 2.2);
   theRamCanvas.clrCanvas(mjr::ramCanvas3c8b::colorType(255, 0, 0));
   int MAXCOUNT = 524288; // Number of times to try and find a point
@@ -116,9 +119,8 @@ int main(int argc, char *argv[]) {
     std::cout << "Write: " << stringStream.str() << std::endl;
   }
 
-
-  return 1;
-
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
+
+  return 1;
 }

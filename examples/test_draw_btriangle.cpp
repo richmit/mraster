@@ -27,9 +27,16 @@
   @endparblock
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int s = 1; // Set to 10 for high res image (test smoothness), set to 1 for low resolution (test pixel level detail)
   const int c = 11 - s;
   static_assert(s<11 && s>0, "ERROR: s must be in [1, 10].");
@@ -44,4 +51,6 @@ int main(void) {
   theRamCanvas.drawTriangle    (10*s+x, 10*s+y, 90*s+x, 40*s+y, 60*s+x, 90*s+y, "white");
   theRamCanvas.scaleUpProximal(c);
   theRamCanvas.writeTIFFfile("test_draw_btriangle.tiff");
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

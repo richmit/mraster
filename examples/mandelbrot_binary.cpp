@@ -36,11 +36,14 @@
  This example demonstrates how to use some of the types defined in the ramCanvas object (integer coordinates, double coordinates, color, and color channel)
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include <chrono>                                                        /* time                    C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 const int    MAXITR = 1024*1;
 
 double ranges[3][4] = { { -2.0,        1.0,       -1.5,        1.5       },
@@ -53,8 +56,8 @@ enum class whyStopMB {OUTSET, MAXCOUNT, INSET};
 typedef mjr::ramCanvas3c8b rc;    // The Ram Canvas type we will use
 typedef rc::colorType      rcc;   // The color type in our Ram Canvas type
 
-int main(void)
-{
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int              CSIZE = 1024*1;
   const rc::coordFltType BALL  = 100;

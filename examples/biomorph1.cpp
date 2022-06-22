@@ -27,11 +27,17 @@
   @endparblock
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include <complex>                                                       /* Complex Numbers         C++11    */
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int NUMITR = 2000;
   const int CSIZE  = 7680;
   const int LIM    = 4;
@@ -162,4 +168,6 @@ int main(void) {
   theRamCanvasJ.writeTIFFfile("biomorph1J.tiff");
   theRamCanvasK.writeTIFFfile("biomorph1K.tiff");
   theRamCanvasL.writeTIFFfile("biomorph1L.tiff");
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

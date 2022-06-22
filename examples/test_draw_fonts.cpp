@@ -27,10 +27,16 @@
   @endparblock
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
-int main(void) {
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+int main(void) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const char *str1 = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNO";
   const char *str2 = " PQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
   mjr::ramCanvas3c8b theRamCanvas(1600, 540);
@@ -53,4 +59,6 @@ int main(void) {
   theRamCanvas.drawString(str1, mjr::hersheyFont::ROMAN_TL_SERIF,     400, y, "red", 1, 25); y+=50;
   theRamCanvas.drawString(str2, mjr::hersheyFont::ROMAN_TL_SERIF,     400, y, "red", 1, 25); y+=50;
   theRamCanvas.writeTIFFfile("test_draw_fonts.tiff");
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

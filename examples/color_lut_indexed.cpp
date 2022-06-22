@@ -27,11 +27,17 @@
   @endparblock
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
 #include <string>                                                        /* C++ strings             C++11    */
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   mjr::ramCanvas3c8b theRamCanvas(450, 832);
   mjr::ramCanvas3c8b::colorType aColor;
   for(int doWS=0; doWS<2; doWS++) {
@@ -92,4 +98,6 @@ int main(void) {
     }
     theRamCanvas.writeTIFFfile(std::string("color_lut_indexed") + (doWS?"WS":"TC") + ".tiff");
   }
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

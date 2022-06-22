@@ -27,9 +27,16 @@
   @endparblock
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main() {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   mjr::ramCanvas3c8b theRamCanvas(7680/8, 4320/8, -2.2, 2.2, -2.2, 2.2);
 
   theRamCanvas.clrCanvas(mjr::ramCanvas3c8b::colorType(255, 0, 0));
@@ -49,4 +56,6 @@ int main() {
   theRamCanvas.drawCircle( theRamCanvas.get_numXpix()/2, theRamCanvas.get_numYpix()/2, theRamCanvas.get_numXpix()/2-3, mjr::ramCanvas3c8b::colorType(0, 0, 255));
   theRamCanvas.drawCircle( theRamCanvas.get_numXpix()/2, theRamCanvas.get_numYpix()/2, (theRamCanvas.get_numYpix()+theRamCanvas.get_numXpix())/4-3, mjr::ramCanvas3c8b::colorType(0, 0, 255));
   theRamCanvas.writeTIFFfile("dlaSeed_circles.tiff");
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

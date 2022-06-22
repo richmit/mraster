@@ -30,11 +30,17 @@
   Inspired by http://paulbourke.net/fractals/starjulia/
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
 #include <complex>                                                       /* Complex Numbers         C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int BSIZ = 7680/8;
   mjr::ramCanvas1c16b::colorType aColor;
   aColor.setAll(1);
@@ -84,5 +90,7 @@ int main(void) {
         anotherRamCanvas.drawPoint(xi, yi, bColor.cmpColorRamp(static_cast<int>(theRamCanvas.getPxColor(xi, yi).getRed() * 1275 / maxII), "0RYBCW"));
 
     anotherRamCanvas.writeTIFFfile("sprott2d.tiff");
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
   return 0;
 }

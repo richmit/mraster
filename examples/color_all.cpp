@@ -33,11 +33,19 @@
 
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 unsigned long igray(unsigned long n);
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   mjr::ramCanvas3c8b theRamCanvas_iii(4096, 4096);
   mjr::ramCanvas3c8b theRamCanvas_int(4096, 4096);
   mjr::ramCanvas3c8b theRamCanvas_gry(4096, 4096);
@@ -79,8 +87,11 @@ int main(void) {
   theRamCanvas_gry.writeTIFFfile("color_all_gry.tiff");
   theRamCanvas_rgb.writeTIFFfile("color_all_rgb.tiff");
   theRamCanvas_web.writeTIFFfile("color_all_web.tiff");
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 unsigned long igray(unsigned long n) {
   unsigned long ans = n;
   unsigned long idiv;

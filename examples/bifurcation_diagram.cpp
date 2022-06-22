@@ -27,11 +27,17 @@
   @endparblock
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include <complex>                                                       /* Complex Numbers         C++11    */
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   mjr::ramCanvas1c16b theRamCanvas(7680, 7680, 2.5, 4, -0.1, 1.1);
   for(mjr::ramCanvas1c16b::coordFltType r=theRamCanvas.get_minRealX(); r<theRamCanvas.get_maxRealX(); r+=theRamCanvas.get_xPixWid()/20) {
     mjr::ramCanvas1c16b::coordFltType f = 0.5;
@@ -45,4 +51,6 @@ int main(void) {
     }
   }
   theRamCanvas.writeTIFFfile("bifurcation_diagram.tiff");
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

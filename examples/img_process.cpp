@@ -26,11 +26,16 @@
   @endparblock
 ***************************************************************************************************************************************************************/
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
-#include <chrono>                                                        /* time                    C++11    */
 
-/**************************************************************************************************************************************************************/
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+#include <chrono>                                                        /* time                    C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(int argc, char *argv[]) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   //mjr::ramCanvas3c8b *aRamCanvasPtr;
   //mjr::ramCanvas3c8b aRamCanvas;
   mjr::ramCanvas3c8b listOcanv[16];
@@ -93,12 +98,9 @@ int main(int argc, char *argv[]) {
   //listOcanv[0].computeConvolutionMatrixBox(kernel, 9);
 
   std::cerr << "CONVOLUTION STARTING" << std::endl;
-  auto startTime = std::chrono::system_clock::now();
   listOcanv[0].convolution(kernel, 9, 9, 1.0);
   //listOcanv[0].convolution(edgeDetect2_3, 3, 3, 1.0);
   //listOcanv[0].convolution(gaussianBlur_5, 5, 5, 256);
-  std::chrono::duration<double> elapsed_seconds = std::chrono::system_clock::now() - startTime;
-  std::cout << "CONVOLUTION TOOK " << elapsed_seconds.count() << " seconds" << std::endl;
   listOcanv[0].writeTIFFfile("testImage1_c.tiff");
 
   /* **************************************************************************************************************************************************************** */
@@ -203,6 +205,9 @@ int main(int argc, char *argv[]) {
   //listOcanv[0].cropCanvas(10, 10, 200, 200);
   //listOcanv[0].resizeCanvas(400, 300, 30, 5);
   //listOcanv[0].writeTIFFfile("img_process.tiff");
+
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 
   return 0;
 }

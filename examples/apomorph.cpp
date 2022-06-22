@@ -34,16 +34,17 @@
 ***************************************************************************************************************************************************************/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-#include <iostream>                                                      /* C++ iostream            C++11    */
-#include <complex>                                                       /* Complex Numbers         C++11    */
-#include <random>                                                        /* C++ random numbers      C++11    */
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-int main()
-{
+#include <iostream>                                                      /* C++ iostream            C++11    */
+#include <complex>                                                       /* Complex Numbers         C++11    */
+#include <random>                                                        /* C++ random numbers      C++11    */
+#include <chrono>                                                        /* time                    C++11    */
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+int main() {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   std::cout << "apomorph start" << std::endl;
   const int   CSIZE = 2160;      // Quad HD
   const int ITRTOSS = 1000;      // Throw away first iterations
@@ -99,5 +100,7 @@ int main()
     theRamCanvas.writeTIFFfile(stringStream.str());
     std::cout << "apomorph finish" << std::endl;
   }
+  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
   return 0;
 }
