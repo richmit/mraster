@@ -530,6 +530,9 @@ namespace mjr {
           @param bIdx Location of blue byte in anInt
           @param aIdx Location of alpha byte in anInt*/
       colorTpl& setColorFromPackedInt(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx, uint8_t aIdx);
+//  MJR TODO NOTE <2022-06-24> colorTpl: Add colorTpl& setColorFromChanArray(colorChanType* chanValues);
+//  MJR TODO NOTE <2022-06-24> colorTpl: Add colorTpl& setColorFromChanVector(std::vector<colorChanType>& chanValues);
+//  MJR TODO NOTE <2022-06-24> colorTpl: Add colorTpl& setColorFromChanTuple();
       //@}
 
       /** @name Set to special colors */
