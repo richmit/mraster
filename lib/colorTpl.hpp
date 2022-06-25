@@ -182,7 +182,7 @@ namespace mjr {
       /** Takes a list of values and a color component value.  Find the element in the discreet value list that is closest to the given component value.  The
           intended use is to reduce colors down to a smaller set of values -- ex: convert a color to the nearest web safe value. */
       clrChanT colorComp2CloseColorComp(clrChanT aColorComp, clrChanT *discreetVals, int numVals);
-      /** This is a helper function for setColorFromNaturalHLS. */
+      /** This is a helper function for setColorFromNaturalHSL. */
       double hslHelperVal(double n1, double n2, double hue);
 
     public:
@@ -222,7 +222,7 @@ namespace mjr {
 
       /** Color space interpolation methods */
       enum colorInterpMethEnum {CINTRP_RGB, //!< RGB-space interpolation
-                                CINTRP_HLS  //!< HLS-space interpolation
+                                CINTRP_HSL  //!< HSL-space interpolation
 
       };
       //@}
@@ -581,19 +581,19 @@ namespace mjr {
           @param s The Saturation.
           @param v The Value */
       colorTpl& setColorFromNaturalHSV(double h, double s, double v);
-      /** Set the color indicated by the given HLS values.  The 'unit' in the name indicates that The ranges for h, s, and v are the the unit interval --
+      /** Set the color indicated by the given HSL values.  The 'unit' in the name indicates that The ranges for h, s, and v are the the unit interval --
           i.e. [0,1].  The algorithm is that presented in Computer Graphics by Foley, Van Dam, Feiner, and Hughes -- 2nd edition page 596.  I have corrected a
           typeo in the text algorithm.
           @param H The Hue.
-          @param L The Lightness or Luminescence
-          @param S The Saturation. */
-      colorTpl&  setColorFromUnitHLS(double H, double L, double S);
-      /** Set the color indicated by the given HLS values.  The 'natural' in the name indicates that The ranges for h, s, and v are the natural ones.  i.e. H is
-          in [0,360], s and v are in the range [0,1].  This simply normalizes the H, and calls setColorFromNaturalHLS.
+          @param S The Saturation. 
+          @param L The Lightness or Luminescence */
+      colorTpl&  setColorFromUnitHSL(double H, double S, double L);
+      /** Set the color indicated by the given HSL values.  The 'natural' in the name indicates that The ranges for h, s, and v are the natural ones.  i.e. H is
+          in [0,360], s and v are in the range [0,1].  This simply normalizes the H, and calls setColorFromNaturalHSL.
           @param H The Hue.
-          @param L The Lightness or Luminescence
-          @param S The Saturation. */
-      colorTpl&  setColorFromNaturalHLS(double H, double L, double S);
+          @param S The Saturation. 
+          @param L The Lightness or Luminescence*/
+      colorTpl&  setColorFromNaturalHSL(double H, double S, double L);
       /** Set the color indicated by the given wavelength.  This function uses an algorithm based upon the color matching functions as as tabulated in table 3
           from Stockman and Sharpe (2000) -- I believe they are taken from Stiles and Burch 10-degree (1959).  Four of the algorithms are based upon simple
           linear interpolation, while one is based upon exponential bump functions closely matching the color matching functions.  The method of interpolation
@@ -654,7 +654,7 @@ namespace mjr {
       colorTpl& cmpRainbowCM(int base, int anInt, int INTRP);
       /** overload */
       colorTpl& cmpRainbowCM(int base, int anInt);
-      /** Computes a color value based upon a common rainbow-like color scheme based upon the HSV or HLS color space.  This rainbow is not natural in that the
+      /** Computes a color value based upon a common rainbow-like color scheme based upon the HSV or HSL color space.  This rainbow is not natural in that the
           colors on the ends match each other, and the colors move in the wrong direction (red to violet).  This function uses floating point arithmetic and is
           thus prone to round off errors.  For a precise rainbow with integer arithmetic, see the function cmpClrCubeRainbow().
           @param base The maximum number of colors
@@ -685,19 +685,19 @@ namespace mjr {
           @param anInt An integer */
       colorTpl& cmpGrey4x(int anInt);
       /** Converts an integer into a color based upon a traversal of the diagonal of the color cube from cyan to red.  This is the same as the saturation based
-          HLS ramp joining the same two colors.  The result is just as if cmpColorRamp had been called with string of "CR".  Provides about (maxChanVal*1+1)
+          HSL ramp joining the same two colors.  The result is just as if cmpColorRamp had been called with string of "CR".  Provides about (maxChanVal*1+1)
           unique colors.  Supports input conditioning.
           @param anInt     An integer
           @return A reference to the current object. */
       colorTpl& cmpDiagRampCR(int anInt);
       /** Converts an integer into a color based upon a traversal of the diagonal of the color cube from magenta to green.  This is the same as the saturation
-          based HLS ramp joining the same two colors.  The result is just as if cmpColorRamp had been called with string of "MG".  Provides about
+          based HSL ramp joining the same two colors.  The result is just as if cmpColorRamp had been called with string of "MG".  Provides about
           (maxChanVal*1+1) unique colors.  Supports input conditioning.
           @param anInt     An integer
           @return A reference to the current object. */
       colorTpl& cmpDiagRampMG(int anInt);
       /** Converts an integer into a color based upon a traversal of the diagonal of the color cube from yellow to blue.  This is the same as the saturation
-          based HLS ramp joining the same two colors.  The result is just as if cmpColorRamp had been called with string of "YB".  Provides about
+          based HSL ramp joining the same two colors.  The result is just as if cmpColorRamp had been called with string of "YB".  Provides about
           (maxChanVal*1+1) unique colors.  Supports input conditioning.
           @param anInt     An integer
           @return A reference to the current object. */
@@ -726,37 +726,37 @@ namespace mjr {
           @param anInt The integer to convert
           @return A reference to the current object.*/
       colorTpl& cmpIceToWaterToHot(int anInt);
-      /** Convert and integer into a color based upon the popular saturation based HLS color scheme extending from the center of the HLS color space to the red
+      /** Convert and integer into a color based upon the popular saturation based HSL color scheme extending from the center of the HSL color space to the red
           vertex.  The same result can be obtained via a ramp from the center of the RGB color cube to the appropriate RGB vertex.  Provides (meanChanVal)
           unique colors.  Supports input conditioning.
           @param anInt The integer to convert
           @return A reference to the current object.*/
       colorTpl& cmpRampGrey2R(int anInt);
-      /** Convert and integer into a color based upon the popular saturation based HLS color scheme extending from the center of the HLS color space to the
+      /** Convert and integer into a color based upon the popular saturation based HSL color scheme extending from the center of the HSL color space to the
           green vertex.  The same result can be obtained via a ramp from the center of the RGB color cube to the appropriate RGB vertex.  Provides (meanChanVal)
           unique colors.  Supports input conditioning.
           @param anInt The integer to convert
           @return A reference to the current object.*/
       colorTpl& cmpRampGrey2G(int anInt);
-      /** Convert and integer into a color based upon the popular saturation based HLS color scheme extending from the center of the HLS color space to the blue
+      /** Convert and integer into a color based upon the popular saturation based HSL color scheme extending from the center of the HSL color space to the blue
           vertex.  The same result can be obtained via a ramp from the center of the RGB color cube to the appropriate RGB vertex.  Provides (meanChanVal)
           unique colors.  Supports input conditioning.
           @param anInt The integer to convert
           @return A reference to the current object.*/
       colorTpl& cmpRampGrey2B(int anInt);
-      /** Convert and integer into a color based upon the popular saturation based HLS color scheme extending from the center of the HLS color space to the cyan
+      /** Convert and integer into a color based upon the popular saturation based HSL color scheme extending from the center of the HSL color space to the cyan
           vertex.  The same result can be obtained via a ramp from the center of the RGB color cube to the appropriate RGB vertex.  Provides (meanChanVal)
           unique colors.  Supports input conditioning.
           @param anInt The integer to convert
           @return A reference to the current object.*/
       colorTpl& cmpRampGrey2C(int anInt);
-      /** Convert and integer into a color based upon the popular saturation based HLS color scheme extending from the center of the HLS color space to the
+      /** Convert and integer into a color based upon the popular saturation based HSL color scheme extending from the center of the HSL color space to the
           magenta vertex.  The same result can be obtained via a ramp from the center of the RGB color cube to the appropriate RGB vertex.  Provides
           (meanChanVal) unique colors.  Supports input conditioning.
           @param anInt The integer to convert
           @return A reference to the current object.*/
       colorTpl& cmpRampGrey2M(int anInt);
-      /** Convert and integer into a color based upon the popular saturation based HLS color scheme extending from the center of the HLS color space to the
+      /** Convert and integer into a color based upon the popular saturation based HSL color scheme extending from the center of the HSL color space to the
           yellow vertex.  The same result can be obtained via a ramp from the center of the RGB color cube to the appropriate RGB vertex.  Provides
           (meanChanVal) unique colors.  Supports input conditioning.
           @param anInt The integer to convert
@@ -876,14 +876,14 @@ namespace mjr {
           @return Returns a reference to the current color object.*/
       colorTpl& interplColors(double aDouble, colorTpl col1, colorTpl col2);
       /** Set the current color to a value linearly interpolated between the two given colors.  When aDouble is 0, the color is col1.  When aDouble is 1 the new
-          value is col2.  The interpolation is done in HLS space -- i.e. the given colors are converted to HLS, the interpolation is done, and the result is
+          value is col2.  The interpolation is done in HSL space -- i.e. the given colors are converted to HSL, the interpolation is done, and the result is
           converted back to RGB and the current color is set.  Unlike interplColors, this function will NOT interpolate every channel.  Rather, as this function
-          deals specifically with RGB and HLS space, only the RGB channels will be interpolated.
+          deals specifically with RGB and HSL space, only the RGB channels will be interpolated.
           @param aDouble The distance from col1
           @param col1 The starting color
           @param col2 The ending color
           @return Returns a reference to the current color object.*/
-      colorTpl& interplColorsHLS(double aDouble, colorTpl col1, colorTpl col2);
+      colorTpl& interplColorsHSL(double aDouble, colorTpl col1, colorTpl col2);
       /** Compute the weighted mean of the given colors.  w1,w2,w3 in [0,1] and w1+w2+w3=1.
           @param w1   The first weight
           @param w2   The second weight
@@ -1082,9 +1082,8 @@ namespace mjr {
 
       /** @name Alternate color space stuff */
       //@{
-      int rgb2hsv(double *H, double *S, double *V);
-      int rgb2hls(double *H, double *L, double *S);
-      double rgb2h();
+      int rgb2hsv(double& H, double& S, double& V);
+      int rgb2hsl(double& H, double& S, double& L);
       //@}
 
       /** @name Color transformation functions */
@@ -3408,22 +3407,22 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::interplColorsHLS(double aDouble,
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::interplColorsHSL(double aDouble,
                                                                                   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
                                                                                   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2) {
-    // Convert our given colors into HLS
+    // Convert our given colors into HSL
     double H1, L1, S1;
     double H2, L2, S2;
-    col1.rgb2hls(&H1, &L1, &S1);
-    col2.rgb2hls(&H2, &L2, &S2);
+    col1.rgb2hsl(H1, S1, L1);
+    col2.rgb2hsl(H2, S2, L2);
 
-    // Interpolate in HLS space..
+    // Interpolate in HSL space..
     double Hi = (H2 - H1) * static_cast<double>(aDouble) + H1;
     double Li = (L2 - L1) * static_cast<double>(aDouble) + L1;
     double Si = (S2 - S1) * static_cast<double>(aDouble) + S1;
 
     // Set the current color and return.
-    setColorFromNaturalHLS(Hi, Li, Si);
+    setColorFromNaturalHSL(Hi, Si, Li);
     return *this;
   }
 
@@ -3992,15 +3991,15 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromUnitHLS(double H, double L, double S) {
-    setColorFromNaturalHLS(H*360, L, S);
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromUnitHSL(double H, double S, double L) {
+    setColorFromNaturalHSL(H*360, L, S);
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromNaturalHLS(double H, double L, double S) {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromNaturalHSL(double H, double S, double L) {
     // Make sure we have appropriate L and S values
     if( (L < 0.0) || (L > 1.0) || (S < 0.0) || (S > 1.0) ) {
       SET_ERR_COLOR;
@@ -4269,116 +4268,125 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
     return static_cast<clrChanT>(anArithComp);
   }
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   int
-  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::rgb2hsv(double *H, double *S, double *V) {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::rgb2hsv(double& H, double& S, double& V) {
     if(numChan < 3) {
       return 1;
     } else {
       clrChanT rgbMaxI = getMaxRGB();
       clrChanT rgbMinI = getMinRGB();
 
-      double rgbMaxF = 1.0 * rgbMaxI / maxChanVal;
-      double rgbMinF = 1.0 * rgbMinI / maxChanVal;
+      clrChanArthT rangeI = rgbMaxI - rgbMinI;
+
+      double rgbMaxF = static_cast<double>(rgbMaxI) / maxChanVal;
+      double rgbMinF = static_cast<double>(rgbMinI) / maxChanVal;
 
       double rangeF = rgbMaxF - rgbMinF;
 
       // Compute V
-      *V = rgbMaxF;
+      V = rgbMaxF;
 
-      // Compute S
-      if(rgbMaxI != 0)
-        *S = rangeF / rgbMaxF;
-      else
-        *S = 0.0;
+      // Compute S & H
+      if((rgbMaxI != 0) && (rangeI != 0)) {
+        S = rangeF / rgbMaxF;
 
-      // Compute H -- This is terrible from an optimization standpoint; however, it saves some typing. :)
-      *H = rgb2h();
-    }
-    return 0;
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  int
-  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::rgb2hls(double *H, double *L, double *S) {
-    if(numChan < 3) {
-      return 1;
-    } else {
-      clrChanT rgbMaxI = getMaxRGB();
-      clrChanT rgbMinI = getMinRGB();
-
-      double rgbMaxF = 1.0 * rgbMaxI / maxChanVal;
-      double rgbMinF = 1.0 * rgbMinI / maxChanVal;
-
-      double rangeF = rgbMaxF - rgbMinF;
-      double sumF   = rgbMaxF + rgbMinF;
-
-      // Compute L
-      *L = sumF / 2.0;
-
-      // Compute S & L
-      if(rgbMaxI == rgbMinI) {
-        *S = 0.0;
-        *H = 0.0;
-        return 2;
-      } else {
-        // Compute S
-        if(*L <= 0.5)
-          *S = rangeF / sumF;
-        else
-          *S = rangeF / ( 2.0 - sumF);
-        // Compute H -- This is terrible from an optimization standpoint; however, it saves some typing. :)
-        *H = rgb2h();
-      }
-    }
-    return 0;
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  double
-  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::rgb2h() {
-    if(numChan < 3) {
-      return -1.0;
-    } else {
-      double rf = getRedF();
-      double gf = getGreenF();
-      double bf = getBlueF();
-
-      clrChanT rgbMaxI = getMaxRGB();
-      clrChanT rgbMinI = getMinRGB();
-
-      double rgbMaxF = 1.0 * rgbMaxI / maxChanVal;
-      double rgbMinF = 1.0 * rgbMinI / maxChanVal;
-
-      double rangeF = rgbMaxF - rgbMinF;
-
-      // Compute H -- if rgbMaxI==0 ==> rgbMaxI==rgbMinI, but we write it for clarity.  Same as S==0.0 without the possibility for round off error.
-      if( (rangeF == 0) || (rgbMaxI == 0) ) {
-        return 0.0;
-      } else {
-        double H;
-        // We use the rgbMaxI to avoid round off error in comparing floating point values.
+        H = 0.0;
         if(theColor.theParts.red == rgbMaxI)
-          H = 0.0 + (gf - bf) / rangeF;
+          H = 0.0 + (getGreenF() - getBlueF()) / rangeF;
         else if(theColor.theParts.green == rgbMaxI)
-          H = 2.0 + (bf - rf) / rangeF;
+          H = 2.0 + (getBlueF() - getRedF()) / rangeF;
         else if(theColor.theParts.blue == rgbMaxI)
-          H = 4.0 + (rf - gf) / rangeF;
-        else {
-          return -2.0; // ERROR
-        }
+          H = 4.0 + (getRedF() - getGreenF()) / rangeF;
 
         H = H * 60.0;
         while(H<0)
           H += 360.0;
         while(H>=360.0)
           H -= 360.0;
-        return H;
+      } else {
+        S = 0.0;
+        H = 0.0;
       }
     }
+    return 0;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  int
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::rgb2hsl(double& H, double& S, double& L) {
+    if(numChan < 3) {
+      return 1;
+    } else {
+
+      // clrChanT rgbMaxI;
+      // clrChanT rgbMinI;
+      // if (theColor.theParts.red < theColor.theParts.blue) {
+      //   // max: blue or green
+      //   if (theColor.theParts.green < theColor.theParts.blue) 
+      //     rgbMaxI   = theColor.theParts.blue;
+      //   else 
+      //     rgbMaxI   = theColor.theParts.green;
+      //   // min: red or green
+      //   if (theColor.theParts.red < theColor.theParts.green) 
+      //     rgbMinI   = theColor.theParts.red;
+      //   else 
+      //     rgbMinI   = theColor.theParts.green;
+      // } else {
+      //   // max: red or green
+      //   if (theColor.theParts.green < theColor.theParts.red) 
+      //     rgbMaxI   = theColor.theParts.red;
+      //   else 
+      //     rgbMaxI   = theColor.theParts.green;
+      //   // min: blue or green
+      //   if (theColor.theParts.blue < theColor.theParts.green) 
+      //     rgbMinI   = theColor.theParts.blue;
+      //   else 
+      //     rgbMinI   = theColor.theParts.green;
+      // }
+
+      clrChanT rgbMaxI = getMaxRGB();
+      clrChanT rgbMinI = getMinRGB();
+
+      double rgbMaxF = static_cast<double>(rgbMaxI) / maxChanVal;
+      double rgbMinF = static_cast<double>(rgbMinI) / maxChanVal;
+
+      double rangeF = rgbMaxF - rgbMinF;
+      double sumF   = rgbMaxF + rgbMinF;
+
+      // Compute L
+      L = sumF / 2.0;
+
+      // Compute S & L
+      if(rgbMaxI == rgbMinI) {
+        S = 0.0;
+        H = 0.0;
+      } else {
+        // Compute S
+        if(L <= 0.5)
+          S = rangeF / sumF;
+        else
+          S = rangeF / ( 2.0 - sumF);
+
+        H = 0.0;
+        if(theColor.theParts.red == rgbMaxI)
+          H = 0.0 + (getGreenF() - getBlueF()) / rangeF;
+        else if(theColor.theParts.green == rgbMaxI)
+          H = 2.0 + (getBlueF() - getRedF()) / rangeF;
+        else if(theColor.theParts.blue == rgbMaxI)
+          H = 4.0 + (getRedF() - getGreenF()) / rangeF;
+
+        H = H * 60.0;
+        while(H<0)
+          H += 360.0;
+        while(H>=360.0)
+          H -= 360.0;
+      }
+    }
+    return 0;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,8 +1,8 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /***************************************************************************************************************************************************************
- @file      color_interp_hls_vs_rgb.cpp
+ @file      color_interp_hsl_vs_rgb.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Illistrate the diffrence in interpolion in HLS vs RGB spaec.@EOL
+ @brief     Illistrate the diffrence in interpolion in HSL vs RGB spaec.@EOL
  @std       C++98
  @copyright
   @parblock
@@ -27,7 +27,7 @@
   @endparblock
  @filedetails
 
-  In some cases, interpolating in HLS spaces can lead to an entirely different result from interpolating in RGB space.  This program illustrates on such
+  In some cases, interpolating in HSL spaces can lead to an entirely different result from interpolating in RGB space.  This program illustrates on such
   example.  Note that in many of the most important cases, interpolating leads to the same results in both color spaces.
 
 ***************************************************************************************************************************************************************/
@@ -47,9 +47,9 @@ int main(void) {
 
   for(int x=0; x<512; x++) {
     theRamCanvas.drawLine(x,   0, x, 250, aColor.interplColors(   x/512.0, mjr::ramCanvas3c8b::colorType("R"), mjr::ramCanvas3c8b::colorType("C")));
-    theRamCanvas.drawLine(x, 260, x, 512, aColor.interplColorsHLS(x/512.0, mjr::ramCanvas3c8b::colorType("R"), mjr::ramCanvas3c8b::colorType("C")));
+    theRamCanvas.drawLine(x, 260, x, 512, aColor.interplColorsHSL(x/512.0, mjr::ramCanvas3c8b::colorType("R"), mjr::ramCanvas3c8b::colorType("C")));
   }
-  theRamCanvas.writeTIFFfile("color_interp_hls_vs_rgb.tiff");
+  theRamCanvas.writeTIFFfile("color_interp_hsl_vs_rgb.tiff");
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

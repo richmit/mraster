@@ -349,20 +349,20 @@
    - 0RMW == sumRampRBG()
    - 0RYW == sumRampRGB() == fireRamp()
 
-  A popular trend is to use luminance based color schemes from the HLS color space.  This popularity is primarily due to a few very well received
-  papers published in the early and mid 1990's following on the work of S. S. Stevens.  Some HLS schemes don't suffer from the perceptional
+  A popular trend is to use luminance based color schemes from the HSL color space.  This popularity is primarily due to a few very well received
+  papers published in the early and mid 1990's following on the work of S. S. Stevens.  Some HSL schemes don't suffer from the perceptional
   non-linearity that some popular RGB schemes suffer from. What most people don't realize is that many of the most popular luminance based color
-  schemes in the HLS color space are actually edge graphs in the RGB color cube!  It is also true that the most common "bad" color scheme in the RGB
-  cube (the colorCubeRainbow), is an edge graph in the HLS hexcone!  In the end, the thing to remember is that both color spaces have both good and
+  schemes in the HSL color space are actually edge graphs in the RGB color cube!  It is also true that the most common "bad" color scheme in the RGB
+  cube (the colorCubeRainbow), is an edge graph in the HSL hexcone!  In the end, the thing to remember is that both color spaces have both good and
   bad color schemes.  Of particular note, are the two segment trees from black to white in the RGB edge/diagonal graph -- they are the same as the two
-  segment graphs in the edges of the HLS hexcone from black to white!
+  segment graphs in the edges of the HSL hexcone from black to white!
 
-   - 0RW -- H=0   red edge of the HLS hexcone
-   - 0YW -- H=60  yellow edge of the HLS hexcone
-   - 0GW -- H=120 green edge of the HLS hexcone
-   - 0CW -- H=180 cyan edge of the HLS hexcone
-   - 0BW -- H=240 blue edge of the HLS hexcone
-   - 0MW -- H=300 magenta edge of the HLS hexcone
+   - 0RW -- H=0   red edge of the HSL hexcone
+   - 0YW -- H=60  yellow edge of the HSL hexcone
+   - 0GW -- H=120 green edge of the HSL hexcone
+   - 0CW -- H=180 cyan edge of the HSL hexcone
+   - 0BW -- H=240 blue edge of the HSL hexcone
+   - 0MW -- H=300 magenta edge of the HSL hexcone
 
  Hot Too Cold
  ------------
@@ -418,8 +418,8 @@
  Out of the graph
  ----------------
 
- A popular trend is to use saturation based color schemes from the HLS color space -- see the earlier comments regarding luminance based color
- schemes.  Essentially, such color maps extend from the center of HLS space, (0.0, 0.5, 0), to one of the primary color vertexes --- which have the
+ A popular trend is to use saturation based color schemes from the HSL color space -- see the earlier comments regarding luminance based color
+ schemes.  Essentially, such color maps extend from the center of HSL space, (0.0, 0.5, 0), to one of the primary color vertexes --- which have the
  same colors as the vertexes of the RGB cube excluding black and white.  As luck would have it, such sequences are the same as extending linearly
  from the center of RGB space, (0.5, 0.5, 0.5), to one of the vertexes excluding black and white!  One can think of this as extending the edge graph
  of the RGB cube with an extra vertex at the center of the cube.
@@ -440,7 +440,7 @@
 
   - 0HW -- cmpGreyRGB()
 
- The other diagonal traversals (diagonal meaning through the center of the cube) are essentially two of the HLS saturation based schemes placed back
+ The other diagonal traversals (diagonal meaning through the center of the cube) are essentially two of the HSL saturation based schemes placed back
  to back.  They can form effective divergent color schemes.  Black to white is technical one of them, but we have already covered that one.  Note
  that the cmpColorRamp function will support this class of schemes with a two element graph -- the first vertex and the last. The remaining three
  diagonal schemes are as follows:

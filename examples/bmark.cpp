@@ -38,22 +38,23 @@
 #include <iostream>                                                      /* C++ iostream            C++11    */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-#define DO_LINE       1
-#define DO_CLIP_LINE  1
-#define DO_POINT      1
+#define DO_LINE       0
+#define DO_CLIP_LINE  0
+#define DO_POINT      0
 #define DO_POINT_NC   1
-#define DO_CLR        1
-#define DO_FFTRI      1
-#define DO_FGTRI      1
-#define DO_RECT       1
-#define DO_HLINE_NC   1
-#define DO_HLINE      1
-#define DO_VLINE_NC   1
-#define DO_VLINE      1
-#define DO_45LINE     1
-#define DO_TRIVLN     1
-#define DO_INTRP_AVG9 1
-#define DO_CONV       1
+#define DO_HSVL       1
+#define DO_CLR        0
+#define DO_FFTRI      0
+#define DO_FGTRI      0
+#define DO_RECT       0
+#define DO_HLINE_NC   0
+#define DO_HLINE      0
+#define DO_VLINE_NC   0
+#define DO_VLINE      0
+#define DO_45LINE     0
+#define DO_TRIVLN     0
+#define DO_INTRP_AVG9 0
+#define DO_CONV       0
 
 #define DO_OUT_TIF   0
 #define DO_OUT_RAW   0
@@ -112,6 +113,26 @@ int main(void) {
   bmTime = std::chrono::system_clock::now() - bmStartTime;
   std::cout << "  DO_POINT_NC Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
+
+#if DO_HSVL
+  std::cout << "Starting DO_HSVL" << std::endl;
+  bmStartTime = std::chrono::system_clock::now();
+  double H, S, V, sum=0;
+  for(int i=0;i<REPS*32;i++)
+    for(int y=0;y<=xMax;y++)
+      for(int x=0;x<=yMax;x++) {
+        //theRamCanvas.getPxColorNC(x, y).rgb2hsv(H, S, V);
+        theRamCanvas.getPxColorNC(x, y).rgb2hsl(H, S, V);
+        sum += H;
+      }
+  std::cout << "sum: " << sum << std::endl;  // The sum bit is here to keep the entire loop from being optimized away. ;)
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_HSVL Runtime " << bmTime.count() << " sec" << std::endl;
+#endif
+
+
+
 
 #if DO_CLR
   std::cout << "Starting DO_CLR" << std::endl;
