@@ -51,6 +51,7 @@ int main(void) {
   mjr::ramCanvas3c8b::colorType aColor;
 
   const double tau      = 6.28318530718; // 2*Pi
+  const double pi       = tau/2;         // Pi
   const double cutDepth = 10.0;          // Range: $[1, ~30]$ Smaller means more contrast on cuts.
   const double argCuts  = 16.0;          // Number of grey cuts for arg
   const int    argWrap  = 3;             // Number of times to wrap around the color ramp for arg
@@ -67,13 +68,16 @@ int main(void) {
       double pzArg = (zArg < 0.0 ? tau + zArg : zArg) / tau; // Arg mapped to [0, 1]
       double zAbs  = std::abs(fz);                           // Abs
       double lzAbs = std::log(zAbs);                         // log(Abs
-      // double x     = std::real(fz);                       // re
-      // double y     = std::imag(fz);                       // img
-      // double xAbs  = std::abs(x);                         // abs(re
-      // double yAbs  = std::abs(y);                         // abs(img
-      // double xPz   = 1.0/(xAbs + 1.0);                    // Map real z to [0,1]  0->1, \inf->0
-      // double yPz   = 1.0/(yAbs + 1.0);                    // Map real z to [0,1]  0->1, \inf->0
-      // double zPz   = 1.0/(zAbs + 1.0);                    // Map abs(z) to [0,1]  0->1, \inf->0
+      double xAbs  = std::abs(x);                            // abs(re
+      double yAbs  = std::abs(y);                            // abs(img
+      double xPz   = 1.0/(xAbs + 1.0);                       // Map real z to [0,1]  0->1, \inf->0
+      double yPz   = 1.0/(yAbs + 1.0);                       // Map real z to [0,1]  0->1, \inf->0
+      double zPz   = 1.0/(zAbs + 1.0);                       // Map abs(z) to [0,1]  0->1, \inf->0
+      double atm   = 2*atan(zAbs)/pi;                        // Map Abs to [0,1]
+      double a     = 2;                                      // param for sgpm
+      double tmp   = std::pow(zAbs, a);                      // tmp for sgpm
+      double sgpm  = tmp / (tmp + 1);                        // Map Abs to [0, 1] e stereographic projection onto the Riemann sphere.
+      double patm  = 1 - std::pow(0.5, zAbs);                // Map Abs to [0,1] -- much like atm, but no trig
 
       // Primary color for fz
       aColor.cmpClrCubeRainbow(mjr::intWrap(mjr::unitTooIntLinMap(mjr::unitClamp(pzArg), numColor*argWrap), numColor)); // Make color
