@@ -37,7 +37,7 @@
 #include <iostream>                                                      /* C++ iostream            C++11    */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-using cplx = std::complex<mjr::ramCanvas3c8b::coordFltType>;
+using cplx = std::complex<double>;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 cplx f(cplx z);
@@ -45,30 +45,43 @@ cplx f(cplx z);
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const double cutDepth = 10.0;   // Range: $[1, ~30]$ Smaller means more contrast on cuts.
-  const double argCuts  = 16.0;   // Number of grey cuts for arg
-  const int    argWrap  = 3;      // Number of times to wrap around the color ramp for arg
-  const double absCuts  = 2.0;    // Number of grey cuts for abs
   const double ar       = 16/9.0; // Aspect ratio
   const int    hdLevel  = 4;      // 1=FHD/2 2=FHD, 4=4k, 8=8k
-  const int    numColor = 1530;
-  //const int   numColor = 765;
-  //mjr::ramCanvas3c8b theRamCanvas(960*hdLevel, 540*hdLevel, -1.2*ar, 0.2*ar, -1.2, 1.2);
-mjr::ramCanvas3c8b theRamCanvas(960*hdLevel, 540*hdLevel, -1.0, 0.1, -0.37, 0.37);
+  mjr::ramCanvas3c8b theRamCanvas(960*hdLevel, 540*hdLevel, -2.2*ar, 2.2*ar, -2.2, 2.2);
+  mjr::ramCanvas3c8b::colorType aColor;
+
+  const double tau      = 6.28318530718; // 2*Pi
+  const double cutDepth = 10.0;          // Range: $[1, ~30]$ Smaller means more contrast on cuts.
+  const double argCuts  = 16.0;          // Number of grey cuts for arg
+  const int    argWrap  = 3;             // Number of times to wrap around the color ramp for arg
+  const double absCuts  = 2.0;           // Number of grey cuts for abs
+  const int    numColor = 6*255;         // Number of colors in cmpClrCubeRainbow -1
+
   for(int y=0;y<theRamCanvas.get_numYpix();y++)  {
-    std::cout << "LINE: " << y << " of " << (1080*hdLevel) << std::endl;
+    //std::cout << "LINE: " << y << " of " << (1080*hdLevel) << std::endl;
     for(int x=0;x<theRamCanvas.get_numXpix();x++) {
       cplx z { theRamCanvas.int2realX(x), theRamCanvas.int2realY(y) };
       cplx fz      = f(z);
-      double fzArg  = std::arg(fz);
-      double pfzArg = (fzArg < 0.0 ? 2.0 *3.141592653589793 + fzArg : fzArg) / (2.0 * 3.141592653589793);
-      double fzAbs  = std::abs(fz);
-      double lfzAbs = std::log(fzAbs);
-      mjr::ramCanvas3c8b::colorType aColor;
-      aColor.cmpClrCubeRainbow(mjr::intWrap(mjr::unitTooIntLinMap(mjr::unitClamp(pfzArg), numColor*argWrap), numColor));          // Make color
-      //aColor.cmpSumRampRGB(mjr::intWrap(mjr::unitTooIntLinMap(mjr::unitClamp(pfzArg), numColor*argWrap), numColor));           // Make color
-      aColor.tfrmLinearGreyLevelScale(1.0 - std::fabs(int(pfzArg*argCuts) - pfzArg*argCuts)/cutDepth, 0);                        // Make slices
-      aColor.tfrmLinearGreyLevelScale(1.0 - std::fabs(int(lfzAbs*absCuts) - lfzAbs*absCuts)/cutDepth, 0);                        // Make slices
+
+      double zArg  = std::arg(fz);                           // Arg
+      double pzArg = (zArg < 0.0 ? tau + zArg : zArg) / tau; // Arg mapped to [0, 1]
+      double zAbs  = std::abs(fz);                           // Abs
+      double lzAbs = std::log(zAbs);                         // log(Abs
+      // double x     = std::real(fz);                       // re
+      // double y     = std::imag(fz);                       // img
+      // double xAbs  = std::abs(x);                         // abs(re
+      // double yAbs  = std::abs(y);                         // abs(img
+      // double xPz   = 1.0/(xAbs + 1.0);                    // Map real z to [0,1]  0->1, \inf->0
+      // double yPz   = 1.0/(yAbs + 1.0);                    // Map real z to [0,1]  0->1, \inf->0
+      // double zPz   = 1.0/(zAbs + 1.0);                    // Map abs(z) to [0,1]  0->1, \inf->0
+
+      // Primary color for fz
+      aColor.cmpClrCubeRainbow(mjr::intWrap(mjr::unitTooIntLinMap(mjr::unitClamp(pzArg), numColor*argWrap), numColor)); // Make color
+
+      // Modify the color with "cuts" along argument & magnitede scales.
+      aColor.tfrmLinearGreyLevelScale(1.0 - std::fabs(int(pzArg*argCuts) - pzArg*argCuts)/cutDepth, 0);
+      aColor.tfrmLinearGreyLevelScale(1.0 - std::fabs(int(lzAbs*absCuts) - lzAbs*absCuts)/cutDepth, 0);
+
       theRamCanvas.drawPoint(x, y, aColor);
     }
   }
@@ -80,8 +93,8 @@ mjr::ramCanvas3c8b theRamCanvas(960*hdLevel, 540*hdLevel, -1.0, 0.1, -0.37, 0.37
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 cplx f(cplx z) {
   try {
-    // z=z*cplx(1.5);
-    // return ((z-cplx(2))*(z-cplx(2))*(z+cplx(1,-2))*(z+cplx(2,2))/(z*z*z));
+    z=z*cplx(1.5);
+    return ((z-2.0)*(z-2.0)*(z+cplx(1,-2))*(z+cplx(2,2))/(z*z*z));
 
     // z=z/cplx(5.5);
     // return (std::sin(cplx(1)/z));
@@ -102,7 +115,7 @@ cplx f(cplx z) {
 
     //return (z - cplx(1))/(z*z*z - cplx(0.5)*z*z + z + cplx(1));
 
-    //return z;
+    // return z;
 
     //// Eisenstein series E4
     // cplx f = 0.0;
@@ -126,19 +139,21 @@ cplx f(cplx z) {
     // f = 1.0 - f;
     // return f;
 
-    //// Eisenstein series G6
-    cplx f = 0.0;
-    for(int n=1; n<10; n++) 
-      for(int m=1; m<10; m++) {
-        cplx d = 1.0/std::pow(static_cast<double>(m) + static_cast<double>(n) * z, 6.0);
-        f += d;
-        if (std::abs(d) < 0.00001) break;
-      }
-    return f;
+    // //// Eisenstein series G6
+    // cplx f = 0.0;
+    // for(int n=1; n<10; n++) 
+    //   for(int m=1; m<10; m++) {
+    //     cplx d = 1.0/std::pow(static_cast<double>(m) + static_cast<double>(n) * z, 6.0);
+    //     f += d;
+    //     if (std::abs(d) < 0.00001) break;
+    //   }
+    // return f;
 
   } catch(...) {
     std::cout << "Something went wrong!!" << std::endl;
     return 0;
   }
 }
+
+
 
