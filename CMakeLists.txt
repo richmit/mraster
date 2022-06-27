@@ -83,7 +83,7 @@ endif()
 ######################################################################################################################################################
 
 set(TARGETS_REQ_NONE   "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "biomorph2" "bmark" "chaos_game" "circles" "color_all"
-                       "color_interp_hls_vs_rgb" "color_lut_ramp_cube" "color_lut_ramp_misc" "cplxColor" "dlaSeed" "level_curves" "lorenz_fuz"
+                        "color_lut_ramp_cube" "color_lut_ramp_misc" "cplxColor" "dlaSeed" "level_curves" "lorenz_fuz"
                        "lorenz_multi" "mandelbrot_binary" "mandelbrot_bm_cplx" "mandelbrot_bm_cplx_hyper" "mandelbrot_bm_real" "mandelbrot_cycles"
                        "mandelbrot_distance" "mandelbrot_distance_old" "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits"
                        "mandelbrot_potential" "mandelbrot_triangle" "newton_bm_cplx" "newton_bm_real" "newton_half" "newton_max_mod" "newton_vs"
@@ -91,7 +91,7 @@ set(TARGETS_REQ_NONE   "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "
                        "test_draw_color" "test_draw_misc" "test_draw_primatives" "tippets" "mandelbrot_bm_real_eqop"
                        )
 set(TARGETS_REQ_MRRL   "color_lut_indexed" "color_lut_rainbows" "color_web_rectangle" "color_web_triangle" "test_draw_fonts" "test_draw_glyph"
-                       "test_draw_strings"
+                       "test_draw_strings" "color_interp_hsl_vs_rgb"
                        )
 set(TARGETS_REQ_OPENGL "glut_image")
 set(TARGETS_REQ_TIFF   "brownianDiffusion" "dlaBrownian" "dlaDrift" "img_process" "test_gtfrm_scale")

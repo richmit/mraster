@@ -34,6 +34,9 @@
 // Put everything in the mjr namespace
 namespace mjr {
 
+/** Yep.  Pi */
+  const static double ctPI = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938;
+
 /** Clamp an integer to the range [0,maxValue] via a modulus like function that wraps the value onto the range (i.e. maxOutValue+1 will map to 0).
    @param anInt The value to be wrapped
    @param maxOutValue The maximum output value

@@ -34,18 +34,18 @@
 #include "mapclamp.hpp"
 #include "colorData.hpp"
 
+#include <algorithm>                                                     /* STL algorithm           C++11    */
+#include <climits>                                                       /* std:: C limits.h        C++11    */
 #include <cmath>                                                         /* std:: C math.h          C++11    */
 #include <cstring>                                                       /* std:: C string.h        C++11    */
-#include <climits>                                                       /* std:: C limits.h        C++11    */
-
-#include <iostream>                                                      /* C++ iostream            C++11    */
-#include <sstream>                                                       /* C++ string stream       C++      */
+#include <ctgmath>
 #include <iomanip>                                                       /* C++ stream formatting   C++11    */
-#include <string>                                                        /* C++ strings             C++11    */
-#include <algorithm>                                                     /* STL algorithm           C++11    */
-
-#include <type_traits>                                                   /* C++ metaprogramming     C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
 #include <limits>                                                        /* C++ Numeric limits      C++11    */
+#include <sstream>                                                       /* C++ string stream       C++      */
+#include <string>                                                        /* C++ strings             C++11    */
+#include <tuple>                                                         /* STL tuples              C++11    */
+#include <type_traits>                                                   /* C++ metaprogramming     C++11    */
 
 // Put everything in the mjr namespace
 namespace mjr {
@@ -182,7 +182,7 @@ namespace mjr {
       /** Takes a list of values and a color component value.  Find the element in the discreet value list that is closest to the given component value.  The
           intended use is to reduce colors down to a smaller set of values -- ex: convert a color to the nearest web safe value. */
       clrChanT colorComp2CloseColorComp(clrChanT aColorComp, clrChanT *discreetVals, int numVals);
-      /** This is a helper function for setColorFromNaturalHSL. */
+      /** This is a helper function for setColorFromColorSpace. */
       double hslHelperVal(double n1, double n2, double hue);
 
     public:
@@ -202,7 +202,7 @@ namespace mjr {
       typedef clrChanArthT channelArithType;  //!< Type for integer channel arithmetic (clrChanArthT)
 
       /* Old typedefs */
-      typedef clrChanArthT clrChanIArthT;       //!< Deprecated! \deprecated Use channelType instead 
+      typedef clrChanArthT clrChanIArthT;       //!< Deprecated! \deprecated Use channelType instead
       typedef clrChanArthT channelIntArithType; //!< Deprecated! \deprecated Use channelType instead
       typedef double       clrChanFArthT;       //!< Deprecated! \deprecated Use double instead
       typedef double       channelFltArithType; //!< Deprecated! \deprecated Use double instead
@@ -218,13 +218,15 @@ namespace mjr {
                                CYAN,    //!< Color cube corner color with RGB=011
                                MAGENTA, //!< Color cube corner color with RGB=101
                                WHITE    //!< Color cube corner color with RGB=111
-      };
-
-      /** Color space interpolation methods */
-      enum colorInterpMethEnum {CINTRP_RGB, //!< RGB-space interpolation
-                                CINTRP_HSL  //!< HSL-space interpolation
-
-      };
+                             };
+      /** Color spaces */
+      enum class colorSpaceEnum { RGB, //!< RGB color space
+                                  HSL, //!< HSL color space
+                                  HSV, //!< HSV color space
+                                  LAB, //!< CIE-L*ab color space
+                                  XYZ, //!< XYZ color space
+                                  LCH  //!< CIE-L*ch color space
+                                };
       //@}
 
       /** @name Constructors: C++ Utility */
@@ -326,16 +328,13 @@ namespace mjr {
           @param chan The channel to set -- if out of range, function is a NOP
           @param cVal The value to set the channel to */
       colorTpl& setChan(int chan, clrChanT cVal);
-      /** Sets the green component of the current object.
-          @param g The value to set the green component to
-          @return Returns a reference to the current color object.*/
       /** Sets the red component of the current object.
           @param r The value to set the red component to
           @return Returns a reference to the current color object.*/
       colorTpl& setRed(clrChanT r);
-      /** Sets the given channel to the value given.
-          @param chan The channel to set
-          @param cVal The value to set the channel to */
+      /** Sets the green component of the current object.
+          @param g The value to set the green component to
+          @return Returns a reference to the current color object.*/
       colorTpl& setGreen(clrChanT g);
       /** Sets the blue component of the current object.
           @param b The value to set the blue component to
@@ -353,14 +352,14 @@ namespace mjr {
 
       /** @name component setting with floating point numbers. */
       //@{
-      /** Sets the red component of the current object from a floating point value in the unit interval, [0,1].
-          @param r The value to set the red component to
-          @return Returns a reference to the current color object.*/
-      colorTpl& setRedF(double r);
       /** Sets the given channel of the current object from a floating point value in the unit interval, [0,1].
           @param chan The channel to set -- if out of range, function is a NOP
           @param cVal The value to set the channel to */
       colorTpl& setChanF(int chan, double cVal);
+      /** Sets the red component of the current object from a floating point value in the unit interval, [0,1].
+          @param r The value to set the red component to
+          @return Returns a reference to the current color object.*/
+      colorTpl& setRedF(double r);
       /** Sets the green component of the current object from a floating point value in the unit interval, [0,1].
           @param g The value to set the green component to
           @return Returns a reference to the current color object.*/
@@ -571,29 +570,24 @@ namespace mjr {
       //@{
       /** Set the color indicated by the given HSV values.  The 'unit' in the name indicates that the values for h, s, and v are the unit interval, [0,1].  This
           function is based upon the HSV_TO_RGB found in Foley and Van Dam.
-          @param h The Hue.
-          @param s The Saturation.
-          @param v The Value */
-      colorTpl& setColorFromUnitHSV(double h, double s, double v);
-      /** Set the color indicated by the given HSV values.  The 'natural' in the name indicates that The ranges for h, s, and v are the natural ones.  i.e. H is
-          in [0,360], s and v are in the range [0,100]
-          @param h The Hue.
-          @param s The Saturation.
-          @param v The Value */
-      colorTpl& setColorFromNaturalHSV(double h, double s, double v);
+          @param H The Hue.
+          @param S The Saturation.
+          @param V The Value */
+      colorTpl& setColorFromUnitHSV(double H, double S, double V);
       /** Set the color indicated by the given HSL values.  The 'unit' in the name indicates that The ranges for h, s, and v are the the unit interval --
           i.e. [0,1].  The algorithm is that presented in Computer Graphics by Foley, Van Dam, Feiner, and Hughes -- 2nd edition page 596.  I have corrected a
           typeo in the text algorithm.
           @param H The Hue.
-          @param S The Saturation. 
+          @param S The Saturation.
           @param L The Lightness or Luminescence */
-      colorTpl&  setColorFromUnitHSL(double H, double S, double L);
-      /** Set the color indicated by the given HSL values.  The 'natural' in the name indicates that The ranges for h, s, and v are the natural ones.  i.e. H is
-          in [0,360], s and v are in the range [0,1].  This simply normalizes the H, and calls setColorFromNaturalHSL.
-          @param H The Hue.
-          @param S The Saturation. 
-          @param L The Lightness or Luminescence*/
-      colorTpl&  setColorFromNaturalHSL(double H, double S, double L);
+      colorTpl& setColorFromUnitHSL(double H, double S, double L);
+      /** Set the color indicated by the color space and values.
+          @bug Lch is broken right now
+          @param space The colorspace
+          @param inCh1 Channel one value for given colorspace
+          @param inCh2 Channel two value for given colorspace
+          @param inCh3 Channel three value for given colorspace */
+      colorTpl& setColorFromColorSpace(colorSpaceEnum space, double inCh1, double inCh2, double inCh3);
       /** Set the color indicated by the given wavelength.  This function uses an algorithm based upon the color matching functions as as tabulated in table 3
           from Stockman and Sharpe (2000) -- I believe they are taken from Stiles and Burch 10-degree (1959).  Four of the algorithms are based upon simple
           linear interpolation, while one is based upon exponential bump functions closely matching the color matching functions.  The method of interpolation
@@ -869,7 +863,7 @@ namespace mjr {
           @return A reference to this object */
       colorTpl& cmpColorRamp(int anInt, int numColors, const char *colChars);
       /** Set the current color to a value linearly interpolated between the two given colors.  When aDouble is 0, the color is col1.  When aDouble is 1 the new
-          value is col2.
+          value is col2.  This method interpolates all channels without any color space conversions and as few type conversions as possible.
           @param aDouble The distance from col1
           @param col1 The starting color
           @param col2 The ending color
@@ -879,11 +873,14 @@ namespace mjr {
           value is col2.  The interpolation is done in HSL space -- i.e. the given colors are converted to HSL, the interpolation is done, and the result is
           converted back to RGB and the current color is set.  Unlike interplColors, this function will NOT interpolate every channel.  Rather, as this function
           deals specifically with RGB and HSL space, only the RGB channels will be interpolated.
+          @bug Lch is broken right now
+          @bug HSV, HSL, & LCH are broken in that the hue interpolation is naive -- not nearest angle.
+          @param space The color space to use
           @param aDouble The distance from col1
           @param col1 The starting color
           @param col2 The ending color
           @return Returns a reference to the current color object.*/
-      colorTpl& interplColorsHSL(double aDouble, colorTpl col1, colorTpl col2);
+      colorTpl& interplColorSpace(colorSpaceEnum space, double aDouble, colorTpl col1, colorTpl col2);
       /** Compute the weighted mean of the given colors.  w1,w2,w3 in [0,1] and w1+w2+w3=1.
           @param w1   The first weight
           @param w2   The second weight
@@ -1082,8 +1079,9 @@ namespace mjr {
 
       /** @name Alternate color space stuff */
       //@{
-      int rgb2hsv(double& H, double& S, double& V);
-      int rgb2hsl(double& H, double& S, double& L);
+      /** Compute channels for given color space coordinates for the current color.  Note RGB returns float RGB normalized to 1.0.
+          @return A three-tuple with the channels. */
+      std::tuple<double, double, double> rgb2colorSpace(colorSpaceEnum space);
       //@}
 
       /** @name Color transformation functions */
@@ -2856,7 +2854,7 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  inline void 
+  inline void
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setChanToMin() {
     if(fastMask)
       theColor.theInt = 0;
@@ -3407,22 +3405,23 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::interplColorsHSL(double aDouble,
-                                                                                  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
-                                                                                  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2) {
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::interplColorSpace(colorSpaceEnum space,
+                                                                                   double aDouble,
+                                                                                   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
+                                                                                   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2) {
     // Convert our given colors into HSL
-    double H1, L1, S1;
-    double H2, L2, S2;
-    col1.rgb2hsl(H1, S1, L1);
-    col2.rgb2hsl(H2, S2, L2);
+    std::tuple<double, double, double> acol1 = col1.rgb2colorSpace(space);
+    std::tuple<double, double, double> acol2 = col2.rgb2colorSpace(space);
 
     // Interpolate in HSL space..
-    double Hi = (H2 - H1) * static_cast<double>(aDouble) + H1;
-    double Li = (L2 - L1) * static_cast<double>(aDouble) + L1;
-    double Si = (S2 - S1) * static_cast<double>(aDouble) + S1;
+    double out1 = (std::get<0>(acol2) - std::get<0>(acol1)) * aDouble + std::get<0>(acol1);
+    double out2 = (std::get<1>(acol2) - std::get<1>(acol1)) * aDouble + std::get<1>(acol1);
+    double out3 = (std::get<2>(acol2) - std::get<2>(acol1)) * aDouble + std::get<2>(acol1);
 
-    // Set the current color and return.
-    setColorFromNaturalHSL(Hi, Si, Li);
+    // Set color
+    setColorFromColorSpace(space, out1, out2, out3);
+
+    // Return
     return *this;
   }
 
@@ -3961,30 +3960,8 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromUnitHSV(double h, double s, double v) {
-    double f, p, q;
-    double rf, gf, bf;
-    double t;
-
-    f = static_cast<double>(std::modf(h * 6.0, &t));
-    int i = static_cast<int>(t) % 6;
-
-    p = v * (1 - s);
-    q = v * (1 - s * f);
-    t = v * (1 - (s * (1 - f)));
-
-    switch (i) {
-    case 0:   rf = v; gf = t; bf = p; break;
-    case 1:   rf = q; gf = v; bf = p; break;
-    case 2:   rf = p; gf = v; bf = t; break;
-    case 3:   rf = p; gf = q; bf = v; break;
-    case 4:   rf = t; gf = p; bf = v; break;
-    case 5:   rf = v; gf = p; bf = q; break;
-    default:  rf = 0; gf = 0; bf = 0; break;
-    }
-    setColorRGB(static_cast<clrChanT>(rf*maxChanVal),
-                static_cast<clrChanT>(gf*maxChanVal),
-                static_cast<clrChanT>(bf*maxChanVal));
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromUnitHSV(double H, double S, double V) {
+    setColorFromColorSpace(colorSpaceEnum::HSV, H*360, S, V);
     return *this;
   }
 
@@ -3992,40 +3969,98 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromUnitHSL(double H, double S, double L) {
-    setColorFromNaturalHSL(H*360, L, S);
+    setColorFromColorSpace(colorSpaceEnum::HSL, H*360, L, S);
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromNaturalHSL(double H, double S, double L) {
-    // Make sure we have appropriate L and S values
-    if( (L < 0.0) || (L > 1.0) || (S < 0.0) || (S > 1.0) ) {
-      SET_ERR_COLOR;
-    } else {
-      // Wrap h into the range [0, 360)
-      double hFrac, hTmp;
-      hFrac = static_cast<double>(std::modf(H, &hTmp));
-      int hInt = static_cast<int>(hTmp) % 360;
-      H = hFrac + static_cast<double>(hInt);
-      // Compute the magic numbers..
-      const double epsilon = 0.000001;
-      double m1, m2;
-      if(L <= 0.5)
-        m2 = L * (1.0 + S);
-      else
-        m2 = L + S - L * S;
-      m1 = 2.0 * L - m2;
-      // Finish up the computation
-      if(S<epsilon) {
-        setAllF(L);
-      } else {
-        setColorRGB(static_cast<clrChanT>(maxChanVal * hslHelperVal(m1, m2, H+120)),
-                    static_cast<clrChanT>(maxChanVal * hslHelperVal(m1, m2, H)),
-                    static_cast<clrChanT>(maxChanVal * hslHelperVal(m1, m2, H-120)));
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromColorSpace(colorSpaceEnum space, double inCh1, double inCh2, double inCh3) {
+    double outR = 0.0, outG = 0.0, outB = 0.0;
+
+    if (space == colorSpaceEnum::HSL) {
+      if( (inCh1 >= 0) && (inCh1 <= 360) && (inCh3 >= 0.0) && (inCh3 <= 1.0) && (inCh2 >= 0.0) && (inCh2 <= 1.0) ) {
+        // Wrap h into the range [0, 360)
+        double hFrac, hTmp, hTot;
+        hFrac = static_cast<double>(std::modf(inCh1, &hTmp));
+        int hInt = static_cast<int>(hTmp) % 360;
+        hTot = hFrac + static_cast<double>(hInt);
+        // Compute the magic numbers..
+        const double epsilon = 0.000001;
+        double m1, m2;
+        if(inCh3 <= 0.5)
+          m2 = inCh3 * (1.0 + inCh2);
+        else
+          m2 = inCh3 + inCh2 - inCh3 * inCh2;
+        m1 = 2.0 * inCh3 - m2;
+        // Finish up the computation
+        if(inCh2 < epsilon) {
+          outR = inCh3;
+          outG = inCh3;
+          outB = inCh3;
+        } else {
+          outR = hslHelperVal(m1, m2, hTot+120);
+          outG = hslHelperVal(m1, m2, hTot);
+          outB = hslHelperVal(m1, m2, hTot-120);
+        }
       }
+    } else if ((space == colorSpaceEnum::LAB) || (space == colorSpaceEnum::XYZ) || (space == colorSpaceEnum::LCH)) {
+      double X, Y, Z;
+
+      if (space == colorSpaceEnum::XYZ) {
+        X = inCh1 / 100.0;
+        Y = inCh2 / 100.0;
+        Z = inCh3 / 100.0;
+      } else {
+        if (space == colorSpaceEnum::LCH) {
+          Y = ( inCh1 + 16.0 ) / 116.0;
+          X = std::cos(inCh3 * ctPI / 180.0) * inCh2 / 500.0 + Y;
+          Z = Y - std::sin(inCh3 * ctPI / 180.0) * inCh2 / 200.0;
+        } else {
+          Y = ( inCh1 + 16.0 ) / 116.0;
+          X = inCh2 / 500.0 + Y;
+          Z = Y - inCh3 / 200.0;
+        }
+
+        X = (X > 0.206893034423 ? std::pow(X, 3) : ( X - 16.0 / 116.0 ) / 7.787)  * 95.047  / 100.0;
+        Y = (Y > 0.206893034423 ? std::pow(Y, 3) : ( Y - 16.0 / 116.0 ) / 7.787)  * 100.000 / 100.0;
+        Z = (Z > 0.206893034423 ? std::pow(Z, 3) : ( Z - 16.0 / 116.0 ) / 7.787)  * 108.883 / 100.0;
+      }
+
+      outR = X *  3.2406 + Y * -1.5372 + Z * -0.4986;
+      outG = X * -0.9689 + Y *  1.8758 + Z *  0.0415;
+      outB = X *  0.0557 + Y * -0.2040 + Z *  1.0570;
+
+      outR = (outR > 0.0031308 ? 1.055 * std::pow(outR, 1.0 / 2.4) - 0.055 : 12.92 * outR);
+      outG = (outG > 0.0031308 ? 1.055 * std::pow(outG, 1.0 / 2.4) - 0.055 : 12.92 * outG);
+      outB = (outB > 0.0031308 ? 1.055 * std::pow(outB, 1.0 / 2.4) - 0.055 : 12.92 * outB);
+    } else if (space == colorSpaceEnum::RGB) {
+      outR = inCh1;
+      outG = inCh2;
+      outB = inCh3;
+    } else if (space == colorSpaceEnum::HSV) {
+      double t;
+      double f = static_cast<double>(std::modf(inCh1 * 6.0 / 360.0, &t));
+      int    i = static_cast<int>(t) % 6;
+      double p = inCh3 * (1 - inCh2);
+      double q = inCh3 * (1 - inCh2 * f);
+      double u = inCh3 * (1 - (inCh2 * (1 - f)));
+      double w = inCh3;
+      switch (i) {
+        case 0:   outR = w; outG = u; outB = p; break;
+        case 1:   outR = q; outG = w; outB = p; break;
+        case 2:   outR = p; outG = w; outB = u; break;
+        case 3:   outR = p; outG = q; outB = w; break;
+        case 4:   outR = u; outG = p; outB = w; break;
+        case 5:   outR = w; outG = p; outB = q; break;
+        default:  outR = 0; outG = 0; outB = 0; break;
+      }
+    } else {
+      std::cerr << "ERROR: Unsupported color space used in setColorFromColorSpace!" << std::endl;
     }
+
+    setColorRGB(static_cast<clrChanT>(maxChanVal * outR), static_cast<clrChanT>(maxChanVal * outG), static_cast<clrChanT>(maxChanVal * outB));
     return *this;
   }
 
@@ -4102,9 +4137,9 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
 
     // Data about the color matching function table used. This should be abstracted away so that other color matching functions may be used.  Going to the
     // trouble of abstracting the color match function concept may not be worth the effort...
-    const double minWL = 390.0;     // Min wavelength in table
-    const double maxWL = 830.0;     // Max wavelength in table
-    const int   numPT = 89;      // Number fo points in the table
+    const double minWL = 390.0;   // Min wavelength in table
+    const double maxWL = 830.0;   // Max wavelength in table
+    const int    numPT = 89;      // Number fo points in the table
     const double rScl  = 3.1673;  // Scale factors for color function
     const double gScl  = 1.0517;
     const double bScl  = 1.0019;
@@ -4175,14 +4210,6 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromNaturalHSV(double h, double s, double v) {
-    setColorFromUnitHSV(h/360.0, s/100.0, v/100.0);
-    return *this;
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromWavelengthLA(double wavelength) {
     double rf, gf, bf;
 
@@ -4239,7 +4266,7 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  clrChanT 
+  clrChanT
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::clipTop(clrChanArthT anArithComp) {
     if(anArithComp > maxChanVal)
       return maxChanVal;
@@ -4268,14 +4295,19 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
     return static_cast<clrChanT>(anArithComp);
   }
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  int
-  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::rgb2hsv(double& H, double& S, double& V) {
-    if(numChan < 3) {
-      return 1;
-    } else {
+  std::tuple<double, double, double>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::rgb2colorSpace(colorSpaceEnum space) {
+
+    double redF   = getRedF();
+    double greenF = getGreenF();
+    double blueF  = getBlueF();
+
+    if (space == colorSpaceEnum::RGB)
+      return std::tuple<double, double, double>(redF, greenF, blueF);
+
+    if ((space == colorSpaceEnum::HSL) || (space == colorSpaceEnum::HSV)) {
       clrChanT rgbMaxI = getMaxRGB();
       clrChanT rgbMinI = getMinRGB();
 
@@ -4285,99 +4317,35 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
       double rgbMinF = static_cast<double>(rgbMinI) / maxChanVal;
 
       double rangeF = rgbMaxF - rgbMinF;
-
-      // Compute V
-      V = rgbMaxF;
-
-      // Compute S & H
-      if((rgbMaxI != 0) && (rangeI != 0)) {
-        S = rangeF / rgbMaxF;
-
-        H = 0.0;
-        if(theColor.theParts.red == rgbMaxI)
-          H = 0.0 + (getGreenF() - getBlueF()) / rangeF;
-        else if(theColor.theParts.green == rgbMaxI)
-          H = 2.0 + (getBlueF() - getRedF()) / rangeF;
-        else if(theColor.theParts.blue == rgbMaxI)
-          H = 4.0 + (getRedF() - getGreenF()) / rangeF;
-
-        H = H * 60.0;
-        while(H<0)
-          H += 360.0;
-        while(H>=360.0)
-          H -= 360.0;
-      } else {
-        S = 0.0;
-        H = 0.0;
-      }
-    }
-    return 0;
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  int
-  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::rgb2hsl(double& H, double& S, double& L) {
-    if(numChan < 3) {
-      return 1;
-    } else {
-
-      // clrChanT rgbMaxI;
-      // clrChanT rgbMinI;
-      // if (theColor.theParts.red < theColor.theParts.blue) {
-      //   // max: blue or green
-      //   if (theColor.theParts.green < theColor.theParts.blue) 
-      //     rgbMaxI   = theColor.theParts.blue;
-      //   else 
-      //     rgbMaxI   = theColor.theParts.green;
-      //   // min: red or green
-      //   if (theColor.theParts.red < theColor.theParts.green) 
-      //     rgbMinI   = theColor.theParts.red;
-      //   else 
-      //     rgbMinI   = theColor.theParts.green;
-      // } else {
-      //   // max: red or green
-      //   if (theColor.theParts.green < theColor.theParts.red) 
-      //     rgbMaxI   = theColor.theParts.red;
-      //   else 
-      //     rgbMaxI   = theColor.theParts.green;
-      //   // min: blue or green
-      //   if (theColor.theParts.blue < theColor.theParts.green) 
-      //     rgbMinI   = theColor.theParts.blue;
-      //   else 
-      //     rgbMinI   = theColor.theParts.green;
-      // }
-
-      clrChanT rgbMaxI = getMaxRGB();
-      clrChanT rgbMinI = getMinRGB();
-
-      double rgbMaxF = static_cast<double>(rgbMaxI) / maxChanVal;
-      double rgbMinF = static_cast<double>(rgbMinI) / maxChanVal;
-
-      double rangeF = rgbMaxF - rgbMinF;
       double sumF   = rgbMaxF + rgbMinF;
 
       // Compute L
-      L = sumF / 2.0;
+      double L = sumF / 2.0;
+      double V = rgbMaxF;
 
-      // Compute S & L
-      if(rgbMaxI == rgbMinI) {
+      // Compute H & S
+      double S, H;
+      if((rgbMaxI == 0) || (rangeI == 0)) {
         S = 0.0;
         H = 0.0;
       } else {
-        // Compute S
-        if(L <= 0.5)
-          S = rangeF / sumF;
-        else
-          S = rangeF / ( 2.0 - sumF);
+
+        if (space == colorSpaceEnum::HSL) {
+          if(L <= 0.5)
+            S = rangeF / sumF;
+          else
+            S = rangeF / ( 2.0 - sumF);
+        } else {
+          S = rangeF / rgbMaxF;
+        }
 
         H = 0.0;
         if(theColor.theParts.red == rgbMaxI)
-          H = 0.0 + (getGreenF() - getBlueF()) / rangeF;
+          H = 0.0 + (greenF - blueF) / rangeF;
         else if(theColor.theParts.green == rgbMaxI)
-          H = 2.0 + (getBlueF() - getRedF()) / rangeF;
+          H = 2.0 + (blueF - redF) / rangeF;
         else if(theColor.theParts.blue == rgbMaxI)
-          H = 4.0 + (getRedF() - getGreenF()) / rangeF;
+          H = 4.0 + (redF - greenF) / rangeF;
 
         H = H * 60.0;
         while(H<0)
@@ -4385,14 +4353,68 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
         while(H>=360.0)
           H -= 360.0;
       }
+      if (space == colorSpaceEnum::HSL)
+        return std::tuple<double, double, double>(H, S, L);
+      else
+        return std::tuple<double, double, double>(H, S, V);
+    } else {
+      redF   = 100.0 * ((redF   > 0.04045) ? std::pow((redF   + 0.055) / 1.055, 2.4) : redF   / 12.92);
+      greenF = 100.0 * ((greenF > 0.04045) ? std::pow((greenF + 0.055) / 1.055, 2.4) : greenF / 12.92);
+      blueF  = 100.0 * ((blueF  > 0.04045) ? std::pow((blueF  + 0.055) / 1.055, 2.4) : blueF  / 12.92);
+
+      double X = (0.4124 * redF + 0.3576 * greenF + 0.1805 * blueF);
+      double Y = (0.2126 * redF + 0.7152 * greenF + 0.0722 * blueF);
+      double Z = (0.0193 * redF + 0.1192 * greenF + 0.9505 * blueF);
+
+      if (space == colorSpaceEnum::XYZ)
+        return std::tuple<double, double, double>(X, Y, Z);
+
+      X /= 95.0429;
+      Y /= 100.0;
+      Z /= 108.89;
+
+      X = (X > 0.008856 ? std::pow(X, 1.0 / 3.0) : (7.787 * X) + (16.0 / 116.0));
+      Y = (Y > 0.008856 ? std::pow(Y, 1.0 / 3.0) : (7.787 * Y) + (16.0 / 116.0));
+      Z = (Z > 0.008856 ? std::pow(Z, 1.0 / 3.0) : (7.787 * Z) + (16.0 / 116.0));
+
+      double L = (116.0 * Y) - 16.0;
+      double A = 500.0 * (X - Y);
+      double B = 200.0 * (Y - Z);
+
+      if (space == colorSpaceEnum::LAB)
+        return std::tuple<double, double, double>(L, A, B);
+
+      double C = std::hypot(A, B);
+
+      double H = 0.0;
+      if ( std::abs(A) > 1.0e-5) { // Not Grey
+        if (A >= 0.0) {
+          if (B >= 0.0) {
+            H = std::atan(B/A);
+          } else {
+            H = std::atan(B/A) + ctPI;
+          }
+        } else { // a<0
+          if (B >= 0.0) {
+            H = std::atan(B/A) + (2 * ctPI);
+          } else {
+            H = std::atan(B/A) + ctPI;
+          }
+        }
+        H *= 180.0 / ctPI;
+      }
+
+      if (space == colorSpaceEnum::LCH)
+        return std::tuple<double, double, double>(L, C, H);
     }
-    return 0;
+
+    return std::tuple<double, double, double>(0.0, 0.0, 0.0);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  /** I/O stream output operator for colorTpl types. */
+  /** i/O stream output operator for colorTpl types. */
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  std::ostream& 
+  std::ostream&
   operator<< (std::ostream &out, colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> const& color) {
     out << "<";
     for(int i=0; i<(numChan-1); i++)
