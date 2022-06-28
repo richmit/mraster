@@ -255,8 +255,6 @@ namespace mjr {
       colorTpl(cornerColor ccolor);
       /** Uses the setColorFromString method to set the initialize the object. */
       colorTpl(const char *colorString);
-      /** Uses the setColorFromLetter method to set the initialize the object. */
-      colorTpl(const char colorChar);
       //@}
 
       /** @name Destructor */
@@ -1267,13 +1265,6 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::colorTpl(const char *colorString) {
     setColorFromString(colorString);
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  /* constructor */
-  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::colorTpl(const char colorChar) {
-    setColorFromLetter(colorChar);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3407,17 +3398,6 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
         out3 = mjr::interpolateLinearAnglesDeg(std::get<2>(acol1), std::get<2>(acol2), aDouble);
       else
         out3 = mjr::interpolateLinear(std::get<2>(acol1), std::get<2>(acol2), aDouble);
-
-
-// //  MJR DEBUG NOTE <2022-06-28T15:47:12-0500> colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::interplColorSpace: 
-      // if ((space == colorSpaceEnum::LCH) || (space == colorSpaceEnum::LAB)) {
-      //   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> aCol;
-      //   aCol.setColorFromColorSpace(space, out1, out2, out3);
-      //   std::tuple<double, double, double> aCon = aCol.rgb2colorSpace(space);
-      //   std::cout << (space == colorSpaceEnum::LCH ? "LCH" : "LAB") << " " << out1 << " " << out2 << " " << out3 << " " << aCol << " " << std::get<0>(aCon) << " " << std::get<1>(aCon) << " " << std::get<2>(aCon) <<std::endl;
-      // }
-
-
 
       // Set color
       setColorFromColorSpace(space, out1, out2, out3);

@@ -43,8 +43,8 @@
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   mjr::ramCanvas3c8b theRamCanvas(592, 1810, -2.0, 2, -2, 2);
-  mjr::ramCanvas3c8b::colorType startColor('r');
-  mjr::ramCanvas3c8b::colorType endColor('b');
+  mjr::ramCanvas3c8b::colorType startColor('red');
+  mjr::ramCanvas3c8b::colorType endColor('blue');
   mjr::ramCanvas3c8b::colorType aColor;
   std::tuple<double, double, double> tmp;
 
