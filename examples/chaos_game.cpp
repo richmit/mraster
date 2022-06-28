@@ -120,11 +120,10 @@ int main() {
     theRamCanvas.clrCanvasToBlack();
 
     std::vector<std::complex<double>> points;
-    const double pi = 3.141592654;
-    double curAngle = pi/2;
+    double curAngle = mjr::PI/2;
     for(int i=0; i<theIFS.numPts; i++) {
       points.push_back(std::complex<double>{cos(curAngle), sin(curAngle)});
-      curAngle += 2*pi/theIFS.numPts;
+      curAngle += 2*mjr::PI/theIFS.numPts;
     }
 
     std::complex<double> z{0.1, 0.2};

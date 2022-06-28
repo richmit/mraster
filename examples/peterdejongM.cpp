@@ -42,7 +42,6 @@ int main(void) {
   const unsigned long int maxIters  =  300000000ul;
   const unsigned long int itersTick =  10000000ul;
   const int               numFrames =  128; // 512 128 32 16
-  const double            pi        =  3.141592653589793238462643383279502884;
   const double            a         =  1.50503;
   const double            b         = -1.44118;
   const double            c         = -1.23281;
@@ -64,8 +63,8 @@ int main(void) {
     double y       = 1.0;
     uint64_t maxII = 0;
     for(uint64_t i=0;i<maxIters;i++) {
-      double xNew = sin((a + 0.09 * sin(frame * 2 * pi / numFrames))*y + e) - cos(b*x + f);
-      double yNew = sin((c + 0.08 * cos(frame * 2 * pi / numFrames))*x + g) - cos(d*y + h);
+      double xNew = sin((a + 0.09 * sin(frame * 2 * mjr::PI / numFrames))*y + e) - cos(b*x + f);
+      double yNew = sin((c + 0.08 * cos(frame * 2 * mjr::PI / numFrames))*x + g) - cos(d*y + h);
       theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColor(x, y).tfrmAdd(aColor));
       if(theRamCanvas.getPxColor(x, y).getRed() > maxII) {
         maxII = theRamCanvas.getPxColor(x, y).getRed();

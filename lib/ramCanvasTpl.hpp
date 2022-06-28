@@ -3308,10 +3308,10 @@ namespace mjr {
           colorChanArithType y30 = (y3 - y);
           colorChanArithType y02 = (y - y2);
           for(intCrdT x=minPts[y]; x<=maxPts[y]; x++) {
-            double w1 = static_cast<double>(std::abs(x  * y23 + x2 * y30 + x3 * y02));
-            double w2 = static_cast<double>(std::abs(x1 * y03 + x  * y31 + x3 * y10));
-            double a  = static_cast<double>(std::abs(x1 * y23 + x2 * y31 + x3 * y12));
-            drawPoint(x, y, colorT().wMean(w1/a, w2/a, c1, c2, c3));
+            double a  = std::abs(x1 * y23 + x2 * y31 + x3 * y12);
+            double w1 = std::abs(x  * y23 + x2 * y30 + x3 * y02) / a;
+            double w2 = std::abs(x1 * y03 + x  * y31 + x3 * y10) / a;
+            drawPoint(x, y, colorT().wMean(w1, w2, 1-w1-w2, c1, c2, c3));
           }
         }
       }

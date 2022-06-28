@@ -37,7 +37,6 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const mjr::ramCanvas3c8b::coordFltType pi        = 3.14159265359;
   int                                    MaxCount  = 255;
   int                                    MultCol   = 15;
   mjr::ramCanvas3c8b::coordFltType       Tol       = (.0001 * .0001);
@@ -47,10 +46,10 @@ int main(void) {
       mjr::ramCanvas3c8b::coordFltType zx = theRamCanvas.int2realX(x);
       mjr::ramCanvas3c8b::coordFltType zy = theRamCanvas.int2realY(y);
       int count = 0;
-      while(count < MaxCount                                                  &&
-            ((zx-1) * (zx-1) + zy * zy >= Tol)                                &&
-            ((zx+.5) * (zx+.5) + (zy-sin(2*pi/3)) * (zy-sin(2*pi/3)) >= Tol)  &&
-            ((zx+.5) * (zx+.5) + (zy+sin(2*pi/3)) * (zy+sin(2*pi/3)) >= Tol)) {
+      while(count < MaxCount                                                            &&
+            ((zx-1) * (zx-1) + zy * zy >= Tol)                                          &&
+            ((zx+.5) * (zx+.5) + (zy-sin(2*mjr::PI/3)) * (zy-sin(2*mjr::PI/3)) >= Tol)  &&
+            ((zx+.5) * (zx+.5) + (zy+sin(2*mjr::PI/3)) * (zy+sin(2*mjr::PI/3)) >= Tol)) {
         mjr::ramCanvas3c8b::coordFltType botx = 3*(zx * zx - zy * zy);
         mjr::ramCanvas3c8b::coordFltType boty = 3*(2 * zx * zy);
 
@@ -68,9 +67,9 @@ int main(void) {
 
       if((zx-1) * (zx-1) + zy * zy < Tol)
         theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(cCol, 0, 0));
-      else if((zx+.5) * (zx+.5) + (zy-sin(2*pi/3)) * (zy-sin(2*pi/3)) <= Tol)
+      else if((zx+.5) * (zx+.5) + (zy-sin(2*mjr::PI/3)) * (zy-sin(2*mjr::PI/3)) <= Tol)
         theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0, cCol, 0));
-      else if((zx+.5) * (zx+.5) + (zy+sin(2*pi/3)) * (zy+sin(2*pi/3)) <= Tol)
+      else if((zx+.5) * (zx+.5) + (zy+sin(2*mjr::PI/3)) * (zy+sin(2*mjr::PI/3)) <= Tol)
         theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0, 0, cCol));
     }
   }

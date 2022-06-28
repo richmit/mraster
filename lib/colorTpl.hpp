@@ -31,7 +31,7 @@
 #ifndef MJR_INCLUDE_colorTpl
 
 #include "ramConfig.hpp"
-#include "mapclamp.hpp"
+#include "mjrmath.hpp"
 #include "colorData.hpp"
 
 #include <algorithm>                                                     /* STL algorithm           C++11    */
@@ -881,7 +881,8 @@ namespace mjr {
           @param col2 The ending color
           @return Returns a reference to the current color object.*/
       colorTpl& interplColorSpace(colorSpaceEnum space, double aDouble, colorTpl col1, colorTpl col2);
-      /** Compute the weighted mean of the given colors.  w1,w2,w3 in [0,1] and w1+w2+w3=1.
+      /** Compute the weighted mean of the given colors.
+          In order to keep the result in range, w1,w2,w3 must be in [0,1] and w1+w2+w3=1.  This constraint is *not* checked!
           @param w1   The first weight
           @param w2   The second weight
           @param w3   The third weight
@@ -891,14 +892,13 @@ namespace mjr {
       colorTpl& wMean(double w1, double w2, double w3, colorTpl col1, colorTpl col2, colorTpl col3);
       /** overload */
       colorTpl& wMean(double w1, double w2, colorTpl col1, colorTpl col2, colorTpl col3);
-      /** Compute the weighted mean of the given colors.  w1,w2,w3 in [0,1] and w1+w2+w3=1.  Same as interplColors(wq, col1, col2).
+      /** Compute the weighted mean of the given colors.
+          In order to keep the result in range, w1,w2 must be in [0,1] and w1+w2=1.  This constraint is *not* checked!
           @param w1   The first weight
           @param w2   The second weight
           @param col1 The first color
           @param col2 The second color */
       colorTpl& wMean(double w1, double w2, colorTpl col1, colorTpl col2);
-      /** overload */
-      colorTpl& wMean(double w1, colorTpl col1, colorTpl col2);
       //@}
 
       /** @name Logical Operators. */
@@ -1354,6 +1354,7 @@ namespace mjr {
     if(channelType8bitInt)
       return static_cast<uint8_t>(theColor.theParts.red);
     else
+//  MJR TODO NOTE <2022-06-28T09:11:25-0500> colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getRed8bit: We can do this with integer arithmatic!
       return static_cast<uint8_t>(255.0 * theColor.theParts.red / maxChanVal);
   }
 
@@ -1364,6 +1365,7 @@ namespace mjr {
     if(channelType8bitInt)
       return static_cast<uint8_t>(theColor.theParts.blue);
     else
+//  MJR TODO NOTE <2022-06-28T09:11:45-0500> colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getBlue8bit: We can do this with integer arithmatic!
       return static_cast<uint8_t>(255.0 * theColor.theParts.blue / maxChanVal);
   }
 
@@ -1374,6 +1376,7 @@ namespace mjr {
     if(channelType8bitInt)
       return static_cast<uint8_t>(theColor.theParts.green);
     else
+//  MJR TODO NOTE <2022-06-28T09:11:52-0500> colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getGreen8bit: We can do this with integer arithmatic!
       return static_cast<uint8_t>(255.0 * theColor.theParts.green / maxChanVal);
   }
 
@@ -1384,6 +1387,7 @@ namespace mjr {
     if(channelType8bitInt)
       return static_cast<uint8_t>(theColor.theParts.alpha);
     else
+//  MJR TODO NOTE <2022-06-28T09:11:58-0500> colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getAlpha8bit: We can do this with integer arithmatic!
       return static_cast<uint8_t>(255.0 * theColor.theParts.alpha / maxChanVal);
   }
 
@@ -1394,6 +1398,7 @@ namespace mjr {
     if(channelType8bitInt)
       return static_cast<uint8_t>(theColor.thePartsA[chan]);
     else
+//  MJR SCM NOTE <2022-06-28T09:12:02-0500> colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::getChan8bit: We can do this with integer arithmatic!
       return static_cast<uint8_t>(255.0 * theColor.thePartsA[chan] / maxChanVal);
   }
 
@@ -1573,17 +1578,16 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setAllF(double aComp) {
-//  MJR TODO NOTE <2022-06-21> colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setAllF: The products can be optimized away.  Set remaining channels to red, or use a temp.
     theColor.theParts.red     = static_cast<clrChanT>(aComp * maxChanVal);
     if(numChan > 1)
-      theColor.theParts.green = static_cast<clrChanT>(aComp * maxChanVal);
+      theColor.theParts.green = theColor.theParts.red; // Avoid the multiplication & cast by reusing red value
     if(numChan > 2)
-      theColor.theParts.blue  = static_cast<clrChanT>(aComp * maxChanVal);
+      theColor.theParts.blue  = theColor.theParts.red;
     if(numChan > 3)
-      theColor.theParts.alpha = static_cast<clrChanT>(aComp * maxChanVal);
+      theColor.theParts.alpha = theColor.theParts.red;
     if(numChan > 4)
       for(int i=4; i<numChan; i++)
-        theColor.thePartsA[i] = static_cast<clrChanT>(aComp * maxChanVal);
+        theColor.thePartsA[i] = theColor.theParts.red;
     return *this;
   }
 
@@ -3314,70 +3318,33 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::interplColors(double aDouble,
-                                                                               colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
-                                                                               colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2) {
-    if( (aDouble < 0.0) || (aDouble > 1.0) ) {
-      SET_ERR_COLOR;
-    } else {
-      theColor.theParts.red      = static_cast<clrChanT>((col2.theColor.theParts.red   - col1.theColor.theParts.red  )*aDouble + col1.theColor.theParts.red);
-      if(numChan > 1)
-        theColor.theParts.green  = static_cast<clrChanT>((col2.theColor.theParts.green - col1.theColor.theParts.green)*aDouble + col1.theColor.theParts.green);
-      if(numChan > 2)
-        theColor.theParts.blue   = static_cast<clrChanT>((col2.theColor.theParts.blue  - col1.theColor.theParts.blue )*aDouble + col1.theColor.theParts.blue);
-      if(numChan > 3)
-        theColor.theParts.alpha  = static_cast<clrChanT>((col2.theColor.theParts.alpha - col1.theColor.theParts.alpha)*aDouble + col1.theColor.theParts.alpha);
-      if(numChan > 4)
-        for(int i=4; i<numChan; i++)
-          theColor.thePartsA[i]  = static_cast<clrChanT>((col2.theColor.thePartsA[i]   - col1.theColor.thePartsA[i]  )*aDouble + col1.theColor.thePartsA[i]);
-    }
-    return *this;
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::wMean(double w1, double w2, double w3,
                                                                        colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
                                                                        colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2,
                                                                        colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col3) {
 
-    if((w1 < 0) || (w2 < 0) || (w3 < 0) || (w1 > 1) || (w2 > 1) || (w3 > 1) || (std::abs(w1+w2+w3-1) > 0.001)) {
-      return SET_ERR_COLOR;
-    } else {
-      theColor.theParts.red     = static_cast<clrChanT>((static_cast<double>(col1.theColor.theParts.red)   * w1) + (static_cast<double>(col2.theColor.theParts.red)   * w2) + (static_cast<double>(col3.theColor.theParts.red)   * w3));
-      if(numChan > 1)
-        theColor.theParts.green = static_cast<clrChanT>((static_cast<double>(col1.theColor.theParts.green) * w1) + (static_cast<double>(col2.theColor.theParts.green) * w2) + (static_cast<double>(col3.theColor.theParts.green) * w3));
-      if(numChan > 2)
-        theColor.theParts.blue  = static_cast<clrChanT>((static_cast<double>(col1.theColor.theParts.blue)  * w1) + (static_cast<double>(col2.theColor.theParts.blue)  * w2) + (static_cast<double>(col3.theColor.theParts.blue)  * w3));
-      if(numChan > 3)
-        theColor.theParts.alpha = static_cast<clrChanT>((static_cast<double>(col1.theColor.theParts.alpha) * w1) + (static_cast<double>(col2.theColor.theParts.alpha) * w2) + (static_cast<double>(col3.theColor.theParts.alpha) * w3));
-      if(numChan > 4)
-        for(int i=4; i<numChan; i++)
-          theColor.thePartsA[i] = static_cast<clrChanT>((static_cast<double>(col1.theColor.thePartsA[i])   * w1) + (static_cast<double>(col2.theColor.thePartsA[i])   * w2) + (static_cast<double>(col3.theColor.thePartsA[i])   * w3));
-      return *this;
-    }
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::wMean(double w1, double w2,
-                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
-                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2,
-                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col3) {
-    return wMean(w1, w2, 1-w1-w2, col1, col2, col3);
-  }
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
-  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
-  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::wMean(double w1,
-                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
-                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2) {
-    return wMean(w1, 1-w1, col1, col2);
-  }
+    theColor.theParts.red     = static_cast<clrChanT>((static_cast<double>(col1.theColor.theParts.red)   * w1) +
+                                                      (static_cast<double>(col2.theColor.theParts.red)   * w2) +
+                                                      (static_cast<double>(col3.theColor.theParts.red)   * w3));
+    if(numChan > 1)
+      theColor.theParts.green = static_cast<clrChanT>((static_cast<double>(col1.theColor.theParts.green) * w1) +
+                                                      (static_cast<double>(col2.theColor.theParts.green) * w2) +
+                                                      (static_cast<double>(col3.theColor.theParts.green) * w3));
+    if(numChan > 2)
+      theColor.theParts.blue  = static_cast<clrChanT>((static_cast<double>(col1.theColor.theParts.blue)  * w1) +
+                                                      (static_cast<double>(col2.theColor.theParts.blue)  * w2) +
+                                                      (static_cast<double>(col3.theColor.theParts.blue)  * w3));
+    if(numChan > 3)
+      theColor.theParts.alpha = static_cast<clrChanT>((static_cast<double>(col1.theColor.theParts.alpha) * w1) +
+                                                      (static_cast<double>(col2.theColor.theParts.alpha) * w2) +
+                                                      (static_cast<double>(col3.theColor.theParts.alpha) * w3));
+  if(numChan > 4)
+    for(int i=4; i<numChan; i++)
+      theColor.thePartsA[i]   = static_cast<clrChanT>((static_cast<double>(col1.theColor.thePartsA[i])   * w1) +
+                                                      (static_cast<double>(col2.theColor.thePartsA[i])   * w2) +
+                                                      (static_cast<double>(col3.theColor.thePartsA[i])   * w3));
+  return *this;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
@@ -3385,21 +3352,22 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::wMean(double w1, double w2,
                                                                        colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
                                                                        colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2) {
-    if((w1 < 0) || (w2 < 0) || (w1 > 1) || (w2 > 1) || (std::abs(w1+w2-1) > 0.001)) {
-      return SET_ERR_COLOR;
-    } else {
-      theColor.theParts.red     = (col1.theColor.theParts.red   * w1) + (col2.theColor.theParts.red   * w2);
+      theColor.theParts.red     = static_cast<clrChanT>((static_cast<double>(col1.theColor.theParts.red)   * w1) +
+                                                        (static_cast<double>(col2.theColor.theParts.red)   * w2));
       if(numChan > 1)
-        theColor.theParts.green = (col1.theColor.theParts.green * w1) + (col2.theColor.theParts.green * w2);
+        theColor.theParts.green = static_cast<clrChanT>((static_cast<double>(col1.theColor.theParts.green) * w1) +
+                                                        (static_cast<double>(col2.theColor.theParts.green) * w2));
       if(numChan > 2)
-        theColor.theParts.blue  = (col1.theColor.theParts.blue  * w1) + (col2.theColor.theParts.blue  * w2);
+        theColor.theParts.blue  = static_cast<clrChanT>((static_cast<double>(col1.theColor.theParts.blue)  * w1) +
+                                                        (static_cast<double>(col2.theColor.theParts.blue)  * w2));
       if(numChan > 3)
-        theColor.theParts.alpha = (col1.theColor.theParts.alpha * w1) + (col2.theColor.theParts.alpha * w2);
+        theColor.theParts.alpha = static_cast<clrChanT>((static_cast<double>(col1.theColor.theParts.alpha) * w1) +
+                                                        (static_cast<double>(col2.theColor.theParts.alpha) * w2));
       if(numChan > 4)
         for(int i=4; i<numChan; i++)
-          theColor.thePartsA[i] = (col1.theColor.thePartsA[i]   * w1) + (col2.theColor.thePartsA[i]   * w2);
+          theColor.thePartsA[i] = static_cast<clrChanT>((static_cast<double>(col1.theColor.thePartsA[i])   * w1) +
+                                                        (static_cast<double>(col2.theColor.thePartsA[i])   * w2));
       return *this;
-    }
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3409,19 +3377,50 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
                                                                                    double aDouble,
                                                                                    colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
                                                                                    colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2) {
-    // Convert our given colors into HSL
-    std::tuple<double, double, double> acol1 = col1.rgb2colorSpace(space);
-    std::tuple<double, double, double> acol2 = col2.rgb2colorSpace(space);
+    if( (aDouble < 0.0) || (aDouble > 1.0) ) {
+      SET_ERR_COLOR;
+    } else {
+      // Convert our given colors into HSL
+      std::tuple<double, double, double> acol1 = col1.rgb2colorSpace(space);
+      std::tuple<double, double, double> acol2 = col2.rgb2colorSpace(space);
 
-    // Interpolate in HSL space..
-    double out1 = (std::get<0>(acol2) - std::get<0>(acol1)) * aDouble + std::get<0>(acol1);
-    double out2 = (std::get<1>(acol2) - std::get<1>(acol1)) * aDouble + std::get<1>(acol1);
-    double out3 = (std::get<2>(acol2) - std::get<2>(acol1)) * aDouble + std::get<2>(acol1);
+      // Interpolate values
+      double out1 = mjr::interpolateLinear(std::get<0>(acol1), std::get<0>(acol2), aDouble);
+      double out2 = mjr::interpolateLinear(std::get<1>(acol1), std::get<1>(acol2), aDouble);
+      double out3 = mjr::interpolateLinear(std::get<2>(acol1), std::get<2>(acol2), aDouble);
 
-    // Set color
-    setColorFromColorSpace(space, out1, out2, out3);
-
+      // Set color
+      setColorFromColorSpace(space, out1, out2, out3);
+    }
     // Return
+    return *this;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::interplColors(double aDouble,
+                                                                               colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
+                                                                               colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2) {
+    if( (aDouble < 0.0) || (aDouble > 1.0) ) {
+      SET_ERR_COLOR;
+    } else {
+      theColor.theParts.red      = static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(col1.theColor.theParts.red),
+                                                                                static_cast<double>(col2.theColor.theParts.red),   aDouble));
+      if(numChan > 1)
+        theColor.theParts.green  = static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(col1.theColor.theParts.green),
+                                                                                static_cast<double>(col2.theColor.theParts.green), aDouble));
+      if(numChan > 2)
+        theColor.theParts.blue   = static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(col1.theColor.theParts.blue),
+                                                                                static_cast<double>(col2.theColor.theParts.blue),  aDouble));
+      if(numChan > 3)
+        theColor.theParts.alpha  = static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(col1.theColor.theParts.alpha),
+                                                                                static_cast<double>(col2.theColor.theParts.alpha), aDouble));
+      if(numChan > 4)
+        for(int i=4; i<numChan; i++)
+          theColor.thePartsA[i]  = static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(col1.theColor.thePartsA[i]),
+                                                                                static_cast<double>(col2.theColor.thePartsA[i]),   aDouble));
+    }
     return *this;
   }
 
@@ -3433,16 +3432,21 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
     if( (aDouble < 0.0) || (aDouble > 1.0) ) {
       SET_ERR_COLOR;
     } else {
-      theColor.theParts.red      = static_cast<clrChanT>((tooCol.theColor.theParts.red   - theColor.theParts.red  )*aDouble + theColor.theParts.red);
+      theColor.theParts.red      = static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(theColor.theParts.red),
+                                                                                static_cast<double>(tooCol.theColor.theParts.red),   aDouble));
       if(numChan > 1)
-        theColor.theParts.green  = static_cast<clrChanT>((tooCol.theColor.theParts.green - theColor.theParts.green)*aDouble + theColor.theParts.green);
+        theColor.theParts.green  = static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(theColor.theParts.green),
+                                                                                static_cast<double>(tooCol.theColor.theParts.green), aDouble));
       if(numChan > 2)
-        theColor.theParts.blue   = static_cast<clrChanT>((tooCol.theColor.theParts.blue  - theColor.theParts.blue )*aDouble + theColor.theParts.blue);
+        theColor.theParts.blue   = static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(theColor.theParts.blue),
+                                                                                static_cast<double>(tooCol.theColor.theParts.blue),  aDouble));
       if(numChan > 3)
-        theColor.theParts.alpha  = static_cast<clrChanT>((tooCol.theColor.theParts.alpha - theColor.theParts.alpha)*aDouble + theColor.theParts.alpha);
+        theColor.theParts.alpha  = static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(theColor.theParts.alpha),
+                                                                                static_cast<double>(tooCol.theColor.theParts.alpha), aDouble));
       if(numChan > 4)
         for(int i=4; i<numChan; i++)
-          theColor.thePartsA[i]  = static_cast<clrChanT>((tooCol.theColor.thePartsA[i]   - theColor.thePartsA[i]  )*aDouble + theColor.thePartsA[i]);
+          theColor.thePartsA[i]  = static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(theColor.thePartsA[i]),
+                                                                                static_cast<double>(tooCol.theColor.thePartsA[i]),   aDouble));
     }
     return *this;
   }
@@ -3980,12 +3984,9 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
     double outR = 0.0, outG = 0.0, outB = 0.0;
 
     if (space == colorSpaceEnum::HSL) {
-      if( (inCh1 >= 0) && (inCh1 <= 360) && (inCh3 >= 0.0) && (inCh3 <= 1.0) && (inCh2 >= 0.0) && (inCh2 <= 1.0) ) {
+      if( (inCh3 >= 0.0) && (inCh3 <= 1.0) && (inCh2 >= 0.0) && (inCh2 <= 1.0) ) {
         // Wrap h into the range [0, 360)
-        double hFrac, hTmp, hTot;
-        hFrac = static_cast<double>(std::modf(inCh1, &hTmp));
-        int hInt = static_cast<int>(hTmp) % 360;
-        hTot = hFrac + static_cast<double>(hInt);
+        double H = realWrap(inCh1, 360.0);
         // Compute the magic numbers..
         const double epsilon = 0.000001;
         double m1, m2;
@@ -4000,9 +4001,9 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
           outG = inCh3;
           outB = inCh3;
         } else {
-          outR = hslHelperVal(m1, m2, hTot+120);
-          outG = hslHelperVal(m1, m2, hTot);
-          outB = hslHelperVal(m1, m2, hTot-120);
+          outR = hslHelperVal(m1, m2, H+120);
+          outG = hslHelperVal(m1, m2, H);
+          outB = hslHelperVal(m1, m2, H-120);
         }
       }
     } else if ((space == colorSpaceEnum::LAB) || (space == colorSpaceEnum::XYZ) || (space == colorSpaceEnum::LCH)) {
@@ -4015,8 +4016,8 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
       } else {
         if (space == colorSpaceEnum::LCH) {
           Y = ( inCh1 + 16.0 ) / 116.0;
-          X = std::cos(inCh3 * ctPI / 180.0) * inCh2 / 500.0 + Y;
-          Z = Y - std::sin(inCh3 * ctPI / 180.0) * inCh2 / 200.0;
+          X = std::cos(inCh3 * PI / 180.0) * inCh2 / 500.0 + Y;
+          Z = Y - std::sin(inCh3 * PI / 180.0) * inCh2 / 200.0;
         } else {
           Y = ( inCh1 + 16.0 ) / 116.0;
           X = inCh2 / 500.0 + Y;
@@ -4068,10 +4069,7 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   double
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::hslHelperVal(double n1, double n2, double hue) {
-    if(hue>360)
-      hue -= 360;
-    if(hue<0)
-      hue += 360;
+    hue = realWrap(hue, 360.0);
     if(hue<60)
       return n1+(n2-n1)*hue/60.0;
     else if(hue<180)
@@ -4347,11 +4345,7 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
         else if(theColor.theParts.blue == rgbMaxI)
           H = 4.0 + (redF - greenF) / rangeF;
 
-        H = H * 60.0;
-        while(H<0)
-          H += 360.0;
-        while(H>=360.0)
-          H -= 360.0;
+        H = realWrap(H * 60.0, 360.0);
       }
       if (space == colorSpaceEnum::HSL)
         return std::tuple<double, double, double>(H, S, L);
@@ -4392,16 +4386,16 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
           if (B >= 0.0) {
             H = std::atan(B/A);
           } else {
-            H = std::atan(B/A) + ctPI;
+            H = std::atan(B/A) + PI;
           }
         } else { // a<0
           if (B >= 0.0) {
-            H = std::atan(B/A) + (2 * ctPI);
+            H = std::atan(B/A) + (2 * PI);
           } else {
-            H = std::atan(B/A) + ctPI;
+            H = std::atan(B/A) + PI;
           }
         }
-        H *= 180.0 / ctPI;
+        H *= 180.0 / PI;
       }
 
       if (space == colorSpaceEnum::LCH)

@@ -38,16 +38,15 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const double pi       = 3.14159265359;
   int         MaxCount = 155;
   int         MultCol  = 25;
   const double Tol      = .0001;
   std::complex<double> r1( 1.0,  0);
-  std::complex<double> r2(-0.5,  sin(2*pi/3));
-  std::complex<double> r3(-0.5, -sin(2*pi/3));
+  std::complex<double> r2(-0.5,  sin(2*mjr::PI/3));
+  std::complex<double> r3(-0.5, -sin(2*mjr::PI/3));
   std::complex<double> r4(-1.0,  0);
-  std::complex<double> r5( 0.5,  sin(2*pi/3));
-  std::complex<double> r6( 0.5, -sin(2*pi/3));
+  std::complex<double> r5( 0.5,  sin(2*mjr::PI/3));
+  std::complex<double> r6( 0.5, -sin(2*mjr::PI/3));
 
   mjr::ramCanvas3c8b theRamCanvas(4096, 4096, -1.20, 1.20, -1.20, 1.20);
 

@@ -160,7 +160,7 @@
    - ramCanvasTpl.hpp .. Implementation for ramCanvasTpl object
    - colorData.cpp ..... Constants for color computations and color schemes
    - colorData.hpp ..... Include file for colorData.cpp
-   - mapclamp.hpp ...... Fast functions used for clamping integers
+   - mjrmath.hpp ....... Simple math stuff
    - mainPage.cpp ...... Documentation
 
  About Color Type Templates

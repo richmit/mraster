@@ -42,7 +42,6 @@
 #include <iostream>                                                      /* C++ iostream            C++11    */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-const double pi     = 3.141592653589793238462643383279502884;
 const int    CSIZE  = 2048;
 const int    MAXITR = 2048;
 const double BALL   = 100;
@@ -69,7 +68,7 @@ int main(void) {
   mjr::ramCanvas3c8b   potRamCanvas(CSIZE, CSIZE), distRamCanvas(CSIZE, CSIZE);
   mjr::ramCanvas3c8b::colorType       theColor;
   double               lightHeight = 1.125;
-  double               lightAngle = pi/4;
+  double               lightAngle = mjr::PI/4;
   std::complex<double> lightDirection = exp(lightAngle*std::complex<double>(0,1));
   whyStop              why;
 
