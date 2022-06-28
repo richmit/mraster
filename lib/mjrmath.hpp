@@ -43,26 +43,6 @@ namespace mjr {
   const static double PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/** Linear interpolation between two double valus
-   @param v1 First value
-   @param v2 Second value
-   @param w  weight
-   @return (v2-v1)*w+v1. */
-  inline double interpolateLinear(double v1, double v2, double w) {
-    return (v2 - v1) * w + v1;
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/** Linear interpolation between two double valus interperted as angles in degrees
-   @param v1 First angle (in degrees)
-   @param v2 Second angle (in degrees)
-   @param w  weight
-   @return (v2-v1)*w+v1. */
-  inline double interpolateLinearAnglesDeg(double v1, double v2, double w) {
-    return (v2 - v1) * w + v1;
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /** Wrap an integer to the range [0,maxValue] via a modulus like function that wraps the value onto the range (i.e. maxOutValue+1 will map to 0).
    @param anInt The value to be wrapped
    @param maxOutValue The maximum output value
@@ -125,6 +105,35 @@ namespace mjr {
     if(aReal > static_cast<realType>(1))
       return static_cast<realType>(1);
     return aReal;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** Linear interpolation between two double valus
+   @param v1 First value
+   @param v2 Second value
+   @param w  weight
+   @return (v2-v1)*w+v1. */
+  inline double interpolateLinear(double v1, double v2, double w) {
+    return (v2 - v1) * w + v1;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** Linear interpolation between two double valus interperted as angles in degrees
+   @param v1 First angle (in degrees)
+   @param v2 Second angle (in degrees)
+   @param w  weight
+   @return (v2-v1)*w+v1. */
+  inline double interpolateLinearAnglesDeg(double v1, double v2, double w) {
+    v1 = realWrap(v1, 360.0);
+    v2 = realWrap(v2, 360.0);
+
+    if (std::abs(v2 - v1) > 180) {
+      if (v1 < v2)
+        v1 += 360;
+      else
+        v2 += 360;
+    } 
+    return realWrap((v2 - v1) * w + v1,  360.0);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

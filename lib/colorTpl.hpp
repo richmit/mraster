@@ -219,13 +219,15 @@ namespace mjr {
                                MAGENTA, //!< Color cube corner color with RGB=101
                                WHITE    //!< Color cube corner color with RGB=111
                              };
-      /** Color spaces */
-      enum class colorSpaceEnum { RGB, //!< RGB color space
-                                  HSL, //!< HSL color space
-                                  HSV, //!< HSV color space
-                                  LAB, //!< CIE-L*ab color space
-                                  XYZ, //!< XYZ color space
-                                  LCH  //!< CIE-L*ch color space
+      /** Color spaces This ENUM is used by setColorFromColorSpace, interplColorSpace, & rgb2colorSpace.  
+          In this context these color spaces use double values for each channel.  Angles (the H of HSV, HSL, & LAB) are in degrees, and will always be
+          normalized to [0, 360).  */
+      enum class colorSpaceEnum { RGB, //!< RGB color space.  Note: R, G, & B are in [0, 1] not [0, 255]
+                                  HSL, //!< HSL color space.  Note: S & L are in [0, 1] not [0, 100]
+                                  HSV, //!< HSV color space.
+                                  LAB, //!< CIE-L*ab color space.
+                                  XYZ, //!< XYZ color space.
+                                  LCH  //!< CIE-L*ch color space. 
                                 };
       //@}
 
@@ -253,6 +255,8 @@ namespace mjr {
       colorTpl(cornerColor ccolor);
       /** Uses the setColorFromString method to set the initialize the object. */
       colorTpl(const char *colorString);
+      /** Uses the setColorFromLetter method to set the initialize the object. */
+      colorTpl(const char colorChar);
       //@}
 
       /** @name Destructor */
@@ -1263,6 +1267,13 @@ namespace mjr {
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::colorTpl(const char *colorString) {
     setColorFromString(colorString);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /* constructor */
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::colorTpl(const char colorChar) {
+    setColorFromLetter(colorChar);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3385,9 +3396,28 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
       std::tuple<double, double, double> acol2 = col2.rgb2colorSpace(space);
 
       // Interpolate values
-      double out1 = mjr::interpolateLinear(std::get<0>(acol1), std::get<0>(acol2), aDouble);
-      double out2 = mjr::interpolateLinear(std::get<1>(acol1), std::get<1>(acol2), aDouble);
-      double out3 = mjr::interpolateLinear(std::get<2>(acol1), std::get<2>(acol2), aDouble);
+
+      double out1, out2, out3;
+      if ((space == colorSpaceEnum::HSL) || (space == colorSpaceEnum::HSV))
+        out1 = mjr::interpolateLinearAnglesDeg(std::get<0>(acol1), std::get<0>(acol2), aDouble);
+      else
+        out1 = mjr::interpolateLinear(std::get<0>(acol1), std::get<0>(acol2), aDouble);
+      out2 = mjr::interpolateLinear(std::get<1>(acol1), std::get<1>(acol2), aDouble);
+      if (space == colorSpaceEnum::LCH)
+        out3 = mjr::interpolateLinearAnglesDeg(std::get<2>(acol1), std::get<2>(acol2), aDouble);
+      else
+        out3 = mjr::interpolateLinear(std::get<2>(acol1), std::get<2>(acol2), aDouble);
+
+
+// //  MJR DEBUG NOTE <2022-06-28T15:47:12-0500> colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::interplColorSpace: 
+      // if ((space == colorSpaceEnum::LCH) || (space == colorSpaceEnum::LAB)) {
+      //   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> aCol;
+      //   aCol.setColorFromColorSpace(space, out1, out2, out3);
+      //   std::tuple<double, double, double> aCon = aCol.rgb2colorSpace(space);
+      //   std::cout << (space == colorSpaceEnum::LCH ? "LCH" : "LAB") << " " << out1 << " " << out2 << " " << out3 << " " << aCol << " " << std::get<0>(aCon) << " " << std::get<1>(aCon) << " " << std::get<2>(aCon) <<std::endl;
+      // }
+
+
 
       // Set color
       setColorFromColorSpace(space, out1, out2, out3);
@@ -3982,12 +4012,9 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
   colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::setColorFromColorSpace(colorSpaceEnum space, double inCh1, double inCh2, double inCh3) {
     double outR = 0.0, outG = 0.0, outB = 0.0;
-
     if (space == colorSpaceEnum::HSL) {
       if( (inCh3 >= 0.0) && (inCh3 <= 1.0) && (inCh2 >= 0.0) && (inCh2 <= 1.0) ) {
-        // Wrap h into the range [0, 360)
         double H = realWrap(inCh1, 360.0);
-        // Compute the magic numbers..
         const double epsilon = 0.000001;
         double m1, m2;
         if(inCh3 <= 0.5)
@@ -3995,51 +4022,45 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
         else
           m2 = inCh3 + inCh2 - inCh3 * inCh2;
         m1 = 2.0 * inCh3 - m2;
-        // Finish up the computation
         if(inCh2 < epsilon) {
           outR = inCh3;
           outG = inCh3;
           outB = inCh3;
         } else {
-          outR = hslHelperVal(m1, m2, H+120);
-          outG = hslHelperVal(m1, m2, H);
-          outB = hslHelperVal(m1, m2, H-120);
+          outR = unitClamp(hslHelperVal(m1, m2, H+120));
+          outG = unitClamp(hslHelperVal(m1, m2, H));
+          outB = unitClamp(hslHelperVal(m1, m2, H-120));
         }
       }
     } else if ((space == colorSpaceEnum::LAB) || (space == colorSpaceEnum::XYZ) || (space == colorSpaceEnum::LCH)) {
       double X, Y, Z;
-
       if (space == colorSpaceEnum::XYZ) {
         X = inCh1 / 100.0;
         Y = inCh2 / 100.0;
         Z = inCh3 / 100.0;
       } else {
+        Y = ( inCh1 + 16.0 ) / 116.0;
         if (space == colorSpaceEnum::LCH) {
-          Y = ( inCh1 + 16.0 ) / 116.0;
           X = std::cos(inCh3 * PI / 180.0) * inCh2 / 500.0 + Y;
           Z = Y - std::sin(inCh3 * PI / 180.0) * inCh2 / 200.0;
         } else {
-          Y = ( inCh1 + 16.0 ) / 116.0;
           X = inCh2 / 500.0 + Y;
           Z = Y - inCh3 / 200.0;
         }
-
         X = (X > 0.206893034423 ? std::pow(X, 3) : ( X - 16.0 / 116.0 ) / 7.787)  * 95.047  / 100.0;
         Y = (Y > 0.206893034423 ? std::pow(Y, 3) : ( Y - 16.0 / 116.0 ) / 7.787)  * 100.000 / 100.0;
         Z = (Z > 0.206893034423 ? std::pow(Z, 3) : ( Z - 16.0 / 116.0 ) / 7.787)  * 108.883 / 100.0;
       }
-
       outR = X *  3.2406 + Y * -1.5372 + Z * -0.4986;
       outG = X * -0.9689 + Y *  1.8758 + Z *  0.0415;
       outB = X *  0.0557 + Y * -0.2040 + Z *  1.0570;
-
-      outR = (outR > 0.0031308 ? 1.055 * std::pow(outR, 1.0 / 2.4) - 0.055 : 12.92 * outR);
-      outG = (outG > 0.0031308 ? 1.055 * std::pow(outG, 1.0 / 2.4) - 0.055 : 12.92 * outG);
-      outB = (outB > 0.0031308 ? 1.055 * std::pow(outB, 1.0 / 2.4) - 0.055 : 12.92 * outB);
+      outR = unitClamp((outR > 0.0031308 ? 1.055 * std::pow(outR, 1.0 / 2.4) - 0.055 : 12.92 * outR));
+      outG = unitClamp((outG > 0.0031308 ? 1.055 * std::pow(outG, 1.0 / 2.4) - 0.055 : 12.92 * outG));
+      outB = unitClamp((outB > 0.0031308 ? 1.055 * std::pow(outB, 1.0 / 2.4) - 0.055 : 12.92 * outB));
     } else if (space == colorSpaceEnum::RGB) {
-      outR = inCh1;
-      outG = inCh2;
-      outB = inCh3;
+      outR = unitClamp(inCh1);
+      outG = unitClamp(inCh2);
+      outB = unitClamp(inCh3);
     } else if (space == colorSpaceEnum::HSV) {
       double t;
       double f = static_cast<double>(std::modf(inCh1 * 6.0 / 360.0, &t));
@@ -4049,18 +4070,17 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
       double u = inCh3 * (1 - (inCh2 * (1 - f)));
       double w = inCh3;
       switch (i) {
-        case 0:   outR = w; outG = u; outB = p; break;
-        case 1:   outR = q; outG = w; outB = p; break;
-        case 2:   outR = p; outG = w; outB = u; break;
-        case 3:   outR = p; outG = q; outB = w; break;
-        case 4:   outR = u; outG = p; outB = w; break;
-        case 5:   outR = w; outG = p; outB = q; break;
-        default:  outR = 0; outG = 0; outB = 0; break;
+        case 0:   outR = unitClamp(w); outG = unitClamp(u); outB = unitClamp(p); break;
+        case 1:   outR = unitClamp(q); outG = unitClamp(w); outB = unitClamp(p); break;
+        case 2:   outR = unitClamp(p); outG = unitClamp(w); outB = unitClamp(u); break;
+        case 3:   outR = unitClamp(p); outG = unitClamp(q); outB = unitClamp(w); break;
+        case 4:   outR = unitClamp(u); outG = unitClamp(p); outB = unitClamp(w); break;
+        case 5:   outR = unitClamp(w); outG = unitClamp(p); outB = unitClamp(q); break;
+        default:  outR =         0.0 ; outG =         0.0 ; outB =         0.0 ; break;
       }
     } else {
       std::cerr << "ERROR: Unsupported color space used in setColorFromColorSpace!" << std::endl;
     }
-
     setColorRGB(static_cast<clrChanT>(maxChanVal * outR), static_cast<clrChanT>(maxChanVal * outG), static_cast<clrChanT>(maxChanVal * outB));
     return *this;
   }
@@ -4381,22 +4401,8 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
       double C = std::hypot(A, B);
 
       double H = 0.0;
-      if ( std::abs(A) > 1.0e-5) { // Not Grey
-        if (A >= 0.0) {
-          if (B >= 0.0) {
-            H = std::atan(B/A);
-          } else {
-            H = std::atan(B/A) + PI;
-          }
-        } else { // a<0
-          if (B >= 0.0) {
-            H = std::atan(B/A) + (2 * PI);
-          } else {
-            H = std::atan(B/A) + PI;
-          }
-        }
-        H *= 180.0 / PI;
-      }
+      if ( std::abs(A) > 1.0e-5)  // Not Grey
+        H = realWrap(atan2(B,A) * 180.0 / PI, 360.0);
 
       if (space == colorSpaceEnum::LCH)
         return std::tuple<double, double, double>(L, C, H);
