@@ -38,6 +38,7 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include <chrono>                                                        /* time                    C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
+#include <vector>
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
@@ -46,53 +47,39 @@ int main(void) {
   mjr::ramCanvas3c8b::colorType startColor("red");
   mjr::ramCanvas3c8b::colorType endColor("blue");
   mjr::ramCanvas3c8b::colorType aColor;
-  std::tuple<double, double, double> tmp;
 
-  for(int x=0; x<512; x++) {
-    theRamCanvas.drawLine(x,   0,  x,  250, aColor.interplColors(                                                        x/512.0, startColor, endColor));
-    theRamCanvas.drawLine(x, 260,  x,  510, aColor.interplColorSpace(mjr::ramCanvas3c8b::colorType::colorSpaceEnum::HSL, x/512.0, startColor, endColor));
-    theRamCanvas.drawLine(x, 520,  x,  770, aColor.interplColorSpace(mjr::ramCanvas3c8b::colorType::colorSpaceEnum::LAB, x/512.0, startColor, endColor));
-    theRamCanvas.drawLine(x, 780,  x, 1030, aColor.interplColorSpace(mjr::ramCanvas3c8b::colorType::colorSpaceEnum::HSV, x/512.0, startColor, endColor));
-    theRamCanvas.drawLine(x, 1040, x, 1290, aColor.interplColorSpace(mjr::ramCanvas3c8b::colorType::colorSpaceEnum::XYZ, x/512.0, startColor, endColor));
-    theRamCanvas.drawLine(x, 1300, x, 1550, aColor.interplColorSpace(mjr::ramCanvas3c8b::colorType::colorSpaceEnum::RGB, x/512.0, startColor, endColor));
-    theRamCanvas.drawLine(x, 1560, x, 1810, aColor.interplColorSpace(mjr::ramCanvas3c8b::colorType::colorSpaceEnum::LCH, x/512.0, startColor, endColor));
+  std::vector<mjr::ramCanvas3c8b::colorType::colorSpaceEnum> colorSpaces { mjr::ramCanvas3c8b::colorType::colorSpaceEnum::HSL,
+                                                                           mjr::ramCanvas3c8b::colorType::colorSpaceEnum::HSV,
+                                                                           mjr::ramCanvas3c8b::colorType::colorSpaceEnum::LCH,
+                                                                           mjr::ramCanvas3c8b::colorType::colorSpaceEnum::LAB,
+                                                                           mjr::ramCanvas3c8b::colorType::colorSpaceEnum::XYZ,
+                                                                           mjr::ramCanvas3c8b::colorType::colorSpaceEnum::RGB
+                                                                         };
+  for(int x=0; x<512; x++)
+    theRamCanvas.drawLine(x,   0,  x,  250, aColor.interplColors(x/512.0, startColor, endColor));
+  theRamCanvas.drawString("RGB", mjr::hersheyFont::ROMAN_SL_SANSERIF, 532, (   0+ 250)/2, "red",  1, 20);
+
+  int i=0;
+  for(auto cs : colorSpaces) {
+    for(int x=0; x<512; x++) 
+      theRamCanvas.drawLine(x, 260*(i+1), x, 260*(i+1)+250, aColor.interplColorSpace(cs, x/512.0, startColor, endColor));
+    theRamCanvas.drawString(aColor.colorSpaceToString(cs), mjr::hersheyFont::ROMAN_SL_SANSERIF, 532, 260*(i+1)+125, "red",  1, 20);
+    i++;
   }
 
-  theRamCanvas.drawString("RGB", mjr::hersheyFont::ROMAN_SL_SANSERIF, 532, (   0+ 250)/2, "red",  1, 20);
-  theRamCanvas.drawString("HSL", mjr::hersheyFont::ROMAN_SL_SANSERIF, 532, ( 260+ 510)/2, "red",  1, 20);
-  theRamCanvas.drawString("Lab", mjr::hersheyFont::ROMAN_SL_SANSERIF, 532, ( 520+ 770)/2, "red",  1, 20);
-  theRamCanvas.drawString("HSV", mjr::hersheyFont::ROMAN_SL_SANSERIF, 532, ( 780+1030)/2, "red",  1, 20);
-  theRamCanvas.drawString("XYZ", mjr::hersheyFont::ROMAN_SL_SANSERIF, 532, (1040+1290)/2, "red",  1, 20);
-  theRamCanvas.drawString("rgb", mjr::hersheyFont::ROMAN_SL_SANSERIF, 532, (1300+1550)/2, "red",  1, 20);
-  theRamCanvas.drawString("Lch", mjr::hersheyFont::ROMAN_SL_SANSERIF, 532, (1560+1810)/2, "red",  1, 20);
-
   std::cout << "Start Color (RGB) : " << startColor << std::endl;
-  tmp = startColor.rgb2colorSpace(mjr::ramCanvas3c8b::colorType::colorSpaceEnum::RGB);
-  std::cout << "Start Color (rgb) : <" << std::get<0>(tmp) << ", " << std::get<1>(tmp) << ", " << std::get<2>(tmp) << ">" << std::endl;
-  tmp = startColor.rgb2colorSpace(mjr::ramCanvas3c8b::colorType::colorSpaceEnum::HSL);
-  std::cout << "Start Color (HSL) : <" << std::get<0>(tmp) << ", " << std::get<1>(tmp) << ", " << std::get<2>(tmp) << ">" << std::endl;
-  tmp = startColor.rgb2colorSpace(mjr::ramCanvas3c8b::colorType::colorSpaceEnum::HSV);
-  std::cout << "Start Color (HSV) : <" << std::get<0>(tmp) << ", " << std::get<1>(tmp) << ", " << std::get<2>(tmp) << ">" << std::endl;
-  tmp = startColor.rgb2colorSpace(mjr::ramCanvas3c8b::colorType::colorSpaceEnum::LAB);
-  std::cout << "Start Color (Lab) : <" << std::get<0>(tmp) << ", " << std::get<1>(tmp) << ", " << std::get<2>(tmp) << ">" << std::endl;
-  tmp = startColor.rgb2colorSpace(mjr::ramCanvas3c8b::colorType::colorSpaceEnum::LCH);
-  std::cout << "Start Color (Lch) : <" << std::get<0>(tmp) << ", " << std::get<1>(tmp) << ", " << std::get<2>(tmp) << ">" << std::endl;
-  tmp = startColor.rgb2colorSpace(mjr::ramCanvas3c8b::colorType::colorSpaceEnum::XYZ);
-  std::cout << "Start Color (XYZ) : <" << std::get<0>(tmp) << ", " << std::get<1>(tmp) << ", " << std::get<2>(tmp) << ">" << std::endl;
+  for(auto cs : colorSpaces) {
+    std::tuple<double, double, double> tmp = startColor.rgb2colorSpace(cs);
+    std::cout << "Start Color (" << startColor.colorSpaceToString(cs) << ") : <" << 
+      std::get<0>(tmp) << ", " << std::get<1>(tmp) << ", " << std::get<2>(tmp) << ">" << std::endl;
+  }
 
   std::cout << "End   Color (RGB) : " << endColor << std::endl;
-  tmp = endColor.rgb2colorSpace(mjr::ramCanvas3c8b::colorType::colorSpaceEnum::RGB);
-  std::cout << "End   Color (rgb) : <" << std::get<0>(tmp) << ", " << std::get<1>(tmp) << ", " << std::get<2>(tmp) << ">" << std::endl;
-  tmp = endColor.rgb2colorSpace(mjr::ramCanvas3c8b::colorType::colorSpaceEnum::HSL);
-  std::cout << "End   Color (HSL) : <" << std::get<0>(tmp) << ", " << std::get<1>(tmp) << ", " << std::get<2>(tmp) << ">" << std::endl;
-  tmp = endColor.rgb2colorSpace(mjr::ramCanvas3c8b::colorType::colorSpaceEnum::HSV);
-  std::cout << "End   Color (HSV) : <" << std::get<0>(tmp) << ", " << std::get<1>(tmp) << ", " << std::get<2>(tmp) << ">" << std::endl;
-  tmp = endColor.rgb2colorSpace(mjr::ramCanvas3c8b::colorType::colorSpaceEnum::LAB);
-  std::cout << "End   Color (Lab) : <" << std::get<0>(tmp) << ", " << std::get<1>(tmp) << ", " << std::get<2>(tmp) << ">" << std::endl;
-  tmp = endColor.rgb2colorSpace(mjr::ramCanvas3c8b::colorType::colorSpaceEnum::LCH);
-  std::cout << "End   Color (Lch) : <" << std::get<0>(tmp) << ", " << std::get<1>(tmp) << ", " << std::get<2>(tmp) << ">" << std::endl;
-  tmp = endColor.rgb2colorSpace(mjr::ramCanvas3c8b::colorType::colorSpaceEnum::XYZ);
-  std::cout << "End   Color (XYZ) : <" << std::get<0>(tmp) << ", " << std::get<1>(tmp) << ", " << std::get<2>(tmp) << ">" << std::endl;
+  for(auto cs : colorSpaces) {
+  std::tuple<double, double, double> tmp = endColor.rgb2colorSpace(cs);
+    std::cout << "Start Color (" << endColor.colorSpaceToString(cs) << ") : <" << 
+      std::get<0>(tmp) << ", " << std::get<1>(tmp) << ", " << std::get<2>(tmp) << ">" << std::endl;
+  }
 
   theRamCanvas.writeTIFFfile("color_interp_hsl_vs_rgb.tiff");
 

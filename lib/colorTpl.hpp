@@ -1082,8 +1082,13 @@ namespace mjr {
       /** @name Alternate color space stuff */
       //@{
       /** Compute channels for given color space coordinates for the current color.  Note RGB returns float RGB normalized to 1.0.
+          @param space The color space to convert to
           @return A three-tuple with the channels. */
       std::tuple<double, double, double> rgb2colorSpace(colorSpaceEnum space);
+      /** Compute channels for given color space coordinates for the current color.  Note RGB returns float RGB normalized to 1.0.
+          @param space The color space to stringify
+          @return A string representing the color space. */
+      std::string colorSpaceToString(colorSpaceEnum space);
       //@}
 
       /** @name Color transformation functions */
@@ -4291,6 +4296,21 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
     if(anArithComp < minChanVal)
       return minChanVal;
     return static_cast<clrChanT>(anArithComp);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  std::string
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::colorSpaceToString(colorSpaceEnum space) {
+    switch (space) {
+      case colorSpaceEnum::RGB : return std::string("rgb");
+      case colorSpaceEnum::HSL : return std::string("HSL");
+      case colorSpaceEnum::HSV : return std::string("HSV");
+      case colorSpaceEnum::LAB : return std::string("Lab");
+      case colorSpaceEnum::XYZ : return std::string("XYZ");
+      case colorSpaceEnum::LCH : return std::string("Lch");
+      default:                   return std::string("ERROR");
+    }
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
