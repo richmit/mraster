@@ -59,13 +59,18 @@ int main(void) {
     theRamCanvas.drawLine(x,   0,  x,  250, aColor.interplColors(x/512.0, startColor, endColor));
   theRamCanvas.drawString("RGB", mjr::hersheyFont::ROMAN_SL_SANSERIF, 532, (   0+ 250)/2, "red",  1, 20);
 
+for(int j=1; j<1000; j++) {
   int i=0;
   for(auto cs : colorSpaces) {
     for(int x=0; x<512; x++) 
       theRamCanvas.drawLine(x, 260*(i+1), x, 260*(i+1)+250, aColor.interplColorSpace(cs, x/512.0, startColor, endColor));
-    theRamCanvas.drawString(aColor.colorSpaceToString(cs), mjr::hersheyFont::ROMAN_SL_SANSERIF, 532, 260*(i+1)+125, "red",  1, 20);
+    //theRamCanvas.drawString(aColor.colorSpaceToString(cs), mjr::hersheyFont::ROMAN_SL_SANSERIF, 532, 260*(i+1)+125, "red",  1, 20);
     i++;
   }
+}
+  std::chrono::duration<double> bmTime = std::chrono::system_clock::now() - startTime;
+  std::cout << "BM Runtime " << bmTime.count() << " sec" << std::endl;
+
 
   std::cout << "Start Color (RGB) : " << startColor << std::endl;
   for(auto cs : colorSpaces) {

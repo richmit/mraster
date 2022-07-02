@@ -40,24 +40,42 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
+  std::tuple<mjr::colorRGBA8b::channelType, mjr::colorRGBA8b::channelType, mjr::colorRGBA8b::channelType> tc3 {128, 255, 128};
+  std::tuple<mjr::colorRGBA8b::channelType, mjr::colorRGBA8b::channelType, mjr::colorRGBA8b::channelType, mjr::colorRGBA8b::channelType> tc4 {255, 128, 255, 128};
+  std::vector<mjr::colorRGBA8b::channelType> vc2 {128, 255};
+
   mjr::colorRGBA8b aColor(255, 200, 100);
   mjr::colorRGBA8b bColor(255, 200, 100, 20);
   mjr::colorRGBA8b cColor(255, 200, 100, 100);
+  mjr::colorRGBA8b dColor(255);
+  mjr::colorRGBA8b eColor(mjr::colorRGBA8b::cornerColor::RED);
+  mjr::colorRGBA8b fColor("red");
+  mjr::colorRGBA8b gColor(std::string("red"));
+  mjr::colorRGBA8b hColor("0");
 
-  std::cout << aColor << std::endl;
-  std::cout << "red 8b: " << (int)aColor.getRed8bit() << std::endl;
-  std::cout << "red F:  " << (double)aColor.getRedF() << std::endl;
+  std::cout << "a: " << aColor << std::endl;
+  std::cout << "b: " << bColor << std::endl;
+  std::cout << "c: " << cColor << std::endl;
+  std::cout << "d: " << dColor << std::endl;
+  std::cout << "e: " << eColor << std::endl;
+  std::cout << "f: " << fColor << std::endl;
+  std::cout << "g: " << gColor << std::endl;
+  std::cout << "h: " << hColor << std::endl;
 
-  std::cout << "MaxC:   " << (int)aColor.getMaxC()    << std::endl;
-  std::cout << "MinC:   " << (int)aColor.getMinC()    << std::endl;
-  std::cout << "MaxRGB: " << (int)aColor.getMaxRGB()  << std::endl;
-  std::cout << "MinRGB: " << (int)aColor.getMinRGB()  << std::endl;
+  std::cout << "a red 8b: " << (int)aColor.getRed8bit() << std::endl;
+  std::cout << "a red F:  " << (double)aColor.getRedF() << std::endl;
+
+  std::cout << "a MaxC:   " << (int)aColor.getMaxC()    << std::endl;
+  std::cout << "a MinC:   " << (int)aColor.getMinC()    << std::endl;
+  std::cout << "a MaxRGB: " << (int)aColor.getMaxRGB()  << std::endl;
+  std::cout << "a MinRGB: " << (int)aColor.getMinRGB()  << std::endl;
 
   aColor.setChan(0, 0);                                            std::cout << "aColor.setChan(0, 0);                       " << aColor << std::endl;
   aColor.setRed(0);                                                std::cout << "aColor.setRed(0);                           " << aColor << std::endl;
   aColor.setGreen(0);                                              std::cout << "aColor.setGreen(0);                         " << aColor << std::endl;
   aColor.setAlpha(0);                                              std::cout << "aColor.setAlpha(0);                         " << aColor << std::endl;
   aColor.setAll(2);                                                std::cout << "aColor.setAll(2);                           " << aColor << std::endl;
+  aColor.setColorFromVector(vc2);                                  std::cout << "aColor.setColorFromVector(vc2);             " << aColor << std::endl;
 
   aColor.setChanF(0, 0.0);                                         std::cout << "aColor.setChanF(0, 0.0);                    " << aColor << std::endl;
   aColor.setRedF(0.0);                                             std::cout << "aColor.setRedF(0.0);                        " << aColor << std::endl;
@@ -108,7 +126,10 @@ int main(void) {
 
   aColor.setColorRGB(100, 200, 210);                               std::cout << "aColor.setColorRGB(100, 200, 210);          " << aColor << std::endl;
   aColor.setColorRGBA(100, 200, 210, 0);                           std::cout << "aColor.setColorRGBA(100, 200, 210, 0);      " << aColor << std::endl;
-  bColor.setColorRGBA(0, 0, 0, 0);                                 std::cout << "bColor.setColorRGBA(0, 0, 0, 0);            " << bColor << std::endl;
+  bColor.setColorRGBA(1, 2, 3, 4);                                 std::cout << "bColor.setColorRGBA(1, 2, 3, 4);            " << bColor << std::endl;
+  bColor.setColorRGB(tc3);                                         std::cout << "bColor.setColorRGB(tc3);                    " << bColor << std::endl;
+  bColor.setColorRGBA(tc4);                                        std::cout << "bColor.setColorRGBA(tc4);                   " << bColor << std::endl;
+
   aColor.setColorFromColor(bColor);                                std::cout << "aColor.setColorFromColor(bColor);           " << aColor << std::endl;
   aColor.setColorFromString("#010203");                            std::cout << "aColor.setColorFromString(#010203);         " << aColor << std::endl;
   aColor.setColorFromString("red");                                std::cout << "aColor.setColorFromString(red);             " << aColor << std::endl;

@@ -41,6 +41,7 @@
 #define DO_LINE       1
 #define DO_CLIP_LINE  1
 #define DO_POINT      1
+#define DO_CS_CONV    1
 #define DO_POINT_NC   1
 #define DO_CLR        1
 #define DO_FFTRI      1
@@ -80,6 +81,7 @@ int main(void) {
   int yMax = theRamCanvas.get_numYpix()-1;
   canvasType::colorType aColor(255,   0, 0);
   canvasType::colorType bColor(  0, 255, 0);
+  canvasType::colorType cColor(  0,   0, 0);
   std::chrono::time_point<std::chrono::system_clock> bmStartTime, bmEndTime;
   std::chrono::duration<double> bmTime;
 

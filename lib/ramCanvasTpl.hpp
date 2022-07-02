@@ -145,6 +145,7 @@ namespace mjr {
       typedef          colorT                      colorType;          //!< Color type for pixels
       typedef typename colorT::channelType         colorChanType;      //!< Channel type for color type for pixels
       typedef typename colorT::channelArithType    colorChanArithType; //!< Type for integer channel arithmetic (clrChanArthT)
+      typedef typename colorT::colorSpaceEnum      colorSpaceEnum;
 
       /* Iterators */
       typedef colorT* pixelIterator; //!< pixel store iterators
@@ -176,6 +177,14 @@ namespace mjr {
                                 DIFFCLIP,
                                 MULTCLIP
       };
+
+      /** Enum for drawing Mode */
+      enum class interpolationType { BILINEAR, //!< bilinear
+                                     TRUNCATE, //!< Coordinates are truncated (fractional bits chopped off)
+                                     NEAREST,  //!< Coordinates are rounded
+                                     AVERAGE4, //!< Average of four sourounding pixels
+                                     AVERAGE9  //!< Average of 9 sourounding pixels
+                                   };
 
       //const static intCrdT intCrdMax = std::sqrt(std::numeric_limits<intCrdT>::max()) - 1; // Some compilers don't think sqrt(const) is const
       const static intCrdT intCrdMax = (1ul << ((sizeof(intCrdT)*CHAR_BIT-1)/2)) - 3;        //!< maximum "on canvas" integer coordinate
@@ -414,7 +423,7 @@ namespace mjr {
       int exportRasterData(void* &rasterData, intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, int redChan, int greenChan, int blueChan, int alphaChan);
       //@}
 
-      /** @name Constructors */
+      /** @name Constructors & Assignment Operators */
       //@{
       /** No arg constructor.  Sets numXpix and numYpix to -1, and pixels to NULL. */
       ramCanvasTpl();
@@ -428,6 +437,11 @@ namespace mjr {
           @param minRealY_p  Minimum real y coordinate value
           @param maxRealY_p  Maximum real y coordinate value */
       ramCanvasTpl(intCrdT numXpix_p, intCrdT numYpix_p, fltCrdT minRealX_p=-1, fltCrdT maxRealX_p=1, fltCrdT minRealY_p=-1, fltCrdT maxRealY_p=1);
+      /** Move constructor */
+      ramCanvasTpl(ramCanvasTpl&& theCanvas);
+      /** Move assignment operator */
+      ramCanvasTpl& operator=(ramCanvasTpl&& theCanvas);
+
       //@}
 
       /** @name Destructor */
@@ -509,6 +523,47 @@ namespace mjr {
           on the xfactor*xfactor pixel corresponding to each new pixel.  This algorithm tends to "fuzz-up" the result -- frequently used for super-sampling.
           @param xfactor The factor to scale down to -- must be a positive integer. */
       void scaleDownMean(int xfactor);
+      //@}
+
+      /** @name Geometric transformations (Reverse Mapping) 
+          @warning These functions are under development, and the API may change */
+      //@{
+      /** Geometric Transform via Radial Polynomial implemented with Reverse Mapping.
+          @warning These functions are under development, and the API may change
+
+          @param errorColor The color to use for pixels with no valid mapping.
+          @param interpMethod Eventually this will be the interpolation method used.  Right now it is ignored.
+          @param RPoly Coefficients for Radial Polynomial with RPoly[0] being the coefficient on the highest power term -- note this direction!!!
+          @param Xo X coordinate for the offset from image center
+          @param Yo Y coordinate for the offset from image center */
+      ramCanvasTpl geomTfrmRevRPoly(std::vector<double> const& RPoly,
+                                    double Xo = 0.0,
+                                    double Yo = 0.0,
+                                    colorT errorColor = colorT::cornerColor::GREEN,
+                                    interpolationType interpMethod = interpolationType::BILINEAR);
+      /** Geometric Transform via provided mapping function implemented with Reverse Mapping.
+          @warning These functions are under development, and the API may change
+
+          @param errorColor The color to use for pixels with no valid mapping.
+          @param interpMethod Eventually this will be the interpolation method used.  Right now it is ignored.
+          @param f The coordinate transformation function */
+      ramCanvasTpl geomTfrmRevArb(mjr::point2d<double> (*f)(double, double),
+                                  colorT errorColor = colorT::cornerColor::GREEN,
+                                  interpolationType interpMethod = interpolationType::BILINEAR);
+      /** Homogenious Affine Geometric Transform implemented with Reverse Mapping.
+          @warning These functions are under development, and the API may change
+
+           @verbatim
+           [1 0 T_x]   [S_x 0   0]   [cA  sA 0]             [x_in]    [x_out]
+           [0 1 T_y]   [0   S_y 0]   [-SA cA 0]         T * [y_in] => [y_out]
+           [0 0 1  ]   [0   0   1]   [0   0  1]             [1   ]    [1    ]
+           @endverbatim
+          @param errorColor The color to use for pixels with no valid mapping.
+          @param interpMethod Eventually this will be the interpolation method used.  Right now it is ignored.
+          @param HAMatrix The homogenious affine transform matrix (3x3) */
+      ramCanvasTpl geomTfrmRevAff(std::vector<double> const& HAMatrix,
+                                  colorT errorColor = colorT::cornerColor::GREEN,
+                                  interpolationType interpMethod = interpolationType::BILINEAR);
       //@}
 
       /** @name Convolution */
@@ -1241,6 +1296,12 @@ namespace mjr {
 
       /** @name Pixel Value Accessor with Interpolation Methods */
       //@{
+      /** Returns the interpolated color value at the the given coordinates using the given interpolation method
+          @param x The x coordinate (the type is double, but the coordinate is in the integer coordinate space.  i.e. x=1.5 is between x=1 and x=2)
+          @param y The y coordinate
+          @param interpMethod The interpolation method (default: interpolationType::BILINEAR)
+          @return Interpolated color value */
+      colorT getPxColorInterpolate(double x, double y, interpolationType interpMethod = interpolationType::BILINEAR);
       /** Returns the bilinear interpolated color value at the the given coordinates
           @param x The x coordinate (the type is double, but the coordinate is in the integer coordinate space.  i.e. x=1.5 is between x=1 and x=2)
           @param y The y coordinate
@@ -1322,8 +1383,10 @@ namespace mjr {
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Constructor
   template<class colorT, class intCrdT, class fltCrdT>
   ramCanvasTpl<colorT, intCrdT, fltCrdT>::ramCanvasTpl() {
+    //std::cout << "DEBUG: ramCanvasTpl no-arg constructor" << std::endl;
     newIntCoordsNC(-1, -1);
     pixels = NULL;
     pixelsE = NULL;
@@ -1333,8 +1396,10 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Copy Constructor
   template<class colorT, class intCrdT, class fltCrdT>
   ramCanvasTpl<colorT, intCrdT, fltCrdT>::ramCanvasTpl(const ramCanvasTpl &theCanvas) {
+    //std::cout << "DEBUG: ramCanvasTpl copy constructor" << std::endl;
     newIntCoordsNC(theCanvas.numXpix, theCanvas.numYpix);
     newRealCoords(theCanvas.minRealX, theCanvas.maxRealX, theCanvas.minRealY, theCanvas.maxRealY);
     pixels = new colorT[theCanvas.numXpix * theCanvas.numYpix];
@@ -1349,9 +1414,49 @@ namespace mjr {
         getPxColorRefNC(x, y) = theCanvas.getPxColorRefNC(x, y);
   }
 
+//  MJR TODO NOTE <2022-06-30T15:28:38-0500> ramCanvasTpl.hpp: Impliment Copy assignment operator
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Move constructor
+  template<class colorT, class intCrdT, class fltCrdT>
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::ramCanvasTpl(ramCanvasTpl<colorT, intCrdT, fltCrdT>&& theCanvas) {
+    //std::cout << "DEBUG: ramCanvasTpl move constructor" << std::endl;
+    newIntCoordsNC(theCanvas.numXpix, theCanvas.numYpix);
+    newRealCoords(theCanvas.minRealX, theCanvas.maxRealX, theCanvas.minRealY, theCanvas.maxRealY);
+    xRealAxOrientation = theCanvas.xRealAxOrientation;
+    yRealAxOrientation = theCanvas.yRealAxOrientation;
+    xIntAxOrientation  = theCanvas.xIntAxOrientation;
+    yIntAxOrientation  = theCanvas.yIntAxOrientation;
+    drawMode           = theCanvas.drawMode;
+    pixels             = theCanvas.pixels;
+    pixelsE            = theCanvas.pixelsE;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Move assignment operator
+  template<class colorT, class intCrdT, class fltCrdT>
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>&
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::operator=(ramCanvasTpl<colorT, intCrdT, fltCrdT>&& theCanvas) {
+    //std::cout << "DEBUG: ramCanvasTpl move assignment operator" << std::endl;
+    if (this != &theCanvas) {
+      newIntCoordsNC(theCanvas.numXpix, theCanvas.numYpix);
+      newRealCoords(theCanvas.minRealX, theCanvas.maxRealX, theCanvas.minRealY, theCanvas.maxRealY);
+      xRealAxOrientation = theCanvas.xRealAxOrientation;
+      yRealAxOrientation = theCanvas.yRealAxOrientation;
+      xIntAxOrientation  = theCanvas.xIntAxOrientation;
+      yIntAxOrientation  = theCanvas.yIntAxOrientation;
+      drawMode           = theCanvas.drawMode;
+      pixels             = theCanvas.pixels;
+      pixelsE            = theCanvas.pixelsE;
+    }
+    return *this;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Normal Constructor
   template<class colorT, class intCrdT, class fltCrdT>
   ramCanvasTpl<colorT, intCrdT, fltCrdT>::ramCanvasTpl(intCrdT numXpix_p, intCrdT numYpix_p, fltCrdT minRealX_p, fltCrdT maxRealX_p, fltCrdT minRealY_p, fltCrdT maxRealY_p) {
+    // std::cout << "DEBUG: ramCanvasTpl normal constructor" << std::endl;
     newIntCoordsNC(numXpix_p, numYpix_p);
     newRealCoords(minRealX_p, maxRealX_p, minRealY_p, maxRealY_p);
     pixels = new colorT[numXpix * numYpix];
@@ -2462,7 +2567,7 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
-  int 
+  int
   ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeTGAstream(std::ostream& oStream,
                                                          std::function<colorRGB8b (colorT&)> toTRU,
                                                          std::function<colorT     (colorT&)> filter) {
@@ -2883,6 +2988,20 @@ namespace mjr {
         subRamCanvas->drawPointNC(xi-x, yi-y, getPxColor(xi, yi));
 
     return subRamCanvas;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  colorT
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::getPxColorInterpolate(double x, double y, interpolationType interpMethod) {
+      switch (interpMethod) {
+        case interpolationType::BILINEAR : return getPxColorInterpBLin(x, y);
+        case interpolationType::TRUNCATE : return getPxColorInterpBLin(x, y);
+        case interpolationType::NEAREST  : return getPxColorInterpBLin(x, y);
+        case interpolationType::AVERAGE4 : return getPxColorInterpBLin(x, y);
+        case interpolationType::AVERAGE9 : return getPxColorInterpBLin(x, y);
+        default                          : return colorT("green"); // Just in case I add an enum value, and forget to update this switch.
+      }
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3896,7 +4015,7 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
-  inline void  
+  inline void
   ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawPointNC(intCrdT x, intCrdT y, colorT color) {
 #if SUPPORT_ALWAYS_PRESERVE_ALPHA
     if(numChan > 3)
@@ -3937,7 +4056,7 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
-  inline colorT& 
+  inline colorT&
   ramCanvasTpl<colorT, intCrdT, fltCrdT>::getPxColorRefNC(intCrdT x, intCrdT y) const {
     return pixels[numXpix * y + x];
   }
@@ -4349,13 +4468,101 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
-  bool ramCanvasTpl<colorT, intCrdT, fltCrdT>::supportLibTIFF() {
+  bool
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::supportLibTIFF() {
 #ifndef TIFF_FOUND
     return true;
 #else
     return false;
 #endif
   }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::geomTfrmRevArb(mjr::point2d<double> (*f)(double, double), colorT errorColor, interpolationType interpMethod) {
+    ramCanvasTpl<colorT, intCrdT, fltCrdT> newRamCanvas(numXpix, numYpix);
+    for(intCrdT y=0; y<numYpix; y++) {
+      for(intCrdT x=0; x<numXpix; x++) {
+        mjr::point2d<double> fv = f(x, y);
+        double xD = fv.x;
+        double yD = fv.y;
+        if ( (xD < 0) || (yD < 0) || (xD >= numXpix) || (yD >= numYpix) ) {
+          newRamCanvas.drawPointNC(x, y, errorColor);
+        } else {
+          newRamCanvas.drawPointNC(x, y, getPxColorInterpolate(xD, yD, interpMethod));
+        }
+      }
+    }
+    return newRamCanvas;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::geomTfrmRevAff(std::vector<double> const& HAMatrix, colorT errorColor, interpolationType interpMethod) {
+    ramCanvasTpl<colorT, intCrdT, fltCrdT> newRamCanvas(numXpix, numYpix);
+    for(intCrdT y=0; y<numYpix; y++) {
+      for(intCrdT x=0; x<numXpix; x++) {
+        double xD = HAMatrix[0] * x + HAMatrix[1] * y + HAMatrix[2];
+        double yD = HAMatrix[3] * x + HAMatrix[4] * y + HAMatrix[5];
+        if ( (xD < 0) || (yD < 0) || (xD >= numXpix) || (yD >= numYpix) ) {
+          newRamCanvas.drawPointNC(x, y, errorColor);
+        } else {
+          newRamCanvas.drawPointNC(x, y, getPxColorInterpolate(xD, yD, interpMethod));
+        }
+      }
+    }
+    return newRamCanvas;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::geomTfrmRevRPoly(std::vector<double> const& RPoly,
+                                                           double Xo,
+                                                           double Yo,
+                                                           colorT errorColor,
+                                                           interpolationType interpMethod) {
+    ramCanvasTpl<colorT, intCrdT, fltCrdT> newRamCanvas(numXpix, numYpix);
+    double srcCtrX = numXpix / 2 + Xo;
+    double srcCtrY = numYpix / 2 + Yo;
+    double rScale  = std::min(numXpix, numYpix) / 2;
+    for(intCrdT y=0; y<numYpix; y++) {
+      for(intCrdT x=0; x<numXpix; x++) {
+        double xU = (x - srcCtrX);
+        double yU = (y - srcCtrY);
+        double rU = std::hypot(xU, yU) / rScale;
+        double rD = RPoly[0];
+        for (unsigned int i=1; i<RPoly.size(); i++)
+          rD = rD*rU + RPoly[i];
+        double xD = xU * rD + srcCtrX;
+        double yD = yU * rD + srcCtrY;
+        if ( (xD < 0) || (yD < 0) || (xD >= numXpix) || (yD >= numYpix) ) {
+          newRamCanvas.drawPointNC(x, y, errorColor);
+        } else {
+          newRamCanvas.drawPointNC(x, y, getPxColorInterpolate(xD, yD, interpMethod));
+        }
+      }
+    }
+    return newRamCanvas;
+  }
+
+// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   template<class colorT, class intCrdT, class fltCrdT>
+//   std::vector<double>
+//   ramCanvasTpl<colorT, intCrdT, fltCrdT>::homogeneousAffineMatrixMult(std::vector<double> const& HAMatrix1, std::vector<double> const& HAMatrix2) {
+//     std::vector<double> matrixProduct(9);
+//     for(int i=0;i<3;i++) { // row
+//       for(int j=0;j<3;j++) { // col
+//         matrixProduct[i*3+j] = 0.0;
+//         for(int k=0;k<3;k++) {
+//           matrixProduct[i*3+j] += =hamatrix1[i*3+k]*hamatrix2[k*3+j];
+//         }
+//       }
+//     }
+//     return matrixProduct;
+//   }
 
 } // end namespace mjr
 

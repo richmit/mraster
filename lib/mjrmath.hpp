@@ -159,7 +159,58 @@ namespace mjr {
     return int(aDouble*double(maxOutValue));
   }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** Maximum of three numbers
+    @param x1 First number
+    @param x2 Second number
+    @param x3 Third number
+    @return Maximum of input values. */
+  template <typename numType>
+  inline numType max3(numType x1, numType x2, numType x3) {
+    return std::max(x1, std::max(x2, x3));
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** Minimum of three numbers
+    @param x1 First number
+    @param x2 Second number
+    @param x3 Third number
+    @return Minimum of input values. */
+  template <typename numType>
+  inline numType min3(numType x1, numType x2, numType x3) {
+    return std::min(x1, std::min(x2, x3));
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** Maximum of three numbers
+    @param x1 First number
+    @param x2 Second number
+    @param x3 Third number
+    @param x4 Fourth number
+    @return Maximum of input values. */
+  template <typename numType>
+  inline numType max4(numType x1, numType x2, numType x3, numType x4) {
+    return std::max(std::max(x1, x2), std::max(x3, x4));
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** Minimum of three numbers
+    @param x1 First number
+    @param x2 Second number
+    @param x3 Third number
+    @param x4 Fourth number
+    @return Minimum of input values. */
+  template <typename numType>
+  inline numType min4(numType x1, numType x2, numType x3, numType x4) {
+    return std::min(std::min(x1, x2), std::min(x3, x4));
+  }
+
 } // end namespace mjr
 
 #define MJR_INCLUDE_mjrmath
 #endif
+
+
+
+  
+

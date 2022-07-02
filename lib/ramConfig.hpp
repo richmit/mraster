@@ -28,12 +28,23 @@
 
 #ifndef MJR_INCLUDE_ramConfig
 
+/** @brief Define to look for 128-bit integer types.@EOL
+    Only supported on GCC & Clang! */
+#ifndef MJR_LOOK_FOR_128_BIT_TYPES
+#define MJR_LOOK_FOR_128_BIT_TYPES 1
+#endif
+
+/** @brief Define to use 128-bit unsigned values for 32-bit channel arithmatic.@EOL
+    Only supported on GCC & Clang! */
+#ifndef MJR_USE_128_FOR_32_ARITH
+// #define MJR_USE_128_FOR_32_ARITH 1
+#endif
+
 /** @brief Define color scheme index out of bound behaviour.@EOL
     Set this to the name of the function used to precondition indexes passed into color scheme functions.  Options:
           - (i)                 -- Do nothing
           - intWrap((i), (m))   -- Wrap
-          - intClamp((i), (m))  -- Clamp
-*/
+          - intClamp((i), (m))  -- Clamp */
 #ifndef IDXCOND
 #define IDXCOND(i, m) (i)
 #endif

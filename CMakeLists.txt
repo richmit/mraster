@@ -24,6 +24,7 @@ OPTION(O_PNG     "Include support for libPNG"          OFF )
 OPTION(O_IM      "Include support for ImageMagick"     OFF )
 OPTION(O_MOVIE   "Include support making movies"       ON  )
 OPTION(O_RAY     "Include support ray-tracing"         ON  )
+OPTION(O_EIGEN   "Include support for eigen"           OFF )
 OPTION(O_STATIC  "Build a static library"              ON  )
 
 set(POVRAY_HINT "c:/Program Files/POV-Ray/v3.7/bin/")
@@ -80,6 +81,10 @@ if(O_IM)
   find_package(ImageMagick COMPONENTS MagickWand MagickCore)
 endif()
 
+if(O_EIGEN)
+find_package (Eigen3 3.3 NO_MODULE)
+endif()
+
 ######################################################################################################################################################
 
 set(TARGETS_REQ_NONE   "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "biomorph2" "bmark" "chaos_game" "circles" "color_all"
@@ -94,7 +99,7 @@ set(TARGETS_REQ_MRRL   "color_lut_indexed" "color_lut_rainbows" "color_web_recta
                        "test_draw_strings" "color_interp_hsl_vs_rgb"
                        )
 set(TARGETS_REQ_OPENGL "glut_image")
-set(TARGETS_REQ_TIFF   "brownianDiffusion" "dlaBrownian" "dlaDrift" "img_process" "test_gtfrm_scale")
+set(TARGETS_REQ_TIFF   "brownianDiffusion" "dlaBrownian" "dlaDrift" "img_process" "test_gtfrm_scale" "geomTfrm_LensDistortion" "geomTfrm_Arb" "geomTfrm_Rotate")
 set(TARGETS_REQ_OPENMP "mandelbrot_bm_cplx_openmp")
 
 # Construct list of targets we can build
@@ -103,18 +108,21 @@ list(APPEND EXAMPLE_TARGETS ${TARGETS_REQ_MRRL})
 if(OpenGL_FOUND AND GLUT_FOUND)
   list(APPEND EXAMPLE_TARGETS ${TARGETS_REQ_OPENGL})
 else()
-  message(WARNING "OpenGL/GLUT programs will NOT be built!.")
+  message(WARNING "OpenGL/GLUT example programs will NOT be built!.")
 endif()
 if(OpenMP_FOUND)
   list(APPEND EXAMPLE_TARGETS ${TARGETS_REQ_OPENMP})
 else()
-  message(WARNING "OpenMP pragmmas will NOT be built!")
+  message(WARNING "OpenMP example programs will NOT be built!")
 endif()
 if(TIFF_FOUND)
   list(APPEND EXAMPLE_TARGETS ${TARGETS_REQ_TIFF})
 else()
-  message(WARNING "TIFF pragmmas will NOT be built!")
+  message(WARNING "TIFF example programs will NOT be built!")
 endif()
+
+
+list(REMOVE_DUPLICATES EXAMPLE_TARGETS)
 
 # Add a target for each example we can build
 foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
@@ -167,7 +175,7 @@ if (OPENMP_FOUND)
   endforeach(CURTGT)
 endif()
 
-# Add builtd requirements for examples using libTIFF
+# Add build requirements for examples using libTIFF
 if(TIFF_FOUND)
   foreach(CURTGT IN LISTS TARGETS_REQ_TIFF)
     target_include_directories(${CURTGT} PRIVATE ${TIFF_INCLUDE_DIRS})
