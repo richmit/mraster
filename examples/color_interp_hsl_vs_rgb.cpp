@@ -64,7 +64,7 @@ for(int j=1; j<1000; j++) {
   for(auto cs : colorSpaces) {
     for(int x=0; x<512; x++) 
       theRamCanvas.drawLine(x, 260*(i+1), x, 260*(i+1)+250, aColor.interplColorSpace(cs, x/512.0, startColor, endColor));
-    //theRamCanvas.drawString(aColor.colorSpaceToString(cs), mjr::hersheyFont::ROMAN_SL_SANSERIF, 532, 260*(i+1)+125, "red",  1, 20);
+    theRamCanvas.drawString(aColor.colorSpaceToString(cs), mjr::hersheyFont::ROMAN_SL_SANSERIF, 532, 260*(i+1)+125, "red",  1, 20);
     i++;
   }
 }

@@ -3032,10 +3032,10 @@ namespace mjr {
       colorT c1;
       colorT c2;
       colorT cF;
-
       c1.interplColors(wH, pixels[numXpix * y1i + x1i], pixels[numXpix * y1i + x2i]);
       c2.interplColors(wH, pixels[numXpix * y2i + x1i], pixels[numXpix * y2i + x2i]);
       cF.interplColors(wV, c1, c2);
+
       return cF;
     } else {
       return colorT().setToBlack();

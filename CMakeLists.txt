@@ -99,7 +99,7 @@ set(TARGETS_REQ_MRRL   "color_lut_indexed" "color_lut_rainbows" "color_web_recta
                        "test_draw_strings" "color_interp_hsl_vs_rgb"
                        )
 set(TARGETS_REQ_OPENGL "glut_image")
-set(TARGETS_REQ_TIFF   "brownianDiffusion" "dlaBrownian" "dlaDrift" "img_process" "test_gtfrm_scale" "geomTfrm_LensDistortion" "geomTfrm_Arb" "geomTfrm_Rotate")
+set(TARGETS_REQ_TIFF   "brownianDiffusion" "dlaBrownian" "dlaDrift" "img_process" "test_interp_scale" "geomTfrm_LensDistortion" "geomTfrm_Arb" "geomTfrm_Rotate")
 set(TARGETS_REQ_OPENMP "mandelbrot_bm_cplx_openmp")
 
 # Construct list of targets we can build

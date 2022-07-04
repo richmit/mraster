@@ -63,7 +63,7 @@ namespace mjr {
 
     @par Size efficiency
 
-    With an compiler supporting ISO C++, this object should take no more than the maximum of sizeof(clrChanT)*numChan, sizeof(clrMaskT), or sizeof(clrNameT).
+    With a compiler supporting ISO C++, this object should take no more than the maximum of sizeof(clrChanT)*numChan, sizeof(clrMaskT), or sizeof(clrNameT).
     For example, this means that on a 64-bit computer a pointer will be larger than this object for a color with 4, or fewer, 8-bit channels.  For this
     reason, it is almost always a mistake to 'new' objects of this type and pass around pointers in order to save memory or time.
 
@@ -905,17 +905,7 @@ namespace mjr {
           @param col2 The ending color
           @return Returns a reference to the current color object.*/
       colorTpl& interplColorSpace(colorSpaceEnum space, double aDouble, colorTpl col1, colorTpl col2);
-      /** Compute the weighted mean of the given colors.
-          In order to keep the result in range, w1,w2,w3 must be in [0,1] and w1+w2+w3=1.  This constraint is *not* checked!
-          @param w1   The first weight
-          @param w2   The second weight
-          @param w3   The third weight
-          @param col1 The first color
-          @param col2 The second color
-          @param col3 The third color */
-      colorTpl& wMean(double w1, double w2, double w3, colorTpl col1, colorTpl col2, colorTpl col3);
-      /** overload */
-      colorTpl& wMean(double w1, double w2, colorTpl col1, colorTpl col2, colorTpl col3);
+
       /** Compute the weighted mean of the given colors.
           In order to keep the result in range, w1,w2 must be in [0,1] and w1+w2=1.  This constraint is *not* checked!
           @param w1   The first weight
@@ -923,6 +913,12 @@ namespace mjr {
           @param col1 The first color
           @param col2 The second color */
       colorTpl& wMean(double w1, double w2, colorTpl col1, colorTpl col2);
+      /** overload */
+      colorTpl& wMean(double w1, double w2, colorTpl col1, colorTpl col2, colorTpl col3);
+      /** overload */
+      colorTpl& wMean(double w1, double w2, double w3, colorTpl col1, colorTpl col2, colorTpl col3);
+      /** overload */
+      colorTpl& wMean(double w1, double w2, double w3, double w4, colorTpl col1, colorTpl col2, colorTpl col3, colorTpl col4);
       //@}
 
       /** @name Logical Operators. */
@@ -3394,6 +3390,43 @@ colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::cmpRampGrey2M(int
     // If we got here, we had a problem.
     return *this;
   }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>&
+  colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan>::wMean(double w1, double w2, double w3, double w4,
+                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col1,
+                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col2,
+                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col3,
+                                                                       colorTpl<clrMaskT, clrChanT, clrChanArthT, clrNameT, numChan> col4) {
+
+    theColor.theParts.red     = static_cast<clrChanT>((static_cast<double>(col1.theColor.theParts.red)   * w1) +
+                                                      (static_cast<double>(col2.theColor.theParts.red)   * w2) +
+                                                      (static_cast<double>(col3.theColor.theParts.red)   * w3) +
+                                                      (static_cast<double>(col4.theColor.theParts.red)   * w4));
+    if(numChan > 1)
+      theColor.theParts.green = static_cast<clrChanT>((static_cast<double>(col1.theColor.theParts.green) * w1) +
+                                                      (static_cast<double>(col2.theColor.theParts.green) * w2) +
+                                                      (static_cast<double>(col3.theColor.theParts.green) * w3) +
+                                                      (static_cast<double>(col4.theColor.theParts.green) * w4));
+    if(numChan > 2)
+      theColor.theParts.blue  = static_cast<clrChanT>((static_cast<double>(col1.theColor.theParts.blue)  * w1) +
+                                                      (static_cast<double>(col2.theColor.theParts.blue)  * w2) +
+                                                      (static_cast<double>(col3.theColor.theParts.blue)  * w3) +
+                                                      (static_cast<double>(col4.theColor.theParts.blue)  * w4));
+    if(numChan > 3)
+      theColor.theParts.alpha = static_cast<clrChanT>((static_cast<double>(col1.theColor.theParts.alpha) * w1) +
+                                                      (static_cast<double>(col2.theColor.theParts.alpha) * w2) +
+                                                      (static_cast<double>(col3.theColor.theParts.alpha) * w3) +
+                                                      (static_cast<double>(col4.theColor.theParts.alpha) * w4));
+  if(numChan > 4)
+    for(int i=4; i<numChan; i++)
+      theColor.thePartsA[i]   = static_cast<clrChanT>((static_cast<double>(col1.theColor.thePartsA[i])   * w1) +
+                                                      (static_cast<double>(col2.theColor.thePartsA[i])   * w2) +
+                                                      (static_cast<double>(col3.theColor.thePartsA[i])   * w3) +
+                                                      (static_cast<double>(col4.theColor.thePartsA[i])   * w4));
+  return *this;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrMaskT, class clrChanT, class clrChanArthT, class clrNameT, int numChan>

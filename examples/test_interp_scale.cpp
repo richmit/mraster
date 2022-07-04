@@ -1,6 +1,6 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /***************************************************************************************************************************************************************
- @file      test_gtfrm_scale.cpp
+ @file      test_interp_scale.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Quick test program for getPxColorInterpBLin.@EOL
  @copyright
@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
       bRamCanvas.drawPointNC(x, y, aColor);
     }
   }
-  bRamCanvas.writeTIFFfile("test_gtfrm_scale_trunc.tiff");
+  bRamCanvas.writeTIFFfile("test_interp_scale_trunc.tiff");
 
   for(mjr::ramCanvas3c8b::coordIntType x = 0; x < bRamCanvas.get_numXpix(); x++) {
     for(mjr::ramCanvas3c8b::coordIntType y = 0; y < bRamCanvas.get_numYpix(); y++) {
@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
       bRamCanvas.drawPointNC(x, y, aColor);
     }
   }
-  bRamCanvas.writeTIFFfile("test_gtfrm_scale_near.tiff");
+  bRamCanvas.writeTIFFfile("test_interp_scale_near.tiff");
 
   for(mjr::ramCanvas3c8b::coordIntType x = 0; x < bRamCanvas.get_numXpix(); x++) {
     for(mjr::ramCanvas3c8b::coordIntType y = 0; y < bRamCanvas.get_numYpix(); y++) {
@@ -79,7 +79,7 @@ int main(int argc, char *argv[]) {
       bRamCanvas.drawPointNC(x, y, aColor);
     }
   }
-  bRamCanvas.writeTIFFfile("test_gtfrm_scale_bil.tiff");
+  bRamCanvas.writeTIFFfile("test_interp_scale_bil.tiff");
 
   for(mjr::ramCanvas3c8b::coordIntType x = 0; x < bRamCanvas.get_numXpix(); x++) {
     for(mjr::ramCanvas3c8b::coordIntType y = 0; y < bRamCanvas.get_numYpix(); y++) {
@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
       bRamCanvas.drawPointNC(x, y, aColor);
     }
   }
-  bRamCanvas.writeTIFFfile("test_gtfrm_scale_avg4.tiff");
+  bRamCanvas.writeTIFFfile("test_interp_scale_avg4.tiff");
 
   for(mjr::ramCanvas3c8b::coordIntType x = 0; x < bRamCanvas.get_numXpix(); x++) {
     for(mjr::ramCanvas3c8b::coordIntType y = 0; y < bRamCanvas.get_numYpix(); y++) {
@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
       bRamCanvas.drawPointNC(x, y, aColor);
     }
   }
-  bRamCanvas.writeTIFFfile("test_gtfrm_scale_avg9.tiff");
+  bRamCanvas.writeTIFFfile("test_interp_scale_avg9.tiff");
 
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;

@@ -54,6 +54,7 @@
 #define DO_45LINE     1
 #define DO_TRIVLN     1
 #define DO_INTRP_AVG9 1
+#define DO_INTRP_BILN 1
 #define DO_CONV       1
 
 #define DO_OUT_TIF   0
@@ -68,8 +69,8 @@
 // typedef mjr::ramCanvas1c16b canvasType;
 // typedef mjr::ramCanvas1c32b canvasType;
 // typedef mjr::ramCanvas1c64b canvasType;
-// typedef mjr::ramCanvas3c8b  canvasType;
-typedef mjr::ramCanvas4c8b  canvasType;
+typedef mjr::ramCanvas3c8b  canvasType;
+// typedef mjr::ramCanvas4c8b  canvasType;
 // typedef mjr::ramCanvas4c16b canvasType;
 // typedef mjr::ramCanvas8c8b  canvasType;
 
@@ -300,6 +301,18 @@ int main(void) {
   bmEndTime = std::chrono::system_clock::now();
   bmTime = std::chrono::system_clock::now() - bmStartTime;
   std::cout << "  DO_INTRP_AVG9 Runtime " << bmTime.count() << " sec" << std::endl;
+#endif
+
+#if DO_INTRP_BILN
+  std::cout << "Starting DO_INTRP_BILN" << std::endl;
+  bmStartTime = std::chrono::system_clock::now();
+  for(int i=0;i<REPS*1;i++)
+    for(double y=0;y<=yMax;y+=0.3)
+      for(double x=0;x<=xMax;x+=0.7)
+        theRamCanvas.drawPointNC((int)x, (int)y, theRamCanvas.getPxColorInterpBLin(x, y));
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_INTRP_BILN Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
 
 #if DO_CONV
