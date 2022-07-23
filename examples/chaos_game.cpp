@@ -1,10 +1,12 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      chaos_game.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Play the chaos Game.@EOL
  @keywords  fractal ifs
- @std       C++14
+ @std       C++20
+ @see       https://www.mitchr.me/SS/ChaosGame/index.html
  @copyright
   @parblock
   Copyright (c) 1988-2015,2017, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -29,8 +31,7 @@
  @filedetails
 
   See: https://en.wikipedia.org/wiki/Chaos_game
-
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -43,6 +44,7 @@
 #include <list>                                                          /* STL list                C++11    */
 #include <random>                                                        /* C++ random numbers      C++11    */
 #include <vector>                                                        /* STL vector              C++11    */
+#include <numbers>
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 struct ifs {
@@ -120,10 +122,10 @@ int main() {
     theRamCanvas.clrCanvasToBlack();
 
     std::vector<std::complex<double>> points;
-    double curAngle = mjr::PI/2;
+    double curAngle = std::numbers::pi/2;
     for(int i=0; i<theIFS.numPts; i++) {
       points.push_back(std::complex<double>{cos(curAngle), sin(curAngle)});
-      curAngle += 2*mjr::PI/theIFS.numPts;
+      curAngle += 2*std::numbers::pi/theIFS.numPts;
     }
 
     std::complex<double> z{0.1, 0.2};

@@ -1,9 +1,11 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      mandelbrot_potential.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     This program draws a Mandelbrot set using the "potential"@EOL
- @std       C++98
+ @std       C++20
+ @see       https://www.mitchr.me/SS/mandelbrot/index.html
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -34,7 +36,7 @@
 
      dd if=mandelbrot_potential_2.mrw skip=100 iflag=skip_bytes of=mandelbrot_potential_2.mrd
 
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -73,7 +75,8 @@ int main(void) {
     //for(int i : { 0 } ) {
     theRamCanvas.newRealCoords(ranges[i][0], ranges[i][1], ranges[i][2], ranges[i][3]);
     theRamCanvas.clrCanvasToBlack();
-    /* Compute the potential function on our grid.  For off-set points we store the potential in an array, for in-set points we store a -1.  */
+    /* Compute the potential function on our grid.  For off-set points we store the potential in an array,
+       for in-set points we store a -1.  */
     std::complex<double> z;
     for(int y=0;y<theRamCanvas.get_numYpix();y++) {
       if((y%(CSIZE/10))==0)
@@ -119,8 +122,9 @@ int main(void) {
 
     std::cout << "MIN: " << minPot << " MAX:" << maxPot << std::endl;
 
-    /* Draw a POV-Ray height field from the potential data.  This one will have the Mandelbrot set itself set to zero height (black).  This allows us to
-       render canyon-like images.  Rendering this data in 3D will tend to emphasize the edge of the set (the walls of the canyon), so a high maximum iteration
+    /* Draw a POV-Ray height field from the potential data.  This one will have the Mandelbrot set itself
+       set to zero height (black).  This allows us to render canyon-like images.  Rendering this data in 3D
+       will tend to emphasize the edge of the set (the walls of the canyon), so a high maximum iteration
        count will yield better results. */
     std::cout << "TGA_1" << std::endl;
     for(int x=0;x<theRamCanvas.get_numXpix();x++) {
@@ -129,7 +133,7 @@ int main(void) {
         if(pot >=  0) {
           pot = pot - minPot;
           pot=(0xffff-1)-pot*(0xffff-2)/(maxPot-minPot);
-          aColor.cmpGreyTGA16bit((int)pot);
+          aColor.setRGBcmpGreyTGA16bit(static_cast<uint16_t>(pot));
         } else {
           aColor.setToBlack();
         }
@@ -138,17 +142,17 @@ int main(void) {
     }
     theRamCanvas.writeTGAfile("mandelbrot_potential_a_" + std::to_string(i) + ".tga");
 
-    /* Draw a POV-Ray height field from the potential data.  This one will have the Mandelbrot set itself set the maximum height.  This allows us to render
-       plateau-like images. */
+    /* Draw a POV-Ray height field from the potential data.  This one will have the Mandelbrot set itself
+       set the maximum height.  This allows us to render plateau-like images. */
     std::cout << "TGA_2" << std::endl;
     for(int x=0;x<theRamCanvas.get_numXpix();x++)
       for(int y=0;y<theRamCanvas.get_numYpix();y++)
         if(theValues[x][y] <  0)
-          theRamCanvas.drawPoint(x, y, aColor.cmpGreyTGA16bit(0xffff-1));
+          theRamCanvas.drawPoint(x, y, aColor.setRGBcmpGreyTGA16bit(0xffff-1));
     theRamCanvas.writeTGAfile("mandelbrot_potential_b_" + std::to_string(i) + ".tga");
 
-    /* We dump out 16-bit unsigned integers less than 2^15 so that they may be interpreted as signed integers by tools like VisIT which might read the data
-       via the BOV file. */
+    /* We dump out 16-bit unsigned integers less than 2^15 so that they may be interpreted as signed
+       integers by tools like VisIT which might read the data via the BOV file. */
     std::cout << "RAW_2" << std::endl;
     mjr::ramCanvas1c16b theRamCanvasG(CSIZE, CSIZE);
     for(int x=0;x<theRamCanvasG.get_numXpix();x++) {

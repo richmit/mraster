@@ -1,9 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      newton_bm_real.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Benchmark drawing a Newton fractal using real types and arithmetic.@EOL
- @std       C++98
+ @std       C++20
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -25,7 +26,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -48,8 +49,8 @@ int main(void) {
       int count = 0;
       while(count < MaxCount                                                            &&
             ((zx-1) * (zx-1) + zy * zy >= Tol)                                          &&
-            ((zx+.5) * (zx+.5) + (zy-sin(2*mjr::PI/3)) * (zy-sin(2*mjr::PI/3)) >= Tol)  &&
-            ((zx+.5) * (zx+.5) + (zy+sin(2*mjr::PI/3)) * (zy+sin(2*mjr::PI/3)) >= Tol)) {
+            ((zx+.5) * (zx+.5) + (zy-sin(2*std::numbers::pi/3)) * (zy-sin(2*std::numbers::pi/3)) >= Tol)  &&
+            ((zx+.5) * (zx+.5) + (zy+sin(2*std::numbers::pi/3)) * (zy+sin(2*std::numbers::pi/3)) >= Tol)) {
         mjr::ramCanvas3c8b::coordFltType botx = 3*(zx * zx - zy * zy);
         mjr::ramCanvas3c8b::coordFltType boty = 3*(2 * zx * zy);
 
@@ -67,9 +68,9 @@ int main(void) {
 
       if((zx-1) * (zx-1) + zy * zy < Tol)
         theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(cCol, 0, 0));
-      else if((zx+.5) * (zx+.5) + (zy-sin(2*mjr::PI/3)) * (zy-sin(2*mjr::PI/3)) <= Tol)
+      else if((zx+.5) * (zx+.5) + (zy-sin(2*std::numbers::pi/3)) * (zy-sin(2*std::numbers::pi/3)) <= Tol)
         theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0, cCol, 0));
-      else if((zx+.5) * (zx+.5) + (zy+sin(2*mjr::PI/3)) * (zy+sin(2*mjr::PI/3)) <= Tol)
+      else if((zx+.5) * (zx+.5) + (zy+sin(2*std::numbers::pi/3)) * (zy+sin(2*std::numbers::pi/3)) <= Tol)
         theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0, 0, cCol));
     }
   }

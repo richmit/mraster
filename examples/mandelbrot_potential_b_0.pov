@@ -1,8 +1,10 @@
 // -*- Mode:pov; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
- @file      mandelbrot_potential.pov
+/*******************************************************************************************************************************************************.H.S.**/
+/**
+ @file      mandelbrot_potential_b_0.pov
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Render height field in mandelbrot_potential_2.tga.@EOL
+ @see       https://www.mitchr.me/SS/mandelbrot/index.html
  @copyright
   @parblock
   Copyright (c) 2001-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -24,7 +26,7 @@
   TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   @endparblock
  @filedetails
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 #include "colors.inc"
 

@@ -1,9 +1,11 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      peterdejong.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw a Peter de Jong Attractor.@EOL
- @std       C++98
+ @std       C++20
+ @see       https://www.mitchr.me/SS/swirl/index.html
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -25,7 +27,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -64,7 +66,7 @@ int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int BSIZ = 7680;
   mjr::ramCanvas1c16b::colorType aColor;
-  aColor.setAll(1);
+  aColor.setChans(1);
   for(int j=0; j<NPR; j++) {
     mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -2, 2, -2, 2);
 
@@ -87,8 +89,8 @@ int main(void) {
       double xNew = std::sin(a*y + e) - std::cos(b*x + f);
       double yNew = std::sin(c*x + g) - std::cos(d*y + h);
       theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColor(x, y).tfrmAdd(aColor));
-      if(theRamCanvas.getPxColor(x, y).getRed() > maxII) {
-        maxII = theRamCanvas.getPxColor(x, y).getRed();
+      if(theRamCanvas.getPxColor(x, y).getC0() > maxII) {
+        maxII = theRamCanvas.getPxColor(x, y).getC0();
         if(maxII > 16384) { // 1/4 of max possible intensity
           std::cout << "ITER(" << j <<  "): " << i << " MAXS: " << maxII << " EXIT: Maximum image intensity reached" << std::endl;
           break;
@@ -116,7 +118,7 @@ int main(void) {
     mjr::ramCanvas3c8b::colorType bColor;
     for(int yi=0;yi<theRamCanvas.get_numYpix();yi++)
       for(int xi=0;xi<theRamCanvas.get_numXpix();xi++)
-        anotherRamCanvas.drawPoint(xi, yi, bColor.cmpColorRamp(static_cast<int>(theRamCanvas.getPxColor(xi, yi).getRed() * 1275 / maxII), "0RYBCW"));
+        anotherRamCanvas.drawPoint(xi, yi, bColor.cmpRGBcolorRamp(static_cast<mjr::ramCanvas3c8b::csIdxType>(theRamCanvas.getPxColor(xi, yi).getC0() * 1275 / maxII), "0RYBCW"));
 
     anotherRamCanvas.writeTIFFfile("peterdejong_" + std::to_string(j) + ".tiff");
   }

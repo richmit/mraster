@@ -1,9 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      color_all.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw every possible color in 24-bit.@EOL
- @std       C++98
+ @std       C++20
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -28,10 +29,10 @@
  @filedetails
 
   This is a very simple program that plots a point of EVERY possible 24-bit color.  This program illustrates how to count by bytes, set colors in byte order,
-  how to avoid all the work and do it with simple integers via setColorFromPackedIntABGR, how to count via Grey code order, and how to reduce to 216 web safe
+  how to avoid all the work and do it with simple integers via setRGBAfromLogPackIntABGR, how to count via Grey code order, and how to reduce to 216 web safe
   color.
 
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -57,13 +58,13 @@ int main(void) {
   mjr::ramCanvas3c8b::colorType aColor;
   for(int y=0;y<theRamCanvas_int.get_numYpix();y++) {
     for(int x=0;x<theRamCanvas_int.get_numXpix();x++) {
-      aColor.setColorFromPackedInt(count, 0, 1, 2, 3);
+      aColor.setRGBfromLogPackIntGen(count, 0, 1, 2);
       theRamCanvas_iii.drawPoint(x, y, aColor);
-      aColor.setColorFromPackedIntABGR(count);
+      aColor.setRGBfromLogPackIntABGR(count);
       theRamCanvas_int.drawPoint(x, y, aColor);
-      aColor.setColorFromPackedIntABGR(igray(count));
+      aColor.setRGBfromLogPackIntABGR(igray(count));
       theRamCanvas_gry.drawPoint(x, y, aColor);
-      aColor.setColorRGB(red, green, blue);
+      aColor.setChans(red, green, blue);
       theRamCanvas_rgb.drawPoint(x, y, aColor);
       aColor.tfrmWebSafe216();
       theRamCanvas_web.drawPoint(x, y, aColor);

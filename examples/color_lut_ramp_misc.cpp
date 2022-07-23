@@ -1,9 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      color_lut_ramp_misc.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Demonstrate the cmpColorRamp (general color ramp) function
- @std       C++98
+ @brief     Demonstrate the cmpRGBcolorRamp (general color ramp) function
+ @std       C++20
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -25,7 +26,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -33,43 +34,37 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include <chrono>                                                        /* time                    C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
+#include <vector>                                                        /* STL vector              C++11    */ 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  mjr::ramCanvasRGB8b theRamCanvas(1024, 1024);
-  mjr::colorRGB8b aColor(0,0,0);
+  mjr::ramCanvasRGB8b theRamCanvas(512, 512);
+  mjr::colorRGB8b aColor(1,1,1);
 
-//  mjr::ramCanvas3c8b::colorType corners[7] = { mjr::ramCanvas3c8b::colorType("red"),   mjr::ramCanvas3c8b::colorType("yellow"),
-//                           mjr::ramCanvas3c8b::colorType("green"), mjr::ramCanvas3c8b::colorType("cyan"),
-//                           mjr::ramCanvas3c8b::colorType("blue"),  mjr::ramCanvas3c8b::colorType("magenta"),
-//                           mjr::ramCanvas3c8b::colorType("red")};
-//
-//  mjr::ramCanvas3c8b::colorType corners2[7] = { mjr::ramCanvas3c8b::colorType(mjr::ramCanvas3c8b::colorType::cornerColors::RED),   mjr::ramCanvas3c8b::colorType(mjr::ramCanvas3c8b::colorType::cornerColors::YELLOW),
-//                            mjr::ramCanvas3c8b::colorType(mjr::ramCanvas3c8b::colorType::cornerColors::GREEN), mjr::ramCanvas3c8b::colorType(mjr::ramCanvas3c8b::colorType::cornerColors::CYAN),
-//                            mjr::ramCanvas3c8b::colorType(mjr::ramCanvas3c8b::colorType::cornerColors::BLUE),  mjr::ramCanvas3c8b::colorType(mjr::ramCanvas3c8b::colorType::cornerColors::MAGENTA),
-//                            mjr::ramCanvas3c8b::colorType(mjr::ramCanvas3c8b::colorType::cornerColors::RED)};
-//
-//  double anchors[7] = {0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
-//  for(int i=0; i<7; i++)
-//    anchors[i] = anchors[i]/6.0;
+  std::vector<double> anchors {390, 425, 445, 495, 540, 600, 685, 830};
+  std::vector<mjr::colorRGB8b> corners(8);
 
-  double anchors[8] = {390, 425, 445, 495, 540, 600, 685, 830};
+  corners[0].setChans_dbl(  4.735895e-04, -3.803366e-04,  6.188242e-03);
+  corners[1].setChans_dbl(  2.408992e-02, -3.213844e-02,  6.140333e-01);
+  corners[2].setChans_dbl( -1.389196e-03,  2.282020e-03,  1.000000e+00);
+  corners[3].setChans_dbl( -1.405614e-01,  5.221071e-01,  1.304521e-01);
+  corners[4].setChans_dbl(  1.692925e-01,  1.000000e+00, -8.184450e-03);
+  corners[5].setChans_dbl(  1.000000e+00,  2.463630e-01, -2.764747e-03);
+  corners[6].setChans_dbl(  2.693146e-02, -6.494247e-04,  7.366005e-06);
+  corners[7].setChans_dbl(  1.436555e-06, -2.633831e-09,  4.411618e-11);
 
-  mjr::colorRGB8b corners[8];
+  aColor.setToWhite();
+  for(auto x : anchors) {
+    int xi = static_cast<int>(x) - 380;
+    theRamCanvas.drawLine(xi, 0, xi, theRamCanvas.get_numYpix()-1, aColor);
+  }
 
-  corners[0].setColorFromF(  4.735895e-04, -3.803366e-04,  6.188242e-03);
-  corners[1].setColorFromF(  2.408992e-02, -3.213844e-02,  6.140333e-01);
-  corners[2].setColorFromF( -1.389196e-03,  2.282020e-03,  1.000000e+00);
-  corners[3].setColorFromF( -1.405614e-01,  5.221071e-01,  1.304521e-01);
-  corners[4].setColorFromF(  1.692925e-01,  1.000000e+00, -8.184450e-03);
-  corners[5].setColorFromF(  1.000000e+00,  2.463630e-01, -2.764747e-03);
-  corners[6].setColorFromF(  2.693146e-02, -6.494247e-04,  7.366005e-06);
-  corners[7].setColorFromF(  1.436555e-06, -2.633831e-09,  4.411618e-11);
-
-  for(int x=0;x<theRamCanvas.get_numXpix();x++)
-    for(int y=0;y<theRamCanvas.get_numYpix();y++)
-      theRamCanvas.drawPoint(x, y, aColor.cmpColorRamp(x, 8, anchors, corners));
+  for(int i=0; i<100; i++) 
+    for(int x=390;x<=830;x++) {
+      int xi = static_cast<int>(x) - 380;
+      theRamCanvas.drawVertLineNC(50, theRamCanvas.get_numYpix()-50, xi, aColor.cmpColorRamp(x, anchors, corners));
+    }
 
   theRamCanvas.writeTIFFfile("color_lut_ramp_misc.tiff");
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;

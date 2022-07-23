@@ -1,10 +1,12 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      sic.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw fractals inspired by the book Symmetry in Chaos.@EOL
- @std       C++98
+ @std       C++20
  @see       sic_search.cpp
+ @see       https://www.mitchr.me/SS/sic/index.html
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -30,7 +32,7 @@
 
   Fractals inspired by the book "Symmetry in Chaos" by Michael Field and Martin Golubitsky.
 
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -80,7 +82,7 @@ class g2rgb8 {
     g2rgb8(uint64_t newFactor) { factor = static_cast<int>(newFactor); }
     mjr::colorRGB8b operator() (mjr::ramCanvas1c16b::colorType c) {
       mjr::colorRGB8b retColor;
-      return retColor.cmpColorRamp(c.getRed() * 1275 / factor, "0RYBCW");
+      return retColor.cmpRGBcolorRamp(static_cast<mjr::ramCanvas3c8b::csIdxType>(c.getC0() * 1275 / factor), "0RYBCW");
     }
 };
 
@@ -89,7 +91,7 @@ int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int BSIZ = 7680;
   mjr::ramCanvas1c16b::colorType aColor;
-  aColor.setAll(1);
+  aColor.setChans(1);
   //for(int j=0; j<NPR; j++) {
     for(int j : { 0 } ) {
     mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, params[j][7], params[j][8], params[j][9], params[j][10]);
@@ -113,8 +115,8 @@ int main(void) {
       typename mjr::ramCanvas1c16b::coordFltType x=z.real(), y=z.imag();
       if(i>1000)
         theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColor(x, y).tfrmAdd(aColor));
-      if(theRamCanvas.getPxColor(x, y).getRed() > maxII) {
-        maxII = theRamCanvas.getPxColor(x, y).getRed();
+      if(theRamCanvas.getPxColor(x, y).getC0() > maxII) {
+        maxII = theRamCanvas.getPxColor(x, y).getC0();
         if(maxII > 16384) { // 1/4 of max possible intensity
           std::cout << "ITER(" << j <<  "): " << i << " MAXS: " << maxII << " EXIT: Maximum image intensity reached" << std::endl;
           break;
@@ -142,8 +144,8 @@ int main(void) {
     std::cout << "ITER(" << j <<  "): " << "MAX" << std::endl;
     maxII = 0;
     for(auto& pixel : theRamCanvas)
-      if(pixel.getRed() > maxII)
-        maxII = pixel.getRed();
+      if(pixel.getC0() > maxII)
+        maxII = pixel.getC0();
 
     std::cout << "ITER(" << j <<  "): " << "TIFF" << std::endl;
     /* Dump the 16-bit grayscale TIFF */

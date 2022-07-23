@@ -1,7 +1,6 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
- @file      colorData.hpp
- @author    Mitch Richling <https://www.mitchr.me>
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      colorData.hpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Header for the colorData array declaration@EOL
@@ -26,7 +25,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 #ifndef MJR_INCLUDE_colorData
 

@@ -1,5 +1,6 @@
-// -*- Mode:C; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+// -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      colorData.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Definition of the colMatchPoints array@EOL
@@ -24,7 +25,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 #include <cstdint>                                                       /* std:: C stdint.h        C++11    */
 

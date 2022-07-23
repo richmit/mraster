@@ -1,5 +1,6 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      mainPage.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Doxygen content.@EOL
@@ -24,18 +25,20 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 /**
  @mainpage
  Introduction
  ============
 
- This library delivers flexible and easy programmatic access to a broad range of low level, high performance raster graphics drawing techniques.
+ This library delivers flexible and easy access to a broad range of low level, high performance raster graphics techniques.
 
- The primary use case is direct image synthesis for visualization of mathematical objects
+ The primary use case is direct image synthesis for mathematical visualization
 
    - Raster based fractals like the Mandelbrot set
+
+   - strange attractor projections, incidence histograms, bifurcation plots, etc...
 
    - Real functions on R^2 (level curves, filled contours, scalar fields, etc...)
 
@@ -45,11 +48,9 @@
 
    - Povray Maps (Bump, texture, and normal) and Height fields
 
-   - Continuous color schemes for 1) Drawing tools (Inkscape), 2) SVG files, 3) Scientific visualization tools (Visit)
+ Secondary use cases include
 
- Secondary use cases mostly include research topics
-
-   - Back end for a my ray tracing manifolds with non-linear optics in 4D euclidean space
+   - Backend for my ray tracing tools (manifolds with non-linear optics in 4D euclidean space)
 
    - Optical distortion correction
 
@@ -59,64 +60,75 @@
 
    - Image compression
 
+   - Images with very high HDR and/or channel depth -- astrographs, satellite imagery, etc...
+
  Design goals:
 
    - Extreme portability (ISO C++ only, minimal external library requirements, etc...)
 
-   - Ease of use and adaptability to many use cases
+   - Ease of use
 
-     What do I mean by "adaptability"?  For example, colors may be set via naive types, numeric characters, hex strings, web color hex strings, name strings,
-     enumerated corner names, symbolic characters, or floating point numbers.  The idea is to make the classes adapt to the setting in which they are being
-     used, and not to force programmers to adapt.
+     My goal was to be able to hand this package to a student with minimal C++ experience, and have them be able to create a Mandelbrot image in an few
+     minutes.  For the most part my students were very successful!
+
+   - Adaptability to many use cases
+
+     My goal is to enable people with existing code to use this library to create images without rearchtecting their code.  This is especially important
+     for mathematisons and scientests who may not be C++ expertes.
+
+     The idea is to make the classes adapt to the setting in which they are being used, and not to force programmers to adapt.  For example, colors may be set
+     via naive types, numeric characters, hex strings, web color hex strings, name strings, enumerated corner names, symbolic characters, or floating point
+     numbers.  As another exmple points for drawing functison be be provided as coordinate pairs, point objects, complex numbers, tuples, arrays, etc...
 
    - High performance
-
-     When performance and portability are at odds, portability wins.
 
  History
  =======
 
+
  This library began in the mid 80's as an abstraction layer on top of Microsoft, Apple, and X11 GUI APIs.  It was written in C and made heavy use of macros to
  translate my "wrapper API" into the native API.  The primary goal was to draw a mathematical object on screen, and allow the user to interact with it.
 
- In the late 80s and early 90s I began to make use of HPC hardware (supercomputers) located at various sites around the globe and was faced with the new
- challenge of drawing pictures without the aid of a graphics device or underlying APIs.  In order to use remote supercomputers to draw pictures off screen, I
- added a "RAM frame buffer" to this library.  Around the same time I began to take serious advantage of OpenGL hardware and software on RS/6000 and HP
- workstations.  This spelled the end for the library as it had existed before, and started an evolution to exclusively supporting RAM frame buffers.
+ As I began to make use of supercomputers at far flung locations around the globe, I was faced with the new challenge of drawing pictures without the aid of a
+ graphics device or underlying APIs.  In response I added a "RAM frame buffer" to this library.  Eventually OpenGL became my on-screen graphics API of choice, leaving
+ this library to evolve toward exclusively supporting RAM frame buffers.
 
  Once the limitations of adapting to underlying GUI APIs was removed, I was free to provide better organization and capabilities for abstraction and extension
- within the library itself.  The natural answer to both was reimplementing the entire thing in C++.
+ within the library itself.  The natural answer to both was rewriting the entire thing in C++.
 
- In the mid 90's I found myself moving beyond 32bit RGBA -- RAW camera images, astrophotographs from CCDs, microscope imagers, and digital film scanners
- producing 16/32-bit greyscale and 48-bit RGB.  So I used templates to allow the ramCanvas to support such images, added quite a lot of image processing
- functionality, and broadened image file support (non-standard TIFF and FITS).
+ Eventually I found myself moving beyond 32bit RGBA -- RAW camera images, astro-photographs from CCDs, microscope imaging devices, and digital film scanners producing
+ 16/32-bit greyscale and 48-bit RGB.  So I used templates to allow the ramCanvas to support such images, added quite a lot of image processing functionality,
+ and broadened image file support using external libraries.  The code required quite a bit of low-level trickery in order to get the best performance from the
+ C++ compilers of the day.
 
- Later tools began to appear for high dynamic range images, and standard image formats began to become broadly supported.  Around this same time, FOSS image
- processing platforms (imagej, GIMP, and ImageMagick) started to become more feature rich and robust.  Once I started using these tools, I refactored this
- library by removing external image library support (CFITSIO, libtiff, libjpeg, and libpng) dependencies and most of the image processing functionality
- (spatial methods, FFT, and general geometric transforms). This left behind a small kernel of routines for basic raster image drawing.
+ Eventually the support burden associated with supporting a dozen external image I/O libraries became too much.  So I decided to trim that down to just
+ libTIFF -- TIFF is both broadly supported and can represent most of the image types provided my mraster.  libTIFF is only required for reading images, so the
+ library is still free of dependencies for most of the identified use cases.
 
- Later I removed floating point images, and added optional libtiff support back.  This was done in such a way that most canvas objects may now be written to
- disk in a bit perfect way, and then read back in.  libtiff is only required for reading images, so the library is still free of dependencies for most of the
- identified use cases.
+ When C++20 became widely supported I decided it was time for a complete refactor.  Most of the low-level trickery used in the code to achieve high
+ performance was no longer required because compilers were so much smarter.  In particular the ugly performance hack of overlaying a struct on the channel
+ arrays became unnecessary.  With the removal of the structs, I was free to remove the names they imposed -- eliminating the confusing RGB'esq references.  I
+ was also able to remove most of the manual loop unrolling!  In addition to simplifying performance critical code, C++ also provided a real opportunity to
+ refactor the templates using concepts resulting in smaller, safer, simpler code.
+
+ And that's how we got the mraster we have today.  
 
  Kool features
  =============
 
-   - It has quite a bit of documentation generated with doxygen.  I used this project to really learn how doxygen works, and the result was more
-     documentation than code. :)
+   - It has quite a bit of documentation generated with doxygen.  
 
    - Portable C++.
 
    - Good performance.
 
-   - Write support for some image formats with no dependency on external libraries.
+   - Write support for TGA and TIFF images with no dependency on external libraries.
 
      - TGA (24-bit and the non-standard 8/16/32-bit greyscale images used by PovRay).
 
      - TIFF (usually bit perfect representations)
 
-   - Reasonably efficient techniques are used for primitive scanline conversion and clipping.
+   - Efficient techniques for primitive scanline conversion and clipping.
 
    - Simple, but powerful, color support including HSV, wavelength, and RGB color specifications.  Unique color schemes are supported including 256,
      765, and 1020 level grey maps.  I have also included six different RGB color ramps (768 levels for 24-bit truecolor).  In addition, a 65K
@@ -124,23 +136,21 @@
 
    - "moveTo/lineTo" and "absolute" techniques are supported.
 
+   - Old school "pixel paint" techniques are supported (set, xor, and, etc....)
+
+   - Conditional compilation can be used to remove "moveTo/lineTo" and "pixel paint" -- these features can impose a 2x-3x performance penality.
+
    - Every canvas has both an integer and real coordinate system.  The orientation of all axes is under user control.
 
    - The precision of floating point pixel coordinates is user selectable, as is the integer type used for pixel coordinate values.
 
-   - Conditional compilation techniques can render different forms of the library tuned for various tasks.  For example, the moveTo/lineTo subsystem
-     can be disabled.
-
-   - Special versions of functions exist that have no error checking or clipping that provide abstraction for extensions, but don't impose a speed
-     penalty or a deep knowledge of C++.
 
  Notes on the Code
  =================
 
  The code for this library all lives within the namespace of 'mjr' -- my initials.  This should help to avoid namespace conflicts.
 
- At this time everything is mostly implemented in header files with only large, static data sets placed into libraries.  This is a serious shift from the
- library based system used before.
+ At this time everything is mostly implemented in header files with only large, static data sets placed into libraries.  
 
  As far as I know this code infringes upon no patents or other IP.
 
@@ -176,7 +186,7 @@
            |---------+---------+------+-------+------------------+-------------------------------------------------|
            |       3 |       8 | RGB  |    24 | 24-bit truecolor | Very common format.                             |
            |       4 |       8 | RGBA |    32 | truecolor+alpha  | Very common format.                             |
-           |       3 |      16 | RGB  |    48 | 48-bit color     | High quality digital camera sensors.             |
+           |       3 |      16 | RGB  |    48 | 48-bit color     | High quality digital camera sensors.            |
            |       3 |      32 | RGB  |    96 | 96-bit color     | Usually a fusion from multiple CCDs             |
            |       1 |       8 | Grey |     8 | 8-bit greyscale  | Surveillance and Low Quality scientific imaging |
            |       1 |      16 | Grey |    16 | 16-bit greyscale | Typical scientific CCD equipment                |
@@ -204,7 +214,7 @@
 
  This library supports both the "moveTo/lineTo" paradigm (i.e. move to A, draw line to B), and the "absolute" paradigm (i.e. draw a line from A to B).
  Because of this, some primitive drawing functions also have forms with fewer coordinates specified.  For example, we have a point drawing function that takes
- no arguments.  just with fewer coordinates.  Some primitives, like circles, require extra parameters to describe the primitive.  Such parameters right before
+ no arguments.  Just with fewer coordinates.  Some primitives, like circles, require extra parameters to describe the primitive.  Such parameters right before
  the color arguments or last in the argument list if no color is specified.
 
  Various Color Schemes
@@ -272,7 +282,7 @@
  --------------
 
  The color class implements many common and/or useful color cube graph based color schemes directly via named methods.  In addition, the class
- supports all graphs via the cmpColorRamp method -- this method takes a simple list of edges to traverse.
+ supports all graphs via the cmpRGBcolorRamp method -- this method takes a simple list of edges to traverse.
 
  The Color Cube Rainbow
  ----------------------
@@ -286,7 +296,7 @@
  This is color scheme is not suggested for general use; however, ignoring this advice is so popular that a special method provides named support for the
  color cube rainbow:
 
-  - RYGCBMR -- cmpClrCubeRainbow()
+  - RYGCBMR -- setRGBcmpClrCubeRainbow()
 
  If we expand to the edge face/diagonal graph, then we have may more six segment cycles not involving white or black.  None of them are commonly
  used; however, in some cases they preform better then the standard color cube rainbow map -- because the regions of extreme nonlinear perception in
@@ -371,12 +381,12 @@
  through green, and ends in red. It suffers from the same defects as the color cube rainbow; however, its use is so common that special support is provided
  via a named method.
 
-  - BCGYR -- cmpColdToHot()
+  - BCGYR -- setRGBcmpColdToHot()
 
  The traditional cold to hot ramp can be improved -- this is my personal opinion.  This new ramp still has the same problems the color cube rainbow has;
  however, it is more attractive.  This one moves from white (ice), up to water (blue), and then up to red (hot) via yellow.
 
-  - WCBYR -- cmpIceToWaterToHot()
+  - WCBYR -- setRGBcmpIceToWaterToHot()
 
  Constant Intensity Cycles
  -------------------------
@@ -384,8 +394,8 @@
  Two cycles, with three edges each, exhibiting constant intensity for every color in the color scheme are genuinely useful.  They have the advantage that they
  always render a "bright" color.  The lower intensity version is best for projected media that don't do well with yellow.
 
-  - CMY == cmpConstTwoRamp() -- intensity == 2
-  - BRG == cmpConstOneRamp() -- intensity == 1
+  - CMY == setRGBcmpConstTwoRamp() -- intensity == 2
+  - BRG == setRGBcmpConstOneRamp() -- intensity == 1
 
  One Segment Diverging Maps
  --------------------------
@@ -395,14 +405,14 @@
 
  While rarely used, the following maps are useful and suggested.  None of them have the problems associated with the color cube rainbow.
 
-  - YC  ==  cmpUpDownRampBr()
-  - YM  ==  cmpUpDownRampBg()
-  - MC  ==  cmpUpDownRampGr()
-  - MY  ==  cmpUpDownRampGb()
-  - CM  ==  cmpUpDownRampRg()
-  - CY  ==  cmpUpDownRampRb()
+  - YC  ==  setRGBcmpUpDownRampBr()
+  - YM  ==  setRGBcmpUpDownRampBg()
+  - MC  ==  setRGBcmpUpDownRampGr()
+  - MY  ==  setRGBcmpUpDownRampGb()
+  - CM  ==  setRGBcmpUpDownRampRg()
+  - CY  ==  setRGBcmpUpDownRampRb()
 
- The naming convention for the methods is not obvious.  Take, for example, cmpUpDownRampBr.  This is so named because of the computational algorithm
+ The naming convention for the methods is not obvious.  Take, for example, setRGBcmpUpDownRampBr.  This is so named because of the computational algorithm
  used to compute the scheme: Blue up, red down, green constant (maxChanVal).
 
  Three Segment Diverging Maps
@@ -428,26 +438,26 @@
  corners of the cube.  We call this new vertex 'H' -- for "Half way between everything". Using this new vertex, we have the following saturation
  based color schemes:
 
-  - HR -- cmpRampGrey2R()
-  - HG -- cmpRampGrey2G()
-  - HB -- cmpRampGrey2B()
-  - HC -- cmpRampGrey2C()
-  - HY -- cmpRampGrey2Y()
-  - HM -- cmpRampGrey2M()
+  - HR -- setRGBcmpRampGrey2R()
+  - HG -- setRGBcmpRampGrey2G()
+  - HB -- setRGBcmpRampGrey2B()
+  - HC -- setRGBcmpRampGrey2C()
+  - HY -- setRGBcmpRampGrey2Y()
+  - HM -- setRGBcmpRampGrey2M()
 
- The traversal from black to white -- through the center point -- is directly supported via a named method.  Note that cmpColorRamp supports this via
+ The traversal from black to white -- through the center point -- is directly supported via a named method.  Note that cmpRGBcolorRamp supports this via
  a graph string of "0W".
 
-  - 0HW -- cmpGreyRGB()
+  - 0HW -- setRGBcmpGreyRGB()
 
  The other diagonal traversals (diagonal meaning through the center of the cube) are essentially two of the HSL saturation based schemes placed back
  to back.  They can form effective divergent color schemes.  Black to white is technical one of them, but we have already covered that one.  Note
- that the cmpColorRamp function will support this class of schemes with a two element graph -- the first vertex and the last. The remaining three
+ that the cmpRGBcolorRamp function will support this class of schemes with a two element graph -- the first vertex and the last. The remaining three
  diagonal schemes are as follows:
 
-  - CHR -- cmpDiagRampCR()
-  - MHG -- cmpDiagRampMG()
-  - YHB -- cmpDiagRampYB()
+  - CHR -- setRGBcmpDiagRampCR()
+  - MHG -- setRGBcmpDiagRampMG()
+  - YHB -- setRGBcmpDiagRampYB()
 
  Special Indexed Pallets
  -----------------------

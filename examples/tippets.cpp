@@ -1,9 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      tippets.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw the John Tippetts variant of the Mandelbrot set.@EOL
- @std       C++14
+ @std       C++20
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -25,7 +26,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #define __USE_MINGW_ANSI_STUDIO 0
@@ -45,6 +46,8 @@ double ranges[6][4] = { {  -2.700,  2.100, -2.100,  2.100 },
                         {   0.250,  0.700, -1.000,  1.000 },
                         {   0.250,  0.600,  0.700,  1.000 },
                         {  -0.720, -0.695,  0.385,  0.410 } };
+
+typedef mjr::ramCanvas3c8b::csIdxType cit;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
@@ -66,7 +69,7 @@ int main(void) {
             (zx*zx+zy*zy<100000)&&(count<=NUMITR);
             count++,zx=zx*zx-zy*zy+a,zy=2*zx*zy+b) ;
         if(count < NUMITR)
-          theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpFireRamp(mjr::intWrap(count*20, 767)));
+          theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().setRGBcmpFireRamp(mjr::numberWrap(static_cast<cit>(count*20), 767)));
       }
     }
     theRamCanvas.writeTIFFfile("tippets" + std::to_string(i) + ".tiff");

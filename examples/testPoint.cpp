@@ -1,5 +1,6 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      testPoint.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Benchmark program for pixel draw rates with ramCanvas.@EOL
@@ -28,7 +29,7 @@
 
    One of the points of the point classes is to provide an easy way to specify points using existing data structures.
 
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -44,10 +45,10 @@ int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   mjr::ramCanvasRGB8b theRamCanvas(BSIZE, BSIZE, 0, BSIZE-1, 0, BSIZE-1);
   theRamCanvas.set_yRealAxisOrientation(mjr::ramCanvasRGB8b::realAxisOrientation::INVERTED);
-  mjr::colorRGB8b aColor(mjr::colorRGB8b::cornerColor::RED);
-  mjr::colorRGB8b bColor(mjr::colorRGB8b::cornerColor::BLUE);
-  mjr::colorRGB8b cColor(mjr::colorRGB8b::cornerColor::MAGENTA);
-  mjr::colorRGB8b dColor(mjr::colorRGB8b::cornerColor::CYAN);
+  mjr::colorRGB8b aColor(mjr::colorRGB8b::cornerColorEnum::RED);
+  mjr::colorRGB8b bColor(mjr::colorRGB8b::cornerColorEnum::BLUE);
+  mjr::colorRGB8b cColor(mjr::colorRGB8b::cornerColorEnum::MAGENTA);
+  mjr::colorRGB8b dColor(mjr::colorRGB8b::cornerColorEnum::CYAN);
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   theRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointIntType({2, 2}),                      aColor);  // Initializeer list

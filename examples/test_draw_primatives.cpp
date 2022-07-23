@@ -1,5 +1,6 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      test_draw_primatives.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Benchmark program for pixel draw rates with ramCanvas.@EOL
@@ -28,7 +29,7 @@
 
    We instantiate every drawing function in ramCanvas so that we can check for compile time errors and do some basic functionality testing.
 
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -43,8 +44,8 @@ int main(void) {
   const int BSIZE = 60;
 
   mjr::ramCanvasRGB8b theRamCanvas(BSIZE, BSIZE, 0, BSIZE-1, 0, BSIZE-1);
-  mjr::colorRGB8b aColor(mjr::colorRGB8b::cornerColor::RED);
-  mjr::colorRGB8b bColor(mjr::colorRGB8b::cornerColor::GREEN);
+  mjr::colorRGB8b aColor(mjr::colorRGB8b::cornerColorEnum::RED);
+  mjr::colorRGB8b bColor(mjr::colorRGB8b::cornerColorEnum::GREEN);
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   theRamCanvas.drawPoint(1, 1, aColor);                                               // drawPoint(iCrd x, iCrd y, clr color);

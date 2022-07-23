@@ -1,9 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      biomorph2.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw a corner centered biomorph fractal nice for a desktop background image.@EOL
- @std       C++14
+ @std       C++20
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -25,7 +26,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -34,6 +35,8 @@
 #include <chrono>                                                        /* time                    C++11    */
 #include <complex>                                                       /* Complex Numbers         C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
+
+typedef mjr::ramCanvas3c8b::colorType::channelArithSPType cit;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
@@ -58,19 +61,19 @@ int main(void) {
           count++,z=std::sin(z)+oneone) ;
       if(count < NUMITR) {
         // A
-        theRamCanvasA.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpClrCubeRainbow(mjr::intWrap(count*500, 255*6+1)));
+        theRamCanvasA.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().setRGBcmpClrCubeRainbow(static_cast<cit>(mjr::numberWrap(count*500, 255*6+1))));
         // E
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
           theRamCanvasE.drawPoint(x, y, mjr::ramCanvas3c8b::colorType("red"));
         else
           theRamCanvasE.drawPoint(x, y, mjr::ramCanvas3c8b::colorType("blue"));
         // K
-        theRamCanvasK.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpClrCubeRainbow(mjr::intWrap(static_cast<int>((std::arg(z)+3.14)*255), 255*6+1)));
+        theRamCanvasK.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().setRGBcmpClrCubeRainbow(mjr::numberWrap(static_cast<cit>((std::arg(z)+3.14)*255), 255*6+1)));
         // L
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
-          theRamCanvasL.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpColorRamp(mjr::intClamp(static_cast<int>(std::abs(std::real(z))*15), 255*1-1), "0R"));
+          theRamCanvasL.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcolorRamp(mjr::intClamp(static_cast<cit>(std::abs(std::real(z))*15), 255*1-1), "0R"));
         else
-          theRamCanvasL.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpColorRamp(mjr::intClamp(static_cast<int>(std::abs(std::imag(z))*15), 255*1-1), "0B"));
+          theRamCanvasL.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcolorRamp(mjr::intClamp(static_cast<cit>(std::abs(std::imag(z))*15), 255*1-1), "0B"));
       }
     }
   }

@@ -1,9 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      mandelbrot_bm_real.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Benchmark drawing a mandelbrot set using doubleing point types and arithmetic only.@EOL
- @std       C++98
+ @std       C++20
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -28,7 +29,7 @@
  @filedetails
 
   Basic benchmark.  Uses only real numbers.
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -50,7 +51,7 @@ int main(void) {
       for(xr=theRamCanvas.int2realX(x),yr=theRamCanvas.int2realY(y),zx=zy=0.0,count=0; (zx*zx+zy*zy<4)&&(count<=NUMITR); count++,tempx=zx*zx-zy*zy+xr,zy=2*zx*zy+yr,zx=tempx)
         ;
       if(count < NUMITR)
-        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpFireRamp(mjr::intWrap(count*20, 767)));
+        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().setRGBcmpFireRamp(mjr::numberWrap(static_cast<mjr::ramCanvas3c8b::csIdxType>(count*20), 767)));
     }
   }
   theRamCanvas.writeTIFFfile("mandelbrot_bm_real.tiff");

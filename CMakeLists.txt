@@ -88,15 +88,15 @@ endif()
 ######################################################################################################################################################
 
 set(TARGETS_REQ_NONE   "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "biomorph2" "bmark" "chaos_game" "circles" "color_all"
-                        "color_lut_ramp_cube" "color_lut_ramp_misc" "cplxColor" "dlaSeed" "level_curves" "lorenz_fuz"
+                       "color_lut_ramp_misc" "cplxColor" "dlaSeed" "level_curves" "lorenz_fuz"
                        "lorenz_multi" "mandelbrot_binary" "mandelbrot_bm_cplx" "mandelbrot_bm_cplx_hyper" "mandelbrot_bm_real" "mandelbrot_cycles"
                        "mandelbrot_distance" "mandelbrot_distance_old" "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits"
                        "mandelbrot_potential" "mandelbrot_triangle" "newton_bm_cplx" "newton_bm_real" "newton_half" "newton_max_mod" "newton_vs"
                        "newton_z6" "peterdejong" "peterdejongM" "sic" "sic_search" "sierpinski_triangle" "sprott2d" "testPoint" "test_draw_btriangle"
-                       "test_draw_color" "test_draw_misc" "test_draw_primatives" "tippets" "mandelbrot_bm_real_eqop"
+                       "test_color" "test_draw_misc" "test_draw_primatives" "tippets" "mandelbrot_bm_real_eqop" "test_float" "types"
                        )
 set(TARGETS_REQ_MRRL   "color_lut_indexed" "color_lut_rainbows" "color_web_rectangle" "color_web_triangle" "test_draw_fonts" "test_draw_glyph"
-                       "test_draw_strings" "color_interp_hsl_vs_rgb"
+                       "test_draw_strings" "color_interp_hsl_vs_rgb" "color_lut_ramp_cube"
                        )
 set(TARGETS_REQ_OPENGL "glut_image")
 set(TARGETS_REQ_TIFF   "brownianDiffusion" "dlaBrownian" "dlaDrift" "img_process" "test_interp_scale" "geomTfrm_LensDistortion" "geomTfrm_Arb" "geomTfrm_Rotate")
@@ -121,14 +121,13 @@ else()
   message(WARNING "TIFF example programs will NOT be built!")
 endif()
 
-
 list(REMOVE_DUPLICATES EXAMPLE_TARGETS)
 
 # Add a target for each example we can build
 foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
   add_executable(${CURTGT} "examples/${CURTGT}.cpp")
   target_include_directories(${CURTGT} PRIVATE lib)
-  target_compile_features(${CURTGT} PUBLIC cxx_auto_type)
+  target_compile_features(${CURTGT} PUBLIC cxx_std_20)
   target_include_directories(${CURTGT} PRIVATE ${CMAKE_BINARY_DIR})
 
   if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -136,10 +135,10 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
     target_compile_options(${CURTGT} PUBLIC -ffast-math)
     target_compile_options(${CURTGT} PUBLIC -Wall -Wconversion -Wno-unknown-pragmas -Wextra -Wno-deprecated-copy)
     target_compile_options(${CURTGT} PUBLIC -Ofast)
-    if(CMAKE_CXX_PLATFORM_ID STREQUAL "MinGWx")
-      target_compile_options(${CURTGT} PUBLIC -static-libgcc)
-      target_compile_options(${CURTGT} PUBLIC -static-libstdc++)
-    endif()
+    # if(CMAKE_CXX_PLATFORM_ID STREQUAL "MinGWx")
+    #   target_compile_options(${CURTGT} PUBLIC -static-libgcc)
+    #   target_compile_options(${CURTGT} PUBLIC -static-libstdc++)
+    # endif()
   elseif((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang"))
     target_compile_options(${CURTGT} PUBLIC -Wstrict-overflow=0)
     target_compile_options(${CURTGT} PUBLIC -ffast-math)

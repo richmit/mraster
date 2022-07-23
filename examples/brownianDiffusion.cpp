@@ -1,5 +1,6 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      brownianDiffusion.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Read a TIFF image and simulate brownian diffusion.@EOL
@@ -24,7 +25,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -68,7 +69,7 @@ int main(int argc, char *argv[]) {
       yC = rEng() % theRamCanvas.get_numYpix();
 
       mjr::ramCanvas3c8b::colorType aColor = theRamCanvas.getPxColor(xC, yC);
-      double lumC = aColor.colorLuminance();
+      double lumC = aColor.rgbLuminance();
 
       if((lumC > 0) && (lumC < tgtLum)) {
         double maxLum = -1;
@@ -79,7 +80,7 @@ int main(int argc, char *argv[]) {
           xN = xC+stenX[curDir];
           yN = yC+stenY[curDir];
           if(xN>=0 && yN>=0 && xN<theRamCanvas.get_numXpix() && yN<theRamCanvas.get_numYpix()) {
-            double lumN = theRamCanvas.getPxColor(xN, yN).colorLuminance();
+            double lumN = theRamCanvas.getPxColor(xN, yN).rgbLuminance();
             if(lumN <= 0) {
               lum0ct++;
             } else {

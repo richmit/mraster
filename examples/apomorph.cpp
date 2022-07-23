@@ -1,10 +1,12 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      apomorph.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Morph a IFS from an Apollony Gasket to a cloud.@EOL
  @keywords  mistake fractal
- @std       C++14
+ @std       C++20
+ @see       https://www.mitchr.me/SS/AGasket/index.html
  @copyright
   @parblock
   Copyright (c) 1988-2015,2017, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -30,8 +32,7 @@
 
   This code started as a programming error.  I was trying to generate an Apollony Gasket via an IFS, but had a cut-n-past error -- a 1 where I should have had
   a zero.  The result was something very unlike an Apollony Gasket. So I was curious what the results would be if the parameter was swept from 0 to 1.
-
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"

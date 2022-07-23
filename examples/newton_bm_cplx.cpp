@@ -1,9 +1,11 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      newton_bm_cplx.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Benchmark drawing a Newton Fractical.  Use complex class.@EOL
- @std       C++98
+ @std       C++20
+ @see       https://www.mitchr.me/SS/newton/index.html
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -25,7 +27,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -44,8 +46,8 @@ int main(void) {
   mjr::ramCanvas3c8b theRamCanvas(4096, 4096, -2.0, 2, -2, 2); // -0.9, -0.7, -0.1, 0.1
 
   std::complex<double> r1( 1.0,                 0);
-  std::complex<double> r2(-0.5,  sin(2*mjr::PI/3));
-  std::complex<double> r3(-0.5, -sin(2*mjr::PI/3));
+  std::complex<double> r2(-0.5,  sin(2*std::numbers::pi/3));
+  std::complex<double> r3(-0.5, -sin(2*std::numbers::pi/3));
 
   for(int y=0;y<theRamCanvas.get_numYpix();y++) {
     for(int x=0;x<theRamCanvas.get_numXpix();x++) {

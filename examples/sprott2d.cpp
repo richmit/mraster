@@ -1,9 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      sprott2d.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw a sprott Attractor.@EOL
- @std       C++98
+ @std       C++20
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -28,7 +29,7 @@
  @filedetails
 
   Inspired by http://paulbourke.net/fractals/starjulia/
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -43,7 +44,7 @@ int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int BSIZ = 7680/8;
   mjr::ramCanvas1c16b::colorType aColor;
-  aColor.setAll(1);
+  aColor.setChans(1);
   mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -1, 1, -1, 1);
   double x=0.0, y=0.0, xNew, yNew;
 
@@ -58,8 +59,8 @@ int main(void) {
       xNew = a[0] + a[1]*x + a[2]*x*x + a[3]*x*y + a[4]*y  + a[5]*y*y;
       yNew = a[6] + a[7]*x + a[8]*x*x + a[9]*x*y + a[10]*y + a[11]*y*y;
       theRamCanvas.drawPoint(xNew, yNew, theRamCanvas.getPxColor(xNew, yNew).tfrmAdd(aColor));
-      if(theRamCanvas.getPxColor(xNew, yNew).getRed() > maxII) {
-        maxII = theRamCanvas.getPxColor(xNew, yNew).getRed();
+      if(theRamCanvas.getPxColor(xNew, yNew).getC0() > maxII) {
+        maxII = theRamCanvas.getPxColor(xNew, yNew).getC0();
         if(maxII > 16384) { // 1/4 of max possible intensity
           std::cout << "ITER(): " << i << " MAXS: " << maxII << " EXIT: Maximum image intensity reached" << std::endl;
           break;
@@ -87,7 +88,7 @@ int main(void) {
     mjr::ramCanvas3c8b::colorType bColor;
     for(int yi=0;yi<theRamCanvas.get_numYpix();yi++)
       for(int xi=0;xi<theRamCanvas.get_numXpix();xi++)
-        anotherRamCanvas.drawPoint(xi, yi, bColor.cmpColorRamp(static_cast<int>(theRamCanvas.getPxColor(xi, yi).getRed() * 1275 / maxII), "0RYBCW"));
+        anotherRamCanvas.drawPoint(xi, yi, bColor.cmpRGBcolorRamp(static_cast<mjr::ramCanvas3c8b::csIdxType>(theRamCanvas.getPxColor(xi, yi).getC0() * 1275 / maxII), "0RYBCW"));
 
     anotherRamCanvas.writeTIFFfile("sprott2d.tiff");
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;

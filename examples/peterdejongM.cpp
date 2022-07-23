@@ -1,9 +1,11 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      peterdejongM.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw a Peter de Jong Attractor Movie.@EOL
- @std       C++98
+ @std       C++20
+ @see       https://www.mitchr.me/SS/swirl/index.html
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -25,7 +27,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -53,7 +55,7 @@ int main(void) {
   const double            p         =  2.10;
 
   mjr::ramCanvas1c16b::colorType aColor;
-  aColor.setAll(1);
+  aColor.setChans(1);
 
   for(int frame=0; frame<numFrames; frame++) {
 
@@ -61,13 +63,13 @@ int main(void) {
     /* Draw the atractor on a 16-bit, greyscale canvas -- the grey level will be an integer represeting the hit count for that pixel. */
     double x       = 1.0;
     double y       = 1.0;
-    uint64_t maxII = 0;
-    for(uint64_t i=0;i<maxIters;i++) {
-      double xNew = sin((a + 0.09 * sin(frame * 2 * mjr::PI / numFrames))*y + e) - cos(b*x + f);
-      double yNew = sin((c + 0.08 * cos(frame * 2 * mjr::PI / numFrames))*x + g) - cos(d*y + h);
+    mjr::ramCanvas1c16b::colorChanArithSPType maxII = 0;
+    for(mjr::ramCanvas1c16b::colorChanArithSPType i=0;i<maxIters;i++) {
+      double xNew = sin((a + 0.09 * sin(frame * 2 * std::numbers::pi / numFrames))*y + e) - cos(b*x + f);
+      double yNew = sin((c + 0.08 * cos(frame * 2 * std::numbers::pi / numFrames))*x + g) - cos(d*y + h);
       theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColor(x, y).tfrmAdd(aColor));
-      if(theRamCanvas.getPxColor(x, y).getRed() > maxII) {
-        maxII = theRamCanvas.getPxColor(x, y).getRed();
+      if(theRamCanvas.getPxColor(x, y).getC0() > maxII) {
+        maxII = theRamCanvas.getPxColor(x, y).getC0();
         if(maxII > 16384) { // 1/4 of max possible intensity
           std::cout << "FRAME(" << frame <<  "): " << i << " MAXS: " << maxII << " EXIT: Maximum image intensity reached" << std::endl;
           break;
@@ -87,7 +89,7 @@ int main(void) {
 
     // Root image transform
     theRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas1c16b::colorType::tfrmStdPow, 1.0/p);
-    maxII = static_cast<uint64_t>(65535.0 * pow(static_cast<double>(maxII)/65535.0, 1.0/p));
+    maxII = static_cast<mjr::ramCanvas1c16b::colorChanArithSPType>(65535.0 * pow(static_cast<double>(maxII)/65535.0, 1.0/p));
 
     /* Create a new image based on an integer color scale -- this one is 24-bit RGB color.  This isn't the most efficient technique from a RAM perspective in
        that we could pass a conversion routine to writeTIFFfile (see sic.cpp for an example of how to do just that). */
@@ -95,7 +97,7 @@ int main(void) {
     mjr::ramCanvas3c8b::colorType bColor;
     for(int yi=0;yi<theRamCanvas.get_numYpix();yi++)
       for(int xi=0;xi<theRamCanvas.get_numXpix();xi++)
-        anotherRamCanvas.drawPoint(xi, yi, bColor.cmpColorRamp(theRamCanvas.getPxColor(xi, yi).getRed() * 1275 / static_cast<int>(maxII), "0RYBCW"));
+        anotherRamCanvas.drawPoint(xi, yi, bColor.cmpRGBcolorRamp(static_cast<mjr::ramCanvas3c8b::csIdxType>(theRamCanvas.getPxColor(xi, yi).getC0() * 1275 / maxII), "0RYBCW"));
 
     { std::ostringstream stringStream;
       stringStream << "peterdejongM_" << std::setfill('0') << std::setw(3) << frame << ".tiff";

@@ -1,16 +1,16 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      sic_search.cpp
- @author    Mitch Richling <https://www.mitchr.me>
- @brief     Find parameters for SIC fractals that light up lots of pixels.@EOL
- @keywords
+ @file      test_float.cpp
+ @author    Mitch Richling http://www.mitchr.me/
+ @date      2022-07-09
+ @brief     Make logically identical images, one 8-bit int and one double, and write both to TIFF files.@EOL
+ @keywords  mraster
  @std       C++20
- @see       sic.cpp
- @see       https://www.mitchr.me/SS/sic/index.html
- @copyright
+ @see       
+ @copyright 
   @parblock
-  Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
+  Copyright (c) 2022, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.
 
   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -29,6 +29,9 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
+
+  make test_float && { rm test_float*.tiff; ./test_float.exe; tiffdump.exe test_floatF.tiff; tiffdump.exe test_floatI.tiff; }
+
 ********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -37,41 +40,24 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include <chrono>                                                        /* time                    C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
-#include <map>                                                           /* STL map                 C++11    */
-#include <random>                                                        /* C++ random numbers      C++11    */
+#include <vector>                                                        /* STL vector              C++11    */ 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const int BSIZ = 2048;
 
-  std::random_device rd;
-  std::mt19937 rEng(rd());
-  std::uniform_real_distribution<double> uniform_dist_double(-2.0, 2.0);
-  std::uniform_int_distribution<int>     uniform_dist_int(3, 7);
+  mjr::ramCanvasRGB64F theFltRamCanvas(1024, 1024);
+  for(int x=0;x<theFltRamCanvas.get_numXpix();x++)
+    for(int y=0;y<theFltRamCanvas.get_numYpix();y++) 
+      theFltRamCanvas.drawPoint(x, y, mjr::ramCanvasRGB64F::colorType(x/1024.0, y/1024.0, 0.0));
+  theFltRamCanvas.writeTIFFfile("test_floatF.tiff");
 
-  mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -2, 2, -2, 2); // Just used for coordinate conversion. ;)
+  mjr::ramCanvasRGB8b theIntRamCanvas(1024, 1024);
+  for(int x=0;x<theIntRamCanvas.get_numXpix();x++)
+    for(int y=0;y<theIntRamCanvas.get_numYpix();y++) 
+      theIntRamCanvas.drawPoint(x, y, mjr::ramCanvasRGB8b::colorType((uint8_t)(x/4), (uint8_t)(y/4), (uint8_t)0));
+  theIntRamCanvas.writeTIFFfile("test_floatI.tiff");
 
-  uint64_t maxCnt = 0;
-  for(int j=0; j<100000; j++) {
-    std::map<uint64_t, uint64_t> ptcnt;
-    double lambda = uniform_dist_double(rEng);
-    double alpha  = uniform_dist_double(rEng);
-    double beta   = uniform_dist_double(rEng);
-    double gamma  = uniform_dist_double(rEng);
-    double w      = uniform_dist_double(rEng);
-    int n        = uniform_dist_int(rEng);
-    std::complex<double> z(0.01,0.01);
-    for(uint64_t i=0;i<1000;i++) {
-      z = (lambda + alpha*z*std::conj(z)+beta* std::pow(z, n).real() + w*std::complex<double>(0,1))*z+gamma*static_cast<std::complex<double>>(std::pow(std::conj(z), n-1));
-      ptcnt[((uint64_t)theRamCanvas.real2intX(z.real()))<<32 | ((uint64_t)theRamCanvas.real2intY(z.imag()))] = 1;
-    }
-    if(ptcnt.size() > maxCnt) {
-      maxCnt = ptcnt.size();
-      std::cout << j << " " << maxCnt << " " << lambda << "," <<  alpha << "," <<  beta << "," <<  gamma << "," <<  w << "," << n << std::endl;
-    }
-  }
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
-  return 0;
 }

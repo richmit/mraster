@@ -1,5 +1,6 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      ramConfig.hpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Header defining several compile options.@EOL
@@ -24,61 +25,62 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
+
+#include <cstdint>                                                       /* std:: C stdint.h        C++11    */
 
 #ifndef MJR_INCLUDE_ramConfig
 
-/** @brief Define to look for 128-bit integer types.@EOL
-    Only supported on GCC & Clang! */
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** Set to 1 to look for 128-bit integer types, and 0 to not look for them.
+    Right now this only works on GCC & Clang! */
 #ifndef MJR_LOOK_FOR_128_BIT_TYPES
 #define MJR_LOOK_FOR_128_BIT_TYPES 1
 #endif
 
-/** @brief Define to use 128-bit unsigned values for 32-bit channel arithmatic.@EOL
-    Only supported on GCC & Clang! */
-#ifndef MJR_USE_128_FOR_32_ARITH
-// #define MJR_USE_128_FOR_32_ARITH 1
-#endif
-
-/** @brief Define color scheme index out of bound behaviour.@EOL
-    Set this to the name of the function used to precondition indexes passed into color scheme functions.  Options:
-          - (i)                 -- Do nothing
-          - intWrap((i), (m))   -- Wrap
-          - intClamp((i), (m))  -- Clamp */
-#ifndef IDXCOND
-#define IDXCOND(i, m) (i)
-#endif
-
-/** @brief Set the error color@EOL
-    Set this define to the function call to set the error color.  Generally, this will be 'setToBlack()' */
-#ifndef SET_ERR_COLOR
-#define SET_ERR_COLOR setToBlack()
-#endif
-
-/** @brief Float type used for fltCrdT in predefiend ramCanvasTpl types defined in ramCanvas.hpp.@EOL*/
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** Float type used for fltCrdT in predefiend ramCanvasTpl types defined in ramCanvas.hpp.*/
 #ifndef REAL_CORD
 #define REAL_CORD double
 #endif
 
-/** @brief Int type used for intCrdT in predefined ramCanvasTpl types defined in ramCanvas.hpp.@EOL */
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** Int type used for intCrdT in predefined ramCanvasTpl types defined in ramCanvas.hpp */
 #ifndef INT_CORD
 #define INT_CORD int
 #endif
 
-/** @brief Always keep the Alpha color safe@EOL
-    If this non-zero, then the library will preserve the alpha color for normal draw operations.
-    @warning Imposes a small performance impact. */
-#ifndef SUPPORT_ALWAYS_PRESERVE_ALPHA
-#define SUPPORT_ALWAYS_PRESERVE_ALPHA 0
-#endif
-
-/** @brief Support drawing modes@EOL
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** Support drawing modes.
     If this non-zero, then the library will support drawMode in ramCanvas objects.
     @warning Imposes a small performance impact. */
 #ifndef SUPPORT_DRAWING_MODE
 #define SUPPORT_DRAWING_MODE 0
 #endif
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#if MJR_LOOK_FOR_128_BIT_TYPES
+#ifdef __GNUC__
+#ifdef __SIZEOF_INT128__
+#if __SIZEOF_INT128__ == 16
+typedef unsigned __int128 mjr_uint128_t;
+typedef          __int128 mjr_int128_t;
+#define MJR_HAVE_128_BIT_TYPES
+#endif
+#endif
+#endif
+#endif
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#ifdef MJR_HAVE_128_BIT_TYPES
+typedef mjr_uint128_t mjr_uintBiggest_t;  //!< The largest unsigned integer supported on the platform
+typedef mjr_int128_t  mjr_intBiggest_t;   //!< The largest signed integer supported on the platform
+#else
+typedef uint64_t     mjr_uintBiggest_t;   //!< The largest unsigned integer supported on the platform
+typedef int64_t      mjr_intBiggest_t;    //!< The largest signed integer supported on the platform  
+#endif
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Put everything in the mjr namespace
 namespace mjr {
 
@@ -88,7 +90,6 @@ namespace mjr {
 
     /** @name Run time detection of compile time options */
     //@{
-      static int support_always_preserve_alpha() { return SUPPORT_ALWAYS_PRESERVE_ALPHA; }
       static int support_drawing_mode()          { return SUPPORT_DRAWING_MODE; }
     //@}
   };

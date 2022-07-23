@@ -1,9 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      test_draw_misc.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Illustrate and test simple drawing functions.@EOL
- @std       C++98
+ @std       C++20
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -25,7 +26,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -78,7 +79,7 @@ int main(void) {
   // Check out some of they ways to specify color (more exist)!
   theRamCanvas.drawFillCircle(70, 400, 50, "red");
   theRamCanvas.drawFillCircle(70, 400, 40, "#ff00ff");
-  theRamCanvas.drawFillCircle(70, 400, 30, mjr::ramCanvas3c8b::colorType::cornerColor::BLUE);
+  theRamCanvas.drawFillCircle(70, 400, 30, mjr::ramCanvas3c8b::colorType::cornerColorEnum::BLUE);
   theRamCanvas.drawFillCircle(70, 400, 10, mjr::ramCanvas3c8b::colorType(0xff, 0xff, 0x00));
 
   theRamCanvas.writeTIFFfile("test_draw_misc.tiff");

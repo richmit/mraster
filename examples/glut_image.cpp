@@ -1,38 +1,42 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
-   @file      glut_image.cpp
-   @author    Mitch Richling <https://www.mitchr.me>
-   @brief     One way to get images from a ramCanvas into OpenGL@EOL
-   @std       C++98
-   @copyright
-   @parblock
-   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
+/*******************************************************************************************************************************************************.H.S.**/
+/**
+ @file      glut_image.cpp
+ @author    Mitch Richling http://www.mitchr.me/
+ @date      2022-07-23
+ @version   VERSION
+ @brief     One way to get images from a ramCanvas into OpenGL@EOL
+ @keywords  
+ @std       C++20
+ @see       
+ @copyright 
+  @parblock
+  Copyright (c) 2022, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.
 
-   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
-   1. Redistributions of source code must retain the above copyright notice, this list of conditions, and the following disclaimer.
+  1. Redistributions of source code must retain the above copyright notice, this list of conditions, and the following disclaimer.
 
-   2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions, and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
+  2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions, and the following disclaimer in the documentation
+     and/or other materials provided with the distribution.
 
-   3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software
-   without specific prior written permission.
+  3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software
+     without specific prior written permission.
 
-   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
-   OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
-   DAMAGE.
-   @endparblock
-   @filedetails
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+  DAMAGE.
+  @endparblock
+ @filedetails   
 
-   We illustrate how to use the exportRasterData() member to get data suitable for use as an OpenGL image.  Note that ramCanvas.h also supports directly an
-   internal representation that is the same as that used by OpenGL --- so one can actually use the raw pixel store in the ramCanvas as OpenGL image data.  This
-   program illustrates how one might get OpenGL image data if the ramCanvas for some reason was not internally compatible with OpenGL.  Note this same
-   technique allows easy integration with other libraries requiring similar data formats.
-
-***************************************************************************************************************************************************************/
+  We illustrate how to use the exportRasterData() member to get data suitable for use as an OpenGL image.  Note that ramCanvas.h also supports directly an
+  internal representation that is the same as that used by OpenGL --- so one can actually use the raw pixel store in the ramCanvas as OpenGL image data.  This
+  program illustrates how one might get OpenGL image data if the ramCanvas for some reason was not internally compatible with OpenGL.  Note this same
+  technique allows easy integration with other libraries requiring similar data formats.
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"

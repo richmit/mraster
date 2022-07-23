@@ -1,5 +1,6 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      mjrmath.hpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Include file defining several mapping and clamping functions.@EOL @EOL
@@ -25,40 +26,55 @@
   DAMAGE.
   @endparblock
   This file contains several definitions for inline functions useful for mapping and clamping integers and floats.
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 /* Some simple linear mapping and clamping functions. */
 
 #ifndef MJR_INCLUDE_mjrmath
 
 #include <type_traits>                                                   /* C++ metaprogramming     C++11    */
-#include <cmath> 
-#include <ctgmath>
+#include <cmath>                                                         /* std:: C math.h          C++11    */
+#include <ctgmath>                                                       /* std:: C tgmath.h        C++11    */
+#include <numbers>                                                       /* C++ math constants      C++20    */
 
 // Put everything in the mjr namespace
 namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/** Yep.  Pi */
-  const static double PI = 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821480865132823066470938;
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/** Wrap an integer to the range [0,maxValue] via a modulus like function that wraps the value onto the range (i.e. maxOutValue+1 will map to 0).
-   @param anInt The value to be wrapped
+/** Wrap a numbers outside [0, maxOutValue] onto  [0, maxOutValue] for integers and [0, maxOutValue) for floating point.
+   @param inNum       The value to be wrapped
    @param maxOutValue The maximum output value
    @return The wrapped value. */
-  inline int intWrap(int anInt, int maxOutValue) {
-//  MJR TODO NOTE <2022-06-28T09:54:40-0500> intWrap: Consider an right open interval like we do for realWrap...
-    if ((anInt < 0) || (anInt > maxOutValue)) {
-      int tmp = anInt % (maxOutValue + 1);
-      if(tmp < 0)
-        return maxOutValue + tmp;
-      else
-        return tmp;
+  template <typename inT, typename maxT>
+  requires (std::convertible_to<maxT, inT> && std::integral<inT> && std::integral<maxT>)
+  inline inT numberWrap(inT inNum, maxT maxOutValue) {
+    if ((inNum >= static_cast<inT>(0)) && (inNum <= static_cast<inT>(maxOutValue))) { [[likely]]
+      return inNum;
     } else {
-      return anInt;
+      inT tmp = inNum % (static_cast<inT>((static_cast<inT>(maxOutValue) + static_cast<inT>(1))));
+      if(tmp >= static_cast<inT>(0)) [[likely]]
+        return tmp;
+      else
+        return static_cast<inT>(maxOutValue) + tmp;
     }
   }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** Teplate specialization. */
+  template <typename inT, typename maxT>
+  requires (std::convertible_to<maxT, inT> && ( std::floating_point<inT> || std::floating_point<maxT> ))
+  inline inT numberWrap(inT inNum, maxT maxOutValue) {
+    if ((inNum >= static_cast<inT>(0)) && (inNum <= static_cast<inT>(maxOutValue))) { [[likely]]
+      return inNum;
+    } else {
+      inT tmp = std::fmod(inNum, maxOutValue);
+      if(tmp < static_cast<inT>(0))
+        return maxOutValue+tmp;
+      else
+        return tmp;
+    } 
+  }
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /** Wrap a floating point value to the range [0, maxValue) via a modulus like function that wraps the value onto the range (i.e. maxOutValue will map to 0).
@@ -82,15 +98,17 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /** Clamp an integer to the range [0,maxOutValue] via a true clamping function (i.e. values below the range map to 0, and values above the range map to
     maxOutValue.).
-    @param anInt The value to be clamped
+    @param inInt The value to be clamped
     @param maxOutValue The maximum output value
     @return The wrapped value. */
-  inline int intClamp(int anInt, int maxOutValue) {
-    if(anInt < 0)
-      return 0;
-    if(anInt > maxOutValue)
-      return maxOutValue;
-    return anInt;
+  template <typename inT, typename maxT>
+  requires (std::convertible_to<maxT, inT>)
+  inline inT intClamp(inT inInt, maxT maxOutValue) {
+    if(inInt < static_cast<inT>(0))
+      return static_cast<inT>(0);
+    if(inInt > static_cast<inT>(maxOutValue))
+      return static_cast<inT>(maxOutValue);
+    return inInt;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -147,6 +165,21 @@ namespace mjr {
   inline int intLinMap(int anInt, int maxOutValue, int maxInValue) {
     return int(double(anInt)*double(maxOutValue)/double(maxInValue));
   }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** Compute equatoin of a line hitting (x1, y1) and (x2, y2), and return equation evaluated at x.
+    @param x           Value at which to evaluate linear equation
+    @param x1          X coordinate of first point
+    @param y1          Y coordinate of first point
+    @param x2          X coordinate of second point
+    @param y2          Y coordinate of second point
+    @return The mapped value. */
+template <typename numT>
+inline numT genLinMap(numT x, numT x1, numT x2, numT y1, numT y2) {
+  numT m = (y1 - y2) / (x1 - x2);
+  numT b = y1 - m * x1;
+  return (m * x + b);
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /** Map an double in the unit interval, the range [0,1], onto the integers in the range [0,maxOutValue] via a linear mapping function.  That is to say, 0.0

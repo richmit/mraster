@@ -1,9 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      mandelbrot_bm_real_eqop.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Benchmark drawing a mandelbrot set using doubleing point types and arithmetic only.@EOL
- @std       C++98
+ @std       C++20
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -28,7 +29,7 @@
  @filedetails
 
   Basic benchmark.  Uses only real numbers.  Reduces operation count by rearranging the equations a bit.
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -50,7 +51,7 @@ int main(void) {
         mjr::ramCanvas3c8b::coordFltType zx = 0.0;
         mjr::ramCanvas3c8b::coordFltType zy = 0.0;
         mjr::ramCanvas3c8b::coordFltType zx2, zy2, tmp;
-        int count = 0;
+        mjr::ramCanvas3c8b::csIdxType count = 0;
         do {
           zx2 = zx * zx;
           zy2 = zy * zy;
@@ -60,7 +61,7 @@ int main(void) {
           count++;
         } while( (zx2+zy2<4) && (count<NUMITR) );
         if(count < NUMITR)
-          theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpFireRamp(mjr::intWrap(count*20, 767)));
+          theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().setRGBcmpFireRamp(mjr::numberWrap(static_cast<mjr::ramCanvas3c8b::csIdxType>(count*20), 767)));
     }
   }
   theRamCanvas.writeTIFFfile("mandelbrot_bm_real_eqop.tiff");

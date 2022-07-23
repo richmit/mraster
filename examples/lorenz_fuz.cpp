@@ -1,9 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      lorenz_fuz.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw a Lorenz Attractor histogram.@EOL
- @std       C++98
+ @std       C++20
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -25,7 +26,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -42,7 +43,7 @@ int main(void) {
   const int YSIZ = 4320/1;
   uint64_t maxII = 0;
   mjr::ramCanvas1c16b::colorType aColor;
-  aColor.setAll(1);
+  aColor.setChans(1);
   mjr::ramCanvas1c16b theRamCanvas(XSIZ, YSIZ, -19, 19, 3, 47);
 
   double distToGo = 80000.0;             /* How long should the curve be? */
@@ -129,8 +130,8 @@ int main(void) {
       z = z + Zdelta;
       theRamCanvas.drawPoint(x, z, theRamCanvas.getPxColor(x, z).tfrmAdd(aColor));
 
-      if(theRamCanvas.getPxColor(x, z).getRed() > maxII)
-        maxII = theRamCanvas.getPxColor(x, z).getRed();
+      if(theRamCanvas.getPxColor(x, z).getC0() > maxII)
+        maxII = theRamCanvas.getPxColor(x, z).getC0();
     }
   }
 
@@ -150,9 +151,9 @@ int main(void) {
   mjr::ramCanvas3c8b::colorType bColor;
   for(int yi=0;yi<theRamCanvas.get_numYpix();yi++)
     for(int xi=0;xi<theRamCanvas.get_numXpix();xi++) {
-      anotherRamCanvas.drawPoint(xi, yi, bColor.cmpColorRamp(static_cast<int>(theRamCanvas.getPxColor(xi, yi).getRed() * 1275 / maxII), "0RYBCW"));
-      if( (anotherRamCanvas.getPxColor(xi, yi).getRed() > 0) && (anotherRamCanvas.getPxColor(xi, yi).getRed() < 255) )
-        anotherRamCanvas.getPxColorRefNC(xi, yi).setRed(255);
+      anotherRamCanvas.drawPoint(xi, yi, bColor.cmpRGBcolorRamp(static_cast<mjr::ramCanvas3c8b::csIdxType>(theRamCanvas.getPxColor(xi, yi).getC0() * 1275 / maxII), "0RYBCW"));
+      if( (anotherRamCanvas.getPxColor(xi, yi).getC0() > 0) && (anotherRamCanvas.getPxColor(xi, yi).getC0() < 255) )
+        anotherRamCanvas.getPxColorRefNC(xi, yi).setC0(255);
     }
 
   anotherRamCanvas.writeTIFFfile("lorenz_fuz.tiff");

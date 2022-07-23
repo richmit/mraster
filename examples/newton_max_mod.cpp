@@ -1,9 +1,11 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      newton_max_mod.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw a Newton Fractical -- color by root and max modulus.@EOL
- @std       C++98
+ @std       C++20
+ @see       https://www.mitchr.me/SS/newton/index.html
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -25,7 +27,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -42,8 +44,8 @@ int main(void) {
   int          MultCol  = 400; // 1, 400, 3000
   double        Tol      = .0001;
   std::complex<double> r1(1,               0);
-  std::complex<double> r2(-0.5,  sin(2*mjr::PI/3));
-  std::complex<double> r3(-0.5, -sin(2*mjr::PI/3));
+  std::complex<double> r2(-0.5,  sin(2*std::numbers::pi/3));
+  std::complex<double> r3(-0.5, -sin(2*std::numbers::pi/3));
   mjr::ramCanvas3c8b theRamCanvas(4096, 4096, -2.15, 1.85, -2.0, 2.0);
 
   for(int y=0;y<theRamCanvas.get_numYpix();y++) {

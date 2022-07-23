@@ -1,9 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      color_web_rectangle.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Produce an image showing an array of the 216 web safe colors -- a pallet of colors once considered "safe" for internet use.@EOL
- @std       C++11
+ @std       C++20
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -25,7 +26,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -42,7 +43,7 @@ int main(void) {
     mjr::ramCanvas3c8b::colorType color;
     int x = (i % 15) * 50;
     int y = (i / 15) * 50;
-    color.icpWebSafe216(i);
+    color.setRGBtoWebSafe216(i);
     theRamCanvas.drawFillRectangle(x, y, x+45, y+45, color);
   }
   theRamCanvas.writeTIFFfile("color_web_rectangle.tiff");

@@ -1,9 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      color_interp_hsl_vs_rgb.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Illistrate the diffrence in interpolion in HSL vs RGB spaec.@EOL
- @std       C++98
+ @std       C++20
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -30,7 +31,7 @@
   In some cases, interpolating in HSL spaces can lead to an entirely different result from interpolating in RGB space.  This program illustrates on such
   example.  Note that in many of the most important cases, interpolating leads to the same results in both color spaces.
 
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -74,16 +75,14 @@ for(int j=1; j<1000; j++) {
 
   std::cout << "Start Color (RGB) : " << startColor << std::endl;
   for(auto cs : colorSpaces) {
-    std::tuple<double, double, double> tmp = startColor.rgb2colorSpace(cs);
-    std::cout << "Start Color (" << startColor.colorSpaceToString(cs) << ") : <" << 
-      std::get<0>(tmp) << ", " << std::get<1>(tmp) << ", " << std::get<2>(tmp) << ">" << std::endl;
+    auto tmp = startColor.rgb2colorSpace(cs);
+    std::cout << "Start Color (" << startColor.colorSpaceToString(cs) << ") : " << tmp << std::endl;
   }
 
   std::cout << "End   Color (RGB) : " << endColor << std::endl;
   for(auto cs : colorSpaces) {
-  std::tuple<double, double, double> tmp = endColor.rgb2colorSpace(cs);
-    std::cout << "Start Color (" << endColor.colorSpaceToString(cs) << ") : <" << 
-      std::get<0>(tmp) << ", " << std::get<1>(tmp) << ", " << std::get<2>(tmp) << ">" << std::endl;
+  auto tmp = endColor.rgb2colorSpace(cs);
+    std::cout << "Start Color (" << endColor.colorSpaceToString(cs) << ") : " << tmp << std::endl;
   }
 
   theRamCanvas.writeTIFFfile("color_interp_hsl_vs_rgb.tiff");

@@ -1,9 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      newton_half.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw various Newton-like Fracticals.@EOL
- @std       C++11
+ @std       C++20
  @copyright
   @parblock
   Copyright (c) 1988-2015, 2017, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -29,7 +30,7 @@
 
      Maxima: f:sin(z); z-f/diff(f, z);
 
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -72,7 +73,7 @@ int main(void) {
       std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
 
       std::vector<std::complex<double>> lastZs(numToKeep);
-      int  count = 0;
+      mjr::ramCanvas3c8b::csIdxType count = 0;
       double maxMod = 0.0;
       while(1) {
         if (count >= MaxCount) {
@@ -123,14 +124,14 @@ int main(void) {
         count++;
       }
 
-      int ccol = (2*4*count);
-      int mcol = ((int)(2*8*maxMod));
+      mjr::ramCanvas3c8b::csIdxType ccol = (2*4*count);
+      mjr::ramCanvas3c8b::csIdxType mcol = ((mjr::ramCanvas3c8b::csIdxType)(2*8*maxMod));
       switch(why) {
-        case whyStopNH::TOOLONG   : theRamCanvas.drawPoint(x, y, aColor.cmpColorRamp((mcol)%(2*256),      "MWM")); break;
-        case whyStopNH::CONVERGEU : theRamCanvas.drawPoint(x, y, aColor.cmpColorRamp((mcol+ccol)%(2*256), "BWB")); break;
-        case whyStopNH::CONVERGEL : theRamCanvas.drawPoint(x, y, aColor.cmpColorRamp((mcol+ccol)%(2*256), "RWR")); break;
+        case whyStopNH::TOOLONG   : theRamCanvas.drawPoint(x, y, aColor.cmpRGBcolorRamp((mcol)%(2*256),      "MWM")); break;
+        case whyStopNH::CONVERGEU : theRamCanvas.drawPoint(x, y, aColor.cmpRGBcolorRamp((mcol+ccol)%(2*256), "BWB")); break;
+        case whyStopNH::CONVERGEL : theRamCanvas.drawPoint(x, y, aColor.cmpRGBcolorRamp((mcol+ccol)%(2*256), "RWR")); break;
         case whyStopNH::TOOBIG    : theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0,        0,        0));           break;
-        case whyStopNH::DIVZERO   : theRamCanvas.drawPoint(x, y, aColor.cmpColorRamp((mcol+ccol)%(2*256), "CWC")); break;
+        case whyStopNH::DIVZERO   : theRamCanvas.drawPoint(x, y, aColor.cmpRGBcolorRamp((mcol+ccol)%(2*256), "CWC")); break;
       }
     }
   }

@@ -1,9 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      mandelbrot_bm_cplx_openmp.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Benchmark drawing a mandelbrot set using the C++ complex type with OpenMP.@EOL
- @std       C++98
+ @std       C++20
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -28,7 +29,7 @@
  @filedetails
 
   Basic benchmark.  Uses complex numbers.  Uses OpenMP.
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -41,7 +42,7 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  int count;
+  mjr::ramCanvas3c8b::csIdxType count;
   const int NUMITR = 1024;
   std::complex<double> c, z, zero(0.0, 0.0);
   mjr::ramCanvas3c8b theRamCanvas(7680, 7680, -2.2, 0.8, -1.5, 1.5);
@@ -52,7 +53,7 @@ int main(void) {
       for(c=std::complex<mjr::ramCanvas3c8b::coordFltType>(theRamCanvas.int2realX(x),theRamCanvas.int2realY(y)),z=zero,count=0; (std::norm(z)<4)&&(count<=NUMITR); count++,z=z*z+c)
         ;
       if(count < NUMITR)
-        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpFireRamp(mjr::intWrap(count*20, 767)));
+        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().setRGBcmpFireRamp(static_cast<mjr::ramCanvas3c8b::csIdxType>(mjr::numberWrap(count*20, 767))));
     }
   }
   theRamCanvas.writeTIFFfile("mandelbrot_bm_cplx_openmp.tiff");

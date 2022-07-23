@@ -1,9 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      mandelbrot_triangle.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw a Mandelbrot set using an edge detection algorithm.@EOL
- @std       C++98
+ @std       C++20
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -35,7 +36,7 @@
   complex used in Fortran.  As a good example, the findAlphaTriangle, traceBoundry, and inSet functions existed long before the ramCanvas library, yet one is
   able to directly make use of the preexisting data types.
 
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -85,7 +86,7 @@ int main(void) {
         tpt.x = theRamCanvas.int2realX(xx);
         tpt.y = theRamCanvas.int2realY(yy);
         int clr = orbCmp(tpt);
-        theRamCanvas.drawPoint(xx, yy, aColor.cmpGrey3x((100*clr)%768));
+        theRamCanvas.drawPoint(xx, yy, aColor.setRGBcmpGrey3x(static_cast<mjr::ramCanvas3c8b::csIdxType>((100*clr)%768)));
       }
     }
   }

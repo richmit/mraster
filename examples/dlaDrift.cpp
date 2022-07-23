@@ -1,5 +1,6 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      dlaDrift.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Read a TIFF image and simulate diffusion limited aggregation with drift of blue pixels.@EOL
@@ -24,7 +25,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -64,7 +65,7 @@ int main(int argc, char *argv[]) {
     mjr::ramCanvas3c8b::coordIntType x, y;
     x = rEng() % theRamCanvas.get_numXpix();
     y = rEng() % theRamCanvas.get_numYpix();
-    if(theRamCanvas.getPxColor(x+0, y+0).getBlue()) {
+    if(theRamCanvas.getPxColor(x+0, y+0).getC2()) {
       numCloseRel++;
     } else {
       // move arround till we go out of range, or hit the tree
@@ -86,14 +87,14 @@ int main(int argc, char *argv[]) {
           numClipRel++;
           break;
         }
-        if(theRamCanvas.getPxColor(x+1, y+0).getBlue() ||
-           theRamCanvas.getPxColor(x-1, y+0).getBlue() ||
-           theRamCanvas.getPxColor(x+0, y+1).getBlue() ||
-           theRamCanvas.getPxColor(x+0, y-1).getBlue() ||
-           theRamCanvas.getPxColor(x+1, y+1).getBlue() ||
-           theRamCanvas.getPxColor(x+1, y-1).getBlue() ||
-           theRamCanvas.getPxColor(x-1, y+1).getBlue() ||
-           theRamCanvas.getPxColor(x-1, y-1).getBlue()
+        if(theRamCanvas.getPxColor(x+1, y+0).getC2() ||
+           theRamCanvas.getPxColor(x-1, y+0).getC2() ||
+           theRamCanvas.getPxColor(x+0, y+1).getC2() ||
+           theRamCanvas.getPxColor(x+0, y-1).getC2() ||
+           theRamCanvas.getPxColor(x+1, y+1).getC2() ||
+           theRamCanvas.getPxColor(x+1, y-1).getC2() ||
+           theRamCanvas.getPxColor(x-1, y+1).getC2() ||
+           theRamCanvas.getPxColor(x-1, y-1).getC2()
           ) {
           theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0, 0, 255));
           numHits++;

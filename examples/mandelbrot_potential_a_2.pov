@@ -1,6 +1,7 @@
 // -*- Mode:pov; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
- @file      mandelbrot_potential.pov
+/*******************************************************************************************************************************************************.H.S.**/
+/**
+ @file      mandelbrot_potential_a_2.pov
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Render height field in mandelbrot_potential_2.tga.@EOL
  @copyright
@@ -23,7 +24,7 @@
   SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
   TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   @endparblock
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 #include "colors.inc"
 

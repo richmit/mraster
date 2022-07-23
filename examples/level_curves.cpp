@@ -1,10 +1,11 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      level_curves.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw level curves for a real valued function on two real variables.@EOL
  @keywords
- @std       C++98
+ @std       C++20
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -26,7 +27,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -53,12 +54,13 @@ int main(void) {
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 drT f(drT x, drT y) {
-  return sin(x)+cos(y)+sqrt(x*x+y*y)*.05;
+  return sin(x)+cos(y)+sqrt(x*x+y*y)*0.05;
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 void drawLevelCurves(int numBand, drT bandWidth, drT zMin, drT zMax, drT minRealX, drT maxRealX, drT minRealY, drT maxRealY, const char *file) {
-  int x, y, clr, foundBand;
+  int x, y, foundBand;
+  mjr::ramCanvas3c8b::csIdxType clr;
   drT fxy, bandGap, band, minDist, minBand;
 
   mjr::ramCanvas3c8b theRamCanvas(1024, 1024, minRealX, maxRealX, minRealY, maxRealY);
@@ -88,8 +90,8 @@ void drawLevelCurves(int numBand, drT bandWidth, drT zMin, drT zMax, drT minReal
         theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType(0, 255, 0));
         } else {
           if(numBand == 0) {
-            clr = (int)((zMax-fxy)/(zMax-zMin)*250);
-            theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType().cmpGrey(clr));
+            clr = static_cast<mjr::ramCanvas3c8b::csIdxType>(mjr::genLinMap(fxy, zMin, zMax, (drT)0, (drT)(255*4+1)));
+            theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType().setRGBcmpIceToWaterToHot(clr));
           } else {
             if(bandWidth == 0) {
               theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType(0, 0, 255));
@@ -104,8 +106,8 @@ void drawLevelCurves(int numBand, drT bandWidth, drT zMin, drT zMax, drT minReal
                 }
               }
               if(foundBand) {
-                clr = (int)((zMax-minBand)/(zMax-zMin)*250);
-                theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType().cmpGrey(clr));
+                clr = static_cast<mjr::ramCanvas3c8b::csIdxType>(mjr::genLinMap(minBand, zMin, zMax, (drT)0, (drT)(255*4+1)));
+                theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType().setRGBcmpIceToWaterToHot(clr));
               }
             } else {
               theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType(0, 0, 255));

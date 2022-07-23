@@ -1,9 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      mandelbrot_emboss.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     This program draws a Mandelbrot set using the "potential"@EOL
- @std       C++98
+ @std       C++20
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -32,7 +33,7 @@
    * pot: Potential surface
    * dist: Distance surface (Using the Milnor and Thurston distance estimator)
 
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -68,7 +69,7 @@ int main(void) {
   mjr::ramCanvas3c8b   potRamCanvas(CSIZE, CSIZE), distRamCanvas(CSIZE, CSIZE);
   mjr::ramCanvas3c8b::colorType       theColor;
   double               lightHeight = 1.125;
-  double               lightAngle = mjr::PI/4;
+  double               lightAngle = std::numbers::pi/4;
   std::complex<double> lightDirection = exp(lightAngle*std::complex<double>(0,1));
   whyStop              why;
 
@@ -141,7 +142,7 @@ int main(void) {
             distNormal = distNormal/distNormalAbs;  // normalize distNormal
             double distShade = std::real(distNormal * std::conj(lightDirection)) + lightHeight;  // dot product with the incoming light
             distShade = mjr::unitClamp(distShade/(1+lightHeight));  // rescale so <=1, and then clamp to keep >=0
-            distRamCanvas.drawPoint(x, y, theColor.cmpGrey(mjr::unitTooIntLinMap(distShade, 255)));
+            distRamCanvas.drawPoint(x, y, theColor.setRGBcmpGrey(static_cast<mjr::ramCanvas3c8b::csIdxType>(mjr::unitTooIntLinMap(distShade, 255))));
           }
         } else {
           distRamCanvas.drawPoint(x, y, "red");

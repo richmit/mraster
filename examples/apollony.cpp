@@ -1,10 +1,12 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      apollony.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw the Apollony Gasket via an ifs.@EOL
  @keywords  apollony fractal gasket
- @std       C++14
+ @std       C++20
+ @see       https://www.mitchr.me/SS/AGasket/index.html
  @copyright
   @parblock
   Copyright (c) 1988-2015,2017, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -40,7 +42,7 @@
   Where
 
   \f[ f(z) = \frac{3}{1-z+\sqrt{3}} - \frac{1+\sqrt{3}}{2+\sqrt{3}} \f]
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -63,9 +65,13 @@ int main() {
   theRamCanvas.set_drawMode(mjr::ramCanvas3c8b::drawModeType::ADDCLIP);
 
 #if SUPPORT_DRAWING_MODE
-  mjr::ramCanvas3c8b::colorType aColor[] = { mjr::ramCanvas3c8b::colorType(1, 0, 0), mjr::ramCanvas3c8b::colorType(0, 1, 0), mjr::ramCanvas3c8b::colorType(0, 0, 1) };
+  mjr::ramCanvas3c8b::colorType aColor[] = { mjr::ramCanvas3c8b::colorType(1, 0, 0),
+                                             mjr::ramCanvas3c8b::colorType(0, 1, 0), 
+                                             mjr::ramCanvas3c8b::colorType(0, 0, 1) };
 #else
-  mjr::ramCanvas3c8b::colorType aColor[] = { mjr::ramCanvas3c8b::colorType(255, 0, 0), mjr::ramCanvas3c8b::colorType(0, 255, 0), mjr::ramCanvas3c8b::colorType(0, 0, 255) };
+  mjr::ramCanvas3c8b::colorType aColor[] = { mjr::ramCanvas3c8b::colorType(255, 0, 0), 
+                                             mjr::ramCanvas3c8b::colorType(0, 255, 0), 
+                                             mjr::ramCanvas3c8b::colorType(0, 0, 255) };
 #endif
 
   std::random_device rd;

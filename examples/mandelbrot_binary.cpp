@@ -1,9 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      mandelbrot_binary.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     This program draws a Mandelbrot the binary method.@EOL
- @std       C++98
+ @std       C++20
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -34,7 +35,7 @@
   - quad: Like the traditional method, but different colors for each quadrant
 
  This example demonstrates how to use some of the types defined in the ramCanvas object (integer coordinates, double coordinates, color, and color channel)
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include <chrono>                                                        /* time                    C++11    */
@@ -100,7 +101,7 @@ int main(void) {
           if(zAbs > 0.001) {
             rcc::channelType ns = ( std::imag(z) > 0 ? 0 : 255 );
             rcc::channelType ew = ( std::real(z) > 0 ? 0 : 255 );
-            grayRamCanvas.drawPoint(x, y, theColor.cmpGrey(mjr::unitTooIntLinMap((std::real(z) / zAbs + 1.0) / 2.0, 255)));
+            grayRamCanvas.drawPoint(x, y, theColor.setRGBcmpGrey(static_cast<mjr::ramCanvas3c8b::csIdxType>(mjr::unitTooIntLinMap((std::real(z) / zAbs + 1.0) / 2.0, 255))));
             binRamCanvas.drawPoint(x, y,  rcc(ns, ns, ns));
             quadRamCanvas.drawPoint(x, y, rcc(ns, static_cast<rcc::channelType>(255-(ns+ew)/2), ew));
           }

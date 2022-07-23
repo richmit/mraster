@@ -1,9 +1,10 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      lorenz_multi.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw a sprott Attractor.@EOL
- @std       C++98
+ @std       C++20
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -28,7 +29,7 @@
  @filedetails
 
   Inspired by http://paulbourke.net/fractals/starjulia/
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -45,7 +46,7 @@ int main(void) {
   const int XSIZ = 7680/2;
   const int YSIZ = 4320/2;
   mjr::ramCanvas1c16b::colorType aColor;
-  aColor.setAll(1);
+  aColor.setChans(1);
   mjr::ramCanvas1c16b theRamCanvas(XSIZ, YSIZ, -19, 19, 3, 47);
   double x=5.10, y=3.1, z=10.1, xNew, yNew, zNew;
 
@@ -81,8 +82,8 @@ int main(void) {
       zNew = z + (x * y - c * z) * tDelta;
       if(i>numPtsPerCurveToss) {
         theRamCanvas.drawPoint(xNew, zNew, theRamCanvas.getPxColor(xNew, zNew).tfrmAdd(aColor));
-        if(theRamCanvas.getPxColor(xNew, zNew).getRed() > maxII) {
-          maxII = theRamCanvas.getPxColor(xNew, zNew).getRed();
+        if(theRamCanvas.getPxColor(xNew, zNew).getC0() > maxII) {
+          maxII = theRamCanvas.getPxColor(xNew, zNew).getC0();
         }
       }
       x=xNew;
@@ -106,9 +107,9 @@ int main(void) {
   mjr::ramCanvas3c8b::colorType bColor;
   for(int yi=0;yi<theRamCanvas.get_numYpix();yi++)
     for(int xi=0;xi<theRamCanvas.get_numXpix();xi++) {
-      anotherRamCanvas.drawPoint(xi, yi, bColor.cmpColorRamp(static_cast<int>(theRamCanvas.getPxColor(xi, yi).getRed() * 1275 / maxII), "0RYBCW"));
-       if( (anotherRamCanvas.getPxColor(xi, yi).getRed() > 0) && (anotherRamCanvas.getPxColor(xi, yi).getRed() < 255/2) )
-         anotherRamCanvas.getPxColorRefNC(xi, yi).setRed(255/2);
+      anotherRamCanvas.drawPoint(xi, yi, bColor.cmpRGBcolorRamp(static_cast<mjr::ramCanvas3c8b::csIdxType>(theRamCanvas.getPxColor(xi, yi).getC0() * 1275 / maxII), "0RYBCW"));
+       if( (anotherRamCanvas.getPxColor(xi, yi).getC0() > 0) && (anotherRamCanvas.getPxColor(xi, yi).getC0() < 255/2) )
+         anotherRamCanvas.getPxColorRefNC(xi, yi).setC0(255/2);
     }
 
   anotherRamCanvas.writeTIFFfile("lorenz_multi.tiff");

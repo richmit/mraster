@@ -1,10 +1,11 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
-/***************************************************************************************************************************************************************
+/*******************************************************************************************************************************************************.H.S.**/
+/**
  @file      cplxColor.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     draw complex function plots@EOL
  @keywords
- @std       C++11
+ @std       C++20
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -26,7 +27,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-***************************************************************************************************************************************************************/
+********************************************************************************************************************************************************.H.E.**/
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -50,13 +51,12 @@ int main(void) {
   mjr::ramCanvas3c8b theRamCanvas(960*hdLevel, 540*hdLevel, -2.2*ar, 2.2*ar, -2.2, 2.2);
   mjr::ramCanvas3c8b::colorType aColor;
 
-  const double tau      = 6.28318530718; // 2*Pi
-  const double pi       = tau/2;         // Pi
+  const double tau      = std::numbers::pi * 2;   // 2*Pi
   const double cutDepth = 10.0;          // Range: $[1, ~30]$ Smaller means more contrast on cuts.
   const double argCuts  = 16.0;          // Number of grey cuts for arg
   const int    argWrap  = 3;             // Number of times to wrap around the color ramp for arg
   const double absCuts  = 2.0;           // Number of grey cuts for abs
-  const int    numColor = 6*255;         // Number of colors in cmpClrCubeRainbow -1
+  const int    numColor = 6*255;         // Number of colors in setRGBcmpClrCubeRainbow -1
 
   for(int y=0;y<theRamCanvas.get_numYpix();y++)  {
     //std::cout << "LINE: " << y << " of " << (1080*hdLevel) << std::endl;
@@ -68,19 +68,19 @@ int main(void) {
       double pzArg = (zArg < 0.0 ? tau + zArg : zArg) / tau; // Arg mapped to [0, 1]
       double zAbs  = std::abs(fz);                           // Abs
       double lzAbs = std::log(zAbs);                         // log(Abs
-      double xAbs  = std::abs(x);                            // abs(re
-      double yAbs  = std::abs(y);                            // abs(img
-      double xPz   = 1.0/(xAbs + 1.0);                       // Map real z to [0,1]  0->1, \inf->0
-      double yPz   = 1.0/(yAbs + 1.0);                       // Map real z to [0,1]  0->1, \inf->0
-      double zPz   = 1.0/(zAbs + 1.0);                       // Map abs(z) to [0,1]  0->1, \inf->0
-      double atm   = 2*atan(zAbs)/pi;                        // Map Abs to [0,1]
-      double a     = 2;                                      // param for sgpm
-      double tmp   = std::pow(zAbs, a);                      // tmp for sgpm
-      double sgpm  = tmp / (tmp + 1);                        // Map Abs to [0, 1] e stereographic projection onto the Riemann sphere.
-      double patm  = 1 - std::pow(0.5, zAbs);                // Map Abs to [0,1] -- much like atm, but no trig
+      // double xAbs  = std::abs(x);                            // abs(re
+      // double yAbs  = std::abs(y);                            // abs(img
+      // double xPz   = 1.0/(xAbs + 1.0);                       // Map real z to [0,1]  0->1, \inf->0
+      // double yPz   = 1.0/(yAbs + 1.0);                       // Map real z to [0,1]  0->1, \inf->0
+      // double zPz   = 1.0/(zAbs + 1.0);                       // Map abs(z) to [0,1]  0->1, \inf->0
+      // double atm   = 2*atan(zAbs)/pi;                        // Map Abs to [0,1]
+      // double a     = 2;                                      // param for sgpm
+      // double tmp   = std::pow(zAbs, a);                      // tmp for sgpm
+      // double sgpm  = tmp / (tmp + 1);                        // Map Abs to [0, 1] e stereographic projection onto the Riemann sphere.
+      // double patm  = 1 - std::pow(0.5, zAbs);                // Map Abs to [0,1] -- much like atm, but no trig
 
       // Primary color for fz
-      aColor.cmpClrCubeRainbow(mjr::intWrap(mjr::unitTooIntLinMap(mjr::unitClamp(pzArg), numColor*argWrap), numColor)); // Make color
+      aColor.setRGBcmpClrCubeRainbow(static_cast<mjr::ramCanvas3c8b::csIdxType>(mjr::numberWrap(mjr::unitTooIntLinMap(mjr::unitClamp(pzArg), numColor*argWrap), numColor))); // Make color
 
       // Modify the color with "cuts" along argument & magnitede scales.
       aColor.tfrmLinearGreyLevelScale(1.0 - std::fabs(int(pzArg*argCuts) - pzArg*argCuts)/cutDepth, 0);
