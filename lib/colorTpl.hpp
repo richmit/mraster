@@ -455,27 +455,27 @@ namespace mjr {
 
       /** @name Component Access */
       //@{
-      /** Provides access to an specified color channel value with compile time index check.  
+      /** Provides access to an specified color channel value with compile time index check.
           The channels are 0 indexed.
           @return The the value of the indexed channel. */
       clrChanT getC0() const;
-      /** Provides access to an specified color channel value with compile time index check.  
+      /** Provides access to an specified color channel value with compile time index check.
           The channels are 0 indexed.
           @return The the value of the indexed channel. */
       clrChanT getC1() const requires (numChan>1);
-      /** Provides access to an specified color channel value with compile time index check.  
+      /** Provides access to an specified color channel value with compile time index check.
           The channels are 0 indexed.
           @return The the value of the indexed channel. */
       clrChanT getC2() const requires (numChan>2);
-      /** Provides access to an specified color channel value with compile time index check.  
+      /** Provides access to an specified color channel value with compile time index check.
           The channels are 0 indexed.
           @return The the value of the indexed channel. */
       clrChanT getC3() const requires (numChan>3);
-      /** Provides access to an specified color channel value with run time time index check.  
+      /** Provides access to an specified color channel value with run time time index check.
           The channels are 0 indexed.  Returns #minChanVal if \a chan id out of range.
           @return The the value of the indexed channel. */
       clrChanT getChan(int chan) const;
-      /** Provides access to an specified color channel value with no index check.  
+      /** Provides access to an specified color channel value with no index check.
           The channels are 0 indexed.
           @param chan The channel index
           @return The the value of the indexed channel. */
@@ -553,23 +553,23 @@ namespace mjr {
           @param cVal The channel value
           @return Returns a reference to the current color object.*/
       colorTpl& setC3(clrChanT cVal) requires (numChan>3);;
-      /** Sets the specified color channel value with run time index check.           
+      /** Sets the specified color channel value with run time index check.
           @param chan The channel to set.  The channels are 0 indexed.  Out of range is a NOOP.
           @param cVal The channel value
           @return Returns a reference to the current color object.*/
       colorTpl& setChan(int chan, clrChanT cVal);
-      /** Sets the specified color channel value with no index check.  
+      /** Sets the specified color channel value with no index check.
           The channels are 0 indexed.
           @param chan The channel index
           @param cVal The channel value
           @return The the value of the indexed channel. */
       colorTpl& setChanNC(int chan, clrChanT cVal);
       /** Sets the given channel of the current object to #maxChanVal.
-          @param chan The channel to set.  The channels are 0 indexed.  Out of range is a NOOP. 
+          @param chan The channel to set.  The channels are 0 indexed.  Out of range is a NOOP.
           @return Returns a reference to the current color object. */
       colorTpl& setChanToMax(int chan);
       /** Sets the given channel of the current object to #minChanVal.
-          @param chan The channel to set.  The channels are 0 indexed.  Out of range is a NOOP. 
+          @param chan The channel to set.  The channels are 0 indexed.  Out of range is a NOOP.
           @return Returns a reference to the current color object. */
       colorTpl& setChanToMin(int chan);
       /** Sets the first four channels current object.
@@ -834,7 +834,7 @@ namespace mjr {
           Foley and Van Dam.
           @param H The Hue.
           @param S The Saturation.
-          @param V The Value 
+          @param V The Value
           @return Returns a reference to the current color object. */
       colorTpl& setRGBfromUnitHSV(double H, double S, double V);
       /** Set the color indicated by the given HSL values.
@@ -882,11 +882,11 @@ namespace mjr {
       //@{
       /** Computes a 24-bit truecolor value intended for use in producing 16-bit greyscale TGA.
           This is the color scheme that should be used for POVray 16-bit height files
-          @param tga16val An integer 
+          @param tga16val An integer
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpGreyTGA16bit(uint16_t tga16val);
       /** Computes a 24-bit truecolor value intended for use in producing 24-bit greyscale TGA.
-          @param tga24val An integer 
+          @param tga24val An integer
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpGreyTGA24bit(uint32_t tga24val);
       //@}
@@ -898,13 +898,13 @@ namespace mjr {
           are taken from Stiles and Burch 10-degree (1959).  Four of the algorithms are based upon simple linear interpolation, while one is based upon
           exponential bump functions closely matching the color matching functions.  The method of interpolation may be specified via the final argument.
           @param wavelength   The wavelength to convert into RGB
-          @param interpMethod Specify the interpolation method (see: cmfInterpolationEnum) 
+          @param interpMethod Specify the interpolation method (see: cmfInterpolationEnum)
           @return Returns a reference to the current color object. */
       colorTpl& setRGBfromWavelengthCM(double wavelength, cmfInterpolationEnum interpMethod = cmfInterpolationEnum::LINEAR);
       /** Set the color indicated by the given wavelength.
           This function uses an algorithm based upon linear approximations to the color match functions.  I believe the original algorithm is due to Dan
           Bruton, and his FORTRAN version is available (at least as of 1997) at http://www.physics.sfasu.edu/astro/color.html
-          @param wavelength to convert 
+          @param wavelength to convert
           @return Returns a reference to the current color object. */
       colorTpl& setRGBfromWavelengthLA(double wavelength);
       //@}
@@ -919,7 +919,7 @@ namespace mjr {
       /** Computes a color value based upon an algorithm to convert wavelength to RGB that uses the Color Matching functions.
           @param base The maximum number of colors
           @param csIdx        The index of the desired color
-          @param interpMethod Specify the interpolation method (see: cmfInterpolationEnum) 
+          @param interpMethod Specify the interpolation method (see: cmfInterpolationEnum)
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpRainbowCM(csIdxType base, csIdxType csIdx, cmfInterpolationEnum interpMethod = cmfInterpolationEnum::LINEAR);
       /** Computes a color value based upon a common rainbow-like color scheme based upon the HSV or HSL color space.
@@ -927,7 +927,7 @@ namespace mjr {
           function uses floating point arithmetic and is thus prone to round off errors.  For a precise rainbow with integer arithmetic, see the function
           setRGBcmpClrCubeRainbow().
           @param base The maximum number of colors
-          @param csIdx The index of the desired color 
+          @param csIdx The index of the desired color
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpRainbowHSV(csIdxType base, csIdxType csIdx);
       /** This computes a color value based upon a common rainbow-like color scheme based upon an edge traversal of the RGB color cube.
@@ -935,7 +935,7 @@ namespace mjr {
           is minimum.  This sequence of colors corresponds to an HSV sequence from h=0 to h=360, with s=100 and v=100.  This is simply a more precise version
           of setRGBcmpRainbowHSV that is immune to round off errors as it doesn't require any floating point conversions.  This function will generate
           6*#maxChanVal+1 different colors.
-          @param csIdx The index of the desired color 
+          @param csIdx The index of the desired color
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpClrCubeRainbow(csIdxType csIdx);
       //@}
@@ -946,23 +946,23 @@ namespace mjr {
           Provides #maxChanVal different colors.  This function is NOT always the same as cmpRGBcolorRamp() with a string of "0W" because cmpRGBcolorRamp() is based
           upon a three channel space, while this function is based upon the number of channels in the current color.  For example, this function sets the
           alpha value of an RGBA color.  For an RGB based grey ramp, use setRGBcmpGreyRGB -- which is the same as cmpRGBcolorRamp() with a corner string of "0W".
-          @param csIdx An integer 
+          @param csIdx An integer
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpGrey(csIdxType csIdx);
       /** Returns an RGB based true grey color given an index.
           Provides #maxChanVal different colors.  This This function is is always the same as cmpRGBcolorRamp() with a string of "0W".  Supports input
           conditioning.
-          @param csIdx An integer 
+          @param csIdx An integer
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpGreyRGB(csIdxType csIdx);
       /** A grey-like color scheme with 3*#maxChanVal colors, [0,3*#maxChanVal-1].
           It is not a true grey, but most people can't tell when used with reasonable channel depths.
-          @param csIdx An integer 
+          @param csIdx An integer
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpGrey3x(csIdxType csIdx);
       /** A grey-like color scheme with 4*#maxChanVal colors, [0,4*#maxChanVal-1].
           It is not a true grey, but most people can't tell when used with reasonable channel depths.
-          @param csIdx An integer 
+          @param csIdx An integer
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpGrey4x(csIdxType csIdx);
       //@}
@@ -1008,7 +1008,7 @@ namespace mjr {
       /** @name Color Schemes: Classic RGB Ramps */
       //@{
       /** Same as setRGBcmpSumRampRGB
-          @param csIdx An integer to convert to a color. 
+          @param csIdx An integer to convert to a color.
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpFireRamp(csIdxType csIdx);
       /** Color based upon the classical cold to hot ramp.
@@ -1073,27 +1073,27 @@ namespace mjr {
       colorTpl& setRGBcmpUpDownRampRg(csIdxType csIdx);
       /** Converts an integer into a color based upon a color up-down ramp: Rb == Red Up and Blue Down == cyan -> yellow.
           Provides #maxChanVal different colors.
-          @param csIdx An integer 
+          @param csIdx An integer
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpUpDownRampRb(csIdxType csIdx);
       /** Converts an integer into a color based upon a color up-down ramp: Gr == Green Up and Red Down == magenta -> cyan.
           Provides #maxChanVal different colors.
-          @param csIdx An integer 
+          @param csIdx An integer
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpUpDownRampGr(csIdxType csIdx);
       /** Converts an integer into a color based upon a color up-down ramp: Gb == Green Up and Blue Down == magenta -> yellow.
           Provides #maxChanVal different colors.
-          @param csIdx An integer 
+          @param csIdx An integer
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpUpDownRampGb(csIdxType csIdx);
       /** Converts an integer into a color based upon a color up-down ramp: Br == Blue Up and Red Down == yellow -> cyan.
           Provides #maxChanVal different colors.
-          @param csIdx An integer 
+          @param csIdx An integer
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpUpDownRampBr(csIdxType csIdx);
       /** Converts an integer into a color based upon a color up-down ramp: Bg == Blue Up and Green Down == yellow -> magenta.
           Provides #maxChanVal different colors.
-          @param csIdx An integer 
+          @param csIdx An integer
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpUpDownRampBg(csIdxType csIdx);
       //@}
@@ -1102,32 +1102,32 @@ namespace mjr {
       //@{
       /** Converts an integer into a color based upon a color sum-ramp: RGB == Black -> Red -> Yellow -> White.
           Same as cmpRGBcolorRamp() with a corner list of "0RYW".  Provides (3*#maxChanVal+1) different colors.
-          @param csIdx An integer 
+          @param csIdx An integer
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpSumRampRGB(csIdxType csIdx);
       /** Converts an integer into a color based upon a color sum-ramp: BGR == Black -> Blue -> cyan -> White.
           Same as cmpRGBcolorRamp() with a corner list of "0BCW" Provides (3*#maxChanVal+1) different colors.
-          @param csIdx An integer 
+          @param csIdx An integer
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpSumRampBGR(csIdxType csIdx);
       /** Converts an integer into a color based upon a color sum-ramp: GRB == Black -> Green -> yellow -> White.
           Same as cmpRGBcolorRamp() with a corner list of "0GYW" Provides (3*#maxChanVal+1) different colors.
-          @param csIdx An integer 
+          @param csIdx An integer
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpSumRampGRB(csIdxType csIdx);
       /** Converts an integer into a color based upon a color sum-ramp: GBR == Black -> Green -> cyan -> White.
           Same as cmpRGBcolorRamp() with a corner list of "0GCW" Provides (3*#maxChanVal+1) different colors.
-          @param csIdx An integer 
+          @param csIdx An integer
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpSumRampGBR(csIdxType csIdx);
       /** Converts an integer into a color based upon a color sum-ramp: BRG == Black -> Blue -> magenta -> White.
           Same as cmpRGBcolorRamp() with a corner list of "0BMW" Provides (3*#maxChanVal+1) different colors.
-          @param csIdx An integer 
+          @param csIdx An integer
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpSumRampBRG(csIdxType csIdx);
       /** Converts an integer into a color based upon a color sum-ramp: RBG Black -> Red -> Magenta -> White.
           Same as cmpRGBcolorRamp() with a corner list of "0RMW".  Provides (3*#maxChanVal+1) different colors.
-          @param csIdx An integer 
+          @param csIdx An integer
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpSumRampRBG(csIdxType csIdx);
       //@}
@@ -1136,32 +1136,32 @@ namespace mjr {
       //@{
       /** Converts an integer into a color based upon a binary color ramp -- red if the integer is less than the threshold and green otherwise.
           @param csIdx     An integer
-          @param threshold The threshold 
+          @param threshold The threshold
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpBinaryColorRampRG(csIdxType csIdx, csIdxType threshold);
       /** Converts an integer into a color based upon a binary color ramp -- red if the integer is less than the threshold and blue otherwise.
           @param csIdx     An integer
-          @param threshold The threshold 
+          @param threshold The threshold
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpBinaryColorRampRB(csIdxType csIdx, csIdxType threshold);
       /** Converts an integer into a color based upon a binary color ramp -- green if the integer is less than the threshold and red otherwise.
           @param csIdx     An integer
-          @param threshold The threshold 
+          @param threshold The threshold
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpBinaryColorRampGR(csIdxType csIdx, csIdxType threshold);
       /** Converts an integer into a color based upon a binary color ramp -- green if the integer is less than the threshold and blue otherwise.
           @param csIdx     An integer
-          @param threshold The threshold 
+          @param threshold The threshold
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpBinaryColorRampGB(csIdxType csIdx, csIdxType threshold);
       /** Converts an integer into a color based upon a binary color ramp -- blue if the integer is less than the threshold and red otherwise.
           @param csIdx     An integer
-          @param threshold The threshold 
+          @param threshold The threshold
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpBinaryColorRampBR(csIdxType csIdx, csIdxType threshold);
       /** Converts an integer into a color based upon a binary color ramp -- blue if the integer is less than the threshold and green otherwise.
           @param csIdx     An integer
-          @param threshold The threshold 
+          @param threshold The threshold
           @return Returns a reference to the current color object. */
       colorTpl& setRGBcmpBinaryColorRampBG(csIdxType csIdx, csIdxType threshold);
       //@}
@@ -1233,7 +1233,7 @@ namespace mjr {
           @param col1 The first color
           @param col2 The second color
           @param col3 The third color
-          @param col4 The fourth color 
+          @param col4 The fourth color
           @return Returns a reference to the current color object. */
       colorTpl& wMean(channelArithFltType w1, channelArithFltType w2, channelArithFltType w3, channelArithFltType w4, colorArgType col1, colorArgType col2, colorArgType col3, colorArgType col4);
       /** @overload */
@@ -1246,9 +1246,9 @@ namespace mjr {
           @param w2   The second weight in the range [0, 1)
           @param w3   The third weight in the range [0, 1)
           @param col1 The first color
-          @param col2 The second color 
+          @param col2 The second color
           @param col3 The third color
-          @param col4 The fourth color 
+          @param col4 The fourth color
           @return Returns a reference to the current color object. */
       colorTpl& uMean(channelArithFltType w1, channelArithFltType w2, channelArithFltType w3, colorArgType col1, colorArgType col2, colorArgType col3, colorArgType col4);
       /** @overload */
@@ -2439,7 +2439,8 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmAddDivClp(colorArgType aCol, colorArgType dCol) {
     for(int i=0; i<numChan; i++)
-      setChanNC(i, clipTop((static_cast<channelArithSPType>(getChanNC(i)) + static_cast<channelArithSPType>(aCol.getChanNC(i))) / static_cast<channelArithSPType>(dCol.getChanNC(i))));
+      setChanNC(i, clipTop((static_cast<channelArithSPType>(getChanNC(i)) + static_cast<channelArithSPType>(aCol.getChanNC(i))) /
+                           static_cast<channelArithSPType>(dCol.getChanNC(i))));
     return *this;
   }
 
@@ -2475,7 +2476,8 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmSqDiff(colorArgType aCol) {
     for(int i=0; i<numChan; i++)
-      setChanNC(i, static_cast<clrChanT>((static_cast<channelArithSDPType>(getChanNC(i)) - static_cast<channelArithSDPType>(aCol.getChanNC(i))) * (static_cast<channelArithSDPType>(getChanNC(i)) - static_cast<channelArithSDPType>(aCol.getChanNC(i)))));
+      setChanNC(i, static_cast<clrChanT>((static_cast<channelArithSDPType>(getChanNC(i)) - static_cast<channelArithSDPType>(aCol.getChanNC(i))) *
+                                         (static_cast<channelArithSDPType>(getChanNC(i)) - static_cast<channelArithSDPType>(aCol.getChanNC(i)))));
     return *this;
   }
 
@@ -2675,7 +2677,7 @@ namespace mjr {
   template <class clrChanT, int numChan>
   inline colorTpl<clrChanT, numChan>::maskType
   colorTpl<clrChanT, numChan>::getMask() const {
-    if(goodMask) 
+    if(goodMask)
       return theColor.theInt;
     else
       return 0;
@@ -2688,7 +2690,7 @@ namespace mjr {
     if(goodMask) {
       theColor.theInt = aMask;
       return true;
-    } else 
+    } else
       return false;
   }
 
@@ -2895,7 +2897,9 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmGreyScale(void) {
     /* Requires: Inherits numChan>2 from getC2. */
-    setChanNC(0, static_cast<clrChanT>(static_cast<channelArithFltType>(getC0()) * static_cast<channelArithFltType>(0.2126) + static_cast<channelArithFltType>(getC1()) * static_cast<channelArithFltType>(0.7152) + static_cast<channelArithFltType>(getC2()) * static_cast<channelArithFltType>(0.0722)));
+    setChanNC(0, static_cast<clrChanT>(static_cast<channelArithFltType>(getC0()) * static_cast<channelArithFltType>(0.2126) +
+                                       static_cast<channelArithFltType>(getC1()) * static_cast<channelArithFltType>(0.7152) +
+                                       static_cast<channelArithFltType>(getC2()) * static_cast<channelArithFltType>(0.0722)));
     for(int i=1; i<numChan; i++)
       setChanNC(i, getChanNC(0));
     return *this;
@@ -2915,7 +2919,8 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmStdPowSqr(void) {
     for(int i=0; i<numChan; i++)
-      setChanNC(i, static_cast<clrChanT>(static_cast<channelArithSPType>(getChanNC(i)) * static_cast<channelArithSPType>(getChanNC(i)) / static_cast<channelArithSPType>(maxChanVal)));
+      setChanNC(i, static_cast<clrChanT>(static_cast<channelArithSPType>(getChanNC(i)) * static_cast<channelArithSPType>(getChanNC(i)) /
+                                         static_cast<channelArithSPType>(maxChanVal)));
     return *this;
   }
 
@@ -3445,7 +3450,10 @@ namespace mjr {
   colorTpl<clrChanT, numChan>::wMean(channelArithFltType w1, channelArithFltType w2, channelArithFltType w3, channelArithFltType w4,
                                      colorArgType      col1, colorArgType      col2, colorArgType      col3, colorArgType      col4) {
     for(int i=0; i<numChan; i++)
-      setChanNC(i, static_cast<clrChanT>((static_cast<channelArithFltType>(col1.getChanNC(i)) * w1) + (static_cast<channelArithFltType>(col2.getChanNC(i)) * w2) + (static_cast<channelArithFltType>(col3.getChanNC(i)) * w3) + (static_cast<channelArithFltType>(col4.getChanNC(i)) * w4)));
+      setChanNC(i, static_cast<clrChanT>((static_cast<channelArithFltType>(col1.getChanNC(i)) * w1) +
+                                         (static_cast<channelArithFltType>(col2.getChanNC(i)) * w2) +
+                                         (static_cast<channelArithFltType>(col3.getChanNC(i)) * w3) +
+                                         (static_cast<channelArithFltType>(col4.getChanNC(i)) * w4)));
 
     return *this;
   }
@@ -3456,7 +3464,9 @@ namespace mjr {
   colorTpl<clrChanT, numChan>::wMean(channelArithFltType w1, channelArithFltType w2, channelArithFltType w3,
                                      colorArgType      col1, colorArgType      col2, colorArgType      col3) {
     for(int i=0; i<numChan; i++)
-      setChanNC(i, static_cast<clrChanT>((static_cast<channelArithFltType>(col1.getChanNC(i)) * w1) + (static_cast<channelArithFltType>(col2.getChanNC(i)) * w2) + (static_cast<channelArithFltType>(col3.getChanNC(i)) * w3)));
+      setChanNC(i, static_cast<clrChanT>((static_cast<channelArithFltType>(col1.getChanNC(i)) * w1) +
+                                         (static_cast<channelArithFltType>(col2.getChanNC(i)) * w2) +
+                                         (static_cast<channelArithFltType>(col3.getChanNC(i)) * w3)));
     return *this;
   }
 
@@ -3465,14 +3475,16 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::wMean(channelArithFltType w1, channelArithFltType w2, colorArgType col1, colorArgType col2) {
     for(int i=0; i<numChan; i++)
-      setChanNC(i, static_cast<clrChanT>((static_cast<channelArithFltType>(col1.getChanNC(i)) * w1) + (static_cast<channelArithFltType>(col2.getChanNC(i)) * w2)));
+      setChanNC(i, static_cast<clrChanT>((static_cast<channelArithFltType>(col1.getChanNC(i)) * w1) +
+                                         (static_cast<channelArithFltType>(col2.getChanNC(i)) * w2)));
     return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
   inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::uMean(channelArithFltType w1, channelArithFltType w2, channelArithFltType w3, colorArgType col1, colorArgType col2, colorArgType col3, colorArgType col4) {
+  colorTpl<clrChanT, numChan>::uMean(channelArithFltType w1, channelArithFltType w2, channelArithFltType w3,
+                                     colorArgType      col1, colorArgType      col2, colorArgType      col3, colorArgType col4) {
     return wMean(w1, w2, w3, 1-w1-w2-w3, col1, col2, col3, col4);
   }
 
@@ -3525,7 +3537,7 @@ namespace mjr {
   colorTpl<clrChanT, numChan>::interplColors(double aDouble, colorArgType col1, colorArgType col2) {
     if( (aDouble >= 0.0) && (aDouble <= 1.0) )
       for(int i=0; i<numChan; i++)
-        setChanNC(i, static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(col1.getChanNC(i)), static_cast<double>(col2.getChanNC(i)),   aDouble)));
+        setChanNC(i, static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(col1.getChanNC(i)), static_cast<double>(col2.getChanNC(i)), aDouble)));
     return *this;
   }
 
@@ -3535,7 +3547,7 @@ namespace mjr {
   colorTpl<clrChanT, numChan>::interplColors(double aDouble, colorArgType tooCol) {
     if( (aDouble >= 0.0) && (aDouble <= 1.0) )
       for(int i=0; i<numChan; i++)
-        setChanNC(i, static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(getChanNC(i)), static_cast<double>(tooCol.getChanNC(i)),   aDouble)));
+        setChanNC(i, static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(getChanNC(i)), static_cast<double>(tooCol.getChanNC(i)), aDouble)));
     return *this;
   }
 
@@ -3781,7 +3793,7 @@ namespace mjr {
   template <class clrChanT, int numChan>
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmInvert() {
-    //  MJR TODO NOTE tfrmInvert: This is just as fast as array refs...  
+    //  MJR TODO NOTE tfrmInvert: This is just as fast as array refs...
     //  MJR TODO NOTE tfrmInvert: We should use this universally across the library -- to isolate the code from the array specifics...
     for(int i=0; i<numChan; i++)
       setChanNC(i, maxChanVal - getChanNC(i));
