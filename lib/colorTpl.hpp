@@ -1571,10 +1571,13 @@ namespace mjr {
       channelArithSPType rgbSumIntensity(void);
       /** Compute the sum of the components.
           @return Sum of components. */
-      channelArithSPType chanSum(void);
+      channelArithSPType sumIntensity(void);
       /** Compute the scaled intensity (sum of the first three components divided by the maximum intensity possible) of the current color
           @return The scaled intensity for the current object. */
       channelArithFltType rgbScaledIntensity(void);
+      /** Compute the scaled intensity (sum of the components divided by the maximum intensity possible) of the current color
+          @return Sum of components. */
+      channelArithFltType sumScaledIntensity(void);
       /** Returns the value of the largest component.
           @return The value of the largest color component currently stored.*/
       clrChanT getMaxC();
@@ -1721,28 +1724,28 @@ namespace mjr {
   template <class clrChanT, int numChan>
   inline clrChanT
   colorTpl<clrChanT, numChan>::getC0() const {
-    return theColor.thePartsA[0];
+    return getChanNC(0);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
   inline clrChanT
   colorTpl<clrChanT, numChan>::getC1() const requires (numChan>1) {
-    return theColor.thePartsA[1];
+    return getChanNC(1);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
   inline clrChanT
   colorTpl<clrChanT, numChan>::getC2() const requires (numChan>2) {
-    return theColor.thePartsA[2];
+    return getChanNC(2);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
   inline clrChanT
   colorTpl<clrChanT, numChan>::getC3() const requires (numChan>3) {
-      return theColor.thePartsA[3];
+      return getChanNC(3);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1754,7 +1757,7 @@ namespace mjr {
     /* Performance: The array assignment here gets optimized because the index is known at compile time.  It's just as fast as accessing a member of a union
        for example.  */
     /* Useablity: We could do this with a template, but that means we need ".template set" syntax in some cases.  That's just too uguly. */
-    theColor.thePartsA[0] = cVal;
+    setChanNC(0, cVal);
     return *this;
   }
 
@@ -1762,7 +1765,7 @@ namespace mjr {
   template <class clrChanT, int numChan>
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::setC1(clrChanT cVal) requires (numChan>1) {
-    theColor.thePartsA[1] = cVal;
+    setChanNC(1, cVal);
     return *this;
   }
 
@@ -1770,7 +1773,7 @@ namespace mjr {
   template <class clrChanT, int numChan>
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::setC2(clrChanT cVal) requires (numChan>2) {
-    theColor.thePartsA[2] = cVal;
+    setChanNC(2, cVal);
     return *this;
   }
 
@@ -1778,7 +1781,7 @@ namespace mjr {
   template <class clrChanT, int numChan>
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::setC3(clrChanT cVal) requires (numChan>3) {
-    theColor.thePartsA[3] = cVal;
+    setChanNC(3, cVal);
     return *this;
   }
 
@@ -1787,7 +1790,7 @@ namespace mjr {
   inline clrChanT
   colorTpl<clrChanT, numChan>::getChan(int chan) const {
     if((chan >= 0) && (chan < numChan)) [[likely]]
-      return theColor.thePartsA[chan];
+      return getChanNC(chan);
     else
       return minChanVal;
   }
@@ -1964,7 +1967,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::setChanToMax(int chan) {
     if((chan >= 0) && (chan < numChan)) [[likely]]
-      theColor.thePartsA[chan] = maxChanVal;
+      setChanNC(chan, maxChanVal);
     return *this;
   }
 
@@ -1973,7 +1976,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::setChanToMin(int chan) {
     if((chan >= 0) && (chan < numChan)) [[likely]]
-      theColor.thePartsA[chan] = minChanVal;
+      setChanNC(chan, minChanVal);
     return *this;
   }
 
@@ -2171,11 +2174,11 @@ namespace mjr {
   colorTpl<clrChanT, numChan>::ScaleSignDiff(colorArgType aCol) {
     for(int i=0; i<numChan; i++) {
       if(getChanNC(i) < aCol.getChanNC(i)) {
-        theColor.thePartsA[i] = minChanVal;
+        setChanNC(i, minChanVal);
       } else if(getChanNC(i) > aCol.getChanNC(i)) {
-        theColor.thePartsA[i] = maxChanVal;
+        setChanNC(i, maxChanVal);
       } else {
-        theColor.thePartsA[i] = meanChanVal;
+        setChanNC(i, meanChanVal);
       }
     }
     return *this;
@@ -2187,7 +2190,7 @@ namespace mjr {
   colorTpl<clrChanT, numChan>::tfrmLn() {
     /* Performance: Even if the compiler fails to unroll this loop, the runtime is dominated by the double computations. */
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = std::log(1.0 + static_cast<double>(getChanNC(i)));
+      setChanNC(i, std::log(1.0 + static_cast<double>(getChanNC(i))));
     return *this;
   }
 
@@ -2206,7 +2209,7 @@ namespace mjr {
       theColor.theInt |= aCol.theColor.theInt;
     else
       for(int i=0; i<numChan; i++)
-        theColor.thePartsA[i] |= aCol.getChanNC(i);
+        setChanNC(i, getChanNC(i) | aCol.getChanNC(i));
     return *this;
   }
 
@@ -2219,7 +2222,7 @@ namespace mjr {
       theColor.theInt |= aCol.theColor.theInt;
     else
       for(int i=0; i<numChan; i++)
-        theColor.thePartsA[i] = std::bit_cast<clrChanT>(std::bit_cast<channelArithLogType>(getChanNC(i)) | std::bit_cast<channelArithLogType>(aCol.getChanNC(i)));
+        setChanNC(i, std::bit_cast<clrChanT>(std::bit_cast<channelArithLogType>(getChanNC(i)) | std::bit_cast<channelArithLogType>(aCol.getChanNC(i))));
     return *this;
   }
 
@@ -2231,7 +2234,7 @@ namespace mjr {
       theColor.theInt = ~(theColor.theInt | aCol.theColor.theInt);
     else
       for(int i=0; i<numChan; i++)
-        theColor.thePartsA[i] = ~(getChanNC(i) | aCol.getChanNC(i));
+        setChanNC(i, ~(getChanNC(i) | aCol.getChanNC(i)));
     return *this;
   }
 
@@ -2243,7 +2246,7 @@ namespace mjr {
       theColor.theInt = ~(theColor.theInt | aCol.theColor.theInt);
     else
       for(int i=0; i<numChan; i++)
-        theColor.thePartsA[i] = std::bit_cast<clrChanT>(~(std::bit_cast<channelArithLogType>(getChanNC(i)) | std::bit_cast<channelArithLogType>(aCol.getChanNC(i))));
+        setChanNC(i, std::bit_cast<clrChanT>(~(std::bit_cast<channelArithLogType>(getChanNC(i)) | std::bit_cast<channelArithLogType>(aCol.getChanNC(i)))));
     return *this;
   }
 
@@ -2255,7 +2258,7 @@ namespace mjr {
       theColor.theInt &= aCol.theColor.theInt;
     else
       for(int i=0; i<numChan; i++)
-        theColor.thePartsA[i] &= aCol.getChanNC(i);
+        setChanNC(i, getChanNC(i) & aCol.getChanNC(i));
     return *this;
   }
 
@@ -2267,7 +2270,7 @@ namespace mjr {
       theColor.theInt &= aCol.theColor.theInt;
     else
       for(int i=0; i<numChan; i++)
-        theColor.thePartsA[i] = std::bit_cast<clrChanT>(std::bit_cast<channelArithLogType>(getChanNC(i)) & std::bit_cast<channelArithLogType>(aCol.getChanNC(i)));
+        setChanNC(i, std::bit_cast<clrChanT>(std::bit_cast<channelArithLogType>(getChanNC(i)) & std::bit_cast<channelArithLogType>(aCol.getChanNC(i))));
     return *this;
   }
 
@@ -2279,7 +2282,7 @@ namespace mjr {
       theColor.theInt = ~(theColor.theInt & aCol.theColor.theInt);
     else
       for(int i=0; i<numChan; i++)
-        theColor.thePartsA[i] = ~(getChanNC(i) & aCol.getChanNC(i));
+        setChanNC(i, ~(getChanNC(i) & aCol.getChanNC(i)));
     return *this;
   }
 
@@ -2291,7 +2294,7 @@ namespace mjr {
       theColor.theInt = ~(theColor.theInt & aCol.theColor.theInt);
     else
       for(int i=0; i<numChan; i++)
-        theColor.thePartsA[i] = std::bit_cast<clrChanT>(~(std::bit_cast<channelArithLogType>(getChanNC(i)) & std::bit_cast<channelArithLogType>(aCol.getChanNC(i))));
+        setChanNC(i, std::bit_cast<clrChanT>(~(std::bit_cast<channelArithLogType>(getChanNC(i)) & std::bit_cast<channelArithLogType>(aCol.getChanNC(i)))));
     return *this;
   }
 
@@ -2303,7 +2306,7 @@ namespace mjr {
       theColor.theInt ^= aCol.theColor.theInt;
     else
       for(int i=0; i<numChan; i++)
-        theColor.thePartsA[i] ^= aCol.getChanNC(i);
+        setChanNC(i, getChanNC(i) ^ aCol.getChanNC(i));
     return *this;
   }
 
@@ -2315,7 +2318,7 @@ namespace mjr {
       theColor.theInt ^= aCol.theColor.theInt;
     else
       for(int i=0; i<numChan; i++)
-        theColor.thePartsA[i] = std::bit_cast<clrChanT>(std::bit_cast<channelArithLogType>(getChanNC(i)) ^ std::bit_cast<channelArithLogType>(aCol.getChanNC(i)));
+        setChanNC(i, std::bit_cast<clrChanT>(std::bit_cast<channelArithLogType>(getChanNC(i)) ^ std::bit_cast<channelArithLogType>(aCol.getChanNC(i))));
     return *this;
   }
 
@@ -2327,7 +2330,7 @@ namespace mjr {
       theColor.theInt = ~(theColor.theInt ^ aCol.theColor.theInt);
     else
       for(int i=0; i<numChan; i++)
-        theColor.thePartsA[i] = ~(getChanNC(i) ^ aCol.getChanNC(i));
+        setChanNC(i, ~(getChanNC(i) ^ aCol.getChanNC(i)));
     return *this;
   }
 
@@ -2339,7 +2342,7 @@ namespace mjr {
       theColor.theInt = ~(theColor.theInt ^ aCol.theColor.theInt);
     else
       for(int i=0; i<numChan; i++)
-        theColor.thePartsA[i] = std::bit_cast<clrChanT>(~(std::bit_cast<channelArithLogType>(getChanNC(i)) ^ std::bit_cast<channelArithLogType>(aCol.getChanNC(i))));
+        setChanNC(i, std::bit_cast<clrChanT>(~(std::bit_cast<channelArithLogType>(getChanNC(i)) ^ std::bit_cast<channelArithLogType>(aCol.getChanNC(i)))));
     return *this;
   }
 
@@ -2351,7 +2354,7 @@ namespace mjr {
       theColor.theInt = ~(theColor.theInt);
     else
       for(int i=0; i<numChan; i++)
-        theColor.thePartsA[i] = ~(getChanNC(i));
+        setChanNC(i, ~(getChanNC(i)));
     return *this;
   }
 
@@ -2363,7 +2366,7 @@ namespace mjr {
       theColor.theInt = ~(theColor.theInt);
     else
       for(int i=0; i<numChan; i++)
-        theColor.thePartsA[i] = std::bit_cast<clrChanT>(~(std::bit_cast<channelArithLogType>(getChanNC(i))));
+        setChanNC(i, std::bit_cast<clrChanT>(~(std::bit_cast<channelArithLogType>(getChanNC(i)))));
     return *this;
   }
 
@@ -2372,7 +2375,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmShiftL(colorArgType aCol) requires (std::integral<clrChanT>) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = getChanNC(i) << aCol.getChanNC(i);
+      setChanNC(i, getChanNC(i) << aCol.getChanNC(i));
     return *this;
   }
 
@@ -2382,8 +2385,7 @@ namespace mjr {
   colorTpl<clrChanT, numChan>::tfrmShiftL(colorArgType aCol) requires (std::floating_point<clrChanT>) {
     for(int i=0; i<numChan; i++)
     /* tricky: We are casting the color component being shifted bitwise to a big int; however, we are casting the shifting quantity via a static_cast. */
-      theColor.thePartsA[i] = std::bit_cast<clrChanT>(std::bit_cast<channelArithLogType>(getChanNC(i)) <<
-                                                      static_cast<uint64_t>(aCol.getChanNC(i)));
+      setChanNC(i, std::bit_cast<clrChanT>(std::bit_cast<channelArithLogType>(getChanNC(i)) << static_cast<uint64_t>(aCol.getChanNC(i))));
     return *this;
   }
 
@@ -2392,7 +2394,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmShiftR(colorArgType aCol) requires (std::integral<clrChanT>) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = getChanNC(i) >> aCol.getChanNC(i);
+      setChanNC(i, getChanNC(i) >> aCol.getChanNC(i));
     return *this;
   }
 
@@ -2401,8 +2403,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmShiftR(colorArgType aCol) requires (std::floating_point<clrChanT>) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = std::bit_cast<clrChanT>(std::bit_cast<channelArithLogType>(getChanNC(i)) >>
-                                                      static_cast<uint64_t>(aCol.getChanNC(i)));
+      setChanNC(i, std::bit_cast<clrChanT>(std::bit_cast<channelArithLogType>(getChanNC(i)) >> static_cast<uint64_t>(aCol.getChanNC(i))));
     return *this;
   }
 
@@ -2411,7 +2412,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmMultClp(colorArgType aCol) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = clipTop(static_cast<channelArithSPType>(getChanNC(i)) * static_cast<channelArithSPType>(aCol.getChanNC(i)));
+      setChanNC(i, clipTop(static_cast<channelArithSPType>(getChanNC(i)) * static_cast<channelArithSPType>(aCol.getChanNC(i))));
     return *this;
   }
 
@@ -2420,8 +2421,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmGmeanClp(colorArgType aCol) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = clipTop(static_cast<channelArithSPType>(std::sqrt(static_cast<double>(getChanNC(i))   *
-                                                                                static_cast<double>(aCol.getChanNC(i)))));
+      setChanNC(i, clipTop(static_cast<channelArithSPType>(std::sqrt(static_cast<double>(getChanNC(i))   * static_cast<double>(aCol.getChanNC(i))))));
     return *this;
   }
 
@@ -2430,7 +2430,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmAddClp(colorArgType aCol) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = clipTop(static_cast<channelArithSPType>(getChanNC(i)) + static_cast<channelArithSPType>(aCol.getChanNC(i)));
+      setChanNC(i, clipTop(static_cast<channelArithSPType>(getChanNC(i)) + static_cast<channelArithSPType>(aCol.getChanNC(i))));
     return *this;
   }
 
@@ -2439,8 +2439,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmAddDivClp(colorArgType aCol, colorArgType dCol) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = clipTop((static_cast<channelArithSPType>(getChanNC(i)) + static_cast<channelArithSPType>(aCol.getChanNC(i))) /
-                                      static_cast<channelArithSPType>(dCol.getChanNC(i)));
+      setChanNC(i, clipTop((static_cast<channelArithSPType>(getChanNC(i)) + static_cast<channelArithSPType>(aCol.getChanNC(i))) / static_cast<channelArithSPType>(dCol.getChanNC(i))));
     return *this;
   }
 
@@ -2449,7 +2448,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmDiffClp(colorArgType aCol) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = clipBot(static_cast<channelArithDType>(getChanNC(i)) - static_cast<channelArithDType>(aCol.getChanNC(i)));
+      setChanNC(i, clipBot(static_cast<channelArithDType>(getChanNC(i)) - static_cast<channelArithDType>(aCol.getChanNC(i))));
     return *this;
   }
 
@@ -2458,7 +2457,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmNegDiffClp(colorArgType aCol) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = clipBot(static_cast<channelArithDType>(aCol.getChanNC(i)) - static_cast<channelArithDType>(getChanNC(i)));
+      setChanNC(i, clipBot(static_cast<channelArithDType>(aCol.getChanNC(i)) - static_cast<channelArithDType>(getChanNC(i))));
     return *this;
   }
 
@@ -2467,8 +2466,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmAbsDiff(colorArgType aCol) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = static_cast<clrChanT>(std::abs(static_cast<channelArithDType>(getChanNC(i))   -
-                                                             static_cast<channelArithDType>(aCol.getChanNC(i))));
+      setChanNC(i, static_cast<clrChanT>(std::abs(static_cast<channelArithDType>(getChanNC(i))   - static_cast<channelArithDType>(aCol.getChanNC(i)))));
     return *this;
   }
 
@@ -2477,8 +2475,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmSqDiff(colorArgType aCol) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = static_cast<clrChanT>((static_cast<channelArithSDPType>(getChanNC(i)) - static_cast<channelArithSDPType>(aCol.getChanNC(i)))   *
-                                                    (static_cast<channelArithSDPType>(getChanNC(i)) - static_cast<channelArithSDPType>(aCol.getChanNC(i))));
+      setChanNC(i, static_cast<clrChanT>((static_cast<channelArithSDPType>(getChanNC(i)) - static_cast<channelArithSDPType>(aCol.getChanNC(i))) * (static_cast<channelArithSDPType>(getChanNC(i)) - static_cast<channelArithSDPType>(aCol.getChanNC(i)))));
     return *this;
   }
 
@@ -2488,7 +2485,7 @@ namespace mjr {
   colorTpl<clrChanT, numChan>::tfrmMax(colorArgType aCol) {
     for(int i=0; i<numChan; i++)
       if(getChanNC(i) < aCol.getChanNC(i))
-        theColor.thePartsA[i] = aCol.getChanNC(i);
+        setChanNC(i, aCol.getChanNC(i));
     return *this;
   }
 
@@ -2498,7 +2495,7 @@ namespace mjr {
   colorTpl<clrChanT, numChan>::tfrmMin(colorArgType aCol) {
     for(int i=0; i<numChan; i++)
       if(getChanNC(i) > aCol.getChanNC(i))
-        theColor.thePartsA[i] = aCol.getChanNC(i);
+        setChanNC(i, aCol.getChanNC(i));
     return *this;
   }
 
@@ -2507,7 +2504,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmAdd(colorArgType aCol) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = static_cast<clrChanT>(static_cast<channelArithSPType>(getChanNC(i)) + static_cast<channelArithSPType>(aCol.getChanNC(i)));
+      setChanNC(i, static_cast<clrChanT>(static_cast<channelArithSPType>(getChanNC(i)) + static_cast<channelArithSPType>(aCol.getChanNC(i))));
     return *this;
   }
 
@@ -2516,7 +2513,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmDiv(colorArgType aCol) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = static_cast<clrChanT>(static_cast<channelArithSPType>(getChanNC(i)) / static_cast<channelArithSPType>(aCol.getChanNC(i)));
+      setChanNC(i, static_cast<clrChanT>(static_cast<channelArithSPType>(getChanNC(i)) / static_cast<channelArithSPType>(aCol.getChanNC(i))));
     return *this;
   }
 
@@ -2525,7 +2522,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmMult(colorArgType aCol) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = static_cast<clrChanT>(static_cast<channelArithSPType>(getChanNC(i)) * static_cast<channelArithSPType>(aCol.getChanNC(i)));
+      setChanNC(i, static_cast<clrChanT>(static_cast<channelArithSPType>(getChanNC(i)) * static_cast<channelArithSPType>(aCol.getChanNC(i))));
     return *this;
   }
 
@@ -2534,7 +2531,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmGmean(colorArgType aCol) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = static_cast<clrChanT>(std::sqrt(static_cast<double>(getChanNC(i)) * static_cast<double>(aCol.getChanNC(i))));
+      setChanNC(i, static_cast<clrChanT>(std::sqrt(static_cast<double>(getChanNC(i)) * static_cast<double>(aCol.getChanNC(i)))));
     return *this;
   }
 
@@ -2543,7 +2540,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmMean(colorArgType aCol) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = static_cast<clrChanT>((static_cast<channelArithSPType>(getChanNC(i)) + static_cast<channelArithSPType>(aCol.getChanNC(i))) / 2);
+      setChanNC(i, static_cast<clrChanT>((static_cast<channelArithSPType>(getChanNC(i)) + static_cast<channelArithSPType>(aCol.getChanNC(i))) / 2));
     return *this;
   }
 
@@ -2552,7 +2549,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmDiff(colorArgType aCol) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = static_cast<clrChanT>(static_cast<channelArithDType>(getChanNC(i)) - static_cast<channelArithDType>(aCol.getChanNC(i)));
+      setChanNC(i, static_cast<clrChanT>(static_cast<channelArithDType>(getChanNC(i)) - static_cast<channelArithDType>(aCol.getChanNC(i))));
     return *this;
   }
 
@@ -2561,7 +2558,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmMod(colorArgType aCol) requires (std::integral<clrChanT>) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = getChanNC(i) % aCol.getChanNC(i);
+      setChanNC(i, getChanNC(i) % aCol.getChanNC(i));
     return *this;
   }
 
@@ -2570,7 +2567,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmMod(colorArgType aCol) requires (std::floating_point<clrChanT>) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = static_cast<clrChanT>(std::fmod(static_cast<double>(getChanNC(i)), static_cast<double>(aCol.getChanNC(i))));
+      setChanNC(i, static_cast<clrChanT>(std::fmod(static_cast<double>(getChanNC(i)), static_cast<double>(aCol.getChanNC(i)))));
     return *this;
   }
 
@@ -2610,7 +2607,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::setChans(clrChanT cVal) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = cVal;
+      setChanNC(i, cVal);
     return *this;
   }
 
@@ -2702,13 +2699,13 @@ namespace mjr {
 
     // if( !(setMask(aCol.getMask())))
     //   for(int i=0; i<numChan; i++)
-    //     theColor.thePartsA[i] = aCol.getChanNC(i);
+    //     setChanNC(i, aCol.getChanNC(i));
 
     if(goodMask)
       theColor.theInt = aCol.theColor.theInt;
     else
       for(int i=0; i<numChan; i++)
-        theColor.thePartsA[i] = aCol.getChanNC(i);
+        setChanNC(i, aCol.getChanNC(i));
 
     return *this;
   }
@@ -2855,7 +2852,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::setChans(std::vector<clrChanT>& chanValues) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = chanValues[i];
+      setChanNC(i, chanValues[i]);
     return *this;
   }
 
@@ -2864,7 +2861,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmLinearGreyLevelScale(double c, double b) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = static_cast<clrChanT>(c * static_cast<double>(getChanNC(i)) + b);
+      setChanNC(i, static_cast<clrChanT>(c * static_cast<double>(getChanNC(i)) + b));
     return *this;
   }
 
@@ -2876,7 +2873,7 @@ namespace mjr {
       double c = ( (static_cast<double>(to1.getChanNC(i))   - static_cast<double>(to2.getChanNC(i))) /
                    (static_cast<double>(from1.getChanNC(i)) - static_cast<double>(from2.getChanNC(i))) );
       double b = static_cast<double>(to1.getChanNC(i)) - c * static_cast<double>(from1.getChanNC(i));
-      theColor.thePartsA[i] = static_cast<clrChanT>(c * getChanNC(i) + b);
+      setChanNC(i, static_cast<clrChanT>(c * getChanNC(i) + b));
     }
     return *this;
   }
@@ -2898,11 +2895,9 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmGreyScale(void) {
     /* Requires: Inherits numChan>2 from getC2. */
-    theColor.thePartsA[0] = static_cast<clrChanT>(static_cast<channelArithFltType>(getC0()) * static_cast<channelArithFltType>(0.2126) +
-                                                  static_cast<channelArithFltType>(getC1()) * static_cast<channelArithFltType>(0.7152) +
-                                                  static_cast<channelArithFltType>(getC2()) * static_cast<channelArithFltType>(0.0722));
+    setChanNC(0, static_cast<clrChanT>(static_cast<channelArithFltType>(getC0()) * static_cast<channelArithFltType>(0.2126) + static_cast<channelArithFltType>(getC1()) * static_cast<channelArithFltType>(0.7152) + static_cast<channelArithFltType>(getC2()) * static_cast<channelArithFltType>(0.0722)));
     for(int i=1; i<numChan; i++)
-      theColor.thePartsA[i] = getChanNC(0);
+      setChanNC(i, getChanNC(0));
     return *this;
   }
 
@@ -2911,7 +2906,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmStdPow(double p) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = static_cast<clrChanT>(std::pow(static_cast<double>(getChanNC(i)) / static_cast<double>(maxChanVal), p) * maxChanVal);
+      setChanNC(i, static_cast<clrChanT>(std::pow(static_cast<double>(getChanNC(i)) / static_cast<double>(maxChanVal), p) * maxChanVal));
     return *this;
   }
 
@@ -2920,8 +2915,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmStdPowSqr(void) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = static_cast<clrChanT>(static_cast<channelArithSPType>(getChanNC(i)) * static_cast<channelArithSPType>(getChanNC(i)) /
-                                                    static_cast<channelArithSPType>(maxChanVal));
+      setChanNC(i, static_cast<clrChanT>(static_cast<channelArithSPType>(getChanNC(i)) * static_cast<channelArithSPType>(getChanNC(i)) / static_cast<channelArithSPType>(maxChanVal)));
     return *this;
   }
 
@@ -2930,8 +2924,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmStdPowSqrt(void) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = static_cast<clrChanT>(std::sqrt(static_cast<double>(getChanNC(i)) / static_cast<double>(maxChanVal)) *
-                                                    static_cast<double>(maxChanVal));
+      setChanNC(i, static_cast<clrChanT>(std::sqrt(static_cast<double>(getChanNC(i)) / static_cast<double>(maxChanVal)) * static_cast<double>(maxChanVal)));
     return *this;
   }
 
@@ -2940,8 +2933,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmStdPow(double rp, double gp, double bp) {
     for(int i=0; i<numChan; i++)
-        theColor.thePartsA[i] = static_cast<clrChanT>(pow(static_cast<double>(getChanNC(i)) / static_cast<double>(maxChanVal), bp) *
-                                                      static_cast<double>(maxChanVal));
+        setChanNC(i, static_cast<clrChanT>(pow(static_cast<double>(getChanNC(i)) / static_cast<double>(maxChanVal), bp) * static_cast<double>(maxChanVal)));
     return *this;
   }
 
@@ -2950,7 +2942,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmSaw(colorArgType lowCol, colorArgType highCol) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i]  = ((lowCol.getChanNC(i) <= getChanNC(i)) && (highCol.getChanNC(i) >= getChanNC(i)) ? getChanNC(1) : 0);
+      setChanNC(i, ((lowCol.getChanNC(i) <= getChanNC(i)) && (highCol.getChanNC(i) >= getChanNC(i)) ? getChanNC(1) : 0));
     return *this;
   }
 
@@ -2959,7 +2951,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmStep(colorArgType lowCol, colorArgType highCol) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i]  = ((lowCol.getChanNC(i) <= getChanNC(i)) && (highCol.getChanNC(i) >= getChanNC(i)) ? maxChanVal : 0);
+      setChanNC(i, ((lowCol.getChanNC(i) <= getChanNC(i)) && (highCol.getChanNC(i) >= getChanNC(i)) ? maxChanVal : 0));
     return *this;
   }
 
@@ -2980,7 +2972,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmDirac(colorArgType aCol) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = ((aCol.getChanNC(i) == getChanNC(i)) ? maxChanVal : 0);
+      setChanNC(i, ((aCol.getChanNC(i) == getChanNC(i)) ? maxChanVal : 0));
     return *this;
   }
 
@@ -2989,7 +2981,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmFuzzyDirac(colorArgType ctrCol, colorArgType radCol) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i]  = ((std::abs(ctrCol.getChanNC(i) - getChanNC(i)) <= radCol.getChanNC(i)) ? maxChanVal : 0);
+      setChanNC(i, ((std::abs(ctrCol.getChanNC(i) - getChanNC(i)) <= radCol.getChanNC(i)) ? maxChanVal : 0));
     return *this;
   }
 
@@ -3453,10 +3445,7 @@ namespace mjr {
   colorTpl<clrChanT, numChan>::wMean(channelArithFltType w1, channelArithFltType w2, channelArithFltType w3, channelArithFltType w4,
                                      colorArgType      col1, colorArgType      col2, colorArgType      col3, colorArgType      col4) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = static_cast<clrChanT>((static_cast<channelArithFltType>(col1.getChanNC(i)) * w1) +
-                                                    (static_cast<channelArithFltType>(col2.getChanNC(i)) * w2) +
-                                                    (static_cast<channelArithFltType>(col3.getChanNC(i)) * w3) +
-                                                    (static_cast<channelArithFltType>(col4.getChanNC(i)) * w4));
+      setChanNC(i, static_cast<clrChanT>((static_cast<channelArithFltType>(col1.getChanNC(i)) * w1) + (static_cast<channelArithFltType>(col2.getChanNC(i)) * w2) + (static_cast<channelArithFltType>(col3.getChanNC(i)) * w3) + (static_cast<channelArithFltType>(col4.getChanNC(i)) * w4)));
 
     return *this;
   }
@@ -3467,9 +3456,7 @@ namespace mjr {
   colorTpl<clrChanT, numChan>::wMean(channelArithFltType w1, channelArithFltType w2, channelArithFltType w3,
                                      colorArgType      col1, colorArgType      col2, colorArgType      col3) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = static_cast<clrChanT>((static_cast<channelArithFltType>(col1.getChanNC(i)) * w1) +
-                                                    (static_cast<channelArithFltType>(col2.getChanNC(i)) * w2) +
-                                                    (static_cast<channelArithFltType>(col3.getChanNC(i)) * w3));
+      setChanNC(i, static_cast<clrChanT>((static_cast<channelArithFltType>(col1.getChanNC(i)) * w1) + (static_cast<channelArithFltType>(col2.getChanNC(i)) * w2) + (static_cast<channelArithFltType>(col3.getChanNC(i)) * w3)));
     return *this;
   }
 
@@ -3478,8 +3465,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::wMean(channelArithFltType w1, channelArithFltType w2, colorArgType col1, colorArgType col2) {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = static_cast<clrChanT>((static_cast<channelArithFltType>(col1.getChanNC(i)) * w1) +
-                                                    (static_cast<channelArithFltType>(col2.getChanNC(i)) * w2));
+      setChanNC(i, static_cast<clrChanT>((static_cast<channelArithFltType>(col1.getChanNC(i)) * w1) + (static_cast<channelArithFltType>(col2.getChanNC(i)) * w2)));
     return *this;
   }
 
@@ -3539,8 +3525,7 @@ namespace mjr {
   colorTpl<clrChanT, numChan>::interplColors(double aDouble, colorArgType col1, colorArgType col2) {
     if( (aDouble >= 0.0) && (aDouble <= 1.0) )
       for(int i=0; i<numChan; i++)
-        theColor.thePartsA[i]  = static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(col1.getChanNC(i)),
-                                                                              static_cast<double>(col2.getChanNC(i)),   aDouble));
+        setChanNC(i, static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(col1.getChanNC(i)), static_cast<double>(col2.getChanNC(i)),   aDouble)));
     return *this;
   }
 
@@ -3550,8 +3535,7 @@ namespace mjr {
   colorTpl<clrChanT, numChan>::interplColors(double aDouble, colorArgType tooCol) {
     if( (aDouble >= 0.0) && (aDouble <= 1.0) )
       for(int i=0; i<numChan; i++)
-        theColor.thePartsA[i]  = static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(getChanNC(i)),
-                                                                              static_cast<double>(tooCol.getChanNC(i)),   aDouble));
+        setChanNC(i, static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(getChanNC(i)), static_cast<double>(tooCol.getChanNC(i)),   aDouble)));
     return *this;
   }
 
@@ -3759,7 +3743,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmWebSafe216() {
     for(int i=0; i<numChan; i++)
-      theColor.thePartsA[i] = colorComp2WebSafeColorComp(getChanNC(i));
+      setChanNC(i, colorComp2WebSafeColorComp(getChanNC(i)));
     return *this;
   }
 
@@ -3801,8 +3785,6 @@ namespace mjr {
     //  MJR TODO NOTE tfrmInvert: We should use this universally across the library -- to isolate the code from the array specifics...
     for(int i=0; i<numChan; i++)
       setChanNC(i, maxChanVal - getChanNC(i));
-    // for(int i=0; i<numChan; i++)
-    //   theColor.thePartsA[i] = maxChanVal - getChanNC(i);
     return *this;
   }
 
@@ -3839,7 +3821,7 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
   inline colorTpl<clrChanT, numChan>::channelArithSPType
-  colorTpl<clrChanT, numChan>::chanSum(void) {
+  colorTpl<clrChanT, numChan>::sumIntensity(void) {
     channelArithSPType sum = 0;
     for(int i=0; i<numChan; i++)
       sum += getChan(i);
@@ -3849,8 +3831,15 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
   inline colorTpl<clrChanT, numChan>::channelArithFltType
+  colorTpl<clrChanT, numChan>::sumScaledIntensity(void) {
+    return (static_cast<channelArithFltType>(sumIntensity()) / static_cast<channelArithFltType>(numChan) / static_cast<channelArithFltType>(maxChanVal));
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template <class clrChanT, int numChan>
+  inline colorTpl<clrChanT, numChan>::channelArithFltType
   colorTpl<clrChanT, numChan>::rgbScaledIntensity(void) {
-    return (theColor.rgbSumIntensity() / static_cast<channelArithFltType>(numChan) / static_cast<channelArithFltType>(maxChanVal));
+    return (static_cast<channelArithFltType>(rgbSumIntensity()) / static_cast<channelArithFltType>(numChan) / static_cast<channelArithFltType>(maxChanVal));
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
