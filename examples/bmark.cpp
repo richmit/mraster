@@ -71,7 +71,7 @@
 #define REPS  1
 
 #define BSIZE 4048 
-//#define BSIZE 1
+//#define BSIZE 10
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // typedef mjr::ramCanvas1c8b  canvasType;
@@ -290,12 +290,12 @@ int main(void) {
 #if DO_FFTRI
   std::cout << "Starting DO_FFTRI" << std::endl;
   bmStartTime = std::chrono::system_clock::now();
-  for(int i=0;i<REPS*16;i++)
-    for(int x1=xMax,j=0;x1>=0;x1-=BSIZE/128,j++)
-      if(j%2)
-        theRamCanvas.drawFillTriangle(x1, x1, x1+BSIZE/2, x1, x1, x1+yMax/2, aColor);
+  for(int i=0;i<REPS*2;i++)
+    for(int y=0;y<=yMax;y+=25)
+      if(y%2)
+        theRamCanvas.drawFillTriangle(xMax/2, 0, 0, y, xMax, yMax-y, aColor);
       else
-        theRamCanvas.drawFillTriangle(x1, x1, x1+BSIZE/2, x1, x1, x1+yMax/2, bColor);
+        theRamCanvas.drawFillTriangle(xMax/2, 0, 0, y, xMax, yMax-y, bColor);
   bmEndTime = std::chrono::system_clock::now();
   bmTime = std::chrono::system_clock::now() - bmStartTime;
   std::cout << "  DO_FFTRI Runtime " << bmTime.count() << " sec" << std::endl;
