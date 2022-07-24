@@ -295,9 +295,7 @@ namespace mjr {
       void setChansToMax();
       /** Sets the current color based upon the contents of the given std::string.
           This is the guts of the magic constructor taking a string.  First all channels are set to minChanVal.  The next step depends on the contents of the
-          colorString argument.  If colorString starts with a "#", then setChans() will be used.  Otherwise setToCorner() will be used
-          @param colorString string specifying a color.
-          @return Returns a reference to the current color object.*/
+          colorString argument.  If colorString starts with a "#", then setChans() will be used.  Otherwise setToCorner() will be used */
       colorTpl& setColorFromString(std::string colorString);
       /** Convert a uint8_t to a clrChanT (for integral clrChanT) */
       clrChanT convertByteToChan(uint8_t cVal) const requires (std::integral<clrChanT>);
@@ -312,8 +310,13 @@ namespace mjr {
       /** Convert a clrChanT to a double */
       double convertChanToDouble(clrChanT cVal) const;
       /** Return the mask value */
-      maskType getMask() const;
-      bool setMask(maskType aMask);
+      maskType getMaskNC() const;
+      // Set the mask value */
+      void setMaskNC(maskType aMask);
+      /** Sets the specified color channel value with no index check. */
+      colorTpl& setChanNC(int chan, clrChanT cVal);
+      /** Provides access to an specified color channel value with no index check. */
+      clrChanT getChanNC(int chan) const;
       //@}
 
       public:
@@ -323,20 +326,22 @@ namespace mjr {
       constexpr static int      bitsPerChan    = (int)(sizeof(clrChanT)*CHAR_BIT);                                       //!< Number of bits in clrChanT
       constexpr static int      bitsPerPixel   = numChan*bitsPerChan;                                                    //!< Number of color data bits
       constexpr static bool     chanIsInt      = std::is_integral<clrChanT>::value;                                      //!< clrChanT is an integral type
-      constexpr static bool     chanIsFlt      = !(chanIsInt);                                                           //!< clrChanT is a floating point type
+      constexpr static bool     chanIsUnsigned = std::is_unsigned<clrChanT>::value;                                      //!< clrChanT is an unsigned integral type
       constexpr static bool     chanIsByte     = std::is_same<clrChanT, uint8_t>::value;                                 //!< is clrChanT an 8-bit unsigned int?
       constexpr static bool     chanIsDouble   = std::is_same<clrChanT, double>::value;                                  //!< is clrChanT a double?
       constexpr static bool     goodMask       = chanIsInt && (sizeof(maskType)            >= sizeof(clrChanT)*numChan); //!< maskType is big enough
-      constexpr static bool     goodArithD     = chanIsFlt || (sizeof(channelArithDType)   >= sizeof(clrChanT)*2);       //!< channelArithDType is big enough
-      constexpr static bool     goodArithSP    = chanIsFlt || (sizeof(channelArithSPType)  >= sizeof(clrChanT)*2);       //!< channelArithSPType is big enough
-      constexpr static bool     goodArithSDP   = chanIsFlt || (sizeof(channelArithSDPType) >= sizeof(clrChanT)*4);       //!< channelArithSDPType is big enough
-      constexpr static bool     goodArithFlt   = chanIsFlt || (sizeof(channelArithFltType) >  sizeof(clrChanT));         //!< channelArithFltType is big enough
+      constexpr static bool     goodArithD     = ( !(chanIsInt)) || (sizeof(channelArithDType)   >= sizeof(clrChanT)*2); //!< channelArithDType is big enough
+      constexpr static bool     goodArithSP    = ( !(chanIsInt)) || (sizeof(channelArithSPType)  >= sizeof(clrChanT)*2); //!< channelArithSPType is big enough
+      constexpr static bool     goodArithSDP   = ( !(chanIsInt)) || (sizeof(channelArithSDPType) >= sizeof(clrChanT)*4); //!< channelArithSDPType is big enough
+      constexpr static bool     goodArithFlt   = ( !(chanIsInt)) || (sizeof(channelArithFltType) >  sizeof(clrChanT));   //!< channelArithFltType is big enough
       constexpr static bool     goodArithLog   = (sizeof(channelArithLogType) == sizeof(clrChanT));                      //!< channelArithLogType is the right size
       constexpr static int      sizeOfColor    = (int)(goodMask ? sizeof(maskType) : sizeof(clrChanT)*numChan);          //!< Size of this object
       constexpr static bool     ptrIsSmaller   = sizeOfColor > (int)sizeof(colorPtrType);                                //!< This object smaller than a pointer
       constexpr static clrChanT maxChanVal     = (chanIsInt ? std::numeric_limits<clrChanT>::max() : 1);                 //!< maximum value for a channel
       constexpr static clrChanT minChanVal     = (chanIsInt ? std::numeric_limits<clrChanT>::min() : 0);                 //!< maximum value for a channel
       constexpr static clrChanT meanChanVal    = (maxChanVal-minChanVal)/2;                                              //!< middle value for a channel
+      constexpr static maskType maskAllOne     = ~(static_cast<maskType>(0));                                            //!< mask value all ones
+      constexpr static maskType maskAllZero    = static_cast<maskType>(0);                                               //!< mask value all zeros
       constexpr static int      channelCount   = numChan;                                                                //!< Number of channels
       //@}
 
@@ -475,11 +480,6 @@ namespace mjr {
           The channels are 0 indexed.  Returns #minChanVal if \a chan id out of range.
           @return The the value of the indexed channel. */
       clrChanT getChan(int chan) const;
-      /** Provides access to an specified color channel value with no index check.
-          The channels are 0 indexed.
-          @param chan The channel index
-          @return The the value of the indexed channel. */
-      clrChanT getChanNC(int chan) const;
       //@}
 
 
@@ -558,12 +558,6 @@ namespace mjr {
           @param cVal The channel value
           @return Returns a reference to the current color object.*/
       colorTpl& setChan(int chan, clrChanT cVal);
-      /** Sets the specified color channel value with no index check.
-          The channels are 0 indexed.
-          @param chan The channel index
-          @param cVal The channel value
-          @return The the value of the indexed channel. */
-      colorTpl& setChanNC(int chan, clrChanT cVal);
       /** Sets the given channel of the current object to #maxChanVal.
           @param chan The channel to set.  The channels are 0 indexed.  Out of range is a NOOP.
           @return Returns a reference to the current color object. */
@@ -1688,7 +1682,7 @@ namespace mjr {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
     if(goodMask)
-      theColor.theInt = aColor.theColor.theInt;
+      setMaskNC(aColor.getMaskNC());
     else
       std::copy_n(aColor.theColor.thePartsA, numChan, theColor.thePartsA);
 #pragma GCC diagnostic pop
@@ -2206,7 +2200,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmOr(colorArgType aCol) requires (std::integral<clrChanT>) {
     if(goodMask)
-      theColor.theInt |= aCol.theColor.theInt;
+      setMaskNC(getMaskNC() | aCol.getMaskNC());
     else
       for(int i=0; i<numChan; i++)
         setChanNC(i, getChanNC(i) | aCol.getChanNC(i));
@@ -2219,7 +2213,7 @@ namespace mjr {
   colorTpl<clrChanT, numChan>::tfrmOr(colorArgType aCol) requires (std::floating_point<clrChanT>) {
     /* Performance: Yep.  Sometimes floating point colors get a goodMask. */
     if(goodMask)
-      theColor.theInt |= aCol.theColor.theInt;
+      setMaskNC(getMaskNC() | aCol.getMaskNC());
     else
       for(int i=0; i<numChan; i++)
         setChanNC(i, std::bit_cast<clrChanT>(std::bit_cast<channelArithLogType>(getChanNC(i)) | std::bit_cast<channelArithLogType>(aCol.getChanNC(i))));
@@ -2231,7 +2225,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmNor(colorArgType aCol) requires (std::integral<clrChanT>) {
     if(goodMask)
-      theColor.theInt = ~(theColor.theInt | aCol.theColor.theInt);
+      setMaskNC(~(getMaskNC() | aCol.getMaskNC()));
     else
       for(int i=0; i<numChan; i++)
         setChanNC(i, ~(getChanNC(i) | aCol.getChanNC(i)));
@@ -2243,7 +2237,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmNor(colorArgType aCol) requires (std::floating_point<clrChanT>) {
     if(goodMask)
-      theColor.theInt = ~(theColor.theInt | aCol.theColor.theInt);
+      setMaskNC(~(getMaskNC() | aCol.getMaskNC()));
     else
       for(int i=0; i<numChan; i++)
         setChanNC(i, std::bit_cast<clrChanT>(~(std::bit_cast<channelArithLogType>(getChanNC(i)) | std::bit_cast<channelArithLogType>(aCol.getChanNC(i)))));
@@ -2255,7 +2249,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmAnd(colorArgType aCol) requires (std::integral<clrChanT>) {
     if(goodMask)
-      theColor.theInt &= aCol.theColor.theInt;
+      setMaskNC(getMaskNC() & aCol.getMaskNC());
     else
       for(int i=0; i<numChan; i++)
         setChanNC(i, getChanNC(i) & aCol.getChanNC(i));
@@ -2267,7 +2261,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmAnd(colorArgType aCol) requires (std::floating_point<clrChanT>) {
     if(goodMask)
-      theColor.theInt &= aCol.theColor.theInt;
+      setMaskNC(getMaskNC() & aCol.getMaskNC());
     else
       for(int i=0; i<numChan; i++)
         setChanNC(i, std::bit_cast<clrChanT>(std::bit_cast<channelArithLogType>(getChanNC(i)) & std::bit_cast<channelArithLogType>(aCol.getChanNC(i))));
@@ -2279,7 +2273,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmNand(colorArgType aCol) requires (std::integral<clrChanT>) {
     if(goodMask)
-      theColor.theInt = ~(theColor.theInt & aCol.theColor.theInt);
+      setMaskNC(~(getMaskNC() & aCol.getMaskNC()));
     else
       for(int i=0; i<numChan; i++)
         setChanNC(i, ~(getChanNC(i) & aCol.getChanNC(i)));
@@ -2291,7 +2285,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmNand(colorArgType aCol) requires (std::floating_point<clrChanT>) {
     if(goodMask)
-      theColor.theInt = ~(theColor.theInt & aCol.theColor.theInt);
+      setMaskNC(~(getMaskNC() & aCol.getMaskNC()));
     else
       for(int i=0; i<numChan; i++)
         setChanNC(i, std::bit_cast<clrChanT>(~(std::bit_cast<channelArithLogType>(getChanNC(i)) & std::bit_cast<channelArithLogType>(aCol.getChanNC(i)))));
@@ -2303,7 +2297,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmXor(colorArgType aCol) requires (std::integral<clrChanT>) {
     if(goodMask)
-      theColor.theInt ^= aCol.theColor.theInt;
+      setMaskNC(getMaskNC() ^ aCol.getMaskNC());
     else
       for(int i=0; i<numChan; i++)
         setChanNC(i, getChanNC(i) ^ aCol.getChanNC(i));
@@ -2315,7 +2309,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmXor(colorArgType aCol) requires (std::floating_point<clrChanT>) {
     if(goodMask)
-      theColor.theInt ^= aCol.theColor.theInt;
+      setMaskNC(getMaskNC() ^ aCol.getMaskNC());
     else
       for(int i=0; i<numChan; i++)
         setChanNC(i, std::bit_cast<clrChanT>(std::bit_cast<channelArithLogType>(getChanNC(i)) ^ std::bit_cast<channelArithLogType>(aCol.getChanNC(i))));
@@ -2327,7 +2321,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmNxor(colorArgType aCol) requires (std::integral<clrChanT>) {
     if(goodMask)
-      theColor.theInt = ~(theColor.theInt ^ aCol.theColor.theInt);
+      setMaskNC(~(getMaskNC() ^ aCol.getMaskNC()));
     else
       for(int i=0; i<numChan; i++)
         setChanNC(i, ~(getChanNC(i) ^ aCol.getChanNC(i)));
@@ -2339,7 +2333,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmNxor(colorArgType aCol) requires (std::floating_point<clrChanT>) {
     if(goodMask)
-      theColor.theInt = ~(theColor.theInt ^ aCol.theColor.theInt);
+      setMaskNC(~(getMaskNC() ^ aCol.getMaskNC()));
     else
       for(int i=0; i<numChan; i++)
         setChanNC(i, std::bit_cast<clrChanT>(~(std::bit_cast<channelArithLogType>(getChanNC(i)) ^ std::bit_cast<channelArithLogType>(aCol.getChanNC(i)))));
@@ -2351,7 +2345,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmNot(void) requires (std::integral<clrChanT>) {
     if(goodMask)
-      theColor.theInt = ~(theColor.theInt);
+      setMaskNC(~(getMaskNC()));
     else
       for(int i=0; i<numChan; i++)
         setChanNC(i, ~(getChanNC(i)));
@@ -2363,7 +2357,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmNot(void) requires (std::floating_point<clrChanT>) {
     if(goodMask)
-      theColor.theInt = ~(theColor.theInt);
+      setMaskNC(~(getMaskNC()));
     else
       for(int i=0; i<numChan; i++)
         setChanNC(i, std::bit_cast<clrChanT>(~(std::bit_cast<channelArithLogType>(getChanNC(i)))));
@@ -2676,35 +2670,23 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
   inline colorTpl<clrChanT, numChan>::maskType
-  colorTpl<clrChanT, numChan>::getMask() const {
-    if(goodMask)
-      return theColor.theInt;
-    else
-      return 0;
+  colorTpl<clrChanT, numChan>::getMaskNC() const {
+    return theColor.theInt;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
-  inline bool
-  colorTpl<clrChanT, numChan>::setMask(maskType aMask) {
-    if(goodMask) {
-      theColor.theInt = aMask;
-      return true;
-    } else
-      return false;
+  inline void
+  colorTpl<clrChanT, numChan>::setMaskNC(maskType aMask) {
+    theColor.theInt = aMask;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::copy(colorArgType aCol) {
-
-    // if( !(setMask(aCol.getMask())))
-    //   for(int i=0; i<numChan; i++)
-    //     setChanNC(i, aCol.getChanNC(i));
-
     if(goodMask)
-      theColor.theInt = aCol.theColor.theInt;
+      setMaskNC(aCol.getMaskNC());
     else
       for(int i=0; i<numChan; i++)
         setChanNC(i, aCol.getChanNC(i));
@@ -2994,10 +2976,8 @@ namespace mjr {
   template <class clrChanT, int numChan>
   inline void
   colorTpl<clrChanT, numChan>::setChansToMin() {
-    // if( !(setMask(0)))
-    //   std::fill_n(theColor.thePartsA, numChan, minChanVal);
     if(goodMask)
-      theColor.theInt = static_cast<maskType>(0);
+      setMaskNC(maskAllZero);
     else
       std::fill_n(theColor.thePartsA, numChan, minChanVal);
   }
@@ -3007,7 +2987,7 @@ namespace mjr {
   inline void
   colorTpl<clrChanT, numChan>::setChansToMax() {
     if(chanIsInt && goodMask)
-      theColor.theInt = ~static_cast<maskType>(0);
+      setMaskNC(~static_cast<maskType>(0));
     else
       std::fill_n(theColor.thePartsA, numChan, maxChanVal);
   }
@@ -3890,7 +3870,7 @@ namespace mjr {
   inline bool
   colorTpl<clrChanT, numChan>::isBlack() {
     if(goodMask)
-      return (theColor.theInt == 0);
+      return (getMaskNC() == maskAllZero);
     else
       for(int i=4; i<numChan; i++)
         if(getChanNC(i) != 0)
@@ -3921,7 +3901,7 @@ namespace mjr {
   inline bool
   colorTpl<clrChanT, numChan>::isEqual(colorArgType aColor) {
     if(goodMask)
-      return (theColor.theInt == aColor.theColor.theInt);
+      return (getMaskNC() == aColor.getMaskNC());
     else
       for(int i=0; i<numChan; i++)
         if(getChanNC(i) != aColor.getChanNC(i))

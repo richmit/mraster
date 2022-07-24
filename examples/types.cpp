@@ -56,7 +56,7 @@ int main(void) {
   std::cout << "mjr::ramCanvas1c8b::colorType::bitsPerChan         " << (int)mjr::ramCanvas1c8b::colorType::bitsPerChan    << std::endl;
   std::cout << "mjr::ramCanvas1c8b::colorType::bitsPerPixel        " << (int)mjr::ramCanvas1c8b::colorType::bitsPerPixel   << std::endl;
   std::cout << "mjr::ramCanvas1c8b::colorType::chanIsInt           " << (int)mjr::ramCanvas1c8b::colorType::chanIsInt      << std::endl;
-  std::cout << "mjr::ramCanvas1c8b::colorType::chanIsFlt           " << (int)mjr::ramCanvas1c8b::colorType::chanIsFlt      << std::endl;
+  std::cout << "mjr::ramCanvas1c8b::colorType::chanIsUnsigned           " << (int)mjr::ramCanvas1c8b::colorType::chanIsUnsigned      << std::endl;
   std::cout << "mjr::ramCanvas1c8b::colorType::chanIsByte          " << (int)mjr::ramCanvas1c8b::colorType::chanIsByte     << std::endl;
   std::cout << "mjr::ramCanvas1c8b::colorType::chanIsDouble        " << (int)mjr::ramCanvas1c8b::colorType::chanIsDouble   << std::endl;
   std::cout << "mjr::ramCanvas1c8b::colorType::sizeOfColor         " << (int)mjr::ramCanvas1c8b::colorType::sizeOfColor    << std::endl;
@@ -85,7 +85,7 @@ int main(void) {
   std::cout << "mjr::ramCanvas3c8b::colorType::bitsPerChan         " << (int)mjr::ramCanvas3c8b::colorType::bitsPerChan    << std::endl;
   std::cout << "mjr::ramCanvas3c8b::colorType::bitsPerPixel        " << (int)mjr::ramCanvas3c8b::colorType::bitsPerPixel   << std::endl;
   std::cout << "mjr::ramCanvas3c8b::colorType::chanIsInt           " << (int)mjr::ramCanvas3c8b::colorType::chanIsInt      << std::endl;
-  std::cout << "mjr::ramCanvas3c8b::colorType::chanIsFlt           " << (int)mjr::ramCanvas3c8b::colorType::chanIsFlt      << std::endl;
+  std::cout << "mjr::ramCanvas3c8b::colorType::chanIsUnsigned           " << (int)mjr::ramCanvas3c8b::colorType::chanIsUnsigned      << std::endl;
   std::cout << "mjr::ramCanvas3c8b::colorType::chanIsByte          " << (int)mjr::ramCanvas3c8b::colorType::chanIsByte     << std::endl;
   std::cout << "mjr::ramCanvas3c8b::colorType::chanIsDouble        " << (int)mjr::ramCanvas3c8b::colorType::chanIsDouble   << std::endl;
   std::cout << "mjr::ramCanvas3c8b::colorType::sizeOfColor         " << (int)mjr::ramCanvas3c8b::colorType::sizeOfColor    << std::endl;
@@ -114,7 +114,7 @@ int main(void) {
   std::cout << "mjr::ramCanvas3c16b::colorType::bitsPerChan        " << (int)mjr::ramCanvas3c16b::colorType::bitsPerChan   << std::endl;
   std::cout << "mjr::ramCanvas3c16b::colorType::bitsPerPixel       " << (int)mjr::ramCanvas3c16b::colorType::bitsPerPixel  << std::endl;
   std::cout << "mjr::ramCanvas3c16b::colorType::chanIsInt          " << (int)mjr::ramCanvas3c16b::colorType::chanIsInt     << std::endl;
-  std::cout << "mjr::ramCanvas3c16b::colorType::chanIsFlt          " << (int)mjr::ramCanvas3c16b::colorType::chanIsFlt     << std::endl;
+  std::cout << "mjr::ramCanvas3c16b::colorType::chanIsUnsigned          " << (int)mjr::ramCanvas3c16b::colorType::chanIsUnsigned     << std::endl;
   std::cout << "mjr::ramCanvas3c16b::colorType::chanIsByte         " << (int)mjr::ramCanvas3c16b::colorType::chanIsByte    << std::endl;
   std::cout << "mjr::ramCanvas3c16b::colorType::chanIsDouble       " << (int)mjr::ramCanvas3c16b::colorType::chanIsDouble  << std::endl;
   std::cout << "mjr::ramCanvas3c16b::colorType::sizeOfColor        " << (int)mjr::ramCanvas3c16b::colorType::sizeOfColor   << std::endl;
@@ -143,7 +143,7 @@ int main(void) {
   std::cout << "mjr::ramCanvas4c32F::colorType::bitsPerChan        " << (int)mjr::ramCanvas4c32F::colorType::bitsPerChan   << std::endl;
   std::cout << "mjr::ramCanvas4c32F::colorType::bitsPerPixel       " << (int)mjr::ramCanvas4c32F::colorType::bitsPerPixel  << std::endl;
   std::cout << "mjr::ramCanvas4c32F::colorType::chanIsInt          " << (int)mjr::ramCanvas4c32F::colorType::chanIsInt     << std::endl;
-  std::cout << "mjr::ramCanvas4c32F::colorType::chanIsFlt          " << (int)mjr::ramCanvas4c32F::colorType::chanIsFlt     << std::endl;
+  std::cout << "mjr::ramCanvas4c32F::colorType::chanIsUnsigned          " << (int)mjr::ramCanvas4c32F::colorType::chanIsUnsigned     << std::endl;
   std::cout << "mjr::ramCanvas4c32F::colorType::chanIsByte         " << (int)mjr::ramCanvas4c32F::colorType::chanIsByte    << std::endl;
   std::cout << "mjr::ramCanvas4c32F::colorType::chanIsDouble       " << (int)mjr::ramCanvas4c32F::colorType::chanIsDouble  << std::endl;
   std::cout << "mjr::ramCanvas4c32F::colorType::sizeOfColor        " << (int)mjr::ramCanvas4c32F::colorType::sizeOfColor   << std::endl;
@@ -172,7 +172,7 @@ int main(void) {
   std::cout << "mjr::ramCanvas4c64F::colorType::bitsPerChan        " << (int)mjr::ramCanvas4c64F::colorType::bitsPerChan   << std::endl;
   std::cout << "mjr::ramCanvas4c64F::colorType::bitsPerPixel       " << (int)mjr::ramCanvas4c64F::colorType::bitsPerPixel  << std::endl;
   std::cout << "mjr::ramCanvas4c64F::colorType::chanIsInt          " << (int)mjr::ramCanvas4c64F::colorType::chanIsInt     << std::endl;
-  std::cout << "mjr::ramCanvas4c64F::colorType::chanIsFlt          " << (int)mjr::ramCanvas4c64F::colorType::chanIsFlt     << std::endl;
+  std::cout << "mjr::ramCanvas4c64F::colorType::chanIsUnsigned          " << (int)mjr::ramCanvas4c64F::colorType::chanIsUnsigned     << std::endl;
   std::cout << "mjr::ramCanvas4c64F::colorType::chanIsByte         " << (int)mjr::ramCanvas4c64F::colorType::chanIsByte    << std::endl;
   std::cout << "mjr::ramCanvas4c64F::colorType::chanIsDouble       " << (int)mjr::ramCanvas4c64F::colorType::chanIsDouble  << std::endl;
   std::cout << "mjr::ramCanvas4c64F::colorType::sizeOfColor        " << (int)mjr::ramCanvas4c64F::colorType::sizeOfColor   << std::endl;
