@@ -2154,7 +2154,7 @@ namespace mjr {
             x2 = (int)(((numYpix-1)*dx-y2*dx+x2*dy)/dy);
             y2 = numYpix - 1;
           }
-//  MJR TODO NOTE <2022-06-18T13:11:56-0500> ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawLine: We use drawPoint instead of drawPointNC, can we make an off canvas decesion instead? Similar case down below.
+//  MJR TODO NOTE drawLine: We use drawPoint instead of drawPointNC, can we make an off canvas decesion instead? Similar case down below.
           if(dx > dy) {                                                       // ... 0 < Slope < 1
             s = dy2 - dx;
             x=x1;
@@ -2600,7 +2600,7 @@ namespace mjr {
           }
          } else {
           colorRGB8b bColor = toTRU(aColor);
-//  MJR TODO NOTE <2022-07-10T12:32:38-0500> ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeTIFFstream: Replace 3 put calls with single write
+//  MJR TODO NOTE writeTIFFstream: Replace 3 put calls with single write
           oStream.put(bColor.getC0());
           oStream.put(bColor.getC1());
           oStream.put(bColor.getC2());
@@ -2825,8 +2825,7 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT>
   inline typename ramCanvasTpl<colorT, intCrdT, fltCrdT>::realAxisOrientation
   ramCanvasTpl<colorT, intCrdT, fltCrdT>::get_xRealAxisOrientation() {
-    //return xRealAxOrientation
-    // TODO -- CHECK ME OUT
+    return xRealAxOrientation;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4349,7 +4348,7 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT>
   int
   ramCanvasTpl<colorT, intCrdT, fltCrdT>::readTIFFfile(std::string fileName) {
-//  MJR TODO NOTE <2022-07-07T12:49:42-0500> ramCanvasTpl<colorT, intCrdT, fltCrdT>::readTIFFfile: Rework so it works with floating point images too!
+//  MJR TODO NOTE readTIFFfile: Rework so it works with floating point images too!
 #ifndef TIFF_FOUND
     return 32;
 #else
@@ -4475,7 +4474,7 @@ namespace mjr {
               if(bpsTIFF == bpsRC) {
                 getPxColorRefNC(x, y).setChan(samp, static_cast<colorChanType>(d));
               } else {
-//  MJR TODO NOTE <2022-07-07T12:48:01-0500> ramCanvasTpl<colorT, intCrdT, fltCrdT>::readTIFFfile: test this arithmatic...
+//  MJR TODO NOTE readTIFFfile: test this arithmatic...
                 getPxColorRefNC(x, y).setChan(samp, static_cast<colorChanType>(d >> (bpsTIFF-bpsRC)));
               }
             }

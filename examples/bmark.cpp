@@ -40,28 +40,30 @@
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #define DO_POINT      1
-#define DO_POINT_NC   0
-#define DO_RAMP       0
-#define DO_COL_SET    0
-#define DO_COL_SETC   0
-#define DO_MINI       0
-#define DO_CLR_BLK    0
-#define DO_CLR        0
-#define DO_FFTRI      0
-#define DO_FGTRI      0
-#define DO_RECT       0
-#define DO_LINE       0
-#define DO_CLIP_LINE  0
-#define DO_HLINE_NC   0
-#define DO_HLINE      0
-#define DO_VLINE_NC   0
-#define DO_VLINE      0
-#define DO_45LINE     0
-#define DO_TRIVLN     0
-#define DO_INTRP_AVG9 0
+#define DO_POINT_NC   1
+#define DO_RAMP       1
+#define DO_RAMP_INT   1
+#define DO_INVERT     1
+#define DO_COL_SET    1
+#define DO_COL_SETC   1
+#define DO_MINI       1
+#define DO_CLR_BLK    1
+#define DO_CLR        1
+#define DO_FFTRI      1
+#define DO_FGTRI      1
+#define DO_RECT       1
+#define DO_LINE       1
+#define DO_CLIP_LINE  1
+#define DO_HLINE_NC   1
+#define DO_HLINE      1
+#define DO_VLINE_NC   1
+#define DO_VLINE      1
+#define DO_45LINE     1
+#define DO_TRIVLN     1
+#define DO_INTRP_AVG9 1
 #define DO_INTRP_BILN 1
-#define DO_CONV       0
-#define DO_CS_CONV    0
+#define DO_CONV       1
+#define DO_CS_CONV    1
 
 #define DO_OUT_TIF   1
 #define DO_OUT_RAW   0
@@ -69,6 +71,7 @@
 #define REPS  1
 
 #define BSIZE 4048 
+//#define BSIZE 1
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // typedef mjr::ramCanvas1c8b  canvasType;
@@ -116,6 +119,18 @@ int main(void) {
   std::cout << "  DO_POINT Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
 
+#if DO_RAMP_INT
+  std::cout << "Starting DO_RAMP_INT" << std::endl;
+  bmStartTime = std::chrono::system_clock::now();
+  for(int i=0;i<REPS*32;i++)
+    for(int y=0;y<=xMax;y++)
+      for(int x=0;x<=yMax;x++)
+        theRamCanvas.drawPoint(x, y, cColor.cmpRGBcolorRamp(x+y, "0BCGYWMR0"));
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_RAMP_INT Runtime " << bmTime.count() << " sec" << std::endl;
+#endif
+
 #if DO_RAMP
   std::cout << "Starting DO_RAMP" << std::endl;
   bmStartTime = std::chrono::system_clock::now();
@@ -141,6 +156,18 @@ int main(void) {
   bmEndTime = std::chrono::system_clock::now();
   bmTime = std::chrono::system_clock::now() - bmStartTime;
   std::cout << "  DO_POINT_NC Runtime " << bmTime.count() << " sec" << std::endl;
+#endif
+
+#if DO_INVERT
+  std::cout << "Starting DO_INVERT" << std::endl;
+  bmStartTime = std::chrono::system_clock::now();
+  for(int i=0;i<REPS*128+1;i++)
+    for(int y=0;y<=xMax;y++)
+      for(int x=0;x<=yMax;x++) 
+          theRamCanvas.getPxColorRefNC(x, y).tfrmInvert();
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_INVERT Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
 
 #if DO_COL_SETC
