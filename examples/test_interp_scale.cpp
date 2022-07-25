@@ -51,6 +51,9 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
+  // aRamCanvas.writeTGAfile("test_interp_scale_orig.tga");
+  // aRamCanvas.writeTGAfile("test_interp_scale_orig.tiff");
+
   mjr::ramCanvas3c8b::coordIntType width  = aRamCanvas.get_numXpix();
   mjr::ramCanvas3c8b::coordIntType height = aRamCanvas.get_numYpix();
   double magr = 7.0;

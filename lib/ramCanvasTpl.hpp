@@ -321,7 +321,13 @@ namespace mjr {
 
           @param oStream The ostream object to which to write
           @param toTRU   A functor used to transform native pixels into truecolor RGB pixels.
-          @param filter  A functor used to transform each pixel. */
+          @param filter  A functor used to transform each pixel. 
+          @return Status of I/O
+          @retval  0 Everything seems to have worked
+          @retval  6 Image of zero width
+          @retval  7 Image too wide for TGA format
+          @retval  8 Image of zero height
+          @retval  9 Image too tall for TGA format */
       int writeTGAstream(std::ostream& oStream, std::function<colorRGB8b (colorT&)> toTRU, std::function<colorT (colorT&)> filter);
       /** Write the an MJR RAW format image to the given ostream
 
@@ -1137,6 +1143,11 @@ namespace mjr {
           @retval 15 TIFF bps not 8, 16, 32, or 64
           @retval 16 Allocation failed (scan line buffer)
           @retval 17 Read (TIFFReadScanline) failure
+          @retval 18 Sample Format is not unsigned integer or IEEE floating point
+          @retval 19 File and ramCanvas samples per pixel (channel count) differs 
+          @retval 20 File and ramCanvas channel depth differ
+          @retval 21 File and ramCanvas channel format (int vs float) differ
+          @retval 22 Planar configuration is invalid (not 1 or 2)
           @retval 32 TIFF read support not provided in this compile */
       int readTIFFfile(std::string fileName);
       /** Write a TIFF format image file.  Respects integer coordinate system orientation.
@@ -2470,27 +2481,27 @@ namespace mjr {
                                                           std::function<colorRGB8b (colorT&)> toTRU,
                                                           std::function<colorT (colorT&)> filter) {
     if( !(toTRU)) {
-      if(colorT::bitsPerChan < 8)                                                            // channels too thin
+      if(colorT::bitsPerChan < 8)                                                          // channels too thin
         return 2;
-      if(colorT::bitsPerChan > 0xffff)                                                       // channels too fat
+      if(colorT::bitsPerChan > 0xffff)                                                     // channels too fat
         return 3;
-      if(colorT::channelCount < 1)                                                           // too few channels
+      if(colorT::channelCount < 1)                                                         // too few channels
         return 4;
-      if(colorT::channelCount > 0xffff)                                                      // too many channels
+      if(colorT::channelCount > 0xffff)                                                    // too many channels
         return 5;
-      if(numXpix < 1)                                                                        // too skinny
-        return 6;
-      if(numXpix > 0x7fffffff)                                                               // too wide
-        return 7;
-      if(numYpix < 1)                                                                        // too short
-        return 8;
-      if(numYpix > 0x7fffffff)                                                               // too tall
-        return 9;
-      if(numXpix * colorT::bitsPerChan / 8ul * colorT::channelCount > 0xffffffff)            // rows too big
-        return 10;
-      if(numXpix * numYpix * colorT::channelCount * colorT::bitsPerChan / 8ul > 0xfffffffff) // image too big
-        return 11;
     }
+    if(numXpix < 1)                                                                        // too skinny
+      return 6;
+    if(numXpix > 0x7fffffff)                                                               // too wide
+      return 7;
+    if(numYpix < 1)                                                                        // too short
+      return 8;
+    if(numYpix > 0x7fffffff)                                                               // too tall
+      return 9;
+    if(numXpix * colorT::bitsPerChan / 8ul * colorT::channelCount > 0xffffffff)            // rows too big
+      return 10;
+    if(numXpix * numYpix * colorT::channelCount * colorT::bitsPerChan / 8ul > 0xfffffffff) // image too big
+      return 11;
 
     endianType fe        = platformEndianness();                         // Endian Type
     uint16_t endianNum   = (fe == endianType::LITTLE ? 0x4949 : 0x4d4d); // Endianness Magic Number
@@ -2600,7 +2611,6 @@ namespace mjr {
           }
          } else {
           colorRGB8b bColor = toTRU(aColor);
-//  MJR TODO NOTE writeTIFFstream: Replace 3 put calls with single write
           oStream.put(bColor.getC0());
           oStream.put(bColor.getC1());
           oStream.put(bColor.getC2());
@@ -2618,9 +2628,15 @@ namespace mjr {
   ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeTGAstream(std::ostream& oStream,
                                                          std::function<colorRGB8b (colorT&)> toTRU,
                                                          std::function<colorT     (colorT&)> filter) {
-//  MJR TODO NOTE ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeTGAstream: Add checks for numXpix < 0xffff and numYpix < 0xfff
-//  MJR TODO NOTE ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeTGAstream: Add support for monochrome
-//  MJR TODO NOTE ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeTGAstream: Add greyScale->true converter function in colorTpl
+    if(numXpix < 1)      // too skinny
+      return 6;
+    if(numXpix > 0xffff) // too wide
+      return 7;
+    if(numYpix < 1)      // too short
+      return 8;
+    if(numYpix > 0xffff) // too tall
+      return 9;
+
     /* Write header */
     writeUIntToStream(oStream, endianType::LITTLE, 1, 0);       // id length
     writeUIntToStream(oStream, endianType::LITTLE, 1, 0);       // colourmaptype
@@ -4348,13 +4364,12 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT>
   int
   ramCanvasTpl<colorT, intCrdT, fltCrdT>::readTIFFfile(std::string fileName) {
-//  MJR TODO NOTE readTIFFfile: Rework so it works with floating point images too!
 #ifndef TIFF_FOUND
     return 32;
 #else
     TIFF* tif;
     uint32_t wTIFF, hTIFF;
-    uint16_t pmTIFF, pcTIFF, sppTIFF, bpsTIFF;
+    uint16_t pmTIFF, pcTIFF, sppTIFF, bpsTIFF, fmtTIFF;
 
     // Open our tiff image
     if( !(tif = TIFFOpen(fileName.c_str(), "r")))
@@ -4374,9 +4389,13 @@ namespace mjr {
     if( 1 != TIFFGetField(tif, TIFFTAG_BITSPERSAMPLE,   &bpsTIFF))
       return 7;
 
+    // This one is not required.  If it's missing, it's 1 (unsigned integer).
+    if( 1 != TIFFGetField(tif, TIFFTAG_SAMPLEFORMAT,   &fmtTIFF)) 
+      fmtTIFF = 1;
+
     //uint64_t cmTIFF = (1ULL << bpsTIFF) - 1ULL;
 
-    // Dump out image metadata
+    // // Dump out image metadata
     // std::cerr << "TIFF: "      << fileName << std::endl;
     // std::cerr << " T WIDTH:  " << wTIFF    << std::endl;
     // std::cerr << " T HEIGHT: " << hTIFF    << std::endl;
@@ -4385,6 +4404,7 @@ namespace mjr {
     // std::cerr << " T PHOM:   " << pmTIFF   << std::endl;
     // std::cerr << " T BPS:    " << bpsTIFF  << std::endl;
     // std::cerr << " T MAX:    " << cmTIFF   << std::endl;
+    // std::cerr << " T FMT:    " << fmtTIFF  << std::endl;
 
     // Check file image size and reallocate aRamCanvas
     if(wTIFF < 1)
@@ -4397,6 +4417,9 @@ namespace mjr {
 
     uint32_t wRC   = get_numXpix();
 
+    if ((pcTIFF != 1) && (pcTIFF != 2))
+      return 22;
+
     if(wTIFF != wRC)
       return 12;
 
@@ -4407,51 +4430,31 @@ namespace mjr {
 
     uint16_t sppRC = colorT::channelCount;
 
-    if(sppTIFF != sppRC)
-      std::cerr << "WARNING: Converting channel count (from: " << sppTIFF << " to " << sppRC << ") image to RGB: " << fileName << std::endl;
+    if(sppTIFF != sppRC)  
+      return 19;
 
     uint16_t bpsRC = colorT::bitsPerPixel / sppRC;
 
-    if(bpsTIFF != bpsRC)
-      std::cerr << "WARNING: Converting image depth (from " << bpsTIFF << "-bit to " << bpsRC << "-bit): " << fileName << std::endl;
+    if(bpsTIFF != bpsRC) 
+      return 20;
 
-    // std::cerr << " C WIDTH:  " << wRC    << std::endl;
-    // std::cerr << " C HEIGHT: " << hRC    << std::endl;
-    // std::cerr << " C SPP:    " << sppRC  << std::endl;
-    // std::cerr << " C BPS:    " << bpsRC  << std::endl;
+    // We only suport 1 (unsigned integers) and 3 (IEEE floating point).
+    if ((fmtTIFF != 1) && (fmtTIFF != 3))
+      return 18;
+
+    if ((colorType::chanIsInt && (fmtTIFF != 1)) || (!(colorType::chanIsInt) && (fmtTIFF != 3))) 
+      return 21;
 
     bool yNat  = !(get_yIntAxisOrientation()==intAxisOrientation::NATURAL);
     bool xNat  = get_xIntAxisOrientation()==intAxisOrientation::NATURAL;
 
-    // Load the image -- Use TIFFReadRGBAImage if aRamCanvas is 24-bit RGB and TIFFReadScanline otherwise.
-    if((sppRC == 3) && (bpsRC == 8)) {
-      if(pmTIFF != 2)
-        std::cerr << "WARNING: Converting non-RGB image (photometric tag of " << pmTIFF << ") to RGB: " << fileName << std::endl;
-      size_t numPix = wTIFF * hTIFF;
-      uint32_t* imageBuffer = (uint32_t*)_TIFFmalloc(numPix * sizeof(uint32_t));
-      if(imageBuffer == NULL)
-        return 10;
+    tsize_t scanlinesize = TIFFScanlineSize(tif);
+    tdata_t scanLineBuffer = _TIFFmalloc(scanlinesize);
 
-      if( !(TIFFReadRGBAImage(tif, wTIFF, hTIFF, imageBuffer, 0)))
-        return 11;
+    if(scanLineBuffer == NULL)
+      return 16;
 
-      for(int y=(yNat?0:(get_numYpix()-1)); (yNat?y<get_numYpix():y>=0); (yNat?y++:y--)) {
-        for(int x=(xNat?0:(get_numXpix()-1)); (xNat?x<get_numXpix():x>=0); (xNat?x++:x--)) {
-          drawPointNC(x, y, colorT(TIFFGetR(imageBuffer[y*wTIFF+x]), TIFFGetG(imageBuffer[y*wTIFF+x]), TIFFGetB(imageBuffer[y*wTIFF+x])));
-        }
-      }
-      _TIFFfree(imageBuffer);
-    } else {
-
-      if( (bpsTIFF != 8) && (bpsTIFF != 16) && (bpsTIFF != 32) && (bpsTIFF != 64) )
-        return 15;
-
-      tsize_t scanlinesize = TIFFScanlineSize(tif);
-      tdata_t scanLineBuffer = _TIFFmalloc(scanlinesize);
-
-      if(scanLineBuffer == NULL)
-        return 16;
-
+    if (pcTIFF == 1) { // Chunky
       for(uint32_t row=0; row<hTIFF; row++) {
         if( !(TIFFReadScanline(tif, scanLineBuffer, row)))
           return 17;
@@ -4459,31 +4462,29 @@ namespace mjr {
         for(uint32_t col=0; col<wTIFF; col++) {
           int x = (xNat ? col : wTIFF-col-1);
           int y = (yNat ? row : hTIFF-row-1);
-          if(sppTIFF != sppRC)
-            getPxColorRefNC(x, y).setToBlack();
           for(uint16_t samp=0; samp<sppTIFF; samp++) {
-            uint64_t d;
-            switch(bpsTIFF) {
-              case 8  : { uint8_t  tmp = *((uint8_t* )p); d = tmp; break; }
-              case 16 : { uint16_t tmp = *((uint16_t*)p); d = tmp; break; }
-              case 32 : { uint32_t tmp = *((uint32_t*)p); d = tmp; break; }
-              case 64 : { uint64_t tmp = *((uint64_t*)p); d = tmp; break; }
-              default : {                                 d = 0;   break; }
-            }
-            if(samp < sppRC) {
-              if(bpsTIFF == bpsRC) {
-                getPxColorRefNC(x, y).setChan(samp, static_cast<colorChanType>(d));
-              } else {
-//  MJR TODO NOTE readTIFFfile: test this arithmatic...
-                getPxColorRefNC(x, y).setChan(samp, static_cast<colorChanType>(d >> (bpsTIFF-bpsRC)));
-              }
-            }
+            getPxColorRefNC(x, y).setChan(samp, static_cast<colorChanType>(*p));
             p = p + (bpsTIFF/8);
           }
         }
       }
-      _TIFFfree(scanLineBuffer);
+    } else { // planar
+      for(uint16_t samp=0; samp<sppTIFF; samp++) {
+        for(uint32_t row=0; row<hTIFF; row++) {
+          if( !(TIFFReadScanline(tif, scanLineBuffer, row, samp)))
+            return 17;
+          char* p = (char*)(scanLineBuffer);
+          for(uint32_t col=0; col<wTIFF; col++) {
+            int x = (xNat ? col : wTIFF-col-1);
+            int y = (yNat ? row : hTIFF-row-1);
+            getPxColorRefNC(x, y).setChan(samp, static_cast<colorChanType>(*p));
+            p = p + (bpsTIFF/8);
+          }
+        }
+      }
     }
+
+    _TIFFfree(scanLineBuffer);
     TIFFClose(tif);
     return 0;
 #endif
