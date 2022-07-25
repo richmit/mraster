@@ -2671,7 +2671,10 @@ namespace mjr {
   template <class clrChanT, int numChan>
   inline colorTpl<clrChanT, numChan>::maskType
   colorTpl<clrChanT, numChan>::getMaskNC() const {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
     return theColor.theInt;
+#pragma GCC diagnostic pop
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
