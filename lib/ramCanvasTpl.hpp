@@ -307,7 +307,19 @@ namespace mjr {
           @param oStream    The ostream object to which to write
           @param ch4isAlpha If true, identify the first non-image channel as an alpha channel.  If toTRU!=NULL, then alpha is 255.
           @param toTRU      A functor used to transform native pixels into truecolor RGB pixels.
-          @param filter     A functor used to transform each pixel. */
+          @param filter     A functor used to transform each pixel. 
+          @return Status of I/O
+          @retval  0 Everything seems to have worked
+          @retval  2 Image has channels are too shallow for TIFF format
+          @retval  3 Image has channels are too deep for TIFF format
+          @retval  4 Image has too few channels for TIFF format
+          @retval  5 Image has too many channels for TIFF format
+          @retval  6 Image has too few columns for TIFF format
+          @retval  7 Image has too many columns for TIFF format
+          @retval  8 Image has too few rows for TIFF format
+          @retval  9 Image has too few rows for TIFF format
+          @retval 10 Image rows are too large (too much data) for TIFF format
+          @retval 11 image is too large (too much data)  for TIFF format */
       int writeTIFFstream(std::ostream& oStream, bool ch4isAlpha, std::function<colorRGB8b (colorT&)> toTRU, std::function<colorT (colorT&)> filter);
       /** Write the a truecolor TGA image to the given ostream.
 
@@ -4393,6 +4405,9 @@ namespace mjr {
     if( 1 != TIFFGetField(tif, TIFFTAG_SAMPLEFORMAT,   &fmtTIFF)) 
       fmtTIFF = 1;
 
+    //  MJR TODO NOTE We don't know how to deal with pallet images (pmTIFF == PHOTOMETRIC_PALETTE).  Should check for that.
+    //  MJR TODO NOTE We don't know how to deal with tiled images.  Should check for that.
+
     //uint64_t cmTIFF = (1ULL << bpsTIFF) - 1ULL;
 
     // // Dump out image metadata
@@ -4417,7 +4432,7 @@ namespace mjr {
 
     uint32_t wRC   = get_numXpix();
 
-    if ((pcTIFF != 1) && (pcTIFF != 2))
+    if ((pcTIFF != PLANARCONFIG_CONTIG) && (pcTIFF != PLANARCONFIG_SEPARATE))
       return 22;
 
     if(wTIFF != wRC)
@@ -4438,11 +4453,12 @@ namespace mjr {
     if(bpsTIFF != bpsRC) 
       return 20;
 
-    // We only suport 1 (unsigned integers) and 3 (IEEE floating point).
-    if ((fmtTIFF != 1) && (fmtTIFF != 3))
+    // We only suport SAMPLEFORMAT_UINT & SAMPLEFORMAT_IEEEFP
+    if ((fmtTIFF != SAMPLEFORMAT_UINT) && (fmtTIFF != SAMPLEFORMAT_IEEEFP))
       return 18;
 
-    if ((colorType::chanIsInt && (fmtTIFF != 1)) || (!(colorType::chanIsInt) && (fmtTIFF != 3))) 
+    if ((  colorType::chanIsInt  && (SAMPLEFORMAT_UINT != 1)) || 
+        (!(colorType::chanIsInt) && (SAMPLEFORMAT_IEEEFP != 3))) 
       return 21;
 
     bool yNat  = !(get_yIntAxisOrientation()==intAxisOrientation::NATURAL);
@@ -4454,7 +4470,7 @@ namespace mjr {
     if(scanLineBuffer == NULL)
       return 16;
 
-    if (pcTIFF == 1) { // Chunky
+    if (pcTIFF == PLANARCONFIG_CONTIG) { // Chunky
       for(uint32_t row=0; row<hTIFF; row++) {
         if( !(TIFFReadScanline(tif, scanLineBuffer, row)))
           return 17;
@@ -4468,7 +4484,7 @@ namespace mjr {
           }
         }
       }
-    } else { // planar
+    } else if (pcTIFF == PLANARCONFIG_SEPARATE) { // planar
       for(uint16_t samp=0; samp<sppTIFF; samp++) {
         for(uint32_t row=0; row<hTIFF; row++) {
           if( !(TIFFReadScanline(tif, scanLineBuffer, row, samp)))
