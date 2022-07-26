@@ -354,8 +354,12 @@ namespace mjr {
       typedef typename std::conditional<ptrIsSmaller, colorCRefType, colorType>::type colorArgType;
 
       /** A type used to pass color scheme indexes.
-          This will be the larger of uint32_t and colorChanArithSPType. We use cmp_less because < confuses Doxygen.*/
-      typedef typename std::conditional<std::cmp_less(sizeof(channelArithSPType), sizeof(uint32_t)), uint32_t, channelArithSPType>::type csIdxType;
+          This will be uint64_t for floating point clrChanT, and the larger of uint32_t and colorChanArithSPType for integral clrChanT. 
+          We use cmp_less because < confuses Doxygen.*/
+      typedef typename std::conditional<std::cmp_less(sizeof(channelArithSPType), sizeof(uint32_t)), uint32_t, 
+              typename std::conditional<std::is_floating_point<clrChanT>::value,                     uint64_t,
+                                                                                                     channelArithSPType
+                                        >::type>::type csIdxType;
 
       // typedef uint32 csIdxType;
 
