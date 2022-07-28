@@ -2,15 +2,13 @@
 ######################################################################################################################################################
 cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
 
-set(CMAKE_CXX_STANDARD 11)
-
 ######################################################################################################################################################
 # Proejct meta data
 
 project(MRaster CXX)
 
-set(PROJECT_VERSION_DATE  2022-06-19)
-set(PROJECT_VERSION_ID    5)
+set(PROJECT_VERSION_DATE  2022-07-28)
+set(PROJECT_VERSION_ID    20.0.0a)
 mark_as_advanced(PROJECT_VERSION_DATE PROJECT_VERSION_ID)
 
 ######################################################################################################################################################
@@ -25,7 +23,8 @@ OPTION(O_IM      "Include support for ImageMagick"     OFF )
 OPTION(O_MOVIE   "Include support making movies"       ON  )
 OPTION(O_RAY     "Include support ray-tracing"         ON  )
 OPTION(O_EIGEN   "Include support for eigen"           OFF )
-OPTION(O_STATIC  "Build a static library"              ON  )
+OPTION(O_STATIC  "Build a static library"              OFF )
+OPTION(O_BTEST   "Include support for boost.test"      ON  )
 
 set(POVRAY_HINT "c:/Program Files/POV-Ray/v3.7/bin/")
 
@@ -85,40 +84,55 @@ if(O_EIGEN)
 find_package (Eigen3 3.3 NO_MODULE)
 endif()
 
+if(O_BTEST)
+find_package(Boost COMPONENTS unit_test_framework)
+endif()
+
 ######################################################################################################################################################
 
 set(TARGETS_REQ_NONE   "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "biomorph2" "bmark" "chaos_game" "circles" "color_all"
-                       "color_lut_ramp_misc" "cplxColor" "dlaSeed" "level_curves" "lorenz_fuz"
-                       "lorenz_multi" "mandelbrot_binary" "mandelbrot_bm_cplx" "mandelbrot_bm_cplx_hyper" "mandelbrot_bm_real" "mandelbrot_cycles"
-                       "mandelbrot_distance" "mandelbrot_distance_old" "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits"
-                       "mandelbrot_potential" "mandelbrot_triangle" "newton_bm_cplx" "newton_bm_real" "newton_half" "newton_max_mod" "newton_vs"
-                       "newton_z6" "peterdejong" "peterdejongM" "sic" "sic_search" "sierpinski_triangle" "sprott2d" "testPoint" "test_draw_btriangle"
-                       "test_color" "test_draw_misc" "test_draw_primatives" "tippets" "mandelbrot_bm_real_eqop" "test_float" "types"
-                       )
+                       "color_lut_ramp_misc" "cplxColor" "dlaSeed" "level_curves" "lorenz_fuz" "lorenz_multi" "mandelbrot_binary" "mandelbrot_bm_cplx"
+                       "mandelbrot_bm_cplx_hyper" "mandelbrot_bm_real" "mandelbrot_cycles" "mandelbrot_distance" "mandelbrot_distance_old"
+                       "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits" "mandelbrot_potential" "mandelbrot_triangle" "newton_bm_cplx"
+                       "newton_bm_real" "newton_half" "newton_max_mod" "newton_vs" "newton_z6" "peterdejong" "peterdejongM" "sic" "sic_search"
+                       "sierpinski_triangle" "sprott2d" "testPoint" "test_draw_btriangle" "test_color" "test_draw_misc" "test_draw_primatives"
+                       "tippets" "mandelbrot_bm_real_eqop" "test_float" "types")
 set(TARGETS_REQ_MRRL   "color_lut_indexed" "color_lut_rainbows" "color_web_rectangle" "color_web_triangle" "test_draw_fonts" "test_draw_glyph"
-                       "test_draw_strings" "color_interp_hsl_vs_rgb" "color_lut_ramp_cube"
-                       )
+                       "test_draw_strings" "color_interp_hsl_vs_rgb" "color_lut_ramp_cube")
 set(TARGETS_REQ_OPENGL "glut_image")
-set(TARGETS_REQ_TIFF   "brownianDiffusion" "dlaBrownian" "dlaDrift" "img_process" "test_interp_scale" "geomTfrm_LensDistortion" "geomTfrm_Arb" "geomTfrm_Rotate")
+set(TARGETS_REQ_TIFF   "brownianDiffusion" "dlaBrownian" "dlaDrift" "img_process" "test_interp_scale" "geomTfrm_LensDistortion" "geomTfrm_Arb" 
+                       "geomTfrm_Rotate")
 set(TARGETS_REQ_OPENMP "mandelbrot_bm_cplx_openmp")
+set(TARGETS_REQ_BTEST  "utest_foo" "utest_color_types_ia64nGCC" "utest_color_methods")
+set(TARGETS_REQ_PNG    )
+set(TARGETS_REQ_IM     )
 
 # Construct list of targets we can build
-set(EXAMPLE_TARGETS ${TARGETS_REQ_NONE})
-list(APPEND EXAMPLE_TARGETS ${TARGETS_REQ_MRRL})
-if(OpenGL_FOUND AND GLUT_FOUND)
-  list(APPEND EXAMPLE_TARGETS ${TARGETS_REQ_OPENGL})
-else()
+set(EXAMPLE_TARGETS ${TARGETS_REQ_NONE} ${TARGETS_REQ_MRRL} ${TARGETS_REQ_OPENGL} ${TARGETS_REQ_TIFF} ${TARGETS_REQ_OPENMP} ${TARGETS_REQ_BTEST} ${TARGETS_REQ_PNG} ${TARGETS_REQ_IM})
+
+if(((NOT OpenGL_FOUND) OR (NOT GLUT_FOUND)) AND TARGETS_REQ_OPENGL)
+  list(REMOVE_ITEM EXAMPLE_TARGETS ${TARGETS_REQ_OPENGL})
   message(WARNING "OpenGL/GLUT example programs will NOT be built!.")
 endif()
-if(OpenMP_FOUND)
-  list(APPEND EXAMPLE_TARGETS ${TARGETS_REQ_OPENMP})
-else()
+if((NOT OpenMP_FOUND) AND TARGETS_REQ_OPENMP)
+  list(REMOVE_ITEM EXAMPLE_TARGETS ${TARGETS_REQ_OPENMP})
   message(WARNING "OpenMP example programs will NOT be built!")
 endif()
-if(TIFF_FOUND)
-  list(APPEND EXAMPLE_TARGETS ${TARGETS_REQ_TIFF})
-else()
+if((NOT TIFF_FOUND) AND TARGETS_REQ_TIFF)
+  list(REMOVE_ITEM EXAMPLE_TARGETS ${TARGETS_REQ_TIFF})
   message(WARNING "TIFF example programs will NOT be built!")
+endif()
+if((NOT Boost_FOUND) AND TARGETS_REQ_BTEST)
+  list(REMOVE_ITEM EXAMPLE_TARGETS ${TARGETS_REQ_BTEST})
+  message(WARNING "Unit tests will NOT be built!")
+endif()
+if((NOT PNG_FOUND) AND TARGETS_REQ_PNG)
+  list(REMOVE_ITEM EXAMPLE_TARGETS ${TARGETS_REQ_PNG})
+  message(WARNING "PNG example programs will NOT be built!")
+endif()
+if((NOT IM_FOUND) AND TARGETS_REQ_IM)
+  list(REMOVE_ITEM EXAMPLE_TARGETS ${TARGETS_REQ_IM})
+  message(WARNING "IM example programs will NOT be built!")
 endif()
 
 list(REMOVE_DUPLICATES EXAMPLE_TARGETS)
@@ -135,10 +149,6 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
     target_compile_options(${CURTGT} PUBLIC -ffast-math)
     target_compile_options(${CURTGT} PUBLIC -Wall -Wconversion -Wno-unknown-pragmas -Wextra -Wno-deprecated-copy)
     target_compile_options(${CURTGT} PUBLIC -Ofast)
-    # if(CMAKE_CXX_PLATFORM_ID STREQUAL "MinGWx")
-    #   target_compile_options(${CURTGT} PUBLIC -static-libgcc)
-    #   target_compile_options(${CURTGT} PUBLIC -static-libstdc++)
-    # endif()
   elseif((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang"))
     target_compile_options(${CURTGT} PUBLIC -Wstrict-overflow=0)
     target_compile_options(${CURTGT} PUBLIC -ffast-math)
@@ -151,6 +161,13 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
     message("Warning: MSVC support is currently experimental")
   endif()
 endforeach(CURTGT)
+
+# Add build requirements for examples using OpenGL
+if(Boost_FOUND)
+  foreach(CURTGT IN LISTS TARGETS_REQ_BTEST)
+    target_link_libraries(${CURTGT} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+  endforeach(CURTGT)
+endif()
 
 # Add link requirements for examples using the mrraster library (not just headers)
 foreach(CURTGT IN LISTS TARGETS_REQ_MRRL)
@@ -177,6 +194,7 @@ endif()
 # Add build requirements for examples using libTIFF
 if(TIFF_FOUND)
   foreach(CURTGT IN LISTS TARGETS_REQ_TIFF)
+    target_compile_definitions(${CURTGT} PUBLIC TIFF_FOUND=1)
     target_include_directories(${CURTGT} PRIVATE ${TIFF_INCLUDE_DIRS})
     target_link_libraries(${CURTGT} ${TIFF_LIBRARIES})
   endforeach(CURTGT)

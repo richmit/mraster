@@ -32,8 +32,6 @@
 
 #ifndef MJR_INCLUDE_ramCanvasTpl
 
-#include "config.hpp"
-
 #ifdef TIFF_FOUND
 #include <unistd.h>                                                      /* UNIX std stf            POSIX    */
 #include <tiffio.h>                                                      /* libTIFF                 libTIFF  */
