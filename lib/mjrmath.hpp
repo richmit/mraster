@@ -174,12 +174,12 @@ namespace mjr {
     @param x2          X coordinate of second point
     @param y2          Y coordinate of second point
     @return The mapped value. */
-template <typename numT>
-inline numT genLinMap(numT x, numT x1, numT x2, numT y1, numT y2) {
-  numT m = (y1 - y2) / (x1 - x2);
-  numT b = y1 - m * x1;
-  return (m * x + b);
-}
+  template <typename numT>
+  inline numT genLinMap(numT x, numT x1, numT x2, numT y1, numT y2) {
+    numT m = (y1 - y2) / (x1 - x2);
+    numT b = y1 - m * x1;
+    return (m * x + b);
+  }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /** Map an double in the unit interval, the range [0,1], onto the integers in the range [0,maxOutValue] via a linear mapping function.  That is to say, 0.0

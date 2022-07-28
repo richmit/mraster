@@ -294,13 +294,17 @@ namespace mjr {
       /** Set all channels to maxChanVal. */
       void setChansToMax();
       /** Sets the current color based upon the contents of the given std::string.
-          This is the guts of the magic constructor taking a string.  First all channels are set to minChanVal.  The next step depends on the contents of the
-          colorString argument.  If colorString starts with a "#", then setChans() will be used.  Otherwise setToCorner() will be used */
+          This is the guts of the magic constructor taking a string.  If colorString starts with a "#", then setChans() will be used.  
+          Otherwise setToCorner() will be used */
       colorTpl& setColorFromString(std::string colorString);
       /** Convert a uint8_t to a clrChanT (for integral clrChanT) */
       clrChanT convertByteToChan(uint8_t cVal) const requires (std::integral<clrChanT>);
       /** Convert a uint8_t to a clrChanT (for floating point clrChanT)*/
       clrChanT convertByteToChan(uint8_t cVal) const requires (std::floating_point<clrChanT>);
+      /** Convert hex CString to clrChanT (for integral clrChanT) */
+      clrChanT convertHexStringToChan(std::string hexString) const requires (std::integral<clrChanT>);
+      /** Convert hex CString to clrChanT  (for floating point clrChanT)*/
+      clrChanT convertHexStringToChan(std::string hexString) const requires (std::floating_point<clrChanT>);
       /** Convert a clrChanT to a uint8_t (for integral clrChanT) */
       uint8_t convertChanToByte(clrChanT cVal) const requires (std::floating_point<clrChanT>);
       /** Convert a clrChanT to a uint8_t (for floating point clrChanT) */
@@ -611,12 +615,13 @@ namespace mjr {
                     #FFFF00000000 -- Red for an RGB color with 16-bit per channels
                     #FF0000EE     -- Red for an RGBA color with 8-bit per channels  (with alpha set to EE)
                     #FFFFFFFFFF   -- White for a 5 channel color with 8-bit per channels
-
-          Fewer channel specifiers may be provided than channels in the current color.  In this case the unspecified channels are left untouched.
-          For most error cases this function silently fails leaving the current color object unchanged.
-          @param colorHexString hex string specifying a color.
+          Fewer channel specifiers may be provided than channels in the current color, then the value of clearUndefinedChannels defines the behavior: NOOP or
+          set them to #minChanVal.  If the colorHexString is somehow invalid, then all channels are considered undefined, and the action is defined by the
+          value of clearUndefinedChannels.
+          @param colorHexString         Hex string specifying a color.
+          @param clearUndefinedChannels Specify error action and what to do with unspecified channels.
           @return Returns a reference to the current color object.*/
-      colorTpl& setChans(std::string colorHexString);
+      colorTpl& setChans(std::string colorHexString, bool clearUndefinedChannels = false);
       //@}
 
       /** @name Set Channel Value(s) with Floating Point Doubles */
@@ -751,20 +756,19 @@ namespace mjr {
           @return Returns a reference to the current color object.*/
       colorTpl& setToMagenta();
       /** Set the current color based upon the single character given -- 0==black, R, G, B, M, C, Y, W/1==white).
-          The color is acutally set using one of the setTo*() functions.
-          If the value of cornerColor is not valid, then setToBlack() is used
+          The color is acutally set using one of the setTo*() functions.  If \a cornerColor is invalid, then setToBlack().
           @param cornerColor Character specifying the color
           @return Returns a reference to the current color object.*/
       colorTpl& setToCorner(char cornerColor);
       /** Set the color to the given  corner color.
-          The color is acutally set using one of the setTo*() functions.
+          The color is acutally set using one of the setTo*() functions.  If \a cornerColor is invalid, then setToBlack().
           @param cornerColor Enum value specifying the color
           @return Returns a reference to the current color object.*/
       colorTpl& setToCorner(cornerColorEnum cornerColor);
       /** Set the color to the named corner color.
-          If cornerColor is one character long, then the call is equivalent to setToCorner(cornerColor[0]).  Otherwise a valid
-          corner color name string is expected: red, blue, green, cyan, yellow, magenta, black, or white.  If no valid color
-          name is provided, then setToBlack() is used. The color is actually set using one of the setTo*() functions.
+          If cornerColor is one character long, then the call is equivalent to setToCorner(cornerColor[0]).  Otherwise a valid corner color name string is
+          expected: red, blue, green, cyan, yellow, magenta, black, or white.  If \a cornerColor is invalid, then setToBlack().  The color is actually set
+          using one of the setTo*() functions.
           @param cornerColor String value specifying the color
           @return Returns a reference to the current color object.*/
       colorTpl& setToCorner(std::string cornerColor);
@@ -1600,13 +1604,17 @@ namespace mjr {
           @param aColor the given color
           @return Returns absolute distance squared.*/
       channelArithSPType distAbs(colorArgType aColor);
-      /** Returns non-zero if the given color is logically the same as the current color.
+//  MJR TODO NOTE: Add distMaxAbs -- max(|C_i - aC_i|)
+//  MJR TODO NOTE: Add fuzzy isEqual/isNotEqual/isBlack/... for floating point channels.  isBlack vs isBlackEPS? Or overloaded versions with extra arg?
+      /** Returns non-zero if the current color is precicely equal to aColor.
+          Note the implications for floating point clrChanT.  
           @return non-zero if the given color is logically the same as the current color*/
       bool isEqual(colorArgType aColor);
       /** Like isEual(), but only checks the R, G, & B channels.
           @return non-zero if the given RGB color is the same as the current color*/
       bool isEqualRGB(colorArgType aColor);
       /** Returns non-zero if the given color is logically NOT the same as the current color.
+          Note the implications for floating point clrChanT.  
           @return non-zero if the given color is logically the same as the current color*/
       bool isNotEqual(colorArgType aColor);
       /** Returns non-zero if the given color is black (all componnets are zero)
@@ -1683,11 +1691,11 @@ namespace mjr {
   colorTpl<clrChanT, numChan>::colorTpl(const colorType& aColor) {
     /* Saftey: Yep.  Sometimes the compiler might not be able to tell if we have initalized the color object -- some of the color set code is too complex.
        Sometimes we might even want to copy an unitilzied color -- sometimes it makes the code easier to write.*/
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
     if(goodMask)
       setMaskNC(aColor.getMaskNC());
     else
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
       std::copy_n(aColor.theColor.thePartsA, numChan, theColor.thePartsA);
 #pragma GCC diagnostic pop
   }
@@ -1797,7 +1805,10 @@ namespace mjr {
   template <class clrChanT, int numChan>
   inline clrChanT
   colorTpl<clrChanT, numChan>::getChanNC(int chan) const {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
     return theColor.thePartsA[chan];
+#pragma GCC diagnostic pop
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1869,7 +1880,7 @@ namespace mjr {
   inline uint8_t
   colorTpl<clrChanT, numChan>::getC3_byte() const {
     /* Requires: Inherits numChan>3 from getC3. */
-    return convertChanToByte(getC2());
+    return convertChanToByte(getC3());
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2105,6 +2116,26 @@ namespace mjr {
     /* Performance: We expect chan to be in range most of the time.  If it is not, we waste time here computing the channel value.. */
     /* Performance: When chanIsByte, convertByteToChan is a NOOP.  As it's inline, this leads to zero overhead for the chanIsByte case. */
     return setChan(chan, convertByteToChan(cVal));
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template <class clrChanT, int numChan>
+  inline clrChanT
+  colorTpl<clrChanT, numChan>::convertHexStringToChan(std::string hexString) const requires (std::integral<clrChanT>) {
+    if (sizeof(unsigned long) >= sizeof(clrChanT))
+      return static_cast<clrChanT>( std::stoul(hexString, nullptr, 16));
+    else
+      return static_cast<clrChanT>(std::stoull(hexString, nullptr, 16));
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template <class clrChanT, int numChan>
+  inline clrChanT
+  colorTpl<clrChanT, numChan>::convertHexStringToChan(std::string hexString) const requires (std::floating_point<clrChanT>) {
+    if (sizeof(unsigned long) >= sizeof(clrChanT))
+      return static_cast<clrChanT>( std::stoul(hexString, nullptr, 16)) / static_cast<clrChanT>((chanIsInt ? 1 : std::pow(2, bitsPerChan)));
+    else
+      return static_cast<clrChanT>(std::stoull(hexString, nullptr, 16)) / static_cast<clrChanT>((chanIsInt ? 1 : std::pow(2, bitsPerChan)));
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2704,7 +2735,7 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
   colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setChans(std::string colorHexString) {
+  colorTpl<clrChanT, numChan>::setChans(std::string colorHexString, bool clearUndefinedChannels) {
     std::string::size_type sizeOfString = colorHexString.size();
     std::string::size_type digitsPerChan = bitsPerChan / 4;
     if (sizeOfString > 0) {  // Not empty
@@ -2712,26 +2743,26 @@ namespace mjr {
         if (0 == ((sizeOfString-1) % digitsPerChan)) { // Has correct number of digits
           if (std::string::npos == colorHexString.find_first_not_of("0123456789abcdefABCDEF", 1)) { // All hex digits after the pound
             std::string::size_type numChanGiven = (sizeOfString-1) / digitsPerChan;
-            std::string::size_type numToSet     = numChanGiven;
             if (numChan < numChanGiven)
-              numToSet = numChan;
-            clrChanT curCmp;
+              numChanGiven = numChan;
             std::string curHexStr(digitsPerChan, 1);
-            for(std::string::size_type i=0; i<numToSet; i++) {
-              for(std::string::size_type j=0; j<digitsPerChan; j++) {
+            for(std::string::size_type i=0; i<numChanGiven; i++) {
+              for(std::string::size_type j=0; j<digitsPerChan; j++) 
                 curHexStr[j] = colorHexString[1+j+digitsPerChan*i];
-              }
-              if (sizeof(unsigned long) >= sizeof(clrChanT))
-                curCmp = static_cast<clrChanT>( std::stoul(curHexStr, nullptr, 16));
-              else
-                curCmp = static_cast<clrChanT>(std::stoull(curHexStr, nullptr, 16));
-              setChan(static_cast<int>(i), curCmp);
+              setChan(static_cast<int>(i), convertHexStringToChan(curHexStr));
             }
+            if (clearUndefinedChannels && (numChanGiven < numChan))
+              for(std::string::size_type i=numChanGiven; i<numChan; i++) 
+                setChanToMin(static_cast<int>(i));
+            return *this;
           }
         }
       }
     }
-    return *this;
+    if (clearUndefinedChannels) 
+      return setToBlack();
+    else
+      return *this;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2899,7 +2930,7 @@ namespace mjr {
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmStdPow(double p) {
     for(int i=0; i<numChan; i++)
-      setChanNC(i, static_cast<clrChanT>(std::pow(static_cast<double>(getChanNC(i)) / static_cast<double>(maxChanVal), p) * maxChanVal));
+      setChanNC(i, static_cast<clrChanT>(std::pow(static_cast<double>(getChanNC(i)) / static_cast<double>(maxChanVal), p) * static_cast<double>(maxChanVal)));
     return *this;
   }
 
@@ -2926,8 +2957,10 @@ namespace mjr {
   template <class clrChanT, int numChan>
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::tfrmStdPow(double rp, double gp, double bp) {
-    for(int i=0; i<numChan; i++)
-        setChanNC(i, static_cast<clrChanT>(pow(static_cast<double>(getChanNC(i)) / static_cast<double>(maxChanVal), bp) * static_cast<double>(maxChanVal)));
+    /* Requires: Inherits numChan>2 from setC2 & getC2. */
+    setC0(static_cast<clrChanT>(std::pow(static_cast<double>(getC0) / static_cast<double>(maxChanVal), rp) * static_cast<double>(maxChanVal)));
+    setC1(static_cast<clrChanT>(std::pow(static_cast<double>(getC1) / static_cast<double>(maxChanVal), gp) * static_cast<double>(maxChanVal)));
+    setC2(static_cast<clrChanT>(std::pow(static_cast<double>(getC2) / static_cast<double>(maxChanVal), bp) * static_cast<double>(maxChanVal)));
     return *this;
   }
 
@@ -3083,7 +3116,7 @@ namespace mjr {
       case cornerColorEnum::YELLOW:   return setToYellow();  break;
       case cornerColorEnum::CYAN:     return setToCyan();    break;
       case cornerColorEnum::MAGENTA:  return setToMagenta(); break;
-      default:                        return setToBlack();   break;
+      default:                        return setToBlack();   break; // Some compilers don't realize all cases are covered above...
     }
     return *this;
   }
@@ -3123,24 +3156,23 @@ namespace mjr {
     if (sizeOfString > 0) {
       if(((cornerColor[0] == 'b') || (cornerColor[0] == 'B')) && (sizeOfString > 0)) {
         if( (cornerColor[2]=='u') || (cornerColor[2]=='U') )
-          setToBlue();
+          return setToBlue();
         else
-          setToBlack();
+          return setToBlack();
       } else {
-        setToCorner(cornerColor[0]);
+          return setToCorner(cornerColor[0]);
       }
     }
-    return *this;
+    return setToBlack();
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
   inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::setColorFromString(std::string colorString) {
-    setChansToMin();
     if ( !(colorString.empty())) {
       if(colorString[0] == '#') {
-        setChans(colorString);
+        setChans(colorString, true);
       } else {
         if(((colorString[0] == 'b') || (colorString[0] == 'B')) && (colorString.size() > 1)) {
           if( (colorString[2]=='u') || (colorString[2]=='U') )

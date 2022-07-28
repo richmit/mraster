@@ -73,10 +73,13 @@ namespace mjr {
 
   /** @name Simple Monochrome Canvas Types (1 channel uint at various depths) */
   //@{
-  typedef ramCanvasTpl<color1c8b,    INT_CORD, REAL_CORD> ramCanvas1c8b;       //!< Canvas type:  8-bit uint grey-scale -- 1 channel,  8-bit.
-  typedef ramCanvasTpl<color1c16b,   INT_CORD, REAL_CORD> ramCanvas1c16b;      //!< Canvas type: 16-bit uint grey-scale -- 1 channel, 16-bit.
-  typedef ramCanvasTpl<color1c32b,   INT_CORD, REAL_CORD> ramCanvas1c32b;      //!< Canvas type: 32-bit uint grey-scale -- 1 channel, 32-bit.
-  typedef ramCanvasTpl<color1c64b,   INT_CORD, REAL_CORD> ramCanvas1c64b;      //!< Canvas type: 64-bit uint grey-scale -- 1 channel, 64-bit.
+  typedef ramCanvasTpl<color1c8b,    INT_CORD, REAL_CORD> ramCanvas1c8b;       //!< Canvas type:   8-bit uint grey-scale -- 1 channel,   8-bit.
+  typedef ramCanvasTpl<color1c16b,   INT_CORD, REAL_CORD> ramCanvas1c16b;      //!< Canvas type:  16-bit uint grey-scale -- 1 channel,  16-bit.
+  typedef ramCanvasTpl<color1c32b,   INT_CORD, REAL_CORD> ramCanvas1c32b;      //!< Canvas type:  32-bit uint grey-scale -- 1 channel,  32-bit.
+  typedef ramCanvasTpl<color1c64b,   INT_CORD, REAL_CORD> ramCanvas1c64b;      //!< Canvas type:  64-bit uint grey-scale -- 1 channel,  64-bit.
+#ifdef MJR_HAVE_128_BIT_TYPES
+  typedef ramCanvasTpl<color1c128b,  INT_CORD, REAL_CORD> ramCanvas1c128b;     //!< Canvas type: 128-bit uint grey-scale -- 1 channel, 128-bit.
+#endif
   //@}
 
   /** @name Simple Color Canvas Types (3 and 4 channels with double float channels) */
