@@ -78,8 +78,9 @@
 // typedef mjr::ramCanvas1c16b canvasType;
 // typedef mjr::ramCanvas1c32b canvasType;
 // typedef mjr::ramCanvas1c64b canvasType;
+// typedef mjr::ramCanvas1c128b canvasType;
 
- typedef mjr::ramCanvas3c8b  canvasType;
+// typedef mjr::ramCanvas3c8b  canvasType;
 // typedef mjr::ramCanvas3c16b canvasType;
 // typedef mjr::ramCanvas3c32b canvasType;
 
