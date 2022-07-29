@@ -1,0 +1,184 @@
+# -*- Mode:Org; Coding:utf-8; fill-column:158 -*-
+# ######################################################################################################################################################.H.S.##
+# FILE:        QuickStart.org
+#+TITLE:       MRaster Quick Start
+#+SUBTITLE:    Linux/UNIX/Msys2/Cygwin/OSX
+#+AUTHOR:      Mitch Richling
+#+EMAIL:       http://www.mitchr.me/
+#+DATE:        2022-07-28
+#+DESCRIPTION: Minimal tutorial for getting started with MRaster
+#+KEYWORDS:    KEYWORDS FIXME
+#+LANGUAGE:    en
+#+OPTIONS:     num:t toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t skip:nil d:nil todo:t pri:nil H:5 p:t author:t html-scripts:nil 
+#+SEQ_TODO:    TODO:NEW(t)                         TODO:WORK(w)    TODO:HOLD(h)    | TODO:FUTURE(f)   TODO:DONE(d)    TODO:CANCELED(c)
+#+PROPERTY: header-args :eval never-export
+#+HTML_HEAD: <style>body { width: 95%; margin: 2% auto; font-size: 18px; line-height: 1.4em; font-family: Georgia, serif; color: black; background-color: white; }</style>
+#+HTML_HEAD: <style>body { min-width: 500px; max-width: 1024px; }</style>
+#+HTML_HEAD: <style>h1,h2,h3,h4,h5,h6 { color: #A5573E; line-height: 1em; font-family: Helvetica, sans-serif; }</style>
+#+HTML_HEAD: <style>h1,h2,h3 { line-height: 1.4em; }</style>
+#+HTML_HEAD: <style>h1.title { font-size: 3em; }</style>
+#+HTML_HEAD: <style>.subtitle { font-size: 0.6em; }</style>
+#+HTML_HEAD: <style>h4,h5,h6 { font-size: 1em; }</style>
+#+HTML_HEAD: <style>.org-src-container { border: 1px solid #ccc; box-shadow: 3px 3px 3px #eee; font-family: Lucida Console, monospace; font-size: 80%; margin: 0px; padding: 0px 0px; position: relative; }</style>
+#+HTML_HEAD: <style>.org-src-container>pre { line-height: 1.2em; padding-top: 1.5em; margin: 0.5em; background-color: #404040; color: white; overflow: auto; }</style>
+#+HTML_HEAD: <style>.org-src-container>pre:before { display: block; position: absolute; background-color: #b3b3b3; top: 0; right: 0; padding: 0 0.2em 0 0.4em; border-bottom-left-radius: 8px; border: 0; color: white; font-size: 100%; font-family: Helvetica, sans-serif;}</style>
+#+HTML_HEAD: <style>pre.example { white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; font-family: Lucida Console, monospace; font-size: 80%; background: #404040; color: white; display: block; padding: 0em; border: 2px solid black; }</style>
+#+HTML_LINK_HOME: https://www.mitchr.me/
+#+HTML_LINK_UP: https://www.mitchr.me/FIXME
+# ######################################################################################################################################################.H.E.##
+
+#+ATTR_HTML: :border 2 solid #ccc :frame hsides :align center
+|          <r> | <l>                                          |
+|   *Updated:* | /{{{modification-time(%Y-%m-%d %H:%M:%S)}}}/ |
+
+* Quick Start (The Absolute Minimum)
+
+If you are interested playing around with *=MRaster=* as quickly as possible, then this section is for you.
+
+The first step is to download *=MRaster=*.  You can grab the [[https://github.com/richmit/mraster/archive/refs/heads/master.zip][zip file]], or you can simply
+clone the repository with GIT like this:
+
+#+BEGIN_EXAMPLE
+git clone 'https://github.com/richmit/mraster.git'
+#+END_EXAMPLE
+
+Once you have it downloaded, make note of the "=lib=" folder within the repository.  This folder contains everything you need to develop with *=MRaster=*, and you
+can simply put your code right in that directory.  So let's create a file called "=hello.cpp=" right inside the "=lib=" directory with the following content:
+
+#+begin_src c++ :exports source :eval never
+#include "ramCanvas.hpp"                                                         // The main *=MRaster=* include
+
+int main(void) {
+  mjr::ramCanvas3c8b theRamCanvas(1024, 1024);                                   // Create a canvas object
+  for(int y=0;y<theRamCanvas.get_numYpix();y++)                                  // Run over the rows 
+    for(int x=0;x<theRamCanvas.get_numXpix();x++)                                //   and columns of the image
+         theRamCanvas.drawPoint(x, y,                                            // Draw a point at (x, y)
+                                mjr::color3c8b().setRGBcmpClrCubeRainbow(x+y));  // Pick a "rainbow" color for the point
+  theRamCanvas.writeTIFFfile("hello.tiff");                                      // Write out our image to disk
+}
+#+end_src
+
+Now we can compile it with GCC like this:
+
+#+begin_src sh :exports source :eval never
+g++ -m64 -std=gnu++20 colorData.cpp hersheyFontData.cpp hello.cpp -o hello2
+#+end_src
+
+Now you can run it, and take a look at the file it created ("=hello.tiff="):
+
+#+ATTR_HTML: :width 800 :align center
+[[./hello.png]]
+
+That's it!  How easy was that?
+
+*Questions*
+
+*Q1:* What are "=colorData.cpp=" and "=hersheyFontData.cpp=" in the compile command?
+
+#+BEGIN_QUOTE
+*A:* They have data for color schemes and fonts.  We didn't actually need them for the "=hello.cpp=" example, but I included them for completeness.
+#+END_QUOTE
+
+
+*Q2:* How do I get advanced TIFF reader support without =cmake=?
+
+#+BEGIN_QUOTE
+*A:* If you have =libtiff= installed in a standard location, then you can probably just add "=-DTIFF_FOUND" to the compile command like this:
+
+#+begin_src sh :exports source :eval never
+g++ -DTIFF_FOUND -m64 --std=gcc++20 colorData.cpp hersheyFontData.cpp hello.cpp -o hello
+#+end_src
+
+Please note that advanced TIFF reader is only required to *read* TIFF files.  *=MRaster=* can save TIFF, TGA, and MRAW files without any external library support.
+#+END_QUOTE
+
+*Q3:* What's up with "=-std=gcc++20=" instead of "=-std=c++20="?  Is *=MRaster=* C++20 complient?
+
+#+BEGIN_QUOTE
+*A:* *=MRaster=* works just fine with standard C++20 compilers.  The "=-std=gcc++20=" option enables specific features of GCC that make *=MRaster=* better.  In
+particular, it enables 128-bit integers on platforms that support it -- allowing, for example, a very high performance floating point RGBA image format.  If
+you want to turn off 128-bit integers, and use pure C++20 instead with GCC, then you can use a command line like this:
+
+#+begin_src sh :exports source :eval never
+g++ -DMJR_LOOK_FOR_128_BIT_TYPES=0 -m64 --std=c++20 colorData.cpp hersheyFontData.cpp hello.cpp -o hello
+#+end_src
+#+END_QUOTE
+
+* Playing With *=MRaster=*'s Example Programs
+
+The source code for the example programs is located in the "=examples=" directory.  *=MRaster=* ships with a =cmake= build system that should be able to
+interrogate your environment, and produce make files for your OS.  To build the example programs:
+
+   1) Change directory to the root of the git repository (you should see "=lib=" & "=examples=" directories.
+   2) Create a "=build=" directory -- cmake builds outside of the source trees.
+   3) Change directory to the build directory
+   4) Use =cmake= to generate make files for your system
+   5) Build the examples
+   6) Play with the examples
+
+A typical shell session following the steps outlined above might look like this:
+
+#+begin_src sh :exports code :eval never
+rm -rf build
+mkdir build
+cd build
+cmake -G 'MSYS Makefiles' ..    # For Windows running MSYS2.  Remove the "-G 'MSYS Makefiles'" bit for other platforms.
+make
+#+end_src
+
+Note =cmake= can take several options like the "=-G=" option mentioned in the example above.  For more information on options related to *=MRaster=*, take a look
+at the "=configure.sh=" script in the root directory of the git repository.
+
+* Using *=MRaster=*'s =cmake= Configuration
+
+For many *=MRaster=* users, =cmake= is an unfamiliar tool.  Some of them decide to directly use *=MRaster=*'s =cmake= infrastructure, using the "=examples="
+directory as a template for the code they produce.  This can be a nice way for people new to =cmake= to get an idea of how it works; however, I have to warn
+you: I'm really a =cmake= novice!  You might just pick up some =cmake= bad habits looking at my =CMakeLists.txt= file! :)
+
+If you want to use the *=MRaster=* =cmake= infrastructure, the easiest path is to put your code in the "=examples"= directory.  Next we need to add your code to
+the "=CMakeLists.txt=" file.  Look for lines like these:
+
+#+begin_src sh :results output verbatum :exports results :wrap "src cmake :eval never :tangle no"
+grep -E '^set\(TARGETS_REQ_' ../../CMakeLists.txt | cut -d\" -f1-5 | sed 's/" *$/"  .../'
+#+end_src
+
+#+RESULTS:
+#+begin_src cmake :eval never :tangle no
+set(TARGETS_REQ_NONE   "apollony" "apomorph"  ...
+set(TARGETS_REQ_MRRL   "color_lut_indexed" "color_lut_rainbows"  ...
+set(TARGETS_REQ_OPENGL "glut_image")
+set(TARGETS_REQ_TIFF   "brownianDiffusion" "dlaBrownian"  ...
+set(TARGETS_REQ_OPENMP "mandelbrot_bm_cplx_openmp")
+set(TARGETS_REQ_BTEST  "utest_foo" "utest_color_types_ia64nGCC"  ...
+set(TARGETS_REQ_PNG    )
+set(TARGETS_REQ_IM     )
+#+end_src
+
+Each of these lines are a list of source files that require various external dependencies.  In general you should always add your source file (minus the
+"=.cpp=" extension) to the "=TARGETS_REQ_MRRL=" list.  If your program needs the advanced TIFF reader, then also add it to the "=TARGETS_REQ_TIFF=" list as
+well.  Now we are ready to go:
+
+  1) Create a directory called "=build=" in the root of the git repository
+  2) Change directory the "=build=" directory
+  3) Use =cmake= to generate make files
+  4) Build your program!
+
+These steps might look like this:
+
+#+begin_src sh :exports code :eval never
+rm -rf build
+mkdir build
+cd build
+cmake -G 'MSYS Makefiles' ..
+make your_program
+#+end_src
+
+
+* Meta
+:PROPERTIES:
+:CUSTOM_ID: meta
+:END:
+
+Publication Site: https://www.mitchr.me/FIXME/
+
+Publication URL: https://www.mitchr.me/FIXME/FIXME.html

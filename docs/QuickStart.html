@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-07-28 Thu 19:14 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=1024, initial-scale=1" />
+<title>MRaster Quick Start</title>
+<meta name="author" content="Mitch Richling" />
+<meta name="description" content="Minimal tutorial for getting started with MRaster" />
+<meta name="keywords" content="KEYWORDS FIXME" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+</style>
+<style>body { width: 95%; margin: 2% auto; font-size: 18px; line-height: 1.4em; font-family: Georgia, serif; color: black; background-color: white; }</style>
+<style>body { min-width: 500px; max-width: 1024px; }</style>
+<style>h1,h2,h3,h4,h5,h6 { color: #A5573E; line-height: 1em; font-family: Helvetica, sans-serif; }</style>
+<style>h1,h2,h3 { line-height: 1.4em; }</style>
+<style>h1.title { font-size: 3em; }</style>
+<style>.subtitle { font-size: 0.6em; }</style>
+<style>h4,h5,h6 { font-size: 1em; }</style>
+<style>.org-src-container { border: 1px solid #ccc; box-shadow: 3px 3px 3px #eee; font-family: Lucida Console, monospace; font-size: 80%; margin: 0px; padding: 0px 0px; position: relative; }</style>
+<style>.org-src-container>pre { line-height: 1.2em; padding-top: 1.5em; margin: 0.5em; background-color: #404040; color: white; overflow: auto; }</style>
+<style>.org-src-container>pre:before { display: block; position: absolute; background-color: #b3b3b3; top: 0; right: 0; padding: 0 0.2em 0 0.4em; border-bottom-left-radius: 8px; border: 0; color: white; font-size: 100%; font-family: Helvetica, sans-serif;}</style>
+<style>pre.example { white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; font-family: Lucida Console, monospace; font-size: 80%; background: #404040; color: white; display: block; padding: 0em; border: 2px solid black; }</style>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="https://www.mitchr.me/FIXME"> UP </a>
+ |
+ <a accesskey="H" href="https://www.mitchr.me/"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">MRaster Quick Start
+<br />
+<span class="subtitle">Linux/UNIX/Msys2/Cygwin/OSX</span>
+</h1>
+<table border="2 solid #ccc" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" align="center">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right"><b>Updated:</b></td>
+<td class="org-left"><i>2022-07-28 19:14:03</i></td>
+</tr>
+</tbody>
+</table>
+
+<div id="outline-container-orgb23bbc3" class="outline-2">
+<h2 id="orgb23bbc3"><span class="section-number-2">1.</span> Quick Start (The Absolute Minimum)</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+If you are interested playing around with <b><code>MRaster</code></b> as quickly as possible, then this section is for you.
+</p>
+
+<p>
+The first step is to download <b><code>MRaster</code></b>.  You can grab the <a href="https://github.com/richmit/mraster/archive/refs/heads/master.zip">zip file</a>, or you can simply
+clone the repository with GIT like this:
+</p>
+
+<pre class="example" id="org4c5d5b9">
+git clone 'https://github.com/richmit/mraster.git'
+</pre>
+
+<p>
+Once you have it downloaded, make note of the "<code>lib</code>" folder within the repository.  This folder contains everything you need to develop with <b><code>MRaster</code></b>, and you
+can simply put your code right in that directory.  So let's create a file called "<code>hello.cpp</code>" right inside the "<code>lib</code>" directory with the following content:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #6495ed;">#include</span> <span style="color: #fa8072;">"ramCanvas.hpp"</span>                                                         <span style="color: #ffa500;">// </span><span style="color: #ff7f24;">The main *=MRaster=* include</span>
+
+<span style="color: #63b8ff;">int</span> <span style="color: #00fa9a; font-weight: bold;">main</span>(<span style="color: #63b8ff;">void</span>) {
+  <span style="color: #8470ff; font-weight: bold;">mjr</span>::<span style="color: #63b8ff;">ramCanvas3c8b</span> <span style="color: #7fffd4;">theRamCanvas</span>(1024, 1024);                                   <span style="color: #ffa500;">// </span><span style="color: #ff7f24;">Create a canvas object</span>
+  <span style="color: #00ffff;">for</span>(<span style="color: #63b8ff;">int</span> <span style="color: #7fffd4;">y</span>=0;y&lt;theRamCanvas.get_numYpix();y++)                                  <span style="color: #ffa500;">// </span><span style="color: #ff7f24;">Run over the rows </span>
+    <span style="color: #00ffff;">for</span>(<span style="color: #63b8ff;">int</span> <span style="color: #7fffd4;">x</span>=0;x&lt;theRamCanvas.get_numXpix();x++)                                <span style="color: #ffa500;">//   </span><span style="color: #ff7f24;">and columns of the image</span>
+         theRamCanvas.drawPoint(x, y,                                            <span style="color: #ffa500;">// </span><span style="color: #ff7f24;">Draw a point at (x, y)</span>
+                                <span style="color: #8470ff; font-weight: bold;">mjr</span>::color3c8b().setRGBcmpClrCubeRainbow(x+y));  <span style="color: #ffa500;">// </span><span style="color: #ff7f24;">Pick a "rainbow" color for the point</span>
+  theRamCanvas.writeTIFFfile(<span style="color: #fa8072;">"hello.tiff"</span>);                                      <span style="color: #ffa500;">// </span><span style="color: #ff7f24;">Write out our image to disk</span>
+}
+</pre>
+</div>
+
+<p>
+Now we can compile it with GCC like this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">g++ -m64 -std=gnu++20 colorData.cpp hersheyFontData.cpp hello.cpp -o hello2
+</pre>
+</div>
+
+<p>
+Now you can run it, and take a look at the file it created ("<code>hello.tiff</code>"):
+</p>
+
+
+<div id="org5f2fed1" class="figure">
+<p><img src="./hello.png" alt="hello.png" width="800" align="center" />
+</p>
+</div>
+
+<p>
+That's it!  How easy was that?
+</p>
+
+<p>
+<b>Questions</b>
+</p>
+
+<p>
+<b>Q1:</b> What are "<code>colorData.cpp</code>" and "<code>hersheyFontData.cpp</code>" in the compile command?
+</p>
+
+<blockquote>
+<p>
+<b>A:</b> They have data for color schemes and fonts.  We didn't actually need them for the "<code>hello.cpp</code>" example, but I included them for completeness.
+</p>
+</blockquote>
+
+
+<p>
+<b>Q2:</b> How do I get advanced TIFF reader support without <code>cmake</code>?
+</p>
+
+<blockquote>
+<p>
+<b>A:</b> If you have <code>libtiff</code> installed in a standard location, then you can probably just add "=-DTIFF_FOUND" to the compile command like this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">g++ -DTIFF_FOUND -m64 --std=gcc++20 colorData.cpp hersheyFontData.cpp hello.cpp -o hello
+</pre>
+</div>
+
+<p>
+Please note that advanced TIFF reader is only required to <b>read</b> TIFF files.  <b><code>MRaster</code></b> can save TIFF, TGA, and MRAW files without any external library support.
+</p>
+</blockquote>
+
+<p>
+<b>Q3:</b> What's up with "<code>-std=gcc++20</code>" instead of "<code>-std=c++20</code>"?  Is <b><code>MRaster</code></b> C++20 complient?
+</p>
+
+<blockquote>
+<p>
+<b>A:</b> <b><code>MRaster</code></b> works just fine with standard C++20 compilers.  The "<code>-std=gcc++20</code>" option enables specific features of GCC that make <b><code>MRaster</code></b> better.  In
+particular, it enables 128-bit integers on platforms that support it &#x2013; allowing, for example, a very high performance floating point RGBA image format.  If
+you want to turn off 128-bit integers, and use pure C++20 instead with GCC, then you can use a command line like this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">g++ -DMJR_LOOK_FOR_128_BIT_TYPES=0 -m64 --std=c++20 colorData.cpp hersheyFontData.cpp hello.cpp -o hello
+</pre>
+</div>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-org2366fba" class="outline-2">
+<h2 id="org2366fba"><span class="section-number-2">2.</span> Playing With <b><code>MRaster</code></b>'s Example Programs</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The source code for the example programs is located in the "<code>examples</code>" directory.  <b><code>MRaster</code></b> ships with a <code>cmake</code> build system that should be able to
+interrogate your environment, and produce make files for your OS.  To build the example programs:
+</p>
+
+<ol class="org-ol">
+<li>Change directory to the root of the git repository (you should see "<code>lib</code>" &amp; "<code>examples</code>" directories.</li>
+<li>Create a "<code>build</code>" directory &#x2013; cmake builds outside of the source trees.</li>
+<li>Change directory to the build directory</li>
+<li>Use <code>cmake</code> to generate make files for your system</li>
+<li>Build the examples</li>
+<li>Play with the examples</li>
+</ol>
+
+<p>
+A typical shell session following the steps outlined above might look like this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">rm -rf build
+mkdir build
+<span style="color: #b0c4de;">cd</span> build
+cmake -G <span style="color: #fa8072;">'MSYS Makefiles'</span> ..    <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">For Windows running MSYS2.  Remove the "-G 'MSYS Makefiles'" bit for other platforms.</span>
+make
+</pre>
+</div>
+
+<p>
+Note <code>cmake</code> can take several options like the "<code>-G</code>" option mentioned in the example above.  For more information on options related to <b><code>MRaster</code></b>, take a look
+at the "<code>configure.sh</code>" script in the root directory of the git repository.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org691810b" class="outline-2">
+<h2 id="org691810b"><span class="section-number-2">3.</span> Using <b><code>MRaster</code></b>'s <code>cmake</code> Configuration</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+For many <b><code>MRaster</code></b> users, <code>cmake</code> is an unfamiliar tool.  Some of them decide to directly use <b><code>MRaster</code></b>'s <code>cmake</code> infrastructure, using the "<code>examples</code>"
+directory as a template for the code they produce.  This can be a nice way for people new to <code>cmake</code> to get an idea of how it works; however, I have to warn
+you: I'm really a <code>cmake</code> novice!  You might just pick up some <code>cmake</code> bad habits looking at my <code>CMakeLists.txt</code> file! :)
+</p>
+
+<p>
+If you want to use the <b><code>MRaster</code></b> <code>cmake</code> infrastructure, the easiest path is to put your code in the "<code>examples"</code> directory.  Next we need to add your code to
+the "<code>CMakeLists.txt</code>" file.  Look for lines like these:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-cmake"><span style="color: #00fa9a; font-weight: bold;">set</span>(TARGETS_REQ_NONE   <span style="color: #fa8072;">"apollony"</span> <span style="color: #fa8072;">"apomorph"</span>  ...
+<span style="color: #00fa9a; font-weight: bold;">set</span>(TARGETS_REQ_MRRL   <span style="color: #fa8072;">"color_lut_indexed"</span> <span style="color: #fa8072;">"color_lut_rainbows"</span>  ...
+<span style="color: #00fa9a; font-weight: bold;">set</span>(TARGETS_REQ_OPENGL <span style="color: #fa8072;">"glut_image"</span>)
+<span style="color: #00fa9a; font-weight: bold;">set</span>(TARGETS_REQ_TIFF   <span style="color: #fa8072;">"brownianDiffusion"</span> <span style="color: #fa8072;">"dlaBrownian"</span>  ...
+<span style="color: #00fa9a; font-weight: bold;">set</span>(TARGETS_REQ_OPENMP <span style="color: #fa8072;">"mandelbrot_bm_cplx_openmp"</span>)
+<span style="color: #00fa9a; font-weight: bold;">set</span>(TARGETS_REQ_BTEST  <span style="color: #fa8072;">"utest_foo"</span> <span style="color: #fa8072;">"utest_color_types_ia64nGCC"</span>  ...
+<span style="color: #00fa9a; font-weight: bold;">set</span>(TARGETS_REQ_PNG    )
+<span style="color: #00fa9a; font-weight: bold;">set</span>(TARGETS_REQ_IM     )
+</pre>
+</div>
+
+<p>
+Each of these lines are a list of source files that require various external dependencies.  In general you should always add your source file (minus the
+"<code>.cpp</code>" extension) to the "<code>TARGETS_REQ_MRRL</code>" list.  If your program needs the advanced TIFF reader, then also add it to the "<code>TARGETS_REQ_TIFF</code>" list as
+well.  Now we are ready to go:
+</p>
+
+<ol class="org-ol">
+<li>Create a directory called "<code>build</code>" in the root of the git repository</li>
+<li>Change directory the "<code>build</code>" directory</li>
+<li>Use <code>cmake</code> to generate make files</li>
+<li>Build your program!</li>
+</ol>
+
+<p>
+These steps might look like this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">rm -rf build
+mkdir build
+<span style="color: #b0c4de;">cd</span> build
+cmake -G <span style="color: #fa8072;">'MSYS Makefiles'</span> ..
+make your_program
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-meta" class="outline-2">
+<h2 id="meta"><span class="section-number-2">4.</span> Meta</h2>
+<div class="outline-text-2" id="text-meta">
+<p>
+Publication Site: <a href="https://www.mitchr.me/FIXME/">https://www.mitchr.me/FIXME/</a>
+</p>
+
+<p>
+Publication URL: <a href="https://www.mitchr.me/FIXME/FIXME.html">https://www.mitchr.me/FIXME/FIXME.html</a>
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+</div>
+</body>
+</html>

@@ -1,0 +1,59 @@
+# -*- Mode:Org; Coding:utf-8; fill-column:158 -*-
+# ######################################################################################################################################################.H.S.##
+# FILE:        index.org
+#+TITLE:       MRaster
+#+AUTHOR:      Mitch Richling
+#+EMAIL:       http://www.mitchr.me/
+#+DATE:        2022-07-28
+#+DESCRIPTION: DESCRIPTION FIXME
+#+KEYWORDS:    KEYWORDS FIXME
+#+LANGUAGE:    en
+#+OPTIONS:     num:t toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t skip:nil d:nil todo:t pri:nil H:5 p:t author:t html-scripts:nil
+# FIXME: When uncommented the following line will render latex equations as images embedded into exported HTML, when commented MathJax will be used
+# #+OPTIONS:     tex:dvipng
+# FIXME: Select ONE of the three TODO lines below
+# #+SEQ_TODO:    ACTION:NEW(t!) ACTION:ASSIGNED(a!@) ACTION:WORK(w!) ACTION:HOLD(h@) | ACTION:FUTURE(f) ACTION:DONE(d!) ACTION:CANCELED(c!)
+# #+SEQ_TODO:    TODO:NEW(T!)                        TODO:WORK(W!)   TODO:HOLD(H@)   |                  TODO:DONE(D!)   TODO:CANCELED(C!)
+#+SEQ_TODO:    TODO:NEW(t)                         TODO:WORK(w)    TODO:HOLD(h)    | TODO:FUTURE(f)   TODO:DONE(d)    TODO:CANCELED(c)
+#+PROPERTY: header-args :eval never-export
+#+HTML_HEAD: <style>body { width: 95%; margin: 2% auto; font-size: 18px; line-height: 1.4em; font-family: Georgia, serif; color: black; background-color: white; }</style>
+#+HTML_HEAD: <style>body { min-width: 500px; max-width: 1024px; }</style>
+#+HTML_HEAD: <style>h1,h2,h3,h4,h5,h6 { color: #A5573E; line-height: 1em; font-family: Helvetica, sans-serif; }</style>
+#+HTML_HEAD: <style>h1,h2,h3 { line-height: 1.4em; }</style>
+#+HTML_HEAD: <style>h1.title { font-size: 3em; }</style>
+#+HTML_HEAD: <style>.subtitle { font-size: 0.6em; }</style>
+#+HTML_HEAD: <style>h4,h5,h6 { font-size: 1em; }</style>
+#+HTML_HEAD: <style>.org-src-container { border: 1px solid #ccc; box-shadow: 3px 3px 3px #eee; font-family: Lucida Console, monospace; font-size: 80%; margin: 0px; padding: 0px 0px; position: relative; }</style>
+#+HTML_HEAD: <style>.org-src-container>pre { line-height: 1.2em; padding-top: 1.5em; margin: 0.5em; background-color: #404040; color: white; overflow: auto; }</style>
+#+HTML_HEAD: <style>.org-src-container>pre:before { display: block; position: absolute; background-color: #b3b3b3; top: 0; right: 0; padding: 0 0.2em 0 0.4em; border-bottom-left-radius: 8px; border: 0; color: white; font-size: 100%; font-family: Helvetica, sans-serif;}</style>
+#+HTML_HEAD: <style>pre.example { white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; font-family: Lucida Console, monospace; font-size: 80%; background: #404040; color: white; display: block; padding: 0em; border: 2px solid black; }</style>
+#+HTML_LINK_HOME: https://www.mitchr.me/
+#+HTML_LINK_UP: http://www.mitchr.me/SS/mraster/
+# ######################################################################################################################################################.H.E.##
+
+* Introduction
+:PROPERTIES:
+:CUSTOM_ID: introduction
+:END:
+
+*=MRaster=* is a very simple C++ library for generating raster images --
+espeically things like fractals.
+
+It is designed to be easy enough for beginners, but advanced enough
+for experts.  It integrates well into existing code, uses pure C++20,
+has a minimum of external depeadancies, and is quite fast.
+
+Project page: [[http://www.mitchr.me/SS/mraster/]]
+
+Some examples of what can be done with *=MRaster=*:
+
+  -  [[http://www.mitchr.me/SS/mandelbrot/index.html][Mandelbrot Mountains]]
+  -  [[http://www.mitchr.me/SS/newton/index.html][Newton Fractal]]
+  -  [[http://www.mitchr.me/SS/swirl/index.html][Peter de Jong Fractal]]
+  -  [[http://www.mitchr.me/SS/sic/index.html][Symmetric Fractals]]
+  -  [[http://www.mitchr.me/SS/ChaosGame/index.html][Chaos Game]]
+  -  [[https://www.mitchr.me/SS/AGasket/index.html][Apollonian Gasket]]
+  -  [[https://www.mitchr.me/SS/circles2/index.html][Circle Art]]
+  -  [[https://www.mitchr.me/SS/desktops/index.html][Some desktop backgrounds]]
+
+A quick start guide: file:QuickStart.org
