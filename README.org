@@ -1,0 +1,23 @@
+* MRaster
+
+*=MRaster=* is a very simple C++ library for generating raster images --
+espeically things like fractals.
+
+It is designed to be easy enough for beginners, but advanced enough
+for experts.  It integrates well into existing code, uses pure C++20,
+has a minimum of external depeadancies, and is quite fast.
+
+Project page: [[http://www.mitchr.me/SS/mraster/]]
+
+Some examples of what can be done with *=MRaster=*:
+
+  -  [[http://www.mitchr.me/SS/mandelbrot/index.html][Mandelbrot Mountains]]
+  -  [[http://www.mitchr.me/SS/newton/index.html][Newton Fractal]]
+  -  [[http://www.mitchr.me/SS/swirl/index.html][Peter de Jong Fractal]]
+  -  [[http://www.mitchr.me/SS/sic/index.html][Symmetric Fractals]]
+  -  [[http://www.mitchr.me/SS/ChaosGame/index.html][Chaos Game]]
+  -  [[https://www.mitchr.me/SS/AGasket/index.html][Apollonian Gasket]]
+  -  [[https://www.mitchr.me/SS/circles2/index.html][Circle Art]]
+  -  [[https://www.mitchr.me/SS/desktops/index.html][Some desktop backgrounds]]
+
+A quick start guide: file:QuickStart.org
