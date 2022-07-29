@@ -20,4 +20,4 @@ Some examples of what can be done with *=MRaster=*:
   -  [[https://www.mitchr.me/SS/circles2/index.html][Circle Art]]
   -  [[https://www.mitchr.me/SS/desktops/index.html][Some desktop backgrounds]]
 
-A quick start guide: file:QuickStart.org
+A quick start guide: [[http://richmit.github.io/mraster/QuickStart.html]]
