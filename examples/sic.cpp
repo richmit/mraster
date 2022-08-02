@@ -82,7 +82,7 @@ class g2rgb8 {
     g2rgb8(uint64_t newFactor) { factor = static_cast<int>(newFactor); }
     mjr::colorRGB8b operator() (mjr::ramCanvas1c16b::colorType c) {
       mjr::colorRGB8b retColor;
-      return retColor.cmpRGBcolorRamp(static_cast<mjr::ramCanvas3c8b::csIdxType>(c.getC0() * 1275 / factor), "0RYBCW");
+      return retColor.cmpRGBcolorRamp(static_cast<mjr::ramCanvas3c8b::csIntType>(c.getC0() * 1275 / factor), "0RYBCW");
     }
 };
 

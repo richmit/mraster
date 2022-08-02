@@ -33,7 +33,6 @@
 
 #include "ramConfig.hpp"
 #include "mjrmath.hpp"
-#include "colorData.hpp"
 
 #include <algorithm>                                                     /* STL algorithm           C++11    */
 #include <array>                                                         /* array template          C++11    */
@@ -151,6 +150,7 @@ namespace mjr {
 
     public:
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Public type related types -- meta-types? ;) */
       //@{
       /** This object type */
@@ -165,6 +165,7 @@ namespace mjr {
       typedef clrChanT                     channelType;
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Public arithmetic types  */
       //@{
       /** @typedef maskType
@@ -262,8 +263,9 @@ namespace mjr {
                                         >::type>::type>::type>::type channelArithLogType;
       //@}
 
-      private:
+    private:
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Private Object Data */
       //@{
       /** Holds the color channel data.
@@ -274,12 +276,7 @@ namespace mjr {
       } theColor;
       //@}
 
-      /** @name Private Constants */
-      //@{
-      const static int minWavelength = 360; //!< Minimum wavelength for wavelength conversion
-      const static int maxWavelength = 830; //!< Maximum wavelength for wavelength conversion
-      //@}
-
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Private utility functions */
       //@{
       /** Helper function for converting to web safe colors.  This function is highly optimized. */
@@ -289,6 +286,8 @@ namespace mjr {
       clrChanT colorComp2CloseColorComp(clrChanT aColorComp, clrChanT *discreetVals, int numVals);
       /** This is a helper function for setRGBfromColorSpace. */
       double hslHelperVal(double n1, double n2, double hue);
+      /** Set all channels to meanChanVal. */
+      void setChansToMean();
       /** Set all channels to minChanVal. */
       void setChansToMin();
       /** Set all channels to maxChanVal. */
@@ -325,30 +324,34 @@ namespace mjr {
 
       public:
 
-      /** @name Public Constants Related to Types */
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Public Constants Related to template paramaters */
       //@{
-      constexpr static int      bitsPerChan    = (int)(sizeof(clrChanT)*CHAR_BIT);                                       //!< Number of bits in clrChanT
-      constexpr static int      bitsPerPixel   = numChan*bitsPerChan;                                                    //!< Number of color data bits
-      constexpr static bool     chanIsInt      = std::is_integral<clrChanT>::value;                                      //!< clrChanT is an integral type
-      constexpr static bool     chanIsUnsigned = std::is_unsigned<clrChanT>::value;                                      //!< clrChanT is an unsigned integral type
-      constexpr static bool     chanIsByte     = std::is_same<clrChanT, uint8_t>::value;                                 //!< is clrChanT an 8-bit unsigned int?
-      constexpr static bool     chanIsDouble   = std::is_same<clrChanT, double>::value;                                  //!< is clrChanT a double?
-      constexpr static bool     goodMask       = chanIsInt && (sizeof(maskType)            >= sizeof(clrChanT)*numChan); //!< maskType is big enough
-      constexpr static bool     goodArithD     = ( !(chanIsInt)) || (sizeof(channelArithDType)   >= sizeof(clrChanT)*2); //!< channelArithDType is big enough
-      constexpr static bool     goodArithSP    = ( !(chanIsInt)) || (sizeof(channelArithSPType)  >= sizeof(clrChanT)*2); //!< channelArithSPType is big enough
-      constexpr static bool     goodArithSDP   = ( !(chanIsInt)) || (sizeof(channelArithSDPType) >= sizeof(clrChanT)*4); //!< channelArithSDPType is big enough
-      constexpr static bool     goodArithFlt   = ( !(chanIsInt)) || (sizeof(channelArithFltType) >  sizeof(clrChanT));   //!< channelArithFltType is big enough
-      constexpr static bool     goodArithLog   = (sizeof(channelArithLogType) == sizeof(clrChanT));                      //!< channelArithLogType is the right size
-      constexpr static int      sizeOfColor    = (int)(goodMask ? sizeof(maskType) : sizeof(clrChanT)*numChan);          //!< Size of this object
-      constexpr static bool     ptrIsSmaller   = sizeOfColor > (int)sizeof(colorPtrType);                                //!< This object smaller than a pointer
-      constexpr static clrChanT maxChanVal     = (chanIsInt ? std::numeric_limits<clrChanT>::max() : 1);                 //!< maximum value for a channel
-      constexpr static clrChanT minChanVal     = (chanIsInt ? std::numeric_limits<clrChanT>::min() : 0);                 //!< maximum value for a channel
-      constexpr static clrChanT meanChanVal    = (maxChanVal-minChanVal)/2;                                              //!< middle value for a channel
-      constexpr static maskType maskAllOne     = ~(static_cast<maskType>(0));                                            //!< mask value all ones
-      constexpr static maskType maskAllZero    = static_cast<maskType>(0);                                               //!< mask value all zeros
-      constexpr static int      channelCount   = numChan;                                                                //!< Number of channels
+      constexpr static int         bitsPerChan    = (int)(sizeof(clrChanT)*CHAR_BIT);                                     //!< Number of bits in clrChanT
+      constexpr static int         bitsPerPixel   = numChan*bitsPerChan;                                                  //!< Number of color data bits
+      constexpr static bool        chanIsInt      = std::is_integral<clrChanT>::value;                                    //!< clrChanT is an integral type
+      constexpr static bool        chanIsFloat    = std::is_floating_point<clrChanT>::value;                              //!< clrChanT is a floating pint type
+      constexpr static bool        chanIsUnsigned = std::is_unsigned<clrChanT>::value;                                    //!< clrChanT is an unsigned integral type
+      constexpr static bool        chanIsByte     = std::is_same<clrChanT, uint8_t>::value;                               //!< is clrChanT an 8-bit unsigned int?
+      constexpr static bool        chanIsDouble   = std::is_same<clrChanT, double>::value;                                //!< is clrChanT a double?
+      constexpr static bool        goodMask       = chanIsInt && (sizeof(maskType) >= sizeof(clrChanT)*numChan);          //!< maskType is big enough
+      constexpr static bool        perfectMask    = chanIsInt && (sizeof(maskType) == sizeof(clrChanT)*numChan);          //!< maskType is perfectly sized
+      constexpr static bool        goodArithD     = (chanIsFloat || (sizeof(channelArithDType)   >= sizeof(clrChanT)*2)); //!< channelArithDType is big enough
+      constexpr static bool        goodArithSP    = (chanIsFloat || (sizeof(channelArithSPType)  >= sizeof(clrChanT)*2)); //!< channelArithSPType is big enough
+      constexpr static bool        goodArithSDP   = (chanIsFloat || (sizeof(channelArithSDPType) >= sizeof(clrChanT)*4)); //!< channelArithSDPType is big enough
+      constexpr static bool        goodArithFlt   = (chanIsFloat || (sizeof(channelArithFltType) >  sizeof(clrChanT)));   //!< channelArithFltType is big enough
+      constexpr static bool        goodArithLog   = (sizeof(channelArithLogType) == sizeof(clrChanT));                    //!< channelArithLogType is the right size
+      constexpr static int         sizeOfColor    = (int)(goodMask ? sizeof(maskType) : sizeof(clrChanT)*numChan);        //!< Size of this object
+      constexpr static bool        ptrIsSmaller   = sizeOfColor > (int)sizeof(colorPtrType);                              //!< This object smaller than a pointer
+      constexpr static clrChanT    maxChanVal     = (chanIsInt ? std::numeric_limits<clrChanT>::max() : 1);               //!< maximum value for a channel
+      constexpr static clrChanT    minChanVal     = (chanIsInt ? std::numeric_limits<clrChanT>::min() : 0);               //!< maximum value for a channel
+      constexpr static clrChanT    meanChanVal    = (maxChanVal-minChanVal)/2;                                            //!< middle value for a channel
+      constexpr static maskType    maskAllOne     = ~(static_cast<maskType>(0));                                          //!< mask value all ones
+      constexpr static maskType    maskAllZero    = static_cast<maskType>(0);                                             //!< mask value all zeros
+      constexpr static int         channelCount   = numChan;                                                              //!< Number of channels
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Public type for argument passing */
       //@{
       /** A type for passing colorTpl objects to functions.
@@ -356,21 +359,33 @@ namespace mjr {
           WHen the size of a colorTpl object is smaller than a pointer, this type is colorTpl -- resulting in pass by value.  Otherwise, this type is
           colorType const& -- resulting in pass by refrence. */
       typedef typename std::conditional<ptrIsSmaller, colorCRefType, colorType>::type colorArgType;
+      //@}
 
-      /** A type used to pass color scheme indexes.
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Color Scheme Related Types */
+      //@{
+      /** A type used for discreet color scheme indexes.
           This will be uint64_t for floating point clrChanT, and the larger of uint32_t and colorChanArithSPType for integral clrChanT. 
           We use cmp_less because < confuses Doxygen.*/
       typedef typename std::conditional<std::cmp_less(sizeof(channelArithSPType), sizeof(uint32_t)), uint32_t, 
               typename std::conditional<std::is_floating_point<clrChanT>::value,                     uint64_t,
                                                                                                      channelArithSPType
-                                        >::type>::type csIdxType;
+                                        >::type>::type csIntType;
 
-      // typedef uint32 csIdxType;
-
-      /** A type used to pass indexed color pallet (ICP) indexes. */
-      typedef uint16_t icpIdxType;
+      /** A type used for continous color scheme indexes. */
+      typedef double csFltType;
+      /** A clrChanT-similar type color scheme indexes. */
+      typedef typename std::conditional<std::is_floating_point<clrChanT>::value, csFltType, csIntType>::type csNatType;
       //@}
 
+      /** @name Color Scheme Constants */
+      //@{
+      constexpr static csIntType chanStepMax   = (chanIsInt ? maxChanVal : std::numeric_limits<uint32_t>::max());  //!< Number of discreet "steps" for channel value
+      constexpr static int       minWavelength = 360;                                                              //!< Minimum wavelength for wavelength conversion
+      constexpr static int       maxWavelength = 830;                                                              //!< Maximum wavelength for wavelength conversion
+      //@}
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Public Enums Constants */
       //@{
       /** Colors at the corners of the RGB color cube. */
@@ -404,6 +419,7 @@ namespace mjr {
                                       };
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Constructors: C++ Utility */
       //@{
       /** The no arg constructor is a noop so we don't needlessly initialize millions of pixels -- compiler warnings are expected. */
@@ -412,6 +428,7 @@ namespace mjr {
       colorTpl(const colorType& aColor);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Constructors: Set channels
           These all use setChans internally; however, these constructors will set any unspecified channels to min. */
       //@{
@@ -443,6 +460,7 @@ namespace mjr {
       colorTpl(cornerColorEnum cornerColor);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Constructors: Magic String Constructor
           These constructors work hard to interpret the given string, and set the color. */
       //@{
@@ -452,12 +470,14 @@ namespace mjr {
       colorTpl(const char* colorCString);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Destructor */
       //@{
       /** The destructor for this class is a no-op. */
       ~colorTpl();
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Utility Methods */
       //@{
       /** Copy the contents of the given color object into the current object.
@@ -496,19 +516,19 @@ namespace mjr {
       /** Provides access to an specified color channel value as a double with compile time index check.
           Value is scaled from source clrChanT range to [0, 1]. The channels are 0 indexed.
           @return The the value of the indexed channel. */
-      double getC0_dbl() const;
+      inline double getC0_dbl() const { return convertChanToDouble(getC0()); }
       /** Provides access to an specified color channel value as a double with compile time index check.
           Value is scaled from source clrChanT range to [0, 1]. The channels are 0 indexed.
           @return The the value of the indexed channel. */
-      double getC1_dbl() const;
+      inline double getC1_dbl() const { return convertChanToDouble(getC1()); } /* Requires: Inherits numChan>1 from getC1. */
       /** Provides access to an specified color channel value as a double with compile time index check.
           Value is scaled from source clrChanT range to [0, 1]. The channels are 0 indexed.
           @return The the value of the indexed channel. */
-      double getC2_dbl() const;
+      inline double getC2_dbl() const { return convertChanToDouble(getC2()); } /* Requires: Inherits numChan>2 from getC2. */
       /** Provides access to an specified color channel value as a double with compile time index check.
           Value is scaled from source clrChanT range to [0, 1]. The channels are 0 indexed.
           @return The the value of the indexed channel. */
-      double getC3_dbl() const;
+      inline double getC3_dbl() const { return convertChanToDouble(getC3()); } /* Requires: Inherits numChan>3 from getC3. */
       /** Provides access to an specified color channel value as a double with run time index check.
           Value is scaled from source clrChanT range to [0, 1]. The channels are 0 indexed.
           Returns 0.0d if \a chan is out of range.
@@ -522,19 +542,19 @@ namespace mjr {
       /** Provides access to an specified color channel value as a uint8_t with compile time index check.
           Value is scaled from source clrChanT range to 8-bit range. The channels are 0 indexed.
           @return The the value of the indexed channel. */
-      uint8_t getC0_byte() const;
+      inline uint8_t getC0_byte() const { return convertChanToByte(getC0()); }
       /** Provides access to an specified color channel value as a uint8_t with compile time index check.
           Value is scaled from source clrChanT range to 8-bit range. The channels are 0 indexed.
           @return The the value of the indexed channel. */
-      uint8_t getC1_byte() const;
+      inline uint8_t getC1_byte() const { return convertChanToByte(getC1()); } /* Requires: Inherits numChan>1 from getC1. */
       /** Provides access to an specified color channel value as a uint8_t with compile time index check.
           Value is scaled from source clrChanT range to 8-bit range. The channels are 0 indexed.
           @return The the value of the indexed channel. */
-      uint8_t getC2_byte() const;
+      inline uint8_t getC2_byte() const { return convertChanToByte(getC2()); } /* Requires: Inherits numChan>2 from getC2. */
       /** Provides access to an specified color channel value as a uint8_t with compile time index check.
           Value is scaled from source clrChanT range to 8-bit range. The channels are 0 indexed.
           @return The the value of the indexed channel. */
-      uint8_t getC3_byte() const;
+      inline uint8_t getC3_byte() const { return convertChanToByte(getC3()); } /* Requires: Inherits numChan>3 from getC3. */
       /** Provides access to an specified color channel value as a uint8_t with run time index check.
           Value is scaled from source clrChanT range to 8-bit range. The channels are 0 indexed.
           Returns 0.0d if \a chan is out of range.
@@ -552,21 +572,21 @@ namespace mjr {
       /** Sets the specified color channel value with compile time index check.  The channels are 0 indexed.
           @param cVal The channel value
           @return Returns a reference to the current color object.*/
-      colorTpl& setC1(clrChanT cVal) requires (numChan>1);;
+      colorTpl& setC1(clrChanT cVal) requires (numChan>1);
       /** Sets the specified color channel value with compile time index check.  The channels are 0 indexed.
           @param cVal The channel value
           @return Returns a reference to the current color object.*/
-      colorTpl& setC2(clrChanT cVal) requires (numChan>2);;
+      colorTpl& setC2(clrChanT cVal) requires (numChan>2);
       /** Sets the specified color channel value with compile time index check.  The channels are 0 indexed.
           @param cVal The channel value
           @return Returns a reference to the current color object.*/
-      colorTpl& setC3(clrChanT cVal) requires (numChan>3);;
+      colorTpl& setC3(clrChanT cVal) requires (numChan>3);
       /** Sets the specified color channel value with run time index check.
           @param chan The channel to set.  The channels are 0 indexed.  Out of range is a NOOP.
           @param cVal The channel value
           @return Returns a reference to the current color object.*/
       colorTpl& setChan(int chan, clrChanT cVal);
-      /** Sets the given channel of the current object to #maxChanVal.
+      /** Sets the given channel of the current object to mjr::colorTpl::maxChanVal.
           @param chan The channel to set.  The channels are 0 indexed.  Out of range is a NOOP.
           @return Returns a reference to the current color object. */
       colorTpl& setChanToMax(int chan);
@@ -634,19 +654,19 @@ namespace mjr {
       /** Sets the first channel of the current object from a floating point value in the unit interval, [0,1].
           @param cVal The value to set the channel to -- 1 is fully saturated.
           @return Returns a reference to the current color object.*/
-      colorTpl& setC0_dbl(double cVal);
+      inline colorTpl& setC0_dbl(double cVal) { return setC0(convertDoubleToChan(cVal));  }
       /** Sets the second channel of the current object from a floating point value in the unit interval, [0,1].
           @param cVal The value to set the channel to -- 1 is fully saturated.
           @return Returns a reference to the current color object.*/
-      colorTpl& setC1_dbl(double cVal);
+      inline colorTpl& setC1_dbl(double cVal) { return setC1(convertDoubleToChan(cVal));  }
       /** Sets the thrid channel of the current object from a floating point value in the unit interval, [0,1].
           @param cVal The value to set the channel to -- 1 is fully saturated.
           @return Returns a reference to the current color object.*/
-      colorTpl& setC2_dbl(double cVal);
+      inline colorTpl& setC2_dbl(double cVal) { return setC2(convertDoubleToChan(cVal));  }
       /** Sets the fourth channel of the current object from a floating point value in the unit interval, [0,1].
           @param cVal The value to set the channel to -- 1 is fully saturated.
           @return Returns a reference to the current color object.*/
-      colorTpl& setC3_dbl(double cVal);
+      inline colorTpl& setC3_dbl(double cVal) { return setC3(convertDoubleToChan(cVal));  }
       /** This function sets the first four channels of the current color objects using floats in the unit interval, [0,1].
           @param c1 The value to set the first channel to -- 1 is fully saturated.
           @param c2 The value to set the thrid channel to -- 1 is fully saturated.
@@ -681,19 +701,19 @@ namespace mjr {
       /** Sets the first channel of the current object from an uint8_t value in the interval [0,255].
           @param cVal The value to set the first channel to  -- 255 is fully saturated.
           @return Returns a reference to the current color object.*/
-      colorTpl& setC0_byte(uint8_t cVal);
+      inline colorTpl& setC0_byte(uint8_t cVal) { return setC0(convertByteToChan(cVal));  }
       /** Sets the second channel of the current object from an uint8_t value in the interval [0,255].
           @param cVal The value to set the thrid channel to  -- 255 is fully saturated.
           @return Returns a reference to the current color object.*/
-      colorTpl& setC1_byte(uint8_t cVal);
+      inline colorTpl& setC1_byte(uint8_t cVal) { return setC1(convertByteToChan(cVal));  }
       /** Sets the thrid channel of the current object from an uint8_t value in the interval [0,255].
           @param cVal The value to set the second channel to  -- 255 is fully saturated.
           @return Returns a reference to the current color object.*/
-      colorTpl& setC2_byte(uint8_t cVal);
+      inline colorTpl& setC2_byte(uint8_t cVal) { return setC2(convertByteToChan(cVal));  }
       /** Sets the fourth channel of the current object from an uint8_t value in the interval [0,255].
           @param cVal The value to set the alpha channel to  -- 255 is fully saturated.
           @return Returns a reference to the current color object.*/
-      colorTpl& setC3_byte(uint8_t cVal);
+      inline colorTpl& setC3_byte(uint8_t cVal) { return setC3(convertByteToChan(cVal));  }
       /** Sets the first four channels current object. Values are uint8_t the range [0,255].
           @param c1 The value to set the first channel to  -- 255 is fully saturated.
           @param c2 The value to set the thrid channel to  -- 255 is fully saturated.
@@ -729,32 +749,32 @@ namespace mjr {
       //@{
       /** Set all channels to #minChanVal -- black in RGB
           @return Returns a reference to the current color object.*/
-      colorTpl& setToBlack();
-      /** Set all channels to #maxChanVal -- white in RGB
+      inline colorTpl& setToBlack()   { setChansToMin(); return *this;  }
+      /** Set all channels to mjr::colorTpl::maxChanVal -- white in RGB
           @return Returns a reference to the current color object.*/
-      colorTpl& setToWhite();
-      /** Set channel 1 is set to #maxChanVal, and all others to #minChanVal -- red in RGB
+      inline colorTpl& setToWhite()   { setChansToMax(); return *this;  }
+      /** Set channel 1 is set to mjr::colorTpl::maxChanVal, and all others to #minChanVal -- red in RGB
           @return Returns a reference to the current color object.*/
-      colorTpl& setToRed();
-      /** Channel 3 to #maxChanVal, and all others to #minChanVal -- blue in RGB
+      inline colorTpl& setToRed()     { setChansToMin(); setChanToMax(0); return *this;  }
+      /** Channel 3 to mjr::colorTpl::maxChanVal, and all others to #minChanVal -- blue in RGB
           @return Returns a reference to the current color object.*/
-      colorTpl& setToBlue();
+      inline colorTpl& setToBlue()    { setChansToMin(); setChanToMax(2); return *this;  }
       /** Set the color to green. (RGB=010).
-          Channel 2 to #maxChanVal, and all others to #minChanVal -- green in RGB
+          Channel 2 to mjr::colorTpl::maxChanVal, and all others to #minChanVal -- green in RGB
           @return Returns a reference to the current color object.*/
-      colorTpl& setToGreen();
+      inline colorTpl& setToGreen()   { setChansToMin(); setChanToMax(1); return *this;  }
       /** Set the color to cyan (RGB=011).
-          Channel 1 is set to #minChanVal, all others are set to #maxChanVal.
+          Channel 1 is set to #minChanVal, all others are set to mjr::colorTpl::maxChanVal.
           @return Returns a reference to the current color object.*/
-      colorTpl& setToCyan();
+      inline colorTpl& setToCyan()    { setChansToMax(); setChanToMin(0); return *this;  }
       /** Set the color to yellow (RGB=110).
-          Channel 3 is set to #minChanVal, all others are set to #maxChanVal.
+          Channel 3 is set to #minChanVal, all others are set to mjr::colorTpl::maxChanVal.
           @return Returns a reference to the current color object.*/
-      colorTpl& setToYellow();
+      inline colorTpl& setToYellow()  { setChansToMax(); setChanToMin(2); return *this;  }
       /** Set the color to magenta (RGB=101).
-          Channel 2 is set to #minChanVal, all others are set to #maxChanVal.
+          Channel 2 is set to #minChanVal, all others are set to mjr::colorTpl::maxChanVal.
           @return Returns a reference to the current color object.*/
-      colorTpl& setToMagenta();
+      inline colorTpl& setToMagenta() { setChansToMax(); setChanToMin(1); return *this;  }
       /** Set the current color based upon the single character given -- 0==black, R, G, B, M, C, Y, W/1==white).
           The color is acutally set using one of the setTo*() functions.  If \a cornerColor is invalid, then setToBlack().
           @param cornerColor Character specifying the color
@@ -858,29 +878,7 @@ namespace mjr {
       colorTpl& setRGBfromColorSpace(colorSpaceEnum space, colorTpl<double, 3> inColor);
       //@}
 
-      /** @name Color Schemes: Indexed Color Schemes.
-       Indexed color schemes use an array of colors (defined as hex color strings or uint32_t integers.  The hex color strings are interpreted via setChans()
-       and the integers are interpreted by setRGBAfromLogPackIntARGB().  The first element of the array holds the number of colors, and the rest of the
-       elements describe the colors.  Several schemes I particularly like may be found in colorData.cpp. */
-      //@{
-      /** Sets the color based upon the web safe 216 indexed color pallet.
-          The colors are ordered in lexicographical ordering based upon the hexadecimal web-based color name scheme "#RRGGBB" -- i.e. 1 maps to "#000000", and
-          216 maps to "#ffffff".  Note that one can transform an rgb color into the nearest web safe color via tfrmWebSafe216().  As with all icp functions, 0
-          is black and the last color, at 217, is white.
-          @param icpIdx An integer
-          @return A reference to the current object */
-      colorTpl& setRGBtoWebSafe216(int icpIdx);
-      /** Sets the color based upon an indexed color pallet.
-          As with all icp functions, 0 is black and the last color, at 217, is white.  Out of range \a icpIdx resutls in black.
-          @param icpIdx An integer
-          @param icpArray The pallet data
-          @return A reference to the current object */
-      colorTpl& setRGBfromICP(int icpIdx, const char **icpArray);
-      /** @overload */
-      colorTpl& setRGBfromICP(int icpIdx, const uint32_t* icpArray);
-      //@}
-
-      /** @name Color Schemes: TGA Height Maps for POVray */
+      /** @name TGA Height Maps for POVray */
       //@{
       /** Computes a 24-bit truecolor value intended for use in producing 16-bit greyscale TGA.
           This is the color scheme that should be used for POVray 16-bit height files
@@ -911,263 +909,6 @@ namespace mjr {
       colorTpl& setRGBfromWavelengthLA(double wavelength);
       //@}
 
-      /** @name Color Schemes: Rainbows */
-      //@{
-      /** Computes a color value based upon a linear approximation of the color match functions used to approximate wavelength to RGB conversion.
-          The linear color function approximation is not very accurate, but it is quite attractive.
-          @param base The maximum number of colors
-          @param csIdx The index of the desired color */
-      colorTpl& setRGBcmpRainbowLA(csIdxType base, csIdxType csIdx);
-      /** Computes a color value based upon an algorithm to convert wavelength to RGB that uses the Color Matching functions.
-          @param base The maximum number of colors
-          @param csIdx        The index of the desired color
-          @param interpMethod Specify the interpolation method (see: cmfInterpolationEnum)
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpRainbowCM(csIdxType base, csIdxType csIdx, cmfInterpolationEnum interpMethod = cmfInterpolationEnum::LINEAR);
-      /** Computes a color value based upon a common rainbow-like color scheme based upon the HSV or HSL color space.
-          This rainbow is not natural in that the colors on the ends match each other, and the colors move in the wrong direction (red to violet).  This
-          function uses floating point arithmetic and is thus prone to round off errors.  For a precise rainbow with integer arithmetic, see the function
-          setRGBcmpClrCubeRainbow().
-          @param base The maximum number of colors
-          @param csIdx The index of the desired color
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpRainbowHSV(csIdxType base, csIdxType csIdx);
-      /** This computes a color value based upon a common rainbow-like color scheme based upon an edge traversal of the RGB color cube.
-          It is thus the same as using cmpRGBcolorRamp() with a corner sequence of "RYGCBMR".  At least one color component is always maximal in RGB space, and one
-          is minimum.  This sequence of colors corresponds to an HSV sequence from h=0 to h=360, with s=100 and v=100.  This is simply a more precise version
-          of setRGBcmpRainbowHSV that is immune to round off errors as it doesn't require any floating point conversions.  This function will generate
-          6*#maxChanVal+1 different colors.
-          @param csIdx The index of the desired color
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpClrCubeRainbow(csIdxType csIdx);
-      //@}
-
-      /** @name Color Schemes: Grey and Pseudo-Grey */
-      //@{
-      /** Computes a true grey color given an index.
-          Provides #maxChanVal different colors.  This function is NOT always the same as cmpRGBcolorRamp() with a string of "0W" because cmpRGBcolorRamp() is based
-          upon a three channel space, while this function is based upon the number of channels in the current color.  For example, this function sets the
-          alpha value of an RGBA color.  For an RGB based grey ramp, use setRGBcmpGreyRGB -- which is the same as cmpRGBcolorRamp() with a corner string of "0W".
-          @param csIdx An integer
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpGrey(csIdxType csIdx);
-      /** Returns an RGB based true grey color given an index.
-          Provides #maxChanVal different colors.  This This function is is always the same as cmpRGBcolorRamp() with a string of "0W".  Supports input
-          conditioning.
-          @param csIdx An integer
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpGreyRGB(csIdxType csIdx);
-      /** A grey-like color scheme with 3*#maxChanVal colors, [0,3*#maxChanVal-1].
-          It is not a true grey, but most people can't tell when used with reasonable channel depths.
-          @param csIdx An integer
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpGrey3x(csIdxType csIdx);
-      /** A grey-like color scheme with 4*#maxChanVal colors, [0,4*#maxChanVal-1].
-          It is not a true grey, but most people can't tell when used with reasonable channel depths.
-          @param csIdx An integer
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpGrey4x(csIdxType csIdx);
-      //@}
-
-      /** @name Color Schemes: RGB Cube Diagional Ramps */
-      //@{
-      /** Color based upon a traversal of the diagonal of the color cube from cyan to red.
-          This is the same as the saturation based HSL ramp joining the same two colors.  The result is just as if cmpRGBcolorRamp() had been called with string of
-          "CR".  Provides about (#maxChanVal*1+1) unique colors.
-          @param csIdx     An integer
-          @return A reference to the current object. */
-      colorTpl& setRGBcmpDiagRampCR(csIdxType csIdx);
-      /** Color based upon a traversal of the diagonal of the color cube from magenta to green.
-          This is the same as the saturation based HSL ramp joining the same two colors.  The result is just as if cmpRGBcolorRamp() had been called with string of
-          "MG".  Provides about (#maxChanVal*1+1) unique colors.
-          @param csIdx     An integer
-          @return A reference to the current object. */
-      colorTpl& setRGBcmpDiagRampMG(csIdxType csIdx);
-      /** Color based upon a traversal of the diagonal of the color cube from yellow to blue.
-          This is the same as the saturation based HSL ramp joining the same two colors.  The result is just as if cmpRGBcolorRamp() had been called with string of
-          "YB".  Provides about (#maxChanVal*1+1) unique colors.
-          @param csIdx     An integer
-          @return A reference to the current object. */
-      colorTpl& setRGBcmpDiagRampYB(csIdxType csIdx);
-      //@}
-
-      /** @name Color Schemes: RGB Constant Brightness Ramps */
-      //@{
-      /** Color based upon a color cycle around the cube with constant constant brightness of two.
-          The result is just as if cmpRGBcolorRamp() had been called with string of "CMYC".  Provides about (#maxChanVal*3+1) unique colors.  Supports input
-          conditioning.
-          @param csIdx     An integer
-          @return A reference to the current object. */
-      colorTpl& setRGBcmpConstTwoRamp(csIdxType csIdx);
-      /** Color based upon a color cycle around the cube with constant constant brightness of two.
-          The result is just as if cmpRGBcolorRamp() had been called with string of "BRGB".  Provides about (#maxChanVal*3+1) unique colors.  Supports input
-          conditioning.
-          @param csIdx     An integer
-          @return A reference to the current object. */
-      colorTpl& setRGBcmpConstOneRamp(csIdxType csIdx);
-      //@}
-
-      /** @name Color Schemes: Classic RGB Ramps */
-      //@{
-      /** Same as setRGBcmpSumRampRGB
-          @param csIdx An integer to convert to a color.
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpFireRamp(csIdxType csIdx);
-      /** Color based upon the classical cold to hot ramp.
-          This is the same as cmpRGBcolorRamp() with a corner list of "BCGYR" Provides (#maxChanVal*4+1) unique colors.
-          @param csIdx The integer to convert
-          @return A reference to the current object.*/
-      colorTpl& setRGBcmpColdToHot(csIdxType csIdx);
-      /** Color based upon a modified version of the classical cold to hot ramp.
-          This modified version corresponds to using cmpRGBcolorRamp() with a corner list of "WCBYR" -- i.e. it starts at white (ice), moves up to blue (cold),
-          then yellow through red (hot).  Provides (#maxChanVal*4+1) unique colors.
-          @param csIdx The integer to convert
-          @return A reference to the current object.*/
-      colorTpl& setRGBcmpIceToWaterToHot(csIdxType csIdx);
-      //@}
-
-      /** @name Color Schemes: HSL Saturation Ramps */
-      //@{
-      /** Popular saturation based HSL color scheme extending from the center of the HSL color space to the red vertex.
-          The same result can be obtained via a ramp from the center of the RGB color cube to the appropriate RGB vertex.  Provides #meanChanVal unique
-          colors.
-          @param csIdx The integer to convert
-          @return A reference to the current object.*/
-      colorTpl& setRGBcmpRampGrey2R(csIdxType csIdx);
-      /** Popular saturation HSL color scheme extending from the center of the HSL color space to the green vertex.
-          The same result can be obtained via a ramp from the center of the RGB color cube to the appropriate RGB vertex.  Provides #meanChanVal unique
-          colors.
-          @param csIdx The integer to convert
-          @return A reference to the current object.*/
-      colorTpl& setRGBcmpRampGrey2G(csIdxType csIdx);
-      /** Popular saturation HSL color scheme extending from the center of the HSL color space to the blue vertex.
-          The same result can be obtained via a ramp from the center of the RGB color cube to the appropriate RGB vertex.  Provides #meanChanVal unique
-          colors.
-          @param csIdx The integer to convert
-          @return A reference to the current object.*/
-      colorTpl& setRGBcmpRampGrey2B(csIdxType csIdx);
-      /** Popular saturation based HSL color scheme extending from the center of the HSL color space to the cyan vertex.
-          The same result can be obtained via a ramp from the center of the RGB color cube to the appropriate RGB vertex.  Provides #meanChanVal unique
-          colors.
-          @param csIdx The integer to convert
-          @return A reference to the current object.*/
-      colorTpl& setRGBcmpRampGrey2C(csIdxType csIdx);
-      /** Popular saturation based HSL color scheme extending from the center of the HSL color space to the magenta vertex.
-          The same result can be obtained via a ramp from the center of the RGB color cube to the appropriate RGB vertex.  Provides #meanChanVal unique
-          colors.
-          @param csIdx The integer to convert
-          @return A reference to the current object.*/
-      colorTpl& setRGBcmpRampGrey2M(csIdxType csIdx);
-      /** Popular saturation based HSL color scheme extending from the center of the HSL color space to the yellow vertex.
-          The same result can be obtained via a ramp from the center of the RGB color cube to the appropriate RGB vertex.  Provides #meanChanVal unique
-          colors.
-          @param csIdx The integer to convert
-          @return A reference to the current object.*/
-      colorTpl& setRGBcmpRampGrey2Y(csIdxType csIdx);
-      //@}
-
-      /** @name Color Schemes: RGB Up-Down Ramps */
-      //@{
-      /** Converts an integer into a color based upon a color up-down ramp: Gg == Green Up and Green Down == cyan -> magenta.
-          Provides #maxChanVal different colors.
-          @param csIdx An integer
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpUpDownRampRg(csIdxType csIdx);
-      /** Converts an integer into a color based upon a color up-down ramp: Rb == Red Up and Blue Down == cyan -> yellow.
-          Provides #maxChanVal different colors.
-          @param csIdx An integer
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpUpDownRampRb(csIdxType csIdx);
-      /** Converts an integer into a color based upon a color up-down ramp: Gr == Green Up and Red Down == magenta -> cyan.
-          Provides #maxChanVal different colors.
-          @param csIdx An integer
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpUpDownRampGr(csIdxType csIdx);
-      /** Converts an integer into a color based upon a color up-down ramp: Gb == Green Up and Blue Down == magenta -> yellow.
-          Provides #maxChanVal different colors.
-          @param csIdx An integer
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpUpDownRampGb(csIdxType csIdx);
-      /** Converts an integer into a color based upon a color up-down ramp: Br == Blue Up and Red Down == yellow -> cyan.
-          Provides #maxChanVal different colors.
-          @param csIdx An integer
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpUpDownRampBr(csIdxType csIdx);
-      /** Converts an integer into a color based upon a color up-down ramp: Bg == Blue Up and Green Down == yellow -> magenta.
-          Provides #maxChanVal different colors.
-          @param csIdx An integer
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpUpDownRampBg(csIdxType csIdx);
-      //@}
-
-      /** @name Color Schemes: RGB Sum Ramps */
-      //@{
-      /** Converts an integer into a color based upon a color sum-ramp: RGB == Black -> Red -> Yellow -> White.
-          Same as cmpRGBcolorRamp() with a corner list of "0RYW".  Provides (3*#maxChanVal+1) different colors.
-          @param csIdx An integer
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpSumRampRGB(csIdxType csIdx);
-      /** Converts an integer into a color based upon a color sum-ramp: BGR == Black -> Blue -> cyan -> White.
-          Same as cmpRGBcolorRamp() with a corner list of "0BCW" Provides (3*#maxChanVal+1) different colors.
-          @param csIdx An integer
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpSumRampBGR(csIdxType csIdx);
-      /** Converts an integer into a color based upon a color sum-ramp: GRB == Black -> Green -> yellow -> White.
-          Same as cmpRGBcolorRamp() with a corner list of "0GYW" Provides (3*#maxChanVal+1) different colors.
-          @param csIdx An integer
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpSumRampGRB(csIdxType csIdx);
-      /** Converts an integer into a color based upon a color sum-ramp: GBR == Black -> Green -> cyan -> White.
-          Same as cmpRGBcolorRamp() with a corner list of "0GCW" Provides (3*#maxChanVal+1) different colors.
-          @param csIdx An integer
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpSumRampGBR(csIdxType csIdx);
-      /** Converts an integer into a color based upon a color sum-ramp: BRG == Black -> Blue -> magenta -> White.
-          Same as cmpRGBcolorRamp() with a corner list of "0BMW" Provides (3*#maxChanVal+1) different colors.
-          @param csIdx An integer
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpSumRampBRG(csIdxType csIdx);
-      /** Converts an integer into a color based upon a color sum-ramp: RBG Black -> Red -> Magenta -> White.
-          Same as cmpRGBcolorRamp() with a corner list of "0RMW".  Provides (3*#maxChanVal+1) different colors.
-          @param csIdx An integer
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpSumRampRBG(csIdxType csIdx);
-      //@}
-
-      /** @name Binary, Threshold Color Schemes */
-      //@{
-      /** Converts an integer into a color based upon a binary color ramp -- red if the integer is less than the threshold and green otherwise.
-          @param csIdx     An integer
-          @param threshold The threshold
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpBinaryColorRampRG(csIdxType csIdx, csIdxType threshold);
-      /** Converts an integer into a color based upon a binary color ramp -- red if the integer is less than the threshold and blue otherwise.
-          @param csIdx     An integer
-          @param threshold The threshold
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpBinaryColorRampRB(csIdxType csIdx, csIdxType threshold);
-      /** Converts an integer into a color based upon a binary color ramp -- green if the integer is less than the threshold and red otherwise.
-          @param csIdx     An integer
-          @param threshold The threshold
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpBinaryColorRampGR(csIdxType csIdx, csIdxType threshold);
-      /** Converts an integer into a color based upon a binary color ramp -- green if the integer is less than the threshold and blue otherwise.
-          @param csIdx     An integer
-          @param threshold The threshold
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpBinaryColorRampGB(csIdxType csIdx, csIdxType threshold);
-      /** Converts an integer into a color based upon a binary color ramp -- blue if the integer is less than the threshold and red otherwise.
-          @param csIdx     An integer
-          @param threshold The threshold
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpBinaryColorRampBR(csIdxType csIdx, csIdxType threshold);
-      /** Converts an integer into a color based upon a binary color ramp -- blue if the integer is less than the threshold and green otherwise.
-          @param csIdx     An integer
-          @param threshold The threshold
-          @return Returns a reference to the current color object. */
-      colorTpl& setRGBcmpBinaryColorRampBG(csIdxType csIdx, csIdxType threshold);
-      //@}
-
       /** @name Color Ramps, Gradients, Interpolation, Binary Thresholds.
           Members in this section form the computational foundation for many of the named color schemes found in this class. */
       //@{
@@ -1195,18 +936,21 @@ namespace mjr {
           @param csIdx The value to convert
           @param cornerColors Characters specifying color (as used by setColor)
           @return A reference to this object */
-      colorTpl& cmpRGBcolorRamp(csIdxType csIdx, const char *cornerColors);
-      /** Color value based upon a color ramp passing through the given sequence of corner colors at equal intervals along [0, (#maxChanVal*(numColors-1)+1)].
-          At 0, the color will be the first specified color.  At (#maxChanVal*(numColors-1)+1) it will be the last color specified color.  This function is
-          similar to the one taking doubles. This version doesn't allow for the specification of anchor points, but uses precise integer arithmetic.  With
-          this function it is possible to precisely duplicate many of the integer ramp color scheme functions.  This function supports input conditioning.
-          cornerColors need not be a real C-string -- i.e. no need for an terminating NULL.  Note this function uses RGB corner colors as anchors, and is thus
-          designed to work with RGB colors.  This function is the primary workhorse behind many of the "cmp" color schemes in this library.
+      colorTpl& cmpRGBcolorRamp(csIntType csIdx, const char *cornerColors);
+      /** Color value based upon a color ramp passing through the given sequence of corner colors at equal intervals along [0, (mjr::colorTpl::maxChanVal * (numColors - 1)
+          + 1)].  At 0, the color will be the first specified color.  At (mjr::colorTpl::maxChanVal * ( numColors - 1) + 1) it will be the last color specified color.  This
+          function is similar to the one taking doubles. This version doesn't allow for the specification of anchor points, but uses precise integer
+          arithmetic.  With this function it is possible to precisely duplicate many of the integer ramp color scheme functions.  This function supports input
+          conditioning.  cornerColors need not be a real C-string -- i.e. no need for an terminating NULL.  Note this function uses RGB corner colors as
+          anchors, and is thus designed to work with RGB colors.  This function is the primary workhorse behind many of the "cmp" color schemes in this
+          library.
           @param csIdx The value to convert
           @param numColors The number of colors
           @param cornerColors Characters specifying color (as used by setColor)
           @return A reference to this object */
-      colorTpl& cmpRGBcolorRamp(csIdxType csIdx, csIdxType numColors, const char *cornerColors);
+      colorTpl& cmpRGBcolorRamp(csIntType csIdx, csIntType numColors, const char *cornerColors);
+      colorTpl& cmpRGBcolorRamp(csIntType csIdx, csIntType numColors, const cornerColorEnum *cornerColors);
+
       /** Set the current color to a value linearly interpolated between the two given colors.  When \a aDouble is 0, the color is col1.
           When \a aDouble is 1 the new value is col2.  This method interpolates all channels without any color space conversions and as few type conversions as
           possible.
@@ -1641,6 +1385,945 @@ namespace mjr {
       template <typename iT> clrChanT clipAll(iT arithValue);
       //@}
 
+      /** @defgroup cs Color Schemes */
+
+
+      /** Template providing RGB color cube gradiant color schemes */
+      template<cornerColorEnum...corners>
+      class csCC_tpl {
+        public:
+          constexpr static csIntType nC = ((sizeof...(corners)) - 1) * chanStepMax + 1;
+          static inline colorTpl&  c(colorRefType aColor, csIntType csIdx) { return aColor.cmpRGBcolorRamp(csIdx % nC, nC, cols); }
+          static inline colorTpl   c(                     csIntType csIdx) { colorTpl tmp; return c(tmp, csIdx);              }
+        private:
+          constexpr static cornerColorEnum cols[] = { corners... };
+      };
+
+      /** @name Color Schemes: RGB Constant Brightness Ramps */
+      //@{
+      /** @class csCCconsTwo
+          @ingroup cs
+          @extends csCC_tpl
+          Color cycle around the cube with constant brightness of two. Provides (mjr::colorTpl::chanStepMax*3+1) unique colors. */
+      typedef csCC_tpl<cornerColorEnum::CYAN, cornerColorEnum::MAGENTA, cornerColorEnum::YELLOW, cornerColorEnum::CYAN>  csCCconsTwo;
+      /** @class csCCconsOne
+          @ingroup cs
+          @extends csCC_tpl
+          Color cycle around the cube with constant brightness of one. Provides (mjr::colorTpl::chanStepMax*3+1) unique colors. */
+      typedef csCC_tpl<cornerColorEnum::BLUE, cornerColorEnum::RED, cornerColorEnum::GREEN, cornerColorEnum::BLUE>       csCCconsOne;
+      //@}
+
+      /** @name Color Schemes: RGB Cube Diagional Ramps */
+      //@{
+      /** @class csCCdiag01 
+          @ingroup cs
+          @extends csCC_tpl
+          Gradient across the diagonal of the RGB color cube from black to white.  Provides about (mjr::colorTpl::chanStepMax + 1) unique colors. */
+      typedef csCC_tpl<cornerColorEnum::BLACK,   cornerColorEnum::WHITE> csCCdiag01;
+      /** @class csCCdiagCR
+          @ingroup cs
+          @extends csCC_tpl
+          Gradient across the diagonal of the RGB color cube from cyan to red.  Provides about (mjr::colorTpl::chanStepMax + 1) unique colors. */
+      typedef csCC_tpl<cornerColorEnum::CYAN,    cornerColorEnum::RED>   csCCdiagCR;
+      /** @class csCCdiagMG
+          @ingroup cs
+          @extends csCC_tpl
+          Gradient across the diagonal of the RGB color cube from magenta to green.  Provides about (mjr::colorTpl::chanStepMax + 1) unique colors. */
+      typedef csCC_tpl<cornerColorEnum::MAGENTA, cornerColorEnum::GREEN> csCCdiagMG;
+      /** @class csCCdiagYB
+          @ingroup cs
+          @extends csCC_tpl
+          Gradient across the diagonal of the RGB color cube from yellow to blue.  Provides about (mjr::colorTpl::chanStepMax + 1) unique colors. */
+      typedef csCC_tpl<cornerColorEnum::YELLOW,  cornerColorEnum::BLUE>  csCCdiagYB;
+      //@}
+
+      /** @name Color Schemes: Classic RGB Ramps */
+      //@{
+      /** @class csCColdeFireRamp
+          @ingroup cs
+          @extends csCC_tpl
+          Classic color cube "Fire Ramp". */
+      typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::RED, cornerColorEnum::YELLOW, cornerColorEnum::WHITE>                         csCColdeFireRamp;
+      /** @class csCColdeColdToHot
+          @ingroup cs
+          @extends csCC_tpl
+          Classical cold to hot color cube ramp.  Provides (mjr::colorTpl::chanStepMax*4+1) unique colors. */
+      typedef csCC_tpl<cornerColorEnum::BLUE, cornerColorEnum::CYAN, cornerColorEnum::GREEN, cornerColorEnum::YELLOW, cornerColorEnum::RED>   csCColdeColdToHot;
+      /** @class csCColdeIceToWaterToHot
+          @ingroup cs
+          @extends csCC_tpl
+          Modified version of the classical cold to hot color cube ramp.ramp. It starts at white (ice), moves up to blue (cold),
+          then yellow through red (hot).  Provides (mjr::colorTpl::chanStepMax*4+1) unique colors. */
+      typedef csCC_tpl<cornerColorEnum::WHITE, cornerColorEnum::CYAN, cornerColorEnum::BLUE, cornerColorEnum::YELLOW, cornerColorEnum::RED>   csCColdeIceToWaterToHot;
+      /** @class csCColdeRainbow
+          @ingroup cs
+          @extends csCC_tpl
+          The classic HSV rainbow color scheme based upon an edge traversal of the RGB color cube.  Provides (6 * mjr::colorTpl::chanStepMax + 1) colors. */
+      typedef csCC_tpl<cornerColorEnum::RED, cornerColorEnum::YELLOW, cornerColorEnum::GREEN, cornerColorEnum::CYAN, cornerColorEnum::BLUE, cornerColorEnum::MAGENTA, cornerColorEnum::RED>          csCColdeRainbow;
+      //@}
+
+      /** @name Color Schemes: RGB Sum Ramps */
+      //@{
+      /** @class csCCsumRGB
+          @ingroup cs
+          @extends csCC_tpl
+          RGB cube sum-ramp: RGB == Black -> Red -> Yellow -> White. Provides (3 * mjr::colorTpl::chanStepMax + 1) different colors. */
+      typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::RED,   cornerColorEnum::YELLOW,  cornerColorEnum::WHITE> csCCsumRGB;
+      /** @class csCCsumBGR
+          @ingroup cs
+          @extends csCC_tpl
+          RGB cube sum-ramp: BGR == Black -> Blue -> cyan -> White.  Provides (3 * mjr::colorTpl::chanStepMax + 1) different colors. */
+      typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::BLUE,  cornerColorEnum::CYAN,    cornerColorEnum::WHITE> csCCsumBGR;
+      /** @class csCCsumGRB
+          @ingroup cs
+          @extends csCC_tpl
+          RGB cube sum-ramp: GRB == Black -> Green -> yellow -> White.  Provides (3 * mjr::colorTpl::chanStepMax + 1) different colors. */
+      typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::GREEN, cornerColorEnum::YELLOW,  cornerColorEnum::WHITE> csCCsumGRB;
+      /** @class csCCsumGBR
+          @ingroup cs
+          @extends csCC_tpl
+          RGB cube sum-ramp: GBR == Black -> Green -> cyan -> White.  Provides (3 * mjr::colorTpl::chanStepMax + 1) different colors. */
+      typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::GREEN, cornerColorEnum::CYAN,    cornerColorEnum::WHITE> csCCsumGBR;
+      /** @class csCCsumBRG
+          @ingroup cs
+          @extends csCC_tpl
+          RGB cube sum-ramp: BRG == Black -> Blue -> magenta -> White. Provides (3 * mjr::colorTpl::chanStepMax + 1) different colors. */
+      typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::BLUE,  cornerColorEnum::MAGENTA, cornerColorEnum::WHITE> csCCsumBRG;
+      /** @class csCCsumRBG
+          @ingroup cs
+          @extends csCC_tpl
+          RGB cube sum-ramp: RBG Black -> Red -> Magenta -> White.  Provides (3 * mjr::colorTpl::chanStepMax + 1) different colors. */
+      typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::RED,   cornerColorEnum::MAGENTA, cornerColorEnum::WHITE> csCCsumRBG;
+      //@}
+
+      /** @name Color Schemes: RGB Up-Down Ramps */
+      //@{
+      /** @class csCCudRg
+          @ingroup cs
+          @extends csCC_tpl
+          RGB Up-Down Ramp: Rg == Red Up and Green Down == cyan -> magenta. Provides chanStepMax different colors.*/
+      typedef csCC_tpl<cornerColorEnum::CYAN,    cornerColorEnum::MAGENTA> csCCudRg;
+      /** @class csCCudRb
+          @ingroup cs
+          @extends csCC_tpl
+          RGB Up-Down Ramp: Rb == Red Up and Blue Down == cyan -> yellow. Provides chanStepMax different colors.*/
+      typedef csCC_tpl<cornerColorEnum::CYAN,    cornerColorEnum::YELLOW>  csCCudRb;
+      /** @class csCCudGr
+          @ingroup cs
+          @extends csCC_tpl
+          RGB Up-Down Ramp: Gr == Green Up and Red Down == magenta -> cyan. Provides chanStepMax different colors. */
+      typedef csCC_tpl<cornerColorEnum::MAGENTA, cornerColorEnum::CYAN>    csCCudGr;
+      /** @class csCCudGb
+          @ingroup cs
+          @extends csCC_tpl
+          RGB Up-Down Ramp: Gb == Green Up and Blue Down == magenta -> yellow. Provides chanStepMax different colors. */
+      typedef csCC_tpl<cornerColorEnum::MAGENTA, cornerColorEnum::YELLOW>  csCCudGb;
+      /** @class csCCudBr
+          @ingroup cs
+          @extends csCC_tpl
+          RGB Up-Down Ramp: Br == Blue Up and Red Down == yellow -> cyan. Provides chanStepMax different colors. */
+      typedef csCC_tpl<cornerColorEnum::YELLOW,  cornerColorEnum::CYAN>    csCCudBr;
+      /** @class csCCudBg
+          @ingroup cs
+          @extends csCC_tpl
+          RGB Up-Down Ramp: Bg == Blue Up and Green Down == yellow -> magenta. Provides chanStepMax different colors. */
+      typedef csCC_tpl<cornerColorEnum::YELLOW,  cornerColorEnum::MAGENTA> csCCudBg;
+      //@}
+
+      /** Binary color scheme. First color for even inputs and second color for odd. */
+      template<cornerColorEnum a, cornerColorEnum b>
+      class csBin_tpl {
+        public:
+          constexpr static csIntType nC = 2;
+          static inline colorTpl&  c(colorRefType aColor, csIntType csIdx) { if (csIdx % 2) return aColor.setToCorner(b); else return aColor.setToCorner(a); }
+          static inline colorTpl   c(                     csIntType csIdx) { colorTpl tmp; return c(tmp, csIdx);                                             }
+      };
+
+      /** @name Color Schemes: Binary */
+      //@{
+      typedef csBin_tpl<cornerColorEnum::BLACK,   cornerColorEnum::WHITE>  ccBin01; //!< Binary Black-White color scheme. First color for even inputs and second color for odd.      
+      typedef csBin_tpl<cornerColorEnum::GREEN,   cornerColorEnum::BLUE>   ccBinGB; //!< Binary Green-Blue color scheme. First color for even inputs and second color for odd.       
+      typedef csBin_tpl<cornerColorEnum::RED,     cornerColorEnum::BLUE>   ccBinRB; //!< Binary Red-Blue color scheme. First color for even inputs and second color for odd.         
+      typedef csBin_tpl<cornerColorEnum::MAGENTA, cornerColorEnum::CYAN>   ccBinMC; //!< Binary Magenta-Cyan color scheme. First color for even inputs and second color for odd.     
+      typedef csBin_tpl<cornerColorEnum::YELLOW,  cornerColorEnum::CYAN>   ccBinYC; //!< Binary Yellow-Cyan color scheme. First color for even inputs and second color for odd.      
+      typedef csBin_tpl<cornerColorEnum::RED,     cornerColorEnum::GREEN>  ccBinRG; //!< Binary Red-Green color scheme. First color for even inputs and second color for odd.        
+      typedef csBin_tpl<cornerColorEnum::MAGENTA, cornerColorEnum::YELLOW> ccBinMY; //!< Binary Magenta-Yellow color scheme. First color for even inputs and second color for odd.   
+      //@}
+
+      /** @name Color Schemes: Pseudo-Grey
+       These color schemes start with black and move toward white trying to increase perceptional brightness, they don't stay precisely on the diagonal. */
+      //@{
+      /** @class csPGrey3x
+          @ingroup cs
+          A Pseudo-Grey color scheme with 3 * mjr::colorTpl::chanStepMax colors. */
+      class csPGrey3x {
+        public:
+          constexpr static csIntType nC = 3*chanStepMax;
+          static inline colorTpl&  c(colorRefType aColor, csIntType csIdx) { csIdx = csIdx % nC;
+                                                                             return aColor.setChans(static_cast<clrChanT>(csIdx / 3 + (csIdx%3==0?1:0)),
+                                                                                                    static_cast<clrChanT>(csIdx / 3 + (csIdx%3==1?1:0)),
+                                                                                                    static_cast<clrChanT>(csIdx / 3 + (csIdx%3==2?1:0)));            }
+          static inline colorTpl   c(                     csIntType csIdx) { colorTpl tmp; return c(tmp, csIdx);                                                     }
+      };
+      /** @class csPGrey4x
+          @ingroup cs
+          A Pseudo-Grey color scheme with 4 * mjr::colorTpl::chanStepMax colors. */
+      class csPGrey4x {
+        public:
+          constexpr static csIntType nC = 4*chanStepMax;
+          static inline colorTpl&  c(colorRefType aColor, csIntType csIdx) { csIdx = csIdx % nC;
+                                                                             return aColor.setChans(static_cast<clrChanT>(csIdx / 4 + ((csIdx+1)%4==0?1:0)),
+                                                                                                    static_cast<clrChanT>(csIdx / 4 + ((csIdx+2)%4==0?1:0)),
+                                                                                                    static_cast<clrChanT>(csIdx / 4 + ((csIdx+3)%4==0?1:0)));        }
+          static inline colorTpl   c(                     csIntType csIdx) { colorTpl tmp; return c(tmp, csIdx);                                                     }
+      };
+      //@}
+
+      /** Template for binary color schemes. */
+      template<cornerColorEnum corner>
+      class csHSLh_tpl {
+        public:
+          constexpr static csIntType nC = (chanIsInt ? meanChanVal : 0);
+          static inline colorTpl&  c(colorRefType aColor, csNatType csIdx) { clrChanT cVal = static_cast<clrChanT>(numberWrap(csIdx, meanChanVal));
+                                                                             colorTpl cc(corner);
+                                                                             return aColor.setChans(static_cast<clrChanT>(meanChanVal + (cc.getC0() > meanChanVal ? cVal : -cVal)),
+                                                                                                    static_cast<clrChanT>(meanChanVal + (cc.getC1() > meanChanVal ? cVal : -cVal)),
+                                                                                                    static_cast<clrChanT>(meanChanVal + (cc.getC2() > meanChanVal ? cVal : -cVal)));        }
+          static inline colorTpl   c(                     csNatType csIdx) { colorTpl tmp; return c(tmp, csIdx);                                       }
+      };
+
+      /** @name Color Schemes: HSL Saturation Ramps */
+      //@{
+      /** @class csHSLhR
+          @ingroup cs
+          @extends csHSLh_tpl
+          HSL color scheme extending from the center of the HSL color space to the red vertex. 
+          Provides mjr::colorTpl::meanChanVal unique colors for integral clrChanT.  For floating point clrChanT, csIdx may be any value in [0, mjr::colorTpl::meanChanVal]. */
+      typedef csHSLh_tpl<cornerColorEnum::RED> csHSLhR;
+      /** @class csHSLhG
+          @ingroup cs
+          @extends csHSLh_tpl
+          HSL color scheme extending from the center of the HSL color space to the green vertex. 
+          Provides mjr::colorTpl::meanChanVal unique colors for integral clrChanT.  For floating point clrChanT, csIdx may be any value in [0, mjr::colorTpl::meanChanVal]. */
+      typedef csHSLh_tpl<cornerColorEnum::GREEN> csHSLhG;
+      /** @class csHSLhB
+          @ingroup cs
+          @extends csHSLh_tpl
+          HSL color scheme extending from the center of the HSL color space to the blue vertex. 
+          Provides mjr::colorTpl::meanChanVal unique colors for integral clrChanT.  For floating point clrChanT, csIdx may be any value in [0, mjr::colorTpl::meanChanVal]. */
+      typedef csHSLh_tpl<cornerColorEnum::BLUE> csHSLhB;
+      /** @class csHSLhC
+          @ingroup cs
+          @extends csHSLh_tpl
+          HSL color scheme extending from the center of the HSL color space to the cyan vertex. 
+          Provides mjr::colorTpl::meanChanVal unique colors for integral clrChanT.  For floating point clrChanT, csIdx may be any value in [0, mjr::colorTpl::meanChanVal]. */
+      typedef csHSLh_tpl<cornerColorEnum::CYAN> csHSLhC;
+      /** @class csHSLhM
+          @ingroup cs
+          @extends csHSLh_tpl
+          HSL color scheme extending from the center of the HSL color space to the magenta vertex. 
+          Provides mjr::colorTpl::meanChanVal unique colors for integral clrChanT.  For floating point clrChanT, csIdx may be any value in [0, mjr::colorTpl::meanChanVal]. */
+      typedef csHSLh_tpl<cornerColorEnum::MAGENTA> csHSLhM;
+      /** @class csHSLhY
+          @ingroup cs
+          @extends csHSLh_tpl
+          HSL color scheme extending from the center of the HSL color space to the yellow vertex. 
+          Provides mjr::colorTpl::meanChanVal unique colors for integral clrChanT.  For floating point clrChanT, csIdx may be any value in [0, mjr::colorTpl::meanChanVal]. */
+      typedef csHSLh_tpl<cornerColorEnum::YELLOW> csHSLhY;
+      //@}
+
+      /** @name Color Schemes: Rainbows */
+      //@{
+      /** @class csRainbowLA
+          @ingroup cs
+          Computes a color value based upon a linear approximation of the color match functions used to approximate wavelength to RGB conversion.
+          The linear color function approximation is not very accurate, but it is quite attractive. */
+      class csRainbowLA {
+        public:
+          static inline colorTpl& c(colorRefType aColor, csIntType nC, csIntType csIdx) { 
+            csIdx = numberWrap(csIdx, nC);
+            return aColor.setRGBfromWavelengthLA(mjr::genLinMap(static_cast<double>(csIdx),
+                                                                static_cast<double>(0),
+                                                                static_cast<double>(nC),
+                                                                static_cast<double>(minWavelength),
+                                                                static_cast<double>(maxWavelength)));         
+          }
+          static inline colorTpl c(csIntType nC, csIntType csIdx) { 
+            colorTpl tmp; 
+            return c(tmp, nC, csIdx);                                       
+          }
+      };
+      /** @class csRainbowCM
+          @ingroup cs
+          Computes a color value based upon an algorithm to convert wavelength to RGB that uses the Color Matching functions.
+          @param interpMethod Specify the interpolation method (see: cmfInterpolationEnum) */
+      class csRainbowCM {
+        public:
+          static inline colorTpl& c(colorRefType aColor, csIntType nC, csIntType csIdx, cmfInterpolationEnum interpMethod = cmfInterpolationEnum::LINEAR) { 
+            csIdx = numberWrap(csIdx, nC);
+            return aColor.setRGBfromWavelengthCM(mjr::genLinMap(static_cast<double>(csIdx),
+                                                                static_cast<double>(0),
+                                                                static_cast<double>(nC),
+                                                                static_cast<double>(minWavelength),
+                                                                static_cast<double>(maxWavelength)), 
+                                                 interpMethod);         
+          }
+          static inline colorTpl c(csIntType nC, csIntType csIdx, cmfInterpolationEnum interpMethod = cmfInterpolationEnum::LINEAR) { 
+            colorTpl tmp; 
+            return c(tmp, nC, csIdx, interpMethod);                                       
+          }
+      };
+      //@}
+
+      /** Template for fixed size pallets. */
+      template<uint32_t...colors>
+      class csFP_tpl {
+        public:
+          constexpr static csIntType nC = (sizeof...(colors));
+          static inline colorTpl&  c(colorRefType aColor, csIntType csIdx) { return aColor.setRGBfromLogPackIntARGB(d[csIdx % nC]);  }
+          static inline colorTpl   c(                     csIntType csIdx) { return c(colorTpl(), csIdx);                            }
+        private:
+          constexpr static uint32_t d[] = { colors... };
+      };
+
+      /** @name "Web Safe" Color Schemes */
+      //@{
+      /** @class csFPwebSafeNormalVision
+          @ingroup cs
+          @extends csFP_tpl
+          The "web safe" color pallet of 216 colors as seen by someone with normal color vision.  
+          These colors were originally designed for low color web browsers in the early days of the internet.  Today they provide a simple (easy to compute)
+          pallet for color reduction.  The colors are ordered in lexicographical ordering based upon the hexadecimal web-based color name scheme "#RRGGBB" --
+          0 maps to "#000000", and 215 maps to "#ffffff".  Note that one can transform an rgb color into the nearest web safe color via tfrmWebSafe216(). */
+      typedef csFP_tpl<0x000000, 0x000033, 0x000066, 0x000099, 0x0000CC, 0x0000FF, 0x003300, 0x003333, 0x003366, 0x003399, 0x0033CC, 
+                       0x0033FF, 0x006600, 0x006633, 0x006666, 0x006699, 0x0066CC, 0x0066FF, 0x009900, 0x009933, 0x009966, 0x009999,
+                       0x0099CC, 0x0099FF, 0x00CC00, 0x00CC33, 0x00CC66, 0x00CC99, 0x00CCCC, 0x00CCFF, 0x00FF00, 0x00FF33, 0x00FF66,
+                       0x00FF99, 0x00FFCC, 0x00FFFF, 0x330000, 0x330033, 0x330066, 0x330099, 0x3300CC, 0x3300FF, 0x333300, 0x333333,
+                       0x333366, 0x333399, 0x3333CC, 0x3333FF, 0x336600, 0x336633, 0x336666, 0x336699, 0x3366CC, 0x3366FF, 0x339900,
+                       0x339933, 0x339966, 0x339999, 0x3399CC, 0x3399FF, 0x33CC00, 0x33CC33, 0x33CC66, 0x33CC99, 0x33CCCC, 0x33CCFF,
+                       0x33FF00, 0x33FF33, 0x33FF66, 0x33FF99, 0x33FFCC, 0x33FFFF, 0x660000, 0x660033, 0x660066, 0x660099, 0x6600CC,
+                       0x6600FF, 0x663300, 0x663333, 0x663366, 0x663399, 0x6633CC, 0x6633FF, 0x666600, 0x666633, 0x666666, 0x666699,
+                       0x6666CC, 0x6666FF, 0x669900, 0x669933, 0x669966, 0x669999, 0x6699CC, 0x6699FF, 0x66CC00, 0x66CC33, 0x66CC66,
+                       0x66CC99, 0x66CCCC, 0x66CCFF, 0x66FF00, 0x66FF33, 0x66FF66, 0x66FF99, 0x66FFCC, 0x66FFFF, 0x990000, 0x990033,
+                       0x990066, 0x990099, 0x9900CC, 0x9900FF, 0x993300, 0x993333, 0x993366, 0x993399, 0x9933CC, 0x9933FF, 0x996600,
+                       0x996633, 0x996666, 0x996699, 0x9966CC, 0x9966FF, 0x999900, 0x999933, 0x999966, 0x999999, 0x9999CC, 0x9999FF,
+                       0x99CC00, 0x99CC33, 0x99CC66, 0x99CC99, 0x99CCCC, 0x99CCFF, 0x99FF00, 0x99FF33, 0x99FF66, 0x99FF99, 0x99FFCC,
+                       0x99FFFF, 0xCC0000, 0xCC0033, 0xCC0066, 0xCC0099, 0xCC00CC, 0xCC00FF, 0xCC3300, 0xCC3333, 0xCC3366, 0xCC3399,
+                       0xCC33CC, 0xCC33FF, 0xCC6600, 0xCC6633, 0xCC6666, 0xCC6699, 0xCC66CC, 0xCC66FF, 0xCC9900, 0xCC9933, 0xCC9966,
+                       0xCC9999, 0xCC99CC, 0xCC99FF, 0xCCCC00, 0xCCCC33, 0xCCCC66, 0xCCCC99, 0xCCCCCC, 0xCCCCFF, 0xCCFF00, 0xCCFF33,
+                       0xCCFF66, 0xCCFF99, 0xCCFFCC, 0xCCFFFF, 0xFF0000, 0xFF0033, 0xFF0066, 0xFF0099, 0xFF00CC, 0xFF00FF, 0xFF3300,
+                       0xFF3333, 0xFF3366, 0xFF3399, 0xFF33CC, 0xFF33FF, 0xFF6600, 0xFF6633, 0xFF6666, 0xFF6699, 0xFF66CC, 0xFF66FF,
+                       0xFF9900, 0xFF9933, 0xFF9966, 0xFF9999, 0xFF99CC, 0xFF99FF, 0xFFCC00, 0xFFCC33, 0xFFCC66, 0xFFCC99, 0xFFCCCC,
+                       0xFFCCFF, 0xFFFF00, 0xFFFF33, 0xFFFF66, 0xFFFF99, 0xFFFFCC, 0xFFFFFF>                                          csFPwebSafeNormalVision;
+      /** @class csFPwebSafeProtanopia
+          @ingroup cs
+          @extends csFP_tpl
+          The "web safe" color pallet of 216 colors as seen by someone with Protanopia. 
+          For more about web safe colors, see mjr::colorTpl::csFPwebSafeNormalVision. Also seemjr::colorTpl::csFPwebSafeProtanopiaAlt. */
+      typedef csFP_tpl<0x000000, 0x002346, 0x004487, 0x0060C1, 0x0078F0, 0x719CFF, 0x312C00, 0x2E2E30, 0x0D3366, 0x0053A6,
+                       0x006FDE, 0x5B91FF, 0x635800, 0x61592E, 0x5C5B5F, 0x4E5F93, 0x1A66CC, 0x007EFE, 0x948500, 0x93852D, 0x90865E,
+                       0x8A898F, 0x7E8DC2, 0x6792F8, 0xC5B000, 0xC5B12B, 0xC3B25D, 0xBFB38D, 0xB8B6BF, 0xADBAF2, 0xF6DC00, 0xF6DD29,
+                       0xF5DD5C, 0xF2DF8C, 0xEDE1BD, 0xE6E4EE, 0x1E1B08, 0x002448, 0x00468B, 0x0062C4, 0x0079F2, 0x739DFF, 0x373200,
+                       0x343333, 0x19376A, 0x0054AA, 0x0070E1, 0x6094FF, 0x655B00, 0x645B2F, 0x5E5D61, 0x506195, 0x2067CD, 0x2581FF,
+                       0x958600, 0x95862E, 0x92875E, 0x8C8A90, 0x7F8EC3, 0x6993FA, 0xC6B100, 0xC6B22C, 0xC4B25D, 0xC0B48E, 0xB9B7BF,
+                       0xAEBBF2, 0xF7DD00, 0xF7DD29, 0xF5DE5C, 0xF3DF8C, 0xEEE2BD, 0xE7E5EF, 0x3C360F, 0x323748, 0x00478E, 0x0065CA,
+                       0x007CF8, 0x7AA1FF, 0x4A420B, 0x46433A, 0x324676, 0x0059B4, 0x0074EA, 0x6E9AFF, 0x6F6300, 0x6D6432, 0x686666,
+                       0x59699C, 0x326ED5, 0x518DFF, 0x9B8B00, 0x9B8B2F, 0x988C61, 0x918F93, 0x8593C7, 0x6E98FE, 0xCAB500, 0xCAB52D,
+                       0xC8B65E, 0xC4B88F, 0xBDBBC1, 0xB2BEF5, 0xFAE000, 0xFAE02A, 0xF8E15D, 0xF6E28D, 0xF1E4BF, 0xEAE7F0, 0x5A5117,
+                       0x55514A, 0x39538F, 0x0067D0, 0x2782FF, 0x83A6FF, 0x635913, 0x5F5941, 0x505B80, 0x005EBF, 0x007AF6, 0x7DA2FF,
+                       0x7F720D, 0x7E7237, 0x78746D, 0x6A77A5, 0x497BDF, 0x709BFF, 0xA69500, 0xA59532, 0xA29665, 0x9B9899, 0x8F9CCE,
+                       0x83A4FF, 0xD2BC00, 0xD1BC2F, 0xCFBD61, 0xCBBF93, 0xC4C1C6, 0xB9C5FA, 0xFFE41C, 0xFFE532, 0xFEE65E, 0xFBE790,
+                       0xF7E9C1, 0xEFECF4, 0x786C1E, 0x746C4C, 0x646D90, 0x356FD5, 0x5D91FF, 0x8CABFF, 0x7E711B, 0x7B7146, 0x707387,
+                       0x5275C8, 0x4387FF, 0x8AAAFF, 0x948415, 0x92853C, 0x8C8675, 0x7F88AF, 0x648CEB, 0x87A7FF, 0xB5A20E, 0xB5A336,
+                       0xB1A46A, 0xAAA5A0, 0x9EA8D7, 0x98B1FF, 0xDDC600, 0xDDC631, 0xDBC764, 0xD7C997, 0xCFCBCB, 0xC4CEFF, 0xFFE655,
+                       0xFFE75C, 0xFFE873, 0xFFEB97, 0xFFF1C5, 0xF8F4F8, 0x968726, 0x93874E, 0x888892, 0x6E89D7, 0x7BA0FF, 0x96B1FF,
+                       0x9A8B23, 0x988B4A, 0x8F8C8B, 0x7A8ECE, 0x779DFF, 0x96B1FF, 0xAC9A1E, 0xAA9A42, 0xA59B7C, 0x999DB9, 0x82A0F6,
+                       0x98B2FF, 0xC8B317, 0xC7B43A, 0xC4B470, 0xBDB6A8, 0xB1B8E0, 0xAABDFF, 0xECD30F, 0xECD435, 0xE9D469, 0xE5D69D,
+                       0xDED8D2, 0xCFD7FF, 0xFFE871, 0xFFE975, 0xFFEA86, 0xFFEDA2, 0xFFF2C8, 0xFFFAFA>                                csFPwebSafeProtanopia;
+      /** @class csFPwebSafeDeutanopia
+          @ingroup cs
+          @extends csFP_tpl
+          The "web safe" color pallet of 216 colors as seen by someone with Deutanopia.
+          For more about web safe colors, see mjr::colorTpl::csFPwebSafeNormalVision. Also seemjr::colorTpl::csFPwebSafeDeutanopiaAlt. */
+      typedef csFP_tpl<0x000000, 0x002135, 0x004168, 0x005E97, 0x0076BE, 0x008BDF, 0x362A0C, 0x2F2D34, 0x003E68, 0x005E9A, 0x0078C2, 
+                       0x008CE2, 0x6D5418, 0x6A5538, 0x5E5A69, 0x3D629A, 0x0078C9, 0x0090EC, 0xA37E25, 0xA27E3D, 0x9B816C, 0x8D869D,
+                       0x728ECF, 0x3398FF, 0xDAA831, 0xD9A844, 0xD4AA6F, 0xCBAEA0, 0xBBB3D1, 0xA5BBFF, 0xFFCD72, 0xFFCD77, 0xFFCF87,
+                       0xFFD3A6, 0xFBDAD4, 0xE6DCFF, 0x221A00, 0x131E30, 0x003F67, 0x005D96, 0x0076BF, 0x008BDF, 0x3D2F09, 0x373133,
+                       0x003B65, 0x005D99, 0x0078C2, 0x008CE2, 0x705617, 0x6D5737, 0x615B68, 0x43639A, 0x0078C9, 0x0090EC, 0xA58600,
+                       0xA4803C, 0x9D826B, 0x8F879D, 0x758FCE, 0x3999FF, 0xDBA830, 0xDAA943, 0xD6AB6F, 0xCCAEA0, 0xBDB4D1, 0xA7BBFF,
+                       0xFFCD74, 0xFFCD78, 0xFFCF88, 0xFFD4A6, 0xFCDBD4, 0xE7DDFF, 0x453500, 0x3F352F, 0x253D60, 0x005A94, 0x0076BF,
+                       0x008BE1, 0x534000, 0x4F4031, 0x3D4763, 0x005995, 0x0076C2, 0x008CE4, 0x7B5E11, 0x795F35, 0x6F6367, 0x586A98,
+                       0x0076C9, 0x0090EE, 0xAC8421, 0xAA853B, 0xA4876A, 0x978C9C, 0x8093CD, 0x519CFE, 0xE0AC2E, 0xDFAC42, 0xDAAE6E,
+                       0xD2B29F, 0xC3B7D1, 0xADBEFF, 0xFFCE79, 0xFFCF7C, 0xFFD08B, 0xFFD5A7, 0xFFDDD3, 0xEBDFFF, 0x674F00, 0x634E2C,
+                       0x57535F, 0x385B90, 0x0073C0, 0x008CE5, 0x705600, 0x6C552D, 0x625961, 0x496192, 0x0073C2, 0x008DE8, 0x8E6C00,
+                       0x8C6D31, 0x847064, 0x737696, 0x507FC7, 0x0090F3, 0xA69500, 0xB78E37, 0xB29068, 0xA6949A, 0x929BCC, 0x6FA4FD,
+                       0xE9B22A, 0xE8B33F, 0xE4B56C, 0xDBB89D, 0xCEBDCF, 0xB9C4FF, 0xFFD080, 0xFFD184, 0xFFD291, 0xFFD6A9, 0xFFDDD0,
+                       0xF4E4FF, 0x886900, 0x856726, 0x7E6A5E, 0x6E7190, 0x4B7AC0, 0x008CEC, 0x8F6D00, 0x8C6C27, 0x856F5F, 0x767591,
+                       0x577EC2, 0x008DEF, 0xA67F00, 0xA47E2B, 0x9E8161, 0x918694, 0x7B8DC5, 0x4C97F6, 0xCA9A00, 0xC99B32, 0xC49D65,
+                       0xBAA198, 0xAAA7C9, 0x8FAEFB, 0xF6C600, 0xF5BC3B, 0xF1BE6A, 0xEAC19B, 0xDEC6CD, 0xCBCCFF, 0xFFD389, 0xFFD38C,
+                       0xFFD497, 0xFFD8AB, 0xFFDECC, 0xFFEAFD, 0xA98200, 0xA8801A, 0xA2835B, 0x97888E, 0x838FC0, 0x5E98F1, 0xAE8600,
+                       0xAD841C, 0xA7875C, 0x9D8B8F, 0x8A92C1, 0x679BF2, 0xC09300, 0xBF9322, 0xBB955E, 0xB19992, 0xA09FC3, 0x85A7F5,
+                       0xDFAA00, 0xDEAB2A, 0xDAAC62, 0xD2B095, 0xC5B5C7, 0xB0BCF9, 0xFFC750, 0xFFC857, 0xFFCA6F, 0xFCCD99, 0xF1D2CB,
+                       0xE1D8FD, 0xFFD592, 0xFFD594, 0xFFD79D, 0xFFDAAD, 0xFFDFC8, 0xFFE8EF>                                          csFPwebSafeDeutanopia;
+      /** @class csFPwebSafeTritanoptia
+          @ingroup cs
+          @extends csFP_tpl
+          The "web safe" color pallet of 216 colors as seen by someone with Tritanoptia.
+          For more about web safe colors, see mjr::colorTpl::csFPwebSafeNormalVision. Also seemjr::colorTpl::csFPwebSafeTritanoptiaAlt. */
+      typedef csFP_tpl<0x000000, 0x001C1D, 0x003739, 0x005155, 0x006A6E, 0x007F85, 0x173033, 0x0A3236, 0x004347, 0x00595E, 0x006F74,
+                       0x008389, 0x2D5F66, 0x2A6068, 0x15656D, 0x00727A, 0x00828A, 0x00929A, 0x448F9A, 0x42909A, 0x39929D, 0x1F97A3,
+                       0x00A1AC, 0x00ACB7, 0x5ABFCD, 0x59BFCD, 0x54C1CF, 0x47C4D3, 0x29CAD9, 0x00D0DF, 0x73EDFF, 0x73EDFF, 0x73EEFF,
+                       0x72EEFF, 0x70EFFF, 0x6EEFFF, 0x330600, 0x301517, 0x212A2D, 0x00474B, 0x006469, 0x007C82, 0x363033, 0x333236,
+                       0x263C41, 0x005056, 0x006A70, 0x008187, 0x415F66, 0x3F6068, 0x35656D, 0x146D76, 0x007F87, 0x009099, 0x518F9A,
+                       0x4F909A, 0x49929D, 0x3997A3, 0x00A0AC, 0x00ABB7, 0x64BFD7, 0x63BFCD, 0x5EC1CF, 0x54C4D3, 0x3ECAD9, 0x00D1E0,
+                       0x7AEDFF, 0x7AEDFF, 0x79EEFF, 0x78EEFF, 0x76EFFF, 0x74EFFF, 0x660B00, 0x651615, 0x602B2D, 0x563F44, 0x42545B,
+                       0x006B73, 0x673033, 0x663336, 0x623D41, 0x584C51, 0x445D64, 0x007179, 0x6C5F66, 0x6B6067, 0x67656C, 0x5E6D75,
+                       0x4D7982, 0x228791, 0x758F9A, 0x74909A, 0x71929D, 0x6997A3, 0x5A9FAB, 0x3EA9B6, 0x82BECD, 0x81BFCD, 0x7EC1CF,
+                       0x77C4D3, 0x6BCAD9, 0x57D1E1, 0x92EDFF, 0x92EDFF, 0x90EEFF, 0x8EEEFF, 0x8BEFFF, 0x88EFFF, 0x991100, 0x981612,
+                       0x962B2C, 0x904044, 0x87555B, 0x796A71, 0x9A3032, 0x993335, 0x963D40, 0x914C51, 0x885D64, 0x7A7078, 0x9D5F66,
+                       0x9C6067, 0x9A656C, 0x946D75, 0x8C7982, 0x7E8791, 0xA28F99, 0xA2909A, 0x9F929D, 0x9A97A3, 0x929FAB, 0x86A9B6,
+                       0xABBECD, 0xAABFCD, 0xA8C1CF, 0xA3C4D3, 0x9CCAD9, 0x91D1E1, 0xB6EDFF, 0xB5EDFF, 0xB4EEFF, 0xB0EEFF, 0xACEFFF,
+                       0xA6EFFF, 0xCC1600, 0xCB170B, 0xCA2B2B, 0xC64043, 0xC0555A, 0xB76A71, 0xCC3030, 0xCC3334, 0xCA3D3F, 0xC64C50,
+                       0xC15E64, 0xB87178, 0xCF5F65, 0xCE6067, 0xCC656C, 0xC96E75, 0xC37982, 0xBB8791, 0xD38F99, 0xD2909A, 0xD0929D,
+                       0xCD98A2, 0xC79FAB, 0xBFA9B6, 0xD9BECC, 0xD8BFCD, 0xD7C1CF, 0xD3C4D3, 0xCECAD9, 0xC6D1E1, 0xE0EEFF, 0xE0EEFF,
+                       0xDDEEFF, 0xD9EEFF, 0xD3EFFF, 0xCBEFFF, 0xFE1C00, 0xFE1A00, 0xFD2B28, 0xFA4042, 0xF6555A, 0xF06A71, 0xFF3331,
+                       0xFF3332, 0xFE3D3E, 0xFB4C4F, 0xF75E63, 0xF07178, 0xFF6569, 0xFF656A, 0xFF666C, 0xFD6E74, 0xF87981, 0xF28791,
+                       0xFF949C, 0xFF949D, 0xFF959E, 0xFF99A2, 0xFC9FAA, 0xF6A9B5, 0xFFBECA, 0xFFBFCA, 0xFFC0CD, 0xFFC4D1, 0xFFCAD8,
+                       0xFBD1E1, 0xFFE4F2, 0xFFE5F3, 0xFFE6F5, 0xFFEAF9, 0xFDEFFF, 0xF4F0FF>                                          csFPwebSafeTritanoptia;          
+      /** @class csFPwebSafeProtanopiaAlt
+          @ingroup cs
+          @extends csFP_tpl
+          The "web safe" color pallet of 216 colors as seen by someone with Protanopia.
+          For more about web safe colors, see mjr::colorTpl::csFPwebSafeNormalVision. Also seemjr::colorTpl::csFPwebSafeProtanopia. */
+      typedef csFP_tpl<0x000000, 0x000E33, 0x001D66, 0x002B99, 0x003ACC, 0x0048FF, 0x422F00, 0x303133, 0x003566, 0x003D99, 0x0047CC,
+                       0x0053FF, 0x845D00, 0x7E5E33, 0x606266, 0x266699, 0x006BCC, 0x0072FF, 0xC68C00, 0xC38D33, 0xB38F66, 0x909399,
+                       0x6896CC, 0x009BFF, 0xFFBB00, 0xFFBB32, 0xFCBD66, 0xE6C099, 0xC0C4CC, 0x9DC7FF, 0xFFE900, 0xFFEA31, 0xFFEB65,
+                       0xFFED99, 0xFFF1CC, 0xF0F5FF, 0x1A1202, 0x001633, 0x002166, 0x002E99, 0x003BCC, 0x0049FF, 0x453100, 0x333333,
+                       0x003766, 0x003F99, 0x0048CC, 0x0053FF, 0x855E00, 0x7F5F33, 0x616366, 0x2A6699, 0x006CCC, 0x0072FF, 0xC78C00,
+                       0xC38D33, 0xB48F66, 0x919499, 0x6997CC, 0x009BFF, 0xFFBB00, 0xFFBB32, 0xFCBD66, 0xE6C099, 0xC0C5CC, 0x9DC8FF,
+                       0xFFEA00, 0xFFEA31, 0xFFEB65, 0xFFED99, 0xFFF1CC, 0xF0F6FF, 0x332405, 0x1D2733, 0x002D66, 0x003699, 0x0042CC,
+                       0x004EFF, 0x4F3804, 0x413A33, 0x003E66, 0x004499, 0x004DCC, 0x0057FF, 0x8A6100, 0x846233, 0x666666, 0x376999,
+                       0x006ECC, 0x0075FF, 0xC98E00, 0xC68F33, 0xB79166, 0x939599, 0x6E99CC, 0x009DFF, 0xFFBC00, 0xFFBD32, 0xFEBE66,
+                       0xE8C199, 0xC2C6CC, 0xA0C9FF, 0xFFEA00, 0xFFEB32, 0xFFEC65, 0xFFEE99, 0xFFF2CC, 0xF2F6FF, 0x4D3607, 0x3E3833,
+                       0x003C66, 0x004399, 0x004CCC, 0x0057FF, 0x604407, 0x564533, 0x2E4966, 0x004E99, 0x0056CC, 0x005FFF, 0x926703,
+                       0x8D6833, 0x726C66, 0x496F99, 0x0074CC, 0x007AFF, 0xCE9200, 0xCB9233, 0xBD9566, 0x999999, 0x769CCC, 0x00A0FF,
+                       0xFFBF00, 0xFFBF32, 0xFFC166, 0xEDC499, 0xC6C8CC, 0xA5CBFF, 0xFFEC00, 0xFFED32, 0xFFEE66, 0xFFF099, 0xFFF4CC,
+                       0xF4F8FF, 0x66490A, 0x5E4A33, 0x3A4E66, 0x005299, 0x0059CC, 0x0062FF, 0x745209, 0x6D5333, 0x4D5766, 0x005B99,
+                       0x0061CC, 0x0069FF, 0x9E7008, 0x9A7133, 0x837466, 0x5E7899, 0x007CCC, 0x0081FF, 0xD69700, 0xD39833, 0xC59A66,
+                       0xA59E99, 0x82A1CC, 0x16A5FF, 0xFFC300, 0xFFC333, 0xFFC466, 0xF3C799, 0xCCCCCC, 0xACCFFF, 0xFFEF00, 0xFFEF32,
+                       0xFFF166, 0xFFF399, 0xFFF6CC, 0xF9FBFF, 0x805B0C, 0x7A5C34, 0x5C6066, 0x006399, 0x0069CC, 0x0070FF, 0x8A620C,
+                       0x856334, 0x676766, 0x396A99, 0x006FCC, 0x0076FF, 0xAE7B0B, 0xAA7C34, 0x967E66, 0x738299, 0x2786CC, 0x008BFF,
+                       0xE19F08, 0xDE9F33, 0xD1A166, 0xB3A599, 0x90A9CC, 0x4FACFF, 0xFFC800, 0xFFC833, 0xFFCA66, 0xFCCC99, 0xD7D1CC,
+                       0xB7D4FF, 0xFFF300, 0xFFF332, 0xFFF466, 0xFFF799, 0xFFFACC, 0xFFFFFF>                                          csFPwebSafeProtanopiaAlt;
+      /** @class csFPwebSafeDeutanopiaAlt
+          @ingroup cs
+          @extends csFP_tpl
+          The "web safe" color pallet of 216 colors as seen by someone with Deutanopia.
+          For more about web safe colors, see mjr::colorTpl::csFPwebSafeNormalVision. Also seemjr::colorTpl::csFPwebSafeDeutanopia. */
+      typedef csFP_tpl<0x000000, 0x001433, 0x002866, 0x003C99, 0x0050CB, 0x0064FE, 0x3A2A0B, 0x2C2F33, 0x003866, 0x004699, 0x0057CB,
+                       0x0069FE, 0x755316, 0x6F5635, 0x585D67, 0x226599, 0x0070CC, 0x007EFF, 0xAF7D20, 0xAC7E39, 0x9E8468, 0x848C9A,
+                       0x5F93CC, 0x009DFF, 0xEAA72B, 0xE8A83F, 0xDFAB6B, 0xCBB29B, 0xAFBBCD, 0x8FC2FF, 0xFFD036, 0xFFD146, 0xFFD46E,
+                       0xFFD99D, 0xF7E1CE, 0xDBE9FF, 0x231800, 0x001F33, 0x002D66, 0x003F99, 0x0052CB, 0x0065FE, 0x412E09, 0x333333,
+                       0x003C66, 0x004999, 0x0059CB, 0x006BFE, 0x775515, 0x725735, 0x5B5F66, 0x2C6799, 0x0072CC, 0x007FFE, 0xB17E20,
+                       0xAE7F39, 0xA08568, 0x858D9A, 0x6294CC, 0x009EFF, 0xEBA72B, 0xE9A83F, 0xE0AC6B, 0xCCB39B, 0xB0BBCD, 0x91C2FF,
+                       0xFFD136, 0xFFD246, 0xFFD46E, 0xFFDA9D, 0xF8E2CE, 0xDCEAFF, 0x453000, 0x393532, 0x003E65, 0x004B98, 0x005ACB,
+                       0x006CFE, 0x563C00, 0x4D4032, 0x2C4865, 0x005398, 0x0061CB, 0x0071FE, 0x825C11, 0x7D5E34, 0x666666, 0x446D99,
+                       0x0077CC, 0x0084FE, 0xB7821E, 0xB48338, 0xA78968, 0x8C9199, 0x6C98CC, 0x00A1FF, 0xEFAA2A, 0xEDAB3E, 0xE4AF6A,
+                       0xD2B69B, 0xB5BECD, 0x97C5FF, 0xFFD335, 0xFFD445, 0xFFD66E, 0xFFDC9D, 0xFCE4CE, 0xE0ECFF, 0x684900, 0x624B2F,
+                       0x485364, 0x005C98, 0x0069CB, 0x0077FE, 0x725000, 0x6D5230, 0x545A64, 0x106398, 0x006ECB, 0x007CFE, 0x946800,
+                       0x906A32, 0x7E7165, 0x617898, 0x0081CB, 0x008DFE, 0xC38A1A, 0xC08B37, 0xB49067, 0x999999, 0x7E9FCC, 0x38A8FF,
+                       0xF7B027, 0xF5B13D, 0xEDB46A, 0xDBBB9B, 0xBEC4CD, 0xA3CAFF, 0xFFD733, 0xFFD844, 0xFFDA6D, 0xFFE09D, 0xFFE7CE,
+                       0xE7F0FF, 0x8B6100, 0x87632C, 0x736A63, 0x537297, 0x007BCA, 0x0087FE, 0x926600, 0x8E682C, 0x7B6F63, 0x5E7697,
+                       0x007FCA, 0x008BFE, 0xAC7900, 0xA97A2F, 0x9A8064, 0x7F8897, 0x5790CB, 0x009AFE, 0xD4960E, 0xD19734, 0xC79B66,
+                       0xB0A398, 0x94ABCB, 0x68B2FE, 0xFFB822, 0xFFB93A, 0xFABC68, 0xEAC39A, 0xCCCCCC, 0xB3D2FF, 0xFFDE30, 0xFFDE42,
+                       0xFFE16C, 0xFFE69C, 0xFFEDCD, 0xF1F6FF, 0xAE7900, 0xAB7A26, 0x9D8061, 0x818996, 0x5B90CA, 0x009AFD, 0xB37D00,
+                       0xB07E27, 0xA38461, 0x878C96, 0x6494CA, 0x009DFD, 0xC78C00, 0xC58D2A, 0xB99162, 0x9F9A96, 0x83A1CA, 0x47AAFD,
+                       0xE9A400, 0xE7A52F, 0xDEA964, 0xCAB097, 0xAEB9CA, 0x8DC0FE, 0xFFC319, 0xFFC436, 0xFFC767, 0xFDCD99, 0xE2D6CB,
+                       0xC8DDFE, 0xFFE62B, 0xFFE73F, 0xFFE96B, 0xFFEE9B, 0xFFF5CD, 0xFFFFFF>                                          csFPwebSafeDeutanopiaAlt;
+      /** @class csFPwebSafeTritanoptiaAlt
+          @ingroup cs
+          @extends csFP_tpl
+          The "web safe" color pallet of 216 colors as seen by someone with Tritanoptia.
+          For more about web safe colors, see mjr::colorTpl::csFPwebSafeNormalVision. Also seemjr::colorTpl::csFPwebSafeTritanoptia. */
+      typedef csFP_tpl<0x000000, 0x00191E, 0x00323D, 0x004B5B, 0x00647A, 0x007C98, 0x202E31, 0x113237, 0x00404A, 0x005463, 0x006A7F,
+                       0x00819C, 0x415C61, 0x3C5D63, 0x21646D, 0x00707E, 0x008093, 0x0093AC, 0x618A92, 0x5F8B93, 0x548F99, 0x3296A4,
+                       0x00A1B4, 0x00AFC7, 0x82B8C2, 0x80B8C3, 0x79BBC7, 0x69C0CF, 0x42C8DA, 0x00D3EA, 0xA2E6F3, 0xA1E6F3, 0x9CE8F6,
+                       0x91ECFC, 0x7DF2FF, 0x53FAFF, 0x340010, 0x2C1A1C, 0x00333A, 0x004B5A, 0x006479, 0x007D98, 0x392E2F, 0x333333,
+                       0x004147, 0x005462, 0x006A7E, 0x00819C, 0x4D5C5F, 0x4A5E62, 0x39646C, 0x00707D, 0x008093, 0x0093AB, 0x698A91,
+                       0x678B92, 0x5D8F98, 0x4296A3, 0x00A1B3, 0x00AFC6, 0x87B8C1, 0x85B8C2, 0x7FBBC6, 0x70C0CE, 0x4FC8DA, 0x00D3E9,
+                       0xA6E6F2, 0xA5E6F3, 0xA0E8F6, 0x95ECFC, 0x82F2FF, 0x5CFAFF, 0x670021, 0x651527, 0x583338, 0x364E52, 0x006674,
+                       0x007E94, 0x692C35, 0x673139, 0x5B4244, 0x3C565B, 0x006C7A, 0x008298, 0x725C5E, 0x705E60, 0x666666, 0x507278,
+                       0x00818F, 0x0094A8, 0x838B8D, 0x818C8E, 0x7B9094, 0x6B97A0, 0x46A2B0, 0x00B0C4, 0x9AB8BF, 0x99B9C0, 0x94BCC4,
+                       0x88C1CC, 0x71C9D8, 0x3CD4E7, 0xB5E6F0, 0xB4E7F1, 0xB0E9F4, 0xA7ECFA, 0x97F3FF, 0x7AFBFF, 0x9B0031, 0x990035,
+                       0x933041, 0x854D54, 0x686969, 0x1C808C, 0x9C293F, 0x9A2E42, 0x943F4C, 0x86565B, 0x6B6E6F, 0x288591, 0xA15B63,
+                       0xA05D65, 0x9A656A, 0x8D7275, 0x758387, 0x4496A2, 0xAC8B8E, 0xAA8C8F, 0xA59092, 0x999999, 0x86A4AA, 0x63B2BF,
+                       0xBABABA, 0xB9BABB, 0xB5BDBF, 0xADC2C7, 0x9DCAD3, 0x83D5E3, 0xD0E7EC, 0xCFE8ED, 0xCBEAF0, 0xC4EDF6, 0xB7F3FF,
+                       0xA3FCFF, 0xCE0042, 0xCD0044, 0xC92A4E, 0xC04A5D, 0xB1676F, 0x978284, 0xCF214C, 0xCE284E, 0xCA3C56, 0xC15463,
+                       0xB26D75, 0x988788, 0xD3596B, 0xD25B6C, 0xCE6371, 0xC5717B, 0xB68388, 0x9E9899, 0xDA8A92, 0xD98B93, 0xD58F97,
+                       0xCD989D, 0xBFA5A7, 0xAAB4B6, 0xE5B9BD, 0xE4BABE, 0xE0BDC0, 0xD9C3C5, 0xCCCCCC, 0xBBD6DD, 0xF3E8E9, 0xF2E9E9,
+                       0xEFEBEB, 0xE9EFF0, 0xDFF5FA, 0xD0FDFF, 0xFF0052, 0xFF0054, 0xFE205B, 0xF84668, 0xED6478, 0xDD818B, 0xFF095A,
+                       0xFF1B5C, 0xFF3662, 0xF8506E, 0xEE6B7D, 0xDE858F, 0xFF5674, 0xFF5875, 0xFF607A, 0xFB6F83, 0xF1818F, 0xE1979E,
+                       0xFF8898, 0xFF8999, 0xFF8E9C, 0xFF96A3, 0xF7A3AC, 0xE8B3B8, 0xFFB8C1, 0xFFB9C2, 0xFFBCC4, 0xFFC2C9, 0xFFCBD0,
+                       0xF2D7D9, 0xFFE7EC, 0xFFE8ED, 0xFFEAEE, 0xFFEFF2, 0xFFF6F7, 0xFFFFFF>                                          csFPwebSafeTritanoptiaAlt;
+      //@}
+
+      /** Template for Color Brewer 2 variable sized pallets. */
+      template<csIntType mx, uint32_t...colors>
+      class csCB_tpl {
+        public:
+          constexpr static csIntType minNc = 3;
+          constexpr static csIntType maxNc = mx;
+          static colorTpl&  c(colorRefType aColor, csIntType Nc, csIntType csIdx) { csIntType b=std::clamp(Nc, minNc, maxNc), i=numberWrap(csIdx, b-1); return aColor.setRGBfromLogPackIntARGB(d[b*(b-1)/2-3+i]); }
+          static colorTpl   c(                     csIntType Nc, csIntType csIdx) { colorTpl tmp; return c(tmp, Nc, csIdx);                                                                       }
+        private:
+          constexpr static uint32_t d[] = { colors... };
+      };
+
+      /** @name ColorBrewer2 Color Schemes */
+      //@{
+      /** @class csCBSpectral
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "Spectral" color scheme of 3 to 11 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<11,
+                           0xFC8D59, 0xFFFFBF, 0x99D594,
+                           0xD7191C, 0xFDAE61, 0xABDDA4, 0x2B83BA,
+                           0xD7191C, 0xFDAE61, 0xFFFFBF, 0xABDDA4, 0x2B83BA,
+                           0xD53E4F, 0xFC8D59, 0xFEE08B, 0xE6F598, 0x99D594, 0x3288BD,
+                           0xD53E4F, 0xFC8D59, 0xFEE08B, 0xFFFFBF, 0xE6F598, 0x99D594, 0x3288BD,
+                           0xD53E4F, 0xF46D43, 0xFDAE61, 0xFEE08B, 0xE6F598, 0xABDDA4, 0x66C2A5, 0x3288BD,
+                           0xD53E4F, 0xF46D43, 0xFDAE61, 0xFEE08B, 0xFFFFBF, 0xE6F598, 0xABDDA4, 0x66C2A5, 0x3288BD,
+                           0x9E0142, 0xD53E4F, 0xF46D43, 0xFDAE61, 0xFEE08B, 0xE6F598, 0xABDDA4, 0x66C2A5, 0x3288BD, 0x5E4FA2,
+                           0x9E0142, 0xD53E4F, 0xF46D43, 0xFDAE61, 0xFEE08B, 0xFFFFBF, 0xE6F598, 0xABDDA4, 0x66C2A5, 0x3288BD, 0x5E4FA2> csCBSpectral;
+      /** @class csCBRdYlGn
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "RdYlGn" color scheme of 3 to 11 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<11,
+                           0xFC8D59, 0xFFFFBF, 0x91CF60,
+                           0xD7191C, 0xFDAE61, 0xA6D96A, 0x1A9641,
+                           0xD7191C, 0xFDAE61, 0xFFFFBF, 0xA6D96A, 0x1A9641,
+                           0xD73027, 0xFC8D59, 0xFEE08B, 0xD9EF8B, 0x91CF60, 0x1A9850,
+                           0xD73027, 0xFC8D59, 0xFEE08B, 0xFFFFBF, 0xD9EF8B, 0x91CF60, 0x1A9850,
+                           0xD73027, 0xF46D43, 0xFDAE61, 0xFEE08B, 0xD9EF8B, 0xA6D96A, 0x66BD63, 0x1A9850,
+                           0xD73027, 0xF46D43, 0xFDAE61, 0xFEE08B, 0xFFFFBF, 0xD9EF8B, 0xA6D96A, 0x66BD63, 0x1A9850,
+                           0xA50026, 0xD73027, 0xF46D43, 0xFDAE61, 0xFEE08B, 0xD9EF8B, 0xA6D96A, 0x66BD63, 0x1A9850, 0x006837,
+                           0xA50026, 0xD73027, 0xF46D43, 0xFDAE61, 0xFEE08B, 0xFFFFBF, 0xD9EF8B, 0xA6D96A, 0x66BD63, 0x1A9850, 0x006837> csCBRdYlGn;
+      /** @class csCBRdBu
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "RdBu" color scheme of 3 to 11 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<11,
+                           0xEF8A62, 0xF7F7F7, 0x67A9CF,
+                           0xCA0020, 0xF4A582, 0x92C5DE, 0x0571B0,
+                           0xCA0020, 0xF4A582, 0xF7F7F7, 0x92C5DE, 0x0571B0,
+                           0xB2182B, 0xEF8A62, 0xFDDBC7, 0xD1E5F0, 0x67A9CF, 0x2166AC,
+                           0xB2182B, 0xEF8A62, 0xFDDBC7, 0xF7F7F7, 0xD1E5F0, 0x67A9CF, 0x2166AC,
+                           0xB2182B, 0xD6604D, 0xF4A582, 0xFDDBC7, 0xD1E5F0, 0x92C5DE, 0x4393C3, 0x2166AC,
+                           0xB2182B, 0xD6604D, 0xF4A582, 0xFDDBC7, 0xF7F7F7, 0xD1E5F0, 0x92C5DE, 0x4393C3, 0x2166AC,
+                           0x67001F, 0xB2182B, 0xD6604D, 0xF4A582, 0xFDDBC7, 0xD1E5F0, 0x92C5DE, 0x4393C3, 0x2166AC, 0x053061,
+                           0x67001F, 0xB2182B, 0xD6604D, 0xF4A582, 0xFDDBC7, 0xF7F7F7, 0xD1E5F0, 0x92C5DE, 0x4393C3, 0x2166AC, 0x053061> csCBRdBu;
+      /** @class csCBPiYG
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "PiYG" color scheme of 3 to 11 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<11,
+                           0xE9A3C9, 0xF7F7F7, 0xA1D76A,
+                           0xD01C8B, 0xF1B6DA, 0xB8E186, 0x4DAC26,
+                           0xD01C8B, 0xF1B6DA, 0xF7F7F7, 0xB8E186, 0x4DAC26,
+                           0xC51B7D, 0xE9A3C9, 0xFDE0EF, 0xE6F5D0, 0xA1D76A, 0x4D9221,
+                           0xC51B7D, 0xE9A3C9, 0xFDE0EF, 0xF7F7F7, 0xE6F5D0, 0xA1D76A, 0x4D9221,
+                           0xC51B7D, 0xDE77AE, 0xF1B6DA, 0xFDE0EF, 0xE6F5D0, 0xB8E186, 0x7FBC41, 0x4D9221,
+                           0xC51B7D, 0xDE77AE, 0xF1B6DA, 0xFDE0EF, 0xF7F7F7, 0xE6F5D0, 0xB8E186, 0x7FBC41, 0x4D9221,
+                           0x8E0152, 0xC51B7D, 0xDE77AE, 0xF1B6DA, 0xFDE0EF, 0xE6F5D0, 0xB8E186, 0x7FBC41, 0x4D9221, 0x276419,
+                           0x8E0152, 0xC51B7D, 0xDE77AE, 0xF1B6DA, 0xFDE0EF, 0xF7F7F7, 0xE6F5D0, 0xB8E186, 0x7FBC41, 0x4D9221, 0x276419> csCBPiYG;
+      /** @class csCBPRGn
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "PRGn" color scheme of 3 to 11 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<11,
+                           0xAF8DC3, 0xF7F7F7, 0x7FBF7B,
+                           0x7B3294, 0xC2A5CF, 0xA6DBA0, 0x008837,
+                           0x7B3294, 0xC2A5CF, 0xF7F7F7, 0xA6DBA0, 0x008837,
+                           0x762A83, 0xAF8DC3, 0xE7D4E8, 0xD9F0D3, 0x7FBF7B, 0x1B7837,
+                           0x762A83, 0xAF8DC3, 0xE7D4E8, 0xF7F7F7, 0xD9F0D3, 0x7FBF7B, 0x1B7837,
+                           0x762A83, 0x9970AB, 0xC2A5CF, 0xE7D4E8, 0xD9F0D3, 0xA6DBA0, 0x5AAE61, 0x1B7837,
+                           0x762A83, 0x9970AB, 0xC2A5CF, 0xE7D4E8, 0xF7F7F7, 0xD9F0D3, 0xA6DBA0, 0x5AAE61, 0x1B7837,
+                           0x40004B, 0x762A83, 0x9970AB, 0xC2A5CF, 0xE7D4E8, 0xD9F0D3, 0xA6DBA0, 0x5AAE61, 0x1B7837, 0x00441B,
+                           0x40004B, 0x762A83, 0x9970AB, 0xC2A5CF, 0xE7D4E8, 0xF7F7F7, 0xD9F0D3, 0xA6DBA0, 0x5AAE61, 0x1B7837, 0x00441B> csCBPRGn;
+      /** @class csCBRdYlBu
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "RdYlBu" color scheme of 3 to 11 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<11,
+                           0xFC8D59, 0xFFFFBF, 0x91BFDB,
+                           0xD7191C, 0xFDAE61, 0xABD9E9, 0x2C7BB6,
+                           0xD7191C, 0xFDAE61, 0xFFFFBF, 0xABD9E9, 0x2C7BB6,
+                           0xD73027, 0xFC8D59, 0xFEE090, 0xE0F3F8, 0x91BFDB, 0x4575B4,
+                           0xD73027, 0xFC8D59, 0xFEE090, 0xFFFFBF, 0xE0F3F8, 0x91BFDB, 0x4575B4,
+                           0xD73027, 0xF46D43, 0xFDAE61, 0xFEE090, 0xE0F3F8, 0xABD9E9, 0x74ADD1, 0x4575B4,
+                           0xD73027, 0xF46D43, 0xFDAE61, 0xFEE090, 0xFFFFBF, 0xE0F3F8, 0xABD9E9, 0x74ADD1, 0x4575B4,
+                           0xA50026, 0xD73027, 0xF46D43, 0xFDAE61, 0xFEE090, 0xE0F3F8, 0xABD9E9, 0x74ADD1, 0x4575B4, 0x313695,
+                           0xA50026, 0xD73027, 0xF46D43, 0xFDAE61, 0xFEE090, 0xFFFFBF, 0xE0F3F8, 0xABD9E9, 0x74ADD1, 0x4575B4, 0x313695> csCBRdYlBu;
+      /** @class csCBBrBG
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "BrBG" color scheme of 3 to 11 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<11,
+                           0xD8B365, 0xF5F5F5, 0x5AB4AC,
+                           0xA6611A, 0xDFC27D, 0x80CDC1, 0x018571,
+                           0xA6611A, 0xDFC27D, 0xF5F5F5, 0x80CDC1, 0x018571,
+                           0x8C510A, 0xD8B365, 0xF6E8C3, 0xC7EAE5, 0x5AB4AC, 0x01665E,
+                           0x8C510A, 0xD8B365, 0xF6E8C3, 0xF5F5F5, 0xC7EAE5, 0x5AB4AC, 0x01665E,
+                           0x8C510A, 0xBF812D, 0xDFC27D, 0xF6E8C3, 0xC7EAE5, 0x80CDC1, 0x35978F, 0x01665E,
+                           0x8C510A, 0xBF812D, 0xDFC27D, 0xF6E8C3, 0xF5F5F5, 0xC7EAE5, 0x80CDC1, 0x35978F, 0x01665E,
+                           0x543005, 0x8C510A, 0xBF812D, 0xDFC27D, 0xF6E8C3, 0xC7EAE5, 0x80CDC1, 0x35978F, 0x01665E, 0x003C30,
+                           0x543005, 0x8C510A, 0xBF812D, 0xDFC27D, 0xF6E8C3, 0xF5F5F5, 0xC7EAE5, 0x80CDC1, 0x35978F, 0x01665E, 0x003C30> csCBBrBG;
+      /** @class csCBRdGy
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "RdGy" color scheme of 3 to 11 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<11,
+                           0xEF8A62, 0xFFFFFF, 0x999999,
+                           0xCA0020, 0xF4A582, 0xBABABA, 0x404040,
+                           0xCA0020, 0xF4A582, 0xFFFFFF, 0xBABABA, 0x404040,
+                           0xB2182B, 0xEF8A62, 0xFDDBC7, 0xE0E0E0, 0x999999, 0x4D4D4D,
+                           0xB2182B, 0xEF8A62, 0xFDDBC7, 0xFFFFFF, 0xE0E0E0, 0x999999, 0x4D4D4D,
+                           0xB2182B, 0xD6604D, 0xF4A582, 0xFDDBC7, 0xE0E0E0, 0xBABABA, 0x878787, 0x4D4D4D,
+                           0xB2182B, 0xD6604D, 0xF4A582, 0xFDDBC7, 0xFFFFFF, 0xE0E0E0, 0xBABABA, 0x878787, 0x4D4D4D,
+                           0x67001F, 0xB2182B, 0xD6604D, 0xF4A582, 0xFDDBC7, 0xE0E0E0, 0xBABABA, 0x878787, 0x4D4D4D, 0x1A1A1A,
+                           0x67001F, 0xB2182B, 0xD6604D, 0xF4A582, 0xFDDBC7, 0xFFFFFF, 0xE0E0E0, 0xBABABA, 0x878787, 0x4D4D4D, 0x1A1A1A> csCBRdGy;
+      /** @class csCBPuOr
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "PuOr" color scheme of 3 to 11 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<11,
+                           0xF1A340, 0xF7F7F7, 0x998EC3,
+                           0xE66101, 0xFDB863, 0xB2ABD2, 0x5E3C99,
+                           0xE66101, 0xFDB863, 0xF7F7F7, 0xB2ABD2, 0x5E3C99,
+                           0xB35806, 0xF1A340, 0xFEE0B6, 0xD8DAEB, 0x998EC3, 0x542788,
+                           0xB35806, 0xF1A340, 0xFEE0B6, 0xF7F7F7, 0xD8DAEB, 0x998EC3, 0x542788,
+                           0xB35806, 0xE08214, 0xFDB863, 0xFEE0B6, 0xD8DAEB, 0xB2ABD2, 0x8073AC, 0x542788,
+                           0xB35806, 0xE08214, 0xFDB863, 0xFEE0B6, 0xF7F7F7, 0xD8DAEB, 0xB2ABD2, 0x8073AC, 0x542788,
+                           0x7F3B08, 0xB35806, 0xE08214, 0xFDB863, 0xFEE0B6, 0xD8DAEB, 0xB2ABD2, 0x8073AC, 0x542788, 0x2D004B,
+                           0x7F3B08, 0xB35806, 0xE08214, 0xFDB863, 0xFEE0B6, 0xF7F7F7, 0xD8DAEB, 0xB2ABD2, 0x8073AC, 0x542788, 0x2D004B> csCBPuOr;
+      /** @class csCBSet2
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "Set2" color scheme of 3 to 8 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<8,
+                           0x66C2A5, 0xFC8D62, 0x8DA0CB,
+                           0x66C2A5, 0xFC8D62, 0x8DA0CB, 0xE78AC3,
+                           0x66C2A5, 0xFC8D62, 0x8DA0CB, 0xE78AC3, 0xA6D854,
+                           0x66C2A5, 0xFC8D62, 0x8DA0CB, 0xE78AC3, 0xA6D854, 0xFFD92F,
+                           0x66C2A5, 0xFC8D62, 0x8DA0CB, 0xE78AC3, 0xA6D854, 0xFFD92F, 0xE5C494,
+                           0x66C2A5, 0xFC8D62, 0x8DA0CB, 0xE78AC3, 0xA6D854, 0xFFD92F, 0xE5C494, 0xB3B3B3> csCBSet2;
+      /** @class csCBAccent
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "Accent" color scheme of 3 to 8 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<8,
+                           0x7FC97F, 0xBEAED4, 0xFDC086,
+                           0x7FC97F, 0xBEAED4, 0xFDC086, 0xFFFF99,
+                           0x7FC97F, 0xBEAED4, 0xFDC086, 0xFFFF99, 0x386CB0,
+                           0x7FC97F, 0xBEAED4, 0xFDC086, 0xFFFF99, 0x386CB0, 0xF0027F,
+                           0x7FC97F, 0xBEAED4, 0xFDC086, 0xFFFF99, 0x386CB0, 0xF0027F, 0xBF5B17,
+                           0x7FC97F, 0xBEAED4, 0xFDC086, 0xFFFF99, 0x386CB0, 0xF0027F, 0xBF5B17, 0x666666> csCBAccent;
+      /** @class csCBSet1
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "Set1" color scheme of 3 to 9 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<9,
+                           0xE41A1C, 0x377EB8, 0x4DAF4A,
+                           0xE41A1C, 0x377EB8, 0x4DAF4A, 0x984EA3,
+                           0xE41A1C, 0x377EB8, 0x4DAF4A, 0x984EA3, 0xFF7F00,
+                           0xE41A1C, 0x377EB8, 0x4DAF4A, 0x984EA3, 0xFF7F00, 0xFFFF33,
+                           0xE41A1C, 0x377EB8, 0x4DAF4A, 0x984EA3, 0xFF7F00, 0xFFFF33, 0xA65628,
+                           0xE41A1C, 0x377EB8, 0x4DAF4A, 0x984EA3, 0xFF7F00, 0xFFFF33, 0xA65628, 0xF781BF,
+                           0xE41A1C, 0x377EB8, 0x4DAF4A, 0x984EA3, 0xFF7F00, 0xFFFF33, 0xA65628, 0xF781BF, 0x999999> csCBSet1;
+      /** @class csCBSet3
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "Set3" color scheme of 3 to 12 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<12,
+                           0x8DD3C7, 0xFFFFB3, 0xBEBADA,
+                           0x8DD3C7, 0xFFFFB3, 0xBEBADA, 0xFB8072,
+                           0x8DD3C7, 0xFFFFB3, 0xBEBADA, 0xFB8072, 0x80B1D3,
+                           0x8DD3C7, 0xFFFFB3, 0xBEBADA, 0xFB8072, 0x80B1D3, 0xFDB462,
+                           0x8DD3C7, 0xFFFFB3, 0xBEBADA, 0xFB8072, 0x80B1D3, 0xFDB462, 0xB3DE69,
+                           0x8DD3C7, 0xFFFFB3, 0xBEBADA, 0xFB8072, 0x80B1D3, 0xFDB462, 0xB3DE69, 0xFCCDE5,
+                           0x8DD3C7, 0xFFFFB3, 0xBEBADA, 0xFB8072, 0x80B1D3, 0xFDB462, 0xB3DE69, 0xFCCDE5, 0xD9D9D9,
+                           0x8DD3C7, 0xFFFFB3, 0xBEBADA, 0xFB8072, 0x80B1D3, 0xFDB462, 0xB3DE69, 0xFCCDE5, 0xD9D9D9, 0xBC80BD,
+                           0x8DD3C7, 0xFFFFB3, 0xBEBADA, 0xFB8072, 0x80B1D3, 0xFDB462, 0xB3DE69, 0xFCCDE5, 0xD9D9D9, 0xBC80BD, 0xCCEBC5,
+                           0x8DD3C7, 0xFFFFB3, 0xBEBADA, 0xFB8072, 0x80B1D3, 0xFDB462, 0xB3DE69, 0xFCCDE5, 0xD9D9D9, 0xBC80BD, 0xCCEBC5, 0xFFED6F> csCBSet3;
+      /** @class csCBDark2
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "Dark2" color scheme of 3 to 8 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<8,
+                           0x1B9E77, 0xD95F02, 0x7570B3,
+                           0x1B9E77, 0xD95F02, 0x7570B3, 0xE7298A,
+                           0x1B9E77, 0xD95F02, 0x7570B3, 0xE7298A, 0x66A61E,
+                           0x1B9E77, 0xD95F02, 0x7570B3, 0xE7298A, 0x66A61E, 0xE6AB02,
+                           0x1B9E77, 0xD95F02, 0x7570B3, 0xE7298A, 0x66A61E, 0xE6AB02, 0xA6761D,
+                           0x1B9E77, 0xD95F02, 0x7570B3, 0xE7298A, 0x66A61E, 0xE6AB02, 0xA6761D, 0x666666> csCBDark2;
+      /** @class csCBPaired
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "Paired" color scheme of 3 to 12 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<12,
+                           0xA6CEE3, 0x1F78B4, 0xB2DF8A,
+                           0xA6CEE3, 0x1F78B4, 0xB2DF8A, 0x33A02C,
+                           0xA6CEE3, 0x1F78B4, 0xB2DF8A, 0x33A02C, 0xFB9A99,
+                           0xA6CEE3, 0x1F78B4, 0xB2DF8A, 0x33A02C, 0xFB9A99, 0xE31A1C,
+                           0xA6CEE3, 0x1F78B4, 0xB2DF8A, 0x33A02C, 0xFB9A99, 0xE31A1C, 0xFDBF6F,
+                           0xA6CEE3, 0x1F78B4, 0xB2DF8A, 0x33A02C, 0xFB9A99, 0xE31A1C, 0xFDBF6F, 0xFF7F00,
+                           0xA6CEE3, 0x1F78B4, 0xB2DF8A, 0x33A02C, 0xFB9A99, 0xE31A1C, 0xFDBF6F, 0xFF7F00, 0xCAB2D6,
+                           0xA6CEE3, 0x1F78B4, 0xB2DF8A, 0x33A02C, 0xFB9A99, 0xE31A1C, 0xFDBF6F, 0xFF7F00, 0xCAB2D6, 0x6A3D9A,
+                           0xA6CEE3, 0x1F78B4, 0xB2DF8A, 0x33A02C, 0xFB9A99, 0xE31A1C, 0xFDBF6F, 0xFF7F00, 0xCAB2D6, 0x6A3D9A, 0xFFFF99,
+                           0xA6CEE3, 0x1F78B4, 0xB2DF8A, 0x33A02C, 0xFB9A99, 0xE31A1C, 0xFDBF6F, 0xFF7F00, 0xCAB2D6, 0x6A3D9A, 0xFFFF99, 0xB15928> csCBPaired;
+      /** @class csCBPastel2
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "Pastel2" color scheme of 3 to 8 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<8,
+                           0xB3E2CD, 0xFDCDAC, 0xCBD5E8,
+                           0xB3E2CD, 0xFDCDAC, 0xCBD5E8, 0xF4CAE4,
+                           0xB3E2CD, 0xFDCDAC, 0xCBD5E8, 0xF4CAE4, 0xE6F5C9,
+                           0xB3E2CD, 0xFDCDAC, 0xCBD5E8, 0xF4CAE4, 0xE6F5C9, 0xFFF2AE,
+                           0xB3E2CD, 0xFDCDAC, 0xCBD5E8, 0xF4CAE4, 0xE6F5C9, 0xFFF2AE, 0xF1E2CC,
+                           0xB3E2CD, 0xFDCDAC, 0xCBD5E8, 0xF4CAE4, 0xE6F5C9, 0xFFF2AE, 0xF1E2CC, 0xCCCCCC> csCBPastel2;
+      /** @class csCBPastel1
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "Pastel1" color scheme of 3 to 9 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<9,
+                           0xFBB4AE, 0xB3CDE3, 0xCCEBC5,
+                           0xFBB4AE, 0xB3CDE3, 0xCCEBC5, 0xDECBE4,
+                           0xFBB4AE, 0xB3CDE3, 0xCCEBC5, 0xDECBE4, 0xFED9A6,
+                           0xFBB4AE, 0xB3CDE3, 0xCCEBC5, 0xDECBE4, 0xFED9A6, 0xFFFFCC,
+                           0xFBB4AE, 0xB3CDE3, 0xCCEBC5, 0xDECBE4, 0xFED9A6, 0xFFFFCC, 0xE5D8BD,
+                           0xFBB4AE, 0xB3CDE3, 0xCCEBC5, 0xDECBE4, 0xFED9A6, 0xFFFFCC, 0xE5D8BD, 0xFDDAEC,
+                           0xFBB4AE, 0xB3CDE3, 0xCCEBC5, 0xDECBE4, 0xFED9A6, 0xFFFFCC, 0xE5D8BD, 0xFDDAEC, 0xF2F2F2> csCBPastel1;
+      /** @class csCBOrRd
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "RdYlGn" color scheme of 3 to 9 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<9,
+                           0xFEE8C8, 0xFDBB84, 0xE34A33,
+                           0xFEF0D9, 0xFDCC8A, 0xFC8D59, 0xD7301F,
+                           0xFEF0D9, 0xFDCC8A, 0xFC8D59, 0xE34A33, 0xB30000,
+                           0xFEF0D9, 0xFDD49E, 0xFDBB84, 0xFC8D59, 0xE34A33, 0xB30000,
+                           0xFEF0D9, 0xFDD49E, 0xFDBB84, 0xFC8D59, 0xEF6548, 0xD7301F, 0x990000,
+                           0xFFF7EC, 0xFEE8C8, 0xFDD49E, 0xFDBB84, 0xFC8D59, 0xEF6548, 0xD7301F, 0x990000,
+                           0xFFF7EC, 0xFEE8C8, 0xFDD49E, 0xFDBB84, 0xFC8D59, 0xEF6548, 0xD7301F, 0xB30000, 0x7F0000> csCBOrRd;
+      /** @class csCBPuBu
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "PuBu" color scheme of 3 to 9 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<9,
+                           0xECE7F2, 0xA6BDDB, 0x2B8CBE,
+                           0xF1EEF6, 0xBDC9E1, 0x74A9CF, 0x0570B0,
+                           0xF1EEF6, 0xBDC9E1, 0x74A9CF, 0x2B8CBE, 0x045A8D,
+                           0xF1EEF6, 0xD0D1E6, 0xA6BDDB, 0x74A9CF, 0x2B8CBE, 0x045A8D,
+                           0xF1EEF6, 0xD0D1E6, 0xA6BDDB, 0x74A9CF, 0x3690C0, 0x0570B0, 0x034E7B,
+                           0xFFF7FB, 0xECE7F2, 0xD0D1E6, 0xA6BDDB, 0x74A9CF, 0x3690C0, 0x0570B0, 0x034E7B,
+                           0xFFF7FB, 0xECE7F2, 0xD0D1E6, 0xA6BDDB, 0x74A9CF, 0x3690C0, 0x0570B0, 0x045A8D, 0x023858> csCBPuBu;
+      /** @class csCBBuPu
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "CbBuPu" color scheme of 3 to 9 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<9,
+                           0xE0ECF4, 0x9EBCDA, 0x8856A7,
+                           0xEDF8FB, 0xB3CDE3, 0x8C96C6, 0x88419D,
+                           0xEDF8FB, 0xB3CDE3, 0x8C96C6, 0x8856A7, 0x810F7C,
+                           0xEDF8FB, 0xBFD3E6, 0x9EBCDA, 0x8C96C6, 0x8856A7, 0x810F7C,
+                           0xEDF8FB, 0xBFD3E6, 0x9EBCDA, 0x8C96C6, 0x8C6BB1, 0x88419D, 0x6E016B,
+                           0xF7FCFD, 0xE0ECF4, 0xBFD3E6, 0x9EBCDA, 0x8C96C6, 0x8C6BB1, 0x88419D, 0x6E016B,
+                           0xF7FCFD, 0xE0ECF4, 0xBFD3E6, 0x9EBCDA, 0x8C96C6, 0x8C6BB1, 0x88419D, 0x810F7C, 0x4D004B> csCBBuPu;
+      /** @class csCBOranges
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "Oranges" color scheme of 3 to 9 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<9,
+                           0xFEE6CE, 0xFDAE6B, 0xE6550D,
+                           0xFEEDDE, 0xFDBE85, 0xFD8D3C, 0xD94701,
+                           0xFEEDDE, 0xFDBE85, 0xFD8D3C, 0xE6550D, 0xA63603,
+                           0xFEEDDE, 0xFDD0A2, 0xFDAE6B, 0xFD8D3C, 0xE6550D, 0xA63603,
+                           0xFEEDDE, 0xFDD0A2, 0xFDAE6B, 0xFD8D3C, 0xF16913, 0xD94801, 0x8C2D04,
+                           0xFFF5EB, 0xFEE6CE, 0xFDD0A2, 0xFDAE6B, 0xFD8D3C, 0xF16913, 0xD94801, 0x8C2D04,
+                           0xFFF5EB, 0xFEE6CE, 0xFDD0A2, 0xFDAE6B, 0xFD8D3C, 0xF16913, 0xD94801, 0xA63603, 0x7F2704> csCBOranges;
+      /** @class csCBBuGn
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "BuGn" color scheme of 3 to 9 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<9,
+                           0xE5F5F9, 0x99D8C9, 0x2CA25F,
+                           0xEDF8FB, 0xB2E2E2, 0x66C2A4, 0x238B45,
+                           0xEDF8FB, 0xB2E2E2, 0x66C2A4, 0x2CA25F, 0x006D2C,
+                           0xEDF8FB, 0xCCECE6, 0x99D8C9, 0x66C2A4, 0x2CA25F, 0x006D2C,
+                           0xEDF8FB, 0xCCECE6, 0x99D8C9, 0x66C2A4, 0x41AE76, 0x238B45, 0x005824,
+                           0xF7FCFD, 0xE5F5F9, 0xCCECE6, 0x99D8C9, 0x66C2A4, 0x41AE76, 0x238B45, 0x005824,
+                           0xF7FCFD, 0xE5F5F9, 0xCCECE6, 0x99D8C9, 0x66C2A4, 0x41AE76, 0x238B45, 0x006D2C, 0x00441B> csCBBuGn;
+      /** @class csCBYlOrBr
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "YlOrBr" color scheme of 3 to 9 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<9,
+                           0xFFF7BC, 0xFEC44F, 0xD95F0E,
+                           0xFFFFD4, 0xFED98E, 0xFE9929, 0xCC4C02,
+                           0xFFFFD4, 0xFED98E, 0xFE9929, 0xD95F0E, 0x993404,
+                           0xFFFFD4, 0xFEE391, 0xFEC44F, 0xFE9929, 0xD95F0E, 0x993404,
+                           0xFFFFD4, 0xFEE391, 0xFEC44F, 0xFE9929, 0xEC7014, 0xCC4C02, 0x8C2D04,
+                           0xFFFFE5, 0xFFF7BC, 0xFEE391, 0xFEC44F, 0xFE9929, 0xEC7014, 0xCC4C02, 0x8C2D04,
+                           0xFFFFE5, 0xFFF7BC, 0xFEE391, 0xFEC44F, 0xFE9929, 0xEC7014, 0xCC4C02, 0x993404, 0x662506> csCBYlOrBr;
+      /** @class csCBYlGn
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "csCBYlGn" color scheme of 3 to 9 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<9,
+                           0xF7FCB9, 0xADDD8E, 0x31A354,
+                           0xFFFFCC, 0xC2E699, 0x78C679, 0x238443,
+                           0xFFFFCC, 0xC2E699, 0x78C679, 0x31A354, 0x006837,
+                           0xFFFFCC, 0xD9F0A3, 0xADDD8E, 0x78C679, 0x31A354, 0x006837,
+                           0xFFFFCC, 0xD9F0A3, 0xADDD8E, 0x78C679, 0x41AB5D, 0x238443, 0x005A32,
+                           0xFFFFE5, 0xF7FCB9, 0xD9F0A3, 0xADDD8E, 0x78C679, 0x41AB5D, 0x238443, 0x005A32,
+                           0xFFFFE5, 0xF7FCB9, 0xD9F0A3, 0xADDD8E, 0x78C679, 0x41AB5D, 0x238443, 0x006837, 0x004529> csCBYlGn;
+      /** @class csCBReds
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "Reds" color scheme of 3 to 9 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<9,
+                           0xFEE0D2, 0xFC9272, 0xDE2D26,
+                           0xFEE5D9, 0xFCAE91, 0xFB6A4A, 0xCB181D,
+                           0xFEE5D9, 0xFCAE91, 0xFB6A4A, 0xDE2D26, 0xA50F15,
+                           0xFEE5D9, 0xFCBBA1, 0xFC9272, 0xFB6A4A, 0xDE2D26, 0xA50F15,
+                           0xFEE5D9, 0xFCBBA1, 0xFC9272, 0xFB6A4A, 0xEF3B2C, 0xCB181D, 0x99000D,
+                           0xFFF5F0, 0xFEE0D2, 0xFCBBA1, 0xFC9272, 0xFB6A4A, 0xEF3B2C, 0xCB181D, 0x99000D,
+                           0xFFF5F0, 0xFEE0D2, 0xFCBBA1, 0xFC9272, 0xFB6A4A, 0xEF3B2C, 0xCB181D, 0xA50F15, 0x67000D> csCBReds;
+      /** @class csCBRdPu
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "RdPu" color scheme of 3 to 9 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<9,
+                           0xFDE0DD, 0xFA9FB5, 0xC51B8A,
+                           0xFEEBE2, 0xFBB4B9, 0xF768A1, 0xAE017E,
+                           0xFEEBE2, 0xFBB4B9, 0xF768A1, 0xC51B8A, 0x7A0177,
+                           0xFEEBE2, 0xFCC5C0, 0xFA9FB5, 0xF768A1, 0xC51B8A, 0x7A0177,
+                           0xFEEBE2, 0xFCC5C0, 0xFA9FB5, 0xF768A1, 0xDD3497, 0xAE017E, 0x7A0177,
+                           0xFFF7F3, 0xFDE0DD, 0xFCC5C0, 0xFA9FB5, 0xF768A1, 0xDD3497, 0xAE017E, 0x7A0177,
+                           0xFFF7F3, 0xFDE0DD, 0xFCC5C0, 0xFA9FB5, 0xF768A1, 0xDD3497, 0xAE017E, 0x7A0177, 0x49006A> csCBRdPu;
+      /** @class csCBGreens
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "Greens" color scheme of 3 to 9 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<9,
+                           0xE5F5E0, 0xA1D99B, 0x31A354,
+                           0xEDF8E9, 0xBAE4B3, 0x74C476, 0x238B45,
+                           0xEDF8E9, 0xBAE4B3, 0x74C476, 0x31A354, 0x006D2C,
+                           0xEDF8E9, 0xC7E9C0, 0xA1D99B, 0x74C476, 0x31A354, 0x006D2C,
+                           0xEDF8E9, 0xC7E9C0, 0xA1D99B, 0x74C476, 0x41AB5D, 0x238B45, 0x005A32,
+                           0xF7FCF5, 0xE5F5E0, 0xC7E9C0, 0xA1D99B, 0x74C476, 0x41AB5D, 0x238B45, 0x005A32,
+                           0xF7FCF5, 0xE5F5E0, 0xC7E9C0, 0xA1D99B, 0x74C476, 0x41AB5D, 0x238B45, 0x006D2C, 0x00441B> csCBGreens;
+      /** @class csCBYlGnBu
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "YlGnBu" color scheme of 3 to 9 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<9,
+                           0xEDF8B1, 0x7FCDBB, 0x2C7FB8,
+                           0xFFFFCC, 0xA1DAB4, 0x41B6C4, 0x225EA8,
+                           0xFFFFCC, 0xA1DAB4, 0x41B6C4, 0x2C7FB8, 0x253494,
+                           0xFFFFCC, 0xC7E9B4, 0x7FCDBB, 0x41B6C4, 0x2C7FB8, 0x253494,
+                           0xFFFFCC, 0xC7E9B4, 0x7FCDBB, 0x41B6C4, 0x1D91C0, 0x225EA8, 0x0C2C84,
+                           0xFFFFD9, 0xEDF8B1, 0xC7E9B4, 0x7FCDBB, 0x41B6C4, 0x1D91C0, 0x225EA8, 0x0C2C84,
+                           0xFFFFD9, 0xEDF8B1, 0xC7E9B4, 0x7FCDBB, 0x41B6C4, 0x1D91C0, 0x225EA8, 0x253494, 0x081D58> csCBYlGnBu;
+      /** @class csCBPurples
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "Purples" color scheme of 3 to 9 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<9,
+                           0xEFEDF5, 0xBCBDDC, 0x756BB1,
+                           0xF2F0F7, 0xCBC9E2, 0x9E9AC8, 0x6A51A3,
+                           0xF2F0F7, 0xCBC9E2, 0x9E9AC8, 0x756BB1, 0x54278F,
+                           0xF2F0F7, 0xDADAEB, 0xBCBDDC, 0x9E9AC8, 0x756BB1, 0x54278F,
+                           0xF2F0F7, 0xDADAEB, 0xBCBDDC, 0x9E9AC8, 0x807DBA, 0x6A51A3, 0x4A1486,
+                           0xFCFBFD, 0xEFEDF5, 0xDADAEB, 0xBCBDDC, 0x9E9AC8, 0x807DBA, 0x6A51A3, 0x4A1486,
+                           0xFCFBFD, 0xEFEDF5, 0xDADAEB, 0xBCBDDC, 0x9E9AC8, 0x807DBA, 0x6A51A3, 0x54278F, 0x3F007D> csCBPurples;
+      /** @class csCBGnBu
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "GnBu" color scheme of 3 to 9 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<9,
+                           0xE0F3DB, 0xA8DDB5, 0x43A2CA,
+                           0xF0F9E8, 0xBAE4BC, 0x7BCCC4, 0x2B8CBE,
+                           0xF0F9E8, 0xBAE4BC, 0x7BCCC4, 0x43A2CA, 0x0868AC,
+                           0xF0F9E8, 0xCCEBC5, 0xA8DDB5, 0x7BCCC4, 0x43A2CA, 0x0868AC,
+                           0xF0F9E8, 0xCCEBC5, 0xA8DDB5, 0x7BCCC4, 0x4EB3D3, 0x2B8CBE, 0x08589E,
+                           0xF7FCF0, 0xE0F3DB, 0xCCEBC5, 0xA8DDB5, 0x7BCCC4, 0x4EB3D3, 0x2B8CBE, 0x08589E,
+                           0xF7FCF0, 0xE0F3DB, 0xCCEBC5, 0xA8DDB5, 0x7BCCC4, 0x4EB3D3, 0x2B8CBE, 0x0868AC, 0x084081> csCBGnBu;
+      /** @class csCBGreys
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "Greys" color scheme of 3 to 9 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<9,
+                           0xF0F0F0, 0xBDBDBD, 0x636363,
+                           0xF7F7F7, 0xCCCCCC, 0x969696, 0x525252,
+                           0xF7F7F7, 0xCCCCCC, 0x969696, 0x636363, 0x252525,
+                           0xF7F7F7, 0xD9D9D9, 0xBDBDBD, 0x969696, 0x636363, 0x252525,
+                           0xF7F7F7, 0xD9D9D9, 0xBDBDBD, 0x969696, 0x737373, 0x525252, 0x252525,
+                           0xFFFFFF, 0xF0F0F0, 0xD9D9D9, 0xBDBDBD, 0x969696, 0x737373, 0x525252, 0x252525,
+                           0xFFFFFF, 0xF0F0F0, 0xD9D9D9, 0xBDBDBD, 0x969696, 0x737373, 0x525252, 0x252525, 0x000000> csCBGreys;
+      /** @class csCBYlOrRd
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "YlOrRd" color scheme of 3 to 8 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<8,
+                           0xFFEDA0, 0xFEB24C, 0xF03B20,
+                           0xFFFFB2, 0xFECC5C, 0xFD8D3C, 0xE31A1C,
+                           0xFFFFB2, 0xFECC5C, 0xFD8D3C, 0xF03B20, 0xBD0026,
+                           0xFFFFB2, 0xFED976, 0xFEB24C, 0xFD8D3C, 0xF03B20, 0xBD0026,
+                           0xFFFFB2, 0xFED976, 0xFEB24C, 0xFD8D3C, 0xFC4E2A, 0xE31A1C, 0xB10026,
+                           0xFFFFCC, 0xFFEDA0, 0xFED976, 0xFEB24C, 0xFD8D3C, 0xFC4E2A, 0xE31A1C, 0xB10026> csCBYlOrRd;
+      /** @class csCBPuRd
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "PuRd" color scheme of 3 to 9 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<9,
+                           0xE7E1EF, 0xC994C7, 0xDD1C77,
+                           0xF1EEF6, 0xD7B5D8, 0xDF65B0, 0xCE1256,
+                           0xF1EEF6, 0xD7B5D8, 0xDF65B0, 0xDD1C77, 0x980043,
+                           0xF1EEF6, 0xD4B9DA, 0xC994C7, 0xDF65B0, 0xDD1C77, 0x980043,
+                           0xF1EEF6, 0xD4B9DA, 0xC994C7, 0xDF65B0, 0xE7298A, 0xCE1256, 0x91003F,
+                           0xF7F4F9, 0xE7E1EF, 0xD4B9DA, 0xC994C7, 0xDF65B0, 0xE7298A, 0xCE1256, 0x91003F,
+                           0xF7F4F9, 0xE7E1EF, 0xD4B9DA, 0xC994C7, 0xDF65B0, 0xE7298A, 0xCE1256, 0x980043, 0x67001F> csCBPuRd;
+      /** @class csCBBlues
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "Blues" color scheme of 3 to 9 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<9,
+                           0xDEEBF7, 0x9ECAE1, 0x3182BD,
+                           0xEFF3FF, 0xBDD7E7, 0x6BAED6, 0x2171B5,
+                           0xEFF3FF, 0xBDD7E7, 0x6BAED6, 0x3182BD, 0x08519C,
+                           0xEFF3FF, 0xC6DBEF, 0x9ECAE1, 0x6BAED6, 0x3182BD, 0x08519C,
+                           0xEFF3FF, 0xC6DBEF, 0x9ECAE1, 0x6BAED6, 0x4292C6, 0x2171B5, 0x084594,
+                           0xF7FBFF, 0xDEEBF7, 0xC6DBEF, 0x9ECAE1, 0x6BAED6, 0x4292C6, 0x2171B5, 0x084594,
+                           0xF7FBFF, 0xDEEBF7, 0xC6DBEF, 0x9ECAE1, 0x6BAED6, 0x4292C6, 0x2171B5, 0x08519C, 0x08306B> csCBBlues;
+      /** @class csCBPuBuGn
+          @ingroup cs
+          @extends csCB_tpl
+          ColorBrewer2 "PuBuGn" color scheme of 3 to 9 colors. Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30. */
+      typedef csCB_tpl<9,
+                           0xECE2F0, 0xA6BDDB, 0x1C9099,
+                           0xF6EFF7, 0xBDC9E1, 0x67A9CF, 0x02818A,
+                           0xF6EFF7, 0xBDC9E1, 0x67A9CF, 0x1C9099, 0x016C59,
+                           0xF6EFF7, 0xD0D1E6, 0xA6BDDB, 0x67A9CF, 0x1C9099, 0x016C59,
+                           0xF6EFF7, 0xD0D1E6, 0xA6BDDB, 0x67A9CF, 0x3690C0, 0x02818A, 0x016450,
+                           0xFFF7FB, 0xECE2F0, 0xD0D1E6, 0xA6BDDB, 0x67A9CF, 0x3690C0, 0x02818A, 0x016450,
+                           0xFFF7FB, 0xECE2F0, 0xD0D1E6, 0xA6BDDB, 0x67A9CF, 0x3690C0, 0x02818A, 0x016C59, 0x014636> csCBPuBuGn;
+      //@}
+
+      template <class csT> colorTpl& csSet(csIntType csIdx) { return csT::c(*this, csIdx); }
+
   };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1694,10 +2377,10 @@ namespace mjr {
     if(goodMask)
       setMaskNC(aColor.getMaskNC());
     else
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+// #pragma GCC diagnostic push
+// #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
       std::copy_n(aColor.theColor.thePartsA, numChan, theColor.thePartsA);
-#pragma GCC diagnostic pop
+// #pragma GCC diagnostic pop
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1805,41 +2488,10 @@ namespace mjr {
   template <class clrChanT, int numChan>
   inline clrChanT
   colorTpl<clrChanT, numChan>::getChanNC(int chan) const {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+// #pragma GCC diagnostic push
+// #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
     return theColor.thePartsA[chan];
-#pragma GCC diagnostic pop
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline double
-  colorTpl<clrChanT, numChan>::getC0_dbl() const {
-    return convertChanToDouble(getC0());
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline double
-  colorTpl<clrChanT, numChan>::getC1_dbl() const {
-    /* Requires: Inherits numChan>1 from getC1. */
-    return convertChanToDouble(getC1());
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline double
-  colorTpl<clrChanT, numChan>::getC2_dbl() const {
-    /* Requires: Inherits numChan>2 from getC2. */
-    return convertChanToDouble(getC2());
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline double
-  colorTpl<clrChanT, numChan>::getC3_dbl() const {
-    /* Requires: Inherits numChan>3 from getC3. */
-    return convertChanToDouble(getC3());
+// #pragma GCC diagnostic pop
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1850,37 +2502,6 @@ namespace mjr {
       return convertChanToDouble(getChanNC(chan));
     else
       return 0.0;
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline uint8_t
-  colorTpl<clrChanT, numChan>::getC0_byte() const {
-    return convertChanToByte(getC0());
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline uint8_t
-  colorTpl<clrChanT, numChan>::getC1_byte() const {
-    /* Requires: Inherits numChan>1 from getC1. */
-    return convertChanToByte(getC1());
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline uint8_t
-  colorTpl<clrChanT, numChan>::getC2_byte() const {
-    /* Requires: Inherits numChan>2 from getC2. */
-    return convertChanToByte(getC2());
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline uint8_t
-  colorTpl<clrChanT, numChan>::getC3_byte() const {
-    /* Requires: Inherits numChan>3 from getC3. */
-    return convertChanToByte(getC3());
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2000,33 +2621,6 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
   inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setC0_dbl(double cVal) {
-    return setC0(convertDoubleToChan(cVal));
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setC1_dbl(double cVal) {
-    return setC1(convertDoubleToChan(cVal));
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setC2_dbl(double cVal) {
-    return setC2(convertDoubleToChan(cVal));
-  }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setC3_dbl(double cVal) {
-    return setC3(convertDoubleToChan(cVal));
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::setChans_dbl(double cVal) {
     return setChans(convertDoubleToChan(cVal));
   }
@@ -2083,7 +2677,7 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
   inline uint8_t
-  colorTpl<clrChanT, numChan>::convertChanToByte(clrChanT cVal) const requires std::integral<clrChanT> {
+  colorTpl<clrChanT, numChan>::convertChanToByte(clrChanT cVal) const requires (std::integral<clrChanT>) {
     /* Performance: A good compiler *should* recgonize the case when bitsPerChan-8==0, and render this function an NOOP.  Some don't.  Hence the if-then
        below. */
     if(chanIsByte)
@@ -2136,34 +2730,6 @@ namespace mjr {
       return static_cast<clrChanT>( std::stoul(hexString, nullptr, 16)) / static_cast<clrChanT>((chanIsInt ? 1 : std::pow(2, bitsPerChan)));
     else
       return static_cast<clrChanT>(std::stoull(hexString, nullptr, 16)) / static_cast<clrChanT>((chanIsInt ? 1 : std::pow(2, bitsPerChan)));
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setC0_byte(uint8_t cVal) {
-    return setC0(convertByteToChan(cVal));
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setC1_byte(uint8_t cVal) {
-    return setC1(convertByteToChan(cVal));
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setC2_byte(uint8_t cVal) {
-    return setC2(convertByteToChan(cVal));
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setC3_byte(uint8_t cVal) {
-    return setC3(convertByteToChan(cVal));
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2704,12 +3270,12 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>::maskType
+  inline typename colorTpl<clrChanT, numChan>::maskType
   colorTpl<clrChanT, numChan>::getMaskNC() const {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+// #pragma GCC diagnostic push
+// #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
     return theColor.theInt;
-#pragma GCC diagnostic pop
+// #pragma GCC diagnostic pop
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3034,72 +3600,9 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setToBlack() {
-    setChansToMin();
-    return *this;
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setToWhite() {
-    setChansToMax();
-    return *this;
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setToRed() {
-    setChansToMin();
-    setChanToMax(0);
-    return *this;
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setToGreen() {
-    setChansToMin();
-    setChanToMax(1);
-    return *this;
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setToBlue() {
-    setChansToMin();
-    setChanToMax(2);
-    return *this;
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setToCyan() {
-    setChansToMax();
-    setChanToMin(0);
-    return *this;
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setToYellow() {
-    setChansToMax();
-    setChanToMin(2);
-    return *this;
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setToMagenta() {
-    setChansToMax();
-    setChanToMin(1);
-    return *this;
+  inline void
+  colorTpl<clrChanT, numChan>::setChansToMean() {
+    std::fill_n(theColor.thePartsA, numChan, meanChanVal);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3214,168 +3717,6 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
   inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpRainbowHSV(csIdxType base, csIdxType csIdx) {
-  /* Usability: The use of csIdxType sometimes requires casts in code using the library -- mostly because people like to use unadorned integer
-     literals.  Unfortunately we can't simply use ints here as they are not big enough for deep images... One can still use ints for shallow, and just ignore
-     any compiler warnings. */
-    csIdx = numberWrap(csIdx, base);
-    return setRGBfromUnitHSV(static_cast<double>(csIdx) / static_cast<double>(base), 1.0, 1.0);
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpRainbowLA(csIdxType base, csIdxType csIdx) {
-    /* Saftey: We don't wrap csIdx because setRGBfromWavelengthLA() clamps. */
-    return setRGBfromWavelengthLA((static_cast<double>(csIdx) / static_cast<double>(base)) * (maxWavelength-minWavelength) + minWavelength);
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpRainbowCM(csIdxType base, csIdxType csIdx, cmfInterpolationEnum interpMethod) {
-    /* Saftey: We don't wrap csIdx because setRGBfromWavelengthCM() clamps. */
-    return setRGBfromWavelengthCM((1.0 * static_cast<double>(csIdx) / static_cast<double>(base))*(maxWavelength-minWavelength)+minWavelength, interpMethod);
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpClrCubeRainbow(csIdxType csIdx) {
-    cmpRGBcolorRamp(csIdx, "RYGCBMR");
-    return *this;
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpRampGrey2R(csIdxType csIdx) {
-    clrChanT cVal = static_cast<clrChanT>(numberWrap(csIdx, meanChanVal));
-    return setChans(static_cast<clrChanT>(meanChanVal + cVal),
-                    static_cast<clrChanT>(meanChanVal - cVal),
-                    static_cast<clrChanT>(meanChanVal - cVal));
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpRampGrey2G(csIdxType csIdx) {
-    clrChanT cVal = static_cast<clrChanT>(numberWrap(csIdx, meanChanVal));
-    return setChans(static_cast<clrChanT>(meanChanVal - cVal),
-                    static_cast<clrChanT>(meanChanVal + cVal),
-                    static_cast<clrChanT>(meanChanVal - cVal));
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpRampGrey2B(csIdxType csIdx) {
-    clrChanT cVal = static_cast<clrChanT>(numberWrap(csIdx, meanChanVal));
-    return setChans(static_cast<clrChanT>(meanChanVal - cVal),
-                    static_cast<clrChanT>(meanChanVal - cVal),
-                    static_cast<clrChanT>(meanChanVal + cVal));
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpRampGrey2Y(csIdxType csIdx) {
-    clrChanT cVal = static_cast<clrChanT>(numberWrap(csIdx, meanChanVal));
-    return setChans(static_cast<clrChanT>(meanChanVal + cVal),
-                    static_cast<clrChanT>(meanChanVal + cVal),
-                    static_cast<clrChanT>(meanChanVal - cVal));
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpRampGrey2C(csIdxType csIdx) {
-    clrChanT cVal = static_cast<clrChanT>(numberWrap(csIdx, meanChanVal));
-    return setChans(static_cast<clrChanT>(meanChanVal - cVal),
-                    static_cast<clrChanT>(meanChanVal + cVal),
-                    static_cast<clrChanT>(meanChanVal + cVal));
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpRampGrey2M(csIdxType csIdx) {
-    clrChanT cVal = static_cast<clrChanT>(numberWrap(csIdx, meanChanVal));
-    return setChans(static_cast<clrChanT>(meanChanVal + cVal),
-                    static_cast<clrChanT>(meanChanVal - cVal),
-                    static_cast<clrChanT>(meanChanVal + cVal));
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpDiagRampCR(csIdxType csIdx) {
-    return cmpRGBcolorRamp(csIdx, "CR");
-  }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpDiagRampMG(csIdxType csIdx) {
-    return cmpRGBcolorRamp(csIdx, "MG");
-  }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpDiagRampYB(csIdxType csIdx) {
-    return cmpRGBcolorRamp(csIdx, "YB");
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpConstTwoRamp(csIdxType csIdx) {
-    return cmpRGBcolorRamp(csIdx, "CMYC");
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpConstOneRamp(csIdxType csIdx) {
-    return cmpRGBcolorRamp(csIdx, "BRGB");
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpGreyRGB(csIdxType csIdx) {
-    return cmpRGBcolorRamp(csIdx, "0W");
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpGrey(csIdxType csIdx) {
-    return setChans(static_cast<clrChanT>(numberWrap(csIdx, maxChanVal)));
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpGrey3x(csIdxType csIdx) {
-    csIdx = numberWrap(csIdx, 3*maxChanVal);
-    return setChans(static_cast<clrChanT>(csIdx / 3 + (csIdx%3==0?1:0)),
-                    static_cast<clrChanT>(csIdx / 3 + (csIdx%3==1?1:0)),
-                    static_cast<clrChanT>(csIdx / 3 + (csIdx%3==2?1:0)));
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpGrey4x(csIdxType csIdx) {
-    csIdx = numberWrap(csIdx, 4*maxChanVal);
-    return setChans(static_cast<clrChanT>(csIdx / 4 + ((csIdx+1)%4==0?1:0)),
-                    static_cast<clrChanT>(csIdx / 4 + ((csIdx+2)%4==0?1:0)),
-                    static_cast<clrChanT>(csIdx / 4 + ((csIdx+3)%4==0?1:0)));
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::cmpColorRamp(double aDouble, std::vector<double> const& anchors, std::vector<colorType> const& colors) {
     typename std::vector<colorType>::size_type numColors = colors.size();
     if((numColors >= 2) && (anchors.size() == numColors)) {
@@ -3410,18 +3751,67 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
   inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::cmpRGBcolorRamp(csIdxType csIdx, const char *cornerColors) {
-    return cmpRGBcolorRamp(csIdx, static_cast<csIdxType>(std::strlen(cornerColors)), cornerColors);
+  colorTpl<clrChanT, numChan>::cmpRGBcolorRamp(csIntType csIdx, const char *cornerColors) {
+    return cmpRGBcolorRamp(csIdx, static_cast<csIntType>(std::strlen(cornerColors)), cornerColors);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
   colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::cmpRGBcolorRamp(csIdxType csIdx, csIdxType numColors, const char *cornerColors) {
+  colorTpl<clrChanT, numChan>::cmpRGBcolorRamp(csIntType csIdx, csIntType numColors, const cornerColorEnum *cornerColors) {
     /* Requires: Inherits numChan>2 from getC2. */
-    csIdx = numberWrap(csIdx, static_cast<csIdxType>(maxChanVal * numColors - maxChanVal + 1));
+    csIdx = numberWrap(csIdx, static_cast<csIntType>(maxChanVal * numColors - maxChanVal));
     if(csIdx != 0) { [[likely]]
-      for(csIdxType i=0; i<(numColors-1); i++) {
+      for(csIntType i=0; i<(numColors-1); i++) {
+        if(csIdx <= maxChanVal) {
+          clrChanT csIdxNoMore = static_cast<clrChanT>(csIdx);
+          // Note: This could be MUCH better optimized!
+          colorTpl<clrChanT, numChan> c1;
+          colorTpl<clrChanT, numChan> c2;
+          c1.setToCorner(cornerColors[i]);
+          c2.setToCorner(cornerColors[i+1]);
+          clrChanT r, g, b;
+          if(c1.getC0() > c2.getC0()) {
+            r = maxChanVal - csIdxNoMore;
+          } else if(c1.getC0() < c2.getC0()) {
+            r = csIdxNoMore;
+          } else {
+            r = c1.getC0();
+          }
+          if(c1.getC1() > c2.getC1()) {
+            g = maxChanVal - csIdxNoMore;
+          } else if(c1.getC1() < c2.getC1()) {
+            g = csIdxNoMore;
+          } else {
+            g = c1.getC1();
+          }
+          if(c1.getC2() > c2.getC2()) {
+            b = maxChanVal - csIdxNoMore;
+          } else if(c1.getC2() < c2.getC2()) {
+            b = csIdxNoMore;
+          } else {
+            b = c1.getC2();
+          }
+          return setChans(r, g, b);
+        } else {
+          csIdx = csIdx - maxChanVal;
+        }
+      }
+    } else {
+      return setToCorner(cornerColors[0]);
+    }
+    // If we got here, we had a problem.  But not much we can do about it...
+    return *this;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template <class clrChanT, int numChan>
+  colorTpl<clrChanT, numChan>&
+  colorTpl<clrChanT, numChan>::cmpRGBcolorRamp(csIntType csIdx, csIntType numColors, const char *cornerColors) {
+    /* Requires: Inherits numChan>2 from getC2. */
+    csIdx = numberWrap(csIdx, static_cast<csIntType>(maxChanVal * numColors - maxChanVal));
+    if(csIdx != 0) { [[likely]]
+      for(csIntType i=0; i<(numColors-1); i++) {
         if(csIdx <= maxChanVal) {
           clrChanT csIdxNoMore = static_cast<clrChanT>(csIdx);
           // Note: This could be MUCH better optimized!
@@ -3572,171 +3962,6 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpUpDownRampBr(csIdxType csIdx) {
-    return cmpRGBcolorRamp(csIdx, "YC");
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpUpDownRampBg(csIdxType csIdx) {
-    return cmpRGBcolorRamp(csIdx, "YM");
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpUpDownRampGr(csIdxType csIdx) {
-    return cmpRGBcolorRamp(csIdx, "MC");
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpUpDownRampGb(csIdxType csIdx) {
-    return cmpRGBcolorRamp(csIdx, "MY");
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpUpDownRampRg(csIdxType csIdx) {
-    return cmpRGBcolorRamp(csIdx, "CM");
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpUpDownRampRb(csIdxType csIdx) {
-    return cmpRGBcolorRamp(csIdx, "CY");
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpSumRampRGB(csIdxType csIdx) {
-    return cmpRGBcolorRamp(csIdx, "0RYW");
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpSumRampBGR(csIdxType csIdx) {
-    return cmpRGBcolorRamp(csIdx, "0BCW");
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpSumRampGRB(csIdxType csIdx) {
-    return cmpRGBcolorRamp(csIdx, "0GYW");
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpSumRampGBR(csIdxType csIdx) {
-    return cmpRGBcolorRamp(csIdx, "0GCW");
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpSumRampBRG(csIdxType csIdx) {
-    return cmpRGBcolorRamp(csIdx, "0BMW");
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpSumRampRBG(csIdxType csIdx) {
-    return cmpRGBcolorRamp(csIdx, "0RMW");
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpBinaryColorRampRG(csIdxType csIdx, csIdxType threshold) {
-    if(csIdx < threshold)
-      return setChans(maxChanVal, minChanVal, minChanVal);
-    else
-      return setChans(minChanVal, maxChanVal, minChanVal);
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpBinaryColorRampRB(csIdxType csIdx, csIdxType threshold) {
-    if(csIdx < threshold)
-      return setChans(maxChanVal, minChanVal, minChanVal);
-    else
-      return setChans(minChanVal, minChanVal, maxChanVal);
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpBinaryColorRampGR(csIdxType csIdx, csIdxType threshold) {
-    if(csIdx < threshold)
-      return setChans(minChanVal, maxChanVal, minChanVal);
-    else
-      return setChans(maxChanVal, minChanVal, minChanVal);
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpBinaryColorRampGB(csIdxType csIdx, csIdxType threshold) {
-    if(csIdx < threshold)
-      return setChans(minChanVal, maxChanVal, minChanVal);
-    else
-      return setChans(minChanVal, minChanVal, maxChanVal);
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpBinaryColorRampBR(csIdxType csIdx, csIdxType threshold) {
-    if(csIdx < threshold)
-      return setChans(minChanVal, minChanVal, maxChanVal);
-    else
-      return setChans(maxChanVal, minChanVal, minChanVal);
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpBinaryColorRampBG(csIdxType csIdx, csIdxType threshold) {
-    if(csIdx < threshold)
-      return setChans(minChanVal, minChanVal, maxChanVal);
-    else
-      return setChans(minChanVal, maxChanVal, minChanVal);
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpFireRamp(csIdxType csIdx) {
-    return setRGBcmpSumRampRGB(csIdx);
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpColdToHot(csIdxType csIdx) {
-    return cmpRGBcolorRamp(csIdx, "BCGYR");
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBcmpIceToWaterToHot(csIdxType csIdx) {
-    return cmpRGBcolorRamp(csIdx, "WCBYR");
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
   inline clrChanT
   colorTpl<clrChanT, numChan>::colorComp2WebSafeColorComp(clrChanT aColorComp) {
     clrChanT minCol;
@@ -3785,7 +4010,7 @@ namespace mjr {
     /* Requires: Inherits numChan>2 from getC2. */
     tfrmWebSafe216();
     int colIdx = 36 * (getC0_byte() / 0x33) + 6 * (getC1_byte() / 0x33) + 1 * (getC2_byte() / 0x33) + 1;
-    return setChans(webSafeColorData[colIdx][1]);
+    return csSet<colorTpl::csFPwebSafeNormalVision>(colIdx);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3795,7 +4020,7 @@ namespace mjr {
     /* Requires: Inherits numChan>2 from getC2. */
     tfrmWebSafe216();
     int colIdx = 36 * (getC0_byte() / 0x33) + 6 * (getC1_byte() / 0x33) + 1 * (getC2_byte() / 0x33) + 1;
-    return setChans(webSafeColorData[colIdx][2]);
+    return csSet<colorTpl::csFPwebSafeDeutanopia>(colIdx);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3805,7 +4030,7 @@ namespace mjr {
     /* Requires: Inherits numChan>2 from getC2. */
     tfrmWebSafe216();
     int colIdx = 36 * (getC0_byte() / 0x33) + 6 * (getC1_byte() / 0x33) + 1 * (getC2_byte() / 0x33) + 1;
-    return setChans(webSafeColorData[colIdx][3]);
+    return csSet<colorTpl::csFPwebSafeTritanoptia>(colIdx);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3831,7 +4056,7 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>::channelArithFltType
+  inline typename colorTpl<clrChanT, numChan>::channelArithFltType
   colorTpl<clrChanT, numChan>::rgbLuminance(void) {
     /* Requires: Inherits numChan>2 from getC2. */
     return (static_cast<channelArithFltType>(getC0()) * static_cast<channelArithFltType>(0.2126) +
@@ -3841,7 +4066,7 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>::channelArithSPType
+  inline typename colorTpl<clrChanT, numChan>::channelArithSPType
   colorTpl<clrChanT, numChan>::rgbSumIntensity(void) {
     /* Requires: Inherits numChan>2 from getC2. */
     return (static_cast<channelArithSPType>(getC0()) +
@@ -3851,7 +4076,7 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>::channelArithSPType
+  inline typename colorTpl<clrChanT, numChan>::channelArithSPType
   colorTpl<clrChanT, numChan>::sumIntensity(void) {
     channelArithSPType sum = 0;
     for(int i=0; i<numChan; i++)
@@ -3861,21 +4086,21 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>::channelArithFltType
+  inline typename colorTpl<clrChanT, numChan>::channelArithFltType
   colorTpl<clrChanT, numChan>::sumScaledIntensity(void) {
     return (static_cast<channelArithFltType>(sumIntensity()) / static_cast<channelArithFltType>(numChan) / static_cast<channelArithFltType>(maxChanVal));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>::channelArithFltType
+  inline typename colorTpl<clrChanT, numChan>::channelArithFltType
   colorTpl<clrChanT, numChan>::rgbScaledIntensity(void) {
     return (static_cast<channelArithFltType>(rgbSumIntensity()) / static_cast<channelArithFltType>(numChan) / static_cast<channelArithFltType>(maxChanVal));
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>::channelArithSPType
+  inline typename colorTpl<clrChanT, numChan>::channelArithSPType
   colorTpl<clrChanT, numChan>::distP2sq(colorArgType aColor) {
     channelArithSPType daDist = 0;
     for(int i=0; i<numChan; i++)
@@ -3886,7 +4111,7 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
-  colorTpl<clrChanT, numChan>::channelArithSPType
+  inline typename colorTpl<clrChanT, numChan>::channelArithSPType
   colorTpl<clrChanT, numChan>::dotProd(colorArgType aColor) {
     channelArithSPType daProd = 0;
     for(int i=0; i<numChan; i++)
@@ -3896,7 +4121,7 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>::channelArithSPType
+  inline typename colorTpl<clrChanT, numChan>::channelArithSPType
   colorTpl<clrChanT, numChan>::distAbs(colorArgType aColor) {
     channelArithSPType daDist = 0;
     for(int i=0; i<numChan; i++)
@@ -3939,7 +4164,7 @@ namespace mjr {
   template <class clrChanT, int numChan>
   inline bool
   colorTpl<clrChanT, numChan>::isEqual(colorArgType aColor) {
-    if(goodMask)
+    if(perfectMask)
       return (getMaskNC() == aColor.getMaskNC());
     else
       for(int i=0; i<numChan; i++)
@@ -3958,16 +4183,12 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
   inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBfromUnitHSV(double H, double S, double V) {
-    return setRGBfromColorSpace(colorSpaceEnum::HSV, H*360.0, S, V);
-  }
+  colorTpl<clrChanT, numChan>::setRGBfromUnitHSV(double H, double S, double V) { return setRGBfromColorSpace(colorSpaceEnum::HSV, H*360.0, S, V); }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
   inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBfromUnitHSL(double H, double S, double L) {
-    return setRGBfromColorSpace(colorSpaceEnum::HSL, H*360.0, L, S);
-  }
+  colorTpl<clrChanT, numChan>::setRGBfromUnitHSL(double H, double S, double L) { return setRGBfromColorSpace(colorSpaceEnum::HSL, H*360.0, L, S); }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
@@ -4073,55 +4294,59 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>
   inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBtoWebSafe216(int icpIdx) {
-    icpIdx = numberWrap(icpIdx, 217);
-    return setColorFromString((char*)(webSafeColorData[icpIdx][0]));
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBfromICP(int icpIdx, const char **icpArray) {
-    int numColorsInArray = (int)strtol(icpArray[0], NULL, 16) - 1;
-    icpIdx++; // Increment icpIdx
-    if( (icpIdx >= 1) && (icpIdx <= numColorsInArray) ) [[likely]]
-      return setColorFromString((char*)(icpArray[icpIdx]));
-    else
-      return setToBlack();
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
-  colorTpl<clrChanT, numChan>::setRGBfromICP(int icpIdx, const uint32_t* icpArray) {
-    int numColorsInArray = icpArray[0];
-    icpIdx++; // Increment icpIdx
-    if( (icpIdx >= 1) && (icpIdx <= numColorsInArray) ) [[likely]]
-      return setRGBfromLogPackIntARGB(icpArray[icpIdx]);
-    else
-      return setToBlack();
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class clrChanT, int numChan>
-  inline colorTpl<clrChanT, numChan>&
   colorTpl<clrChanT, numChan>::setRGBfromWavelengthCM(double wavelength, cmfInterpolationEnum interpMethod) {
-    double rf, gf, bf;
 
-    // Data about the color matching function table used. This should be abstracted away so that other color matching functions may be used.  Going to the
-    // trouble of abstracting the color match function concept may not be worth the effort...
-    const double minWL = 390.0;   // Min wavelength in table
-    const double maxWL = 830.0;   // Max wavelength in table
-    const int    numPT = 89;      // Number fo points in the table
-    const double rScl  = 3.1673;  // Scale factors for color function
-    const double gScl  = 1.0517;
-    const double bScl  = 1.0019;
+    // Color matching function table & metadata. 
+    // Tabulated in table 3 from Stockman and Sharpe (2000).  I beleive they are taken from Stiles and Burch 10-degree (1959) 
+    const double minWL         = 390.0;   // Min wavelength in table
+    const double maxWL         = 830.0;   // Max wavelength in table
+    const int    numPT         = 89;      // Number fo points in the table
+    const double rScl          = 3.1673;  // Scale factors for color function
+    const double gScl          = 1.0517;
+    const double bScl          = 1.0019;
+    const static int cmfW[]    = {         390,         395,         400,         405,         410,         415,         420,         425,         430,         
+                                           435,         440,         445,         450,         455,         460,         465,         470,         475,        
+                                           480,         485,         490,         495,         500,         505,         510,         515,         520,        
+                                           525,         530,         535,         540,         545,         550,         555,         560,         565,        
+                                           570,         575,         580,         585,         590,         595,         600,         605,         610,        
+                                           615,         620,         625,         630,         635,         640,         645,         650,         655,        
+                                           660,         665,         670,         675,         680,         685,         690,         695,         700,        
+                                           705,         710,         715,         720,         725,         730,         735,         740,         745,        
+                                           750,         755,         760,         765,         770,         775,         780,         785,         790,        
+                                           795,         800,         805,         810,         815,         820,         825,         830 };
+    const static double cmfR[] = {  1.5000E-03,  3.8000E-03,  8.9000E-03,  1.8800E-02,  3.5000E-02,  5.3100E-02,  7.0200E-02,  7.6300E-02,  7.4500E-02,  
+                                    5.6100E-02,  3.2300E-02, -4.4000E-03, -4.7800E-02, -9.7000E-02, -1.5860E-01, -2.2350E-01, -2.8480E-01, -3.3460E-01, 
+                                   -3.7760E-01, -4.1360E-01, -4.3170E-01, -4.4520E-01, -4.3500E-01, -4.1400E-01, -3.6730E-01, -2.8450E-01, -1.8550E-01, 
+                                   -4.3500E-02,  1.2700E-01,  3.1290E-01,  5.3620E-01,  7.7220E-01,  1.0059E+00,  1.2710E+00,  1.5574E+00,  1.8465E+00, 
+                                    2.1511E+00,  2.4250E+00,  2.6574E+00,  2.9151E+00,  3.0779E+00,  3.1613E+00,  3.1673E+00,  3.1048E+00,  2.9462E+00,  
+                                    2.7194E+00,  2.4526E+00,  2.1700E+00,  1.8358E+00,  1.5179E+00,  1.2428E+00,  1.0070E+00,  7.8270E-01,  5.9340E-01,  
+                                    4.4420E-01,  3.2830E-01,  2.3940E-01,  1.7220E-01,  1.2210E-01,  8.5300E-02,  5.8600E-02,  4.0800E-02,  2.8400E-02,  
+                                    1.9700E-02,  1.3500E-02,  9.2400E-03,  6.3800E-03,  4.4100E-03,  3.0700E-03,  2.1400E-03,  1.4900E-03,  1.0500E-03,  
+                                    7.3900E-04,  5.2300E-04,  3.7200E-04,  2.6500E-04,  1.9000E-04,  1.3600E-04,  9.8400E-05,  7.1300E-05,  5.1800E-05,  
+                                    3.7700E-05,  2.7600E-05,  2.0300E-05,  1.4900E-05,  1.1000E-05,  8.1800E-06,  6.0900E-06,  4.5500E-06};
+    const static double cmfG[] = { -4.0000E-04, -1.0000E-03, -2.5000E-03, -5.9000E-03, -1.1900E-02, -2.0100E-02, -2.8900E-02, -3.3800E-02, -3.4900E-02,
+                                   -2.7600E-02, -1.6900E-02,  2.4000E-03,  2.8300E-02,  6.3600E-02,  1.0820E-01,  1.6170E-01,  2.2010E-01,  2.7960E-01,
+                                    3.4280E-01,  4.0860E-01,  4.7160E-01,  5.4910E-01,  6.2600E-01,  7.0970E-01,  7.9350E-01,  8.7150E-01,  9.4770E-01,  
+                                    9.9450E-01,  1.0203E+00,  1.0375E+00,  1.0517E+00,  1.0390E+00,  1.0029E+00,  9.6980E-01,  9.1620E-01,  8.5710E-01,  
+                                    7.8230E-01,  6.9530E-01,  5.9660E-01,  5.0630E-01,  4.2030E-01,  3.3600E-01,  2.5910E-01,  1.9170E-01,  1.3670E-01, 
+                                    9.3800E-02,  6.1100E-02,  3.7100E-02,  2.1500E-02,  1.1200E-02,  4.4000E-03,  7.8000E-05, -1.3680E-03, -1.9880E-03, 
+                                   -2.1680E-03, -2.0060E-03, -1.6420E-03, -1.2720E-03, -9.4700E-04, -6.8300E-04, -4.7800E-04, -3.3700E-04, -2.3500E-04,
+                                   -1.6300E-04, -1.1100E-04, -7.4800E-05, -5.0800E-05, -3.4400E-05, -2.3400E-05, -1.5900E-05, -1.0700E-05, -7.2300E-06,
+                                   -4.8700E-06, -3.2900E-06, -2.2200E-06, -1.5000E-06, -1.0200E-06, -6.8800E-07, -4.6500E-07, -3.1200E-07, -2.0800E-07,
+                                   -1.3700E-07, -8.8000E-08, -5.5300E-08, -3.3600E-08, -1.9600E-08, -1.0900E-08, -5.7000E-09, -2.7700E-09 };
+    const static double cmfB[] = {  6.2000E-03,  1.6100E-02,  4.0000E-02,  9.0600E-02,  1.8020E-01,  3.0880E-01,  4.6700E-01,  6.1520E-01,  7.6380E-01,  
+                                    8.7780E-01,  9.7550E-01,  1.0019E+00,  9.9960E-01,  9.1390E-01,  8.2970E-01,  7.4170E-01,  6.1340E-01,  4.7200E-01,  
+                                    3.4950E-01,  2.5640E-01,  1.8190E-01,  1.3070E-01,  9.1000E-02,  5.8000E-02,  3.5700E-02,  2.0000E-02,  9.5000E-03,  
+                                    7.0000E-04, -4.3000E-03, -6.4000E-03, -8.2000E-03, -9.4000E-03, -9.7000E-03, -9.7000E-03, -9.3000E-03, -8.7000E-03, 
+                                    8.0000E-03, -7.3000E-03, -6.3000E-03, -5.3700E-03, -4.4500E-03, -3.5700E-03, -2.7700E-03, -2.0800E-03,  1.5000E-03, 
+                                    1.0300E-03, -6.8000E-04, -4.4200E-04, -2.7200E-04, -1.4100E-04, -5.4900E-05, -2.2000E-06,  2.3700E-05,  2.8600E-05, 
+                                    2.6100E-05,  2.2500E-05,  1.8200E-05,  1.3900E-05,  1.0300E-05,  7.3800E-06, -5.2200E-06,  3.6700E-06,  2.5600E-06,
+                                    1.7600E-06,  1.2000E-06,  8.1700E-07,  5.5500E-07,  3.7500E-07,  2.5400E-07, -1.7100E-07,  1.1600E-07,  7.8500E-08, 
+                                    5.3100E-08,  3.6000E-08,  2.4400E-08,  1.6500E-08,  1.1200E-08,  7.5300E-09, -5.0700E-09,  3.4000E-09,  2.2700E-09, 
+                                    1.5000E-09,  9.8600E-10,  6.3900E-10,  4.0700E-10,  2.5300E-10,  1.5200E-10, -8.6400E-11,  4.4200E-11 };
 
     // Clip the wavelength to be in range
-    if(wavelength < minWL)
-      wavelength = minWL;
-    if(wavelength > maxWL)
-      wavelength = maxWL;
+    wavelength = std::clamp(wavelength, minWL, maxWL);
 
     // Figure out where we are in our color function table
     double fIdx  = (wavelength-minWL)/(maxWL-minWL)*(numPT-1.0);
@@ -4133,32 +4358,33 @@ namespace mjr {
     if(iIdx1<0)         { iIdx1 = 0;       iIdx2 = 1;       fIdx = static_cast<double>(iIdx1); }
 
     // Interpolate using our tabulated color matching function
+    double rf, gf, bf;
     switch(interpMethod) {
       case cmfInterpolationEnum::FLOOR : // Closest with wavelength lower than given value
-        rf=colMatchPoints[iIdx1][1];
-        gf=colMatchPoints[iIdx1][2];
-        bf=colMatchPoints[iIdx1][3];
+        rf=cmfR[iIdx1];
+        gf=cmfG[iIdx1];
+        bf=cmfB[iIdx1];
         break;
       case cmfInterpolationEnum::CEILING : // Closest with wavelength greater than given value
-        rf=colMatchPoints[iIdx2][1];
-        gf=colMatchPoints[iIdx2][2];
-        bf=colMatchPoints[iIdx2][3];
+        rf=cmfR[iIdx2];
+        gf=cmfG[iIdx2];
+        bf=cmfB[iIdx2];
         break;
       case cmfInterpolationEnum::NEAREST : // Closest with wavelength to given value
-        if( std::abs(wavelength-colMatchPoints[iIdx2][0]) < std::abs(wavelength-colMatchPoints[iIdx1][0])) {
-          rf=colMatchPoints[iIdx2][1];
-          gf=colMatchPoints[iIdx2][2];
-          bf=colMatchPoints[iIdx2][3];
+        if( std::abs(wavelength-cmfW[iIdx2]) < std::abs(wavelength-cmfW[iIdx1])) {
+          rf=cmfR[iIdx2];
+          gf=cmfG[iIdx2];
+          bf=cmfB[iIdx2];
         } else {
-          rf=colMatchPoints[iIdx1][1];
-          gf=colMatchPoints[iIdx1][2];
-          bf=colMatchPoints[iIdx1][3];
+          rf=cmfR[iIdx1];
+          gf=cmfG[iIdx1];
+          bf=cmfB[iIdx1];
         }
         break;
       case cmfInterpolationEnum::LINEAR : // Linear interpolation between data points
-        rf = (fIdx-static_cast<double>(iIdx1)) * (colMatchPoints[iIdx2][1] - colMatchPoints[iIdx1][1]) + colMatchPoints[iIdx1][1];
-        gf = (fIdx-static_cast<double>(iIdx1)) * (colMatchPoints[iIdx2][2] - colMatchPoints[iIdx1][2]) + colMatchPoints[iIdx1][2];
-        bf = (fIdx-static_cast<double>(iIdx1)) * (colMatchPoints[iIdx2][3] - colMatchPoints[iIdx1][3]) + colMatchPoints[iIdx1][3];
+        rf = (fIdx-static_cast<double>(iIdx1)) * (cmfR[iIdx2] - cmfR[iIdx1]) + cmfR[iIdx1];
+        gf = (fIdx-static_cast<double>(iIdx1)) * (cmfG[iIdx2] - cmfG[iIdx1]) + cmfG[iIdx1];
+        bf = (fIdx-static_cast<double>(iIdx1)) * (cmfB[iIdx2] - cmfB[iIdx1]) + cmfB[iIdx1];
         break;
       case cmfInterpolationEnum::BUMP : // Use exponential hump functions -- MJR developed algorithm 2007
         rf = 3.07 / std::exp(0.0005 * (wavelength-600.0)*(wavelength-600.0)) + 0.09 / std::exp(0.005 * (wavelength-425.0)*(wavelength-425.0));
@@ -4179,6 +4405,7 @@ namespace mjr {
     setChans_dbl(rf, gf, bf);
     return *this;
   }
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class clrChanT, int numChan>

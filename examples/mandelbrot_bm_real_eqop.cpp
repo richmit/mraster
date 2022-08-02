@@ -51,7 +51,7 @@ int main(void) {
         mjr::ramCanvas3c8b::coordFltType zx = 0.0;
         mjr::ramCanvas3c8b::coordFltType zy = 0.0;
         mjr::ramCanvas3c8b::coordFltType zx2, zy2, tmp;
-        mjr::ramCanvas3c8b::csIdxType count = 0;
+        mjr::ramCanvas3c8b::csIntType count = 0;
         do {
           zx2 = zx * zx;
           zy2 = zy * zy;
@@ -61,7 +61,7 @@ int main(void) {
           count++;
         } while( (zx2+zy2<4) && (count<NUMITR) );
         if(count < NUMITR)
-          theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().setRGBcmpFireRamp(mjr::numberWrap(static_cast<mjr::ramCanvas3c8b::csIdxType>(count*20), 767)));
+          theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType::csCColdeFireRamp::c(mjr::numberWrap(static_cast<mjr::ramCanvas3c8b::csIntType>(count*20), 767)));
     }
   }
   theRamCanvas.writeTIFFfile("mandelbrot_bm_real_eqop.tiff");

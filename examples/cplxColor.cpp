@@ -80,7 +80,7 @@ int main(void) {
       // double patm  = 1 - std::pow(0.5, zAbs);                // Map Abs to [0,1] -- much like atm, but no trig
 
       // Primary color for fz
-      aColor.setRGBcmpClrCubeRainbow(static_cast<mjr::ramCanvas3c8b::csIdxType>(mjr::numberWrap(mjr::unitTooIntLinMap(mjr::unitClamp(pzArg), numColor*argWrap), numColor))); // Make color
+      aColor.csSet<mjr::ramCanvas3c8b::colorType::csCColdeRainbow>(static_cast<mjr::ramCanvas3c8b::csIntType>(mjr::numberWrap(mjr::unitTooIntLinMap(mjr::unitClamp(pzArg), numColor*argWrap), numColor))); // Make color
 
       // Modify the color with "cuts" along argument & magnitede scales.
       aColor.tfrmLinearGreyLevelScale(1.0 - std::fabs(int(pzArg*argCuts) - pzArg*argCuts)/cutDepth, 0);

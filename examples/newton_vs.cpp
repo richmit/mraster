@@ -125,7 +125,7 @@ int main(void) {
         std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
 
         std::vector<std::complex<double>> lastZs(numToKeep);
-        mjr::ramCanvas3c8b::csIdxType count = 0;
+        mjr::ramCanvas3c8b::csIntType count = 0;
         double maxMod = 0.0;
         while(1) {
           if (count >= MaxCount) {
@@ -214,8 +214,8 @@ int main(void) {
           count++;
         }
 
-      mjr::ramCanvas3c8b::csIdxType ccol = (2*4*count);
-      mjr::ramCanvas3c8b::csIdxType mcol = (      mjr::ramCanvas3c8b::csIdxType )(2*8*maxMod);
+      mjr::ramCanvas3c8b::csIntType ccol = (2*4*count);
+      mjr::ramCanvas3c8b::csIntType mcol = (      mjr::ramCanvas3c8b::csIntType )(2*8*maxMod);
         switch(why) {
           case whyStopNV::TOOLONG   : theRamCanvas.drawPoint(x, y, aColor.cmpRGBcolorRamp((mcol)%(2*256),      "MWM")); break;
           case whyStopNV::CONVERGEU : theRamCanvas.drawPoint(x, y, aColor.cmpRGBcolorRamp((mcol+ccol)%(2*256), "BWB")); break;

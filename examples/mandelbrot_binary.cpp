@@ -101,7 +101,7 @@ int main(void) {
           if(zAbs > 0.001) {
             rcc::channelType ns = ( std::imag(z) > 0 ? 0 : 255 );
             rcc::channelType ew = ( std::real(z) > 0 ? 0 : 255 );
-            grayRamCanvas.drawPoint(x, y, theColor.setRGBcmpGrey(static_cast<mjr::ramCanvas3c8b::csIdxType>(mjr::unitTooIntLinMap((std::real(z) / zAbs + 1.0) / 2.0, 255))));
+            grayRamCanvas.drawPoint(x, y, mjr::color3c8b::csCCdiag01::c(static_cast<mjr::ramCanvas3c8b::csIntType>(mjr::unitTooIntLinMap((std::real(z) / zAbs + 1.0) / 2.0, 255))));
             binRamCanvas.drawPoint(x, y,  rcc(ns, ns, ns));
             quadRamCanvas.drawPoint(x, y, rcc(ns, static_cast<rcc::channelType>(255-(ns+ew)/2), ew));
           }

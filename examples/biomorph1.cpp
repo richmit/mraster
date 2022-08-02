@@ -69,13 +69,13 @@ int main(void) {
           count++,z=static_cast<std::complex<double>>(std::pow(z, 5))+oneone) ;
       if(count < NUMITR) {
         // A
-        theRamCanvasA.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().setRGBcmpClrCubeRainbow(static_cast<cit>(mjr::numberWrap(count*500, 255*6+1))));
+        theRamCanvasA.drawPoint(x, y, mjr::ramCanvas3c8b::colorType::csCColdeRainbow::c(static_cast<cit>(mjr::numberWrap(count*500, 255*6+1))));
         // B
-        theRamCanvasB.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().setRGBcmpClrCubeRainbow(static_cast<cit>(mjr::numberWrap(static_cast<int>(std::norm(z)/1000), 255*6+1))));
+        theRamCanvasB.drawPoint(x, y, mjr::ramCanvas3c8b::colorType::csCColdeRainbow::c(static_cast<cit>(mjr::numberWrap(static_cast<int>(std::norm(z)/1000), 255*6+1))));
         // C
-        theRamCanvasC.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().setRGBcmpClrCubeRainbow(static_cast<cit>(mjr::numberWrap(static_cast<int>(std::abs(std::imag(z))), 255*6+1))));
+        theRamCanvasC.drawPoint(x, y, mjr::ramCanvas3c8b::colorType::csCColdeRainbow::c(static_cast<cit>(mjr::numberWrap(static_cast<int>(std::abs(std::imag(z))), 255*6+1))));
         // D
-        theRamCanvasD.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().setRGBcmpClrCubeRainbow(static_cast<cit>(mjr::numberWrap(static_cast<int>(std::abs(std::real(z))), 255*6+1))));
+        theRamCanvasD.drawPoint(x, y, mjr::ramCanvas3c8b::colorType::csCColdeRainbow::c(static_cast<cit>(mjr::numberWrap(static_cast<int>(std::abs(std::real(z))), 255*6+1))));
         // E
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
           theRamCanvasE.drawPoint(x, y, mjr::ramCanvas3c8b::colorType("red"));
@@ -150,7 +150,7 @@ int main(void) {
           }
         }
         // K
-        theRamCanvasK.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().setRGBcmpClrCubeRainbow(mjr::numberWrap(static_cast<cit>((std::arg(z)+3.14)*255), 255*6+1)));
+        theRamCanvasK.drawPoint(x, y, mjr::ramCanvas3c8b::colorType::csCColdeRainbow::c(mjr::numberWrap(static_cast<cit>((std::arg(z)+3.14)*255), 255*6+1)));
         // L
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
           theRamCanvasL.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcolorRamp(mjr::intClamp(static_cast<cit>(std::abs(std::real(z)/100)), 255*1-1), "0R"));

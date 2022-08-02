@@ -76,8 +76,6 @@ int main(void) {
 
   // First we draw a greyscale Mandelbrot set for reference.
   if(true) {
-    mjr::ramCanvas3c8b::colorType aColor;
-    aColor.setToWhite();
     MAXCOUNT = 255;
     std::cout << "INFO(main): Draw reference set via fill algorithm." << std::endl;
     for(int yy=0;yy<theRamCanvas.get_numYpix();yy++) {
@@ -86,7 +84,7 @@ int main(void) {
         tpt.x = theRamCanvas.int2realX(xx);
         tpt.y = theRamCanvas.int2realY(yy);
         int clr = orbCmp(tpt);
-        theRamCanvas.drawPoint(xx, yy, aColor.setRGBcmpGrey3x(static_cast<mjr::ramCanvas3c8b::csIdxType>((100*clr)%768)));
+        theRamCanvas.drawPoint(xx, yy, mjr::ramCanvas3c8b::colorType::csPGrey3x::c(static_cast<mjr::ramCanvas3c8b::csIntType>((100*clr)%768)));
       }
     }
   }

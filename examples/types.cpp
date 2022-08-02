@@ -77,7 +77,7 @@ int main(void) {
   std::cout << "sizeof(mjr::ramCanvas3c8b::colorChanType)          " << sizeof(mjr::ramCanvas3c8b::colorChanType)           << std::endl;
   std::cout << "sizeof(mjr::ramCanvas3c8b::colorMaskType)          " << sizeof(mjr::ramCanvas3c8b::colorMaskType)           << std::endl;
   std::cout << "sizeof(mjr::ramCanvas3c8b::colorChanArithDType)    " << sizeof(mjr::ramCanvas3c8b::colorChanArithDType)     << std::endl;
-  std::cout << "sizeof(mjr::ramCanvas3c8b::colorChanArithSPType)   " << sizeof(mjr::ramCanvas3c8b::csIdxType)               << std::endl;
+  std::cout << "sizeof(mjr::ramCanvas3c8b::colorChanArithSPType)   " << sizeof(mjr::ramCanvas3c8b::csIntType)               << std::endl;
   std::cout << "sizeof(mjr::ramCanvas3c8b::colorChanArithSDPType)  " << sizeof(mjr::ramCanvas3c8b::colorChanArithSDPType)   << std::endl;
   std::cout << "sizeof(mjr::ramCanvas3c8b::colorChanArithFltType)  " << sizeof(mjr::ramCanvas3c8b::colorChanArithFltType)   << std::endl;
   std::cout << "sizeof(mjr::ramCanvas3c8b::colorChanArithLogType)  " << sizeof(mjr::ramCanvas3c8b::colorChanArithLogType)   << std::endl;

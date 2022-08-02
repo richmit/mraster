@@ -38,7 +38,7 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  int numRamps = 8, rampGap = 10, rampWidth = 150, maxColors = 1536, textWide = 600;
+  int numRamps = 7, rampGap = 10, rampWidth = 150, maxColors = 1536, textWide = 600;
 
   mjr::ramCanvas3c8b theRamCanvas(maxColors+2*rampGap+textWide, (2+numRamps)*rampWidth+rampGap);
   mjr::ramCanvas3c8b::colorType aColor(255, 255, 255);
@@ -52,17 +52,16 @@ int main(void) {
       int y2 = rampWidth + i * rampWidth + rampWidth - rampGap;
       int yt = (y1+y2)/2;
 
-      mjr::ramCanvas3c8b::csIdxType xi = static_cast<mjr::ramCanvas3c8b::csIdxType>(x);
-      mjr::ramCanvas3c8b::csIdxType b  = static_cast<mjr::ramCanvas3c8b::csIdxType>(maxColors);
+      mjr::ramCanvas3c8b::csIntType xi = static_cast<mjr::ramCanvas3c8b::csIntType>(x);
+      mjr::ramCanvas3c8b::csIntType b  = static_cast<mjr::ramCanvas3c8b::csIntType>(maxColors);
       switch(i) {
-        case 0: theRamCanvas.drawLine(x, y1, x, y2, aColor.setRGBcmpClrCubeRainbow(xi));                                                   theRamCanvas.drawString("  setRGBcmpClrCubeRainbow    ", mjr::hersheyFont::ROMAN_SL_SANSERIF, maxColors+2*rampGap, yt, "red",  1, 20); break;
-        case 1: theRamCanvas.drawLine(x, y1, x, y2, aColor.setRGBcmpRainbowHSV(b, xi));                                                    theRamCanvas.drawString("  setRGBcmpRainbowHSV        ", mjr::hersheyFont::ROMAN_SL_SANSERIF, maxColors+2*rampGap, yt, "red",  1, 20); break;
-        case 2: theRamCanvas.drawLine(x, y1, x, y2, aColor.setRGBcmpRainbowLA( b, xi));                                                    theRamCanvas.drawString("  setRGBcmpRainbowLA         ", mjr::hersheyFont::ROMAN_SL_SANSERIF, maxColors+2*rampGap, yt, "red",  1, 20); break;
-        case 3: theRamCanvas.drawLine(x, y1, x, y2, aColor.setRGBcmpRainbowCM( b, xi, mjr::ramCanvas3c8b::cmfInterpolationEnum::FLOOR));   theRamCanvas.drawString("  setRGBcmpRainbowCM  FLOOR  ", mjr::hersheyFont::ROMAN_SL_SANSERIF, maxColors+2*rampGap, yt, "red",  1, 20); break;
-        case 4: theRamCanvas.drawLine(x, y1, x, y2, aColor.setRGBcmpRainbowCM( b, xi, mjr::ramCanvas3c8b::cmfInterpolationEnum::CEILING)); theRamCanvas.drawString("  setRGBcmpRainbowCM  CEILING", mjr::hersheyFont::ROMAN_SL_SANSERIF, maxColors+2*rampGap, yt, "red",  1, 20); break;
-        case 5: theRamCanvas.drawLine(x, y1, x, y2, aColor.setRGBcmpRainbowCM( b, xi, mjr::ramCanvas3c8b::cmfInterpolationEnum::NEAREST)); theRamCanvas.drawString("  setRGBcmpRainbowCM  NEAREST", mjr::hersheyFont::ROMAN_SL_SANSERIF, maxColors+2*rampGap, yt, "red",  1, 20); break;
-        case 6: theRamCanvas.drawLine(x, y1, x, y2, aColor.setRGBcmpRainbowCM( b, xi, mjr::ramCanvas3c8b::cmfInterpolationEnum::LINEAR));  theRamCanvas.drawString("  setRGBcmpRainbowCM  LINEAR ", mjr::hersheyFont::ROMAN_SL_SANSERIF, maxColors+2*rampGap, yt, "red",  1, 20); break;
-        case 7: theRamCanvas.drawLine(x, y1, x, y2, aColor.setRGBcmpRainbowCM( b, xi, mjr::ramCanvas3c8b::cmfInterpolationEnum::BUMP));    theRamCanvas.drawString("  setRGBcmpRainbowCM  BUMP   ", mjr::hersheyFont::ROMAN_SL_SANSERIF, maxColors+2*rampGap, yt, "red",  1, 20); break;
+        case 0: theRamCanvas.drawLine(x, y1, x, y2, mjr::color3c8b::csCColdeRainbow::c(xi));                                                   theRamCanvas.drawString("  setRGBcmpClrCubeRainbow    ", mjr::hersheyFont::ROMAN_SL_SANSERIF, maxColors+2*rampGap, yt, "red",  1, 20); break;
+        case 1: theRamCanvas.drawLine(x, y1, x, y2, mjr::color3c8b::csRainbowLA::c(b, xi));                                                    theRamCanvas.drawString("  setRGBcmpRainbowLA         ", mjr::hersheyFont::ROMAN_SL_SANSERIF, maxColors+2*rampGap, yt, "red",  1, 20); break;
+        case 2: theRamCanvas.drawLine(x, y1, x, y2, mjr::color3c8b::csRainbowCM::c(b, xi, mjr::ramCanvas3c8b::cmfInterpolationEnum::FLOOR));   theRamCanvas.drawString("  setRGBcmpRainbowCM  FLOOR  ", mjr::hersheyFont::ROMAN_SL_SANSERIF, maxColors+2*rampGap, yt, "red",  1, 20); break;
+        case 3: theRamCanvas.drawLine(x, y1, x, y2, mjr::color3c8b::csRainbowCM::c(b, xi, mjr::ramCanvas3c8b::cmfInterpolationEnum::CEILING)); theRamCanvas.drawString("  setRGBcmpRainbowCM  CEILING", mjr::hersheyFont::ROMAN_SL_SANSERIF, maxColors+2*rampGap, yt, "red",  1, 20); break;
+        case 4: theRamCanvas.drawLine(x, y1, x, y2, mjr::color3c8b::csRainbowCM::c(b, xi, mjr::ramCanvas3c8b::cmfInterpolationEnum::NEAREST)); theRamCanvas.drawString("  setRGBcmpRainbowCM  NEAREST", mjr::hersheyFont::ROMAN_SL_SANSERIF, maxColors+2*rampGap, yt, "red",  1, 20); break;
+        case 5: theRamCanvas.drawLine(x, y1, x, y2, mjr::color3c8b::csRainbowCM::c(b, xi, mjr::ramCanvas3c8b::cmfInterpolationEnum::LINEAR));  theRamCanvas.drawString("  setRGBcmpRainbowCM  LINEAR ", mjr::hersheyFont::ROMAN_SL_SANSERIF, maxColors+2*rampGap, yt, "red",  1, 20); break;
+        case 6: theRamCanvas.drawLine(x, y1, x, y2, mjr::color3c8b::csRainbowCM::c(b, xi, mjr::ramCanvas3c8b::cmfInterpolationEnum::BUMP));    theRamCanvas.drawString("  setRGBcmpRainbowCM  BUMP   ", mjr::hersheyFont::ROMAN_SL_SANSERIF, maxColors+2*rampGap, yt, "red",  1, 20); break;
       }
     }
   theRamCanvas.writeTIFFfile("color_lut_rainbows.tiff");

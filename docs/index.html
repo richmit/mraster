@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-07-28 Thu 19:51 -->
+<!-- 2022-07-29 Fri 10:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster</title>
@@ -219,7 +219,12 @@
 <h2 id="introduction"><span class="section-number-2">1.</span> Introduction</h2>
 <div class="outline-text-2" id="text-introduction">
 <p>
-<b><code>MRaster</code></b> is a very simple C++ library for generating raster images &#x2013;
+From the README:
+</p>
+<blockquote>
+<hr />
+<p>
+<b>MRaster</b> is a very simple C++ library for generating raster images &#x2013;
 espeically things like fractals.
 </p>
 
@@ -230,11 +235,7 @@ has a minimum of external depeadancies, and is quite fast.
 </p>
 
 <p>
-Project page: <a href="http://www.mitchr.me/SS/mraster/">http://www.mitchr.me/SS/mraster/</a>
-</p>
-
-<p>
-Some examples of what can be done with <b><code>MRaster</code></b>:
+Some examples of what can be done with <b>MRaster</b>:
 </p>
 
 <ul class="org-ul">
@@ -249,8 +250,77 @@ Some examples of what can be done with <b><code>MRaster</code></b>:
 </ul>
 
 <p>
-A quick start guide: <a href="QuickStart.html">QuickStart.html</a>
+A quick start guide: <a href="http://richmit.github.io/mraster/QuickStart.html">http://richmit.github.io/mraster/QuickStart.html</a>
 </p>
+
+<p>
+The code: <a href="https://github.com/richmit/mraster/">https://github.com/richmit/mraster/</a>
+</p>
+<hr />
+</blockquote>
+</div>
+</div>
+
+
+<div id="outline-container-org01f9117" class="outline-2">
+<h2 id="org01f9117"><span class="section-number-2">2.</span> Design goals</h2>
+<div class="outline-text-2" id="text-2">
+<ul class="org-ul">
+<li><b>Extreme portability (ISO C++20 only, zero external library requirements)</b></li>
+<li><b>Super simple and easy to use, but full featured enough for an expert to be happy with</b><br />
+My goal was to be able to hand this package to a student with minimal C++ experience, and have them be able to create a Mandelbrot image in an few
+minutes.  For the most part my students were very successful!</li>
+<li><b>Easy integration with existing code and libraries</b> <br />
+The idea is to make the classes adapt to the setting in which they are being used, and not to force programmers to adapt.  For example, colors may be set
+via naive types, numeric characters, hex strings, web color hex strings, name strings, enumerated corner names, symbolic characters, or floating point
+numbers.  As another example points for drawing function be be provided as coordinate pairs, point objects, complex numbers, tuples, arrays, etc&#x2026;</li>
+<li><b>Extreme flexibility <i>and</i> high performance</b> <br />
+In general, many operations are optimized for the specific image layout and type. For example a small, integer based color may be treated in RAM as a
+single packed integer while larger colors may be treated as an array of channels.  As another example, <code>colorTpl</code> member functions will pass a color by
+value if it is small (like a 24-bit RGB color), and by const reference if it large (like a 192-bit RGB color).  In addition the code is carefully
+structured to allow the optimizer to do as much compile time optimization as possible.</li>
+<li><b>No Explicit Limits</b> <br />
+Image size, channel depth, and count are limited only by available RAM.</li>
+<li><b>Sophisticated color API via a zero cost, object based pixel store</b> <br />
+<b><code>MRaster</code></b> is an outlier among image libraries in that pixels are objects.  These objects deliver a very rich API for things like color theory
+computations, color schemes, transformations, etc&#x2026;  And they do so with <b>zero</b> overhead in RAM or runtime performance.  In fact, these templated
+objects are one of the primary tools use to optimize <b><code>MRaster</code></b> performance.</li>
+<li><b>Mathematical Use cases</b><br />
+Images have both real &amp; integer coordinates, so they may be thought of as part of the real plane.  In addition a great many discrete and continue color
+schemes are supported.  Together these features make <b><code>MRaster</code></b> a very friendly environment for mathematically oriented visualization &#x2013; stuff like
+drawing fractals like the Mandelbrot set.</li>
+<li><b>100% focus on raster graphics synthesis</b>
+This is kind of a non-feature.  We simply don't try to do things like anti-aliasing, vector graphics, or FFT based image processing. What we do:
+<ul class="org-ul">
+<li>Manipulate pixels!</li>
+<li>Efficient primitive scanline conversion and clipping including Old school "pixel paint" techniques (set, xor, and, etc&#x2026;.)</li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org47a4234" class="outline-2">
+<h2 id="org47a4234"><span class="section-number-2">3.</span> Who is using it, and what are they using it for?</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+While I can't know what everyone uses it for, many users have shared with me how they use <b><code>MRaster</code></b>.
+</p>
+
+<ul class="org-ul">
+<li>The majority of <b><code>MRaster</code></b> users are doing direct image synthesis for mathematical visualization.
+<ul class="org-ul">
+<li>Raster based fractals like the Mandelbrot set<br />
+<b><code>MRaster</code></b> is used for some university non-linear dynamics courses, generating a higher user count than I expected.</li>
+<li>Strange attractor projections, incidence histograms, bifurcation plots, etc&#x2026;</li>
+<li>Complex function phase portraits</li>
+<li>Making color schemes for other graphics tools</li>
+<li>Producing POV-ray Maps and Height fields</li>
+</ul></li>
+<li>Visualizations in HPC (supercomputer) environemtns.  For large 2D fields, <b><code>MRaster</code></b> can be a less complex and more efficient alternative to traditional
+visualization tools.</li>
+<li>Scientific images (astronomy and microscopy mostly) with very high depth and/or channel count.</li>
+<li>Satellite and other hyperspectral remote-sensing imagery with crazy numbers of channels.</li>
+</ul>
 </div>
 </div>
 </div>

@@ -125,7 +125,7 @@ namespace mjr {
       @tparam fltCrdT A floating point type used for the floating point image coordinates
   */
   template <class colorT, class intCrdT, class fltCrdT>
-  requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
+  //requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
   class ramCanvasTpl {
 
     public:
@@ -149,8 +149,7 @@ namespace mjr {
       typedef typename colorT::colorPtrType         colorPtrType;            //!< imported from colorTpl: Pointer to color
       typedef typename colorT::colorRefType         colorRefType;            //!< imported from colorTpl: Ref to a color
       typedef typename colorT::colorCRefType        colorCRefType;           //!< imported from colorTpl: Const Ref to a color
-      typedef typename colorT::csIdxType            csIdxType;               //!< imported from colorTpl: Color Scheme Index Type
-      typedef typename colorT::icpIdxType           icpIdxType;              //!< imported from colorTpl: Indexed Pallet Index Type
+      typedef typename colorT::csIntType            csIntType;               //!< imported from colorTpl: Color Scheme Index Type
       typedef typename colorT::cmfInterpolationEnum cmfInterpolationEnum;    //!< imported from colorTpl: Interpolation for color match functions
 
       /* Iterators */
@@ -2819,10 +2818,10 @@ namespace mjr {
     for(intCrdT y=y1; y<=y2; y++) {
       for(intCrdT x=x1; x<=x2; x++) {
         colorT aColor = getPxColorNC(x, y);
-        if(redChan   >= 0) curPixComp[redChan]   = aColor.getC0_byte();
-        if(greenChan >= 0) curPixComp[greenChan] = aColor.getC1_byte();
-        if(blueChan  >= 0) curPixComp[blueChan]  = aColor.getC2_byte();
-        if(alphaChan >= 0) curPixComp[alphaChan] = aColor.getC3_byte();
+        if(redChan   >= 0) curPixComp[redChan]   = aColor.getChan_byte(0);
+        if(greenChan >= 0) curPixComp[greenChan] = aColor.getChan_byte(1);
+        if(blueChan  >= 0) curPixComp[blueChan]  = aColor.getChan_byte(2);
+        if(alphaChan >= 0) curPixComp[alphaChan] = aColor.getChan_byte(3);
         curPixComp += bytesPerPix;
       } /* end for x */
     } /* end for y */

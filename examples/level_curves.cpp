@@ -60,7 +60,7 @@ drT f(drT x, drT y) {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 void drawLevelCurves(int numBand, drT bandWidth, drT zMin, drT zMax, drT minRealX, drT maxRealX, drT minRealY, drT maxRealY, const char *file) {
   int x, y, foundBand;
-  mjr::ramCanvas3c8b::csIdxType clr;
+  mjr::ramCanvas3c8b::csIntType clr;
   drT fxy, bandGap, band, minDist, minBand;
 
   mjr::ramCanvas3c8b theRamCanvas(1024, 1024, minRealX, maxRealX, minRealY, maxRealY);
@@ -90,8 +90,8 @@ void drawLevelCurves(int numBand, drT bandWidth, drT zMin, drT zMax, drT minReal
         theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType(0, 255, 0));
         } else {
           if(numBand == 0) {
-            clr = static_cast<mjr::ramCanvas3c8b::csIdxType>(mjr::genLinMap(fxy, zMin, zMax, (drT)0, (drT)(255*4+1)));
-            theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType().setRGBcmpIceToWaterToHot(clr));
+            clr = static_cast<mjr::ramCanvas3c8b::csIntType>(mjr::genLinMap(fxy, zMin, zMax, (drT)0, (drT)(255*4+1)));
+            theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType::csCColdeIceToWaterToHot::c(clr));
           } else {
             if(bandWidth == 0) {
               theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType(0, 0, 255));
@@ -106,8 +106,8 @@ void drawLevelCurves(int numBand, drT bandWidth, drT zMin, drT zMax, drT minReal
                 }
               }
               if(foundBand) {
-                clr = static_cast<mjr::ramCanvas3c8b::csIdxType>(mjr::genLinMap(minBand, zMin, zMax, (drT)0, (drT)(255*4+1)));
-                theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType().setRGBcmpIceToWaterToHot(clr));
+                clr = static_cast<mjr::ramCanvas3c8b::csIntType>(mjr::genLinMap(minBand, zMin, zMax, (drT)0, (drT)(255*4+1)));
+                theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType::csCColdeIceToWaterToHot::c(clr));
               }
             } else {
               theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType(0, 0, 255));

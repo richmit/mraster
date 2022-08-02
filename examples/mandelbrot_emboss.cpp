@@ -142,7 +142,7 @@ int main(void) {
             distNormal = distNormal/distNormalAbs;  // normalize distNormal
             double distShade = std::real(distNormal * std::conj(lightDirection)) + lightHeight;  // dot product with the incoming light
             distShade = mjr::unitClamp(distShade/(1+lightHeight));  // rescale so <=1, and then clamp to keep >=0
-            distRamCanvas.drawPoint(x, y, theColor.setRGBcmpGrey(static_cast<mjr::ramCanvas3c8b::csIdxType>(mjr::unitTooIntLinMap(distShade, 255))));
+            distRamCanvas.drawPoint(x, y, mjr::color3c8b::csCCdiag01::c(static_cast<mjr::ramCanvas3c8b::csIntType>(mjr::unitTooIntLinMap(distShade, 255))));
           }
         } else {
           distRamCanvas.drawPoint(x, y, "red");

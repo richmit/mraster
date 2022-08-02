@@ -47,7 +47,7 @@ double ranges[6][4] = { {  -2.700,  2.100, -2.100,  2.100 },
                         {   0.250,  0.600,  0.700,  1.000 },
                         {  -0.720, -0.695,  0.385,  0.410 } };
 
-typedef mjr::ramCanvas3c8b::csIdxType cit;
+typedef mjr::ramCanvas3c8b::csIntType cit;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
@@ -69,7 +69,7 @@ int main(void) {
             (zx*zx+zy*zy<100000)&&(count<=NUMITR);
             count++,zx=zx*zx-zy*zy+a,zy=2*zx*zy+b) ;
         if(count < NUMITR)
-          theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().setRGBcmpFireRamp(mjr::numberWrap(static_cast<cit>(count*20), 767)));
+          theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType::csCColdeFireRamp::c(mjr::numberWrap(static_cast<cit>(count*20), 767)));
       }
     }
     theRamCanvas.writeTIFFfile("tippets" + std::to_string(i) + ".tiff");
