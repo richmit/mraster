@@ -97,7 +97,7 @@ int main(void) {
     mjr::ramCanvas3c8b::colorType bColor;
     for(int yi=0;yi<theRamCanvas.get_numYpix();yi++)
       for(int xi=0;xi<theRamCanvas.get_numXpix();xi++)
-        anotherRamCanvas.drawPoint(xi, yi, bColor.cmpRGBcolorRamp(static_cast<mjr::ramCanvas3c8b::csIntType>(theRamCanvas.getPxColor(xi, yi).getC0() * 1275 / maxII), "0RYBCW"));
+        anotherRamCanvas.drawPoint(xi, yi, bColor.cmpRGBcornerGradiant(static_cast<mjr::ramCanvas3c8b::csIntType>(theRamCanvas.getPxColor(xi, yi).getC0() * 1275 / maxII), "0RYBCW"));
 
     { std::ostringstream stringStream;
       stringStream << "peterdejongM_" << std::setfill('0') << std::setw(3) << frame << ".tiff";

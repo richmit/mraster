@@ -71,9 +71,9 @@ int main(void) {
         theRamCanvasK.drawPoint(x, y, mjr::ramCanvas3c8b::colorType::csCColdeRainbow::c(mjr::numberWrap(static_cast<cit>((std::arg(z)+3.14)*255), 255*6+1)));
         // L
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
-          theRamCanvasL.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcolorRamp(mjr::intClamp(static_cast<cit>(std::abs(std::real(z))*15), 255*1-1), "0R"));
+          theRamCanvasL.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerGradiant(mjr::intClamp(static_cast<cit>(std::abs(std::real(z))*15), 255*1-1), "0R"));
         else
-          theRamCanvasL.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcolorRamp(mjr::intClamp(static_cast<cit>(std::abs(std::imag(z))*15), 255*1-1), "0B"));
+          theRamCanvasL.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerGradiant(mjr::intClamp(static_cast<cit>(std::abs(std::imag(z))*15), 255*1-1), "0B"));
       }
     }
   }

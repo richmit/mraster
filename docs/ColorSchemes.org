@@ -57,15 +57,15 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
 *=MRaster=* provides access to a rich collection of color schemes.  Color schemes are exposed in the API as inner classes of the =colorTpl= class.  These
 inner classes follow a regular naming convention:
 
-  - =csCB ..........= RGB Color Brewer 2
-  - =csWebSafe .....= RGB Web safe colors
-  - =csCCdiag ......= RGB color cube: diagonal gradients
-  - =csCCcons ......= RGB color cube: Gradients with constant brightness
+  - =csCB ..........= RGB Color Brewer 2 (template: =csCB_tpl=
+  - =csFPwebSafe ...= RGB Web safe colors (template: =csFP_tpl=
+  - =csCCdiag ......= RGB color cube: diagonal gradients (template: =csCC_tpl=)
+  - =csCCcons ......= RGB color cube: Gradients with constant brightness (template: =csCC_tpl=)
+  - =csCColde ......= RGB color cube: Some classic color gradients (template: =csCC_tpl=)
+  - =csCCud ........= RGB color cube: Two color up-down ramps (template: =csCC_tpl=)
+  - =csCCSum .......= RGB color cube: Sum ramp (template: =csCC_tpl=)
   - =csHSLh ........= RGB color cube: Gradients starting at the center of the cube and extending to a corner
-  - =csCColde ......= RGB color cube: Some classic color gradients
-  - =csCCud ........= RGB color cube: Two color up-down ramps
-  - =csCCSum .......= RGB color cube: Sum ramp
-  - =csBin .........= RGB Binary Schemes
+  - =csBin .........= RGB Binary Schemes (template: =csCC_tpl=)
   - =csPGrey .......= RGB Pseudo-greyscale
   - =csRainbow .....= RGB spectrum based colors
 
@@ -96,12 +96,12 @@ aColor.csSet<mjr::color3c8b::webSafeNormalVision>(25);
 ** Color Scheme Class Interface
 
 Not all color scheme classes have the same interface; however, the interfaces are uniformly designed:
-  - *=Nc=:* The number of colors available in the scheme 
-    - As a member: Color schemes with a fixed number of colors at compile time.
-    - As an argument: Color schemes with the number of colors set at run time.
-  - *=maxNc= & =minNc=:* Define the maximal & minimal =Nc= value for color schemes with the number of colors set at run time. Not found in color schemes with a fixed number of colors at compile time.
-  - *=c=:* Used to set colors
-    - All color schemes have a =colorTpl= factory method and a =colorTpl= setter method taking a =colorTpl= instance as the first argument with the remaining arguments identical to the factory method.
+  - *=numC=:* The number of colors available in the scheme 
+    - Color schemes with a fixed number of colors at compile time have member =numC=
+    - Color schemes with the number of colors set at run time, will have a =numC= argument for the =c= methods.
+      - These schemes have two members specifying the range for =numC=: =minNumC= & =maxNumC=.
+  - *=c=:* methods are used to set colors
+    - All color schemes have a =colorTpl= factory methodand a =colorTpl= setter method taking a =colorTpl= instance as the first argument with the remaining arguments identical to the factory method.
     - The arguments for the =c= method vary according to the needs of the scheme.  For example:
       - =csCB*= color schemes take an =Nc= argument followed by a =csIdx=.
       - =csCC*= color schemes take a =csIdx= -- the =Nc= value being fixed at compile time.
@@ -316,14 +316,14 @@ Many color schemes provide a number of colors that is a function of =chanStepMax
   - =HY= -- =csHSLhY=
   - =HM= -- =csHSLhM=
 
- The traversal from black to white -- through the center point -- is directly supported via a named method.  Note that cmpRGBcolorRamp supports this via
+ The traversal from black to white -- through the center point -- is directly supported via a named method.  Note that cmpRGBcornerGradiant() supports this via
  a graph string of "0W".
 
   - =0W= -- =csCCdiag01=
 
  The other diagonal traversals (diagonal meaning through the center of the cube) are essentially two of the HSL saturation based schemes placed back to back.
  They can form effective divergent color schemes.  Black to white is technically one of them, but we have already covered that one.  Note that the
- cmpRGBcolorRamp function will support this class of schemes with a two element graph -- the first vertex and the last. The remaining three diagonal schemes
+ cmpRGBcornerGradiant() function will support this class of schemes with a two element graph -- the first vertex and the last. The remaining three diagonal schemes
  are as follows:
 
   - =CR= -- =csCCdiagCR=

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-07-31 Sun 22:57 -->
+<!-- 2022-08-02 Tue 14:11 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>Color Schemes</title>
@@ -251,12 +251,12 @@
 
 <tr>
 <td class="org-right"><b>Updated:</b></td>
-<td class="org-left"><i>2022-07-31 22:57:06</i></td>
+<td class="org-left"><i>2022-08-02 14:11:07</i></td>
 </tr>
 
 <tr>
 <td class="org-right"><b>Generated:</b></td>
-<td class="org-left"><i>2022-07-31 22:57:07</i></td>
+<td class="org-left"><i>2022-08-02 14:11:08</i></td>
 </tr>
 </tbody>
 </table>
@@ -270,18 +270,18 @@ Copyright &copy; 2022 Mitch Richling. All rights reserved.
 <ul>
 <li><a href="#introduction">1. Introduction</a>
 <ul>
-<li><a href="#org562aeb2">1.1. Color Scheme Class Interface</a></li>
+<li><a href="#org659fd15">1.1. Color Scheme Class Interface</a></li>
 </ul>
 </li>
-<li><a href="#orgb320e79">2. Color Cube Edge/Diagonal Graph Color Schemes</a>
+<li><a href="#orgdcdf3dc">2. Color Cube Edge/Diagonal Graph Color Schemes</a>
 <ul>
-<li><a href="#org6facdcb">2.1. The Color Cube Rainbow</a></li>
-<li><a href="#org366a54d">2.2. Hitting all the corners</a></li>
-<li><a href="#org0e3d87b">2.3. Hot Too Cold</a></li>
-<li><a href="#orgeb500e9">2.4. Constant Intensity Cycles</a></li>
-<li><a href="#org581daa7">2.5. One Segment Diverging Maps</a></li>
-<li><a href="#orgf75a136">2.6. Three Segment Diverging Maps</a></li>
-<li><a href="#org5aabcae">2.7. Center point ramps (HSL schemes)</a></li>
+<li><a href="#orge274d81">2.1. The Color Cube Rainbow</a></li>
+<li><a href="#orgd64514a">2.2. Hitting all the corners</a></li>
+<li><a href="#org9a39e24">2.3. Hot Too Cold</a></li>
+<li><a href="#org540bd45">2.4. Constant Intensity Cycles</a></li>
+<li><a href="#org82e35b2">2.5. One Segment Diverging Maps</a></li>
+<li><a href="#org03bf917">2.6. Three Segment Diverging Maps</a></li>
+<li><a href="#org28ba40c">2.7. Center point ramps (HSL schemes)</a></li>
 </ul>
 </li>
 </ul>
@@ -297,15 +297,15 @@ inner classes follow a regular naming convention:
 </p>
 
 <ul class="org-ul">
-<li><code>csCB ..........</code> RGB Color Brewer 2</li>
-<li><code>csWebSafe .....</code> RGB Web safe colors</li>
-<li><code>csCCdiag ......</code> RGB color cube: diagonal gradients</li>
-<li><code>csCCcons ......</code> RGB color cube: Gradients with constant brightness</li>
+<li><code>csCB ..........</code> RGB Color Brewer 2 (template: <code>csCB_tpl</code></li>
+<li><code>csFPwebSafe ...</code> RGB Web safe colors (template: <code>csFP_tpl</code></li>
+<li><code>csCCdiag ......</code> RGB color cube: diagonal gradients (template: <code>csCC_tpl</code>)</li>
+<li><code>csCCcons ......</code> RGB color cube: Gradients with constant brightness (template: <code>csCC_tpl</code>)</li>
+<li><code>csCColde ......</code> RGB color cube: Some classic color gradients (template: <code>csCC_tpl</code>)</li>
+<li><code>csCCud ........</code> RGB color cube: Two color up-down ramps (template: <code>csCC_tpl</code>)</li>
+<li><code>csCCSum .......</code> RGB color cube: Sum ramp (template: <code>csCC_tpl</code>)</li>
 <li><code>csHSLh ........</code> RGB color cube: Gradients starting at the center of the cube and extending to a corner</li>
-<li><code>csCColde ......</code> RGB color cube: Some classic color gradients</li>
-<li><code>csCCud ........</code> RGB color cube: Two color up-down ramps</li>
-<li><code>csCCSum .......</code> RGB color cube: Sum ramp</li>
-<li><code>csBin .........</code> RGB Binary Schemes</li>
+<li><code>csBin .........</code> RGB Binary Schemes (template: <code>csCC_tpl</code>)</li>
 <li><code>csPGrey .......</code> RGB Pseudo-greyscale</li>
 <li><code>csRainbow .....</code> RGB spectrum based colors</li>
 </ul>
@@ -346,22 +346,24 @@ aColor.csSet&lt;<span style="color: #8470ff; font-weight: bold;">mjr</span>::<sp
 </div>
 </div>
 
-<div id="outline-container-org562aeb2" class="outline-3">
-<h3 id="org562aeb2"><span class="section-number-3">1.1.</span> Color Scheme Class Interface</h3>
+<div id="outline-container-org659fd15" class="outline-3">
+<h3 id="org659fd15"><span class="section-number-3">1.1.</span> Color Scheme Class Interface</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 Not all color scheme classes have the same interface; however, the interfaces are uniformly designed:
 </p>
 <ul class="org-ul">
-<li><b><code>Nc</code>:</b> The number of colors available in the scheme 
+<li><b><code>numC</code>:</b> The number of colors available in the scheme 
 <ul class="org-ul">
-<li>As a member: Color schemes with a fixed number of colors at compile time.</li>
-<li>As an argument: Color schemes with the number of colors set at run time.</li>
+<li>Color schemes with a fixed number of colors at compile time have member <code>numC</code></li>
+<li>Color schemes with the number of colors set at run time, will have a <code>numC</code> argument for the <code>c</code> methods.
+<ul class="org-ul">
+<li>These schemes have two members specifying the range for <code>numC</code>: <code>minNumC</code> &amp; <code>maxNumC</code>.</li>
 </ul></li>
-<li><b><code>maxNc</code> &amp; <code>minNc</code>:</b> Define the maximal &amp; minimal <code>Nc</code> value for color schemes with the number of colors set at run time. Not found in color schemes with a fixed number of colors at compile time.</li>
-<li><b><code>c</code>:</b> Used to set colors
+</ul></li>
+<li><b><code>c</code>:</b> methods are used to set colors
 <ul class="org-ul">
-<li>All color schemes have a <code>colorTpl</code> factory method and a <code>colorTpl</code> setter method taking a <code>colorTpl</code> instance as the first argument with the remaining arguments identical to the factory method.</li>
+<li>All color schemes have a <code>colorTpl</code> factory methodand a <code>colorTpl</code> setter method taking a <code>colorTpl</code> instance as the first argument with the remaining arguments identical to the factory method.</li>
 <li>The arguments for the <code>c</code> method vary according to the needs of the scheme.  For example:
 <ul class="org-ul">
 <li><code>csCB*</code> color schemes take an <code>Nc</code> argument followed by a <code>csIdx</code>.</li>
@@ -384,8 +386,8 @@ Many color schemes provide a number of colors that is a function of <code>chanSt
 </div>
 </div>
 
-<div id="outline-container-orgb320e79" class="outline-2">
-<h2 id="orgb320e79"><span class="section-number-2">2.</span> Color Cube Edge/Diagonal Graph Color Schemes</h2>
+<div id="outline-container-orgdcdf3dc" class="outline-2">
+<h2 id="orgdcdf3dc"><span class="section-number-2">2.</span> Color Cube Edge/Diagonal Graph Color Schemes</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The RGB color cube:
@@ -462,8 +464,8 @@ as "complete cube graph with center" in this documentation.
 </p>
 </div>
 
-<div id="outline-container-org6facdcb" class="outline-3">
-<h3 id="org6facdcb"><span class="section-number-3">2.1.</span> The Color Cube Rainbow</h3>
+<div id="outline-container-orge274d81" class="outline-3">
+<h3 id="orge274d81"><span class="section-number-3">2.1.</span> The Color Cube Rainbow</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 This is one of the most commonly seen color schemes in scientific visualization, and it is also one of the worst because it can be misleading when
@@ -502,8 +504,8 @@ If we expand to the edge face/diagonal graph, then we have may more six segment 
 </div>
 </div>
 
-<div id="outline-container-org366a54d" class="outline-3">
-<h3 id="org366a54d"><span class="section-number-3">2.2.</span> Hitting all the corners</h3>
+<div id="outline-container-orgd64514a" class="outline-3">
+<h3 id="orgd64514a"><span class="section-number-3">2.2.</span> Hitting all the corners</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 A common request is for a cycle in the face edge graph that uses every corner color of the RGB cube.  Not only do we have one, but 6 uniquely
@@ -572,8 +574,8 @@ black to white!
 </div>
 </div>
 
-<div id="outline-container-org0e3d87b" class="outline-3">
-<h3 id="org0e3d87b"><span class="section-number-3">2.3.</span> Hot Too Cold</h3>
+<div id="outline-container-org9a39e24" class="outline-3">
+<h3 id="org9a39e24"><span class="section-number-3">2.3.</span> Hot Too Cold</h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 A very common color map used to map data with ranges from cold up to hot is known as the "cold too hot ramp".  This ramp provides colors from blue, up
@@ -596,8 +598,8 @@ however, it is more attractive.  This one moves from white (ice), up to water (b
 </div>
 </div>
 
-<div id="outline-container-orgeb500e9" class="outline-3">
-<h3 id="orgeb500e9"><span class="section-number-3">2.4.</span> Constant Intensity Cycles</h3>
+<div id="outline-container-org540bd45" class="outline-3">
+<h3 id="org540bd45"><span class="section-number-3">2.4.</span> Constant Intensity Cycles</h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 Two cycles, with three edges each, exhibiting constant intensity for every color in the color scheme are genuinely useful.  They have the advantage that they
@@ -611,8 +613,8 @@ always render a "bright" color.  The lower intensity version is best for project
 </div>
 </div>
 
-<div id="outline-container-org581daa7" class="outline-3">
-<h3 id="org581daa7"><span class="section-number-3">2.5.</span> One Segment Diverging Maps</h3>
+<div id="outline-container-org82e35b2" class="outline-3">
+<h3 id="org82e35b2"><span class="section-number-3">2.5.</span> One Segment Diverging Maps</h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 One edge trees in the face diagonal graph with a nearly constant intensity of 2 along the entire edge are useful for "diverging" or "bipolar" color
@@ -639,8 +641,8 @@ used to compute the scheme: Blue up, red down, green constant (maxChanVal).
 </div>
 </div>
 
-<div id="outline-container-orgf75a136" class="outline-3">
-<h3 id="orgf75a136"><span class="section-number-3">2.6.</span> Three Segment Diverging Maps</h3>
+<div id="outline-container-org03bf917" class="outline-3">
+<h3 id="org03bf917"><span class="section-number-3">2.6.</span> Three Segment Diverging Maps</h3>
 <div class="outline-text-3" id="text-2-6">
 <p>
 Some three edge trees utilizing very different colors for starting and terminal points can form very nice "divergent" color maps.  Such maps can
@@ -649,14 +651,14 @@ supported via named methods (selected for attractiveness):
 </p>
 
 <ul class="org-ul">
-<li><code>BWR</code>  intensity between 1 and 3</li>
-<li><code>CWM</code>  intensity between 2 and 3</li>
+<li><code>BWR</code> &#x2013; intensity between 1 and 3</li>
+<li><code>CWM</code> &#x2013; intensity between 2 and 3</li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org5aabcae" class="outline-3">
-<h3 id="org5aabcae"><span class="section-number-3">2.7.</span> Center point ramps (HSL schemes)</h3>
+<div id="outline-container-org28ba40c" class="outline-3">
+<h3 id="org28ba40c"><span class="section-number-3">2.7.</span> Center point ramps (HSL schemes)</h3>
 <div class="outline-text-3" id="text-2-7">
 <p>
 Color schemes from the HSL color space are popular because they are perceptually more linear.  The most popular maps extend from the center of HSL space,

@@ -3,7 +3,7 @@
 /**
  @file      color_lut_ramp_misc.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Demonstrate the cmpRGBcolorRamp (general color ramp) function
+ @brief     Demonstrate the cmpRGBcornerGradiant (general color ramp) function
  @std       C++20
  @copyright
   @parblock
@@ -63,7 +63,7 @@ int main(void) {
   for(int i=0; i<100; i++) 
     for(int x=390;x<=830;x++) {
       int xi = static_cast<int>(x) - 380;
-      theRamCanvas.drawVertLineNC(50, theRamCanvas.get_numYpix()-50, xi, aColor.cmpColorRamp(x, anchors, corners));
+      theRamCanvas.drawVertLineNC(50, theRamCanvas.get_numYpix()-50, xi, aColor.cmpGradiant(x, anchors, corners));
     }
 
   theRamCanvas.writeTIFFfile("color_lut_ramp_misc.tiff");
