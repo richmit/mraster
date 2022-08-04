@@ -513,6 +513,13 @@ namespace mjr {
       constexpr static int       maxWavelength = 830;                                                              //!< Maximum wavelength for wavelength conversion
       //@}
 
+      /** @name Default RGB Luminescence Weights */
+      //@{
+      constexpr static double RGBluminanceWeightR = 0.2126;
+      constexpr static double RGBluminanceWeightG = 0.7152;
+      constexpr static double RGBluminanceWeightB = 0.0722;
+      //@}
+
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Public Enums Constants */
       //@{
@@ -2376,9 +2383,9 @@ namespace mjr {
           @return Returns a reference to the current color object.*/
       inline colorTpl & tfrmGreyScaleRGB(void) {
         /* Requires: Inherits numChan>2 from getC2. */
-        setChanNC(0, static_cast<clrChanT>(static_cast<channelArithFltType>(getC0()) * static_cast<channelArithFltType>(0.2126) +
-                                           static_cast<channelArithFltType>(getC1()) * static_cast<channelArithFltType>(0.7152) +
-                                           static_cast<channelArithFltType>(getC2()) * static_cast<channelArithFltType>(0.0722)));
+        setChanNC(0, static_cast<clrChanT>(static_cast<channelArithFltType>(getC0()) * static_cast<channelArithFltType>(RGBluminanceWeightR) +
+                                           static_cast<channelArithFltType>(getC1()) * static_cast<channelArithFltType>(RGBluminanceWeightG) +
+                                           static_cast<channelArithFltType>(getC2()) * static_cast<channelArithFltType>(RGBluminanceWeightB)));
         for(int i=1; i<numChan; i++)
           setChanNC(i, getChanNC(0));
         return *this;
@@ -2494,7 +2501,7 @@ namespace mjr {
           blueF  = 100.0 * ((blueF  > 0.04045) ? std::pow((blueF  + 0.055) / 1.055, 2.4) : blueF  / 12.92);
 
           double X = (0.4124 * redF + 0.3576 * greenF + 0.1805 * blueF);
-          double Y = (0.2126 * redF + 0.7152 * greenF + 0.0722 * blueF);
+          double Y = (0.2126 * redF + 0.7152 * greenF + 0.0722 * blueF); // luminance with weights RGBluminanceWeightR, RGBluminanceWeightG, RGBluminanceWeightB
           double Z = (0.0193 * redF + 0.1192 * greenF + 0.9505 * blueF);
 
           if (space == colorSpaceEnum::XYZ)
@@ -2666,13 +2673,13 @@ namespace mjr {
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the luminance of the current color via the definition given in the ITU-R Recommendation BT.709.
-          The output value will be between 0 and 1, and is given by: (0.2126*R+0.7152*G+0.0722*B)/#maxChanVal.
+          The output value will be between 0 and 1, and is given by: (RGBluminanceWeightR*R+RGBluminanceWeightG*G+RGBluminanceWeightB*B)/#maxChanVal.
           @return The luminance for the current object. */
       inline channelArithFltType rgbLuminance(void) {
         /* Requires: Inherits numChan>2 from getC2. */
-        return (static_cast<channelArithFltType>(getC0()) * static_cast<channelArithFltType>(0.2126) +
-                static_cast<channelArithFltType>(getC1()) * static_cast<channelArithFltType>(0.7152) +
-                static_cast<channelArithFltType>(getC2()) * static_cast<channelArithFltType>(0.0722)) / static_cast<channelArithFltType>(maxChanVal);
+        return (static_cast<channelArithFltType>(getC0()) * static_cast<channelArithFltType>(RGBluminanceWeightR) +
+                static_cast<channelArithFltType>(getC1()) * static_cast<channelArithFltType>(RGBluminanceWeightG) +
+                static_cast<channelArithFltType>(getC2()) * static_cast<channelArithFltType>(RGBluminanceWeightB)) / static_cast<channelArithFltType>(maxChanVal);
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the unscaled intensity (sum of the first three components) of the current color
@@ -2872,11 +2879,207 @@ namespace mjr {
       }
       //@}
 
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @defgroup cs Color Schemes */
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** Compute a color from a polynomial space curve in the RGB color space. This is a continuous color scheme!
+          @tparam coefs Polynomial coefficients*/
+      template<double...coefs>
+      class csPLY_tpl {
+        public:
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csX A value in [0, 1] that identifies the color in the scheme.
+              @return Returns a reference to \a aColor. */
+          static inline colorTpl& c(colorRefType aColor, csFltType csX) {
+            double pR = pcoff[0 * psize];
+            double pG = pcoff[1 * psize];
+            double pB = pcoff[2 * psize];
+            for (unsigned int i=1; i<psize; i++) {
+              pR = pR * csX + pcoff[i + 0 * psize];
+              pG = pG * csX + pcoff[i + 1 * psize];
+              pB = pB * csX + pcoff[i + 2 * psize];
+            }
+            return aColor.setChans_dbl(std::clamp(pR, 0.0, 1.0), std::clamp(pG, 0.0, 1.0), std::clamp(pB, 0.0, 1.0));
+          }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csX A value in [0, 1] that identifies the color in the scheme.
+              @return Returns a colorTpl value */
+          static inline colorTpl c(csFltType csX) { colorTpl tmp; return c(tmp, csX); }
+        private:
+          constexpr static int    psize   = (sizeof...(coefs)) / 3;
+          constexpr static double pcoff[] = { coefs... };
+      };
 
+      //========================================================================================================================================================
+      /** @name Color Schemes: Polynomial */
+      //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csPLYgrey
+          @ingroup cs
+          @extends csPLY_tpl
+          Greyscale */
+      typedef csPLY_tpl<1.0, 0.0,
+                        1.0, 0.0,
+                        1.0, 0.0> csPLYgrey;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csPLYgrey
+          @ingroup cs
+          @extends csPLY_tpl
+          Quadratic */
+      typedef csPLY_tpl<1.0, 0.0, 0.0, 
+                        1.0, 0.0, 0.0, 
+                        1.0, 0.0, 0.0> csPLYquad;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csPLYturbo
+          @ingroup cs
+          @extends csPLY_tpl
+          Similar to the Google turbo colormap.
+          @image html color_lut_docs_csPLYgrey.tiff
+          Note this colormap is not identical to turbo, and lacks some of it's more sophisticated characteristics; however, it looks nice.
+          See: https://ai.googleblog.com/2019/08/turbo-improved-rainbow-colormap-for.html */
+      typedef csPLY_tpl< 40703.92740, -218720.2701,   492368.2177, -590441.1804,   384271.9078, -101352.6555,  -30425.81099,
+                         32619.05953, -10529.162296, 1625.5688083, -124.13217495,  4.867108400, 0.15787894011,
+                         20766.64723, -122258.4886,   315808.0723, -470687.9792,   447662.9929, -283594.9850,  121141.42864,
+                        -34482.96363,  6288.268231, -682.8118257,   37.74849512,  2.025549368, 0.06643490255,
+                        -94331.85477,  587011.8043, -1597312.2220, 2495306.9899, -2470958.0510, 1616523.3372, -706621.97816,
+                        204052.57726, -37536.525321, 4109.7062335, -257.68681737, 13.750387410, 0.16179522842>                          csPLYturbo;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csPLYparula
+          @ingroup cs
+          @extends csPLY_tpl
+          Similar to the Matlab parula colormap.  
+          Note this colormap is not identical to parula, and lacks some of it's more sophisticated characteristics; however, it looks nice.
+          See: https://www.mathworks.com/help/matlab/ref/parula.html */
+      typedef csPLY_tpl< 62043.87545, -399037.6523, 1122946.9120, -1812238.5254, 1846100.4184, -1230398.5816,  537273.93047, 
+                       -149254.730651, 24535.019552, -2015.3894764, 44.825447931, 0.6772663755, 0.2018889435,
+                        -17121.77553,  108751.1007, -300422.7570,   473217.4661, -468061.6834,   301522.8593, -126770.41694,   
+                         33776.781210, -5288.933402,   404.6316583, -7.800267203, 1.3431462881, 0.1677335602,
+                        -17004.66127,  100139.7442, -255248.5285,   366029.9549, -319570.5392,   169195.6211,  -48015.67328,   
+                          2478.369459,  2717.762128,  -795.8032035, 72.119793045, 1.1497391882, 0.5347179324>                           csPLYparula;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csPLYmagma
+          @ingroup cs
+          @extends csPLY_tpl
+          Similar, but not identical, to the matplotlib magma colormap.  
+          See: https://bids.github.io/colormap/ and https://matplotlib.org/stable/tutorials/colors/colormaps.html */
+      typedef csPLY_tpl<746.7387907, -3433.588054,   6464.361262,  -6369.328232,   3470.981211, -1010.528460,   141.7946515, 
+                        -15.78575778,   6.066078845,  0.2765580349, 0.000406276347,
+                        885.3555317, -5488.721941,  14347.739660, -20613.711506,  17758.797775, -9380.063372,  2976.8215781, 
+                       -529.56166374,  45.254936301, -0.9276250448, 0.006923020887,
+                      -3360.6362774, 17553.826465, -38851.355442,  47349.901018, -34548.072322, 15336.155184, -3997.3017542, 
+                        548.12480687, -32.540585926,  2.6406562133, 0.006263758764>                                                     csPLYmagma;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csPLYinferno
+          @ingroup cs
+          @extends csPLY_tpl
+          Similar, but not identical, to the matplotlib inferno colormap.  
+          See: https://bids.github.io/colormap/ and https://matplotlib.org/stable/tutorials/colors/colormaps.html */
+      typedef csPLY_tpl<-19.63292067,    452.2107953, -1685.008066,   2775.510486, -2442.279827,   1181.312494, -280.5809421, 
+                         10.74924866,  8.60430465,  0.1030211659, 0.002048171596,
+                       1970.76446015, -10379.8617699, 23277.924908, -28925.873437, 21688.815122, -10002.539645, 2763.0755166, 
+                       -419.99828889, 28.92908793, -0.2365793129, 0.001175881895,
+                       2525.53763382, -12168.1567723, 24862.266312, -28273.600973, 19817.598983,  -8983.810158, 2683.7805375, 
+                       -515.72960422, 52.67809976,  0.0641022894, 0.024051180021>                                                       csPLYinferno;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csPLYplasma
+          @ingroup cs
+          @extends csPLY_tpl
+          Similar, but not identical, to the matplotlib plasma colormap.  
+          See: https://bids.github.io/colormap/ and https://matplotlib.org/stable/tutorials/colors/colormaps.html */
+      typedef csPLY_tpl<-43.8322257,   285.8375115,  -806.7514473,   1301.765273, -1325.274751,   878.0715655,  -374.7228293,
+                         98.20716947, -15.31425214,  2.899584724, 0.05309687850,
+                       1014.1378090, -5599.3136737, 13256.9879694, -17529.001879, 14102.556299, -7032.4501033,  2110.7323912,
+                       -350.31653834,  28.69509557, -1.086029536, 0.03452846048,
+                       -829.5844973,  4029.2020771, -8461.6295286,  10078.322085, -7471.246818,  3531.4365043, -1036.2596994,
+                        175.24253651, -17.51426724,  1.646647586, 0.52562476199>                                                        csPLYplasma;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csPLYviridis
+          @ingroup cs
+          @extends csPLY_tpl
+          Similar, but not identical, to the matplotlib viridis colormap.  
+          See: https://bids.github.io/colormap/ and https://matplotlib.org/stable/tutorials/colors/colormaps.html */
+      typedef csPLY_tpl<-5.432077171,   4.751786889,  6.203735901,  -4.599931518, -0.32724109679, 0.1077083262, 0.274455424454,
+                         4.641571316, -13.749439404, 14.153964947,  -5.758238189,  0.21481356454, 1.3964696839, 0.005767962397,
+                        26.272107604, -65.320967828, 56.656299565, -19.291808950,  0.09197688076, 1.3867705979, 0.332663881113>         csPLYviridis;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csPLYcividis
+          @ingroup cs
+          @extends csPLY_tpl
+          Similar, but not identical, to the cividis colormap.  
+          Note this map dosen't have the flat red and sharp increase in blue at the start of the map.
+          See: https://github.com/marcosci/cividis and https://matplotlib.org/stable/tutorials/colors/colormaps.html */
+      typedef csPLY_tpl<-10.6296994279,  27.5479183452, -25.1086313881,  9.3401209056, -0.1385953043, -0.0177903167,
+                         -0.2641767638,   0.6924831686,  -0.5155427716,  0.2071305342,  0.6695454456,  0.1273928107,
+                          9.7085048454, -25.9409393982,  24.1852720215, -9.7350011883,  1.7347333905,  0.3185822998>                    csPLYcividis;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csPLYhsvRB
+          @ingroup cs
+          @extends csPLY_tpl
+          Similar to csCColdeRainbow, but a little softer. */
+      typedef csPLY_tpl<8.746561257e-11,   4.285714286, -4.285714286,  1.166666667e+00,
+                        1.200000000e+01, -21.000000000,  9.023809524, -2.161907281e-13,
+                       -1.200000000e+01,  15.000000000, -3.023809524,  2.380952381e-02>                                                 csPLYhsvRB;
+      //@}
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** Compute a color from Dave Green's cubehelix scheme.  See: Green, D. A., 2011, Bulletin of the Astronomical Society of India, Vol.39, p.289.
+          This is a continous color scheme!
+          @tparam start colour (1=red, 2=green, 3=blue; ex: 0.5=purple;
+          @tparam rots  Rotations in colour in [-1.5, 1.5]. ex: -1.0 is one blue->green->red cycle;
+          @tparam hue   Hue intensity scaling in [0, 1] (0 == greyscale).
+          @tparam gamma Gamma correction for intensity. */
+      template<double start, double rots, double hue, double gamma>
+      class csCubeHelix_tpl {
+        public:
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csX A value in [0, 1] that identifies the color in the scheme.
+              @return Returns a reference to \a aColor. */
+          static inline colorTpl& c(colorRefType aColor, csFltType csX) {
+            //csX=mjr::numberWrap(csX, 0.0, 1.0);
+            double angle=2*std::numbers::pi*(start/3.0+1.0+rots*csX);
+            csX=std::pow(csX, gamma);
+            double ampl=hue*csX*(1-csX)/2.0;
+            return aColor.setChans_dbl(std::clamp(csX+ampl*(-0.14861*std::cos(angle)+1.78277*std::sin(angle)), 0.0, 1.0),
+                                       std::clamp(csX+ampl*(-0.29227*std::cos(angle)-0.90649*std::sin(angle)), 0.0, 1.0),
+                                       std::clamp(csX+ampl*(+1.97294*std::cos(angle)),                         0.0, 1.0));
+          }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csX A value in [0, 1] that identifies the color in the scheme.
+              @return Returns a colorTpl value */
+          static inline colorTpl c(csFltType csX) { colorTpl tmp; return c(tmp, csX); }
+      };
+
+      //========================================================================================================================================================
+      /** @name Color Schemes: CubeHelix */
+      //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csCHstd
+          @ingroup cs
+          @extends csCubeHelix_tpl
+          The "standard" cubehelix color scheme with start=0.5, rots=-1.5, hue=1, and gamma=1. */
+      typedef csCubeHelix_tpl<0.5, -1.5, 1.0, 1.0> csCHstd;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csCHblu
+          @ingroup cs
+          @extends csCubeHelix_tpl
+          The "blues" cubehelix color scheme with start=0.5, rots=-0.5, hue=1, and gamma=1. */
+      typedef csCubeHelix_tpl<0.5, -0.5, 1.0, 1.0> csCHblu;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csCHvio
+          @ingroup cs
+          @extends csCubeHelix_tpl
+          The "violets" cubehelix color scheme with start=0.5, rots=0.0, hue=1, and gamma=1. */
+      typedef csCubeHelix_tpl<0.5,  0.0, 1.0, 1.0> csCHvio;
+      //@}
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** Template providing RGB color cube gradiant color schemes */
       template<cornerColorEnum...corners>
       class csCC_tpl {
@@ -2888,13 +3091,16 @@ namespace mjr {
           constexpr static cornerColorEnum cols[] = { corners... };
       };
 
+      //========================================================================================================================================================
       /** @name Color Schemes: RGB Constant Brightness Ramps */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCCconsTwo
           @ingroup cs
           @extends csCC_tpl
           Color cycle around the cube with constant brightness of two. Provides (mjr::colorTpl::chanStepMax*3+1) unique colors. */
       typedef csCC_tpl<cornerColorEnum::CYAN, cornerColorEnum::MAGENTA, cornerColorEnum::YELLOW, cornerColorEnum::CYAN>  csCCconsTwo;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCCconsOne
           @ingroup cs
           @extends csCC_tpl
@@ -2902,23 +3108,28 @@ namespace mjr {
       typedef csCC_tpl<cornerColorEnum::BLUE, cornerColorEnum::RED, cornerColorEnum::GREEN, cornerColorEnum::BLUE>       csCCconsOne;
       //@}
 
+      //========================================================================================================================================================
       /** @name Color Schemes: RGB Cube Diagional Ramps */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCCdiag01
           @ingroup cs
           @extends csCC_tpl
           Gradient across the diagonal of the RGB color cube from black to white.  Provides about (mjr::colorTpl::chanStepMax + 1) unique colors. */
       typedef csCC_tpl<cornerColorEnum::BLACK,   cornerColorEnum::WHITE> csCCdiag01;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCCdiagCR
           @ingroup cs
           @extends csCC_tpl
           Gradient across the diagonal of the RGB color cube from cyan to red.  Provides about (mjr::colorTpl::chanStepMax + 1) unique colors. */
       typedef csCC_tpl<cornerColorEnum::CYAN,    cornerColorEnum::RED>   csCCdiagCR;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCCdiagMG
           @ingroup cs
           @extends csCC_tpl
           Gradient across the diagonal of the RGB color cube from magenta to green.  Provides about (mjr::colorTpl::chanStepMax + 1) unique colors. */
       typedef csCC_tpl<cornerColorEnum::MAGENTA, cornerColorEnum::GREEN> csCCdiagMG;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCCdiagYB
           @ingroup cs
           @extends csCC_tpl
@@ -2926,58 +3137,73 @@ namespace mjr {
       typedef csCC_tpl<cornerColorEnum::YELLOW,  cornerColorEnum::BLUE>  csCCdiagYB;
       //@}
 
+      //========================================================================================================================================================
       /** @name Color Schemes: Classic RGB Ramps */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCColdeFireRamp
           @ingroup cs
           @extends csCC_tpl
           Classic color cube "Fire Ramp". */
-      typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::RED, cornerColorEnum::YELLOW, cornerColorEnum::WHITE>                         csCColdeFireRamp;
+      typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::RED, cornerColorEnum::YELLOW, cornerColorEnum::WHITE>                csCColdeFireRamp;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCColdeColdToHot
           @ingroup cs
           @extends csCC_tpl
           Classical cold to hot color cube ramp.  Provides (mjr::colorTpl::chanStepMax*4+1) unique colors. */
-      typedef csCC_tpl<cornerColorEnum::BLUE, cornerColorEnum::CYAN, cornerColorEnum::GREEN, cornerColorEnum::YELLOW, cornerColorEnum::RED>   csCColdeColdToHot;
+      typedef csCC_tpl<cornerColorEnum::BLUE, cornerColorEnum::CYAN, cornerColorEnum::GREEN, 
+                       cornerColorEnum::YELLOW, cornerColorEnum::RED>                                                                csCColdeColdToHot;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCColdeIceToWaterToHot
           @ingroup cs
           @extends csCC_tpl
           Modified version of the classical cold to hot color cube ramp.ramp. It starts at white (ice), moves up to blue (cold),
           then yellow through red (hot).  Provides (mjr::colorTpl::chanStepMax*4+1) unique colors. */
-      typedef csCC_tpl<cornerColorEnum::WHITE, cornerColorEnum::CYAN, cornerColorEnum::BLUE, cornerColorEnum::YELLOW, cornerColorEnum::RED>   csCColdeIceToWaterToHot;
+      typedef csCC_tpl<cornerColorEnum::WHITE, cornerColorEnum::CYAN, cornerColorEnum::BLUE, 
+                       cornerColorEnum::YELLOW, cornerColorEnum::RED>                                                                csCColdeIceToWaterToHot;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCColdeRainbow
           @ingroup cs
           @extends csCC_tpl
           The classic HSV rainbow color scheme based upon an edge traversal of the RGB color cube.  Provides (6 * mjr::colorTpl::chanStepMax + 1) colors. */
-      typedef csCC_tpl<cornerColorEnum::RED, cornerColorEnum::YELLOW, cornerColorEnum::GREEN, cornerColorEnum::CYAN, cornerColorEnum::BLUE, cornerColorEnum::MAGENTA, cornerColorEnum::RED>          csCColdeRainbow;
+      typedef csCC_tpl<cornerColorEnum::RED, cornerColorEnum::YELLOW, cornerColorEnum::GREEN, cornerColorEnum::CYAN, 
+                       cornerColorEnum::BLUE, cornerColorEnum::MAGENTA, cornerColorEnum::RED>                                        csCColdeRainbow;
       //@}
 
+      //========================================================================================================================================================
       /** @name Color Schemes: RGB Sum Ramps */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCCsumRGB
           @ingroup cs
           @extends csCC_tpl
           RGB cube sum-ramp: RGB == Black -> Red -> Yellow -> White. Provides (3 * mjr::colorTpl::chanStepMax + 1) different colors. */
       typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::RED,   cornerColorEnum::YELLOW,  cornerColorEnum::WHITE> csCCsumRGB;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCCsumBGR
           @ingroup cs
           @extends csCC_tpl
           RGB cube sum-ramp: BGR == Black -> Blue -> cyan -> White.  Provides (3 * mjr::colorTpl::chanStepMax + 1) different colors. */
       typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::BLUE,  cornerColorEnum::CYAN,    cornerColorEnum::WHITE> csCCsumBGR;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCCsumGRB
           @ingroup cs
           @extends csCC_tpl
           RGB cube sum-ramp: GRB == Black -> Green -> yellow -> White.  Provides (3 * mjr::colorTpl::chanStepMax + 1) different colors. */
       typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::GREEN, cornerColorEnum::YELLOW,  cornerColorEnum::WHITE> csCCsumGRB;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCCsumGBR
           @ingroup cs
           @extends csCC_tpl
           RGB cube sum-ramp: GBR == Black -> Green -> cyan -> White.  Provides (3 * mjr::colorTpl::chanStepMax + 1) different colors. */
       typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::GREEN, cornerColorEnum::CYAN,    cornerColorEnum::WHITE> csCCsumGBR;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCCsumBRG
           @ingroup cs
           @extends csCC_tpl
           RGB cube sum-ramp: BRG == Black -> Blue -> magenta -> White. Provides (3 * mjr::colorTpl::chanStepMax + 1) different colors. */
       typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::BLUE,  cornerColorEnum::MAGENTA, cornerColorEnum::WHITE> csCCsumBRG;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCCsumRBG
           @ingroup cs
           @extends csCC_tpl
@@ -2985,33 +3211,40 @@ namespace mjr {
       typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::RED,   cornerColorEnum::MAGENTA, cornerColorEnum::WHITE> csCCsumRBG;
       //@}
 
+      //========================================================================================================================================================
       /** @name Color Schemes: RGB Up-Down Ramps */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCCudRg
           @ingroup cs
           @extends csCC_tpl
           RGB Up-Down Ramp: Rg == Red Up and Green Down == cyan -> magenta. Provides chanStepMax different colors.*/
       typedef csCC_tpl<cornerColorEnum::CYAN,    cornerColorEnum::MAGENTA> csCCudRg;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCCudRb
           @ingroup cs
           @extends csCC_tpl
           RGB Up-Down Ramp: Rb == Red Up and Blue Down == cyan -> yellow. Provides chanStepMax different colors.*/
       typedef csCC_tpl<cornerColorEnum::CYAN,    cornerColorEnum::YELLOW>  csCCudRb;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCCudGr
           @ingroup cs
           @extends csCC_tpl
           RGB Up-Down Ramp: Gr == Green Up and Red Down == magenta -> cyan. Provides chanStepMax different colors. */
       typedef csCC_tpl<cornerColorEnum::MAGENTA, cornerColorEnum::CYAN>    csCCudGr;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCCudGb
           @ingroup cs
           @extends csCC_tpl
           RGB Up-Down Ramp: Gb == Green Up and Blue Down == magenta -> yellow. Provides chanStepMax different colors. */
       typedef csCC_tpl<cornerColorEnum::MAGENTA, cornerColorEnum::YELLOW>  csCCudGb;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCCudBr
           @ingroup cs
           @extends csCC_tpl
           RGB Up-Down Ramp: Br == Blue Up and Red Down == yellow -> cyan. Provides chanStepMax different colors. */
       typedef csCC_tpl<cornerColorEnum::YELLOW,  cornerColorEnum::CYAN>    csCCudBr;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCCudBg
           @ingroup cs
           @extends csCC_tpl
@@ -3019,15 +3252,24 @@ namespace mjr {
       typedef csCC_tpl<cornerColorEnum::YELLOW,  cornerColorEnum::MAGENTA> csCCudBg;
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** Binary color scheme. First color for even inputs and second color for odd. */
       template<cornerColorEnum a, cornerColorEnum b>
       class csBin_tpl {
         public:
           constexpr static csIntType numC = 2;
-          static inline colorTpl&  c(colorRefType aColor, csIntType csIdx) { if (csIdx % 2) return aColor.setToCorner(b); else return aColor.setToCorner(a); }
-          static inline colorTpl   c(                     csIntType csIdx) { colorTpl tmp; return c(tmp, csIdx);                                             }
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csIdx Index of color in pallet.  Not wrapped or clipped.  Even values get color \a a, while odd values get color \a b. 
+              @return Returns a reference to \a aColor. */
+          static inline colorTpl& c(colorRefType aColor, csIntType csIdx) { if (csIdx % 2) return aColor.setToCorner(b); else return aColor.setToCorner(a); }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csIdx Index of color in pallet.  Not wrapped or clipped.  Even values get color \a a, while odd values get color \a b. 
+              @return Returns a colorTpl value */
+          static inline colorTpl c(csIntType csIdx) { colorTpl tmp; return c(tmp, csIdx); }
       };
 
+      //========================================================================================================================================================
       /** @name Color Schemes: Binary */
       //@{
       typedef csBin_tpl<cornerColorEnum::BLACK,   cornerColorEnum::WHITE>  ccBin01; //!< Binary Black-White color scheme. First color for even inputs and second color for odd.
@@ -3039,82 +3281,118 @@ namespace mjr {
       typedef csBin_tpl<cornerColorEnum::MAGENTA, cornerColorEnum::YELLOW> ccBinMY; //!< Binary Magenta-Yellow color scheme. First color for even inputs and second color for odd.
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Color Schemes: Pseudo-Grey
        These color schemes start with black and move toward white trying to increase perceptional brightness, they don't stay precisely on the diagonal. */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csPGrey3x
           @ingroup cs
           A Pseudo-Grey color scheme with 3 * mjr::colorTpl::chanStepMax colors. */
       class csPGrey3x {
         public:
           constexpr static csIntType numC = 3*chanStepMax;
-          static inline colorTpl&  c(colorRefType aColor, csIntType csIdx) { csIdx = csIdx % numC;
-                                                                             return aColor.setChans(static_cast<clrChanT>(csIdx / 3 + (csIdx%3==0?1:0)),
-                                                                                                    static_cast<clrChanT>(csIdx / 3 + (csIdx%3==1?1:0)),
-                                                                                                    static_cast<clrChanT>(csIdx / 3 + (csIdx%3==2?1:0)));            }
-          static inline colorTpl   c(                     csIntType csIdx) { colorTpl tmp; return c(tmp, csIdx);                                                     }
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
+              @return Returns a reference to \a aColor. */
+          static inline colorTpl&  c(colorRefType aColor, csIntType csIdx) { 
+            csIdx = csIdx % numC;
+            return aColor.setChans(static_cast<clrChanT>(csIdx / 3 + (csIdx%3==0?1:0)),
+                                   static_cast<clrChanT>(csIdx / 3 + (csIdx%3==1?1:0)),
+                                   static_cast<clrChanT>(csIdx / 3 + (csIdx%3==2?1:0)));            }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
+              @return Returns a colorTpl value */
+          static inline colorTpl c(csIntType csIdx) { colorTpl tmp; return c(tmp, csIdx); }
       };
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csPGrey4x
           @ingroup cs
           A Pseudo-Grey color scheme with 4 * mjr::colorTpl::chanStepMax colors. */
       class csPGrey4x {
         public:
           constexpr static csIntType numC = 4*chanStepMax;
-          static inline colorTpl&  c(colorRefType aColor, csIntType csIdx) { csIdx = csIdx % numC;
-                                                                             return aColor.setChans(static_cast<clrChanT>(csIdx / 4 + ((csIdx+1)%4==0?1:0)),
-                                                                                                    static_cast<clrChanT>(csIdx / 4 + ((csIdx+2)%4==0?1:0)),
-                                                                                                    static_cast<clrChanT>(csIdx / 4 + ((csIdx+3)%4==0?1:0)));        }
-          static inline colorTpl   c(                     csIntType csIdx) { colorTpl tmp; return c(tmp, csIdx);                                                     }
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
+              @return Returns a reference to \a aColor. */
+          static inline colorTpl& c(colorRefType aColor, csIntType csIdx) { 
+            csIdx = csIdx % numC;
+            return aColor.setChans(static_cast<clrChanT>(csIdx / 4 + ((csIdx+1)%4==0?1:0)),
+                                   static_cast<clrChanT>(csIdx / 4 + ((csIdx+2)%4==0?1:0)),
+                                   static_cast<clrChanT>(csIdx / 4 + ((csIdx+3)%4==0?1:0)));        
+          }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
+              @return Returns a colorTpl value */
+          static inline colorTpl c(csIntType csIdx) { colorTpl tmp; return c(tmp, csIdx); }
       };
       //@}
 
-      /** Template for binary color schemes. */
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** Template for HSL color schemes. 
+          If clrChanT is integral, this is a discrete color scheme, otherwise it is continuous.. */
       template<cornerColorEnum corner>
       class csHSLh_tpl {
         public:
           constexpr static csIntType numC = (chanIsInt ? meanChanVal : 0);
-          static inline colorTpl&  c(colorRefType aColor, csNatType csIdx) { 
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csIdx Index of color in pallet.  Wrapped to [0, meanChanVal].
+              @return Returns a reference to \a aColor. */
+          static inline colorTpl& c(colorRefType aColor, csNatType csIdx) { 
             clrChanT cVal = static_cast<clrChanT>(numberWrap(csIdx, meanChanVal));
             colorTpl cc(corner);
             return aColor.setChans(static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getC0() ? cVal : -cVal)),
                                    static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getC1() ? cVal : -cVal)),
                                    static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getC2() ? cVal : -cVal)));
           }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csIdx Index of color in pallet.  Wrapped to [0, meanChanVal].
+              @return Returns a colorTpl value */
           static inline colorTpl c(csNatType csIdx) { colorTpl tmp; return c(tmp, csIdx); }
       };
 
+      //========================================================================================================================================================
       /** @name Color Schemes: HSL Saturation Ramps */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csHSLhR
           @ingroup cs
           @extends csHSLh_tpl
           HSL color scheme extending from the center of the HSL color space to the red vertex.
           Provides mjr::colorTpl::meanChanVal unique colors for integral clrChanT.  For floating point clrChanT, csIdx may be any value in [0, mjr::colorTpl::meanChanVal]. */
       typedef csHSLh_tpl<cornerColorEnum::RED> csHSLhR;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csHSLhG
           @ingroup cs
           @extends csHSLh_tpl
           HSL color scheme extending from the center of the HSL color space to the green vertex.
           Provides mjr::colorTpl::meanChanVal unique colors for integral clrChanT.  For floating point clrChanT, csIdx may be any value in [0, mjr::colorTpl::meanChanVal]. */
       typedef csHSLh_tpl<cornerColorEnum::GREEN> csHSLhG;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csHSLhB
           @ingroup cs
           @extends csHSLh_tpl
           HSL color scheme extending from the center of the HSL color space to the blue vertex.
           Provides mjr::colorTpl::meanChanVal unique colors for integral clrChanT.  For floating point clrChanT, csIdx may be any value in [0, mjr::colorTpl::meanChanVal]. */
       typedef csHSLh_tpl<cornerColorEnum::BLUE> csHSLhB;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csHSLhC
           @ingroup cs
           @extends csHSLh_tpl
           HSL color scheme extending from the center of the HSL color space to the cyan vertex.
           Provides mjr::colorTpl::meanChanVal unique colors for integral clrChanT.  For floating point clrChanT, csIdx may be any value in [0, mjr::colorTpl::meanChanVal]. */
       typedef csHSLh_tpl<cornerColorEnum::CYAN> csHSLhC;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csHSLhM
           @ingroup cs
           @extends csHSLh_tpl
           HSL color scheme extending from the center of the HSL color space to the magenta vertex.
           Provides mjr::colorTpl::meanChanVal unique colors for integral clrChanT.  For floating point clrChanT, csIdx may be any value in [0, mjr::colorTpl::meanChanVal]. */
       typedef csHSLh_tpl<cornerColorEnum::MAGENTA> csHSLhM;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csHSLhY
           @ingroup cs
           @extends csHSLh_tpl
@@ -3123,8 +3401,10 @@ namespace mjr {
       typedef csHSLh_tpl<cornerColorEnum::YELLOW> csHSLhY;
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Color Schemes: Rainbows */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csRainbowLA
           @ingroup cs
           Computes a color value based upon a linear approximation of the color match functions used to approximate wavelength to RGB conversion.
@@ -3133,23 +3413,36 @@ namespace mjr {
         public:
           static inline colorTpl& c(colorRefType aColor, csIntType numC, csIntType csIdx) {
             csIdx = numberWrap(csIdx, numC);
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
+              @return Returns a reference to \a aColor. */
             return aColor.setRGBfromWavelengthLA(mjr::genLinMap(static_cast<double>(csIdx),
                                                                 static_cast<double>(0),
                                                                 static_cast<double>(numC),
                                                                 static_cast<double>(minWavelength),
                                                                 static_cast<double>(maxWavelength)));
           }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
+              @return Returns a reference a colorTpl value. */
           static inline colorTpl c(csIntType numC, csIntType csIdx) {
             colorTpl tmp;
             return c(tmp, numC, csIdx);
           }
       };
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csRainbowCM
           @ingroup cs
           Computes a color value based upon an algorithm to convert wavelength to RGB that uses the Color Matching functions.
           @param interpMethod Specify the interpolation method (see: cmfInterpolationEnum) */
       class csRainbowCM {
         public:
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
+              @param interpMethod Specify the interpolation method (see: cmfInterpolationEnum)
+              @return Returns a reference to \a aColor. */
           static inline colorTpl& c(colorRefType aColor, csIntType numC, csIntType csIdx, cmfInterpolationEnum interpMethod = cmfInterpolationEnum::LINEAR) {
             csIdx = numberWrap(csIdx, numC);
             return aColor.setRGBfromWavelengthCM(mjr::genLinMap(static_cast<double>(csIdx),
@@ -3159,6 +3452,10 @@ namespace mjr {
                                                                 static_cast<double>(maxWavelength)),
                                                  interpMethod);
           }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
+              @param interpMethod Specify the interpolation method (see: cmfInterpolationEnum)
+              @return Returns a reference a colorTpl value. */
           static inline colorTpl c(csIntType numC, csIntType csIdx, cmfInterpolationEnum interpMethod = cmfInterpolationEnum::LINEAR) {
             colorTpl tmp;
             return c(tmp, numC, csIdx, interpMethod);
@@ -3166,19 +3463,29 @@ namespace mjr {
       };
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** Template for fixed size pallets. */
       template<uint32_t...colors>
       class csFP_tpl {
         public:
           constexpr static csIntType numC = (sizeof...(colors));
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
+              @return Returns a reference to \a aColor. */
           static inline colorTpl&  c(colorRefType aColor, csIntType csIdx) { return aColor.setRGBfromLogPackIntARGB(d[csIdx % numC]);  }
-          static inline colorTpl   c(                     csIntType csIdx) { return c(colorTpl(), csIdx);                              }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
+              @return Returns a reference a colorTpl value. */
+          static inline colorTpl c(csIntType csIdx) { return c(colorTpl(), csIdx); }
         private:
           constexpr static uint32_t d[] = { colors... };
       };
 
+      //========================================================================================================================================================
       /** @name "Web Safe" Color Schemes */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csFPwebSafeNormalVision
           @ingroup cs
           @extends csFP_tpl
@@ -3206,6 +3513,7 @@ namespace mjr {
                        0xFF3333, 0xFF3366, 0xFF3399, 0xFF33CC, 0xFF33FF, 0xFF6600, 0xFF6633, 0xFF6666, 0xFF6699, 0xFF66CC, 0xFF66FF,
                        0xFF9900, 0xFF9933, 0xFF9966, 0xFF9999, 0xFF99CC, 0xFF99FF, 0xFFCC00, 0xFFCC33, 0xFFCC66, 0xFFCC99, 0xFFCCCC,
                        0xFFCCFF, 0xFFFF00, 0xFFFF33, 0xFFFF66, 0xFFFF99, 0xFFFFCC, 0xFFFFFF>                                          csFPwebSafeNormalVision;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csFPwebSafeProtanopia
           @ingroup cs
           @extends csFP_tpl
@@ -3231,6 +3539,7 @@ namespace mjr {
                        0x9A8B23, 0x988B4A, 0x8F8C8B, 0x7A8ECE, 0x779DFF, 0x96B1FF, 0xAC9A1E, 0xAA9A42, 0xA59B7C, 0x999DB9, 0x82A0F6,
                        0x98B2FF, 0xC8B317, 0xC7B43A, 0xC4B470, 0xBDB6A8, 0xB1B8E0, 0xAABDFF, 0xECD30F, 0xECD435, 0xE9D469, 0xE5D69D,
                        0xDED8D2, 0xCFD7FF, 0xFFE871, 0xFFE975, 0xFFEA86, 0xFFEDA2, 0xFFF2C8, 0xFFFAFA>                                csFPwebSafeProtanopia;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csFPwebSafeDeutanopia
           @ingroup cs
           @extends csFP_tpl
@@ -3256,6 +3565,7 @@ namespace mjr {
                        0xAD841C, 0xA7875C, 0x9D8B8F, 0x8A92C1, 0x679BF2, 0xC09300, 0xBF9322, 0xBB955E, 0xB19992, 0xA09FC3, 0x85A7F5,
                        0xDFAA00, 0xDEAB2A, 0xDAAC62, 0xD2B095, 0xC5B5C7, 0xB0BCF9, 0xFFC750, 0xFFC857, 0xFFCA6F, 0xFCCD99, 0xF1D2CB,
                        0xE1D8FD, 0xFFD592, 0xFFD594, 0xFFD79D, 0xFFDAAD, 0xFFDFC8, 0xFFE8EF>                                          csFPwebSafeDeutanopia;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csFPwebSafeTritanoptia
           @ingroup cs
           @extends csFP_tpl
@@ -3281,6 +3591,7 @@ namespace mjr {
                        0xFF3332, 0xFE3D3E, 0xFB4C4F, 0xF75E63, 0xF07178, 0xFF6569, 0xFF656A, 0xFF666C, 0xFD6E74, 0xF87981, 0xF28791,
                        0xFF949C, 0xFF949D, 0xFF959E, 0xFF99A2, 0xFC9FAA, 0xF6A9B5, 0xFFBECA, 0xFFBFCA, 0xFFC0CD, 0xFFC4D1, 0xFFCAD8,
                        0xFBD1E1, 0xFFE4F2, 0xFFE5F3, 0xFFE6F5, 0xFFEAF9, 0xFDEFFF, 0xF4F0FF>                                          csFPwebSafeTritanoptia;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csFPwebSafeProtanopiaAlt
           @ingroup cs
           @extends csFP_tpl
@@ -3306,6 +3617,7 @@ namespace mjr {
                        0x856334, 0x676766, 0x396A99, 0x006FCC, 0x0076FF, 0xAE7B0B, 0xAA7C34, 0x967E66, 0x738299, 0x2786CC, 0x008BFF,
                        0xE19F08, 0xDE9F33, 0xD1A166, 0xB3A599, 0x90A9CC, 0x4FACFF, 0xFFC800, 0xFFC833, 0xFFCA66, 0xFCCC99, 0xD7D1CC,
                        0xB7D4FF, 0xFFF300, 0xFFF332, 0xFFF466, 0xFFF799, 0xFFFACC, 0xFFFFFF>                                          csFPwebSafeProtanopiaAlt;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csFPwebSafeDeutanopiaAlt
           @ingroup cs
           @extends csFP_tpl
@@ -3331,6 +3643,7 @@ namespace mjr {
                        0xB07E27, 0xA38461, 0x878C96, 0x6494CA, 0x009DFD, 0xC78C00, 0xC58D2A, 0xB99162, 0x9F9A96, 0x83A1CA, 0x47AAFD,
                        0xE9A400, 0xE7A52F, 0xDEA964, 0xCAB097, 0xAEB9CA, 0x8DC0FE, 0xFFC319, 0xFFC436, 0xFFC767, 0xFDCD99, 0xE2D6CB,
                        0xC8DDFE, 0xFFE62B, 0xFFE73F, 0xFFE96B, 0xFFEE9B, 0xFFF5CD, 0xFFFFFF>                                          csFPwebSafeDeutanopiaAlt;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csFPwebSafeTritanoptiaAlt
           @ingroup cs
           @extends csFP_tpl
@@ -3358,24 +3671,39 @@ namespace mjr {
                        0xF2D7D9, 0xFFE7EC, 0xFFE8ED, 0xFFEAEE, 0xFFEFF2, 0xFFF6F7, 0xFFFFFF>                                          csFPwebSafeTritanoptiaAlt;
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** Template for Color Brewer 2 variable sized pallets. */
       template<csIntType mx, uint32_t...colors>
       class csCB_tpl {
         public:
           constexpr static csIntType minNumC = 3;
           constexpr static csIntType maxNumC = mx;
-          static colorTpl&  c(colorRefType aColor, csIntType numC, csIntType csIdx) { 
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
+              @param numC Number of colors for the given scheme.  Will be clamped to [minNumC, maxNumC].
+              @return Returns a reference to \a aColor. */
+          static colorTpl&  c(colorRefType aColor, csIntType csIdx, csIntType numC=maxNumC) { 
             csIntType b = std::clamp(numC, minNumC, maxNumC);
-            csIntType i = numberWrap(csIdx, b-1); 
+            csIntType i = csIdx % b; 
             return aColor.setRGBfromLogPackIntARGB(d[b*(b-1)/2-3+i]); 
           }
-          static colorTpl c(csIntType numC, csIntType csIdx) { colorTpl tmp; return c(tmp, numC, csIdx); }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
+              @param numC Number of colors for the given scheme.  Will be clamped to [minNumC, maxNumC].
+              @return Returns a reference a colorTpl value. */
+          static colorTpl c(csIntType csIdx, csIntType numC=maxNumC) { 
+            colorTpl tmp; 
+            return c(tmp, csIdx, numC);
+          }
         private:
           constexpr static uint32_t d[] = { colors... };
       };
 
+      //========================================================================================================================================================
       /** @name ColorBrewer2 Color Schemes */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBSpectral
           @ingroup cs
           @extends csCB_tpl
@@ -3390,6 +3718,7 @@ namespace mjr {
                            0xD53E4F, 0xF46D43, 0xFDAE61, 0xFEE08B, 0xFFFFBF, 0xE6F598, 0xABDDA4, 0x66C2A5, 0x3288BD,
                            0x9E0142, 0xD53E4F, 0xF46D43, 0xFDAE61, 0xFEE08B, 0xE6F598, 0xABDDA4, 0x66C2A5, 0x3288BD, 0x5E4FA2,
                            0x9E0142, 0xD53E4F, 0xF46D43, 0xFDAE61, 0xFEE08B, 0xFFFFBF, 0xE6F598, 0xABDDA4, 0x66C2A5, 0x3288BD, 0x5E4FA2> csCBSpectral;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBRdYlGn
           @ingroup cs
           @extends csCB_tpl
@@ -3404,6 +3733,7 @@ namespace mjr {
                            0xD73027, 0xF46D43, 0xFDAE61, 0xFEE08B, 0xFFFFBF, 0xD9EF8B, 0xA6D96A, 0x66BD63, 0x1A9850,
                            0xA50026, 0xD73027, 0xF46D43, 0xFDAE61, 0xFEE08B, 0xD9EF8B, 0xA6D96A, 0x66BD63, 0x1A9850, 0x006837,
                            0xA50026, 0xD73027, 0xF46D43, 0xFDAE61, 0xFEE08B, 0xFFFFBF, 0xD9EF8B, 0xA6D96A, 0x66BD63, 0x1A9850, 0x006837> csCBRdYlGn;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBRdBu
           @ingroup cs
           @extends csCB_tpl
@@ -3418,6 +3748,7 @@ namespace mjr {
                            0xB2182B, 0xD6604D, 0xF4A582, 0xFDDBC7, 0xF7F7F7, 0xD1E5F0, 0x92C5DE, 0x4393C3, 0x2166AC,
                            0x67001F, 0xB2182B, 0xD6604D, 0xF4A582, 0xFDDBC7, 0xD1E5F0, 0x92C5DE, 0x4393C3, 0x2166AC, 0x053061,
                            0x67001F, 0xB2182B, 0xD6604D, 0xF4A582, 0xFDDBC7, 0xF7F7F7, 0xD1E5F0, 0x92C5DE, 0x4393C3, 0x2166AC, 0x053061> csCBRdBu;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBPiYG
           @ingroup cs
           @extends csCB_tpl
@@ -3432,6 +3763,7 @@ namespace mjr {
                            0xC51B7D, 0xDE77AE, 0xF1B6DA, 0xFDE0EF, 0xF7F7F7, 0xE6F5D0, 0xB8E186, 0x7FBC41, 0x4D9221,
                            0x8E0152, 0xC51B7D, 0xDE77AE, 0xF1B6DA, 0xFDE0EF, 0xE6F5D0, 0xB8E186, 0x7FBC41, 0x4D9221, 0x276419,
                            0x8E0152, 0xC51B7D, 0xDE77AE, 0xF1B6DA, 0xFDE0EF, 0xF7F7F7, 0xE6F5D0, 0xB8E186, 0x7FBC41, 0x4D9221, 0x276419> csCBPiYG;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBPRGn
           @ingroup cs
           @extends csCB_tpl
@@ -3446,6 +3778,7 @@ namespace mjr {
                            0x762A83, 0x9970AB, 0xC2A5CF, 0xE7D4E8, 0xF7F7F7, 0xD9F0D3, 0xA6DBA0, 0x5AAE61, 0x1B7837,
                            0x40004B, 0x762A83, 0x9970AB, 0xC2A5CF, 0xE7D4E8, 0xD9F0D3, 0xA6DBA0, 0x5AAE61, 0x1B7837, 0x00441B,
                            0x40004B, 0x762A83, 0x9970AB, 0xC2A5CF, 0xE7D4E8, 0xF7F7F7, 0xD9F0D3, 0xA6DBA0, 0x5AAE61, 0x1B7837, 0x00441B> csCBPRGn;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBRdYlBu
           @ingroup cs
           @extends csCB_tpl
@@ -3460,6 +3793,7 @@ namespace mjr {
                            0xD73027, 0xF46D43, 0xFDAE61, 0xFEE090, 0xFFFFBF, 0xE0F3F8, 0xABD9E9, 0x74ADD1, 0x4575B4,
                            0xA50026, 0xD73027, 0xF46D43, 0xFDAE61, 0xFEE090, 0xE0F3F8, 0xABD9E9, 0x74ADD1, 0x4575B4, 0x313695,
                            0xA50026, 0xD73027, 0xF46D43, 0xFDAE61, 0xFEE090, 0xFFFFBF, 0xE0F3F8, 0xABD9E9, 0x74ADD1, 0x4575B4, 0x313695> csCBRdYlBu;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBBrBG
           @ingroup cs
           @extends csCB_tpl
@@ -3474,6 +3808,7 @@ namespace mjr {
                            0x8C510A, 0xBF812D, 0xDFC27D, 0xF6E8C3, 0xF5F5F5, 0xC7EAE5, 0x80CDC1, 0x35978F, 0x01665E,
                            0x543005, 0x8C510A, 0xBF812D, 0xDFC27D, 0xF6E8C3, 0xC7EAE5, 0x80CDC1, 0x35978F, 0x01665E, 0x003C30,
                            0x543005, 0x8C510A, 0xBF812D, 0xDFC27D, 0xF6E8C3, 0xF5F5F5, 0xC7EAE5, 0x80CDC1, 0x35978F, 0x01665E, 0x003C30> csCBBrBG;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBRdGy
           @ingroup cs
           @extends csCB_tpl
@@ -3488,6 +3823,7 @@ namespace mjr {
                            0xB2182B, 0xD6604D, 0xF4A582, 0xFDDBC7, 0xFFFFFF, 0xE0E0E0, 0xBABABA, 0x878787, 0x4D4D4D,
                            0x67001F, 0xB2182B, 0xD6604D, 0xF4A582, 0xFDDBC7, 0xE0E0E0, 0xBABABA, 0x878787, 0x4D4D4D, 0x1A1A1A,
                            0x67001F, 0xB2182B, 0xD6604D, 0xF4A582, 0xFDDBC7, 0xFFFFFF, 0xE0E0E0, 0xBABABA, 0x878787, 0x4D4D4D, 0x1A1A1A> csCBRdGy;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBPuOr
           @ingroup cs
           @extends csCB_tpl
@@ -3502,6 +3838,7 @@ namespace mjr {
                            0xB35806, 0xE08214, 0xFDB863, 0xFEE0B6, 0xF7F7F7, 0xD8DAEB, 0xB2ABD2, 0x8073AC, 0x542788,
                            0x7F3B08, 0xB35806, 0xE08214, 0xFDB863, 0xFEE0B6, 0xD8DAEB, 0xB2ABD2, 0x8073AC, 0x542788, 0x2D004B,
                            0x7F3B08, 0xB35806, 0xE08214, 0xFDB863, 0xFEE0B6, 0xF7F7F7, 0xD8DAEB, 0xB2ABD2, 0x8073AC, 0x542788, 0x2D004B> csCBPuOr;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBSet2
           @ingroup cs
           @extends csCB_tpl
@@ -3513,6 +3850,7 @@ namespace mjr {
                            0x66C2A5, 0xFC8D62, 0x8DA0CB, 0xE78AC3, 0xA6D854, 0xFFD92F,
                            0x66C2A5, 0xFC8D62, 0x8DA0CB, 0xE78AC3, 0xA6D854, 0xFFD92F, 0xE5C494,
                            0x66C2A5, 0xFC8D62, 0x8DA0CB, 0xE78AC3, 0xA6D854, 0xFFD92F, 0xE5C494, 0xB3B3B3> csCBSet2;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBAccent
           @ingroup cs
           @extends csCB_tpl
@@ -3524,6 +3862,7 @@ namespace mjr {
                            0x7FC97F, 0xBEAED4, 0xFDC086, 0xFFFF99, 0x386CB0, 0xF0027F,
                            0x7FC97F, 0xBEAED4, 0xFDC086, 0xFFFF99, 0x386CB0, 0xF0027F, 0xBF5B17,
                            0x7FC97F, 0xBEAED4, 0xFDC086, 0xFFFF99, 0x386CB0, 0xF0027F, 0xBF5B17, 0x666666> csCBAccent;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBSet1
           @ingroup cs
           @extends csCB_tpl
@@ -3536,6 +3875,7 @@ namespace mjr {
                            0xE41A1C, 0x377EB8, 0x4DAF4A, 0x984EA3, 0xFF7F00, 0xFFFF33, 0xA65628,
                            0xE41A1C, 0x377EB8, 0x4DAF4A, 0x984EA3, 0xFF7F00, 0xFFFF33, 0xA65628, 0xF781BF,
                            0xE41A1C, 0x377EB8, 0x4DAF4A, 0x984EA3, 0xFF7F00, 0xFFFF33, 0xA65628, 0xF781BF, 0x999999> csCBSet1;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBSet3
           @ingroup cs
           @extends csCB_tpl
@@ -3551,6 +3891,7 @@ namespace mjr {
                            0x8DD3C7, 0xFFFFB3, 0xBEBADA, 0xFB8072, 0x80B1D3, 0xFDB462, 0xB3DE69, 0xFCCDE5, 0xD9D9D9, 0xBC80BD,
                            0x8DD3C7, 0xFFFFB3, 0xBEBADA, 0xFB8072, 0x80B1D3, 0xFDB462, 0xB3DE69, 0xFCCDE5, 0xD9D9D9, 0xBC80BD, 0xCCEBC5,
                            0x8DD3C7, 0xFFFFB3, 0xBEBADA, 0xFB8072, 0x80B1D3, 0xFDB462, 0xB3DE69, 0xFCCDE5, 0xD9D9D9, 0xBC80BD, 0xCCEBC5, 0xFFED6F> csCBSet3;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBDark2
           @ingroup cs
           @extends csCB_tpl
@@ -3562,6 +3903,7 @@ namespace mjr {
                            0x1B9E77, 0xD95F02, 0x7570B3, 0xE7298A, 0x66A61E, 0xE6AB02,
                            0x1B9E77, 0xD95F02, 0x7570B3, 0xE7298A, 0x66A61E, 0xE6AB02, 0xA6761D,
                            0x1B9E77, 0xD95F02, 0x7570B3, 0xE7298A, 0x66A61E, 0xE6AB02, 0xA6761D, 0x666666> csCBDark2;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBPaired
           @ingroup cs
           @extends csCB_tpl
@@ -3577,6 +3919,7 @@ namespace mjr {
                            0xA6CEE3, 0x1F78B4, 0xB2DF8A, 0x33A02C, 0xFB9A99, 0xE31A1C, 0xFDBF6F, 0xFF7F00, 0xCAB2D6, 0x6A3D9A,
                            0xA6CEE3, 0x1F78B4, 0xB2DF8A, 0x33A02C, 0xFB9A99, 0xE31A1C, 0xFDBF6F, 0xFF7F00, 0xCAB2D6, 0x6A3D9A, 0xFFFF99,
                            0xA6CEE3, 0x1F78B4, 0xB2DF8A, 0x33A02C, 0xFB9A99, 0xE31A1C, 0xFDBF6F, 0xFF7F00, 0xCAB2D6, 0x6A3D9A, 0xFFFF99, 0xB15928> csCBPaired;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBPastel2
           @ingroup cs
           @extends csCB_tpl
@@ -3588,6 +3931,7 @@ namespace mjr {
                            0xB3E2CD, 0xFDCDAC, 0xCBD5E8, 0xF4CAE4, 0xE6F5C9, 0xFFF2AE,
                            0xB3E2CD, 0xFDCDAC, 0xCBD5E8, 0xF4CAE4, 0xE6F5C9, 0xFFF2AE, 0xF1E2CC,
                            0xB3E2CD, 0xFDCDAC, 0xCBD5E8, 0xF4CAE4, 0xE6F5C9, 0xFFF2AE, 0xF1E2CC, 0xCCCCCC> csCBPastel2;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBPastel1
           @ingroup cs
           @extends csCB_tpl
@@ -3600,6 +3944,7 @@ namespace mjr {
                            0xFBB4AE, 0xB3CDE3, 0xCCEBC5, 0xDECBE4, 0xFED9A6, 0xFFFFCC, 0xE5D8BD,
                            0xFBB4AE, 0xB3CDE3, 0xCCEBC5, 0xDECBE4, 0xFED9A6, 0xFFFFCC, 0xE5D8BD, 0xFDDAEC,
                            0xFBB4AE, 0xB3CDE3, 0xCCEBC5, 0xDECBE4, 0xFED9A6, 0xFFFFCC, 0xE5D8BD, 0xFDDAEC, 0xF2F2F2> csCBPastel1;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBOrRd
           @ingroup cs
           @extends csCB_tpl
@@ -3612,6 +3957,7 @@ namespace mjr {
                            0xFEF0D9, 0xFDD49E, 0xFDBB84, 0xFC8D59, 0xEF6548, 0xD7301F, 0x990000,
                            0xFFF7EC, 0xFEE8C8, 0xFDD49E, 0xFDBB84, 0xFC8D59, 0xEF6548, 0xD7301F, 0x990000,
                            0xFFF7EC, 0xFEE8C8, 0xFDD49E, 0xFDBB84, 0xFC8D59, 0xEF6548, 0xD7301F, 0xB30000, 0x7F0000> csCBOrRd;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBPuBu
           @ingroup cs
           @extends csCB_tpl
@@ -3624,6 +3970,7 @@ namespace mjr {
                            0xF1EEF6, 0xD0D1E6, 0xA6BDDB, 0x74A9CF, 0x3690C0, 0x0570B0, 0x034E7B,
                            0xFFF7FB, 0xECE7F2, 0xD0D1E6, 0xA6BDDB, 0x74A9CF, 0x3690C0, 0x0570B0, 0x034E7B,
                            0xFFF7FB, 0xECE7F2, 0xD0D1E6, 0xA6BDDB, 0x74A9CF, 0x3690C0, 0x0570B0, 0x045A8D, 0x023858> csCBPuBu;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBBuPu
           @ingroup cs
           @extends csCB_tpl
@@ -3636,6 +3983,7 @@ namespace mjr {
                            0xEDF8FB, 0xBFD3E6, 0x9EBCDA, 0x8C96C6, 0x8C6BB1, 0x88419D, 0x6E016B,
                            0xF7FCFD, 0xE0ECF4, 0xBFD3E6, 0x9EBCDA, 0x8C96C6, 0x8C6BB1, 0x88419D, 0x6E016B,
                            0xF7FCFD, 0xE0ECF4, 0xBFD3E6, 0x9EBCDA, 0x8C96C6, 0x8C6BB1, 0x88419D, 0x810F7C, 0x4D004B> csCBBuPu;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBOranges
           @ingroup cs
           @extends csCB_tpl
@@ -3648,6 +3996,7 @@ namespace mjr {
                            0xFEEDDE, 0xFDD0A2, 0xFDAE6B, 0xFD8D3C, 0xF16913, 0xD94801, 0x8C2D04,
                            0xFFF5EB, 0xFEE6CE, 0xFDD0A2, 0xFDAE6B, 0xFD8D3C, 0xF16913, 0xD94801, 0x8C2D04,
                            0xFFF5EB, 0xFEE6CE, 0xFDD0A2, 0xFDAE6B, 0xFD8D3C, 0xF16913, 0xD94801, 0xA63603, 0x7F2704> csCBOranges;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBBuGn
           @ingroup cs
           @extends csCB_tpl
@@ -3660,6 +4009,7 @@ namespace mjr {
                            0xEDF8FB, 0xCCECE6, 0x99D8C9, 0x66C2A4, 0x41AE76, 0x238B45, 0x005824,
                            0xF7FCFD, 0xE5F5F9, 0xCCECE6, 0x99D8C9, 0x66C2A4, 0x41AE76, 0x238B45, 0x005824,
                            0xF7FCFD, 0xE5F5F9, 0xCCECE6, 0x99D8C9, 0x66C2A4, 0x41AE76, 0x238B45, 0x006D2C, 0x00441B> csCBBuGn;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBYlOrBr
           @ingroup cs
           @extends csCB_tpl
@@ -3672,6 +4022,7 @@ namespace mjr {
                            0xFFFFD4, 0xFEE391, 0xFEC44F, 0xFE9929, 0xEC7014, 0xCC4C02, 0x8C2D04,
                            0xFFFFE5, 0xFFF7BC, 0xFEE391, 0xFEC44F, 0xFE9929, 0xEC7014, 0xCC4C02, 0x8C2D04,
                            0xFFFFE5, 0xFFF7BC, 0xFEE391, 0xFEC44F, 0xFE9929, 0xEC7014, 0xCC4C02, 0x993404, 0x662506> csCBYlOrBr;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBYlGn
           @ingroup cs
           @extends csCB_tpl
@@ -3684,6 +4035,7 @@ namespace mjr {
                            0xFFFFCC, 0xD9F0A3, 0xADDD8E, 0x78C679, 0x41AB5D, 0x238443, 0x005A32,
                            0xFFFFE5, 0xF7FCB9, 0xD9F0A3, 0xADDD8E, 0x78C679, 0x41AB5D, 0x238443, 0x005A32,
                            0xFFFFE5, 0xF7FCB9, 0xD9F0A3, 0xADDD8E, 0x78C679, 0x41AB5D, 0x238443, 0x006837, 0x004529> csCBYlGn;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBReds
           @ingroup cs
           @extends csCB_tpl
@@ -3696,6 +4048,7 @@ namespace mjr {
                            0xFEE5D9, 0xFCBBA1, 0xFC9272, 0xFB6A4A, 0xEF3B2C, 0xCB181D, 0x99000D,
                            0xFFF5F0, 0xFEE0D2, 0xFCBBA1, 0xFC9272, 0xFB6A4A, 0xEF3B2C, 0xCB181D, 0x99000D,
                            0xFFF5F0, 0xFEE0D2, 0xFCBBA1, 0xFC9272, 0xFB6A4A, 0xEF3B2C, 0xCB181D, 0xA50F15, 0x67000D> csCBReds;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBRdPu
           @ingroup cs
           @extends csCB_tpl
@@ -3708,6 +4061,7 @@ namespace mjr {
                            0xFEEBE2, 0xFCC5C0, 0xFA9FB5, 0xF768A1, 0xDD3497, 0xAE017E, 0x7A0177,
                            0xFFF7F3, 0xFDE0DD, 0xFCC5C0, 0xFA9FB5, 0xF768A1, 0xDD3497, 0xAE017E, 0x7A0177,
                            0xFFF7F3, 0xFDE0DD, 0xFCC5C0, 0xFA9FB5, 0xF768A1, 0xDD3497, 0xAE017E, 0x7A0177, 0x49006A> csCBRdPu;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBGreens
           @ingroup cs
           @extends csCB_tpl
@@ -3720,6 +4074,7 @@ namespace mjr {
                            0xEDF8E9, 0xC7E9C0, 0xA1D99B, 0x74C476, 0x41AB5D, 0x238B45, 0x005A32,
                            0xF7FCF5, 0xE5F5E0, 0xC7E9C0, 0xA1D99B, 0x74C476, 0x41AB5D, 0x238B45, 0x005A32,
                            0xF7FCF5, 0xE5F5E0, 0xC7E9C0, 0xA1D99B, 0x74C476, 0x41AB5D, 0x238B45, 0x006D2C, 0x00441B> csCBGreens;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBYlGnBu
           @ingroup cs
           @extends csCB_tpl
@@ -3732,6 +4087,7 @@ namespace mjr {
                            0xFFFFCC, 0xC7E9B4, 0x7FCDBB, 0x41B6C4, 0x1D91C0, 0x225EA8, 0x0C2C84,
                            0xFFFFD9, 0xEDF8B1, 0xC7E9B4, 0x7FCDBB, 0x41B6C4, 0x1D91C0, 0x225EA8, 0x0C2C84,
                            0xFFFFD9, 0xEDF8B1, 0xC7E9B4, 0x7FCDBB, 0x41B6C4, 0x1D91C0, 0x225EA8, 0x253494, 0x081D58> csCBYlGnBu;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBPurples
           @ingroup cs
           @extends csCB_tpl
@@ -3744,6 +4100,7 @@ namespace mjr {
                            0xF2F0F7, 0xDADAEB, 0xBCBDDC, 0x9E9AC8, 0x807DBA, 0x6A51A3, 0x4A1486,
                            0xFCFBFD, 0xEFEDF5, 0xDADAEB, 0xBCBDDC, 0x9E9AC8, 0x807DBA, 0x6A51A3, 0x4A1486,
                            0xFCFBFD, 0xEFEDF5, 0xDADAEB, 0xBCBDDC, 0x9E9AC8, 0x807DBA, 0x6A51A3, 0x54278F, 0x3F007D> csCBPurples;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBGnBu
           @ingroup cs
           @extends csCB_tpl
@@ -3756,6 +4113,7 @@ namespace mjr {
                            0xF0F9E8, 0xCCEBC5, 0xA8DDB5, 0x7BCCC4, 0x4EB3D3, 0x2B8CBE, 0x08589E,
                            0xF7FCF0, 0xE0F3DB, 0xCCEBC5, 0xA8DDB5, 0x7BCCC4, 0x4EB3D3, 0x2B8CBE, 0x08589E,
                            0xF7FCF0, 0xE0F3DB, 0xCCEBC5, 0xA8DDB5, 0x7BCCC4, 0x4EB3D3, 0x2B8CBE, 0x0868AC, 0x084081> csCBGnBu;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBGreys
           @ingroup cs
           @extends csCB_tpl
@@ -3768,6 +4126,7 @@ namespace mjr {
                            0xF7F7F7, 0xD9D9D9, 0xBDBDBD, 0x969696, 0x737373, 0x525252, 0x252525,
                            0xFFFFFF, 0xF0F0F0, 0xD9D9D9, 0xBDBDBD, 0x969696, 0x737373, 0x525252, 0x252525,
                            0xFFFFFF, 0xF0F0F0, 0xD9D9D9, 0xBDBDBD, 0x969696, 0x737373, 0x525252, 0x252525, 0x000000> csCBGreys;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBYlOrRd
           @ingroup cs
           @extends csCB_tpl
@@ -3779,6 +4138,7 @@ namespace mjr {
                            0xFFFFB2, 0xFED976, 0xFEB24C, 0xFD8D3C, 0xF03B20, 0xBD0026,
                            0xFFFFB2, 0xFED976, 0xFEB24C, 0xFD8D3C, 0xFC4E2A, 0xE31A1C, 0xB10026,
                            0xFFFFCC, 0xFFEDA0, 0xFED976, 0xFEB24C, 0xFD8D3C, 0xFC4E2A, 0xE31A1C, 0xB10026> csCBYlOrRd;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBPuRd
           @ingroup cs
           @extends csCB_tpl
@@ -3791,6 +4151,7 @@ namespace mjr {
                            0xF1EEF6, 0xD4B9DA, 0xC994C7, 0xDF65B0, 0xE7298A, 0xCE1256, 0x91003F,
                            0xF7F4F9, 0xE7E1EF, 0xD4B9DA, 0xC994C7, 0xDF65B0, 0xE7298A, 0xCE1256, 0x91003F,
                            0xF7F4F9, 0xE7E1EF, 0xD4B9DA, 0xC994C7, 0xDF65B0, 0xE7298A, 0xCE1256, 0x980043, 0x67001F> csCBPuRd;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBBlues
           @ingroup cs
           @extends csCB_tpl
@@ -3803,6 +4164,7 @@ namespace mjr {
                            0xEFF3FF, 0xC6DBEF, 0x9ECAE1, 0x6BAED6, 0x4292C6, 0x2171B5, 0x084594,
                            0xF7FBFF, 0xDEEBF7, 0xC6DBEF, 0x9ECAE1, 0x6BAED6, 0x4292C6, 0x2171B5, 0x084594,
                            0xF7FBFF, 0xDEEBF7, 0xC6DBEF, 0x9ECAE1, 0x6BAED6, 0x4292C6, 0x2171B5, 0x08519C, 0x08306B> csCBBlues;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCBPuBuGn
           @ingroup cs
           @extends csCB_tpl

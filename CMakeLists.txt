@@ -31,9 +31,9 @@ set(POVRAY_HINT "c:/Program Files/POV-Ray/v3.7/bin/")
 ######################################################################################################################################################
 
 if(O_STATIC)
-  add_library(mrr STATIC lib/colorData.cpp lib/hersheyFontData.cpp)
+  add_library(mrr STATIC lib/hersheyFontData.cpp)
 else()
-  add_library(mrr SHARED lib/colorData.cpp lib/hersheyFontData.cpp)
+  add_library(mrr SHARED lib/hersheyFontData.cpp)
 endif()
 
 ######################################################################################################################################################
@@ -96,14 +96,14 @@ set(TARGETS_REQ_NONE   "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "
                        "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits" "mandelbrot_potential" "mandelbrot_triangle" "newton_bm_cplx"
                        "newton_bm_real" "newton_half" "newton_max_mod" "newton_vs" "newton_z6" "peterdejong" "peterdejongM" "sic" "sic_search"
                        "sierpinski_triangle" "sprott2d" "testPoint" "test_draw_btriangle" "test_color" "test_draw_misc" "test_draw_primatives"
-                       "tippets" "mandelbrot_bm_real_eqop" "test_float" "types")
+                       "tippets" "mandelbrot_bm_real_eqop" "test_float" "types" "color_lut_docs")
 set(TARGETS_REQ_MRRL   "color_lut_indexed" "color_lut_rainbows" "color_web_rectangle" "color_web_triangle" "test_draw_fonts" "test_draw_glyph"
-                       "test_draw_strings" "color_interp_hsl_vs_rgb" "color_lut_ramp_cube")
+                       "test_draw_strings" "color_interp_hsl_vs_rgb" "color_lut_ramp_cube" "color_lut_cubehelix" "color_lut_poly")
 set(TARGETS_REQ_OPENGL "glut_image")
 set(TARGETS_REQ_TIFF   "brownianDiffusion" "dlaBrownian" "dlaDrift" "img_process" "test_interp_scale" "geomTfrm_LensDistortion" "geomTfrm_Arb" 
                        "geomTfrm_Rotate")
 set(TARGETS_REQ_OPENMP "mandelbrot_bm_cplx_openmp")
-set(TARGETS_REQ_BTEST  "utest_foo" "utest_color_types_ia64nGCC" "utest_color_methods")
+set(TARGETS_REQ_BTEST  "utest_color_types_ia64nGCC" "utest_color_methods" "utest_color_schemes")
 set(TARGETS_REQ_PNG    )
 set(TARGETS_REQ_IM     )
 

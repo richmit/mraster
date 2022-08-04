@@ -69,10 +69,6 @@ int main(void) {
   BMP; for(csIt x=0;x<ct::csCCudBr::numC;               x++) theRC.drawLine(x, y1, x, y2, ct::csCCudBr::c(x));                theRC.drawString("  csCCudBr",                hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
   BMP; for(csIt x=0;x<ct::csCCudBg::numC;               x++) theRC.drawLine(x, y1, x, y2, ct::csCCudBg::c(x));                theRC.drawString("  csCCudBg",                hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20);                                                                                                        
   BMP; for(csIt x=0;x<ct::csCColdeRainbow::numC;        x++) theRC.drawLine(x, y1, x, y2, ct::csCColdeRainbow::c(x));         theRC.drawString("  csCColdeRainbow",         hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20);                                                                                                        
-
-  BMP; for(csIt x=0;x<ct::csCColdeRainbow::numC;        x++) theRC.drawLine(x, y1, x, y2, ct().cmpRGBcornerGradiant(x, "RYGCBMR"));         theRC.drawString("  cmpRGBcornerGradiant",         hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20);                                                                                                        
-
-
   BMP; for(csIt x=0;x<ct::csCColdeIceToWaterToHot::numC;x++) theRC.drawLine(x, y1, x, y2, ct::csCColdeIceToWaterToHot::c(x)); theRC.drawString("  csCColdeIceToWaterToHot", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20);                                                                                                                                                         
   BMP; for(csIt x=0;x<ct::csCColdeColdToHot::numC;      x++) theRC.drawLine(x, y1, x, y2, ct::csCColdeColdToHot::c(x));       theRC.drawString("  csCColdeColdToHot",       hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
   BMP; for(csIt x=0;x<ct::csCColdeFireRamp::numC;       x++) theRC.drawLine(x, y1, x, y2, ct::csCColdeFireRamp::c(x));        theRC.drawString("  csCColdeFireRamp",        hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 

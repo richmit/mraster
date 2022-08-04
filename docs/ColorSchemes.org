@@ -68,6 +68,8 @@ inner classes follow a regular naming convention:
   - =csBin .........= RGB Binary Schemes (template: =csCC_tpl=)
   - =csPGrey .......= RGB Pseudo-greyscale
   - =csRainbow .....= RGB spectrum based colors
+  - =csCH ..........= RGB Cubehelix colors (template: csCubeHelix_tpl)
+
 
 These classes are static in nature, and an instance is not required to use them.  They all have a member named "=c=" which is used to set the components of a
 =colorTpl= instance passed as argument, or as a factory for =colorTpl= instances.
@@ -101,14 +103,18 @@ Not all color scheme classes have the same interface; however, the interfaces ar
     - Color schemes with the number of colors set at run time, will have a =numC= argument for the =c= methods.
       - These schemes have two members specifying the range for =numC=: =minNumC= & =maxNumC=.
   - *=c=:* methods are used to set colors
-    - All color schemes have a =colorTpl= factory methodand a =colorTpl= setter method taking a =colorTpl= instance as the first argument with the remaining arguments identical to the factory method.
-    - The arguments for the =c= method vary according to the needs of the scheme.  For example:
-      - =csCB*= color schemes take an =Nc= argument followed by a =csIdx=.
-      - =csCC*= color schemes take a =csIdx= -- the =Nc= value being fixed at compile time.
-      - The =csIdx= argument may be one of several types depending on the scheme:
-        - *=csIntType=:* An integer type used to to select colors from discrete schemes (like Colorbrewer schemes).  When =clrChanT= is integral, gradient schemes can be considerd discrete as well.
-        - *=csFltType=:* An floating point type used to select colors from continuous schemes (like gradiants).
-        - *=csNatType=:* This will be =csIntType= when  =clrChanT= is integral, and =csFltType= otherwise.  It is used by =csHSLh*= schemes.
+    - The =c= methods come in two general forms:
+      - A =colorTpl= factory methodand that takes one or more arguments identifying the color within the color scheme
+        - The first argument is a "locator" that selects a color in a scheme.  This locater takes one of three forms:
+          - *=csIntType csInx=:* An integer "index" for descrete color schemes (like Colorbrewer schemes)
+          - *=csFltType csX=:* A floating point value in [0, 1] used to select colors from continuous schemes (like gradiants)
+          - *=csNatType csVal=:* These are highly dependant upon the color scheme.  See the =csHSLh*= schemes as an example.
+        - The remaining arguments are generally used to specify some characterstic of the scheme itself.  Examples:
+          - A =numC= argument specifying the number of elements in a discrete scheme (like Colorbrewer schemes)
+          - The color match function based rainbow color schemes take an argument =interpMethod= specifiying an interpolation method. is 
+      - A method that takes a =colorTpl= as it's first argument, with the remaining argument as in the factory method form of =c=.
+      - It is entirely possilbe that a color scheme object may have more than two =c= methods.  For example, a discrete and continous versions of =c= for
+        color schems that may be used both ways.
 
 Many color schemes provide a number of colors that is a function of =chanStepMax=, which is directly related to the value of =clrChanT=.  For integral
 =clrChanT= types, =chanStepMax= will be equal to =maxChanVal=. For floating point =clrChanT= types, =chanStepMax= will be equal to $2^32$.
@@ -153,9 +159,25 @@ Many color schemes provide a number of colors that is a function of =chanStepMax
 .                                       grey50   0.5   0.5   0.5   h
 #+end_src
 
- The edges of the cube taken with the corners as vertexes form a graph (referred to as "the cube edge graph" in this documentation).  Every trail (a walk with
- unique edges) with $n$ edges generates a color scheme with $\mathrm{maxChanVal}\cdot n - 1$ unique colors.  To make this scheme unique, we define the tree to
- have one of its end points the "start" of the scheme -- so we can map the integers from $[0,\mathrm{maxChanVal}\cdot n]$ to unique colors.
+The RGB color cube is usually considered as part of the 3D Euclidean space $\mathbb{R}^3$ -- that is $R$, $G$, & $B$ are real values in $I=[0, 1]$.  This
+subset of $\mathbb{R}^3$ is frequently called the "unit cube" and denoted by $I^3$.  A gradient in this context is a continuous curve, $c:I\rightarrow I^3$, from one
+point in the cube to another.  In this way we define an infinite sequence of colors.  The most popular gradients are straight lines connecting two colors
+together.  The next most popular is a pairwise linear curve connecting several colors together -- usually with each linear component the same length.
+
+Digital images are mos commonly represented with integer values for $R$, $G$, & $B$.  Most commonly unsigned, 8-bit integers -- $0.0$ mapping to $0$ and $1.0$
+mapping to $255$.  In this scenario one might think of the RGB color space as a discrete set of $16777216$ values, and color gradients as finite sequences of
+discrete "steps" from one discrete color value to another.  For example, a linear gradient from "green" to "yellow" will have precisely $256$ unique steps when
+the color space is defined in terms of 8-bit, integer color channels.  Note that a linear gradient from "green" to "magenta", across the diagonal of the cube,
+will also have $256$ color steps -- one of the oddities of distance measurement the discrete RGB space!  Lastly, note that if we had a gradient from "green"
+through "yellow" and ending at "red", we would have have $511$ distinct colors.  So discreet RGB color spaces produce discreet gradients, and the number of
+colors in the gradient will differ depending on the points traversed.
+
+The corners of the color cube are by far the most popular choices for gradient control points.  In describing these gradients it is usefully to think about
+the corners and how we can connect them as a mathematical graph.
+
+The edges of the cube taken with the corners as vertexes form a graph (referred to as "the cube edge graph" in this documentation).  Every trail (a walk with
+unique edges) with $n$ edges generates a color scheme with $\mathrm{maxChanVal}\cdot n - 1$ unique colors.  To make this scheme unique, we define the tree to
+have one of its end points the "start" of the scheme -- so we can map the integers from $[0,\mathrm{maxChanVal}\cdot n]$ to unique colors.
 
  Example:
 
@@ -165,23 +187,29 @@ Many color schemes provide a number of colors that is a function of =chanStepMax
     interpolate between the two values.
 #+END_QUOTE
 
- If we expand the graph to also include edges between the diagonal points of each face (cyan to yellow for example), we have a larger graph with more options.
- This graph is referred to as "the face edge/diagonal graph" in this documentation.
+If we expand the graph to also include edges between the diagonal points of each face (cyan to yellow for example), we have a larger graph with more options.
+This graph is referred to as "the face edge/diagonal graph" in this documentation.
 
- Color schemes defined in this way have several advantages, but they can be misleading because our perception of color change is non-linear in the RGB cube.
- We illustrate several useful and/or commonly used face edge/diagonal graph color schemes.
+Lastly, we can expand that graph by adding one vertex, called =h=, at the center of the cube with edges extending to each corner.  This graph is referred to
+as "complete cube graph with center" in this documentation.
 
- Lastly, we can expand that graph by adding one vertex, called =h=, at the center of the cube with edges extending to each corner.  This graph is referred to
- as "complete cube graph with center" in this documentation.
+Every color scheme in this section can be created via the =cmpRGBcornerGradiant()= method of =colorTpl=; however, many are also available as predefined color
+scheme objects.  The color schemes provided by the =csCC_tpl= template provide a dual interface.  One provides a discreet view of gradients (the =c= methods
+with =csIdx= arguments), and the other provides a continuous view of gradients (the =c= methods with =csX= arguments).  When the colors use floating point
+channels, the discreet gradients have $2^{32}$ steps between corner colors.
 
-** The Color Cube Rainbow
+** Maximal circuits in the cube edge graph
 
- This is one of the most commonly seen color schemes in scientific visualization, and it is also one of the worst because it can be misleading when
- mapped to linear values.
-
- The color cube rainbow map is generated by the unique six segment (6 vertex) cycle in the face edge graph not involving white or black:
+ This is one of the most commonly seen color schemes in scientific visualization.  The color cube rainbow map is generated by the unique six segment (6
+ vertex) cycle in the face edge graph not involving white or black:
 
   - =RYGCBMR= -- =csCColdeRainbow=
+
+*** Predefined Schemes
+ - =csCColdeRainbow= :: \\
+  [[./pics/cs/color_lut_docs_csCColdeRainbow_50.png]]
+
+** Maximal circuits in the cube edge/diagonal graph
 
  If we expand to the edge face/diagonal graph, then we have may more six segment cycles not involving white or black:
 
@@ -213,6 +241,8 @@ Many color schemes provide a number of colors that is a function of =chanStepMax
    - =0GCBMWYR0=
    - =0GYWCBMR0=
 
+** Large Trees
+
   Another common request is for trees (so no color is used twice) starting at black and ending at white.  Several trees exist of lengths of 7 and 5:
 
    - =0BCGYRMW=
@@ -228,29 +258,44 @@ Many color schemes provide a number of colors that is a function of =chanStepMax
    - =0RMBCW=
    - =0RYGCW=
 
+** Black to White Trees
+
   The three segment trees from black to white are useful in that the intensity (sum of the components) is a monotone increasing function from zero up to
-  three.  One of them (0RYW) is often called the "fire ramp" as it ranges from black (flame base), up to yellow, then red, and finally to white hot.
+  three.  One of them (=0RYW=) is often called the "fire ramp" as it ranges from black (flame base), up to yellow, then red, and finally to white hot.
 
-   - =0BCW= -- =csCCsumBGR=
-   - =0BMW= -- =csCCsumBRG=
-   - =0GCW= -- =csCCsumGBR=
-   - =0GYW= -- =csCCsumGRB=
-   - =0RMW= -- =csCCsumRBG=
-   - =0RYW= -- =csCCsumRGB= and =csCColdeFireRamp=
+   - =0BCW= -- =csCCsumBGR=                     
+   - =0BMW= -- =csCCsumBRG=                     
+   - =0GCW= -- =csCCsumGBR=                     
+   - =0GYW= -- =csCCsumGRB=                     
+   - =0RMW= -- =csCCsumRBG=                     
+   - =0RYW= -- =csCCsumRGB= & =csCColdeFireRamp=
 
-  Luminance based color schemes from the HSL color space are quite popular.  Some HSL schemes don't suffer from the perceptional non-linearity that some
-  popular RGB schemes suffer from. What most people don't realize is that many of the most popular luminance based color schemes in the HSL color space are
-  actually edge graphs in the RGB color cube!  It is also true that the most common "bad" color scheme in the RGB cube (the colorCubeRainbow), is an edge
-  graph in the HSL hexcone!  In the end, the thing to remember is that both color spaces have both good and bad color schemes.  Of particular note, are the
-  two segment trees from black to white in the RGB edge/diagonal graph -- they are the same as the two segment graphs in the edges of the HSL hexcone from
-  black to white!
+*** Predefined Schemes
+ - =csCCsumBGR= :: \\
+  [[./pics/cs/color_lut_docs_csCCsumBGR_50.png]]
+ - =csCCsumBRG= :: \\
+  [[./pics/cs/color_lut_docs_csCCsumBRG_50.png]]
+ - =csCCsumGBR= :: \\
+  [[./pics/cs/color_lut_docs_csCCsumGBR_50.png]]
+ - =csCCsumGRB= :: \\
+  [[./pics/cs/color_lut_docs_csCCsumGRB_50.png]]
+ - =csCCsumRBG= :: \\
+  [[./pics/cs/color_lut_docs_csCCsumRBG_50.png]]
+ - =csCCsumRGB= & =csCColdeFireRamp= :: \\
+  [[./pics/cs/color_lut_docs_csCCsumRGB_50.png]]
 
-   - =0RW= -- H=0   red edge of the HSL hexcone
-   - =0YW= -- H=60  yellow edge of the HSL hexcone
-   - =0GW= -- H=120 green edge of the HSL hexcone
-   - =0CW= -- H=180 cyan edge of the HSL hexcone
-   - =0BW= -- H=240 blue edge of the HSL hexcone
-   - =0MW= -- H=300 magenta edge of the HSL hexcone
+** Luminance based color schemes
+
+  Luminance based color schemes defined as color gradients from the center of the in the HSL color space to an extreem vertex are quite popular.  Many of the
+  most popular luminance based color schemes in the HSL color space are also edge graphs in the RGB color cube!  Of particular note, are the two segment trees
+  from black to white in the RGB edge/diagonal graph -- they are the same as the two segment graphs in the edges of the HSL hexcone from black to white!
+
+   - =0RW= -- =H=000= -- red edge of the HSL hexcone
+   - =0YW= -- =H=060= -- yellow edge of the HSL hexcone
+   - =0GW= -- =H=120= -- green edge of the HSL hexcone
+   - =0CW= -- =H=180= -- cyan edge of the HSL hexcone
+   - =0BW= -- =H=240= -- blue edge of the HSL hexcone
+   - =0MW= -- =H=300= -- magenta edge of the HSL hexcone
 
 ** Hot Too Cold
 
@@ -258,12 +303,18 @@ Many color schemes provide a number of colors that is a function of =chanStepMax
  through green, and ends in red. It suffers from the same defects as the color cube rainbow; however, its use is so common that special support is provided
  via a named method.
 
-  - "BCGYR" -- =csCColdeColdToHot=
+  - =BCGYR= -- =csCColdeColdToHot=
 
  The traditional cold to hot ramp can be improved -- this is my personal opinion.  This new ramp still has the same problems the color cube rainbow has;
  however, it is more attractive.  This one moves from white (ice), up to water (blue), and then up to red (hot) via yellow.
 
   - =WCBYR= -- =csCColdeIceToWaterToHot=
+
+*** Predefined Schemes
+ - =csCColdeColdToHot= :: \\
+  [[./pics/cs/color_lut_docs_csCColdeColdToHot_50.png]]
+ - =csCColdeIceToWaterToHot= :: \\
+  [[./pics/cs/color_lut_docs_csCColdeIceToWaterToHot_50.png]]
 
 ** Constant Intensity Cycles
 
@@ -272,6 +323,12 @@ Many color schemes provide a number of colors that is a function of =chanStepMax
 
   - =CMY= -- =csCCconsTwo= -- intensity == 2
   - =BRG= -- =csCCconsOne= -- intensity == 1
+
+*** Predefined Schemes
+ - =csCCconsTwo= :: \\
+  [[./pics/cs/color_lut_docs_csCCconsTwo_50.png]]
+ - =csCCconsOne= :: \\
+  [[./pics/cs/color_lut_docs_csCCconsOne_50.png]]
 
 ** One Segment Diverging Maps
 
@@ -290,6 +347,20 @@ Many color schemes provide a number of colors that is a function of =chanStepMax
  The naming convention for the methods is not obvious.  Take, for example, setRGBcmpUpDownRampBr.  This is so named because of the computational algorithm
  used to compute the scheme: Blue up, red down, green constant (maxChanVal).
 
+*** Predefined Schemes
+ - =csCCudBr= :: \\
+  [[./pics/cs/color_lut_docs_csCCudBr_50.png]]
+ - =csCCudBg= :: \\
+  [[./pics/cs/color_lut_docs_csCCudBg_50.png]]
+ - =csCCudGr= :: \\
+  [[./pics/cs/color_lut_docs_csCCudGr_50.png]]
+ - =csCCudGb= :: \\
+  [[./pics/cs/color_lut_docs_csCCudGb_50.png]]
+ - =csCCudRg= :: \\
+  [[./pics/cs/color_lut_docs_csCCudRg_50.png]]
+ - =csCCudRb= :: \\
+  [[./pics/cs/color_lut_docs_csCCudRb_50.png]]
+
 ** Three Segment Diverging Maps
 
  Some three edge trees utilizing very different colors for starting and terminal points can form very nice "divergent" color maps.  Such maps can
@@ -301,13 +372,9 @@ Many color schemes provide a number of colors that is a function of =chanStepMax
 
 ** Center point ramps (HSL schemes)
 
- Color schemes from the HSL color space are popular because they are perceptually more linear.  The most popular maps extend from the center of HSL space,
- (0.0, 0.5, 0), to one of the primary color vertexes --- which have the same colors as the vertexes of the RGB cube excluding black and white.  These
- sequences are identical to ones from the center of RGB space, (0.5, 0.5, 0.5), to one of the vertexes excluding black and white!  So we can implement these
- color schemes directly in RGB color space much as we have the cube schemes above.
-
- Recall that we call the vertex at the center of the cube "=H=" -- for "Half way between everything". Using this new vertex, we have the following saturation
- based color schemes:
+ Color schemes defined as gradients from the center of the HSL color space to an extreme edge are mostly perceptually linear.  These are also one segment
+ trees in the complete cube graph with center.  Recall that we call the vertex at the center of the cube "=H=" -- for "Half way between everything". Using
+ this new vertex, we have the following saturation based color schemes:
 
   - =HR= -- =csHSLhR=
   - =HG= -- =csHSLhG=
@@ -316,17 +383,190 @@ Many color schemes provide a number of colors that is a function of =chanStepMax
   - =HY= -- =csHSLhY=
   - =HM= -- =csHSLhM=
 
- The traversal from black to white -- through the center point -- is directly supported via a named method.  Note that cmpRGBcornerGradiant() supports this via
- a graph string of "0W".
+*** Predefined Schemes
+ - =csHSLhR= :: \\
+  [[./pics/cs/color_lut_docs_csHSLhR_50.png]]
+ - =csHSLhG= :: \\
+  [[./pics/cs/color_lut_docs_csHSLhG_50.png]]
+ - =csHSLhB= :: \\
+  [[./pics/cs/color_lut_docs_csHSLhB_50.png]]
+ - =csHSLhC= :: \\
+  [[./pics/cs/color_lut_docs_csHSLhC_50.png]]
+ - =csHSLhY= :: \\
+  [[./pics/cs/color_lut_docs_csHSLhY_50.png]]
+ - =csHSLhM= :: \\
+  [[./pics/cs/color_lut_docs_csHSLhM_50.png]]
 
-  - =0W= -- =csCCdiag01=
+** Stacked HSL Schemes
 
- The other diagonal traversals (diagonal meaning through the center of the cube) are essentially two of the HSL saturation based schemes placed back to back.
- They can form effective divergent color schemes.  Black to white is technically one of them, but we have already covered that one.  Note that the
- cmpRGBcornerGradiant() function will support this class of schemes with a two element graph -- the first vertex and the last. The remaining three diagonal schemes
- are as follows:
+ The diagonal traversals (diagonal meaning through the center of the cube) are essentially two of the HSL saturation based schemes placed back to back.  Aside
+ from the black-white one, these can form effective divergent color schemes.  
 
   - =CR= -- =csCCdiagCR=
   - =MG= -- =csCCdiagMG=
   - =YB= -- =csCCdiagYB=
+  - =0W= -- =csCCdiag01=
 
+*** Predefined Schemes
+ - =csCCdiagCR= :: \\
+  [[./pics/cs/color_lut_docs_csCCdiagCR_50.png]]
+ - =csCCdiagMG= :: \\
+  [[./pics/cs/color_lut_docs_csCCdiagMG_50.png]]
+ - =csCCdiagYB= :: \\
+  [[./pics/cs/color_lut_docs_csCCdiagYB_50.png]]
+ - =csCCdiag01= :: \\
+  [[./pics/cs/color_lut_docs_csCCdiag01_50.png]]
+
+* Continuous Polynomial Schemes
+
+These schemes are "continuous" in that they take a floating point value to select the color, and are derived from continuous polynomial curves in the RGB cube
+space.  Many of them are very similar to color maps in popular use (with similar names), but these are only only similar to those popular maps.  In
+particular, the maps here may not be as precise when it comes to things like monotonously of intensity.  That said these look nice and I like easy to compute
+color maps that don't require fancy interpolating schemes.
+
+ - =csPLYgrey= :: \\
+  [[./pics/cs/color_lut_docs_csPLYgrey_50.png]]
+ - =csPLYquad= :: \\
+  [[./pics/cs/color_lut_docs_csPLYquad_50.png]]
+ - =csPLYinferno= :: \\
+  [[./pics/cs/color_lut_docs_csPLYinferno_50.png]]
+ - =csPLYmagma= :: \\
+  [[./pics/cs/color_lut_docs_csPLYmagma_50.png]]
+ - =csPLYparula= :: \\
+  [[./pics/cs/color_lut_docs_csPLYparula_50.png]]
+ - =csPLYplasma= :: \\
+  [[./pics/cs/color_lut_docs_csPLYplasma_50.png]]
+ - =csPLYturbo= :: \\
+  [[./pics/cs/color_lut_docs_csPLYturbo_50.png]]
+ - =csPLYviridis= :: \\
+  [[./pics/cs/color_lut_docs_csPLYviridis_50.png]]
+ - =csPLYcividis= :: \\
+  [[./pics/cs/color_lut_docs_csPLYcividis_50.png]]
+ - =csPLYhsvRB= :: \\
+  [[./pics/cs/color_lut_docs_csPLYhsvRB_50.png]]
+
+* Dav Green's cubehelix color maps
+
+The =csCubeHelix_tpl= templte can geneate any of the cubehelix schemes, but =colorTpl= predefines three I particularly like:
+
+ - =csCHstd= :: \\
+  [[./pics/cs/color_lut_docs_csCHstd_50.png]]
+ - =csCHblu= :: \\
+  [[./pics/cs/color_lut_docs_csCHblu_50.png]]
+ - =csCHvio= :: \\
+  [[./pics/cs/color_lut_docs_csCHvio_50.png]]
+
+* Pseudo-Greyscale   
+
+These schemes are not true greyscale, but the colors are very close to grey.  These schemes are discreet!
+
+ - =csPGrey3x= :: \\
+  [[./pics/cs/color_lut_docs_csPGrey3x_50.png]]
+ - =csPGrey4x= :: \\
+  [[./pics/cs/color_lut_docs_csPGrey4x_50.png]]
+
+* Spectral
+
+These color schemes are based on the spectrum and color match functions.  These aren't really suitable for visualization, but some
+interesting color schemes can be derived from them.
+
+ - =csRainbowLA= :: \\
+  [[./pics/cs/color_lut_docs_csRainbowLA_50.png]]
+ - =csRainbowCM= with =BUMP= :: \\
+  [[./pics/cs/color_lut_docs_csRainbowCMb_50.png]]
+ - =csRainbowCM= with =LINEAR= :: \\
+  [[./pics/cs/color_lut_docs_csRainbowCMl_50.png]]
+ - =csRainbowCM= with =FLOOR= :: \\
+  [[./pics/cs/color_lut_docs_csRainbowCMf_50.png]]
+ - =csRainbowCM= with =CEILING= :: \\
+  [[./pics/cs/color_lut_docs_csRainbowCMc_50.png]]
+ - =csRainbowCM= with =NEAREST= :: \\
+  [[./pics/cs/color_lut_docs_csRainbowCMn_50.png]]
+
+* Color Brewer
+
+ - =csCBAccent= :: \\
+  [[./pics/cs/color_lut_docs_csCBAccent_50.png]]
+ - =csCBBlues= :: \\
+  [[./pics/cs/color_lut_docs_csCBBlues_50.png]]
+ - =csCBBrBG= :: \\
+  [[./pics/cs/color_lut_docs_csCBBrBG_50.png]]
+ - =csCBBuGn= :: \\
+  [[./pics/cs/color_lut_docs_csCBBuGn_50.png]]
+ - =csCBBuPu= :: \\
+  [[./pics/cs/color_lut_docs_csCBBuPu_50.png]]
+ - =csCBDark2= :: \\
+  [[./pics/cs/color_lut_docs_csCBDark2_50.png]]
+ - =csCBGnBu= :: \\
+  [[./pics/cs/color_lut_docs_csCBGnBu_50.png]]
+ - =csCBGreens= :: \\
+  [[./pics/cs/color_lut_docs_csCBGreens_50.png]]
+ - =csCBGreys= :: \\
+  [[./pics/cs/color_lut_docs_csCBGreys_50.png]]
+ - =csCBOranges= :: \\
+  [[./pics/cs/color_lut_docs_csCBOranges_50.png]]
+ - =csCBOrRd= :: \\
+  [[./pics/cs/color_lut_docs_csCBOrRd_50.png]]
+ - =csCBPaired= :: \\
+  [[./pics/cs/color_lut_docs_csCBPaired_50.png]]
+ - =csCBPastel1= :: \\
+  [[./pics/cs/color_lut_docs_csCBPastel1_50.png]]
+ - =csCBPastel2= :: \\
+  [[./pics/cs/color_lut_docs_csCBPastel2_50.png]]
+ - =csCBPiYG= :: \\
+  [[./pics/cs/color_lut_docs_csCBPiYG_50.png]]
+ - =csCBPRGn= :: \\
+  [[./pics/cs/color_lut_docs_csCBPRGn_50.png]]
+ - =csCBPuBuGn= :: \\
+  [[./pics/cs/color_lut_docs_csCBPuBuGn_50.png]]
+ - =csCBPuBu= :: \\
+  [[./pics/cs/color_lut_docs_csCBPuBu_50.png]]
+ - =csCBPuOr= :: \\
+  [[./pics/cs/color_lut_docs_csCBPuOr_50.png]]
+ - =csCBPuRd= :: \\
+  [[./pics/cs/color_lut_docs_csCBPuRd_50.png]]
+ - =csCBPurples= :: \\
+  [[./pics/cs/color_lut_docs_csCBPurples_50.png]]
+ - =csCBRdBu= :: \\
+  [[./pics/cs/color_lut_docs_csCBRdBu_50.png]]
+ - =csCBRdGy= :: \\
+  [[./pics/cs/color_lut_docs_csCBRdGy_50.png]]
+ - =csCBRdPu= :: \\
+  [[./pics/cs/color_lut_docs_csCBRdPu_50.png]]
+ - =csCBRdYlBu= :: \\
+  [[./pics/cs/color_lut_docs_csCBRdYlBu_50.png]]
+ - =csCBRdYlGn= :: \\
+  [[./pics/cs/color_lut_docs_csCBRdYlGn_50.png]]
+ - =csCBReds= :: \\
+  [[./pics/cs/color_lut_docs_csCBReds_50.png]]
+ - =csCBSet1= :: \\
+  [[./pics/cs/color_lut_docs_csCBSet1_50.png]]
+ - =csCBSet2= :: \\
+  [[./pics/cs/color_lut_docs_csCBSet2_50.png]]
+ - =csCBSet3= :: \\
+  [[./pics/cs/color_lut_docs_csCBSet3_50.png]]
+ - =csCBSpectral= :: \\
+  [[./pics/cs/color_lut_docs_csCBSpectral_50.png]]
+ - =csCBYlGnBu= :: \\
+  [[./pics/cs/color_lut_docs_csCBYlGnBu_50.png]]
+ - =csCBYlGn= :: \\
+  [[./pics/cs/color_lut_docs_csCBYlGn_50.png]]
+ - =csCBYlOrBr= :: \\
+  [[./pics/cs/color_lut_docs_csCBYlOrBr_50.png]]
+ - =csCBYlOrRd= :: \\
+  [[./pics/cs/color_lut_docs_csCBYlOrRd_50.png]]
+
+* Converting and processing previews                               :noexport:
+
+In the build directory, we run the =color_lut_docs= example to generate all the TIFF files.
+
+#+begin_src sh
+make color_lut_docs && ./color_lut_docs.exe 
+#+end_src
+
+In this directory, we run the following to create PNGs:
+
+#+begin_src zsh
+for f in ../build/color_lut_docs_*.tiff(:r); do echo $f; nf=pics/cs/`basename $f`_50.png; convert $f.tiff $nf; done
+for f in ../build/color_lut_docs_*.tiff(:r); do echo $f; nf=pics/cs/`basename $f`_50_50.png; convert -resize 50% $f.tiff $nf; done
+#+end_src

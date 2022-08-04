@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-08-02 Tue 14:11 -->
+<!-- 2022-08-04 Thu 16:34 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>Color Schemes</title>
@@ -251,12 +251,12 @@
 
 <tr>
 <td class="org-right"><b>Updated:</b></td>
-<td class="org-left"><i>2022-08-02 14:11:07</i></td>
+<td class="org-left"><i>2022-08-04 16:34:02</i></td>
 </tr>
 
 <tr>
 <td class="org-right"><b>Generated:</b></td>
-<td class="org-left"><i>2022-08-02 14:11:08</i></td>
+<td class="org-left"><i>2022-08-04 16:34:02</i></td>
 </tr>
 </tbody>
 </table>
@@ -270,20 +270,58 @@ Copyright &copy; 2022 Mitch Richling. All rights reserved.
 <ul>
 <li><a href="#introduction">1. Introduction</a>
 <ul>
-<li><a href="#org659fd15">1.1. Color Scheme Class Interface</a></li>
+<li><a href="#orgdf8f821">1.1. Color Scheme Class Interface</a></li>
 </ul>
 </li>
-<li><a href="#orgdcdf3dc">2. Color Cube Edge/Diagonal Graph Color Schemes</a>
+<li><a href="#org5f91ff3">2. Color Cube Edge/Diagonal Graph Color Schemes</a>
 <ul>
-<li><a href="#orge274d81">2.1. The Color Cube Rainbow</a></li>
-<li><a href="#orgd64514a">2.2. Hitting all the corners</a></li>
-<li><a href="#org9a39e24">2.3. Hot Too Cold</a></li>
-<li><a href="#org540bd45">2.4. Constant Intensity Cycles</a></li>
-<li><a href="#org82e35b2">2.5. One Segment Diverging Maps</a></li>
-<li><a href="#org03bf917">2.6. Three Segment Diverging Maps</a></li>
-<li><a href="#org28ba40c">2.7. Center point ramps (HSL schemes)</a></li>
+<li><a href="#orgf63c4d0">2.1. Maximal circuits in the cube edge graph</a>
+<ul>
+<li><a href="#org074f7f7">2.1.1. Predefined Schemes</a></li>
 </ul>
 </li>
+<li><a href="#org1925307">2.2. Maximal circuits in the cube edge/diagonal graph</a></li>
+<li><a href="#org78288cc">2.3. Hitting all the corners</a></li>
+<li><a href="#orgc7ddbd0">2.4. Large Trees</a></li>
+<li><a href="#orgac620d7">2.5. Black to White Trees</a>
+<ul>
+<li><a href="#org825e059">2.5.1. Predefined Schemes</a></li>
+</ul>
+</li>
+<li><a href="#org33b57c7">2.6. Luminance based color schemes</a></li>
+<li><a href="#org52f1c80">2.7. Hot Too Cold</a>
+<ul>
+<li><a href="#org1b31e1a">2.7.1. Predefined Schemes</a></li>
+</ul>
+</li>
+<li><a href="#org8b44ae9">2.8. Constant Intensity Cycles</a>
+<ul>
+<li><a href="#orgee3ac3d">2.8.1. Predefined Schemes</a></li>
+</ul>
+</li>
+<li><a href="#org8f77705">2.9. One Segment Diverging Maps</a>
+<ul>
+<li><a href="#org6055c78">2.9.1. Predefined Schemes</a></li>
+</ul>
+</li>
+<li><a href="#orgccdeaf6">2.10. Three Segment Diverging Maps</a></li>
+<li><a href="#orgf7d43ee">2.11. Center point ramps (HSL schemes)</a>
+<ul>
+<li><a href="#org7e23cb4">2.11.1. Predefined Schemes</a></li>
+</ul>
+</li>
+<li><a href="#orgcebf699">2.12. Stacked HSL Schemes</a>
+<ul>
+<li><a href="#org3de1964">2.12.1. Predefined Schemes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orga781cec">3. Continuous Polynomial Schemes</a></li>
+<li><a href="#org5570d0b">4. Dav Green's cubehelix color maps</a></li>
+<li><a href="#orgbdf0f11">5. Pseudo-Greyscale</a></li>
+<li><a href="#orgfbf24b7">6. Spectral</a></li>
+<li><a href="#orga0c5fe4">7. Color Brewer</a></li>
 </ul>
 </div>
 </div>
@@ -308,7 +346,9 @@ inner classes follow a regular naming convention:
 <li><code>csBin .........</code> RGB Binary Schemes (template: <code>csCC_tpl</code>)</li>
 <li><code>csPGrey .......</code> RGB Pseudo-greyscale</li>
 <li><code>csRainbow .....</code> RGB spectrum based colors</li>
+<li><code>csCH ..........</code> RGB Cubehelix colors (template: csCubeHelix_tpl)</li>
 </ul>
+
 
 <p>
 These classes are static in nature, and an instance is not required to use them.  They all have a member named "<code>c</code>" which is used to set the components of a
@@ -346,8 +386,8 @@ aColor.csSet&lt;<span style="color: #8470ff; font-weight: bold;">mjr</span>::<sp
 </div>
 </div>
 
-<div id="outline-container-org659fd15" class="outline-3">
-<h3 id="org659fd15"><span class="section-number-3">1.1.</span> Color Scheme Class Interface</h3>
+<div id="outline-container-orgdf8f821" class="outline-3">
+<h3 id="orgdf8f821"><span class="section-number-3">1.1.</span> Color Scheme Class Interface</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 Not all color scheme classes have the same interface; however, the interfaces are uniformly designed:
@@ -363,17 +403,25 @@ Not all color scheme classes have the same interface; however, the interfaces ar
 </ul></li>
 <li><b><code>c</code>:</b> methods are used to set colors
 <ul class="org-ul">
-<li>All color schemes have a <code>colorTpl</code> factory methodand a <code>colorTpl</code> setter method taking a <code>colorTpl</code> instance as the first argument with the remaining arguments identical to the factory method.</li>
-<li>The arguments for the <code>c</code> method vary according to the needs of the scheme.  For example:
+<li>The <code>c</code> methods come in two general forms:
 <ul class="org-ul">
-<li><code>csCB*</code> color schemes take an <code>Nc</code> argument followed by a <code>csIdx</code>.</li>
-<li><code>csCC*</code> color schemes take a <code>csIdx</code> &#x2013; the <code>Nc</code> value being fixed at compile time.</li>
-<li>The <code>csIdx</code> argument may be one of several types depending on the scheme:
+<li>A <code>colorTpl</code> factory methodand that takes one or more arguments identifying the color within the color scheme
 <ul class="org-ul">
-<li><b><code>csIntType</code>:</b> An integer type used to to select colors from discrete schemes (like Colorbrewer schemes).  When <code>clrChanT</code> is integral, gradient schemes can be considerd discrete as well.</li>
-<li><b><code>csFltType</code>:</b> An floating point type used to select colors from continuous schemes (like gradiants).</li>
-<li><b><code>csNatType</code>:</b> This will be <code>csIntType</code> when  <code>clrChanT</code> is integral, and <code>csFltType</code> otherwise.  It is used by <code>csHSLh*</code> schemes.</li>
+<li>The first argument is a "locator" that selects a color in a scheme.  This locater takes one of three forms:
+<ul class="org-ul">
+<li><b><code>csIntType csInx</code>:</b> An integer "index" for descrete color schemes (like Colorbrewer schemes)</li>
+<li><b><code>csFltType csX</code>:</b> A floating point value in [0, 1] used to select colors from continuous schemes (like gradiants)</li>
+<li><b><code>csNatType csVal</code>:</b> These are highly dependant upon the color scheme.  See the <code>csHSLh*</code> schemes as an example.</li>
 </ul></li>
+<li>The remaining arguments are generally used to specify some characterstic of the scheme itself.  Examples:
+<ul class="org-ul">
+<li>A <code>numC</code> argument specifying the number of elements in a discrete scheme (like Colorbrewer schemes)</li>
+<li>The color match function based rainbow color schemes take an argument <code>interpMethod</code> specifiying an interpolation method. is</li>
+</ul></li>
+</ul></li>
+<li>A method that takes a <code>colorTpl</code> as it's first argument, with the remaining argument as in the factory method form of <code>c</code>.</li>
+<li>It is entirely possilbe that a color scheme object may have more than two <code>c</code> methods.  For example, a discrete and continous versions of <code>c</code> for
+color schems that may be used both ways.</li>
 </ul></li>
 </ul></li>
 </ul>
@@ -386,8 +434,8 @@ Many color schemes provide a number of colors that is a function of <code>chanSt
 </div>
 </div>
 
-<div id="outline-container-orgdcdf3dc" class="outline-2">
-<h2 id="orgdcdf3dc"><span class="section-number-2">2.</span> Color Cube Edge/Diagonal Graph Color Schemes</h2>
+<div id="outline-container-org5f91ff3" class="outline-2">
+<h2 id="org5f91ff3"><span class="section-number-2">2.</span> Color Cube Edge/Diagonal Graph Color Schemes</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The RGB color cube:
@@ -431,6 +479,28 @@ The RGB color cube:
 </div>
 
 <p>
+The RGB color cube is usually considered as part of the 3D Euclidean space \(\mathbb{R}^3\) &#x2013; that is \(R\), \(G\), &amp; \(B\) are real values in \(I=[0, 1]\).  This
+subset of \(\mathbb{R}^3\) is frequently called the "unit cube" and denoted by \(I^3\).  A gradient in this context is a continuous curve, \(c:I\rightarrow I^3\), from one
+point in the cube to another.  In this way we define an infinite sequence of colors.  The most popular gradients are straight lines connecting two colors
+together.  The next most popular is a pairwise linear curve connecting several colors together &#x2013; usually with each linear component the same length.
+</p>
+
+<p>
+Digital images are mos commonly represented with integer values for \(R\), \(G\), &amp; \(B\).  Most commonly unsigned, 8-bit integers &#x2013; \(0.0\) mapping to \(0\) and \(1.0\)
+mapping to \(255\).  In this scenario one might think of the RGB color space as a discrete set of \(16777216\) values, and color gradients as finite sequences of
+discrete "steps" from one discrete color value to another.  For example, a linear gradient from "green" to "yellow" will have precisely \(256\) unique steps when
+the color space is defined in terms of 8-bit, integer color channels.  Note that a linear gradient from "green" to "magenta", across the diagonal of the cube,
+will also have \(256\) color steps &#x2013; one of the oddities of distance measurement the discrete RGB space!  Lastly, note that if we had a gradient from "green"
+through "yellow" and ending at "red", we would have have \(511\) distinct colors.  So discreet RGB color spaces produce discreet gradients, and the number of
+colors in the gradient will differ depending on the points traversed.
+</p>
+
+<p>
+The corners of the color cube are by far the most popular choices for gradient control points.  In describing these gradients it is usefully to think about
+the corners and how we can connect them as a mathematical graph.
+</p>
+
+<p>
 The edges of the cube taken with the corners as vertexes form a graph (referred to as "the cube edge graph" in this documentation).  Every trail (a walk with
 unique edges) with \(n\) edges generates a color scheme with \(\mathrm{maxChanVal}\cdot n - 1\) unique colors.  To make this scheme unique, we define the tree to
 have one of its end points the "start" of the scheme &#x2013; so we can map the integers from \([0,\mathrm{maxChanVal}\cdot n]\) to unique colors.
@@ -454,32 +524,45 @@ This graph is referred to as "the face edge/diagonal graph" in this documentatio
 </p>
 
 <p>
-Color schemes defined in this way have several advantages, but they can be misleading because our perception of color change is non-linear in the RGB cube.
-We illustrate several useful and/or commonly used face edge/diagonal graph color schemes.
-</p>
-
-<p>
 Lastly, we can expand that graph by adding one vertex, called <code>h</code>, at the center of the cube with edges extending to each corner.  This graph is referred to
 as "complete cube graph with center" in this documentation.
 </p>
+
+<p>
+Every color scheme in this section can be created via the <code>cmpRGBcornerGradiant()</code> method of <code>colorTpl</code>; however, many are also available as predefined color
+scheme objects.  The color schemes provided by the <code>csCC_tpl</code> template provide a dual interface.  One provides a discreet view of gradients (the <code>c</code> methods
+with <code>csIdx</code> arguments), and the other provides a continuous view of gradients (the <code>c</code> methods with <code>csX</code> arguments).  When the colors use floating point
+channels, the discreet gradients have \(2^{32}\) steps between corner colors.
+</p>
 </div>
 
-<div id="outline-container-orge274d81" class="outline-3">
-<h3 id="orge274d81"><span class="section-number-3">2.1.</span> The Color Cube Rainbow</h3>
+<div id="outline-container-orgf63c4d0" class="outline-3">
+<h3 id="orgf63c4d0"><span class="section-number-3">2.1.</span> Maximal circuits in the cube edge graph</h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
-This is one of the most commonly seen color schemes in scientific visualization, and it is also one of the worst because it can be misleading when
-mapped to linear values.
-</p>
-
-<p>
-The color cube rainbow map is generated by the unique six segment (6 vertex) cycle in the face edge graph not involving white or black:
+This is one of the most commonly seen color schemes in scientific visualization.  The color cube rainbow map is generated by the unique six segment (6
+vertex) cycle in the face edge graph not involving white or black:
 </p>
 
 <ul class="org-ul">
 <li><code>RYGCBMR</code> &#x2013; <code>csCColdeRainbow</code></li>
 </ul>
+</div>
 
+<div id="outline-container-org074f7f7" class="outline-4">
+<h4 id="org074f7f7"><span class="section-number-4">2.1.1.</span> Predefined Schemes</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<dl class="org-dl">
+<dt><code>csCColdeRainbow</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCColdeRainbow_50.png" alt="color_lut_docs_csCColdeRainbow_50.png" /></dd>
+</dl>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org1925307" class="outline-3">
+<h3 id="org1925307"><span class="section-number-3">2.2.</span> Maximal circuits in the cube edge/diagonal graph</h3>
+<div class="outline-text-3" id="text-2-2">
 <p>
 If we expand to the edge face/diagonal graph, then we have may more six segment cycles not involving white or black:
 </p>
@@ -504,9 +587,9 @@ If we expand to the edge face/diagonal graph, then we have may more six segment 
 </div>
 </div>
 
-<div id="outline-container-orgd64514a" class="outline-3">
-<h3 id="orgd64514a"><span class="section-number-3">2.2.</span> Hitting all the corners</h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-org78288cc" class="outline-3">
+<h3 id="org78288cc"><span class="section-number-3">2.3.</span> Hitting all the corners</h3>
+<div class="outline-text-3" id="text-2-3">
 <p>
 A common request is for a cycle in the face edge graph that uses every corner color of the RGB cube.  Not only do we have one, but 6 uniquely
 different ones &#x2013; not counting rearrangements or reversals:
@@ -520,7 +603,12 @@ different ones &#x2013; not counting rearrangements or reversals:
 <li><code>0GCBMWYR0</code></li>
 <li><code>0GYWCBMR0</code></li>
 </ul>
+</div>
+</div>
 
+<div id="outline-container-orgc7ddbd0" class="outline-3">
+<h3 id="orgc7ddbd0"><span class="section-number-3">2.4.</span> Large Trees</h3>
+<div class="outline-text-3" id="text-2-4">
 <p>
 Another common request is for trees (so no color is used twice) starting at black and ending at white.  Several trees exist of lengths of 7 and 5:
 </p>
@@ -539,10 +627,15 @@ Another common request is for trees (so no color is used twice) starting at blac
 <li><code>0RMBCW</code></li>
 <li><code>0RYGCW</code></li>
 </ul>
+</div>
+</div>
 
+<div id="outline-container-orgac620d7" class="outline-3">
+<h3 id="orgac620d7"><span class="section-number-3">2.5.</span> Black to White Trees</h3>
+<div class="outline-text-3" id="text-2-5">
 <p>
 The three segment trees from black to white are useful in that the intensity (sum of the components) is a monotone increasing function from zero up to
-three.  One of them (0RYW) is often called the "fire ramp" as it ranges from black (flame base), up to yellow, then red, and finally to white hot.
+three.  One of them (<code>0RYW</code>) is often called the "fire ramp" as it ranges from black (flame base), up to yellow, then red, and finally to white hot.
 </p>
 
 <ul class="org-ul">
@@ -551,32 +644,54 @@ three.  One of them (0RYW) is often called the "fire ramp" as it ranges from bla
 <li><code>0GCW</code> &#x2013; <code>csCCsumGBR</code></li>
 <li><code>0GYW</code> &#x2013; <code>csCCsumGRB</code></li>
 <li><code>0RMW</code> &#x2013; <code>csCCsumRBG</code></li>
-<li><code>0RYW</code> &#x2013; <code>csCCsumRGB</code> and <code>csCColdeFireRamp</code></li>
+<li><code>0RYW</code> &#x2013; <code>csCCsumRGB</code> &amp; <code>csCColdeFireRamp</code></li>
 </ul>
+</div>
 
+<div id="outline-container-org825e059" class="outline-4">
+<h4 id="org825e059"><span class="section-number-4">2.5.1.</span> Predefined Schemes</h4>
+<div class="outline-text-4" id="text-2-5-1">
+<dl class="org-dl">
+<dt><code>csCCsumBGR</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCsumBGR_50.png" alt="color_lut_docs_csCCsumBGR_50.png" /></dd>
+<dt><code>csCCsumBRG</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCsumBRG_50.png" alt="color_lut_docs_csCCsumBRG_50.png" /></dd>
+<dt><code>csCCsumGBR</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCsumGBR_50.png" alt="color_lut_docs_csCCsumGBR_50.png" /></dd>
+<dt><code>csCCsumGRB</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCsumGRB_50.png" alt="color_lut_docs_csCCsumGRB_50.png" /></dd>
+<dt><code>csCCsumRBG</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCsumRBG_50.png" alt="color_lut_docs_csCCsumRBG_50.png" /></dd>
+<dt><code>csCCsumRGB</code> &amp; <code>csCColdeFireRamp</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCsumRGB_50.png" alt="color_lut_docs_csCCsumRGB_50.png" /></dd>
+</dl>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org33b57c7" class="outline-3">
+<h3 id="org33b57c7"><span class="section-number-3">2.6.</span> Luminance based color schemes</h3>
+<div class="outline-text-3" id="text-2-6">
 <p>
-Luminance based color schemes from the HSL color space are quite popular.  Some HSL schemes don't suffer from the perceptional non-linearity that some
-popular RGB schemes suffer from. What most people don't realize is that many of the most popular luminance based color schemes in the HSL color space are
-actually edge graphs in the RGB color cube!  It is also true that the most common "bad" color scheme in the RGB cube (the colorCubeRainbow), is an edge
-graph in the HSL hexcone!  In the end, the thing to remember is that both color spaces have both good and bad color schemes.  Of particular note, are the
-two segment trees from black to white in the RGB edge/diagonal graph &#x2013; they are the same as the two segment graphs in the edges of the HSL hexcone from
-black to white!
+Luminance based color schemes defined as color gradients from the center of the in the HSL color space to an extreem vertex are quite popular.  Many of the
+most popular luminance based color schemes in the HSL color space are also edge graphs in the RGB color cube!  Of particular note, are the two segment trees
+from black to white in the RGB edge/diagonal graph &#x2013; they are the same as the two segment graphs in the edges of the HSL hexcone from black to white!
 </p>
 
 <ul class="org-ul">
-<li><code>0RW</code> &#x2013; H=0   red edge of the HSL hexcone</li>
-<li><code>0YW</code> &#x2013; H=60  yellow edge of the HSL hexcone</li>
-<li><code>0GW</code> &#x2013; H=120 green edge of the HSL hexcone</li>
-<li><code>0CW</code> &#x2013; H=180 cyan edge of the HSL hexcone</li>
-<li><code>0BW</code> &#x2013; H=240 blue edge of the HSL hexcone</li>
-<li><code>0MW</code> &#x2013; H=300 magenta edge of the HSL hexcone</li>
+<li><code>0RW</code> &#x2013; <code>H=000</code> &#x2013; red edge of the HSL hexcone</li>
+<li><code>0YW</code> &#x2013; <code>H=060</code> &#x2013; yellow edge of the HSL hexcone</li>
+<li><code>0GW</code> &#x2013; <code>H=120</code> &#x2013; green edge of the HSL hexcone</li>
+<li><code>0CW</code> &#x2013; <code>H=180</code> &#x2013; cyan edge of the HSL hexcone</li>
+<li><code>0BW</code> &#x2013; <code>H=240</code> &#x2013; blue edge of the HSL hexcone</li>
+<li><code>0MW</code> &#x2013; <code>H=300</code> &#x2013; magenta edge of the HSL hexcone</li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org9a39e24" class="outline-3">
-<h3 id="org9a39e24"><span class="section-number-3">2.3.</span> Hot Too Cold</h3>
-<div class="outline-text-3" id="text-2-3">
+<div id="outline-container-org52f1c80" class="outline-3">
+<h3 id="org52f1c80"><span class="section-number-3">2.7.</span> Hot Too Cold</h3>
+<div class="outline-text-3" id="text-2-7">
 <p>
 A very common color map used to map data with ranges from cold up to hot is known as the "cold too hot ramp".  This ramp provides colors from blue, up
 through green, and ends in red. It suffers from the same defects as the color cube rainbow; however, its use is so common that special support is provided
@@ -584,7 +699,7 @@ via a named method.
 </p>
 
 <ul class="org-ul">
-<li>"BCGYR" &#x2013; <code>csCColdeColdToHot</code></li>
+<li><code>BCGYR</code> &#x2013; <code>csCColdeColdToHot</code></li>
 </ul>
 
 <p>
@@ -596,11 +711,23 @@ however, it is more attractive.  This one moves from white (ice), up to water (b
 <li><code>WCBYR</code> &#x2013; <code>csCColdeIceToWaterToHot</code></li>
 </ul>
 </div>
+
+<div id="outline-container-org1b31e1a" class="outline-4">
+<h4 id="org1b31e1a"><span class="section-number-4">2.7.1.</span> Predefined Schemes</h4>
+<div class="outline-text-4" id="text-2-7-1">
+<dl class="org-dl">
+<dt><code>csCColdeColdToHot</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCColdeColdToHot_50.png" alt="color_lut_docs_csCColdeColdToHot_50.png" /></dd>
+<dt><code>csCColdeIceToWaterToHot</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCColdeIceToWaterToHot_50.png" alt="color_lut_docs_csCColdeIceToWaterToHot_50.png" /></dd>
+</dl>
+</div>
+</div>
 </div>
 
-<div id="outline-container-org540bd45" class="outline-3">
-<h3 id="org540bd45"><span class="section-number-3">2.4.</span> Constant Intensity Cycles</h3>
-<div class="outline-text-3" id="text-2-4">
+<div id="outline-container-org8b44ae9" class="outline-3">
+<h3 id="org8b44ae9"><span class="section-number-3">2.8.</span> Constant Intensity Cycles</h3>
+<div class="outline-text-3" id="text-2-8">
 <p>
 Two cycles, with three edges each, exhibiting constant intensity for every color in the color scheme are genuinely useful.  They have the advantage that they
 always render a "bright" color.  The lower intensity version is best for projected media that don't do well with yellow.
@@ -611,11 +738,23 @@ always render a "bright" color.  The lower intensity version is best for project
 <li><code>BRG</code> &#x2013; <code>csCCconsOne</code> &#x2013; intensity == 1</li>
 </ul>
 </div>
+
+<div id="outline-container-orgee3ac3d" class="outline-4">
+<h4 id="orgee3ac3d"><span class="section-number-4">2.8.1.</span> Predefined Schemes</h4>
+<div class="outline-text-4" id="text-2-8-1">
+<dl class="org-dl">
+<dt><code>csCCconsTwo</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCconsTwo_50.png" alt="color_lut_docs_csCCconsTwo_50.png" /></dd>
+<dt><code>csCCconsOne</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCconsOne_50.png" alt="color_lut_docs_csCCconsOne_50.png" /></dd>
+</dl>
+</div>
+</div>
 </div>
 
-<div id="outline-container-org82e35b2" class="outline-3">
-<h3 id="org82e35b2"><span class="section-number-3">2.5.</span> One Segment Diverging Maps</h3>
-<div class="outline-text-3" id="text-2-5">
+<div id="outline-container-org8f77705" class="outline-3">
+<h3 id="org8f77705"><span class="section-number-3">2.9.</span> One Segment Diverging Maps</h3>
+<div class="outline-text-3" id="text-2-9">
 <p>
 One edge trees in the face diagonal graph with a nearly constant intensity of 2 along the entire edge are useful for "diverging" or "bipolar" color
 schemes.  By definition, such color schemes will never involve black or white.
@@ -639,11 +778,31 @@ The naming convention for the methods is not obvious.  Take, for example, setRGB
 used to compute the scheme: Blue up, red down, green constant (maxChanVal).
 </p>
 </div>
+
+<div id="outline-container-org6055c78" class="outline-4">
+<h4 id="org6055c78"><span class="section-number-4">2.9.1.</span> Predefined Schemes</h4>
+<div class="outline-text-4" id="text-2-9-1">
+<dl class="org-dl">
+<dt><code>csCCudBr</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCudBr_50.png" alt="color_lut_docs_csCCudBr_50.png" /></dd>
+<dt><code>csCCudBg</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCudBg_50.png" alt="color_lut_docs_csCCudBg_50.png" /></dd>
+<dt><code>csCCudGr</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCudGr_50.png" alt="color_lut_docs_csCCudGr_50.png" /></dd>
+<dt><code>csCCudGb</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCudGb_50.png" alt="color_lut_docs_csCCudGb_50.png" /></dd>
+<dt><code>csCCudRg</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCudRg_50.png" alt="color_lut_docs_csCCudRg_50.png" /></dd>
+<dt><code>csCCudRb</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCudRb_50.png" alt="color_lut_docs_csCCudRb_50.png" /></dd>
+</dl>
+</div>
+</div>
 </div>
 
-<div id="outline-container-org03bf917" class="outline-3">
-<h3 id="org03bf917"><span class="section-number-3">2.6.</span> Three Segment Diverging Maps</h3>
-<div class="outline-text-3" id="text-2-6">
+<div id="outline-container-orgccdeaf6" class="outline-3">
+<h3 id="orgccdeaf6"><span class="section-number-3">2.10.</span> Three Segment Diverging Maps</h3>
+<div class="outline-text-3" id="text-2-10">
 <p>
 Some three edge trees utilizing very different colors for starting and terminal points can form very nice "divergent" color maps.  Such maps can
 successfully illustrate variables with both positive and negative values or two mutually exclusive, opposing variables.  Only two are directly
@@ -657,19 +816,13 @@ supported via named methods (selected for attractiveness):
 </div>
 </div>
 
-<div id="outline-container-org28ba40c" class="outline-3">
-<h3 id="org28ba40c"><span class="section-number-3">2.7.</span> Center point ramps (HSL schemes)</h3>
-<div class="outline-text-3" id="text-2-7">
+<div id="outline-container-orgf7d43ee" class="outline-3">
+<h3 id="orgf7d43ee"><span class="section-number-3">2.11.</span> Center point ramps (HSL schemes)</h3>
+<div class="outline-text-3" id="text-2-11">
 <p>
-Color schemes from the HSL color space are popular because they are perceptually more linear.  The most popular maps extend from the center of HSL space,
-(0.0, 0.5, 0), to one of the primary color vertexes &#x2014; which have the same colors as the vertexes of the RGB cube excluding black and white.  These
-sequences are identical to ones from the center of RGB space, (0.5, 0.5, 0.5), to one of the vertexes excluding black and white!  So we can implement these
-color schemes directly in RGB color space much as we have the cube schemes above.
-</p>
-
-<p>
-Recall that we call the vertex at the center of the cube "<code>H</code>" &#x2013; for "Half way between everything". Using this new vertex, we have the following saturation
-based color schemes:
+Color schemes defined as gradients from the center of the HSL color space to an extreme edge are mostly perceptually linear.  These are also one segment
+trees in the complete cube graph with center.  Recall that we call the vertex at the center of the cube "<code>H</code>" &#x2013; for "Half way between everything". Using
+this new vertex, we have the following saturation based color schemes:
 </p>
 
 <ul class="org-ul">
@@ -680,29 +833,232 @@ based color schemes:
 <li><code>HY</code> &#x2013; <code>csHSLhY</code></li>
 <li><code>HM</code> &#x2013; <code>csHSLhM</code></li>
 </ul>
+</div>
 
+<div id="outline-container-org7e23cb4" class="outline-4">
+<h4 id="org7e23cb4"><span class="section-number-4">2.11.1.</span> Predefined Schemes</h4>
+<div class="outline-text-4" id="text-2-11-1">
+<dl class="org-dl">
+<dt><code>csHSLhR</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csHSLhR_50.png" alt="color_lut_docs_csHSLhR_50.png" /></dd>
+<dt><code>csHSLhG</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csHSLhG_50.png" alt="color_lut_docs_csHSLhG_50.png" /></dd>
+<dt><code>csHSLhB</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csHSLhB_50.png" alt="color_lut_docs_csHSLhB_50.png" /></dd>
+<dt><code>csHSLhC</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csHSLhC_50.png" alt="color_lut_docs_csHSLhC_50.png" /></dd>
+<dt><code>csHSLhY</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csHSLhY_50.png" alt="color_lut_docs_csHSLhY_50.png" /></dd>
+<dt><code>csHSLhM</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csHSLhM_50.png" alt="color_lut_docs_csHSLhM_50.png" /></dd>
+</dl>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcebf699" class="outline-3">
+<h3 id="orgcebf699"><span class="section-number-3">2.12.</span> Stacked HSL Schemes</h3>
+<div class="outline-text-3" id="text-2-12">
 <p>
-The traversal from black to white &#x2013; through the center point &#x2013; is directly supported via a named method.  Note that cmpRGBcolorRamp supports this via
-a graph string of "0W".
-</p>
-
-<ul class="org-ul">
-<li><code>0W</code> &#x2013; <code>csCCdiag01</code></li>
-</ul>
-
-<p>
-The other diagonal traversals (diagonal meaning through the center of the cube) are essentially two of the HSL saturation based schemes placed back to back.
-They can form effective divergent color schemes.  Black to white is technically one of them, but we have already covered that one.  Note that the
-cmpRGBcolorRamp function will support this class of schemes with a two element graph &#x2013; the first vertex and the last. The remaining three diagonal schemes
-are as follows:
+The diagonal traversals (diagonal meaning through the center of the cube) are essentially two of the HSL saturation based schemes placed back to back.  Aside
+from the black-white one, these can form effective divergent color schemes.  
 </p>
 
 <ul class="org-ul">
 <li><code>CR</code> &#x2013; <code>csCCdiagCR</code></li>
 <li><code>MG</code> &#x2013; <code>csCCdiagMG</code></li>
 <li><code>YB</code> &#x2013; <code>csCCdiagYB</code></li>
+<li><code>0W</code> &#x2013; <code>csCCdiag01</code></li>
 </ul>
 </div>
+
+<div id="outline-container-org3de1964" class="outline-4">
+<h4 id="org3de1964"><span class="section-number-4">2.12.1.</span> Predefined Schemes</h4>
+<div class="outline-text-4" id="text-2-12-1">
+<dl class="org-dl">
+<dt><code>csCCdiagCR</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCdiagCR_50.png" alt="color_lut_docs_csCCdiagCR_50.png" /></dd>
+<dt><code>csCCdiagMG</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCdiagMG_50.png" alt="color_lut_docs_csCCdiagMG_50.png" /></dd>
+<dt><code>csCCdiagYB</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCdiagYB_50.png" alt="color_lut_docs_csCCdiagYB_50.png" /></dd>
+<dt><code>csCCdiag01</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCdiag01_50.png" alt="color_lut_docs_csCCdiag01_50.png" /></dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga781cec" class="outline-2">
+<h2 id="orga781cec"><span class="section-number-2">3.</span> Continuous Polynomial Schemes</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+These schemes are "continuous" in that they take a floating point value to select the color, and are derived from continuous polynomial curves in the RGB cube
+space.  Many of them are very similar to color maps in popular use (with similar names), but these are only only similar to those popular maps.  In
+particular, the maps here may not be as precise when it comes to things like monotonously of intensity.  That said these look nice and I like easy to compute
+color maps that don't require fancy interpolating schemes.
+</p>
+
+<dl class="org-dl">
+<dt><code>csPLYgrey</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPLYgrey_50.png" alt="color_lut_docs_csPLYgrey_50.png" /></dd>
+<dt><code>csPLYquad</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPLYquad_50.png" alt="color_lut_docs_csPLYquad_50.png" /></dd>
+<dt><code>csPLYinferno</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPLYinferno_50.png" alt="color_lut_docs_csPLYinferno_50.png" /></dd>
+<dt><code>csPLYmagma</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPLYmagma_50.png" alt="color_lut_docs_csPLYmagma_50.png" /></dd>
+<dt><code>csPLYparula</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPLYparula_50.png" alt="color_lut_docs_csPLYparula_50.png" /></dd>
+<dt><code>csPLYplasma</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPLYplasma_50.png" alt="color_lut_docs_csPLYplasma_50.png" /></dd>
+<dt><code>csPLYturbo</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPLYturbo_50.png" alt="color_lut_docs_csPLYturbo_50.png" /></dd>
+<dt><code>csPLYviridis</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPLYviridis_50.png" alt="color_lut_docs_csPLYviridis_50.png" /></dd>
+<dt><code>csPLYcividis</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPLYcividis_50.png" alt="color_lut_docs_csPLYcividis_50.png" /></dd>
+<dt><code>csPLYhsvRB</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPLYhsvRB_50.png" alt="color_lut_docs_csPLYhsvRB_50.png" /></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-org5570d0b" class="outline-2">
+<h2 id="org5570d0b"><span class="section-number-2">4.</span> Dav Green's cubehelix color maps</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+The <code>csCubeHelix_tpl</code> templte can geneate any of the cubehelix schemes, but <code>colorTpl</code> predefines three I particularly like:
+</p>
+
+<dl class="org-dl">
+<dt><code>csCHstd</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCHstd_50.png" alt="color_lut_docs_csCHstd_50.png" /></dd>
+<dt><code>csCHblu</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCHblu_50.png" alt="color_lut_docs_csCHblu_50.png" /></dd>
+<dt><code>csCHvio</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCHvio_50.png" alt="color_lut_docs_csCHvio_50.png" /></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-orgbdf0f11" class="outline-2">
+<h2 id="orgbdf0f11"><span class="section-number-2">5.</span> Pseudo-Greyscale</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+These schemes are not true greyscale, but the colors are very close to grey.  These schemes are discreet!
+</p>
+
+<dl class="org-dl">
+<dt><code>csPGrey3x</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPGrey3x_50.png" alt="color_lut_docs_csPGrey3x_50.png" /></dd>
+<dt><code>csPGrey4x</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPGrey4x_50.png" alt="color_lut_docs_csPGrey4x_50.png" /></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-orgfbf24b7" class="outline-2">
+<h2 id="orgfbf24b7"><span class="section-number-2">6.</span> Spectral</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+These color schemes are based on the spectrum and color match functions.  These aren't really suitable for visualization, but some
+interesting color schemes can be derived from them.
+</p>
+
+<dl class="org-dl">
+<dt><code>csRainbowLA</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csRainbowLA_50.png" alt="color_lut_docs_csRainbowLA_50.png" /></dd>
+<dt><code>csRainbowCM</code> with <code>BUMP</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csRainbowCMb_50.png" alt="color_lut_docs_csRainbowCMb_50.png" /></dd>
+<dt><code>csRainbowCM</code> with <code>LINEAR</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csRainbowCMl_50.png" alt="color_lut_docs_csRainbowCMl_50.png" /></dd>
+<dt><code>csRainbowCM</code> with <code>FLOOR</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csRainbowCMf_50.png" alt="color_lut_docs_csRainbowCMf_50.png" /></dd>
+<dt><code>csRainbowCM</code> with <code>CEILING</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csRainbowCMc_50.png" alt="color_lut_docs_csRainbowCMc_50.png" /></dd>
+<dt><code>csRainbowCM</code> with <code>NEAREST</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csRainbowCMn_50.png" alt="color_lut_docs_csRainbowCMn_50.png" /></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-orga0c5fe4" class="outline-2">
+<h2 id="orga0c5fe4"><span class="section-number-2">7.</span> Color Brewer</h2>
+<div class="outline-text-2" id="text-7">
+<dl class="org-dl">
+<dt><code>csCBAccent</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBAccent_50.png" alt="color_lut_docs_csCBAccent_50.png" /></dd>
+<dt><code>csCBBlues</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBBlues_50.png" alt="color_lut_docs_csCBBlues_50.png" /></dd>
+<dt><code>csCBBrBG</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBBrBG_50.png" alt="color_lut_docs_csCBBrBG_50.png" /></dd>
+<dt><code>csCBBuGn</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBBuGn_50.png" alt="color_lut_docs_csCBBuGn_50.png" /></dd>
+<dt><code>csCBBuPu</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBBuPu_50.png" alt="color_lut_docs_csCBBuPu_50.png" /></dd>
+<dt><code>csCBDark2</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBDark2_50.png" alt="color_lut_docs_csCBDark2_50.png" /></dd>
+<dt><code>csCBGnBu</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBGnBu_50.png" alt="color_lut_docs_csCBGnBu_50.png" /></dd>
+<dt><code>csCBGreens</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBGreens_50.png" alt="color_lut_docs_csCBGreens_50.png" /></dd>
+<dt><code>csCBGreys</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBGreys_50.png" alt="color_lut_docs_csCBGreys_50.png" /></dd>
+<dt><code>csCBOranges</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBOranges_50.png" alt="color_lut_docs_csCBOranges_50.png" /></dd>
+<dt><code>csCBOrRd</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBOrRd_50.png" alt="color_lut_docs_csCBOrRd_50.png" /></dd>
+<dt><code>csCBPaired</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBPaired_50.png" alt="color_lut_docs_csCBPaired_50.png" /></dd>
+<dt><code>csCBPastel1</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBPastel1_50.png" alt="color_lut_docs_csCBPastel1_50.png" /></dd>
+<dt><code>csCBPastel2</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBPastel2_50.png" alt="color_lut_docs_csCBPastel2_50.png" /></dd>
+<dt><code>csCBPiYG</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBPiYG_50.png" alt="color_lut_docs_csCBPiYG_50.png" /></dd>
+<dt><code>csCBPRGn</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBPRGn_50.png" alt="color_lut_docs_csCBPRGn_50.png" /></dd>
+<dt><code>csCBPuBuGn</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBPuBuGn_50.png" alt="color_lut_docs_csCBPuBuGn_50.png" /></dd>
+<dt><code>csCBPuBu</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBPuBu_50.png" alt="color_lut_docs_csCBPuBu_50.png" /></dd>
+<dt><code>csCBPuOr</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBPuOr_50.png" alt="color_lut_docs_csCBPuOr_50.png" /></dd>
+<dt><code>csCBPuRd</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBPuRd_50.png" alt="color_lut_docs_csCBPuRd_50.png" /></dd>
+<dt><code>csCBPurples</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBPurples_50.png" alt="color_lut_docs_csCBPurples_50.png" /></dd>
+<dt><code>csCBRdBu</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBRdBu_50.png" alt="color_lut_docs_csCBRdBu_50.png" /></dd>
+<dt><code>csCBRdGy</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBRdGy_50.png" alt="color_lut_docs_csCBRdGy_50.png" /></dd>
+<dt><code>csCBRdPu</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBRdPu_50.png" alt="color_lut_docs_csCBRdPu_50.png" /></dd>
+<dt><code>csCBRdYlBu</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBRdYlBu_50.png" alt="color_lut_docs_csCBRdYlBu_50.png" /></dd>
+<dt><code>csCBRdYlGn</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBRdYlGn_50.png" alt="color_lut_docs_csCBRdYlGn_50.png" /></dd>
+<dt><code>csCBReds</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBReds_50.png" alt="color_lut_docs_csCBReds_50.png" /></dd>
+<dt><code>csCBSet1</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBSet1_50.png" alt="color_lut_docs_csCBSet1_50.png" /></dd>
+<dt><code>csCBSet2</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBSet2_50.png" alt="color_lut_docs_csCBSet2_50.png" /></dd>
+<dt><code>csCBSet3</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBSet3_50.png" alt="color_lut_docs_csCBSet3_50.png" /></dd>
+<dt><code>csCBSpectral</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBSpectral_50.png" alt="color_lut_docs_csCBSpectral_50.png" /></dd>
+<dt><code>csCBYlGnBu</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBYlGnBu_50.png" alt="color_lut_docs_csCBYlGnBu_50.png" /></dd>
+<dt><code>csCBYlGn</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBYlGn_50.png" alt="color_lut_docs_csCBYlGn_50.png" /></dd>
+<dt><code>csCBYlOrBr</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBYlOrBr_50.png" alt="color_lut_docs_csCBYlOrBr_50.png" /></dd>
+<dt><code>csCBYlOrRd</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBYlOrRd_50.png" alt="color_lut_docs_csCBYlOrRd_50.png" /></dd>
+</dl>
 </div>
 </div>
 </div>

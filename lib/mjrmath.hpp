@@ -163,7 +163,7 @@ namespace mjr {
     @param maxOutValue The maximum output value (used to compute slope for linear map, not to clamp)
     @return The mapped value. */
   inline int intLinMap(int anInt, int maxOutValue, int maxInValue) {
-    return int(double(anInt)*double(maxOutValue)/double(maxInValue));
+    return int(static_cast<double>(anInt) * static_cast<double>(maxOutValue) / static_cast<double>(maxInValue));
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -174,11 +174,11 @@ namespace mjr {
     @param x2          X coordinate of second point
     @param y2          Y coordinate of second point
     @return The mapped value. */
-  template <typename numT>
-  inline numT genLinMap(numT x, numT x1, numT x2, numT y1, numT y2) {
-    numT m = (y1 - y2) / (x1 - x2);
-    numT b = y1 - m * x1;
-    return (m * x + b);
+  template <typename numTx, typename numTy>
+  inline numTy genLinMap(numTx x, numTx x1, numTx x2, numTy y1, numTy y2) {
+    double m = (static_cast<double>(y1) - static_cast<double>(y2)) / (static_cast<double>(x1) - static_cast<double>(x2));
+    double b = static_cast<double>(y1) - m * static_cast<double>(x1);
+    return static_cast<numTy>(m * x + b);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

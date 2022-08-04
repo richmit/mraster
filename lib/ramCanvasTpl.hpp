@@ -149,7 +149,9 @@ namespace mjr {
       typedef typename colorT::colorPtrType         colorPtrType;            //!< imported from colorTpl: Pointer to color
       typedef typename colorT::colorRefType         colorRefType;            //!< imported from colorTpl: Ref to a color
       typedef typename colorT::colorCRefType        colorCRefType;           //!< imported from colorTpl: Const Ref to a color
-      typedef typename colorT::csIntType            csIntType;               //!< imported from colorTpl: Color Scheme Index Type
+      typedef typename colorT::csIntType            csIntType;               //!< imported from colorTpl: Color Scheme Integer Type
+      typedef typename colorT::csFltType            csFltType;               //!< imported from colorTpl: Color Scheme Float Type
+      typedef typename colorT::csNatType            csNatType;               //!< imported from colorTpl: Color Scheme Natural Type
       typedef typename colorT::cmfInterpolationEnum cmfInterpolationEnum;    //!< imported from colorTpl: Interpolation for color match functions
 
       /* Iterators */
