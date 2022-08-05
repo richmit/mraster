@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-08-04 Thu 23:07 -->
+<!-- 2022-08-05 Fri 13:13 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster</title>
@@ -214,6 +214,31 @@
  <a accesskey="H" href="https://www.mitchr.me/"> HOME </a>
 </div><div id="content" class="content">
 <h1 class="title">MRaster</h1>
+<table border="2 solid #ccc" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" align="center">
+
+
+<colgroup>
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Copyright &copy; 2022 Mitch Richling. All rights reserved.</td>
+</tr>
+</tbody>
+</table>
+
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#introduction">1. Introduction</a></li>
+<li><a href="#goals">2. Design goals</a></li>
+<li><a href="#use">3. Who is using it, and what are they using it for?</a></li>
+<li><a href="#nonuse">4. Perhaps more important is what people don't use it for.</a></li>
+<li><a href="#Gallery">5. Gallery</a></li>
+</ul>
+</div>
+</div>
 
 <div id="outline-container-introduction" class="outline-2">
 <h2 id="introduction"><span class="section-number-2">1.</span> Introduction</h2>
@@ -281,7 +306,7 @@ minutes.  For the most part my students were very successful!</li>
 <li><b>Easy integration with existing code and libraries</b> <br />
 The idea is to make the classes adapt to the setting in which they are being used, and not to force programmers to adapt.  For example, colors may be set
 via naive types, numeric characters, hex strings, web color hex strings, name strings, enumerated corner names, symbolic characters, or floating point
-numbers.  As another example points for drawing function be be provided as coordinate pairs, point objects, complex numbers, tuples, arrays, etc&#x2026;</li>
+numbers.  As another example points for drawing functions be be provided as coordinate pairs, point objects, complex numbers, tuples, arrays, etc&#x2026;</li>
 <li><b>Extreme flexibility <i>and</i> high performance</b> <br />
 In general, many operations are optimized for the specific image layout and type. For example a small, integer based color may be treated in RAM as a
 single packed integer while larger colors may be treated as an array of channels.  As another example, <code>colorTpl</code> member functions will pass a color by
@@ -290,13 +315,13 @@ structured to allow the optimizer to do as much compile time optimization as pos
 <li><b>No Explicit Limits</b> <br />
 Image size, channel depth, and count are limited only by available RAM.</li>
 <li><b>Sophisticated color API via a zero cost, object based pixel store</b> <br />
-<b><code>MRaster</code></b> is an outlier among image libraries in that pixels are objects.  These objects deliver a very rich API for things like color theory
-computations, color schemes, transformations, etc&#x2026;  And they do so with <b>zero</b> overhead in RAM or runtime performance.  In fact, these templated
-objects are one of the primary tools use to optimize <b><code>MRaster</code></b> performance.</li>
+<b><code>MRaster</code></b> is an outlier among image libraries in that pixels are objects.  These objects deliver a very rich API for color theory computations, color
+schemes, transformations, etc&#x2026;  And they do so with <b>zero</b> overhead in RAM or runtime performance.  In fact, these templated objects are one of the
+primary tools used to optimize <b><code>MRaster</code></b> performance.</li>
 <li><b>Mathematical Use cases</b><br />
-Images have both real &amp; integer coordinates, so they may be thought of as part of the real plane.  In addition a great many discrete and continue color
-schemes are supported.  Together these features make <b><code>MRaster</code></b> a very friendly environment for mathematically oriented visualization &#x2013; stuff like
-drawing fractals like the Mandelbrot set.</li>
+Images have both real &amp; integer coordinates, so they may be thought of as part of the real plane.  In addition a great many
+<a href="./ColorSchemes.html">discrete and continuous color schemes</a> are supported.  Together these features make <b><code>MRaster</code></b> a very friendly environment for
+mathematically oriented visualization &#x2013; stuff like drawing Mandelbrot set fractals.</li>
 <li><b>100% focus on raster graphics synthesis</b>
 This is kind of a non-feature.  We simply don't try to do things like anti-aliasing, vector graphics, or FFT based image processing. What we do:
 <ul class="org-ul">
@@ -376,7 +401,7 @@ Most of these things can be better achieved via other libraries:
 <a href="http://www.mitchr.me/SS/ChaosGame/index.html"><img src="./pics/gallery/chaosGame,6,2,2,-1,2_270.jpg" alt="chaosGame,6,2,2,-1,2_270.jpg" /></a> <br />
 <a href="http://www.mitchr.me/SS/mandelbrot/index.html"><img src="./pics/gallery/mandelbrot_c_thumb.jpg" alt="mandelbrot_c_thumb.jpg" /></a>
 <a href="http://www.mitchr.me/SS/mandelbrot/index.html"><img src="./pics/gallery/potMandelbrot_a_0d_279.jpg" alt="potMandelbrot_a_0d_279.jpg" /></a>
-<a href="http://www.mitchr.me/SS/mandelbrot/index.html"><img src="./pics/gallery/triangleMandelbrot_thumb.jpg" alt="triangleMandelbrot_thumb.jpg" /></a> ]]
+<a href="http://www.mitchr.me/SS/mandelbrot/index.html"><img src="./pics/gallery/triangleMandelbrot_thumb.jpg" alt="triangleMandelbrot_thumb.jpg" /></a> <br />
 <a href="http://www.mitchr.me/SS/newton/index.html"><img src="./pics/gallery/newton2_c_thumb.jpg" alt="newton2_c_thumb.jpg" /></a>
 <a href="http://www.mitchr.me/SS/newton/index.html"><img src="./pics/gallery/newton3_c_thumb.jpg" alt="newton3_c_thumb.jpg" /></a>
 <a href="http://www.mitchr.me/SS/newton/index.html"><img src="./pics/gallery/newton_thumb.jpg" alt="newton_thumb.jpg" /></a> <br />

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-08-04 Thu 22:33 -->
+<!-- 2022-08-05 Fri 18:30 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster Quick Start</title>
@@ -221,20 +221,29 @@
 
 
 <colgroup>
-<col  class="org-right" />
-
 <col  class="org-left" />
 </colgroup>
 <tbody>
 <tr>
-<td class="org-right"><b>Updated:</b></td>
-<td class="org-left"><i>2022-08-04 22:33:09</i></td>
+<td class="org-left">Copyright &copy; 2022 Mitch Richling. All rights reserved.</td>
 </tr>
 </tbody>
 </table>
 
-<div id="outline-container-orgca5d5c4" class="outline-2">
-<h2 id="orgca5d5c4"><span class="section-number-2">1.</span> Quick Start (The Absolute Minimum)</h2>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orga97937f">1. Quick Start (The Absolute Minimum)</a></li>
+<li><a href="#org84f9d6a">2. Playing With <b><code>MRaster</code></b>'s Example Programs</a></li>
+<li><a href="#org2cb05d9">3. Using <b><code>MRaster</code></b>'s <code>cmake</code> Configuration</a></li>
+<li><a href="#meta">4. Meta</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orga97937f" class="outline-2">
+<h2 id="orga97937f"><span class="section-number-2">1.</span> Quick Start (The Absolute Minimum)</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 If you are interested playing around with <b><code>MRaster</code></b> as quickly as possible, then this section is for you.
@@ -245,7 +254,7 @@ The first step is to download <b><code>MRaster</code></b>.  You can grab the <a 
 clone the repository with GIT like this:
 </p>
 
-<pre class="example" id="org5260552">
+<pre class="example" id="orge6d81be">
 git clone 'https://github.com/richmit/mraster.git'
 </pre>
 
@@ -281,8 +290,8 @@ Now you can run it, and take a look at the file it created ("<code>hello.tiff</c
 </p>
 
 
-<div id="org81262c2" class="figure">
-<p><img src="./hello.png" alt="hello.png" width="800" align="center" />
+<div id="org313994f" class="figure">
+<p><img src="./pics/quick/hello.png" alt="hello.png" width="800" align="center" />
 </p>
 </div>
 
@@ -343,8 +352,8 @@ you want to turn off 128-bit integers, and use pure C++20 instead with GCC, then
 </div>
 </div>
 
-<div id="outline-container-orgf00373d" class="outline-2">
-<h2 id="orgf00373d"><span class="section-number-2">2.</span> Playing With <b><code>MRaster</code></b>'s Example Programs</h2>
+<div id="outline-container-org84f9d6a" class="outline-2">
+<h2 id="org84f9d6a"><span class="section-number-2">2.</span> Playing With <b><code>MRaster</code></b>'s Example Programs</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The source code for the example programs is located in the "<code>examples</code>" directory.  <b><code>MRaster</code></b> ships with a <code>cmake</code> build system that should be able to
@@ -380,8 +389,8 @@ at the "<code>configure.sh</code>" script in the root directory of the git repos
 </div>
 </div>
 
-<div id="outline-container-org68dff19" class="outline-2">
-<h2 id="org68dff19"><span class="section-number-2">3.</span> Using <b><code>MRaster</code></b>'s <code>cmake</code> Configuration</h2>
+<div id="outline-container-org2cb05d9" class="outline-2">
+<h2 id="org2cb05d9"><span class="section-number-2">3.</span> Using <b><code>MRaster</code></b>'s <code>cmake</code> Configuration</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 For many <b><code>MRaster</code></b> users, <code>cmake</code> is an unfamiliar tool.  Some of them decide to directly use <b><code>MRaster</code></b>'s <code>cmake</code> infrastructure, using the "<code>examples</code>"

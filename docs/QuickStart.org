@@ -28,8 +28,9 @@
 # ######################################################################################################################################################.H.E.##
 
 #+ATTR_HTML: :border 2 solid #ccc :frame hsides :align center
-|          <r> | <l>                                          |
-|   *Updated:* | /{{{modification-time(%Y-%m-%d %H:%M:%S)}}}/ |
+| Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved. |
+
+#+TOC: headlines 5
 
 * Quick Start (The Absolute Minimum)
 
@@ -71,7 +72,7 @@ g++ -m64 -std=gnu++20 colorData.cpp hersheyFontData.cpp hello.cpp -o hello2
 Now you can run it, and take a look at the file it created ("=hello.tiff="):
 
 #+ATTR_HTML: :width 800 :align center
-[[./hello.png]]
+[[file:./pics/quick/hello.png]]
 
 That's it!  How easy was that?
 

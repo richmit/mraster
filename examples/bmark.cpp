@@ -177,10 +177,10 @@ int main(void) {
   for(int i=0;i<REPS*32;i++)
     for(int y=0;y<=xMax;y++)
       for(int x=0;x<=yMax;x++) {
-        if((x*y)%2) 
-          cColor.setChans(static_cast<uint8_t>(x%256));
+        if((i+x*y)%2) 
+          cColor.setChans_byte(static_cast<uint8_t>((i+x)%256));
         else
-          cColor.setChans(static_cast<uint8_t>(y%256));
+          cColor.setChans_byte(static_cast<uint8_t>((i+y)%256));
         theRamCanvas.drawPointNC(x, y, cColor);
       }
   bmEndTime = std::chrono::system_clock::now();
@@ -194,9 +194,9 @@ int main(void) {
   for(int i=0;i<REPS*32;i++)
     for(int y=0;y<=xMax;y++)
       for(int x=0;x<=yMax;x++) {
-        cColor.setChans(static_cast<uint8_t>(x%256), 
-                        static_cast<uint8_t>(y%256),
-                        static_cast<uint8_t>((i*8)%256));
+        cColor.setChans_byte(static_cast<uint8_t>(x%256), 
+                             static_cast<uint8_t>(y%256),
+                             static_cast<uint8_t>((i*8)%256));
         theRamCanvas.drawPointNC(x, y, cColor);
       }
   bmEndTime = std::chrono::system_clock::now();
@@ -225,7 +225,7 @@ int main(void) {
   theRamCanvas.setDfltColor(aColor);
   for(int i=0;i<REPS*256;i++) {
     if(i%2) 
-      theRamCanvas.clrCanvas(aColor);
+      theRamCanvas.clrCanvasToWhite();
     else
       theRamCanvas.clrCanvasToBlack();
   }

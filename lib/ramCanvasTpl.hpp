@@ -714,6 +714,8 @@ namespace mjr {
       //@{
       /** Clear the canvas to black.  Faster than clrCanvas().  */
       void clrCanvasToBlack();
+      /** Clear the canvas to black.  Faster than clrCanvas().  */
+      void clrCanvasToWhite();
       /** Clear the canvas.   */
       void clrCanvas();
       /** @overload */
@@ -1595,6 +1597,15 @@ namespace mjr {
         getPxColorRefNC(x, y).setToBlack();
     //// Call clrCanvas with black (this one is *way* slower)
     // clrCanvas(colorT(colorCornerEnum::BLACK));
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  inline void
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::clrCanvasToWhite() {
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        getPxColorRefNC(x, y).setToWhite();
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3458,30 +3469,30 @@ namespace mjr {
         } else if(x1 <= x2) {                                /* 1---2 */
           triangleEdger(x1, y1, x3, y3, true,  minPts);      /*  \ /  */
           triangleEdger(x2, y2, x3, y3, false, maxPts);      /*   3   */
-        } else {                                             /* 2---1 */
-          triangleEdger(x1, y1, x3, y3, false, maxPts);      /*  \ /  */
-          triangleEdger(x2, y2, x3, y3, true,  minPts);      /*   3   */
-        }                                                    /*       */
-      } else if(y2==y3) {                                    /*       */
-        if(x2 == x3) {                                       /*   1   */
-          //drawLine(x2, y2, x1, y1, c1);                    /*   |   */
-          return;                                            /*   3   */
-        } else if(x2 <= x3) {                                /*   3   */
-          triangleEdger(x2, y2, x1, y1, true,  minPts);      /*  / \  */
-          triangleEdger(x3, y3, x1, y1, false, maxPts);      /* 1---2 */
-        } else {                                             /*   3   */
-          triangleEdger(x2, y2, x1, y1, false, maxPts);      /*  / \  */
-          triangleEdger(x3, y3, x1, y1, true,  minPts);      /* 2---1 */
-        }
-      } else {
-        intCrdT xli = (x1*y3-x3*y1+(x3-x1)*y2)/(y3-y1);      /*       */
-        if(xli == x2) {                                      /*       */
-          //drawLine(x1, y1, x3, y3, c1);                    /*  1    */
-          return;                                            /*   \   */
-                                                             /*    3  */
-        } else if (xli < x2) {                               /*  1    Note: x1 need not equal x3 */
-          triangleEdger(x2, y2, x1, y1, false, maxPts);      /*  |\   */
-          triangleEdger(x2, y2, x3, y3, false, maxPts);      /*  | 2  */
+        } else {                                             /* 2---1 */                                     /*             1                */
+          triangleEdger(x1, y1, x3, y3, false, maxPts);      /*  \ /  */                                     /*             |\               */
+          triangleEdger(x2, y2, x3, y3, true,  minPts);      /*   3   */                                     /*             /  \             */
+        }                                                    /*       */                                     /*            |    \            */
+      } else if(y2==y3) {                                    /*       */                                     /*            |      \          */
+        if(x2 == x3) {                                       /*   1   */                                     /*            |       \         */
+          //drawLine(x2, y2, x1, y1, c1);                    /*   |   */                                     /*            /        \        */
+          return;                                            /*   3   */                                     /*           |           \      */
+        } else if(x2 <= x3) {                                /*   1   */                                     /*           |            \     */
+          triangleEdger(x2, y2, x1, y1, true,  minPts);      /*  / \  */                                     /*           o xli          2   */
+          triangleEdger(x3, y3, x1, y1, false, maxPts);      /* 2---3 */                                     /*           /             /    */
+        } else {                                             /*   1   */                                     /*          |            /      */
+          triangleEdger(x2, y2, x1, y1, false, maxPts);      /*  / \  */                                     /*          |           /       */
+          triangleEdger(x3, y3, x1, y1, true,  minPts);      /* 3---2 */                                     /*          |          /        */
+        }                                                                                                    /*          |        /          */
+      } else {                                                                                               /*          /       /           */
+        intCrdT xli = (x1*y3-x3*y1+(x3-x1)*y2)/(y3-y1);      /*       */                                     /*         |       /            */
+        if(xli == x2) {                                      /*       */                                     /*         |     /              */
+          //drawLine(x1, y1, x3, y3, c1);                    /*  1    */                                     /*         |    /               */
+          return;                                            /*   \   */                                     /*         /   /                */
+                                                             /*    3  */                                     /*        |  /                  */
+        } else if (xli < x2) {                               /*  1    Note: x1 need not equal x3 */          /*        | /                   */
+          triangleEdger(x2, y2, x1, y1, false, maxPts);      /*  |\   */                                     /*        |/                    */
+          triangleEdger(x2, y2, x3, y3, false, maxPts);      /*  | 2  */                                     /*        3                     */
           triangleEdger(x1, y1, x3, y3, true,  minPts);      /*  |/   */
                                                              /*  3    */
         } else {                                             /*    1  Note: x1 need not equal x3 */
