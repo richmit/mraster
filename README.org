@@ -16,6 +16,10 @@ Some examples of what can be done with *MRaster*:
   -  [[https://www.mitchr.me/SS/circles2/index.html][Circle Art]]
   -  [[https://www.mitchr.me/SS/desktops/index.html][Some desktop backgrounds]]
 
+For a bit more detail about *MRaster*: [[http://richmit.github.io/mraster/index.html]]
+
 A quick start guide: [[http://richmit.github.io/mraster/QuickStart.html]]
+
+Color schemes included in *MRaster*: [[http://richmit.github.io/mraster/ColorSchemes.html]]
 
 The code: [[https://github.com/richmit/mraster/]]

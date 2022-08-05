@@ -28,7 +28,7 @@
 #+HTML_HEAD: <style>.org-src-container>pre:before { display: block; position: absolute; background-color: #b3b3b3; top: 0; right: 0; padding: 0 0.2em 0 0.4em; border-bottom-left-radius: 8px; border: 0; color: white; font-size: 100%; font-family: Helvetica, sans-serif;}</style>
 #+HTML_HEAD: <style>pre.example { white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; font-family: Lucida Console, monospace; font-size: 80%; background: #404040; color: white; display: block; padding: 0em; border: 2px solid black; }</style>
 #+HTML_LINK_HOME: https://www.mitchr.me/
-#+HTML_LINK_UP: http://www.mitchr.me/SS/mraster/
+#+HTML_LINK_UP: https://github.com/richmit/mraster/
 # ######################################################################################################################################################.H.E.##
 
 * Introduction
@@ -85,7 +85,28 @@ While I can't know what everyone uses it for, many users have shared with me how
    - Complex function phase portraits
    - Making color schemes for other graphics tools
    - Producing POV-ray Maps and Height fields
- - Visualizations in HPC (supercomputer) environemtns.  For large 2D fields, *=MRaster=* can be a less complex and more efficient alternative to traditional
+ - Visualizations in HPC (supercomputer) environments.  For large 2D fields, *=MRaster=* can be a less complex and more efficient alternative to traditional
    visualization tools.
  - Scientific images (astronomy and microscopy mostly) with very high depth and/or channel count.
  - Satellite and other hyperspectral remote-sensing imagery with crazy numbers of channels.
+ - The last sizable group of *=MRaster=* users makes no use of the "raster" part. ;)
+   - Many developers use the =colorTpl= template for color theory computations with other graphics libraries.
+   - Quite a few people use =colorTpl= for creating [[./ColorSchemes.org][color schemes]] for visualizations created in other tools.
+
+* Perhaps more important is what people don't use it for.
+
+What don't we do with =MRaster=?  Frankly, the non-features are features -- i.e. we don't do things that we are not good at or things for which other
+libraries are better.
+
+ - Anti-aliased primitive rendering.
+ - Sophisticated font rendering.
+ - Very little support for non-homogeneous image processing transforms.
+ - No 3D -- but *=MRaster=* makes for a fantastic back end for 3D rendering tools.
+
+Most of these things can be better achieved via other libraries:
+
+ - [[../tools/index.html#lib-vis][Cairo]] -- My favorite vector graphics library.
+ - [[../tools/index.html#imagepro][ImageJ]] -- One of my favorite image analysis & processing platforms.
+ - [[../tools/index.html#images][ImageMagick]] -- A veritable Swiss army knife for batch image processing.
+ - [[../tools/index.html#lib-vis][VTK]] -- Comprehensive 3D data visualization library.
+

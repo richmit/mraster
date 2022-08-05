@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-07-29 Fri 10:27 -->
+<!-- 2022-08-04 Thu 22:35 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster</title>
@@ -209,7 +209,7 @@
 </head>
 <body>
 <div id="org-div-home-and-up">
- <a accesskey="h" href="http://www.mitchr.me/SS/mraster/"> UP </a>
+ <a accesskey="h" href="https://github.com/richmit/mraster/"> UP </a>
  |
  <a accesskey="H" href="https://www.mitchr.me/"> HOME </a>
 </div><div id="content" class="content">
@@ -250,7 +250,15 @@ Some examples of what can be done with <b>MRaster</b>:
 </ul>
 
 <p>
+For a bit more detail about <b>MRaster</b>: <a href="http://richmit.github.io/mraster/index.html">http://richmit.github.io/mraster/index.html</a>
+</p>
+
+<p>
 A quick start guide: <a href="http://richmit.github.io/mraster/QuickStart.html">http://richmit.github.io/mraster/QuickStart.html</a>
+</p>
+
+<p>
+Color schemes included in <b>MRaster</b>: <a href="http://richmit.github.io/mraster/ColorSchemes.html">http://richmit.github.io/mraster/ColorSchemes.html</a>
 </p>
 
 <p>
@@ -262,8 +270,8 @@ The code: <a href="https://github.com/richmit/mraster/">https://github.com/richm
 </div>
 
 
-<div id="outline-container-org01f9117" class="outline-2">
-<h2 id="org01f9117"><span class="section-number-2">2.</span> Design goals</h2>
+<div id="outline-container-orgb4ca73e" class="outline-2">
+<h2 id="orgb4ca73e"><span class="section-number-2">2.</span> Design goals</h2>
 <div class="outline-text-2" id="text-2">
 <ul class="org-ul">
 <li><b>Extreme portability (ISO C++20 only, zero external library requirements)</b></li>
@@ -299,8 +307,8 @@ This is kind of a non-feature.  We simply don't try to do things like anti-alias
 </div>
 </div>
 
-<div id="outline-container-org47a4234" class="outline-2">
-<h2 id="org47a4234"><span class="section-number-2">3.</span> Who is using it, and what are they using it for?</h2>
+<div id="outline-container-orgf42a902" class="outline-2">
+<h2 id="orgf42a902"><span class="section-number-2">3.</span> Who is using it, and what are they using it for?</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 While I can't know what everyone uses it for, many users have shared with me how they use <b><code>MRaster</code></b>.
@@ -316,10 +324,43 @@ While I can't know what everyone uses it for, many users have shared with me how
 <li>Making color schemes for other graphics tools</li>
 <li>Producing POV-ray Maps and Height fields</li>
 </ul></li>
-<li>Visualizations in HPC (supercomputer) environemtns.  For large 2D fields, <b><code>MRaster</code></b> can be a less complex and more efficient alternative to traditional
+<li>Visualizations in HPC (supercomputer) environments.  For large 2D fields, <b><code>MRaster</code></b> can be a less complex and more efficient alternative to traditional
 visualization tools.</li>
 <li>Scientific images (astronomy and microscopy mostly) with very high depth and/or channel count.</li>
 <li>Satellite and other hyperspectral remote-sensing imagery with crazy numbers of channels.</li>
+<li>The last sizable group of <b><code>MRaster</code></b> users makes no use of the "raster" part. ;)
+<ul class="org-ul">
+<li>Many developers use the <code>colorTpl</code> template for color theory computations with other graphics libraries.</li>
+<li>Quite a few people use <code>colorTpl</code> for creating <a href="./ColorSchemes.html">color schemes</a> for visualizations created in other tools.</li>
+</ul></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org9d27a60" class="outline-2">
+<h2 id="org9d27a60"><span class="section-number-2">4.</span> Perhaps more important is what people don't use it for.</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+What don't we do with <code>MRaster</code>?  Frankly, the non-features are features &#x2013; i.e. we don't do things that we are not good at or things for which other
+libraries are better.
+</p>
+
+<ul class="org-ul">
+<li>Anti-aliased primitive rendering.</li>
+<li>Sophisticated font rendering.</li>
+<li>Very little support for non-homogeneous image processing transforms.</li>
+<li>No 3D &#x2013; but <b><code>MRaster</code></b> makes for a fantastic back end for 3D rendering tools.</li>
+</ul>
+
+<p>
+Most of these things can be better achieved via other libraries:
+</p>
+
+<ul class="org-ul">
+<li><a href="../tools/index.html#lib-vis">Cairo</a> &#x2013; My favorite vector graphics library.</li>
+<li><a href="../tools/index.html#imagepro">ImageJ</a> &#x2013; One of my favorite image analysis &amp; processing platforms.</li>
+<li><a href="../tools/index.html#images">ImageMagick</a> &#x2013; A veritable Swiss army knife for batch image processing.</li>
+<li><a href="../tools/index.html#lib-vis">VTK</a> &#x2013; Comprehensive 3D data visualization library.</li>
 </ul>
 </div>
 </div>
