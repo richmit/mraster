@@ -268,7 +268,7 @@ namespace mjr {
           @param c2 The color of the second point (x2, y2)
           @param c3 The color of the third point (x3, y3)
           @param solid Use only c1 if true, otherwise use barycentric interpolation */
-      void drawFillTriangleUtl(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3, colorArgType c1, colorArgType c2, colorArgType c3, bool solid);
+      void drawFillTriangleUtl(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3, colorT c1, colorT c2, colorT c3, bool solid);
       //@}
 
       /** @name File Writing Utility Methods */
@@ -3382,7 +3382,7 @@ namespace mjr {
   ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawFillTriangleUtl(intCrdT x1, intCrdT y1,
                                                               intCrdT x2, intCrdT y2,
                                                               intCrdT x3, intCrdT y3,
-                                                              colorArgType c1, colorArgType c2, colorArgType c3, bool solid) {
+                                                              colorT c1, colorT c2, colorT c3, bool solid) { // Not colorArgType because of std::swap
     static intCrdT *minPts, *maxPts;
     static intCrdT  numPts;
 

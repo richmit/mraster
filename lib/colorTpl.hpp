@@ -462,8 +462,8 @@ namespace mjr {
       constexpr static bool        chanIsUnsigned = std::is_unsigned<clrChanT>::value;                                    //!< clrChanT is an unsigned integral type
       constexpr static bool        chanIsByte     = std::is_same<clrChanT, uint8_t>::value;                               //!< is clrChanT an 8-bit unsigned int?
       constexpr static bool        chanIsDouble   = std::is_same<clrChanT, double>::value;                                //!< is clrChanT a double?
-      constexpr static bool        goodMask       = chanIsInt && (sizeof(maskType) >= sizeof(clrChanT)*numChan);          //!< maskType is big enough
-      constexpr static bool        perfectMask    = chanIsInt && (sizeof(maskType) == sizeof(clrChanT)*numChan);          //!< maskType is perfectly sized
+      constexpr static bool        goodMask       = (sizeof(maskType) >= sizeof(clrChanT)*numChan);                       //!< maskType is big enough
+      constexpr static bool        perfectMask    = (sizeof(maskType) == sizeof(clrChanT)*numChan);                       //!< maskType is perfectly sized
       constexpr static bool        goodArithD     = (chanIsFloat || (sizeof(channelArithDType)   >= sizeof(clrChanT)*2)); //!< channelArithDType is big enough
       constexpr static bool        goodArithSP    = (chanIsFloat || (sizeof(channelArithSPType)  >= sizeof(clrChanT)*2)); //!< channelArithSPType is big enough
       constexpr static bool        goodArithSDP   = (chanIsFloat || (sizeof(channelArithSDPType) >= sizeof(clrChanT)*4)); //!< channelArithSDPType is big enough
@@ -1686,8 +1686,8 @@ namespace mjr {
         return cmpRGBcornerGradiant(csIdx, static_cast<csIntType>(std::strlen(cornerColors)), cornerColors);
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Color value based upon a color ramp passing through the given sequence of corner colors at equal intervals along [0, (mjr::colorTpl::maxChanVal * (numColors - 1)
-          + 1)].  At 0, the color will be the first specified color.  At (mjr::colorTpl::maxChanVal * ( numColors - 1) + 1) it will be the last color specified color.  This
+      /** Color value based upon a color ramp passing through the given sequence of corner colors at equal intervals along [0, (mjr::colorTpl::chanStepMax * (numColors - 1)
+          + 1)].  At 0, the color will be the first specified color.  At (mjr::colorTpl::chanStepMax * ( numColors - 1) + 1) it will be the last color specified color.  This
           function is similar to the one taking doubles. This version doesn't allow for the specification of anchor points, but uses precise integer
           arithmetic.  With this function it is possible to precisely duplicate many of the integer ramp color scheme functions.  This function supports input
           conditioning.  cornerColors need not be a real C-string -- i.e. no need for an terminating NULL.  Note this function uses RGB corner colors as
@@ -1700,10 +1700,10 @@ namespace mjr {
       template <typename ccT> 
       inline colorTpl& cmpRGBcornerGradiant(csIntType csIdx, csIntType numColors, const ccT* cornerColors) {
         /* Requires: Inherits numChan>2 from getC2. */
-        csIdx = numberWrap(csIdx, static_cast<csIntType>(maxChanVal * numColors - maxChanVal));
+        csIdx = numberWrap(csIdx, static_cast<csIntType>(chanStepMax * numColors - chanStepMax));
         if(csIdx != 0) { [[likely]]
           for(csIntType i=0; i<(numColors-1); i++) {
-            if(csIdx <= maxChanVal) {
+            if(csIdx <= chanStepMax) {
               clrChanT csIdxNoMore = static_cast<clrChanT>(csIdx);
               // Note: This could be MUCH better optimized!
               colorTpl<clrChanT, numChan> c1;
@@ -1712,21 +1712,21 @@ namespace mjr {
               c2.setToCorner(cornerColors[i+1]);
               clrChanT r, g, b;
               if(c1.getC0() > c2.getC0()) {
-                r = maxChanVal - csIdxNoMore;
+                r = chanStepMax - csIdxNoMore;
               } else if(c1.getC0() < c2.getC0()) {
                 r = csIdxNoMore;
               } else {
                 r = c1.getC0();
               }
               if(c1.getC1() > c2.getC1()) {
-                g = maxChanVal - csIdxNoMore;
+                g = chanStepMax - csIdxNoMore;
               } else if(c1.getC1() < c2.getC1()) {
                 g = csIdxNoMore;
               } else {
                 g = c1.getC1();
               }
               if(c1.getC2() > c2.getC2()) {
-                b = maxChanVal - csIdxNoMore;
+                b = chanStepMax - csIdxNoMore;
               } else if(c1.getC2() < c2.getC2()) {
                 b = csIdxNoMore;
               } else {
@@ -1734,7 +1734,7 @@ namespace mjr {
               }
               return setChans(r, g, b);
             } else {
-              csIdx = csIdx - maxChanVal;
+              csIdx = csIdx - chanStepMax;
             }
           }
         } else {

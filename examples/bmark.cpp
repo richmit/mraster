@@ -147,7 +147,7 @@ int main(void) {
 #if DO_POINT_NC
   std::cout << "Starting DO_POINT_NC" << std::endl;
   bmStartTime = std::chrono::system_clock::now();
-  for(int i=0;i<REPS*512/512;i++)
+  for(int i=0;i<REPS*512;i++)
     for(int y=0;y<=xMax;y++)
       for(int x=0;x<=yMax;x++) 
         if((x*y)%2) 
