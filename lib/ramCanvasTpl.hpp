@@ -415,7 +415,7 @@ namespace mjr {
       /** @name Various helper functions */
       //@{
       /** Used to find the left and right edges of a triangle. */
-      void triangleEdger(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, bool minSide, intCrdT* pts);
+      void triangleEdger(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT* pts);
       //@}
 
     public:
@@ -873,7 +873,6 @@ namespace mjr {
       //@{
       /** Draw a triangle filled with a solid color using a nicely optimized, horizontal scan conversion algorithm.
           @bug Triangles not entirely on the canvas are not rendered.
-          @bug Degenerate trainagles are not rendered
           @param x1 The x coordinate of the first point
           @param y1 The y coordinate of the first point
           @param x2 The x coordinate of the second point
@@ -3279,14 +3278,14 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT>::triangleEdger(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, bool minSide, intCrdT* pts) {
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::triangleEdger(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT* pts) {
     // This code is essentially the line drawing code with some simplifications.
     intCrdT x, y;
     if(x1 == x2) {                                                            // slope = infinity
       if(y1 > y2)                                                             // Fix point ordering
         std::swap(y1, y2);
       for(y=y1; y<=y2; y++)                                                   // Draw PIxels: drawVertLineNC(y1, y2, x1, color);
-        if(minSide) { if(x1<pts[y]) pts[y]=x1; } else { if(x1>pts[y]) pts[y]=x1; };
+        pts[y]=x1; // set bound
     } else {                                                                  // Slope is not infinity or 0...
       int dx, dy;
       if(x1 > x2) {                                                           // Fix point ordering
@@ -3297,10 +3296,10 @@ namespace mjr {
       dy = y2 - y1;
       if(dx == dy) {                                                          // Slope = 1
         for(x=x1,y=y1;x<=x2;y++,x++)                                          // Draw Pixels
-          if(minSide) { if(x<pts[y]) pts[y]=x; } else { if(x>pts[y]) pts[y]=x; };
+          pts[y]=x; // set bound
       } else if(dx == -dy) {                                                  // Slope = -1
         for(x=x1,y=y1;x<=x2;y--,x++)                                          // Draw Pixels
-          if(minSide) { if(x<pts[y]) pts[y]=x; } else { if(x>pts[y]) pts[y]=x; };
+          pts[y]=x; // set bound
       } else {                                                                // Slope != 1, -1, 0, \infinity
         int s, dx2, dy2;
         dx2 = 2*dx;
@@ -3311,7 +3310,7 @@ namespace mjr {
             x=x1;
             y=y1;
             while(x<=x2) {                                                    // Draw Line
-              if(minSide) { if(x<pts[y]) pts[y]=x; } else { if(x>pts[y]) pts[y]=x; }
+              pts[y]=x; // set bound
               if(s < 0) {
                 s += dy2;
               } else {
@@ -3325,7 +3324,7 @@ namespace mjr {
             x=x1;
             y=y1;
             while(y<=y2) {                                                    // Draw Line
-              if(minSide) { if(x<pts[y]) pts[y]=x; } else { if(x>pts[y]) pts[y]=x; }
+              pts[y]=x; // set bound
               if(s > 0) {
                 s -= dx2;
               } else {
@@ -3341,7 +3340,7 @@ namespace mjr {
             x=x1;
             y=y1;
             while(x<=x2) {                                                    // Draw Line
-              if(!isCliped(x, y)) { if(minSide) { if(x<pts[y]) pts[y]=x; } else { if(x>pts[y]) pts[y]=x; } };
+              pts[y]=x; // set bound
               if(s > 0) {
                 s += dy2;
               } else {
@@ -3355,7 +3354,7 @@ namespace mjr {
             x=x1;
             y=y1;
             while(y>=y2) {                                                    // Draw Line
-              if(minSide) { if(x<pts[y]) pts[y]=x; } else { if(x>pts[y]) pts[y]=x; }
+              pts[y]=x; // set bound
               if(s < 0) {
                 s += dx2;
               } else {
@@ -3394,22 +3393,22 @@ namespace mjr {
                                                               intCrdT x2, intCrdT y2,
                                                               intCrdT x3, intCrdT y3,
                                                               colorT c1, colorT c2, colorT c3, bool solid) { // Not colorArgType because of std::swap
-    static intCrdT *minPts, *maxPts;
+    static intCrdT *wkPts1, *wkPts2;
     static intCrdT  numPts;
 
     if( !(isCliped(x1, y1) || isCliped(x2, y2) || isCliped(x3, y3))) {
       ///////////////////////////////////////////////////////////////////////////////////
       // Check our work space, and allocate/reallocate as required.
-      if(minPts == NULL) {               // First time in function -- allocate
-        minPts = new intCrdT[numYpix];
-        maxPts = new intCrdT[numYpix];
+      if(wkPts1 == NULL) {               // First time in function -- allocate
+        wkPts1 = new intCrdT[numYpix];
+        wkPts2 = new intCrdT[numYpix];
         numPts = numYpix;
       } else {                           // Not our first time!  We have a work space.
         if(numPts != numYpix) {          // Work space is wrong size -- reallocate
-          delete[] minPts;
-          delete[] maxPts;
-          minPts = new intCrdT[numYpix];
-          maxPts = new intCrdT[numYpix];
+          delete[] wkPts1;
+          delete[] wkPts2;
+          wkPts1 = new intCrdT[numYpix];
+          wkPts2 = new intCrdT[numYpix];
           numPts = numYpix;
         }
       }
@@ -3458,50 +3457,39 @@ namespace mjr {
         }
       }
       ///////////////////////////////////////////////////////////////////////////////////
-      for(intCrdT y=y3; y<=y1; y++) {
-        minPts[y] = intCrdGrdMax;
-        maxPts[y] = intCrdGrdMin;
+      /*   1   1---2  2---1  1       1 */          
+      /*   |    \ /    \ /   |\     /| */          
+      /*   3     3      3    | 2   2 | */          
+      /*                     |/     \| */
+      /*   1     1      1    3   ^   3 */
+      /*   |    / \    / \       |     */
+      /*   3   2---3  3---2      |     */
+      /*                         |     */
+      /*   x1 need not equal x3 in     */
+      /*      right most two cases     */
+
+      triangleEdger(x1, y1, x3, y3,      wkPts1);
+      if(y1==y2) {  
+        // Flat top or bottom case.
+        if(x1 != x2)
+          triangleEdger(x2, y2, x3, y3,  wkPts2);
+        else if(y2==y3)                          
+          triangleEdger(x2, y2, x1, y1,  wkPts2);
+      } else {                                   
+        // General case
+        triangleEdger(x2, y2, x1, y1,    wkPts2);
+        triangleEdger(x2, y2, x3, y3,    wkPts2);
       }
-      if(y1==y2) {                                           /*       */
-        if(x1 == x2) {                                       /*   1   */
-          //drawLine(x1, y1, x3, y3, c1);                    /*   |   */
-          return;                                            /*   3   */
-        } else if(x1 <= x2) {                                /* 1---2 */
-          triangleEdger(x1, y1, x3, y3, true,  minPts);      /*  \ /  */
-          triangleEdger(x2, y2, x3, y3, false, maxPts);      /*   3   */
-        } else {                                             /* 2---1 */                                     /*             1                */
-          triangleEdger(x1, y1, x3, y3, false, maxPts);      /*  \ /  */                                     /*             |\               */
-          triangleEdger(x2, y2, x3, y3, true,  minPts);      /*   3   */                                     /*             /  \             */
-        }                                                    /*       */                                     /*            |    \            */
-      } else if(y2==y3) {                                    /*       */                                     /*            |      \          */
-        if(x2 == x3) {                                       /*   1   */                                     /*            |       \         */
-          //drawLine(x2, y2, x1, y1, c1);                    /*   |   */                                     /*            /        \        */
-          return;                                            /*   3   */                                     /*           |           \      */
-        } else if(x2 <= x3) {                                /*   1   */                                     /*           |            \     */
-          triangleEdger(x2, y2, x1, y1, true,  minPts);      /*  / \  */                                     /*           o xli          2   */
-          triangleEdger(x3, y3, x1, y1, false, maxPts);      /* 2---3 */                                     /*           /             /    */
-        } else {                                             /*   1   */                                     /*          |            /      */
-          triangleEdger(x2, y2, x1, y1, false, maxPts);      /*  / \  */                                     /*          |           /       */
-          triangleEdger(x3, y3, x1, y1, true,  minPts);      /* 3---2 */                                     /*          |          /        */
-        }                                                                                                    /*          |        /          */
-      } else {                                                                                               /*          /       /           */
-        intCrdT xli = (x1*y3-x3*y1+(x3-x1)*y2)/(y3-y1);      /*       */                                     /*         |       /            */
-        if(xli == x2) {                                      /*       */                                     /*         |     /              */
-          //drawLine(x1, y1, x3, y3, c1);                    /*  1    */                                     /*         |    /               */
-          return;                                            /*   \   */                                     /*         /   /                */
-                                                             /*    3  */                                     /*        |  /                  */
-        } else if (xli < x2) {                               /*  1    Note: x1 need not equal x3 */          /*        | /                   */
-          triangleEdger(x2, y2, x1, y1, false, maxPts);      /*  |\   */                                     /*        |/                    */
-          triangleEdger(x2, y2, x3, y3, false, maxPts);      /*  | 2  */                                     /*        3                     */
-          triangleEdger(x1, y1, x3, y3, true,  minPts);      /*  |/   */
-                                                             /*  3    */
-        } else {                                             /*    1  Note: x1 need not equal x3 */
-          triangleEdger(x2, y2, x1, y1, true,  minPts);      /*   /|  */
-          triangleEdger(x2, y2, x3, y3, true,  minPts);      /*  2 |  */
-          triangleEdger(x1, y1, x3, y3, false, maxPts);      /*   \|  */
-                                                             /*    3  */
+
+      intCrdT *minPts, *maxPts;
+      if (wkPts1[y2] < wkPts2[y2]) {
+          minPts = wkPts1;
+          maxPts = wkPts2;
+        } else {
+          minPts = wkPts2;
+          maxPts = wkPts1;
         }
-      }
+
       ///////////////////////////////////////////////////////////////////////////////////
       // Fill between the left and right bits.
       if(solid) {
