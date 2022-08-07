@@ -130,9 +130,9 @@ int main(void) {
   aColor.tfrmMaxI(bColor);                                         std::cout << "aColor.tfrmMaxI(bColor);                       " << aColor << std::endl;
   aColor.tfrmMinI(bColor);                                         std::cout << "aColor.tfrmMinI(bColor);                       " << aColor << std::endl;
 
-  aColor.setChans(100, 200, 210);                                  std::cout << "aColor.setChans(100, 200, 210);                " << aColor << std::endl;
-  aColor.setChans(100, 200, 210, 0);                               std::cout << "aColor.setChans(100, 200, 210, 0);             " << aColor << std::endl;
-  bColor.setChans(1, 2, 3, 4);                                     std::cout << "bColor.setChans(1, 2, 3, 4);                   " << bColor << std::endl;
+  aColor.setChansRGB(100, 200, 210);                               std::cout << "aColor.setChansRGB(100, 200, 210);             " << aColor << std::endl;
+  aColor.setChansRGBA(100, 200, 210, 0);                           std::cout << "aColor.setChansRGBA(100, 200, 210, 0);         " << aColor << std::endl;
+  bColor.setChansRGBA(1, 2, 3, 4);                                 std::cout << "bColor.setChansRGBA(1, 2, 3, 4);               " << bColor << std::endl;
   bColor.setChans(tc3);                                            std::cout << "bColor.setChans(tc3);                          " << bColor << std::endl;
   bColor.setChans(tc4);                                            std::cout << "bColor.setChans(tc4);                          " << bColor << std::endl;
 
@@ -147,15 +147,15 @@ int main(void) {
   aColor.setToCorner("black");                                     std::cout << "aColor.setToCorner(black);                     " << aColor << std::endl;
   aColor.setToCorner("W");                                         std::cout << "aColor.setToCorner(W);                         " << aColor << std::endl;
   aColor.setToCorner("0");                                         std::cout << "aColor.setToCorner(0);                         " << aColor << std::endl;
-  aColor.setChans_byte(100, 200, 210, 20);                         std::cout << "aColor.setChans_byte(100, 200, 210, 20);       " << aColor << std::endl;
-  aColor.setChans_byte(100, 200, 210);                             std::cout << "aColor.setChans_byte(100, 200, 210);           " << aColor << std::endl;
-  aColor.setChans_dbl(0.5, 0.5, 0.5, 0.5);                         std::cout << "aColor.setChans_dbl(0.5, 0.5, 0.5, 0.5);       " << aColor << std::endl;
-  aColor.setChans_dbl(0.5, 0.5, 0.5);                              std::cout << "aColor.setChans_dbl(0.5, 0.5, 0.5);            " << aColor << std::endl;
+  aColor.setChansRGBA_byte(100, 200, 210, 20);                     std::cout << "aColor.setChans_byte(100, 200, 210, 20);       " << aColor << std::endl;
+  aColor.setChansRGB_byte(100, 200, 210);                          std::cout << "aColor.setChans_byte(100, 200, 210);           " << aColor << std::endl;
+  aColor.setChansRGBA_dbl(0.5, 0.5, 0.5, 0.5);                     std::cout << "aColor.setChans_dbl(0.5, 0.5, 0.5, 0.5);       " << aColor << std::endl;
+  aColor.setChansRGB_dbl(0.5, 0.5, 0.5);                           std::cout << "aColor.setChans_dbl(0.5, 0.5, 0.5);            " << aColor << std::endl;
   aColor.setRGBAfromLogPackIntABGR(123);                           std::cout << "aColor.setRGBAfromLogPackIntABGR(123);         " << aColor << std::endl;
 
   aColor.tfrmLinearGreyLevelScale(0.5, 0.1);                       std::cout << "aColor.tfrmLinearGreyLevelScale(0.5, 0.1);     " << aColor << std::endl;
 
-  aColor.setRGBAfromLogPackIntARGB(0x01020304u);                    std::cout << "aColor.setRGBAfromLogPackIntARGB(0x01020304); " << aColor << std::endl;
+  aColor.setRGBAfromLogPackIntARGB(0x01020304u);                   std::cout << "aColor.setRGBAfromLogPackIntARGB(0x01020304);  " << aColor << std::endl;
 
   aColor.setToBlack();                                             std::cout << "aColor.setToBlack();                           " << aColor << std::endl;
   aColor.setToWhite();                                             std::cout << "aColor.setToWhite();                           " << aColor << std::endl;
@@ -169,10 +169,8 @@ int main(void) {
 
   aColor.setRGBcmpGreyTGA16bit(1);                                 std::cout << "aColor.setRGBcmpGreyTGA16bit(1);               " << aColor << std::endl;
 
-
-
   jColor.setChan(0, 0);                                            std::cout << "jColor.setChan(0, 0);                          " << jColor << std::endl;
-  jColor.setC0(0);                                                 std::cout << "jColor.setC0(!0);                               " << jColor << std::endl;
+  jColor.setC0(0);                                                 std::cout << "jColor.setC0(!0);                              " << jColor << std::endl;
   jColor.setC1(0);                                                 std::cout << "jColor.setC1(0);                               " << jColor << std::endl;
   jColor.setC3(0);                                                 std::cout << "jColor.setC3(0);                               " << jColor << std::endl;
   jColor.setChans(2);                                              std::cout << "jColor.setChans(2);                            " << jColor << std::endl;
@@ -219,9 +217,9 @@ int main(void) {
   jColor.tfrmMaxI(kColor);                                         std::cout << "jColor.tfrmMaxI(kColor);                       " << jColor << std::endl;
   jColor.tfrmMinI(kColor);                                         std::cout << "jColor.tfrmMinI(kColor);                       " << jColor << std::endl;
 
-  jColor.setChans(100, 200, 210);                                  std::cout << "jColor.setChans(100, 200, 210);                " << jColor << std::endl;
-  jColor.setChans(100, 200, 210, 0);                               std::cout << "jColor.setChans(100, 200, 210, 0);             " << jColor << std::endl;
-  kColor.setChans(1, 2, 3, 4);                                     std::cout << "kColor.setChans(1, 2, 3, 4);                   " << kColor << std::endl;
+  jColor.setChansRGB(100, 200, 210);                               std::cout << "jColor.setChansRGB(100, 200, 210);             " << jColor << std::endl;
+  jColor.setChansRGBA(100, 200, 210, 0);                           std::cout << "jColor.setChansRGBA(100, 200, 210, 0);         " << jColor << std::endl;
+  kColor.setChansRGBA(1, 2, 3, 4);                                 std::cout << "kColor.setChansRGBA(1, 2, 3, 4);               " << kColor << std::endl;
   kColor.setChans(tc3);                                            std::cout << "kColor.setChans(tc3);                          " << kColor << std::endl;
   kColor.setChans(tc4);                                            std::cout << "kColor.setChans(tc4);                          " << kColor << std::endl;
 
@@ -236,10 +234,10 @@ int main(void) {
   jColor.setToCorner("black");                                     std::cout << "jColor.setToCorner(black);                     " << jColor << std::endl;
   jColor.setToCorner("W");                                         std::cout << "jColor.setToCorner(W);                         " << jColor << std::endl;
   jColor.setToCorner("0");                                         std::cout << "jColor.setToCorner(0);                         " << jColor << std::endl;
-  jColor.setChans_byte(100, 200, 210, 20);                         std::cout << "jColor.setChans_byte(100, 200, 210, 20);       " << jColor << std::endl;
-  jColor.setChans_byte(100, 200, 210);                             std::cout << "jColor.setChans_byte(100, 200, 210);           " << jColor << std::endl;
-  jColor.setChans_dbl(0.5, 0.5, 0.5, 0.5);                         std::cout << "jColor.setChans_dbl(0.5, 0.5, 0.5, 0.5);       " << jColor << std::endl;
-  jColor.setChans_dbl(0.5, 0.5, 0.5);                              std::cout << "jColor.setChans_dbl(0.5, 0.5, 0.5);            " << jColor << std::endl;
+  jColor.setChansRGBA_byte(100, 200, 210, 20);                     std::cout << "jColor.setChansRGBA_byte(100, 200, 210, 20);   " << jColor << std::endl;
+  jColor.setChansRGB_byte(100, 200, 210);                          std::cout << "jColor.setChansRGB_byte(100, 200, 210);        " << jColor << std::endl;
+  jColor.setChansRGBA_dbl(0.5, 0.5, 0.5, 0.5);                     std::cout << "jColor.setChansRGBA_dbl(0.5, 0.5, 0.5, 0.5);   " << jColor << std::endl;
+  jColor.setChansRGB_dbl(0.5, 0.5, 0.5);                           std::cout << "jColor.setChansRGB_dbl(0.5, 0.5, 0.5);         " << jColor << std::endl;
   jColor.setRGBAfromLogPackIntABGR(123);                           std::cout << "jColor.setRGBAfromLogPackIntABGR(123);         " << jColor << std::endl;
 
   jColor.tfrmLinearGreyLevelScale(0.5, 0.1);                       std::cout << "jColor.tfrmLinearGreyLevelScale(0.5, 0.1);     " << jColor << std::endl;

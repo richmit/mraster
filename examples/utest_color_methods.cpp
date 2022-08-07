@@ -291,7 +291,7 @@ BOOST_AUTO_TEST_CASE(set_chan_dbl_8) {
   BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
   BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
 
-  aColor.setChans_dbl(1.0, 1.0, 0.0);
+  aColor.setChansRGB_dbl(1.0, 1.0, 0.0);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == 255);
   BOOST_TEST_CHECK(aColor.getChan(1)      == 255);
@@ -355,7 +355,7 @@ BOOST_AUTO_TEST_CASE(set_chan_dbl_8) {
   BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
   BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
 
-  aColor.setChans_dbl(0.0, 0.0, 0.0);
+  aColor.setChansRGB_dbl(0.0, 0.0, 0.0);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == 0);
   BOOST_TEST_CHECK(aColor.getChan(1)      == 0);
@@ -419,7 +419,7 @@ BOOST_AUTO_TEST_CASE(set_chan_dbl_8) {
   BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
   BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
 
-  aColor.setChans_dbl(1.0, 0.0, 0.5, 0.5);
+  aColor.setChansRGBA_dbl(1.0, 0.0, 0.5, 0.5);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == 255);
   BOOST_TEST_CHECK(aColor.getChan(1)      == 0);
@@ -559,7 +559,7 @@ BOOST_AUTO_TEST_CASE(set_chan_dbl_16, * boost::unit_test::tolerance(0.001)) {
   BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
   BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
 
-  aColor.setChans_dbl(1.0, 1.0, 0.0);
+  aColor.setChansRGB_dbl(1.0, 1.0, 0.0);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == 65535);
   BOOST_TEST_CHECK(aColor.getChan(1)      == 65535);
@@ -623,7 +623,7 @@ BOOST_AUTO_TEST_CASE(set_chan_dbl_16, * boost::unit_test::tolerance(0.001)) {
   BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
   BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
 
-  aColor.setChans_dbl(0.0, 0.0, 0.0);
+  aColor.setChansRGB_dbl(0.0, 0.0, 0.0);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == 0);
   BOOST_TEST_CHECK(aColor.getChan(1)      == 0);
@@ -687,7 +687,7 @@ BOOST_AUTO_TEST_CASE(set_chan_dbl_16, * boost::unit_test::tolerance(0.001)) {
   BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
   BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
 
-  aColor.setChans_dbl(1.0, 0.0, 0.5, 0.5);
+  aColor.setChansRGBA_dbl(1.0, 0.0, 0.5, 0.5);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == 65535);
   BOOST_TEST_CHECK(aColor.getChan(1)      == 0);
@@ -827,7 +827,7 @@ BOOST_AUTO_TEST_CASE(set_chan_dbl_64F, * boost::unit_test::tolerance(0.00001)) {
   BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
   BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
 
-  aColor.setChans_dbl(1.0, 1.0, 0.0);
+  aColor.setChansRGB_dbl(1.0, 1.0, 0.0);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == 1.0);
   BOOST_TEST_CHECK(aColor.getChan(1)      == 1.0);
@@ -891,7 +891,7 @@ BOOST_AUTO_TEST_CASE(set_chan_dbl_64F, * boost::unit_test::tolerance(0.00001)) {
   BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
   BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
 
-  aColor.setChans_dbl(0.0, 0.0, 0.0);
+  aColor.setChansRGB_dbl(0.0, 0.0, 0.0);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == 0.0);
   BOOST_TEST_CHECK(aColor.getChan(1)      == 0.0);
@@ -955,7 +955,7 @@ BOOST_AUTO_TEST_CASE(set_chan_dbl_64F, * boost::unit_test::tolerance(0.00001)) {
   BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
   BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
 
-  aColor.setChans_dbl(1.0, 0.0, 0.5, 0.5);
+  aColor.setChansRGBA_dbl(1.0, 0.0, 0.5, 0.5);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == 1.0);
   BOOST_TEST_CHECK(aColor.getChan(1)      == 0.0);
@@ -1102,29 +1102,7 @@ BOOST_AUTO_TEST_CASE(set_chan_byte_8) {
   BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
   BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
 
-  aColor.setChans_byte(11, 22);
-
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 11);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 22);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 99);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 99);
-
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
-
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 11);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 22);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 99);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 99);
-
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
-
-  aColor.setChans_byte(33, 44, 55);
+  aColor.setChansRGB_byte(33, 44, 55);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == 33);
   BOOST_TEST_CHECK(aColor.getChan(1)      == 44);
@@ -1146,7 +1124,7 @@ BOOST_AUTO_TEST_CASE(set_chan_byte_8) {
   BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
   BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
 
-  aColor.setChans_byte(11, 22, 33, 44);
+  aColor.setChansRGBA_byte(11, 22, 33, 44);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == 11);
   BOOST_TEST_CHECK(aColor.getChan(1)      == 22);
@@ -1247,29 +1225,7 @@ BOOST_AUTO_TEST_CASE(set_chan_byte_16) {
   BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
   BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
 
-  aColor.setChans_byte(11, 22);
-
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 2816);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 5632);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 25344);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 25344);
-
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
-
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 11);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 22);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 99);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 99);
-
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
-
-  aColor.setChans_byte(33, 44, 55);
+  aColor.setChansRGB_byte(33, 44, 55);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == 8448);
   BOOST_TEST_CHECK(aColor.getChan(1)      == 11264);
@@ -1291,7 +1247,7 @@ BOOST_AUTO_TEST_CASE(set_chan_byte_16) {
   BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
   BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
 
-  aColor.setChans_byte(11, 22, 33, 44);
+  aColor.setChansRGBA_byte(11, 22, 33, 44);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == 2816);
   BOOST_TEST_CHECK(aColor.getChan(1)      == 5632);
@@ -1392,29 +1348,7 @@ BOOST_AUTO_TEST_CASE(set_chan_byte_64F, * boost::unit_test::tolerance(0.0001)) {
   BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
   BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
 
-  aColor.setChans_byte(11, 22);
-
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0.043137254901960784);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0.08627450980392157);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 0.38823529411764707);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0.38823529411764707);
-
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
-
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 11);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 22);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 99);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 99);
-
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
-
-  aColor.setChans_byte(34, 44, 55);
+  aColor.setChansRGB_byte(34, 44, 55);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == 0.133333333333);
   BOOST_TEST_CHECK(aColor.getChan(1)      == 0.17254901960784313);
@@ -1436,7 +1370,7 @@ BOOST_AUTO_TEST_CASE(set_chan_byte_64F, * boost::unit_test::tolerance(0.0001)) {
   BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
   BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
 
-  aColor.setChans_byte(11, 22, 34, 44);
+  aColor.setChansRGBA_byte(11, 22, 34, 44);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == 0.043137254902);
   BOOST_TEST_CHECK(aColor.getChan(1)      == 0.08627450980392157);
@@ -1537,29 +1471,7 @@ BOOST_AUTO_TEST_CASE(set_chan_8) {
   BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
   BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
 
-  aColor.setChans(11, 22);
-
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 11);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 22);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 99);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 99);
-
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
-
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 11);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 22);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 99);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 99);
-
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
-
-  aColor.setChans(33, 44, 55);
+  aColor.setChansRGB(33, 44, 55);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == 33);
   BOOST_TEST_CHECK(aColor.getChan(1)      == 44);
@@ -1581,7 +1493,7 @@ BOOST_AUTO_TEST_CASE(set_chan_8) {
   BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
   BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
 
-  aColor.setChans(11, 22, 33, 44);
+  aColor.setChansRGBA(11, 22, 33, 44);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == 11);
   BOOST_TEST_CHECK(aColor.getChan(1)      == 22);
@@ -1682,29 +1594,7 @@ BOOST_AUTO_TEST_CASE(set_chan_16) {
   BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
   BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
 
-  aColor.setChans(1024, 2048);
-
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 1024);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 2048);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 32768);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 32768);
-
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
-
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 4);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 8);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 128);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 128);
-
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
-
-  aColor.setChans(4096, 8192, 16384);
+  aColor.setChansRGB(4096, 8192, 16384);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == 4096);
   BOOST_TEST_CHECK(aColor.getChan(1)      == 8192);
@@ -1726,7 +1616,7 @@ BOOST_AUTO_TEST_CASE(set_chan_16) {
   BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
   BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
 
-  aColor.setChans(1024, 2048, 4096, 8192);
+  aColor.setChansRGBA(1024, 2048, 4096, 8192);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == 1024);
   BOOST_TEST_CHECK(aColor.getChan(1)      == 2048);
@@ -1749,25 +1639,28 @@ BOOST_AUTO_TEST_CASE(set_chan_16) {
   BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
 
   //Corners
-  aColor.setChans(0, 65535);
+  aColor.setChans(0);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == 0);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 65535);
-
   BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
 
   BOOST_TEST_CHECK(aColor.getChan_byte(0) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 255);
-
   BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
 
   BOOST_TEST_CHECK(aColor.getChan_dbl(0) == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1) == 1.0);
-
   BOOST_TEST_CHECK(aColor.getChan_dbl(0) == aColor.getC0_dbl());
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1) == aColor.getC1_dbl());
+
+  aColor.setChans(65535);
+
+  BOOST_TEST_CHECK(aColor.getChan(0)      == 65535);
+  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC1());
+
+  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 255);
+  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC1_byte());
+
+  BOOST_TEST_CHECK(aColor.getChan_dbl(0) == 1.0);
+  BOOST_TEST_CHECK(aColor.getChan_dbl(0) == aColor.getC1_dbl());
+
  }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1848,29 +1741,7 @@ BOOST_AUTO_TEST_CASE(set_chan_64F) {
   BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
   BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
 
-  aColor.setChans(0.25, 0.50);
-
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0.25);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0.50);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0.0);
-
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
-
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 63);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 127);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0);
-
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
-
-  aColor.setChans(0.75, 0.50, 1.0);
+  aColor.setChansRGB(0.75, 0.50, 1.0);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == 0.75);
   BOOST_TEST_CHECK(aColor.getChan(1)      == 0.50);
@@ -1892,7 +1763,7 @@ BOOST_AUTO_TEST_CASE(set_chan_64F) {
   BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
   BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
 
-  aColor.setChans(0.25, 0.50, 0.75, 1.00);
+  aColor.setChansRGBA(0.25, 0.50, 0.75, 1.00);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == 0.25);
   BOOST_TEST_CHECK(aColor.getChan(1)      == 0.50);
@@ -1923,12 +1794,6 @@ BOOST_AUTO_TEST_CASE(constr_64F) {
   BOOST_TEST_CHECK(aColor.getChan(1)      == 0.25);
   BOOST_TEST_CHECK(aColor.getChan(2)      == 0.25);
   BOOST_TEST_CHECK(aColor.getChan(3)      == 0.25);
-
-  mjr::color4c64F bColor(0.25, 0.50);
-  BOOST_TEST_CHECK(bColor.getChan(0)      == 0.25);
-  BOOST_TEST_CHECK(bColor.getChan(1)      == 0.50);
-  BOOST_TEST_CHECK(bColor.getChan(2)      == 0.00);
-  BOOST_TEST_CHECK(bColor.getChan(3)      == 0.00);
 
   mjr::color4c64F cColor(0.25, 0.50, 0.75);
   BOOST_TEST_CHECK(cColor.getChan(0)      == 0.25);
@@ -2115,12 +1980,6 @@ BOOST_AUTO_TEST_CASE(constr_8b) {
   BOOST_TEST_CHECK(aColor.getChan(1) == 123);
   BOOST_TEST_CHECK(aColor.getChan(2) == 123);
   BOOST_TEST_CHECK(aColor.getChan(3) == 123);
-
-  mjr::color4c8b bColor(11, 22);
-  BOOST_TEST_CHECK(bColor.getChan(0) == 11);
-  BOOST_TEST_CHECK(bColor.getChan(1) == 22);
-  BOOST_TEST_CHECK(bColor.getChan(2) == 0);
-  BOOST_TEST_CHECK(bColor.getChan(3) == 0);
 
   mjr::color4c8b cColor(33, 44, 55);
   BOOST_TEST_CHECK(cColor.getChan(0) == 33);
@@ -2325,12 +2184,6 @@ BOOST_AUTO_TEST_CASE(constr_16b) {
   BOOST_TEST_CHECK(aColor.getChan(1) == 123);
   BOOST_TEST_CHECK(aColor.getChan(2) == 123);
   BOOST_TEST_CHECK(aColor.getChan(3) == 123);
-
-  mjr::color4c16b bColor(11, 22);
-  BOOST_TEST_CHECK(bColor.getChan(0) == 11);
-  BOOST_TEST_CHECK(bColor.getChan(1) == 22);
-  BOOST_TEST_CHECK(bColor.getChan(2) == 0);
-  BOOST_TEST_CHECK(bColor.getChan(3) == 0);
 
   mjr::color4c16b cColor(33, 44, 55);
   BOOST_TEST_CHECK(cColor.getChan(0) == 33);

@@ -144,9 +144,30 @@ namespace mjr {
                             |--------------------------------+---------------------+----------------------------------------|
 
     @tparam clrChanT Type to contain the channel information.  This type should be a unsigned integral type, a float, or double.
-    @tparam numChan The number of channels this color will have.  Common choices are 1 for greyscale, 3 for RGB, and 4 for RGBA. */
-  template <class clrChanT, int numChan>
-  requires (numChan>0) && ((std::is_unsigned<clrChanT>::value && std::is_integral<clrChanT>::value) || std::is_floating_point<clrChanT>::value)
+    @tparam numChan The number of channels this color will have.  Common choices are 1 for greyscale, 3 for RGB, and 4 for RGBA.
+    @tparam redChanIdx Index for the Red channel. -1 indicates no Red chan.
+    @tparam blueChanIdx Index for the Blue channel. -1 indicates no Red channel.
+    @tparam greenChanIdx Index for the Green channel. -1 indicates no Red channel.
+    @tparam alphaChanIdx Index for the Alpha channel. -1 indicates no Red channel.
+    If redChanIdx, blueChanIdx, greenChanIdx, & alphaChanIdx are *all* -1, then they will be assigned to channels 0, 1, 2, & 3 when numChan is >= 4.  If they
+    are all negative and numChan == 3, then alphaChanIdx won't be assigned, but red, blue, and green will be. */
+  template <class clrChanT, int numChan, int redChanIdx = -1, int blueChanIdx = -1, int greenChanIdx = -1, int alphaChanIdx = -1>
+  requires ((numChan>0)                                                                    && // Must have at least 1 chan
+            (std::is_unsigned<clrChanT>::value || std::is_floating_point<clrChanT>::value) && // unsigned integral or floating point
+            (std::is_floating_point<clrChanT>::value || (sizeof(clrChanT) >= 1))           && // If clrChanT int, then must be >= 1 char size
+            (redChanIdx < numChan)                                                         &&
+            (blueChanIdx < numChan)                                                        &&
+            (greenChanIdx < numChan)                                                       &&
+            (alphaChanIdx < numChan)                                                       &&
+            (((blueChanIdx <  0) && (redChanIdx <  0) && (greenChanIdx <  0)) ||
+             ((blueChanIdx >= 0) && (redChanIdx >= 0) && (greenChanIdx >= 0)))             && // R, G, & B all non-negative or all negative
+            ((alphaChanIdx < 0) || (redChanIdx >= 0))                                      && // If A is non-negative, then all non-negative
+            ((redChanIdx < 0) || ((redChanIdx   != greenChanIdx) &&
+                                  (redChanIdx   != blueChanIdx)  &&
+                                  (redChanIdx   != alphaChanIdx) &&
+                                  (greenChanIdx != blueChanIdx)  &&
+                                  (greenChanIdx != alphaChanIdx) &&
+                                  (blueChanIdx  != alphaChanIdx))))                           // Chans can't be teh same if non-negative
   class colorTpl {
 
     public:
@@ -427,10 +448,10 @@ namespace mjr {
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Return the mask value */
-      inline maskType getMaskNC() const { 
+      inline maskType getMaskNC() const {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-        return theColor.theInt; 
+        return theColor.theInt;
 #pragma GCC diagnostic pop
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -442,15 +463,27 @@ namespace mjr {
       inline colorTpl& setChanNC(int chan, clrChanT cVal) { theColor.thePartsA[chan] = cVal; return *this; }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Provides access to an specified color channel value with no index check. */
-      inline clrChanT getChanNC(int chan) const { 
+      inline clrChanT getChanNC(int chan) const {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-        return theColor.thePartsA[chan]; 
+        return theColor.thePartsA[chan];
 #pragma GCC diagnostic pop
       }
       //@}
 
       public:
+
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Public Constants Related to RGBA channels */
+      //@{
+      constexpr static int noRGBchanIdx = (redChanIdx < 0) && (greenChanIdx < 0) && (blueChanIdx < 0) && (alphaChanIdx < 0);
+      constexpr static int redChan      = (noRGBchanIdx && numChan > 0 ? 0 : redChanIdx);
+      constexpr static int greenChan    = (noRGBchanIdx && numChan > 1 ? 1 : greenChanIdx);
+      constexpr static int blueChan     = (noRGBchanIdx && numChan > 2 ? 2 : blueChanIdx);
+      constexpr static int alphaChan    = (noRGBchanIdx && numChan > 3 ? 3 : alphaChanIdx);
+      //@}
+
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Public Constants Related to template paramaters */
@@ -573,39 +606,25 @@ namespace mjr {
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** @name Constructors: Set channels
+      /** @name Constructors: RGB
+          These all use setChansRGB or setChansRGBA internally; however, these constructors will set any unspecified channels to min. */
+      //@{
+      colorTpl(clrChanT r, clrChanT g, clrChanT b, clrChanT a) {
+        if (numChan > 4)
+          setChansToMin();
+        setChansRGBA(r, g, b, a);
+      }
+      colorTpl(clrChanT r, clrChanT g, clrChanT b) {
+        if (numChan > 3)
+          setChansToMin();
+        setChansRGB(r, g, b);
+      }
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Constructors: RGBSet channels
           These all use setChans internally; however, these constructors will set any unspecified channels to min. */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Uses setChans() to set the first four channels of the color object
-          @param c1 The value to set the first channel to
-          @param c2 The value to set the second channel to
-          @param c3 The value to set the third channel to
-          @param c4 The value to set the fourth channel to  */
-      colorTpl(clrChanT c1, clrChanT c2, clrChanT c3, clrChanT c4) {
-        if (numChan > 4)
-          setChansToMin();
-        setChans(c1, c2, c3, c4);
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Uses setChans() to set the first three channels of the color object.
-          @param c1 The value to set the first channel to
-          @param c2 The value to set the second channel to
-          @param c3 The value to set the third channel to */
-      colorTpl(clrChanT c1, clrChanT c2, clrChanT c3) {
-        if (numChan > 3)
-          setChansToMin();
-        setChans(c1, c2, c3);
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Uses setChans() to set the first two channels of the color object.
-          @param c1 The value to set the first channel to
-          @param c2 The value to set the second channel to */
-      colorTpl(clrChanT c1, clrChanT c2) {
-        if (numChan > 2)
-          setChansToMin();
-        setChans(c1, c2);
-      }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Uses setChans() to set all channels to the given value
           @param cVal The value to set the channels to */
@@ -657,106 +676,64 @@ namespace mjr {
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** @name Component Access */
+      /** @name Named Channel Access
+       Provides access to the specified color channel value with compile time index check.
+         - _dbl versions work with double values scaled to [0, 1].
+         - _byte versions work with uint8_t values scaled to [0, 255]
+         - Numbered channel names are 0 indexed. */
       //@{
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Provides access to an specified color channel value with compile time index check.
-          The channels are 0 indexed.
-          @return The the value of the indexed channel. */
-      inline clrChanT getC0() const { return getChanNC(0); }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Provides access to an specified color channel value with compile time index check.
-          The channels are 0 indexed.
-          @return The the value of the indexed channel. */
+      inline clrChanT getRed()   const requires ((redChan>=0)   && (numChan>redChan))   { return getChanNC(redChan);   }
+      inline clrChanT getBlue()  const requires ((blueChan>=0)  && (numChan>blueChan))  { return getChanNC(blueChan);  }
+      inline clrChanT getGreen() const requires ((greenChan>=0) && (numChan>greenChan)) { return getChanNC(greenChan); }
+      inline clrChanT getAlpha() const requires ((alphaChan>=0) && (numChan>alphaChan)) { return getChanNC(alphaChan); }
+
+      inline double getRed_dbl()   const { return convertChanToDouble(getRed());   }
+      inline double getGreen_dbl() const { return convertChanToDouble(getGreen()); }
+      inline double getBlue_dbl()  const { return convertChanToDouble(getBlue());  }
+      inline double getAlpha_dbl() const { return convertChanToDouble(getAlpha()); }
+
+      inline uint8_t getRed_byte()   const { return convertChanToByte(getRed());   }
+      inline uint8_t getGreen_byte() const { return convertChanToByte(getGreen()); }
+      inline uint8_t getBlue_byte()  const { return convertChanToByte(getBlue());  }
+      inline uint8_t getAlpha_byte() const { return convertChanToByte(getAlpha()); }
+
+      inline clrChanT getC0() const                      { return getChanNC(0); }
       inline clrChanT getC1() const requires (numChan>1) { return getChanNC(1); }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Provides access to an specified color channel value with compile time index check.
-          The channels are 0 indexed.
-          @return The the value of the indexed channel. */
       inline clrChanT getC2() const requires (numChan>2) { return getChanNC(2); }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Provides access to an specified color channel value with compile time index check.
-          The channels are 0 indexed.
-          @return The the value of the indexed channel. */
       inline clrChanT getC3() const requires (numChan>3) { return getChanNC(3); }
+
+      inline double getC0_dbl() const { return convertChanToDouble(getC0()); }
+      inline double getC1_dbl() const { return convertChanToDouble(getC1()); }
+      inline double getC2_dbl() const { return convertChanToDouble(getC2()); }
+      inline double getC3_dbl() const { return convertChanToDouble(getC3()); }
+
+      inline uint8_t getC0_byte() const { return convertChanToByte(getC0()); }
+      inline uint8_t getC1_byte() const { return convertChanToByte(getC1()); }
+      inline uint8_t getC2_byte() const { return convertChanToByte(getC2()); }
+      inline uint8_t getC3_byte() const { return convertChanToByte(getC3()); }
+      //@}
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Indexed Channel Access
+          Provides access to an indexed color channel value with run time index check.
+          The channels are 0 indexed.
+         - _dbl versions work with double values scaled to [0, 1].
+         - _byte versions work with uint8_t values scaled to [0, 255] */
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Provides access to an specified color channel value with run time time index check.
-          The channels are 0 indexed.  Returns #minChanVal if \a chan id out of range.
-          @return The the value of the indexed channel. */
       inline clrChanT getChan(int chan) const {
         if((chan >= 0) && (chan < numChan)) [[likely]]
           return getChanNC(chan);
         else
           return minChanVal;
       }
-      //@}
-
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** @name Component Access and Conversion to Double Float */
-      //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Provides access to an specified color channel value as a double with compile time index check.
-          Value is scaled from source clrChanT range to [0, 1]. The channels are 0 indexed.
-          @return The the value of the indexed channel. */
-      inline double getC0_dbl() const { return convertChanToDouble(getC0()); }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Provides access to an specified color channel value as a double with compile time index check.
-          Value is scaled from source clrChanT range to [0, 1]. The channels are 0 indexed.
-          @return The the value of the indexed channel. */
-      inline double getC1_dbl() const { return convertChanToDouble(getC1()); } /* Requires: Inherits numChan>1 from getC1. */
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Provides access to an specified color channel value as a double with compile time index check.
-          Value is scaled from source clrChanT range to [0, 1]. The channels are 0 indexed.
-          @return The the value of the indexed channel. */
-      inline double getC2_dbl() const { return convertChanToDouble(getC2()); } /* Requires: Inherits numChan>2 from getC2. */
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Provides access to an specified color channel value as a double with compile time index check.
-          Value is scaled from source clrChanT range to [0, 1]. The channels are 0 indexed.
-          @return The the value of the indexed channel. */
-      inline double getC3_dbl() const { return convertChanToDouble(getC3()); } /* Requires: Inherits numChan>3 from getC3. */
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Provides access to an specified color channel value as a double with run time index check.
-          Value is scaled from source clrChanT range to [0, 1]. The channels are 0 indexed.
-          Returns 0.0d if \a chan is out of range.
-          @param chan The channel index
-          @return The the value of the indexed channel. */
       inline double getChan_dbl(int chan) const {
         if((chan >= 0) && (chan < numChan)) [[likely]]
           return convertChanToDouble(getChanNC(chan));
         else
           return 0.0;
       }
-      //@}
-
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** @name Component Access and Conversion to Unsigned 8-Bit Integer */
-      //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Provides access to an specified color channel value as a uint8_t with compile time index check.
-          Value is scaled from source clrChanT range to 8-bit range. The channels are 0 indexed.
-          @return The the value of the indexed channel. */
-      inline uint8_t getC0_byte() const { return convertChanToByte(getC0()); }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Provides access to an specified color channel value as a uint8_t with compile time index check.
-          Value is scaled from source clrChanT range to 8-bit range. The channels are 0 indexed.
-          @return The the value of the indexed channel. */
-      inline uint8_t getC1_byte() const { return convertChanToByte(getC1()); } /* Requires: Inherits numChan>1 from getC1. */
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Provides access to an specified color channel value as a uint8_t with compile time index check.
-          Value is scaled from source clrChanT range to 8-bit range. The channels are 0 indexed.
-          @return The the value of the indexed channel. */
-      inline uint8_t getC2_byte() const { return convertChanToByte(getC2()); } /* Requires: Inherits numChan>2 from getC2. */
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Provides access to an specified color channel value as a uint8_t with compile time index check.
-          Value is scaled from source clrChanT range to 8-bit range. The channels are 0 indexed.
-          @return The the value of the indexed channel. */
-      inline uint8_t getC3_byte() const { return convertChanToByte(getC3()); } /* Requires: Inherits numChan>3 from getC3. */
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Provides access to an specified color channel value as a uint8_t with run time index check.
-          Value is scaled from source clrChanT range to 8-bit range. The channels are 0 indexed.
-          Returns 0.0d if \a chan is out of range.
-          @param chan The channel index
-          @return The the value of the indexed channel. */
       inline uint8_t getChan_byte(int chan) const {
         if((chan >= 0) && (chan < numChan)) [[likely]]
           return convertChanToByte(getChanNC(chan));
@@ -766,97 +743,115 @@ namespace mjr {
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** @name Set Channel Value(s) with clrChanT values */
+      /** @name Set Named Channel Value
+       Provides access to the specified color channel value with compile time index check.
+         - _dbl versions work with double values scaled to [0, 1].
+         - _byte versions work with uint8_t values scaled to [0, 255]
+         - Numbered channel names are 0 indexed. */
       //@{
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the specified color channel value with compile time index check.  The channels are 0 indexed.
-          @param cVal The channel value
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setC0(clrChanT cVal) {
-        /* Performance: numChan is known at compile time, so the optimizer will produce an assignment or no code at all -- i.e. the test for numChan is done at
+      /* Performance: numChan is known at compile time, so the optimizer will produce an assignment or no code at all -- i.e. the test for numChan is done at
            compile time only, and imposes zero overhead at runtime.  */
-        /* Performance: The array assignment here gets optimized because the index is known at compile time.  It's just as fast as accessing a member of a union
+      /* Performance: The array assignment here gets optimized because the index is known at compile time.  It's just as fast as accessing a member of a union
            for example.  */
-        /* Useablity: We could do this with a template, but that means we need ".template set" syntax in some cases.  That's just too uguly. */
-        return setChanNC(0, cVal);
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the specified color channel value with compile time index check.  The channels are 0 indexed.
-          @param cVal The channel value
-          @return Returns a reference to the current color object.*/
+      /* Useablity: We could do this with a template, but that means we need ".template set" syntax in some cases.  That's just too uguly. */
+
+      inline colorTpl& setC0(clrChanT cVal)                      { return setChanNC(0, cVal); }
       inline colorTpl& setC1(clrChanT cVal) requires (numChan>1) { return setChanNC(1, cVal); }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the specified color channel value with compile time index check.  The channels are 0 indexed.
-          @param cVal The channel value
-          @return Returns a reference to the current color object.*/
       inline colorTpl& setC2(clrChanT cVal) requires (numChan>2) { return setChanNC(2, cVal); }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the specified color channel value with compile time index check.  The channels are 0 indexed.
-          @param cVal The channel value
-          @return Returns a reference to the current color object.*/
       inline colorTpl& setC3(clrChanT cVal) requires (numChan>3) { return setChanNC(3, cVal); }
+
+      inline colorTpl& setC0_dbl(double cVal) { return setC0(convertDoubleToChan(cVal));  }
+      inline colorTpl& setC1_dbl(double cVal) { return setC1(convertDoubleToChan(cVal));  }
+      inline colorTpl& setC2_dbl(double cVal) { return setC2(convertDoubleToChan(cVal));  }
+      inline colorTpl& setC3_dbl(double cVal) { return setC3(convertDoubleToChan(cVal));  }
+
+      inline colorTpl& setC0_byte(uint8_t cVal) { return setC0(convertByteToChan(cVal));  }
+      inline colorTpl& setC1_byte(uint8_t cVal) { return setC1(convertByteToChan(cVal));  }
+      inline colorTpl& setC2_byte(uint8_t cVal) { return setC2(convertByteToChan(cVal));  }
+      inline colorTpl& setC3_byte(uint8_t cVal) { return setC3(convertByteToChan(cVal));  }
+
+      inline colorTpl& setRed(clrChanT cVal)   requires ((redChan>=0)   && (numChan>redChan))   { return setChanNC(redChan,   cVal); }
+      inline colorTpl& setBlue(clrChanT cVal)  requires ((blueChan>=0)  && (numChan>blueChan))  { return setChanNC(blueChan,  cVal); }
+      inline colorTpl& setGreen(clrChanT cVal) requires ((greenChan>=0) && (numChan>greenChan)) { return setChanNC(greenChan, cVal); }
+      inline colorTpl& setAlpha(clrChanT cVal) requires ((alphaChan>=0) && (numChan>alphaChan)) { return setChanNC(alphaChan, cVal); }
+
+      inline colorTpl& setRed_dbl(double cVal)   { return setRed(convertDoubleToChan(cVal));   }
+      inline colorTpl& setGreen_dbl(double cVal) { return setGreen(convertDoubleToChan(cVal)); }
+      inline colorTpl& setBlue_dbl(double cVal)  { return setBlue(convertDoubleToChan(cVal));  }
+      inline colorTpl& setAlpha_dbl(double cVal) { return setAlpha(convertDoubleToChan(cVal)); }
+
+      inline colorTpl& setRed_byte(uint8_t cVal)   { return setRed(convertByteToChan(cVal));   }
+      inline colorTpl& setGreen_byte(uint8_t cVal) { return setGreen(convertByteToChan(cVal)); }
+      inline colorTpl& setBlue_byte(uint8_t cVal)  { return setBlue(convertByteToChan(cVal));  }
+      inline colorTpl& setAlpha_byte(uint8_t cVal) { return setAlpha(convertByteToChan(cVal)); }
+
+      inline colorTpl& setChansRGBA(clrChanT r, clrChanT g, clrChanT b, clrChanT a) { setRed(r); setGreen(g); setBlue(b); setAlpha(a); return *this; }
+      inline colorTpl& setChansRGB(clrChanT r, clrChanT g, clrChanT b)              { setRed(r); setGreen(g); setBlue(b);              return *this; }
+
+      inline colorTpl& setChansRGBA_dbl(double r, double g, double b, double a)     { return setChansRGBA(convertDoubleToChan(r), convertDoubleToChan(g), convertDoubleToChan(b), convertDoubleToChan(a)); }
+      inline colorTpl& setChansRGB_dbl(double r, double g, double b)                { return setChansRGB(convertDoubleToChan(r), convertDoubleToChan(g), convertDoubleToChan(b));                         }
+
+      inline colorTpl& setChansRGBA_byte(uint8_t r, uint8_t g, uint8_t b, uint8_t a) { return setChansRGBA(convertByteToChan(r), convertByteToChan(g), convertByteToChan(b), convertByteToChan(a)); }
+      inline colorTpl& setChansRGB_byte(uint8_t r, uint8_t g, uint8_t b)             { return setChansRGB(convertByteToChan(r), convertByteToChan(g), convertByteToChan(b));                       }
+      //@}
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Setting a single Channel by Index
+          Provides access to an indexed color channel value with run time index check.
+          The channels are 0 indexed.
+         - _dbl versions work with double values scaled to [0, 1].
+         - _byte versions work with uint8_t values scaled to [0, 255] */
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the specified color channel value with run time index check.
-          @param chan The channel to set.  The channels are 0 indexed.  Out of range is a NOOP.
-          @param cVal The channel value
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setChan(int chan, clrChanT cVal) {
-        if((chan >= 0) && (chan < numChan)) [[likely]]
-          setChanNC(chan, cVal);
-        return *this;
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the given channel of the current object to mjr::colorTpl::maxChanVal.
-          @param chan The channel to set.  The channels are 0 indexed.  Out of range is a NOOP.
-          @return Returns a reference to the current color object. */
       inline colorTpl& setChanToMax(int chan) {
         if((chan >= 0) && (chan < numChan)) [[likely]]
           setChanNC(chan, maxChanVal);
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the given channel of the current object to #minChanVal.
-          @param chan The channel to set.  The channels are 0 indexed.  Out of range is a NOOP.
-          @return Returns a reference to the current color object. */
       inline colorTpl& setChanToMin(int chan) {
         if((chan >= 0) && (chan < numChan)) [[likely]]
           setChanNC(chan, minChanVal);
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the first four channels current object.
-          @param c1 The value to set the first channel to
-          @param c2 The value to set the thrid channel to
-          @param c3 The value to set the second channel to
-          @param c4 The value to set the alpha channel to
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setChans(clrChanT c1, clrChanT c2, clrChanT c3, clrChanT c4) {  /* Requires: Inherits numChan>3 from getC3. */
-        setC0(c1); setC1(c2); setC2(c3); return setC3(c4); 
+      inline colorTpl& setChan(int chan, clrChanT cVal) {
+        if((chan >= 0) && (chan < numChan)) [[likely]]
+          setChanNC(chan, cVal);
+        return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the first three channels current object.
-          @param c1 The value to set the first channel to
-          @param c2 The value to set the thrid channel to
-          @param c3 The value to set the second channel to
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setChans(clrChanT c1, clrChanT c2, clrChanT c3) { /* Requires: Inherits numChan>2 from getC2. */
-        setC0(c1); setC1(c2); return setC2(c3); 
-      }  
+      inline colorTpl& setChan_dbl(int chan, double cVal) {
+        /* Performance: We expect chan to be in range most of the time.  If it is not, we waste time here computing the channel value.. */
+        return setChan(chan, convertDoubleToChan(cVal));
+      }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the first two channels current object.
-          @param c1 The value to set the first channel to
-          @param c2 The value to set the thrid channel to
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setChans(clrChanT c1, clrChanT c2) { setC0(c1); return setC1(c2); }  /* Requires: Inherits numChan>1 from getC1. */
+      inline colorTpl& setChan_byte(int chan, uint8_t cVal) {
+        /* Performance: We expect chan to be in range most of the time.  If it is not, we waste time here computing the channel value.. */
+        /* Performance: When chanIsByte, convertByteToChan is a NOOP.  As it's inline, this leads to zero overhead for the chanIsByte case. */
+        return setChan(chan, convertByteToChan(cVal));
+      }
+      //@}
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Set All Channel Values To One Value
+       Sets all components of the current object from to \a cVal.
+        - _dbl versions work with double values scaled to [0, 1].
+        - _byte versions work with uint8_t values scaled to [0, 255] */
+      //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets all components of the current object from to \a cVal
-          @param cVal The value to set each channel to
-          @return Returns a reference to the current color object.*/
       inline colorTpl& setChans(clrChanT cVal) {
         for(int i=0; i<numChan; i++)
           setChanNC(i, cVal);
         return *this;
       }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      inline colorTpl& setChans_dbl(double cVal)   { return setChans(convertDoubleToChan(cVal)); }
+      inline colorTpl& setChans_byte(uint8_t cVal) { return setChans(convertByteToChan(cVal));   }
+      //@}
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Set Channel Value(s) with clrChanT values */
+      //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Sets the first four channels current object.
           @param chanValues The values for the components
@@ -872,9 +867,9 @@ namespace mjr {
           @param chanValues The values for the components
           @return Returns a reference to the current color object.*/
       inline colorTpl& setChans(std::tuple<clrChanT, clrChanT, clrChanT> chanValues) {   /* Requires: Inherits numChan>2 from getC2. */
-        setC0(std::get<0>(chanValues)); 
-        setC1(std::get<1>(chanValues)); 
-        return setC2(std::get<2>(chanValues)); 
+        setC0(std::get<0>(chanValues));
+        setC1(std::get<1>(chanValues));
+        return setC2(std::get<2>(chanValues));
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** This function sets color channels from the data in a std::vector.
@@ -931,142 +926,6 @@ namespace mjr {
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** @name Set Channel Value(s) with Floating Point Doubles */
-      //@{
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the given channel of the current object from a floating point value in the unit interval, [0,1].
-          @param chan The channel to set.  The channels are 0 indexed.  Out of range is a NOOP.
-          @param cVal The value to set the channel to -- 1 is fully saturated.
-          @return Returns a reference to the current color object. */
-      inline colorTpl& setChan_dbl(int chan, double cVal) {
-        /* Performance: We expect chan to be in range most of the time.  If it is not, we waste time here computing the channel value.. */
-        return setChan(chan, convertDoubleToChan(cVal));
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the first channel of the current object from a floating point value in the unit interval, [0,1].
-          @param cVal The value to set the channel to -- 1 is fully saturated.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setC0_dbl(double cVal) { return setC0(convertDoubleToChan(cVal));  }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the second channel of the current object from a floating point value in the unit interval, [0,1].
-          @param cVal The value to set the channel to -- 1 is fully saturated.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setC1_dbl(double cVal) { return setC1(convertDoubleToChan(cVal));  }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the thrid channel of the current object from a floating point value in the unit interval, [0,1].
-          @param cVal The value to set the channel to -- 1 is fully saturated.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setC2_dbl(double cVal) { return setC2(convertDoubleToChan(cVal));  }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the fourth channel of the current object from a floating point value in the unit interval, [0,1].
-          @param cVal The value to set the channel to -- 1 is fully saturated.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setC3_dbl(double cVal) { return setC3(convertDoubleToChan(cVal));  }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** This function sets the first four channels of the current color objects using floats in the unit interval, [0,1].
-          @param c1 The value to set the first channel to -- 1 is fully saturated.
-          @param c2 The value to set the thrid channel to -- 1 is fully saturated.
-          @param c3 The value to set the second channel to -- 1 is fully saturated.
-          @param c4 The value to set the alpha channel to -- 1 is fully saturated.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setChans_dbl(double c1, double c2, double c3, double c4) {
-        return setChans(convertDoubleToChan(c1), convertDoubleToChan(c2), convertDoubleToChan(c3), convertDoubleToChan(c4));
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** This function sets the first three channels of the current color objects using floats in the unit interval, [0,1].
-          @param c1 The value to set the first channel to -- 1 is fully saturated.
-          @param c2 The value to set the thrid channel to -- 1 is fully saturated.
-          @param c3 The value to set the second channel to -- 1 is fully saturated.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setChans_dbl(double c1, double c2, double c3) {
-        return setChans(convertDoubleToChan(c1), convertDoubleToChan(c2), convertDoubleToChan(c3));
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** This function sets the first two channels of the current color objects using floats in the unit interval, [0,1].
-          @param c1 The value to set the first channel to -- 1 is fully saturated.
-          @param c2 The value to set the thrid channel to -- 1 is fully saturated.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setChans_dbl(double c1, double c2) {
-        return setChans(convertDoubleToChan(c1), convertDoubleToChan(c2));
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets all components of the current object from a floating point value in the unit interval, [0,1].
-          @param cVal The value to set each channel to -- 1 is fully saturated.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setChans_dbl(double cVal) { return setChans(convertDoubleToChan(cVal)); }
-      //@}
-
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** @name Set Channel Value(s) with 8-Bit, Unsigned Integers */
-      //@{
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the given channel of the current object from an uint8_t value in the interval [0,255].
-          @param chan The channel to set.  The channels are 0 indexed.  Out of range is a NOOP.
-          @param cVal The value to set the channel to  -- 255 is fully saturated.
-          @return Returns a reference to the current color object. */
-      inline colorTpl& setChan_byte(int chan, uint8_t cVal) {
-        /* Performance: We expect chan to be in range most of the time.  If it is not, we waste time here computing the channel value.. */
-        /* Performance: When chanIsByte, convertByteToChan is a NOOP.  As it's inline, this leads to zero overhead for the chanIsByte case. */
-        return setChan(chan, convertByteToChan(cVal));
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the first channel of the current object from an uint8_t value in the interval [0,255].
-          @param cVal The value to set the first channel to  -- 255 is fully saturated.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setC0_byte(uint8_t cVal) { return setC0(convertByteToChan(cVal));  }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the second channel of the current object from an uint8_t value in the interval [0,255].
-          @param cVal The value to set the thrid channel to  -- 255 is fully saturated.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setC1_byte(uint8_t cVal) { return setC1(convertByteToChan(cVal));  }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the thrid channel of the current object from an uint8_t value in the interval [0,255].
-          @param cVal The value to set the second channel to  -- 255 is fully saturated.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setC2_byte(uint8_t cVal) { return setC2(convertByteToChan(cVal));  }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the fourth channel of the current object from an uint8_t value in the interval [0,255].
-          @param cVal The value to set the alpha channel to  -- 255 is fully saturated.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setC3_byte(uint8_t cVal) { return setC3(convertByteToChan(cVal));  }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the first four channels current object. Values are uint8_t the range [0,255].
-          @param c1 The value to set the first channel to  -- 255 is fully saturated.
-          @param c2 The value to set the thrid channel to  -- 255 is fully saturated.
-          @param c3 The value to set the second channel to  -- 255 is fully saturated.
-          @param c4 The value to set the alpha channel to  -- 255 is fully saturated.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setChans_byte(uint8_t c1, uint8_t c2, uint8_t c3, uint8_t c4) {
-        setChans(convertByteToChan(c1), convertByteToChan(c2), convertByteToChan(c3), convertByteToChan(c4));
-        return *this;
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the first three channels current object. Values are uint8_t the range [0,255].
-          @param c1 The value to set the first channel to  -- 255 is fully saturated.
-          @param c2 The value to set the thrid channel to  -- 255 is fully saturated.
-          @param c3 The value to set the second channel to  -- 255 is fully saturated.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setChans_byte(uint8_t c1, uint8_t c2, uint8_t c3) {
-        setChans(convertByteToChan(c1), convertByteToChan(c2), convertByteToChan(c3));
-        return *this;
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the first three channels current object. Values are uint8_t the range [0,255].
-          @param c1 The value to set the first channel to  -- 255 is fully saturated.
-          @param c2 The value to set the thrid channel to  -- 255 is fully saturated.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setChans_byte(uint8_t c1, uint8_t c2) {
-        setChans(convertByteToChan(c1), convertByteToChan(c2));
-        return *this;
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets all components of the current object from an uint8_t value in the interval [0,255].
-          @param cVal The value to set each channel to  -- 255 is fully saturated.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setChans_byte(uint8_t cVal) { return setChans(convertByteToChan(cVal)); }
-      //@}
-
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Set To Special Colors (RGB Corners)
           While the assumed color model is RGB, these functions are generalized beyond RGB in that non-RGB channels are uniformly, and usefully, manipulated.
           For example, setToBlack and setToWhite functions set all channels to minimum and maximum respectively -- both reasonable definitions for "black" and
@@ -1077,41 +936,14 @@ namespace mjr {
           functions. */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Set all channels to #minChanVal -- black in RGB
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setToBlack()   { setChansToMin(); return *this;  }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Set all channels to mjr::colorTpl::maxChanVal -- white in RGB
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setToWhite()   { setChansToMax(); return *this;  }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Set channel 1 is set to mjr::colorTpl::maxChanVal, and all others to #minChanVal -- red in RGB
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setToRed()     { setChansToMin(); setChanToMax(0); return *this;  }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Channel 3 to mjr::colorTpl::maxChanVal, and all others to #minChanVal -- blue in RGB
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setToBlue()    { setChansToMin(); setChanToMax(2); return *this;  }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Set the color to green. (RGB=010).
-          Channel 2 to mjr::colorTpl::maxChanVal, and all others to #minChanVal -- green in RGB
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setToGreen()   { setChansToMin(); setChanToMax(1); return *this;  }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Set the color to cyan (RGB=011).
-          Channel 1 is set to #minChanVal, all others are set to mjr::colorTpl::maxChanVal.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setToCyan()    { setChansToMax(); setChanToMin(0); return *this;  }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Set the color to yellow (RGB=110).
-          Channel 3 is set to #minChanVal, all others are set to mjr::colorTpl::maxChanVal.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setToYellow()  { setChansToMax(); setChanToMin(2); return *this;  }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Set the color to magenta (RGB=101).
-          Channel 2 is set to #minChanVal, all others are set to mjr::colorTpl::maxChanVal.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setToMagenta() { setChansToMax(); setChanToMin(1); return *this;  }
+      inline colorTpl& setToBlack()   { setChansToMin();                  return *this; }
+      inline colorTpl& setToWhite()   { setChansToMax();                  return *this; }
+      inline colorTpl& setToRed()     { setChansToMin(); setChanToMax(0); return *this; }
+      inline colorTpl& setToBlue()    { setChansToMin(); setChanToMax(2); return *this; }
+      inline colorTpl& setToGreen()   { setChansToMin(); setChanToMax(1); return *this; }
+      inline colorTpl& setToCyan()    { setChansToMax(); setChanToMin(0); return *this; }
+      inline colorTpl& setToYellow()  { setChansToMax(); setChanToMin(2); return *this; }
+      inline colorTpl& setToMagenta() { setChansToMax(); setChanToMin(1); return *this; }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the current color based upon the single character given -- 0==black, R, G, B, M, C, Y, W/1==white).
           The color is acutally set using one of the setTo*() functions.  If \a cornerColor is invalid, then setToBlack().
@@ -1196,20 +1028,20 @@ namespace mjr {
           @param anInt The integer from which to extract bytes to set color
           @return Returns a reference to the current color object.*/
       inline colorTpl& setRGBAfromLogPackIntABGR(uint32_t anInt) {
-        /* Requires: Inherits numChan>3 from setC3. */
-        setC0_byte(0xFF & anInt); anInt = anInt >> 8;
-        setC1_byte(0xFF & anInt); anInt = anInt >> 8;
-        setC2_byte(0xFF & anInt); anInt = anInt >> 8;
-        setC3_byte(0xFF & anInt);
+        /* Requires: Inherits numChan>3 from setAlpha. */
+        setRed_byte(  0xFF & anInt); anInt = anInt >> 8;
+        setGreen_byte(0xFF & anInt); anInt = anInt >> 8;
+        setBlue_byte( 0xFF & anInt); anInt = anInt >> 8;
+        setAlpha_byte(0xFF & anInt);
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Just like setRGBAfromLogPackIntABGR, but no A */
       inline colorTpl& setRGBfromLogPackIntABGR(uint32_t anInt) {
-        /* Requires: Inherits numChan>2 from setC2. */
-        setC0_byte(0xFF & anInt); anInt = anInt >> 8;
-        setC1_byte(0xFF & anInt); anInt = anInt >> 8;
-        setC2_byte(0xFF & anInt); anInt = anInt >> 8;
+        /* Requires: Inherits numChan>2 from setBlue. */
+        setRed_byte(  0xFF & anInt); anInt = anInt >> 8;
+        setGreen_byte(0xFF & anInt); anInt = anInt >> 8;
+        setBlue_byte( 0xFF & anInt); anInt = anInt >> 8;
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1222,20 +1054,20 @@ namespace mjr {
            @param anInt The integer from which to extract bytes to set color
            @return Returns a reference to the current color object.*/
       inline colorTpl& setRGBAfromLogPackIntARGB(uint32_t anInt) {
-        /* Requires: Inherits numChan>3 from setC3. */
-        setC2_byte(0xFF & anInt); anInt = anInt >> 8;
-        setC1_byte(0xFF & anInt); anInt = anInt >> 8;
-        setC0_byte(0xFF & anInt); anInt = anInt >> 8;
-        setC3_byte(0xFF & anInt);
+        /* Requires: Inherits numChan>3 from setAlpha. */
+        setBlue_byte( 0xFF & anInt); anInt = anInt >> 8;
+        setGreen_byte(0xFF & anInt); anInt = anInt >> 8;
+        setRed_byte(  0xFF & anInt); anInt = anInt >> 8;
+        setAlpha_byte(0xFF & anInt);
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Just like setRGBAfromLogPackIntARGB, but no A */
       inline colorTpl & setRGBfromLogPackIntARGB(uint32_t anInt) {
-        /* Requires: Inherits numChan>2 from setC2. */
-        setC2_byte(0xFF & anInt); anInt = anInt >> 8;
-        setC1_byte(0xFF & anInt); anInt = anInt >> 8;
-        setC0_byte(0xFF & anInt); anInt = anInt >> 8;
+        /* Requires: Inherits numChan>2 from setBlue. */
+        setBlue_byte( 0xFF & anInt); anInt = anInt >> 8;
+        setGreen_byte(0xFF & anInt); anInt = anInt >> 8;
+        setRed_byte(  0xFF & anInt); anInt = anInt >> 8;
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1249,30 +1081,30 @@ namespace mjr {
           @param aIdx Location of alpha byte in \a anInt
           @return Returns a reference to the current color object.*/
       inline colorTpl& setRGBAfromLogPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx, uint8_t aIdx) {
-        /* Requires: Inherits numChan>3 from setC3. */
+        /* Requires: Inherits numChan>3 from setAlpha. */
         uint8_t bytes[4];
         bytes[0] = (0xFF & anInt); anInt = anInt >> 8;
         bytes[1] = (0xFF & anInt); anInt = anInt >> 8;
         bytes[2] = (0xFF & anInt); anInt = anInt >> 8;
         bytes[3] = (0xFF & anInt);
-        setC0_byte(bytes[rIdx]);
-        setC1_byte(bytes[gIdx]);
-        setC2_byte(bytes[bIdx]);
-        setC3_byte(bytes[aIdx]);
+        setRed_byte(  bytes[rIdx]);
+        setGreen_byte(bytes[gIdx]);
+        setBlue_byte( bytes[bIdx]);
+        setAlpha_byte(bytes[aIdx]);
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Just like setRGBAfromLogPackIntGen, but no A */
       inline colorTpl& setRGBfromLogPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx) {
         uint8_t bytes[4];
-        /* Requires: Inherits numChan>2 from setC2. */
+        /* Requires: Inherits numChan>2 from setBlue. */
         bytes[0] = (0xFF & anInt); anInt = anInt >> 8;
         bytes[1] = (0xFF & anInt); anInt = anInt >> 8;
         bytes[2] = (0xFF & anInt); anInt = anInt >> 8;
         bytes[3] = (0xFF & anInt);
-        setC0_byte(bytes[rIdx]);
-        setC1_byte(bytes[gIdx]);
-        setC2_byte(bytes[bIdx]);
+        setRed_byte(  bytes[rIdx]);
+        setGreen_byte(bytes[gIdx]);
+        setBlue_byte( bytes[bIdx]);
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1286,22 +1118,22 @@ namespace mjr {
           @param aIdx Location of alpha byte in \a anInt
           @return Returns a reference to the current color object.*/
       inline colorTpl& setRGBAfromPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx, uint8_t aIdx) {
-        /* Requires: Inherits numChan>3 from setC3. */
+        /* Requires: Inherits numChan>3 from setAlpha. */
         uint8_t *curByte = (uint8_t *)(&anInt);
-        setC0_byte(curByte[rIdx]);
-        setC1_byte(curByte[gIdx]);
-        setC2_byte(curByte[bIdx]);
-        setC3_byte(curByte[aIdx]);
+        setRed_byte(  curByte[rIdx]);
+        setGreen_byte(curByte[gIdx]);
+        setBlue_byte( curByte[bIdx]);
+        setAlpha_byte(curByte[aIdx]);
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Just like setRGBAfromPackIntGen, but no A */
       inline colorTpl& setRGBfromPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx) {
-        /* Requires: Inherits numChan>2 from setC2. */
+        /* Requires: Inherits numChan>2 from setBlue. */
         uint8_t *curByte = (uint8_t *)(&anInt);
-        setC0_byte(curByte[rIdx]);
-        setC1_byte(curByte[gIdx]);
-        setC2_byte(curByte[bIdx]);
+        setRed_byte(  curByte[rIdx]);
+        setGreen_byte(curByte[gIdx]);
+        setBlue_byte( curByte[bIdx]);
         return *this;
       }
       //@}
@@ -1409,7 +1241,9 @@ namespace mjr {
         } else {
           std::cerr << "ERROR: Unsupported color space used in setRGBfromColorSpace!" << std::endl;
         }
-        setChans(static_cast<clrChanT>(maxChanVal * outR), static_cast<clrChanT>(maxChanVal * outG), static_cast<clrChanT>(maxChanVal * outB));
+        setChansRGB(static_cast<clrChanT>(maxChanVal * outR),
+                    static_cast<clrChanT>(maxChanVal * outG),
+                    static_cast<clrChanT>(maxChanVal * outB));
         return *this;
       }
 
@@ -1430,11 +1264,11 @@ namespace mjr {
           @param tga16val An integer
           @return Returns a reference to the current color object. */
       inline colorTpl& setRGBcmpGreyTGA16bit(uint16_t tga16val) {
-        /* Requires: Inherits numChan>1 from setC1. */
+        /* Requires: Inherits numChan>1 from setGreen. */
         tga16val = numberWrap(tga16val, 65536u);
         setChansToMin();
-        setC1_byte(static_cast<clrChanT>( tga16val        & 0xff));
-        setC0_byte(static_cast<clrChanT>((tga16val >> 8)  & 0xff));
+        setGreen_byte(static_cast<clrChanT>( tga16val        & 0xff));
+        setRed_byte(  static_cast<clrChanT>((tga16val >> 8)  & 0xff));
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1442,11 +1276,11 @@ namespace mjr {
           @param tga24val An integer
           @return Returns a reference to the current color object. */
       inline colorTpl& setRGBcmpGreyTGA24bit(uint32_t tga24val) {
-        /* Requires: Inherits numChan>2 from setC2. */
+        /* Requires: Inherits numChan>2 from setBlue. */
         tga24val = numberWrap(tga24val, 16777216u);
-        setC1_byte(tga24val         & 0xff);
-        setC0_byte((tga24val >> 8)  & 0xff);
-        setC2_byte((tga24val >> 16) & 0xff);
+        setGreen_byte( tga24val        & 0xff);
+        setRed_byte(  (tga24val >> 8)  & 0xff);
+        setBlue_byte( (tga24val >> 16) & 0xff);
         return *this;
       }
       //@}
@@ -1569,7 +1403,7 @@ namespace mjr {
         bf=(bf>0.0 ? bf : 0.0)/bScl;
 
         // We are done.  Set the color and exit.
-        setChans_dbl(rf, gf, bf);
+        setChansRGB_dbl(rf, gf, bf);
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1628,7 +1462,7 @@ namespace mjr {
           edgeIntensityAdj=1.0;
         }
 
-        return setChans_dbl(edgeIntensityAdj*rf, edgeIntensityAdj*gf, edgeIntensityAdj*bf);
+        return setChansRGB_dbl(edgeIntensityAdj*rf, edgeIntensityAdj*gf, edgeIntensityAdj*bf);
       }
       //@}
 
@@ -1697,7 +1531,7 @@ namespace mjr {
           @param numColors The number of colors
           @param cornerColors An array of things that can be passed to setToCorner() -- usually char or cornerColorEnum
           @return A reference to this object */
-      template <typename ccT> 
+      template <typename ccT>
       inline colorTpl& cmpRGBcornerGradiant(csIntType csIdx, csIntType numColors, const ccT* cornerColors) {
         /* Requires: Inherits numChan>2 from getC2. */
         csIdx = numberWrap(csIdx, static_cast<csIntType>(chanStepMax * numColors - chanStepMax));
@@ -1732,7 +1566,7 @@ namespace mjr {
               } else {
                 b = c1.getC2();
               }
-              return setChans(r, g, b);
+              return setChansRGB(r, g, b);
             } else {
               csIdx = csIdx - chanStepMax;
             }
@@ -2597,11 +2431,11 @@ namespace mjr {
           @param bb The "brightness" value for blue
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmLinearGreyLevelScaleRGB(double rc, double rb, double gc, double gb, double bc, double bb) {
-        /* Requires: Inherits numChan>3 from setC3 & getC3. */
-        setC0(static_cast<clrChanT>(rc * static_cast<double>(theColor.getC0()) + rb));
-        setC1(static_cast<clrChanT>(gc * static_cast<double>(theColor.getC1()) + gb));
-        setC2(static_cast<clrChanT>(bc * static_cast<double>(theColor.getC2()) + bb));
-        setC3(static_cast<clrChanT>(bc * static_cast<double>(theColor.getC3()) + bb));
+        /* Requires: Inherits numChan>3 from setAlpha & getC3. */
+        setRed(  static_cast<clrChanT>(rc * static_cast<double>(theColor.getC0()) + rb));
+        setGreen(static_cast<clrChanT>(gc * static_cast<double>(theColor.getC1()) + gb));
+        setBlue( static_cast<clrChanT>(bc * static_cast<double>(theColor.getC2()) + bb));
+        setAlpha(static_cast<clrChanT>(bc * static_cast<double>(theColor.getC3()) + bb));
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2618,10 +2452,10 @@ namespace mjr {
           R=#maxChanVal*(R/#maxChanVal)**rp, B=#maxChanVal*(B/#maxChanVal)**gp, B=#maxChanVal*(B/#maxChanVal)**bp
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmStdPowRGB(double rp, double gp, double bp) {
-        /* Requires: Inherits numChan>2 from setC2 & getC2. */
-        setC0(static_cast<clrChanT>(std::pow(static_cast<double>(getC0) / static_cast<double>(maxChanVal), rp) * static_cast<double>(maxChanVal)));
-        setC1(static_cast<clrChanT>(std::pow(static_cast<double>(getC1) / static_cast<double>(maxChanVal), gp) * static_cast<double>(maxChanVal)));
-        setC2(static_cast<clrChanT>(std::pow(static_cast<double>(getC2) / static_cast<double>(maxChanVal), bp) * static_cast<double>(maxChanVal)));
+        /* Requires: Inherits numChan>2 from setBlue & getC2. */
+        setRed(  static_cast<clrChanT>(std::pow(static_cast<double>(getC0) / static_cast<double>(maxChanVal), rp) * static_cast<double>(maxChanVal)));
+        setGreen(static_cast<clrChanT>(std::pow(static_cast<double>(getC1) / static_cast<double>(maxChanVal), gp) * static_cast<double>(maxChanVal)));
+        setBlue( static_cast<clrChanT>(std::pow(static_cast<double>(getC2) / static_cast<double>(maxChanVal), bp) * static_cast<double>(maxChanVal)));
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2905,7 +2739,7 @@ namespace mjr {
               pG = pG * csX + pcoff[i + 1 * psize];
               pB = pB * csX + pcoff[i + 2 * psize];
             }
-            return aColor.setChans_dbl(std::clamp(pR, 0.0, 1.0), std::clamp(pG, 0.0, 1.0), std::clamp(pB, 0.0, 1.0));
+            return aColor.setChansRGB_dbl(std::clamp(pR, 0.0, 1.0), std::clamp(pG, 0.0, 1.0), std::clamp(pB, 0.0, 1.0));
           }
           /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
               @param csX A value in [0, 1] that identifies the color in the scheme.
@@ -2932,8 +2766,8 @@ namespace mjr {
           @ingroup cs
           @extends csPLY_tpl
           Quadratic */
-      typedef csPLY_tpl<1.0, 0.0, 0.0, 
-                        1.0, 0.0, 0.0, 
+      typedef csPLY_tpl<1.0, 0.0, 0.0,
+                        1.0, 0.0, 0.0,
                         1.0, 0.0, 0.0> csPLYquad;
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csPLYturbo
@@ -2952,44 +2786,44 @@ namespace mjr {
       /** @class csPLYparula
           @ingroup cs
           @extends csPLY_tpl
-          Similar to the Matlab parula colormap.  
+          Similar to the Matlab parula colormap.
           Note this colormap is not identical to parula, and lacks some of it's more sophisticated characteristics; however, it looks nice.
           See: https://www.mathworks.com/help/matlab/ref/parula.html */
-      typedef csPLY_tpl< 62043.87545, -399037.6523, 1122946.9120, -1812238.5254, 1846100.4184, -1230398.5816,  537273.93047, 
+      typedef csPLY_tpl< 62043.87545, -399037.6523, 1122946.9120, -1812238.5254, 1846100.4184, -1230398.5816,  537273.93047,
                        -149254.730651, 24535.019552, -2015.3894764, 44.825447931, 0.6772663755, 0.2018889435,
-                        -17121.77553,  108751.1007, -300422.7570,   473217.4661, -468061.6834,   301522.8593, -126770.41694,   
+                        -17121.77553,  108751.1007, -300422.7570,   473217.4661, -468061.6834,   301522.8593, -126770.41694,
                          33776.781210, -5288.933402,   404.6316583, -7.800267203, 1.3431462881, 0.1677335602,
-                        -17004.66127,  100139.7442, -255248.5285,   366029.9549, -319570.5392,   169195.6211,  -48015.67328,   
+                        -17004.66127,  100139.7442, -255248.5285,   366029.9549, -319570.5392,   169195.6211,  -48015.67328,
                           2478.369459,  2717.762128,  -795.8032035, 72.119793045, 1.1497391882, 0.5347179324>                           csPLYparula;
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csPLYmagma
           @ingroup cs
           @extends csPLY_tpl
-          Similar, but not identical, to the matplotlib magma colormap.  
+          Similar, but not identical, to the matplotlib magma colormap.
           See: https://bids.github.io/colormap/ and https://matplotlib.org/stable/tutorials/colors/colormaps.html */
-      typedef csPLY_tpl<746.7387907, -3433.588054,   6464.361262,  -6369.328232,   3470.981211, -1010.528460,   141.7946515, 
+      typedef csPLY_tpl<746.7387907, -3433.588054,   6464.361262,  -6369.328232,   3470.981211, -1010.528460,   141.7946515,
                         -15.78575778,   6.066078845,  0.2765580349, 0.000406276347,
-                        885.3555317, -5488.721941,  14347.739660, -20613.711506,  17758.797775, -9380.063372,  2976.8215781, 
+                        885.3555317, -5488.721941,  14347.739660, -20613.711506,  17758.797775, -9380.063372,  2976.8215781,
                        -529.56166374,  45.254936301, -0.9276250448, 0.006923020887,
-                      -3360.6362774, 17553.826465, -38851.355442,  47349.901018, -34548.072322, 15336.155184, -3997.3017542, 
+                      -3360.6362774, 17553.826465, -38851.355442,  47349.901018, -34548.072322, 15336.155184, -3997.3017542,
                         548.12480687, -32.540585926,  2.6406562133, 0.006263758764>                                                     csPLYmagma;
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csPLYinferno
           @ingroup cs
           @extends csPLY_tpl
-          Similar, but not identical, to the matplotlib inferno colormap.  
+          Similar, but not identical, to the matplotlib inferno colormap.
           See: https://bids.github.io/colormap/ and https://matplotlib.org/stable/tutorials/colors/colormaps.html */
-      typedef csPLY_tpl<-19.63292067,    452.2107953, -1685.008066,   2775.510486, -2442.279827,   1181.312494, -280.5809421, 
+      typedef csPLY_tpl<-19.63292067,    452.2107953, -1685.008066,   2775.510486, -2442.279827,   1181.312494, -280.5809421,
                          10.74924866,  8.60430465,  0.1030211659, 0.002048171596,
-                       1970.76446015, -10379.8617699, 23277.924908, -28925.873437, 21688.815122, -10002.539645, 2763.0755166, 
+                       1970.76446015, -10379.8617699, 23277.924908, -28925.873437, 21688.815122, -10002.539645, 2763.0755166,
                        -419.99828889, 28.92908793, -0.2365793129, 0.001175881895,
-                       2525.53763382, -12168.1567723, 24862.266312, -28273.600973, 19817.598983,  -8983.810158, 2683.7805375, 
+                       2525.53763382, -12168.1567723, 24862.266312, -28273.600973, 19817.598983,  -8983.810158, 2683.7805375,
                        -515.72960422, 52.67809976,  0.0641022894, 0.024051180021>                                                       csPLYinferno;
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csPLYplasma
           @ingroup cs
           @extends csPLY_tpl
-          Similar, but not identical, to the matplotlib plasma colormap.  
+          Similar, but not identical, to the matplotlib plasma colormap.
           See: https://bids.github.io/colormap/ and https://matplotlib.org/stable/tutorials/colors/colormaps.html */
       typedef csPLY_tpl<-43.8322257,   285.8375115,  -806.7514473,   1301.765273, -1325.274751,   878.0715655,  -374.7228293,
                          98.20716947, -15.31425214,  2.899584724, 0.05309687850,
@@ -3001,7 +2835,7 @@ namespace mjr {
       /** @class csPLYviridis
           @ingroup cs
           @extends csPLY_tpl
-          Similar, but not identical, to the matplotlib viridis colormap.  
+          Similar, but not identical, to the matplotlib viridis colormap.
           See: https://bids.github.io/colormap/ and https://matplotlib.org/stable/tutorials/colors/colormaps.html */
       typedef csPLY_tpl<-5.432077171,   4.751786889,  6.203735901,  -4.599931518, -0.32724109679, 0.1077083262, 0.274455424454,
                          4.641571316, -13.749439404, 14.153964947,  -5.758238189,  0.21481356454, 1.3964696839, 0.005767962397,
@@ -3010,7 +2844,7 @@ namespace mjr {
       /** @class csPLYcividis
           @ingroup cs
           @extends csPLY_tpl
-          Similar, but not identical, to the cividis colormap.  
+          Similar, but not identical, to the cividis colormap.
           Note this map dosen't have the flat red and sharp increase in blue at the start of the map.
           See: https://github.com/marcosci/cividis and https://matplotlib.org/stable/tutorials/colors/colormaps.html */
       typedef csPLY_tpl<-10.6296994279,  27.5479183452, -25.1086313881,  9.3401209056, -0.1385953043, -0.0177903167,
@@ -3045,9 +2879,9 @@ namespace mjr {
             double angle=2*std::numbers::pi*(start/3.0+1.0+rots*csX);
             csX=std::pow(csX, gamma);
             double ampl=hue*csX*(1-csX)/2.0;
-            return aColor.setChans_dbl(std::clamp(csX+ampl*(-0.14861*std::cos(angle)+1.78277*std::sin(angle)), 0.0, 1.0),
-                                       std::clamp(csX+ampl*(-0.29227*std::cos(angle)-0.90649*std::sin(angle)), 0.0, 1.0),
-                                       std::clamp(csX+ampl*(+1.97294*std::cos(angle)),                         0.0, 1.0));
+            return aColor.setChansRGB_dbl(std::clamp(csX+ampl*(-0.14861*std::cos(angle)+1.78277*std::sin(angle)), 0.0, 1.0),
+                                          std::clamp(csX+ampl*(-0.29227*std::cos(angle)-0.90649*std::sin(angle)), 0.0, 1.0),
+                                          std::clamp(csX+ampl*(+1.97294*std::cos(angle)),                         0.0, 1.0));
           }
           /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
               @param csX A value in [0, 1] that identifies the color in the scheme.
@@ -3150,7 +2984,7 @@ namespace mjr {
           @ingroup cs
           @extends csCC_tpl
           Classical cold to hot color cube ramp.  Provides (mjr::colorTpl::chanStepMax*4+1) unique colors. */
-      typedef csCC_tpl<cornerColorEnum::BLUE, cornerColorEnum::CYAN, cornerColorEnum::GREEN, 
+      typedef csCC_tpl<cornerColorEnum::BLUE, cornerColorEnum::CYAN, cornerColorEnum::GREEN,
                        cornerColorEnum::YELLOW, cornerColorEnum::RED>                                                                csCColdeColdToHot;
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCColdeIceToWaterToHot
@@ -3158,14 +2992,14 @@ namespace mjr {
           @extends csCC_tpl
           Modified version of the classical cold to hot color cube ramp.ramp. It starts at white (ice), moves up to blue (cold),
           then yellow through red (hot).  Provides (mjr::colorTpl::chanStepMax*4+1) unique colors. */
-      typedef csCC_tpl<cornerColorEnum::WHITE, cornerColorEnum::CYAN, cornerColorEnum::BLUE, 
+      typedef csCC_tpl<cornerColorEnum::WHITE, cornerColorEnum::CYAN, cornerColorEnum::BLUE,
                        cornerColorEnum::YELLOW, cornerColorEnum::RED>                                                                csCColdeIceToWaterToHot;
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCColdeRainbow
           @ingroup cs
           @extends csCC_tpl
           The classic HSV rainbow color scheme based upon an edge traversal of the RGB color cube.  Provides (6 * mjr::colorTpl::chanStepMax + 1) colors. */
-      typedef csCC_tpl<cornerColorEnum::RED, cornerColorEnum::YELLOW, cornerColorEnum::GREEN, cornerColorEnum::CYAN, 
+      typedef csCC_tpl<cornerColorEnum::RED, cornerColorEnum::YELLOW, cornerColorEnum::GREEN, cornerColorEnum::CYAN,
                        cornerColorEnum::BLUE, cornerColorEnum::MAGENTA, cornerColorEnum::RED>                                        csCColdeRainbow;
       //@}
 
@@ -3259,11 +3093,11 @@ namespace mjr {
           constexpr static csIntType numC = 2;
           /** Set given colorTpl instance to the selected color in the color scheme.
               @param aColor color object to set.
-              @param csIdx Index of color in pallet.  Not wrapped or clipped.  Even values get color \a a, while odd values get color \a b. 
+              @param csIdx Index of color in pallet.  Not wrapped or clipped.  Even values get color \a a, while odd values get color \a b.
               @return Returns a reference to \a aColor. */
           static inline colorTpl& c(colorRefType aColor, csIntType csIdx) { if (csIdx % 2) return aColor.setToCorner(b); else return aColor.setToCorner(a); }
           /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
-              @param csIdx Index of color in pallet.  Not wrapped or clipped.  Even values get color \a a, while odd values get color \a b. 
+              @param csIdx Index of color in pallet.  Not wrapped or clipped.  Even values get color \a a, while odd values get color \a b.
               @return Returns a colorTpl value */
           static inline colorTpl c(csIntType csIdx) { colorTpl tmp; return c(tmp, csIdx); }
       };
@@ -3295,11 +3129,11 @@ namespace mjr {
               @param aColor color object to set.
               @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
               @return Returns a reference to \a aColor. */
-          static inline colorTpl&  c(colorRefType aColor, csIntType csIdx) { 
+          static inline colorTpl&  c(colorRefType aColor, csIntType csIdx) {
             csIdx = csIdx % numC;
-            return aColor.setChans(static_cast<clrChanT>(csIdx / 3 + (csIdx%3==0?1:0)),
-                                   static_cast<clrChanT>(csIdx / 3 + (csIdx%3==1?1:0)),
-                                   static_cast<clrChanT>(csIdx / 3 + (csIdx%3==2?1:0)));            }
+            return aColor.setChansRGB(static_cast<clrChanT>(csIdx / 3 + (csIdx%3==0?1:0)),
+                                      static_cast<clrChanT>(csIdx / 3 + (csIdx%3==1?1:0)),
+                                      static_cast<clrChanT>(csIdx / 3 + (csIdx%3==2?1:0)));            }
           /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
               @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
               @return Returns a colorTpl value */
@@ -3316,11 +3150,11 @@ namespace mjr {
               @param aColor color object to set.
               @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
               @return Returns a reference to \a aColor. */
-          static inline colorTpl& c(colorRefType aColor, csIntType csIdx) { 
+          static inline colorTpl& c(colorRefType aColor, csIntType csIdx) {
             csIdx = csIdx % numC;
-            return aColor.setChans(static_cast<clrChanT>(csIdx / 4 + ((csIdx+1)%4==0?1:0)),
-                                   static_cast<clrChanT>(csIdx / 4 + ((csIdx+2)%4==0?1:0)),
-                                   static_cast<clrChanT>(csIdx / 4 + ((csIdx+3)%4==0?1:0)));        
+            return aColor.setChansRGB(static_cast<clrChanT>(csIdx / 4 + ((csIdx+1)%4==0?1:0)),
+                                      static_cast<clrChanT>(csIdx / 4 + ((csIdx+2)%4==0?1:0)),
+                                      static_cast<clrChanT>(csIdx / 4 + ((csIdx+3)%4==0?1:0)));
           }
           /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
               @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
@@ -3330,7 +3164,7 @@ namespace mjr {
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** Template for HSL color schemes. 
+      /** Template for HSL color schemes.
           If clrChanT is integral, this is a discrete color scheme, otherwise it is continuous.. */
       template<cornerColorEnum corner>
       class csHSLh_tpl {
@@ -3340,12 +3174,12 @@ namespace mjr {
               @param aColor color object to set.
               @param csIdx Index of color in pallet.  Wrapped to [0, meanChanVal].
               @return Returns a reference to \a aColor. */
-          static inline colorTpl& c(colorRefType aColor, csNatType csIdx) { 
+          static inline colorTpl& c(colorRefType aColor, csNatType csIdx) {
             clrChanT cVal = static_cast<clrChanT>(numberWrap(csIdx, meanChanVal));
             colorTpl cc(corner);
-            return aColor.setChans(static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getC0() ? cVal : -cVal)),
-                                   static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getC1() ? cVal : -cVal)),
-                                   static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getC2() ? cVal : -cVal)));
+            return aColor.setChansRGB(static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getC0() ? cVal : -cVal)),
+                                      static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getC1() ? cVal : -cVal)),
+                                      static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getC2() ? cVal : -cVal)));
           }
           /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
               @param csIdx Index of color in pallet.  Wrapped to [0, meanChanVal].
@@ -3680,7 +3514,7 @@ namespace mjr {
       /** @class csFPcircular12
           @ingroup cs
           @extends csFP_tpl */
-      typedef csFP_tpl<0xFF0000, 0xFF7D00, 0xFFFF00, 0x7DFF00, 0x66CC00, 0x66FFB2, 0x00FFFF, 
+      typedef csFP_tpl<0xFF0000, 0xFF7D00, 0xFFFF00, 0x7DFF00, 0x66CC00, 0x66FFB2, 0x00FFFF,
                        0x007DFF, 0x0000FF, 0x7D00FF, 0xFF00FF, 0xFF007D>                                                              csFPcircular12;
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csFPcircular24
@@ -3995,7 +3829,7 @@ namespace mjr {
                        0x1589B1, 0x1A8CB3, 0x2190B5, 0x2391B5, 0x2D95B8, 0x3399BA, 0x389CBC, 0x3F9EBF, 0x44A1C1, 0x4BA5C3, 0x50A8C4,
                        0x56AAC6, 0x5DAEC8, 0x62B1CA, 0x69B3CD, 0x6EB6CF, 0x75BAD1, 0x7BBCD3, 0x80BFD4, 0x83C1D6, 0x8CC6D8, 0x93C8DB,
                        0x99CCDD, 0x9ECFDF, 0xA5D1E1, 0xAAD4E2, 0xB1D8E4, 0xB6DBE6, 0xBCDDE8, 0xC3E1EB, 0xC8E4ED, 0xCFE6EF, 0xD4E9F0,
-                       0xDBEDF2, 0xE1EFF4, 0xE4F1F6, 0xEDF6F9, 0xF2F9FB, 0xF9FBFD, 0xFFFFFF>                                          csFPmplOcean;                                                                                            
+                       0xDBEDF2, 0xE1EFF4, 0xE4F1F6, 0xEDF6F9, 0xF2F9FB, 0xF9FBFD, 0xFFFFFF>                                          csFPmplOcean;
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csFPmplOranges
           @ingroup cs
@@ -4111,17 +3945,17 @@ namespace mjr {
               @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
               @param numC Number of colors for the given scheme.  Will be clamped to [minNumC, maxNumC].
               @return Returns a reference to \a aColor. */
-          static colorTpl&  c(colorRefType aColor, csIntType csIdx, csIntType numC=maxNumC) { 
+          static colorTpl&  c(colorRefType aColor, csIntType csIdx, csIntType numC=maxNumC) {
             csIntType b = std::clamp(numC, minNumC, maxNumC);
-            csIntType i = csIdx % b; 
-            return aColor.setRGBfromLogPackIntARGB(d[b*(b-1)/2-3+i]); 
+            csIntType i = csIdx % b;
+            return aColor.setRGBfromLogPackIntARGB(d[b*(b-1)/2-3+i]);
           }
           /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
               @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
               @param numC Number of colors for the given scheme.  Will be clamped to [minNumC, maxNumC].
               @return Returns a reference a colorTpl value. */
-          static colorTpl c(csIntType csIdx, csIntType numC=maxNumC) { 
-            colorTpl tmp; 
+          static colorTpl c(csIntType csIdx, csIntType numC=maxNumC) {
+            colorTpl tmp;
             return c(tmp, csIdx, numC);
           }
         private:
@@ -4610,11 +4444,26 @@ namespace mjr {
       template <class csT> colorTpl& csSet(csIntType csIdx) { return csT::c(*this, csIdx); }
 
   };
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /** i/O stream output operator for colorTpl types. */
-  template <class clrChanT, int numChan>
-  requires (numChan>0) && ((std::is_unsigned<clrChanT>::value && std::is_integral<clrChanT>::value) || std::is_floating_point<clrChanT>::value)
+  template <class clrChanT, int numChan, int redChanIdx = -1, int blueChanIdx = -1, int greenChanIdx = -1, int alphaChanIdx = -1>
+  requires ((numChan>0)                                                                    && // Must have at least 1 chan
+            (std::is_unsigned<clrChanT>::value || std::is_floating_point<clrChanT>::value) && // unsigned integral or floating point
+            (std::is_floating_point<clrChanT>::value || (sizeof(clrChanT) >= 1))           && // If clrChanT int, then must be >= 1 char size
+            (redChanIdx < numChan)                                                         &&
+            (blueChanIdx < numChan)                                                        &&
+            (greenChanIdx < numChan)                                                       &&
+            (alphaChanIdx < numChan)                                                       &&
+            (((blueChanIdx <  0) && (redChanIdx <  0) && (greenChanIdx <  0)) ||
+             ((blueChanIdx >= 0) && (redChanIdx >= 0) && (greenChanIdx >= 0)))             && // R, G, & B all non-negative or all negative
+            ((alphaChanIdx < 0) || (redChanIdx >= 0))                                      && // If A is non-negative, then all non-negative
+            ((redChanIdx < 0) || ((redChanIdx   != greenChanIdx) &&
+                                  (redChanIdx   != blueChanIdx)  &&
+                                  (redChanIdx   != alphaChanIdx) &&
+                                  (greenChanIdx != blueChanIdx)  &&
+                                  (greenChanIdx != alphaChanIdx) &&
+                                  (blueChanIdx  != alphaChanIdx))))                           // Chans can't be teh same if non-negative
   inline std::ostream&
   operator<< (std::ostream &out, colorTpl<clrChanT, numChan> const& color) {
     //  MJR BUG NOTE operator<<: Will fail if 'char' is bigger than uint64_t -- I shudder to imagine a future that might bring such a condition..

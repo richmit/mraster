@@ -45,14 +45,14 @@ int main(void) {
   std::vector<double> anchors {390, 425, 445, 495, 540, 600, 685, 830};
   std::vector<mjr::colorRGB8b> corners(8);
 
-  corners[0].setChans_dbl(  4.735895e-04, -3.803366e-04,  6.188242e-03);
-  corners[1].setChans_dbl(  2.408992e-02, -3.213844e-02,  6.140333e-01);
-  corners[2].setChans_dbl( -1.389196e-03,  2.282020e-03,  1.000000e+00);
-  corners[3].setChans_dbl( -1.405614e-01,  5.221071e-01,  1.304521e-01);
-  corners[4].setChans_dbl(  1.692925e-01,  1.000000e+00, -8.184450e-03);
-  corners[5].setChans_dbl(  1.000000e+00,  2.463630e-01, -2.764747e-03);
-  corners[6].setChans_dbl(  2.693146e-02, -6.494247e-04,  7.366005e-06);
-  corners[7].setChans_dbl(  1.436555e-06, -2.633831e-09,  4.411618e-11);
+  corners[0].setChansRGB_dbl(  4.735895e-04, -3.803366e-04,  6.188242e-03);
+  corners[1].setChansRGB_dbl(  2.408992e-02, -3.213844e-02,  6.140333e-01);
+  corners[2].setChansRGB_dbl( -1.389196e-03,  2.282020e-03,  1.000000e+00);
+  corners[3].setChansRGB_dbl( -1.405614e-01,  5.221071e-01,  1.304521e-01);
+  corners[4].setChansRGB_dbl(  1.692925e-01,  1.000000e+00, -8.184450e-03);
+  corners[5].setChansRGB_dbl(  1.000000e+00,  2.463630e-01, -2.764747e-03);
+  corners[6].setChansRGB_dbl(  2.693146e-02, -6.494247e-04,  7.366005e-06);
+  corners[7].setChansRGB_dbl(  1.436555e-06, -2.633831e-09,  4.411618e-11);
 
   aColor.setToWhite();
   for(auto x : anchors) {
