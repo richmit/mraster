@@ -716,6 +716,10 @@ namespace mjr {
       void clrCanvasToBlack();
       /** Clear the canvas to black.  Faster than clrCanvas().  */
       void clrCanvasToWhite();
+      /** Set the given channel to the minimum value. */
+      void clrCanvasChannelToMin(int chan);
+      /** Set the given channel to the maximum value. */
+      void clrCanvasChannelToMax(int chan);
       /** Clear the canvas.   */
       void clrCanvas();
       /** @overload */
@@ -1574,6 +1578,24 @@ namespace mjr {
     yWid = maxRealY - minRealY;
     xPixWid = xWid / numXpix;
     yPixWid = yWid / numYpix;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  inline void
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::clrCanvasChannelToMin(int chan) {
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        getPxColorRefNC(x, y).setChanToMin(chan);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  inline void
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::clrCanvasChannelToMax(int chan) {
+    for(intCrdT y=0; y<numYpix; y++)
+      for(intCrdT x=0; x<numXpix; x++)
+        getPxColorRefNC(x, y).setChanToMax(chan);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
