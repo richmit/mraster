@@ -66,7 +66,7 @@ int main(void) {
 Now we can compile it with GCC like this:
 
 #+begin_src sh :exports source :eval never
-g++ -m64 -std=gnu++20 colorData.cpp hersheyFontData.cpp hello.cpp -o hello2
+g++ -m64 -std=gnu++20 hello.cpp -o hello2
 #+end_src
 
 Now you can run it, and take a look at the file it created ("=hello.tiff="):
@@ -78,26 +78,19 @@ That's it!  How easy was that?
 
 *Questions*
 
-*Q1:* What are "=colorData.cpp=" and "=hersheyFontData.cpp=" in the compile command?
-
-#+BEGIN_QUOTE
-*A:* They have data for color schemes and fonts.  We didn't actually need them for the "=hello.cpp=" example, but I included them for completeness.
-#+END_QUOTE
-
-
-*Q2:* How do I get advanced TIFF reader support without =cmake=?
+*Q1:* How do I get advanced TIFF reader support without =cmake=?
 
 #+BEGIN_QUOTE
 *A:* If you have =libtiff= installed in a standard location, then you can probably just add "=-DTIFF_FOUND" to the compile command like this:
 
 #+begin_src sh :exports source :eval never
-g++ -DTIFF_FOUND -m64 --std=gcc++20 colorData.cpp hersheyFontData.cpp hello.cpp -o hello
+g++ -DTIFF_FOUND -m64 --std=gcc++20 hello.cpp -o hello
 #+end_src
 
 Please note that advanced TIFF reader is only required to *read* TIFF files.  *=MRaster=* can save TIFF, TGA, and MRAW files without any external library support.
 #+END_QUOTE
 
-*Q3:* What's up with "=-std=gcc++20=" instead of "=-std=c++20="?  Is *=MRaster=* C++20 complient?
+*Q2:* What's up with "=-std=gcc++20=" instead of "=-std=c++20="?  Is *=MRaster=* C++20 complient?
 
 #+BEGIN_QUOTE
 *A:* *=MRaster=* works just fine with standard C++20 compilers.  The "=-std=gcc++20=" option enables specific features of GCC that make *=MRaster=* better.  In
@@ -105,7 +98,7 @@ particular, it enables 128-bit integers on platforms that support it -- allowing
 you want to turn off 128-bit integers, and use pure C++20 instead with GCC, then you can use a command line like this:
 
 #+begin_src sh :exports source :eval never
-g++ -DMJR_LOOK_FOR_128_BIT_TYPES=0 -m64 --std=c++20 colorData.cpp hersheyFontData.cpp hello.cpp -o hello
+g++ -DMJR_LOOK_FOR_128_BIT_TYPES=0 -m64 --std=c++20 hello.cpp -o hello
 #+end_src
 #+END_QUOTE
 
