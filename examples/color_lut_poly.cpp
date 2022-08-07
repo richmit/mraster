@@ -38,7 +38,7 @@
 #define BMP i++; y1 = rampWidth + i * rampWidth; y2 = rampWidth + i * rampWidth + rampWidth - rampGap; yt = (y1+y2)/2;
 
 typedef mjr::color3c8b              ct;
-typedef mjr::hersheyFont            hft;
+typedef mjr::hershey::font          hft;
 
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();

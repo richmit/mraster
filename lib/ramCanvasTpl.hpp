@@ -51,7 +51,7 @@
 
 #include "color.hpp"
 #include "ramConfig.hpp"
-#include "hersheyFontData.hpp"
+#include "hersheyFont.hpp"
 #include "point2d.hpp"
 
 // Put everything in the mjr namespace
@@ -1111,7 +1111,7 @@ namespace mjr {
           @param aColor  The color with which to render the glyphs
           @param cex     A factor by which to expand the size of each glyph -- 1 is a good value (the name comes from R).
           @param spc     Space to jump for each charcter -- 20 for SL fonts, 23 for DL fonts, and 25 for TL fonts.  Scaled with cex. */
-      void drawString(std::string aString, hersheyFont aFont, intCrdT x, intCrdT y, colorArgType aColor, double cex, intCrdT spc);
+      void drawString(std::string aString, mjr::hershey::font aFont, intCrdT x, intCrdT y, colorArgType aColor, double cex, intCrdT spc);
       /** Renders a filled, bounding box for the given string as rendered via drawString.
           @param aString     A string to render
           @param aFont       The font to set the default with
@@ -1121,7 +1121,7 @@ namespace mjr {
           @param boxColor    The color with which to render the BOX
           @param cex         A factor by which to expand the size of each glyph -- 1 is a good value (the name comes from R).
           @param spc         Space to jump for each charcter -- 20 for SL fonts, 23 for DL fonts, and 25 for TL fonts.  Scaled with cex. */
-      void drawStringBox(std::string aString, hersheyFont aFont, intCrdT x, intCrdT y, colorArgType stringColor, colorArgType boxColor, double cex, intCrdT spc);
+      void drawStringBox(std::string aString, mjr::hershey::font aFont, intCrdT x, intCrdT y, colorArgType stringColor, colorArgType boxColor, double cex, intCrdT spc);
       //@}
 
       /** @name File Reading and Writing Methods */
@@ -4339,19 +4339,19 @@ namespace mjr {
       glyphNum = 699;
 
     actionIsMoveTo=1;
-    for(int i=0; i<(theHerChars[glyphNum]).numComp; i++) {
-      if((theHerChars[glyphNum]).components[2*i] == ' ') {
+    for(int i=0; i<(mjr::hershey::chars[glyphNum]).numComp; i++) {
+      if((mjr::hershey::chars[glyphNum]).components[2*i] == ' ') {
         actionIsMoveTo = 1;
       } else {
         if(xIntAxOrientation == intAxisOrientation::INVERTED)
-          x1 = static_cast<intCrdT>(magX * ('R'  -  (theHerChars[glyphNum]).components[2*i]));
+          x1 = static_cast<intCrdT>(magX * ('R'  -  (mjr::hershey::chars[glyphNum]).components[2*i]));
         else
-          x1 = static_cast<intCrdT>(magX * ((theHerChars[glyphNum]).components[2*i]  -  'R'));
+          x1 = static_cast<intCrdT>(magX * ((mjr::hershey::chars[glyphNum]).components[2*i]  -  'R'));
 
         if(yIntAxOrientation == intAxisOrientation::NATURAL)
-          y1 = static_cast<intCrdT>(magY * ('R' - (theHerChars[glyphNum]).components[2*i+1]));
+          y1 = static_cast<intCrdT>(magY * ('R' - (mjr::hershey::chars[glyphNum]).components[2*i+1]));
         else
-          y1 = static_cast<intCrdT>(magY * ((theHerChars[glyphNum]).components[2*i+1] - 'R'));
+          y1 = static_cast<intCrdT>(magY * ((mjr::hershey::chars[glyphNum]).components[2*i+1] - 'R'));
 
         if(actionIsMoveTo) {
           moveTo(x1+x, y1+y);
@@ -4366,11 +4366,11 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawString(std::string aString, hersheyFont aFont, intCrdT x, intCrdT y, colorArgType aColor, double cex, intCrdT spc) {
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawString(std::string aString, mjr::hershey::font aFont, intCrdT x, intCrdT y, colorArgType aColor, double cex, intCrdT spc) {
     for(auto &c : aString) {
       int glyphNum = 0;
       if((c>=32) && (c<=126))
-        glyphNum = hersheyFontAscii[(int)aFont][c-32];
+        glyphNum = mjr::hershey::ascii2hershey[(int)aFont][c-32];
       drawHersheyGlyph(glyphNum, x, y, cex, cex, aColor);
       x+=static_cast<intCrdT>(spc*cex);
     }
@@ -4380,7 +4380,7 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT>
   inline void
   ramCanvasTpl<colorT, intCrdT, fltCrdT>::drawStringBox(std::string aString,
-                                                        hersheyFont aFont,
+                                                        mjr::hershey::font aFont,
                                                         intCrdT x, intCrdT y,
                                                         colorArgType stringColor, colorArgType boxColor,
                                                         double cex, intCrdT spc) {

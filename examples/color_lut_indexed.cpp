@@ -39,7 +39,7 @@
 typedef mjr::color3c8b              ct;
 typedef mjr::color3c8b::csIntType   cit;
 typedef mjr::color3c8b::channelType cct;
-typedef mjr::hersheyFont            hft;
+typedef mjr::hershey::font          hft;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {

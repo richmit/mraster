@@ -40,7 +40,7 @@
 typedef mjr::color3c8b              ct;
 typedef mjr::color3c8b::csIntType   csIt;
 typedef mjr::color3c8b::csNatType   csNt;
-typedef mjr::hersheyFont            hft;
+typedef mjr::hershey::font          hft;
 
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
