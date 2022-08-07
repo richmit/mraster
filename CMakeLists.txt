@@ -96,7 +96,7 @@ set(TARGETS_REQ_NONE   "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "
                        "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits" "mandelbrot_potential" "mandelbrot_triangle" "newton_bm_cplx"
                        "newton_bm_real" "newton_half" "newton_max_mod" "newton_vs" "newton_z6" "peterdejong" "peterdejongM" "sic" "sic_search"
                        "sierpinski_triangle" "sprott2d" "testPoint" "test_draw_btriangle" "test_color" "test_draw_misc" "test_draw_primatives"
-                       "tippets" "mandelbrot_bm_real_eqop" "test_float" "types" "color_lut_docs")
+                       "tippets" "mandelbrot_bm_real_eqop" "test_float" "types" "color_lut_docs" "heart2022")
 set(TARGETS_REQ_MRRL   "color_lut_indexed" "color_lut_rainbows" "color_web_rectangle" "color_web_triangle" "test_draw_fonts" "test_draw_glyph"
                        "test_draw_strings" "color_interp_hsl_vs_rgb" "color_lut_ramp_cube" "color_lut_cubehelix" "color_lut_poly")
 set(TARGETS_REQ_OPENGL "glut_image")
