@@ -404,7 +404,7 @@ namespace mjr {
         if(chanIsByte)
           return cVal;
         else
-          return (static_cast<clrChanT>(cVal) << (bitsPerChan-8));
+          return static_cast<clrChanT>(static_cast<channelArithSPType>(cVal) * static_cast<channelArithSPType>(maxChanVal) / static_cast<channelArithSPType>(255));
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Convert a uint8_t to a clrChanT (for floating point clrChanT)*/
@@ -440,7 +440,7 @@ namespace mjr {
         if(chanIsByte)
           return cVal;
         else
-          return static_cast<uint8_t>(cVal >> (bitsPerChan-8));
+          return static_cast<uint8_t>(static_cast<channelArithSPType>(cVal) * static_cast<channelArithSPType>(255) / static_cast<channelArithSPType>(maxChanVal));
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Convert a double to a clrChanT */

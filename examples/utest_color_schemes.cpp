@@ -49,6 +49,13 @@ BOOST_AUTO_TEST_CASE(csCubeHelix_tpl, * boost::unit_test::tolerance(0.01)) {
   BOOST_TEST_CHECK(mjr::color3c64F::csCHvio::c(0.75).getC0() == 0.888);
   BOOST_TEST_CHECK(mjr::color3c64F::csCHvio::c(0.75).getC1() == 0.663);
   BOOST_TEST_CHECK(mjr::color3c64F::csCHvio::c(0.75).getC2() == 0.842);
+
+  typedef mjr::colorTpl<double, 3, 2, 1, 0> permcolor3c64F;
+
+  BOOST_TEST_CHECK(permcolor3c64F::csCHstd::c(0.25).getC2() == 0.085);
+  BOOST_TEST_CHECK(permcolor3c64F::csCHstd::c(0.25).getC1() == 0.325);
+  BOOST_TEST_CHECK(permcolor3c64F::csCHstd::c(0.25).getC0() == 0.298);
+
 }
 
 BOOST_AUTO_TEST_CASE(cmpRGBcornerGradiant_csCColdeRainbow, * boost::unit_test::tolerance(0.01)) {
