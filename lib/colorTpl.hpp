@@ -151,7 +151,7 @@ namespace mjr {
     @tparam alphaChanIdx Index for the Alpha channel. -1 indicates no Red channel.
     If redChanIdx, blueChanIdx, greenChanIdx, & alphaChanIdx are *all* -1, then they will be assigned to channels 0, 1, 2, & 3 when numChan is >= 4.  If they
     are all negative and numChan == 3, then alphaChanIdx won't be assigned, but red, blue, and green will be. */
-  template <class clrChanT, int numChan, int redChanIdx = -1, int blueChanIdx = -1, int greenChanIdx = -1, int alphaChanIdx = -1>
+  template <class clrChanT, int numChan, int redChanIdx = -1, int greenChanIdx = -1, int blueChanIdx = -1, int alphaChanIdx = -1>
   requires ((numChan>0)                                                                    && // Must have at least 1 chan
             (std::is_unsigned<clrChanT>::value || std::is_floating_point<clrChanT>::value) && // unsigned integral or floating point
             (std::is_floating_point<clrChanT>::value || (sizeof(clrChanT) >= 1))           && // If clrChanT int, then must be >= 1 char size
@@ -185,6 +185,19 @@ namespace mjr {
       typedef colorType const&             colorCRefType;
       /** Type for the channels (clrChanT) */
       typedef clrChanT                     channelType;
+      //@}
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Public types for std::tuple & std::vector containing clrChanT values */
+      //@{
+      /** Tuple for RGBA & 4 chan */
+      typedef std::tuple<clrChanT, clrChanT, clrChanT, clrChanT> clrChanTup6;
+      typedef std::tuple<clrChanT, clrChanT, clrChanT, clrChanT> clrChanTup5;
+      typedef std::tuple<clrChanT, clrChanT, clrChanT, clrChanT> clrChanTup4;
+      typedef std::tuple<clrChanT, clrChanT, clrChanT>           clrChanTup3;
+      typedef std::tuple<clrChanT, clrChanT>                     clrChanTup2;
+
+      typedef std::vector<clrChanT>                              clrChanVec;
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -793,6 +806,9 @@ namespace mjr {
 
       inline colorTpl& setChansRGBA_byte(uint8_t r, uint8_t g, uint8_t b, uint8_t a) { return setChansRGBA(convertByteToChan(r), convertByteToChan(g), convertByteToChan(b), convertByteToChan(a)); }
       inline colorTpl& setChansRGB_byte(uint8_t r, uint8_t g, uint8_t b)             { return setChansRGB(convertByteToChan(r), convertByteToChan(g), convertByteToChan(b));                       }
+
+      inline colorTpl& setChansRGBA(clrChanTup4 chanValues) { setRed(std::get<0>(chanValues)); setGreen(std::get<1>(chanValues)); setBlue(std::get<2>(chanValues)); setAlpha(std::get<3>(chanValues)); return *this; }
+      inline colorTpl& setChansRGB(clrChanTup3 chanValues)  { setRed(std::get<0>(chanValues)); setGreen(std::get<1>(chanValues)); setBlue(std::get<2>(chanValues));                                    return *this; }
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -856,7 +872,7 @@ namespace mjr {
       /** Sets the first four channels current object.
           @param chanValues The values for the components
           @return Returns a reference to the current color object.*/
-      inline colorTpl& setChans(std::tuple<clrChanT, clrChanT, clrChanT, clrChanT> chanValues) { /* Requires: Inherits numChan>3 from getC3. */
+      inline colorTpl& setChans(clrChanTup4 chanValues) { /* Requires: Inherits numChan>3 from getC3. */
         setC0(std::get<0>(chanValues));
         setC1(std::get<1>(chanValues));
         setC2(std::get<2>(chanValues));
@@ -866,7 +882,7 @@ namespace mjr {
       /** Sets the first three channels current object.
           @param chanValues The values for the components
           @return Returns a reference to the current color object.*/
-      inline colorTpl& setChans(std::tuple<clrChanT, clrChanT, clrChanT> chanValues) {   /* Requires: Inherits numChan>2 from getC2. */
+      inline colorTpl& setChans(clrChanTup3 chanValues) {   /* Requires: Inherits numChan>2 from getC2. */
         setC0(std::get<0>(chanValues));
         setC1(std::get<1>(chanValues));
         return setC2(std::get<2>(chanValues));
@@ -875,7 +891,7 @@ namespace mjr {
       /** This function sets color channels from the data in a std::vector.
           @param chanValues A std::vector containing the color channels.  It must have at least #channelCount elements!  This is *not* checked!
           @return Returns a reference to the current color object.*/
-      inline colorTpl& setChans(std::vector<clrChanT>& chanValues) {
+      inline colorTpl& setChans(clrChanVec& chanValues) {
         for(int i=0; i<numChan; i++)
           setChanNC(i, chanValues[i]);
         return *this;
@@ -2762,7 +2778,7 @@ namespace mjr {
                         1.0, 0.0,
                         1.0, 0.0> csPLYgrey;
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** @class csPLYgrey
+      /** @class csPLYquad
           @ingroup cs
           @extends csPLY_tpl
           Quadratic */
