@@ -83,26 +83,26 @@ int main(void) {
           theRamCanvasE.drawPoint(x, y, mjr::ramCanvas3c8b::colorType("blue"));
         // F
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
-         theRamCanvasF.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))), 255*1-1), "0R"));
+         theRamCanvasF.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))), 255*1-1), "0R"));
         else
-          theRamCanvasF.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::imag(z))), 255*1-1), "0B"));
+          theRamCanvasF.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::imag(z))), 255*1-1), "0B"));
         // G
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
-          theRamCanvasG.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerGradiant(mjr::numberWrap(static_cast<cit>(std::norm(z)/1000), 255*1-1), "0R"));
+          theRamCanvasG.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::norm(z)/1000), 255*1-1), "0R"));
         else
-          theRamCanvasG.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerGradiant(mjr::numberWrap(static_cast<cit>(std::norm(z)/1000), 255*1-1), "0B"));
+          theRamCanvasG.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::norm(z)/1000), 255*1-1), "0B"));
         // H
         if(std::real(z) < 0) {
           if(std::imag(z) < 0) {
-            theRamCanvasH.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))), 255*1-1), "0R"));
+            theRamCanvasH.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))), 255*1-1), "0R"));
           } else {
-            theRamCanvasH.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))), 255*1-1), "0B"));
+            theRamCanvasH.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))), 255*1-1), "0B"));
           }
         } else {
           if(std::imag(z) < 0) {
-            theRamCanvasH.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))), 255*1-1), "0M"));
+            theRamCanvasH.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))), 255*1-1), "0M"));
           } else {
-            theRamCanvasH.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))), 255*1-1), "0C"));
+            theRamCanvasH.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))), 255*1-1), "0C"));
           }
         }
         // I
@@ -131,21 +131,21 @@ int main(void) {
         if(std::real(z) < 0) {
           if(std::imag(z) < 0) {
             if(std::imag(z) < std::real(z) ) {
-              theRamCanvasJ.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))),  255*1-1), "0R"));
+              theRamCanvasJ.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))),  255*1-1), "0R"));
             } else {
-              theRamCanvasJ.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))),  255*1-1), "0Y"));
+              theRamCanvasJ.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))),  255*1-1), "0Y"));
             }
           } else {
-            theRamCanvasJ.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))),    255*1-1), "0B"));
+            theRamCanvasJ.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))),    255*1-1), "0B"));
           }
         } else {
           if(std::imag(z) < 0) {
-            theRamCanvasJ.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))),    255*1-1), "0M"));
+            theRamCanvasJ.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))),    255*1-1), "0M"));
           } else {
             if(std::imag(z) < std::real(z) ) {
-              theRamCanvasJ.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))),  255*1-1), "0C"));
+              theRamCanvasJ.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))),  255*1-1), "0C"));
             } else {
-              theRamCanvasJ.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))),  255*1-1), "0G"));
+              theRamCanvasJ.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))),  255*1-1), "0G"));
             }
           }
         }
@@ -153,9 +153,9 @@ int main(void) {
         theRamCanvasK.drawPoint(x, y, mjr::ramCanvas3c8b::colorType::csCColdeRainbow::c(mjr::numberWrap(static_cast<cit>((std::arg(z)+3.14)*255), 255*6+1)));
         // L
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
-          theRamCanvasL.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerGradiant(mjr::intClamp(static_cast<cit>(std::abs(std::real(z)/100)), 255*1-1), "0R"));
+          theRamCanvasL.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::intClamp(static_cast<cit>(std::abs(std::real(z)/100)), 255*1-1), "0R"));
         else
-          theRamCanvasL.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerGradiant(mjr::intClamp(static_cast<cit>(std::abs(std::imag(z))/100), 255*1-1), "0B"));
+          theRamCanvasL.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::intClamp(static_cast<cit>(std::abs(std::imag(z))/100), 255*1-1), "0B"));
       }
     }
   }

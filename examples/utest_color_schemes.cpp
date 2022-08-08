@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_CASE(csCubeHelix_tpl, * boost::unit_test::tolerance(0.01)) {
 
 }
 
-BOOST_AUTO_TEST_CASE(cmpRGBcornerGradiant_csCColdeRainbow, * boost::unit_test::tolerance(0.01)) {
+BOOST_AUTO_TEST_CASE(cmpRGBcornerDGradiant_csCColdeRainbow, * boost::unit_test::tolerance(0.01)) {
   // for(csIt x=0;x<ct::csCColdeRainbow::numC;x++) 
-  //   ct::csCColdeRainbow::c(x) === ct().cmpRGBcornerGradiant(x, "RYGCBMR");    
+  //   ct::csCColdeRainbow::c(x) === ct().cmpRGBcornerDGradiant(x, "RYGCBMR");    
 }

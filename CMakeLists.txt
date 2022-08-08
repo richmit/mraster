@@ -98,7 +98,7 @@ set(TARGETS_REQ_NONE   "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "
                        "sierpinski_triangle" "sprott2d" "testPoint" "test_draw_btriangle" "test_color" "test_draw_misc" "test_draw_primatives"
                        "tippets" "mandelbrot_bm_real_eqop" "test_float" "types" "color_lut_docs" "heart2022" "color_lut_indexed" "color_lut_rainbows"
                        "color_web_rectangle" "color_web_triangle" "test_draw_fonts" "test_draw_glyph"
-                       "test_draw_strings" "color_interp_hsl_vs_rgb" "color_lut_ramp_cube" "color_lut_cubehelix" "color_lut_poly")
+                       "test_draw_strings" "color_interp_hsl_vs_rgb" "color_lut_ramp_cube" "color_lut_cubehelix" "color_lut_poly" "color_lut_ramp_cubeC")
 set(TARGETS_REQ_OPENGL "glut_image")
 set(TARGETS_REQ_TIFF   "brownianDiffusion" "dlaBrownian" "dlaDrift" "img_process" "test_interp_scale" "geomTfrm_LensDistortion" "geomTfrm_Arb" 
                        "geomTfrm_Rotate")

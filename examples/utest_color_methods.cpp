@@ -114,8 +114,8 @@
 // +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // |    | colorTpl& cmpGradiant(double aDouble, std::vector<double> const& anchors, std::vector<colorType> const& colors);
 // |    | colorTpl& cmpGradiant(double aDouble, std::vector<colorType> const& colors);
-// |    | colorTpl& cmpRGBcornerGradiant(csIntType csIdx, const char *cornerColors);
-// |    | colorTpl& cmpRGBcornerGradiant(csIntType csIdx, csIntType numColors, const char *cornerColors);
+// |    | colorTpl& cmpRGBcornerDGradiant(csIntType csIdx, const char *cornerColors);
+// |    | colorTpl& cmpRGBcornerDGradiant(csIntType csIdx, csIntType numColors, const char *cornerColors);
 // +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // |    | colorTpl& interplColors(double aDouble, colorArgType col1, colorArgType col2);
 // |    | colorTpl& interplColorSpace(colorSpaceEnum space, double aDouble, colorArgType col1, colorArgType col2);

@@ -3,7 +3,7 @@
 /**
  @file      color_lut_ramp_misc.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Demonstrate the cmpRGBcornerGradiant (general color ramp) function
+ @brief     Demonstrate the cmpRGBcornerDGradiant (general color ramp) function
  @std       C++20
  @copyright
   @parblock

@@ -127,11 +127,11 @@ int main(void) {
       mjr::ramCanvas3c8b::csIntType ccol = (2*4*count);
       mjr::ramCanvas3c8b::csIntType mcol = ((mjr::ramCanvas3c8b::csIntType)(2*8*maxMod));
       switch(why) {
-        case whyStopNH::TOOLONG   : theRamCanvas.drawPoint(x, y, aColor.cmpRGBcornerGradiant((mcol)%(2*256),      "MWM")); break;
-        case whyStopNH::CONVERGEU : theRamCanvas.drawPoint(x, y, aColor.cmpRGBcornerGradiant((mcol+ccol)%(2*256), "BWB")); break;
-        case whyStopNH::CONVERGEL : theRamCanvas.drawPoint(x, y, aColor.cmpRGBcornerGradiant((mcol+ccol)%(2*256), "RWR")); break;
+        case whyStopNH::TOOLONG   : theRamCanvas.drawPoint(x, y, aColor.cmpRGBcornerDGradiant((mcol)%(2*256),      "MWM")); break;
+        case whyStopNH::CONVERGEU : theRamCanvas.drawPoint(x, y, aColor.cmpRGBcornerDGradiant((mcol+ccol)%(2*256), "BWB")); break;
+        case whyStopNH::CONVERGEL : theRamCanvas.drawPoint(x, y, aColor.cmpRGBcornerDGradiant((mcol+ccol)%(2*256), "RWR")); break;
         case whyStopNH::TOOBIG    : theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0,        0,        0));           break;
-        case whyStopNH::DIVZERO   : theRamCanvas.drawPoint(x, y, aColor.cmpRGBcornerGradiant((mcol+ccol)%(2*256), "CWC")); break;
+        case whyStopNH::DIVZERO   : theRamCanvas.drawPoint(x, y, aColor.cmpRGBcornerDGradiant((mcol+ccol)%(2*256), "CWC")); break;
       }
     }
   }

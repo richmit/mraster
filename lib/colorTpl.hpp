@@ -1525,30 +1525,36 @@ namespace mjr {
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** This is simply a version of cmpRGBcornerGradiant() that computes the length of the final argument as a C-string.
-          Unlike the version of cmpRGBcornerGradiant() specifying numColors, this one requires the final argument to be a real C-string -- i.e. it must have a
-          terminating NULL.  Note this function uses RGB corner colors as anchors, and is thus designed to work with RGB colors.  This function is the primary
-          workhorse behind many of the "cmp" color schemes in this library.
+      /** This is simply a version of cmpRGBcornerCGradiant() that computes the length of the final argument as a C-string.
+          Unlike the version of cmpRGBcornerDGradiant() specifying numColors, this one requires the final argument to be a real C-string -- i.e. it must have a
+          terminating NULL.  Note this function uses RGB corner colors as anchors, and is thus designed to work with RGB colors.  
           @param csIdx The value to convert
           @param cornerColors Characters specifying color (as used by setColor)
           @return A reference to this object */
-      inline colorTpl& cmpRGBcornerGradiant(csIntType csIdx, const char *cornerColors) {
-        return cmpRGBcornerGradiant(csIdx, static_cast<csIntType>(std::strlen(cornerColors)), cornerColors);
+      inline colorTpl& cmpRGBcornerCGradiant(csFltType csX, const char *cornerColors) {
+        return cmpRGBcornerCGradiant(csX, static_cast<csIntType>(std::strlen(cornerColors)), cornerColors);
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Color value based upon a color ramp passing through the given sequence of corner colors at equal intervals along [0, (mjr::colorTpl::chanStepMax * (numColors - 1)
-          + 1)].  At 0, the color will be the first specified color.  At (mjr::colorTpl::chanStepMax * ( numColors - 1) + 1) it will be the last color specified color.  This
-          function is similar to the one taking doubles. This version doesn't allow for the specification of anchor points, but uses precise integer
-          arithmetic.  With this function it is possible to precisely duplicate many of the integer ramp color scheme functions.  This function supports input
-          conditioning.  cornerColors need not be a real C-string -- i.e. no need for an terminating NULL.  Note this function uses RGB corner colors as
-          anchors, and is thus designed to work with RGB colors.  This function is the primary workhorse behind many of the "cmp" color schemes in this
-          library.
+      /** This is simply a version of cmpRGBcornerDGradiant() that computes the length of the final argument as a C-string.
+          Unlike the version of cmpRGBcornerDGradiant() specifying numColors, this one requires the final argument to be a real C-string -- i.e. it must have a
+          terminating NULL.  Note this function uses RGB corner colors as anchors, and is thus designed to work with RGB colors.  
+          @param csIdx The value to convert
+          @param cornerColors Characters specifying color (as used by setColor)
+          @return A reference to this object */
+      inline colorTpl& cmpRGBcornerDGradiant(csIntType csIdx, const char *cornerColors) {
+        return cmpRGBcornerDGradiant(csIdx, static_cast<csIntType>(std::strlen(cornerColors)), cornerColors);
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Color value based upon a color ramp passing through the given sequence of corner colors at equal intervals along [0, (mjr::colorTpl::chanStepMax *
+          (numColors - 1) + 1)].  At 0, the color will be the first specified color.  At (mjr::colorTpl::chanStepMax * ( numColors - 1) + 1) it will be the
+          last color specified color.  This function uses precise integer arithmetic.  cornerColors need not be a real C-string -- i.e. no need for an
+          terminating NULL.  Note this function uses RGB corner colors as anchors, and is thus designed to work with RGB colors.
           @param csIdx The value to convert
           @param numColors The number of colors
           @param cornerColors An array of things that can be passed to setToCorner() -- usually char or cornerColorEnum
           @return A reference to this object */
       template <typename ccT>
-      inline colorTpl& cmpRGBcornerGradiant(csIntType csIdx, csIntType numColors, const ccT* cornerColors) {
+      inline colorTpl& cmpRGBcornerDGradiant(csIntType csIdx, csIntType numColors, const ccT* cornerColors) {
         /* Requires: Inherits numChan>2 from getC2. */
         csIdx = numberWrap(csIdx, static_cast<csIntType>(chanStepMax * numColors - chanStepMax));
         if(csIdx != 0) { [[likely]]
@@ -1591,6 +1597,33 @@ namespace mjr {
           return setToCorner(cornerColors[0]);
         }
         // If we got here, we had a problem.  But not much we can do about it...
+        return *this;
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Color value based upon a color ramp passing through the given sequence of corner colors at equal intervals along [0.0, 1.0].  At 0, the color will
+          be the first specified color.  At 1.0 it will be the last color specified color. CornerColors need not be a real C-string -- i.e. no need for an
+          terminating NULL.  Note this function uses RGB corner colors as anchors, and is thus designed to work with RGB colors.  
+
+          @param csX The value to convert
+          @param numColors The number of colors
+          @param cornerColors An array of things that can be passed to setToCorner() -- usually char or cornerColorEnum
+          @return A reference to this object */
+      template <typename ccT>
+      inline colorTpl& cmpRGBcornerCGradiant(csFltType csX, csIntType numColors, const ccT* cornerColors) {
+        csX = numberWrap(csX, static_cast<csFltType>(1));
+        if(numColors >= 2) {
+          for(csIntType i=0; i<(numColors-1); i++) {
+            csFltType lowAnchor  = static_cast<csFltType>(i)  / static_cast<csFltType>(numColors-1);
+            csFltType highAnchor = static_cast<csFltType>(i+1)/ static_cast<csFltType>(numColors-1);
+            if( (csX >= lowAnchor) && (csX < highAnchor) ) {
+              colorTpl<clrChanT, numChan> c1;
+              colorTpl<clrChanT, numChan> c2;
+              c1.setToCorner(cornerColors[i]);
+              c2.setToCorner(cornerColors[i+1]);
+              return interplColors(std::abs((csX-lowAnchor)/(highAnchor-lowAnchor)), c1, c2);
+            }
+          }
+        }
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2934,9 +2967,12 @@ namespace mjr {
       class csCC_tpl {
         public:
           constexpr static csIntType numC = ((sizeof...(corners)) - 1) * chanStepMax + 1;
-          static inline colorTpl&  c(colorRefType aColor, csIntType csIdx) { return aColor.cmpRGBcornerGradiant(csIdx % numC, numC, cols); }
-          static inline colorTpl   c(                     csIntType csIdx) { colorTpl tmp; return c(tmp, csIdx);                      }
+          static inline colorTpl&  c(colorRefType aColor, csFltType csX)   { return aColor.cmpRGBcornerCGradiant(csX, numA, cols);          }
+          static inline colorTpl   c(                     csFltType csX)   { colorTpl tmp; return c(tmp, csX);                              }
+          static inline colorTpl&  c(colorRefType aColor, csIntType csIdx) { return aColor.cmpRGBcornerDGradiant(csIdx % numC, numA, cols); }
+          static inline colorTpl   c(                     csIntType csIdx) { colorTpl tmp; return c(tmp, csIdx);                            }
         private:
+          constexpr static int numA = (sizeof...(corners));
           constexpr static cornerColorEnum cols[] = { corners... };
       };
 

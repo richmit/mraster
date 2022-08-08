@@ -126,7 +126,7 @@ int main(void) {
   for(int i=0;i<REPS*32;i++)
     for(int y=0;y<=xMax;y++)
       for(int x=0;x<=yMax;x++)
-        theRamCanvas.drawPoint(x, y, cColor.cmpRGBcornerGradiant(x+y, "0BCGYWMR0"));
+        theRamCanvas.drawPoint(x, y, cColor.cmpRGBcornerDGradiant(x+y, "0BCGYWMR0"));
   bmEndTime = std::chrono::system_clock::now();
   bmTime = std::chrono::system_clock::now() - bmStartTime;
   std::cout << "  DO_RAMP_INT Runtime " << bmTime.count() << " sec" << std::endl;

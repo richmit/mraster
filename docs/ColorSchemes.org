@@ -194,7 +194,7 @@ This graph is referred to as "the face edge/diagonal graph" in this documentatio
 Lastly, we can expand that graph by adding one vertex, called =h=, at the center of the cube with edges extending to each corner.  This graph is referred to
 as "complete cube graph with center" in this documentation.
 
-Every color scheme in this section can be created via the =cmpRGBcornerGradiant()= method of =colorTpl=; however, many are also available as predefined color
+Every color scheme in this section can be created via the =cmpRGBcornerDGradiant()= method of =colorTpl=; however, many are also available as predefined color
 scheme objects.  The color schemes provided by the =csCC_tpl= template provide a dual interface.  One provides a discreet view of gradients (the =c= methods
 with =csIdx= arguments), and the other provides a continuous view of gradients (the =c= methods with =csX= arguments).  When the colors use floating point
 channels, the discreet gradients have $2^{32}$ steps between corner colors.
