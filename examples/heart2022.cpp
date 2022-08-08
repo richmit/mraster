@@ -56,6 +56,10 @@ int main(void) {
         theRamCanvas.drawPoint(x, y, mjr::color3c8b::csPLYquad::c(mjr::genLinMap(std::hypot(x-512, y-512), maxH, 0.0, 0.5, 1.0)));
     }
 
+  theRamCanvas.drawString("MWU. M", mjr::hershey::font::ROMAN_SL_SANSERIF, 900, 90, "red",  1, 20); 
+  theRamCanvas.drawString("2022  ", mjr::hershey::font::ROMAN_SL_SANSERIF, 900, 60, "red",  1, 20); 
+  theRamCanvas.drawString("    -m", mjr::hershey::font::ROMAN_SL_SANSERIF, 900, 30, "red",  1, 20); 
+
   theRamCanvas.writeTIFFfile("heart2022.tiff");
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
