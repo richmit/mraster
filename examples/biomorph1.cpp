@@ -36,7 +36,7 @@
 #include <chrono>                                                        /* time                    C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
 
-typedef mjr::ramCanvas3c8b::colorType::channelArithSPType cit;
+typedef mjr::ramCanvas3c8b::colorType::csIntType cit;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
