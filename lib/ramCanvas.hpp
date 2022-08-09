@@ -98,6 +98,18 @@ namespace mjr {
   typedef ramCanvas3c32F                                  ramCanvasRGB32F;     //!< Canvas type: RGB with single float channels
   //@}
 
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /** @name Simple Color Canvas Types with 8-bit channels and commonly used orderings for R, G, B, & A.
+      These are commonly used by libraries like Cairo, Open GL, SDL, etc... */
+  //@{
+  typedef ramCanvasTpl<colorBGR8b,    INT_CORD, REAL_CORD> ramCanvasBGR8b;    //!< colorTpl:  3 Channel @   8-bit unsigned int channels  BGR8b
+  typedef ramCanvasTpl<colorARGB8b,   INT_CORD, REAL_CORD> ramCanvasARGB8b;   //!< colorTpl:  4 Channel @   8-bit unsigned int channels  ARGB8b
+  typedef ramCanvasTpl<colorBGRA8b,   INT_CORD, REAL_CORD> ramCanvasBGRA8b;   //!< colorTpl:  4 Channel @   8-bit unsigned int channels  BGRA8b
+  typedef ramCanvasTpl<colorABGR8b,   INT_CORD, REAL_CORD> ramCanvasABGR8b;   //!< colorTpl:  4 Channel @   8-bit unsigned int channels  ABGR8b
+  //@}
+
+
+
 } // end namespace mjr
 
 #define MJR_INCLUDE_ramCanvas

@@ -143,6 +143,16 @@ namespace mjr {
   typedef color1c64F  colorGrey64F;  //!< colorTpl:  64-bit float Greyscale
   //@}
 
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /** @name Complete Color Types with 8-bit channels and commonly used orderings for R, G, B, & A@EOL
+      These are commonly used by libraries like Cairo, Open GL, SDL, etc... */
+  //@{
+  typedef colorTpl<colChanI8,   3, 2, 1, 0>     colorBGR8b;   //!< colorTpl:  3 Channel @   8-bit unsigned int     24
+
+  typedef colorTpl<colChanI8,   4, 1, 2, 3, 0>  colorARGB8b;   //!< colorTpl:  4 Channel @   8-bit unsigned int     32
+  typedef colorTpl<colChanI8,   4, 2, 1, 0, 3>  colorBGRA8b;   //!< colorTpl:  4 Channel @   8-bit unsigned int     32
+  typedef colorTpl<colChanI8,   4, 1, 2, 3, 0>  colorABGR8b;   //!< colorTpl:  4 Channel @   8-bit unsigned int     32
+  //@}
 
 } // end namespace mjr
 
