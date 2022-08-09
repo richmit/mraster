@@ -343,9 +343,9 @@ namespace mjr {
       /** Write the an MJR RAW format image to the given ostream
 
           Why? This simple file format is designed to house the more exotic images this library supports, and be easily consumed by many image processing and
-          data visualization tools -- usually via a feature referred to as a raw importer.  VisIT, ParaView, and ImageJ all can read this type of data. The
-          header is ASCII, and contains two newlines -- the idea being that one can do a 'head -n 2 FILENAME' on the image file, and get a human readable
-          output of basic image info.  The file format is very simple:
+          data visualization tools -- usually via a feature referred to as a raw importer.  ImageMagick, VisIT, ParaView, and ImageJ all can read this type of
+          data. The header is ASCII, and contains two newlines -- the idea being that one can do a 'head -n 2 FILENAME' on the image file, and get a human
+          readable output of basic image info.  The file format is very simple:
 
           - Header: Byte  00-05: "MJRRAW"
           - Header: Byte  06-06: Newline
@@ -2706,9 +2706,9 @@ namespace mjr {
         if(filter != NULL)
           aColor = filter(aColor);
         if(toTRU == NULL) {
-          writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte(2));
-          writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte(1));
-          writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte(0));
+          writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((blueChan  < 0 : 0 : blueChan)));
+          writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((greenChan < 0 : 0 : greenChan)));
+          writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((redChan   < 0 : 0 : redChan)));  
         } else {
           colorRGB8b bColor = toTRU(aColor);
           writeUIntToStream(oStream, endianType::LITTLE, 1, bColor.getC2());
