@@ -1427,6 +1427,13 @@ namespace mjr {
           @param color The color with which to draw the point */
       void drawPointS(intCrdT x, intCrdT y, colorArgType color);
       //@}
+
+      /** @name Canvas Level Colorization.
+       These are tools designed to make things like escape time fractals very easy to create.*/
+      //@{
+      void colorizeCanvas(std::function<colorT (fltCrdT, fltCrdT)> cFun);
+      //@}
+
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2667,6 +2674,21 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
+  void
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::colorizeCanvas(std::function<colorT (fltCrdT, fltCrdT)> cFun) {
+    for(intCrdT yi=0;yi<numYpix;yi++) {
+      std::cout << "ROW: " << yi << std::endl;
+      for(intCrdT xi=0;xi<numXpix;xi++) {
+        fltCrdT xf = int2realX(xi);
+        fltCrdT yf = int2realY(yi);
+        colorT aColor = cFun(xf, yf);
+        drawPoint(xi, yi, aColor);
+      }
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
   int
   ramCanvasTpl<colorT, intCrdT, fltCrdT>::writeTGAstream(std::ostream& oStream,
                                                          std::function<colorRGB8b (colorT&)> toTRU,
@@ -2706,9 +2728,9 @@ namespace mjr {
         if(filter != NULL)
           aColor = filter(aColor);
         if(toTRU == NULL) {
-          writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((blueChan  < 0 : 0 : blueChan)));
-          writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((greenChan < 0 : 0 : greenChan)));
-          writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((redChan   < 0 : 0 : redChan)));  
+          writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((colorT::blueChan  < 0 ? 0 : colorT::blueChan)));
+          writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((colorT::greenChan < 0 ? 0 : colorT::greenChan)));
+          writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((colorT::redChan   < 0 ? 0 : colorT::redChan)));  
         } else {
           colorRGB8b bColor = toTRU(aColor);
           writeUIntToStream(oStream, endianType::LITTLE, 1, bColor.getC2());
