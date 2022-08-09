@@ -2677,7 +2677,6 @@ namespace mjr {
   void
   ramCanvasTpl<colorT, intCrdT, fltCrdT>::colorizeCanvas(std::function<colorT (fltCrdT, fltCrdT)> cFun) {
     for(intCrdT yi=0;yi<numYpix;yi++) {
-      std::cout << "ROW: " << yi << std::endl;
       for(intCrdT xi=0;xi<numXpix;xi++) {
         fltCrdT xf = int2realX(xi);
         fltCrdT yf = int2realY(yi);
