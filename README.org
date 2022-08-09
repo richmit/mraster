@@ -23,3 +23,11 @@ A quick start guide: [[http://richmit.github.io/mraster/QuickStart.html]]
 Color schemes included in *MRaster*: [[http://richmit.github.io/mraster/ColorSchemes.html]]
 
 The code: [[https://github.com/richmit/mraster/]]
+
+*Version 20 Warning:*
+
+Starting with v20, I'm refactoring the library.  I'm doing small
+releases as functionality in a given area is complete.  The releases
+are fully functional, but the API is still in flux.  I encourage you
+to use v20, and provide feedback; however, don't put it in a
+production system just yet. ;)
