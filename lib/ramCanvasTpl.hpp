@@ -1431,7 +1431,12 @@ namespace mjr {
       /** @name Canvas Level Colorization.
        These are tools designed to make things like escape time fractals very easy to create.*/
       //@{
-      void colorizeCanvas(std::function<colorT (fltCrdT, fltCrdT)> cFun);
+      void colorizeFltCanvas(std::function<colorT (fltCrdT, fltCrdT)> cFun);
+      void colorizeFltCanvas(std::function<colorT (pointFltType)> cFun);
+
+      void colorizeIntCanvas(std::function<colorT (intCrdT, intCrdT)> cFun);
+      void colorizeIntCanvas(std::function<colorT (pointIntType)> cFun);
+
       //@}
 
   };
@@ -1835,7 +1840,7 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   inline void ramCanvasTpl<colorT, intCrdT, fltCrdT>::applyHomoPixTfrm(colorT& (colorT::*HPT)(double, double, double, double, double, double),
-                                                                double arg1, double arg2, double arg3, double arg4, double arg5, double arg6) {
+                                                                       double arg1, double arg2, double arg3, double arg4, double arg5, double arg6) {
     for(intCrdT y=0; y<numYpix; y++)
       for(intCrdT x=0; x<numXpix; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3, arg4, arg5, arg6);
@@ -1844,10 +1849,10 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   inline void ramCanvasTpl<colorT, intCrdT, fltCrdT>::combineRamCanvasBinOp(colorT& (colorT::*HPT)(colorT),
-                                                                     const ramCanvasTpl &theCanvas,
-                                                                     intCrdT trgX, intCrdT trgY,
-                                                                     intCrdT wide, intCrdT tall,
-                                                                     intCrdT srcX, intCrdT srcY) {
+                                                                            const ramCanvasTpl &theCanvas,
+                                                                            intCrdT trgX, intCrdT trgY,
+                                                                            intCrdT wide, intCrdT tall,
+                                                                            intCrdT srcX, intCrdT srcY) {
     // Figure out real default width
     if(wide < 0)
       wide = numXpix-trgX;
@@ -2675,12 +2680,50 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT>
   void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT>::colorizeCanvas(std::function<colorT (fltCrdT, fltCrdT)> cFun) {
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::colorizeFltCanvas(std::function<colorT (fltCrdT, fltCrdT)> cFun) {
     for(intCrdT yi=0;yi<numYpix;yi++) {
       for(intCrdT xi=0;xi<numXpix;xi++) {
         fltCrdT xf = int2realX(xi);
         fltCrdT yf = int2realY(yi);
         colorT aColor = cFun(xf, yf);
+        drawPoint(xi, yi, aColor);
+      }
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::colorizeFltCanvas(std::function<colorT (pointFltType)> cFun) {
+    for(intCrdT yi=0;yi<numYpix;yi++) {
+      for(intCrdT xi=0;xi<numXpix;xi++) {
+        pointFltType xyPt(int2realX(xi), int2realY(yi));
+        colorT aColor = cFun(xyPt);
+        drawPoint(xi, yi, aColor);
+      }
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::colorizeIntCanvas(std::function<colorT (intCrdT, intCrdT)> cFun) {
+    for(intCrdT yi=0;yi<numYpix;yi++) {
+      for(intCrdT xi=0;xi<numXpix;xi++) {
+        colorT aColor = cFun(xi, yi);
+        drawPoint(xi, yi, aColor);
+      }
+    }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template<class colorT, class intCrdT, class fltCrdT>
+  void
+  ramCanvasTpl<colorT, intCrdT, fltCrdT>::colorizeIntCanvas(std::function<colorT (pointIntType)> cFun) {
+    for(intCrdT yi=0;yi<numYpix;yi++) {
+      for(intCrdT xi=0;xi<numXpix;xi++) {
+        pointIntType xyPt(xi, yi);
+        colorT aColor = cFun(xyPt);
         drawPoint(xi, yi, aColor);
       }
     }
