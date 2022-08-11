@@ -37,6 +37,7 @@
   program illustrates how one might get OpenGL image data if the ramCanvas for some reason was not internally compatible with OpenGL.  Note this same
   technique allows easy integration with other libraries requiring similar data formats.
 ********************************************************************************************************************************************************.H.E.**/
+/** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -122,3 +123,4 @@ int main(int argc, char *argv[]) {
   glutMainLoop();
   return 0;
 } /* end func main */
+/** @endcond */

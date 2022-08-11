@@ -39,6 +39,7 @@
 
   Reference: Peitgen, Heinz-Otto and Saupe, Dietmar; 1988; The Science of Fractal Images; ISBN: 0-387-96608-0; pp 192-196
 ********************************************************************************************************************************************************.H.E.**/
+/** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -97,3 +98,4 @@ int main(void) {
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
+/** @endcond */

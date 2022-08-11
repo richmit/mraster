@@ -37,6 +37,7 @@
      dd if=mandelbrot_potential_2.mrw skip=100 iflag=skip_bytes of=mandelbrot_potential_2.mrd
 
 ********************************************************************************************************************************************************.H.E.**/
+/** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -174,3 +175,4 @@ int main(void) {
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
+/** @endcond */

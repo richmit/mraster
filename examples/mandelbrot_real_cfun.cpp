@@ -1,7 +1,7 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      mandelbrot_bm_real_cfun.cpp
+ @file      mandelbrot_real_cfun.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw a mandelbrot set using colorizeCanvas.@EOL
  @std       C++20
@@ -27,6 +27,7 @@
   DAMAGE.
   @endparblock
 ********************************************************************************************************************************************************.H.E.**/
+/** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -59,3 +60,4 @@ int main(void) {
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
+/** @endcond */

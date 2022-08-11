@@ -1207,12 +1207,13 @@ namespace mjr {
 
       /** @name Drawing Mode */
       //@{
-      /** Get the current drawing mode
-          @return NATURAL means increasing to the right. */
-      inline void         set_drawMode(drawModeType newDrawMode) { drawMode = newDrawMode; }
-      /** Set the current drawing mode
-          @param newDrawMode The drawing mode */
+      /** Get the current drawing mode.
+       @return The drawing mode */
       inline drawModeType get_drawMode()                         { return drawMode; }
+      /** Set the current drawing mode
+          NOOP if enableDrawModes is false.
+          @param newDrawMode The drawing mode */
+      inline void         set_drawMode(drawModeType newDrawMode) { if (enableDrawModes) drawMode = newDrawMode; }
       /** Set the default draw mode */
       inline void         set_DefaultDrawMode()                  { set_drawMode(drawModeType::SET); }
       //@}

@@ -33,6 +33,7 @@
   Fractals inspired by the book "Symmetry in Chaos" by Michael Field and Martin Golubitsky.
 
 ********************************************************************************************************************************************************.H.E.**/
+/** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -75,6 +76,7 @@ typename mjr::ramCanvas1c16b::coordFltType params[NPR][12] = {
 };
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+/** @cond exj */
 class g2rgb8 {
   private:
     int factor;
@@ -85,6 +87,7 @@ class g2rgb8 {
       return retColor.cmpRGBcornerDGradiant(static_cast<mjr::ramCanvas3c8b::csIntType>(c.getC0() * 1275 / factor), "0RYBCW");
     }
 };
+/** @endcond */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
@@ -158,3 +161,4 @@ int main(void) {
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
   return 0;
 }
+/** @endcond */

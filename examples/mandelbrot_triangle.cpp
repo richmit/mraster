@@ -37,6 +37,7 @@
   able to directly make use of the preexisting data types.
 
 ********************************************************************************************************************************************************.H.E.**/
+/** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -46,7 +47,9 @@
 #include <iostream>                                                      /* C++ iostream            C++11    */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+/** @cond exj */
 typedef struct { double x; double y; } complex;
+/** @endcond */
 
 int MAXCOUNT;
 
@@ -285,3 +288,4 @@ int traceBoundry(int maxCnt, double epsilon, int goOtherWay, complex alphaTriang
     std::cerr <<  "INFO(traceBoundry): Max iteration count reached.  Done." << std::endl;
   return 2;
 } /* end func traceBoundry */
+/** @endcond */

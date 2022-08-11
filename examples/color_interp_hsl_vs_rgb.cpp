@@ -32,6 +32,7 @@
   example.  Note that in many of the most important cases, interpolating leads to the same results in both color spaces.
 
 ********************************************************************************************************************************************************.H.E.**/
+/** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -90,3 +91,4 @@ for(int j=1; j<1000; j++) {
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
+/** @endcond */

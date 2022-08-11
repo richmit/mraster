@@ -231,6 +231,7 @@ namespace mjr {
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @cond pat */
       /** @name Public arithmetic types  */
       //@{
       /** @typedef maskType
@@ -327,6 +328,7 @@ namespace mjr {
                                                                                                                uint64_t
                                         >::type>::type>::type>::type channelArithLogType;
       //@}
+      /** @endcond */
 
     private:
 
@@ -564,6 +566,7 @@ namespace mjr {
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @cond cst */
       /** @name Color Scheme Related Types */
       //@{
       /** A type used for discreet color scheme indexes.
@@ -579,6 +582,7 @@ namespace mjr {
       /** A clrChanT-similar type color scheme indexes. */
       typedef typename std::conditional<std::is_floating_point<clrChanT>::value, csFltType, csIntType>::type csNatType;
       //@}
+      /** @endcond */
 
       /** @name Color Scheme Constants */
       //@{
@@ -2794,6 +2798,9 @@ namespace mjr {
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+      /** @cond color-schemes */
+      /* Doxygen is pretty bad at formatting these bits... */
+
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @defgroup cs Color Schemes */
 
@@ -2831,7 +2838,7 @@ namespace mjr {
       /** @name Color Schemes: Polynomial */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** @class csPLYgrey
+      /*- @class csPLYgrey
           @ingroup cs
           @extends csPLY_tpl
           Greyscale */
@@ -3588,7 +3595,7 @@ namespace mjr {
                        0xF2D7D9, 0xFFE7EC, 0xFFE8ED, 0xFFEAEE, 0xFFEFF2, 0xFFF6F7, 0xFFFFFF>                                          csFPwebSafeTritanoptiaAlt;
       //@}
       //========================================================================================================================================================
-      /** @name "Interesting Pallets */
+      /** @name Interesting Pallets */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csFPcircular12
@@ -4520,6 +4527,8 @@ namespace mjr {
                            0xFFF7FB, 0xECE2F0, 0xD0D1E6, 0xA6BDDB, 0x67A9CF, 0x3690C0, 0x02818A, 0x016450,
                            0xFFF7FB, 0xECE2F0, 0xD0D1E6, 0xA6BDDB, 0x67A9CF, 0x3690C0, 0x02818A, 0x016C59, 0x014636> csCBPuBuGn;
       //@}
+
+      /** @endcond  */
 
       template <class csT> colorTpl& csSet(csIntType csIdx) { return csT::c(*this, csIdx); }
 

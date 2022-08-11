@@ -27,6 +27,7 @@
   DAMAGE.
   @endparblock
 ********************************************************************************************************************************************************.H.E.**/
+/** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -172,3 +173,4 @@ int main(void) {
   sd = std::ceil(std::sqrt(ct::csFPneoModisNdvi::numC));       theRC.resizeCanvas(sd*tg-gap, sd*tg-gap); theRC.clrCanvas("white"); for(int x=0;x<(int)ct::csFPneoModisNdvi::numC; x++)       { theRC.drawFillRectangle((x%sd)*tg, (x/sd)*tg, (x%sd)*tg+tall, (x/sd)*tg+tall, ct::csFPneoModisNdvi::c(x));       } theRC.writeTIFFfile("color_lut_docs_csFPneoModisNdvi.tiff");
 
 }
+/** @endcond */

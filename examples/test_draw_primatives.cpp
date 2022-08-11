@@ -30,6 +30,7 @@
    We instantiate every drawing function in ramCanvas so that we can check for compile time errors and do some basic functionality testing.
 
 ********************************************************************************************************************************************************.H.E.**/
+/** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -309,3 +310,4 @@ int main(void) {
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
+/** @endcond */

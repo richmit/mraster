@@ -31,6 +31,7 @@
   Color points based on qualitative sequence behavior: Tends to infinity (reds), cyclic (blues), or converges (greens).  The method for detecting cycles and
   fixed points is not perfect, but makes a nice picture.  The color intensity is the length of time it took to make the behavior determination.
 ********************************************************************************************************************************************************.H.E.**/
+/** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -87,3 +88,4 @@ int main(void) {
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
+/** @endcond */

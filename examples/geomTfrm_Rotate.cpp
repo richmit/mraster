@@ -3,7 +3,7 @@
 /**
  @file      geomTfrm_Rotate.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Read an image, correct it for radial lens discortion, and write out the corrected image.@EOL
+ @brief     Read an image, rotate it, and write out the transformed image.@EOL
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -26,6 +26,7 @@
   DAMAGE.
   @endparblock
 ********************************************************************************************************************************************************.H.E.**/
+/** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -81,3 +82,4 @@ int main(int argc, char *argv[]) {
 
   return 0;
 }
+/** @endcond */

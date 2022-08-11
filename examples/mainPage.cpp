@@ -1,10 +1,9 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      mandelbrot_bm_real.cpp
+ @file      mainPage.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Benchmark drawing a mandelbrot set using doubleing point types and arithmetic only.@EOL
- @std       C++20
+ @brief     Doxygen content -- not an example!@EOL
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -26,37 +25,19 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails
-
-  Basic benchmark.  Uses only real numbers.
 ********************************************************************************************************************************************************.H.E.**/
-/** @cond exj */
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-#include "ramCanvas.hpp"
+/**
+ @mainpage
+ Introduction
+ ============
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-#include <chrono>                                                        /* time                    C++11    */
-#include <iostream>                                                      /* C++ iostream            C++11    */
+ For a bit more detail about *MRaster*: http://richmit.github.io/mraster/index.html
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-int main(void) {
-  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  int count;
-  const int NUMITR = 1024;
-  mjr::ramCanvas3c8b::coordFltType xr, yr, zx, zy, tempx;
-  mjr::ramCanvas3c8b theRamCanvas(7680, 7680, -2.2, 0.8, -1.5, 1.5);
+ A quick start guide: http://richmit.github.io/mraster/QuickStart.html
 
-  for(int x=0;x<theRamCanvas.get_numXpix();x++) {
-    for(int y=0;y<theRamCanvas.get_numYpix();y++) {
-      for(xr=theRamCanvas.int2realX(x),yr=theRamCanvas.int2realY(y),zx=zy=0.0,count=0; (zx*zx+zy*zy<4)&&(count<=NUMITR); count++,tempx=zx*zx-zy*zy+xr,zy=2*zx*zy+yr,zx=tempx)
-        ;
-      if(count < NUMITR)
-        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType::csCColdeFireRamp::c(mjr::numberWrap(static_cast<mjr::ramCanvas3c8b::csIntType>(count*20), 767)));
-    }
-  }
-  theRamCanvas.writeTIFFfile("mandelbrot_bm_real.tiff");
-  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
-  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
-}
-/** @endcond */
+ The code: [[https://github.com/richmit/mraster/]]
+
+ One of the best ways to learn how to use a library is to look at examples, and MRaster comes with more than a few.  Check out the "files" tab above!
+
+*/

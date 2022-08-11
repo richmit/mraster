@@ -3,7 +3,7 @@
 /**
  @file      mainPage.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Doxygen content.@EOL
+ @brief     Doxygen content -- not part of the library.@EOL
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -32,12 +32,18 @@
  Introduction
  ============
 
+ For a bit more detail about *MRaster*: http://richmit.github.io/mraster/index.html
+
+ A quick start guide: http://richmit.github.io/mraster/QuickStart.html
+
+ The code: [[https://github.com/richmit/mraster/]]
+
  Notes on the Code
  =================
 
  The code for this library all lives within the namespace of 'mjr' -- my initials.  This should help to avoid namespace conflicts.
 
- At this time everything is mostly implemented in header files with only large, static data sets placed into libraries.  
+ At this time everything is implemented in header files.
 
  As far as I know this code infringes upon no patents or other IP.
 
@@ -77,6 +83,8 @@
            |       1 |      32 | Grey |    32 | 32-bit greyscale | High end scientific CCD equipment               |
            |---------+---------+------+-------+------------------+-------------------------------------------------|
 
+ A great many color schemes are included: Color schemes included: http://richmit.github.io/mraster/ColorSchemes.html
+
  Drawing
  =======
 
@@ -101,53 +109,4 @@
  no arguments.  Just with fewer coordinates.  Some primitives, like circles, require extra parameters to describe the primitive.  Such parameters right before
  the color arguments or last in the argument list if no color is specified.
 
- Various Color Schemes
- =====================
-
- Special Indexed Pallets
- -----------------------
-
- Some special indexed color pallets exist in the library.  Some common ones are:
-
-  - Black and White
-  - Web Safe 216
-
- Several carefully selected pallets are also supported from Cynthia Brewer's ColorBrewer application or from the geography department at U of Oregon.
- For reference, both original sources (hopefully still on the web):
-
-  - http://geography.uoregon.edu/datagraphics/color_scales.htm
-  - http://www.ColorBrewer.org
-
- If you publish something using one of the color schemes from ColorBrewer, then Cynthia Brewer requests that you cite her work.  The following
- paragraph is from the original source:
-
-            5. Citation
-            Ahhh, that lavish citation I'm hoping for...
-            Wording depends on context and I'm not too picky.
-            If you add a note in the corner of a map, how about one of these:
-                - Colors from www.ColorBrewer.org by Cynthia A. Brewer, Geography, Pennsylvania State University.
-                - Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State.
-                - Color symbols: ColorBrewer.org
-            A reference in a journal article or report might look like:
-                - Brewer, Cynthia A., 200x. http://www.ColorBrewer.org, accessed date.
-
- As a side note, Cynthia Brewer has a very nice book about making maps.  It is quite a nice read even for people who don't make maps for a living.
- You might check it out: "Designing Better Maps : A Guide for GIS Users".  Last I checked, the ISBN was 1589480899.
-
- Color Resources
- ---------------
-
- Some color resources on the web:
-
-  - http://geography.uoregon.edu/datagraphics/color_scales.htm
-  - http://www.ColorBrewer.org
-  - http://www.caida.org/~youngh/colorscales/nonlinear.html
-  - http://www.internettg.org/newsletter/mar99/accessibility_color_challenged.html
-  - http://www.research.ibm.com/dx/proceedings/pravda/index.htm
-  - http://www.research.ibm.com/dx/proceedings/pravda/truevis.htm
-  - http://www.research.ibm.com/people/l/lloydt/color/color.HTM
-
-  S. S. Stevens did the ground work upon which modern luminance and saturation based color schemes are based.  The original reference:
-
-   - Stevens, S. S.  Matching Functions Between Loudness and Ten Other Continua. Perception and Psychophysics, 1, pp. 5-8, 1966
 */

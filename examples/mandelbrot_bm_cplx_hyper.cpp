@@ -47,6 +47,7 @@
  Note doREFLCT should be implemented differently for cases where symmetry is known in advance.  In these cases we can simply avoid iterating over
  the symmetric points at all instead of testing to see if we are on a symmetric point.
 ********************************************************************************************************************************************************.H.E.**/
+/** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
@@ -142,3 +143,4 @@ int main(void) {
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
+/** @endcond */
