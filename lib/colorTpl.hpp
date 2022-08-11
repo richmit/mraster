@@ -28,9 +28,9 @@
 ********************************************************************************************************************************************************.H.E.**/
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 #ifndef MJR_INCLUDE_colorTpl
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "ramConfig.hpp"
 #include "mjrmath.hpp"
 
@@ -53,6 +53,36 @@
 #include <bit>                                                           /* STL bit manipulation    C++20    */
 #include <span>
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** Set to 1 to look for 128-bit integer types, and 0 to not look for them.
+    Right now this only works on GCC & Clang! */
+#ifndef MJR_LOOK_FOR_128_BIT_TYPES
+#define MJR_LOOK_FOR_128_BIT_TYPES 1
+#endif
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#if MJR_LOOK_FOR_128_BIT_TYPES
+#ifdef __GNUC__
+#ifdef __SIZEOF_INT128__
+#if __SIZEOF_INT128__ == 16
+typedef unsigned __int128 mjr_uint128_t;
+typedef          __int128 mjr_int128_t;
+#define MJR_HAVE_128_BIT_TYPES
+#endif
+#endif
+#endif
+#endif
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#ifdef MJR_HAVE_128_BIT_TYPES
+typedef mjr_uint128_t mjr_uintBiggest_t;  //!< The largest unsigned integer supported on the platform
+typedef mjr_int128_t  mjr_intBiggest_t;   //!< The largest signed integer supported on the platform
+#else
+typedef uint64_t      mjr_uintBiggest_t;   //!< The largest unsigned integer supported on the platform
+typedef int64_t       mjr_intBiggest_t;    //!< The largest signed integer supported on the platform  
+#endif
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Put everything in the mjr namespace
 namespace mjr {
 
@@ -74,7 +104,7 @@ namespace mjr {
     The most common use cases are 24-bit RGB/RGBA and greyscale up to 64-bits deep.  All of these types are smaller than a 64-bit pointer, so it is
     almost always better to pass these values around by reference.  That said, some types are quite large -- an RGBA image with 64-bit floating point channels
     requires 256 bits of RAM.  For these larger color objects, it is more efficient to pass them by reference.  Within the library, some care is taken to
-    adapt to the size of the color object, and pass by objects to functions by the most efficient means (value or const reference).  The class provides a type
+    adapt to the size of the color object, and pass objects to functions by the most efficient means (value or const reference).  The class provides a type
     the end user can employ to use this same strategy: colorArgType.
 
     @par Memory Layout and Performance
@@ -196,6 +226,7 @@ namespace mjr {
       typedef std::tuple<clrChanT, clrChanT, clrChanT, clrChanT> clrChanTup4;
       typedef std::tuple<clrChanT, clrChanT, clrChanT>           clrChanTup3;
       typedef std::tuple<clrChanT, clrChanT>                     clrChanTup2;
+      typedef std::tuple<clrChanT>                               clrChanTup1;
 
       typedef std::vector<clrChanT>                              clrChanVec;
       //@}
@@ -486,7 +517,6 @@ namespace mjr {
 
       public:
 
-
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Public Constants Related to RGBA channels */
       //@{
@@ -496,7 +526,6 @@ namespace mjr {
       constexpr static int blueChan     = (noRGBchanIdx && numChan > 2 ? 2 : blueChanIdx);
       constexpr static int alphaChan    = (noRGBchanIdx && numChan > 3 ? 3 : alphaChanIdx);
       //@}
-
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Public Constants Related to template paramaters */
@@ -1528,7 +1557,7 @@ namespace mjr {
       /** This is simply a version of cmpRGBcornerCGradiant() that computes the length of the final argument as a C-string.
           Unlike the version of cmpRGBcornerDGradiant() specifying numColors, this one requires the final argument to be a real C-string -- i.e. it must have a
           terminating NULL.  Note this function uses RGB corner colors as anchors, and is thus designed to work with RGB colors.  
-          @param csIdx The value to convert
+          @param csX The value to convert
           @param cornerColors Characters specifying color (as used by setColor)
           @return A reference to this object */
       inline colorTpl& cmpRGBcornerCGradiant(csFltType csX, const char *cornerColors) {
