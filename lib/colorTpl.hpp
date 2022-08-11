@@ -4530,7 +4530,7 @@ namespace mjr {
 
       /** @endcond  */
 
-      template <class csT> colorTpl& csSet(csIntType csIdx) { return csT::c(*this, csIdx); }
+      template <class csT, class csAT> colorTpl& csSet(csAT csArg) { return csT::c(*this, csArg); }
 
   };
 
