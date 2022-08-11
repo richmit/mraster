@@ -29,7 +29,6 @@
 
 #ifndef MJR_INCLUDE_ramCanvas
 
-#include "ramConfig.hpp"
 #include "color.hpp"
 #include "ramCanvasTpl.hpp"
 

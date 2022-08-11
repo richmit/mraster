@@ -10,7 +10,7 @@
 
 #include "ramCanvas.hpp"
 
-#if 0
+#if 1
 
 
 // +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -228,14 +228,17 @@ BOOST_AUTO_TEST_CASE(set_chan_dbl_8) {
 
   mjr::color4c8b aColor;
 
+  BOOST_TEST_CHECK(mjr::color4c8b::maxChanVal  == 255);
+  BOOST_TEST_CHECK(mjr::color4c8b::minChanVal  == 0);
+
   aColor.setToBlack();
   aColor.setChan_dbl(0, 1.0);
   aColor.setChan_dbl(2, 1.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 255);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 255);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0);
+  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c8b::maxChanVal);
+  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c8b::minChanVal);
+  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c8b::maxChanVal);
+  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c8b::minChanVal);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
   BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
@@ -264,10 +267,10 @@ BOOST_AUTO_TEST_CASE(set_chan_dbl_8) {
 
   aColor.setChan_dbl(0, 0.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 255);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0);
+  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c8b::minChanVal);
+  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c8b::minChanVal);
+  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c8b::maxChanVal);
+  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c8b::minChanVal);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
   BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
@@ -296,10 +299,10 @@ BOOST_AUTO_TEST_CASE(set_chan_dbl_8) {
 
   aColor.setChansRGB_dbl(1.0, 1.0, 0.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 255);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 255);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 0);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0);
+  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c8b::maxChanVal);
+  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c8b::maxChanVal);
+  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c8b::minChanVal);
+  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c8b::minChanVal);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
   BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
@@ -328,10 +331,10 @@ BOOST_AUTO_TEST_CASE(set_chan_dbl_8) {
 
   aColor.setChan_dbl(1, 0.5);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 255);
+  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c8b::maxChanVal);
   BOOST_TEST_CHECK(aColor.getChan(1)      == 127);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 0);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0);
+  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c8b::minChanVal);
+  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c8b::minChanVal);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
   BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
@@ -349,7 +352,7 @@ BOOST_AUTO_TEST_CASE(set_chan_dbl_8) {
   BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
 
   BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 127.0/255, boost::test_tools::tolerance(0.005));
+  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 127.0/mjr::color4c8b::maxChanVal, boost::test_tools::tolerance(0.005));
   BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 0.0);
   BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 0.0);
 
@@ -360,10 +363,10 @@ BOOST_AUTO_TEST_CASE(set_chan_dbl_8) {
 
   aColor.setChansRGB_dbl(0.0, 0.0, 0.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 0);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0);
+  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c8b::minChanVal);
+  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c8b::minChanVal);
+  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c8b::minChanVal);
+  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c8b::minChanVal);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
   BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
@@ -392,10 +395,10 @@ BOOST_AUTO_TEST_CASE(set_chan_dbl_8) {
 
   aColor.setChans_dbl(1.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 255);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 255);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 255);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 255);
+  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c8b::maxChanVal);
+  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c8b::maxChanVal);
+  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c8b::maxChanVal);
+  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c8b::maxChanVal);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
   BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
@@ -424,8 +427,8 @@ BOOST_AUTO_TEST_CASE(set_chan_dbl_8) {
 
   aColor.setChansRGBA_dbl(1.0, 0.0, 0.5, 0.5);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 255);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0);
+  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c8b::maxChanVal);
+  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c8b::minChanVal);
   BOOST_TEST_CHECK(aColor.getChan(2)      == 127);
   BOOST_TEST_CHECK(aColor.getChan(3)      == 127);
 
@@ -446,8 +449,8 @@ BOOST_AUTO_TEST_CASE(set_chan_dbl_8) {
 
   BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 1.0);
   BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 127.0/255, boost::test_tools::tolerance(0.005));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 127.0/255, boost::test_tools::tolerance(0.005));
+  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 127.0/mjr::color4c8b::maxChanVal, boost::test_tools::tolerance(0.005));
+  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 127.0/mjr::color4c8b::maxChanVal, boost::test_tools::tolerance(0.005));
 
   BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
   BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
@@ -459,10 +462,10 @@ BOOST_AUTO_TEST_CASE(set_chan_dbl_8) {
   aColor.setC2_dbl(1.0);
   aColor.setC3_dbl(0.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 255);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 255);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0);
+  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c8b::minChanVal);
+  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c8b::maxChanVal);
+  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c8b::maxChanVal);
+  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c8b::minChanVal);
 
   BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
   BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());

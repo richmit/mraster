@@ -32,7 +32,6 @@
 #include <cstdint>                                                       /* std:: C stdint.h        C++11    */
 #include <limits>                                                        /* C++ Numeric limits      C++11    */
 
-#include "ramConfig.hpp"
 #include "colorTpl.hpp"
 
 // Put everything in the mjr namespace

@@ -52,7 +52,6 @@
 
    - color.hpp ......... The include file most users will include for color support
    - ramCanvas.hpp ..... The include file most users will include for ramCanvas support (includes color.hpp)
-   - ramConfig.hpp ..... Common config macros
    - colorTpl.hpp ...... Implementation of the color/pixel object
    - ramCanvasTpl.hpp .. Implementation for ramCanvasTpl object
    - mjrmath.hpp ....... Simple math stuff

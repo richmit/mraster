@@ -50,7 +50,6 @@
 #include <vector>                                                        /* STL vector              C++11    */
 
 #include "color.hpp"
-#include "ramConfig.hpp"
 #include "hersheyFont.hpp"
 #include "point2d.hpp"
 
@@ -103,7 +102,7 @@ namespace mjr {
                                 |            |
                  (numYpix-1, 0) +------------+ (numXpix-1, numYpix-1)
 
-      ramConfig Coordinate Systems
+      ramCanvas Coordinate Systems
       ----------------------------
 
       This library supports two sets of coordinates for each image:
