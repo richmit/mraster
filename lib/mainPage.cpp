@@ -83,7 +83,27 @@
            |       1 |      32 | Grey |    32 | 32-bit greyscale | High end scientific CCD equipment               |
            |---------+---------+------+-------+------------------+-------------------------------------------------|
 
- A great many color schemes are included: Color schemes included: http://richmit.github.io/mraster/ColorSchemes.html
+ Several aspects of the colorTpl template are not included in the Doxygen documentation because Doxygen has trouble
+ with complex meta-programming constructs.  In particular:
+  - Types
+    - maskType - Unsigned integer mask to cover the channel array without wasting too much space.
+    - channelArithDType - Arithmetic type for differences of clrChanT values.
+    - channelArithSPType - Arithmetic type for sums and products of clrChanT values.
+    - channelArithSDPType - Arithmetic type for sums, differences, and products of clrChanT values.
+    - channelArithFltType - Floating point type suitable for arithmetic of clrChanT values.
+    - channelArithLogType - Arithmetic type suitable for for logical operations of clrChanT values.
+    - csIntType - Integer type used to select colors from a color scheme
+    - csFltType - Floating point type used to select colors from a color scheme
+    - csNatType - A type used to  select colors from a color scheme (it will be integral when clrChanT is integral, and floating point otherwise)
+  - Color Schemes
+    - Predefined color scheme classes are documented here: http://richmit.github.io/mraster/ColorSchemes.html
+    - Templates used to make custom color schemes:
+      - csPLY_tpl - Compute a color from a polynomial space curve in the RGB color space. This is a continuous color scheme!
+      - csCubeHelix_tpl - Compute a color from Dave Green's cubehelix scheme.  See: Green, D. A., 2011, Bulletin of the Astronomical Society of India, Vol.39, p.289.
+      - csCC_tpl - RGB color cube gradiant color schemes 
+      - csHSLh_tpl - HSL color schemes.
+      - csFP_tpl - fixed size pallets
+      - csCB_tpl - Color Brewer 2 variable sized pallets
 
  Drawing
  =======
@@ -110,3 +130,7 @@
  the color arguments or last in the argument list if no color is specified.
 
 */
+
+
+
+          
