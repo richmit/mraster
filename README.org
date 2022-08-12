@@ -22,6 +22,10 @@ A quick start guide: [[http://richmit.github.io/mraster/QuickStart.html]]
 
 Color schemes included in *MRaster*: [[http://richmit.github.io/mraster/ColorSchemes.html]]
 
+API Documentation: [[https://www.mitchr.me/SS/mraster/doc-lib/autodocs/html/index.html]]
+
+Example Documentation: [[https://www.mitchr.me/SS/mraster/doc-examples/autodocs/html/index.html]]
+
 The code: [[https://github.com/richmit/mraster/]]
 
 *Version 20 Warning:*

@@ -36,7 +36,7 @@
 
  A quick start guide: http://richmit.github.io/mraster/QuickStart.html
 
- The code: [[https://github.com/richmit/mraster/]]
+ The code: https://github.com/richmit/mraster/
 
  One of the best ways to learn how to use a library is to look at examples, and MRaster comes with more than a few.  Check out the "files" tab above!
 

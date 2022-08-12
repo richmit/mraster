@@ -48,7 +48,6 @@ From the README:
 ------
 #+END_QUOTE
 
-
 * Design goals
 :PROPERTIES:
 :CUSTOM_ID: goals
@@ -68,11 +67,12 @@ From the README:
      value if it is small (like a 24-bit RGB color), and by const reference if it large (like a 192-bit RGB color).  In addition the code is carefully
      structured to allow the optimizer to do as much compile time optimization as possible.
    - *No Explicit Limits* \\
-     Image size, channel depth, and count are limited only by available RAM.
+     Image size, channel depth, and channel count are limited only by available RAM.
    - *Sophisticated color API via a zero cost, object based pixel store* \\
      *=MRaster=* is an outlier among image libraries in that pixels are objects.  These objects deliver a very rich API for color theory computations, color
      schemes, transformations, etc...  And they do so with *zero* overhead in RAM or runtime performance.  In fact, these templated objects are one of the
-     primary tools used to optimize *=MRaster=* performance.
+     primary tools used to optimize *=MRaster=* performance.  Before the conversion to C++20, =colorTpl= made up about 80% of the code base -- yes larger than
+     =ramCanvasTpl= even with the complexity of the scanline conversion code in the canvas object.
    - *Mathematical Use cases*\\
      Images have both real & integer coordinates, so they may be thought of as part of the real plane.  In addition a great many
      [[./ColorSchemes.org][discrete and continuous color schemes]] are supported.  Together these features make *=MRaster=* a very friendly environment for

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-08-08 Mon 21:24 -->
+<!-- 2022-08-12 Fri 16:18 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster</title>
@@ -287,6 +287,14 @@ Color schemes included in <b>MRaster</b>: <a href="http://richmit.github.io/mras
 </p>
 
 <p>
+API Documentation: <a href="https://www.mitchr.me/SS/mraster/doc-lib/autodocs/html/index.html">https://www.mitchr.me/SS/mraster/doc-lib/autodocs/html/index.html</a>
+</p>
+
+<p>
+Example Documentation: <a href="https://www.mitchr.me/SS/mraster/doc-examples/autodocs/html/index.html">https://www.mitchr.me/SS/mraster/doc-examples/autodocs/html/index.html</a>
+</p>
+
+<p>
 The code: <a href="https://github.com/richmit/mraster/">https://github.com/richmit/mraster/</a>
 </p>
 
@@ -306,7 +314,6 @@ production system just yet. ;)
 </div>
 </div>
 
-
 <div id="outline-container-goals" class="outline-2">
 <h2 id="goals"><span class="section-number-2">2.</span> Design goals</h2>
 <div class="outline-text-2" id="text-goals">
@@ -325,11 +332,12 @@ single packed integer while larger colors may be treated as an array of channels
 value if it is small (like a 24-bit RGB color), and by const reference if it large (like a 192-bit RGB color).  In addition the code is carefully
 structured to allow the optimizer to do as much compile time optimization as possible.</li>
 <li><b>No Explicit Limits</b> <br />
-Image size, channel depth, and count are limited only by available RAM.</li>
+Image size, channel depth, and channel count are limited only by available RAM.</li>
 <li><b>Sophisticated color API via a zero cost, object based pixel store</b> <br />
 <b><code>MRaster</code></b> is an outlier among image libraries in that pixels are objects.  These objects deliver a very rich API for color theory computations, color
 schemes, transformations, etc&#x2026;  And they do so with <b>zero</b> overhead in RAM or runtime performance.  In fact, these templated objects are one of the
-primary tools used to optimize <b><code>MRaster</code></b> performance.</li>
+primary tools used to optimize <b><code>MRaster</code></b> performance.  Before the conversion to C++20, <code>colorTpl</code> made up about 80% of the code base &#x2013; yes larger than
+<code>ramCanvasTpl</code> even with the complexity of the scanline conversion code in the canvas object.</li>
 <li><b>Mathematical Use cases</b><br />
 Images have both real &amp; integer coordinates, so they may be thought of as part of the real plane.  In addition a great many
 <a href="./ColorSchemes.html">discrete and continuous color schemes</a> are supported.  Together these features make <b><code>MRaster</code></b> a very friendly environment for
