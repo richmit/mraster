@@ -48,7 +48,7 @@ int main(void) {
       f = r*f*(1-f);
       if(i>1000) {
         mjr::ramCanvas1c16b::coordIntType y = theRamCanvas.real2intY(f);
-        theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColor(x, y).tfrmAddClp(mjr::ramCanvas1c16b::colorType(600)));
+        theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColor(x, y).tfrmAddClamp(mjr::ramCanvas1c16b::colorType(600)));
       }
     }
   }

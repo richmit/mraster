@@ -63,7 +63,7 @@ int main() {
   const long NUMITR = std::pow(2, 29); // Needs to be big
 
   mjr::ramCanvas3c8b theRamCanvas(CSIZE, CSIZE, -4.0, 4.0, -4.0, 4.0);
-  theRamCanvas.set_drawMode(mjr::ramCanvas3c8b::drawModeType::ADDCLIP);
+  theRamCanvas.set_drawMode(mjr::ramCanvas3c8b::drawModeType::ADDCLAMP);
 
 #if SUPPORT_DRAWING_MODE
   mjr::ramCanvas3c8b::colorType aColor[] = { mjr::ramCanvas3c8b::colorType(1, 0, 0),

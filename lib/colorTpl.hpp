@@ -1063,61 +1063,11 @@ namespace mjr {
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** @name Color Setting Methods via Packed Integers
-          We use R, G, B, and A in the method names to indicate the first, second, third, and fourth channels respectively of the current color object. */
+      /** @name Color Setting Methods via Logically Packed Integers. 
+       By "logically" we mean as if the integers were written on paper left to right with MSB on the left -- the same way they are "written" in C++ source code.
+       ex: 0x11223344u has 11 as the most significant byte, but it might be placed in memory differently.  These functions are very usefully for unpacking integers
+       derived from integer literals in C++ code.  setRGBfromLogPackIntARGB() is heavily used for color schemes. */
       //@{
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Set the color based upon the bytes of the given integer ordered from LSB to MSB.
-           - LSB (lest significant byte) -> Channel1
-           - next byte                   -> Channel2
-           - next byte                   -> Channel3
-           - MSB (most significant byte) -> Channel4
-          The extracted bytes are interpreted as by setChans_byte.  Any channels beyond four are left untouched.
-          @param anInt The integer from which to extract bytes to set color
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& setRGBAfromLogPackIntABGR(uint32_t anInt) {
-        /* Requires: Inherits numChan>3 from setAlpha. */
-        setRed_byte(  0xFF & anInt); anInt = anInt >> 8;
-        setGreen_byte(0xFF & anInt); anInt = anInt >> 8;
-        setBlue_byte( 0xFF & anInt); anInt = anInt >> 8;
-        setAlpha_byte(0xFF & anInt);
-        return *this;
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Just like setRGBAfromLogPackIntABGR, but no A */
-      inline colorTpl& setRGBfromLogPackIntABGR(uint32_t anInt) {
-        /* Requires: Inherits numChan>2 from setBlue. */
-        setRed_byte(  0xFF & anInt); anInt = anInt >> 8;
-        setGreen_byte(0xFF & anInt); anInt = anInt >> 8;
-        setBlue_byte( 0xFF & anInt); anInt = anInt >> 8;
-        return *this;
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Set the color based upon the bytes of the given integer ordered from LSB to MSB.
-           - LSB (lest significant byte) -> Channel3
-           - next byte                   -> Channel2
-           - next byte                   -> Channel1
-           - MSB (most significant byte) -> Channel4
-           The extracted bytes are interpreted as by setChans_byte.  Any channels beyond four are left untouched.
-           @param anInt The integer from which to extract bytes to set color
-           @return Returns a reference to the current color object.*/
-      inline colorTpl& setRGBAfromLogPackIntARGB(uint32_t anInt) {
-        /* Requires: Inherits numChan>3 from setAlpha. */
-        setBlue_byte( 0xFF & anInt); anInt = anInt >> 8;
-        setGreen_byte(0xFF & anInt); anInt = anInt >> 8;
-        setRed_byte(  0xFF & anInt); anInt = anInt >> 8;
-        setAlpha_byte(0xFF & anInt);
-        return *this;
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Just like setRGBAfromLogPackIntARGB, but no A */
-      inline colorTpl & setRGBfromLogPackIntARGB(uint32_t anInt) {
-        /* Requires: Inherits numChan>2 from setBlue. */
-        setBlue_byte( 0xFF & anInt); anInt = anInt >> 8;
-        setGreen_byte(0xFF & anInt); anInt = anInt >> 8;
-        setRed_byte(  0xFF & anInt); anInt = anInt >> 8;
-        return *this;
-      }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the color based upon the bytes of the given integer ordered from LSB to MSB.
           The *Idx arguments select which byte of the int is used for each channel -- with LSB equal to index 0 and MSB equal to index 3. The extracted bytes
@@ -1155,6 +1105,53 @@ namespace mjr {
         setBlue_byte( bytes[bIdx]);
         return *this;
       }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      inline colorTpl& setRGBAfromLogPackIntARGB(uint32_t anInt) { return setRGBAfromLogPackIntGen(anInt, 2, 1, 0, 3); } /* Requires: Inherits numChan>3 from setAlpha. */
+      inline colorTpl& setRGBfromLogPackIntARGB( uint32_t anInt) { return setRGBfromLogPackIntGen( anInt, 2, 1, 0);    } /* Requires: Inherits numChan>2 from setBlue.  */
+      inline colorTpl& setRGBAfromLogPackIntRGBA(uint32_t anInt) { return setRGBAfromLogPackIntGen(anInt, 3, 2, 1, 0); } /* Requires: Inherits numChan>3 from setAlpha. */
+      inline colorTpl& setRGBfromLogPackIntRGBA( uint32_t anInt) { return setRGBfromLogPackIntGen( anInt, 3, 2, 1);    } /* Requires: Inherits numChan>2 from setBlue.  */
+      inline colorTpl& setRGBAfromLogPackIntABGR(uint32_t anInt) { return setRGBAfromLogPackIntGen(anInt, 0, 1, 2, 3); } /* Requires: Inherits numChan>3 from setAlpha. */
+      inline colorTpl& setRGBfromLogPackIntABGR( uint32_t anInt) { return setRGBfromLogPackIntGen( anInt, 0, 1, 2);    } /* Requires: Inherits numChan>2 from setBlue.  */
+      inline colorTpl& setRGBAfromLogPackIntABRG(uint32_t anInt) { return setRGBAfromLogPackIntGen(anInt, 1, 0, 2, 3); } /* Requires: Inherits numChan>3 from setAlpha. */
+      inline colorTpl& setRGBfromLogPackIntABRG( uint32_t anInt) { return setRGBfromLogPackIntGen( anInt, 1, 0, 2);    } /* Requires: Inherits numChan>2 from setBlue.  */
+      //@}
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name TGA Height Maps for POVray */
+      //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Computes a 24-bit truecolor value intended for use in producing 16-bit greyscale TGA.
+          This is the color scheme that should be used for POVray 16-bit height files
+          @param tga16val An integer
+          @return Returns a reference to the current color object. */
+      inline colorTpl& setRGBcmpGreyTGA16bit(uint32_t tga16val) requires(chanIsByte) {
+        /* Requires: Inherits numChan>1 from setGreen. */
+        tga16val = numberWrap(tga16val, 0x0000FFFFu);
+        return setRGBfromLogPackIntABRG(tga16val);
+        // setChansToMin();
+        // setGreen_byte(static_cast<clrChanT>( tga16val        & 0xff));  // 0
+        // setRed_byte(  static_cast<clrChanT>((tga16val >> 8)  & 0xff));  // 1
+        // return *this;
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Computes a 24-bit truecolor value intended for use in producing 24-bit greyscale TGA.
+          @param tga24val An integer
+          @return Returns a reference to the current color object. */
+      inline colorTpl& setRGBcmpGreyTGA24bit(uint32_t tga24val) requires(chanIsByte) {
+        /* Requires: Inherits numChan>2 from setBlue. */
+        tga24val = numberWrap(tga24val, 0x00FFFFFFu);
+        return setRGBfromLogPackIntABRG(tga24val);
+        // setGreen_byte( tga24val        & 0xff); // 0
+        // setRed_byte(  (tga24val >> 8)  & 0xff); // 1
+        // setBlue_byte( (tga24val >> 16) & 0xff); // 2
+        // return *this;
+      }   //BRG
+      //@}
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Color Setting Methods via Physically Packed Integers. 
+       By "physically" we mean as the bytes are physically ordered in RAM -- which may differ from how we write them on paper or in C++ code. */
+      //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the color based upon the bytes of the given integer ordered as in RAM.
           The *Idx arguments select which byte of the int is used for each channel -- with byte[0] being the first in RAM. The extracted bytes are interpreted
@@ -1300,36 +1297,6 @@ namespace mjr {
       inline colorTpl& setRGBfromColorSpace(colorSpaceEnum space, colorTpl<double, 3> inColor) {
         /* Requires: Inherits numChan>2 from getC2. */
         return setRGBfromColorSpace(space, inColor.getC0(), inColor.getC1(), inColor.getC2());
-      }
-      //@}
-
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** @name TGA Height Maps for POVray */
-      //@{
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Computes a 24-bit truecolor value intended for use in producing 16-bit greyscale TGA.
-          This is the color scheme that should be used for POVray 16-bit height files
-          @param tga16val An integer
-          @return Returns a reference to the current color object. */
-      inline colorTpl& setRGBcmpGreyTGA16bit(uint16_t tga16val) {
-        /* Requires: Inherits numChan>1 from setGreen. */
-        tga16val = numberWrap(tga16val, 65536u);
-        setChansToMin();
-        setGreen_byte(static_cast<clrChanT>( tga16val        & 0xff));
-        setRed_byte(  static_cast<clrChanT>((tga16val >> 8)  & 0xff));
-        return *this;
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Computes a 24-bit truecolor value intended for use in producing 24-bit greyscale TGA.
-          @param tga24val An integer
-          @return Returns a reference to the current color object. */
-      inline colorTpl& setRGBcmpGreyTGA24bit(uint32_t tga24val) {
-        /* Requires: Inherits numChan>2 from setBlue. */
-        tga24val = numberWrap(tga24val, 16777216u);
-        setGreen_byte( tga24val        & 0xff);
-        setRed_byte(  (tga24val >> 8)  & 0xff);
-        setBlue_byte( (tga24val >> 16) & 0xff);
-        return *this;
       }
       //@}
 
@@ -1967,12 +1934,13 @@ namespace mjr {
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Computes the arithmetic division of the current color by the given color.
-          No check is made for division by zero.
+          If a channel of aCol is zero, then the corresponding channel of the current color object will be left untouched.
           @param aCol The color to use in the computation.
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmDiv(colorArgType aCol) {
         for(int i=0; i<numChan; i++)
-          setChanNC(i, static_cast<clrChanT>(static_cast<channelArithSPType>(getChanNC(i)) / static_cast<channelArithSPType>(aCol.getChanNC(i))));
+          if (aCol.getChanNC(i) != 0)
+            setChanNC(i, static_cast<clrChanT>(static_cast<channelArithSPType>(getChanNC(i)) / static_cast<channelArithSPType>(aCol.getChanNC(i))));
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1989,9 +1957,9 @@ namespace mjr {
           If the result of a multiplication is too large, it will be set to the maximum component value.
           @param aCol The color to use in the computation.
           @return Returns a reference to the current color object.*/
-      inline colorTpl& tfrmMultClp(colorArgType aCol) {
+      inline colorTpl& tfrmMultClamp(colorArgType aCol) {
         for(int i=0; i<numChan; i++)
-          setChanNC(i, clipTop(static_cast<channelArithSPType>(getChanNC(i)) * static_cast<channelArithSPType>(aCol.getChanNC(i))));
+          setChanNC(i, clampTop(static_cast<channelArithSPType>(getChanNC(i)) * static_cast<channelArithSPType>(aCol.getChanNC(i))));
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2002,7 +1970,7 @@ namespace mjr {
           - R=#maxChanVal  iff(R>color.R)
           @param aCol The color to use in the computation.
           @return Returns a reference to the current color object.*/
-      inline colorTpl& ScaleSignDiff(colorArgType aCol) {
+      inline colorTpl& tfrmSignDiff(colorArgType aCol) {
         for(int i=0; i<numChan; i++) {
           if(getChanNC(i) < aCol.getChanNC(i)) {
             setChanNC(i, minChanVal);
@@ -2019,9 +1987,9 @@ namespace mjr {
           If the result a differences is negative, then that component will be set to zero.
           @param aCol The color to use in the computation.
           @return Returns a reference to the current color object.*/
-      inline colorTpl& tfrmDiffClp(colorArgType aCol) {
+      inline colorTpl& tfrmDiffClamp(colorArgType aCol) {
         for(int i=0; i<numChan; i++)
-          setChanNC(i, clipBot(static_cast<channelArithDType>(getChanNC(i)) - static_cast<channelArithDType>(aCol.getChanNC(i))));
+          setChanNC(i, clampBot(static_cast<channelArithDType>(getChanNC(i)) - static_cast<channelArithDType>(aCol.getChanNC(i))));
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2030,9 +1998,9 @@ namespace mjr {
           component will be set to zero.
           @param aCol The color to use in the computation.
           @return Returns a reference to the current color object.*/
-      inline colorTpl& tfrmNegDiffClp(colorArgType aCol) {
+      inline colorTpl& tfrmNegDiffClamp(colorArgType aCol) {
         for(int i=0; i<numChan; i++)
-          setChanNC(i, clipBot(static_cast<channelArithDType>(aCol.getChanNC(i)) - static_cast<channelArithDType>(getChanNC(i))));
+          setChanNC(i, clampBot(static_cast<channelArithDType>(aCol.getChanNC(i)) - static_cast<channelArithDType>(getChanNC(i))));
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2040,22 +2008,23 @@ namespace mjr {
           If the result of a sum is greater than the maximum value, then that component will be set to the maximum value.
           @param aCol The color to use in the computation.
           @return Returns a reference to the current color object.*/
-      inline colorTpl& tfrmAddClp(colorArgType aCol) {
+      inline colorTpl& tfrmAddClamp(colorArgType aCol) {
         for(int i=0; i<numChan; i++)
-          setChanNC(i, clipTop(static_cast<channelArithSPType>(getChanNC(i)) + static_cast<channelArithSPType>(aCol.getChanNC(i))));
+          setChanNC(i, clampTop(static_cast<channelArithSPType>(getChanNC(i)) + static_cast<channelArithSPType>(aCol.getChanNC(i))));
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Computes the arithmetic sum of the given color from the current one, then divids by dcolor.
-          If the result of a sum is greater than the maximum value, then that component will be set to the maximum value.
-          No check is made for division by zero.
+      /** Computes the arithmetic sum of the current color and aCol, then divids by dCol.
+          If the result is greater than the maximum value, then that component will be set to the maximum value.
+          If a channel of dCol is zero, then the corresponding channel of the current color object will be left untouched.
           @param aCol The color to use for initial add.
           @param dCol The color to use for final division.
           @return Returns a reference to the current color object.*/
-      inline colorTpl& tfrmAddDivClp(colorArgType aCol, colorArgType dCol) {
+      inline colorTpl& tfrmAddDivClamp(colorArgType aCol, colorArgType dCol) {
         for(int i=0; i<numChan; i++)
-          setChanNC(i, clipTop((static_cast<channelArithSPType>(getChanNC(i)) + static_cast<channelArithSPType>(aCol.getChanNC(i))) /
-                               static_cast<channelArithSPType>(dCol.getChanNC(i))));
+          if (dCol.getChanNC(i) != 0)
+            setChanNC(i, clampTop((static_cast<channelArithSPType>(getChanNC(i)) + static_cast<channelArithSPType>(aCol.getChanNC(i))) /
+                                 static_cast<channelArithSPType>(dCol.getChanNC(i))));
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2069,11 +2038,13 @@ namespace mjr {
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Computes the arithmetic modulus of the current by the given one.
+          If a channel of aCol is zero, then the corresponding channel of the current object is left untouched.
           @param aCol The color to use in the computation.
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmMod(colorArgType aCol) requires (std::integral<clrChanT>) {
         for(int i=0; i<numChan; i++)
-          setChanNC(i, getChanNC(i) % aCol.getChanNC(i));
+          if (aCol.getChanNC(i) != 0) //  MJR TODO NOTE tfrmMod: What about floats?
+            setChanNC(i, getChanNC(i) % aCol.getChanNC(i));
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2100,7 +2071,7 @@ namespace mjr {
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Adds 1.0 and takes the natural logarithm of each channel.
-          Floating point Numbers re used for intermediate values and the result cast to a colorChanType at the end.
+          Floating point Numbers are used for intermediate values and the result cast to a colorChanType at the end.
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmLn() {
         /* Performance: Even if the compiler fails to unroll this loop, the runtime is dominated by the double computations. */
@@ -2286,9 +2257,9 @@ namespace mjr {
           Floating point Numbers re used for intermediate values and the result cast to a colorChanType at the end.
           @param aCol The color to use in the computation.
           @return Returns a reference to the current color object.*/
-      inline colorTpl& tfrmGmeanClp(colorArgType aCol) {
+      inline colorTpl& tfrmGmeanClamp(colorArgType aCol) {
         for(int i=0; i<numChan; i++)
-          setChanNC(i, clipTop(static_cast<channelArithSPType>(std::sqrt(static_cast<double>(getChanNC(i))   * static_cast<double>(aCol.getChanNC(i))))));
+          setChanNC(i, clampTop(static_cast<channelArithSPType>(std::sqrt(static_cast<double>(getChanNC(i))   * static_cast<double>(aCol.getChanNC(i))))));
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2759,37 +2730,36 @@ namespace mjr {
       /** @name Channel Clipping Functions */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Clamp a value on the top end such that it will fit into a clrChanT type. Input values larger than the maximum channel value are mapped to the maximum
-          channel value.  Values less than the minimum (0) are not clamped.
+      /** Clamp a value to (infinity, maxChanVal].
+          Input values larger than maxChanVal are mapped to maxChanVal.  Values less than minChanVal are not changed.
           @param arithValue The value to clamp */
       template <typename iT>
-      inline clrChanT clipTop(iT arithValue) {
+      inline clrChanT clampTop(iT arithValue) {
         if(arithValue > maxChanVal)
-          return maxChanVal;
+          return static_cast<clrChanT>(maxChanVal);
         else
           return static_cast<clrChanT>(arithValue);
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Clamp a value on the bottom end such that it will fit into a clrChanT type. Input values less than the minimum (0), are mapped to 0.  Note values
-          greater than the maximum channel value are NOT clamped.
-          @param arithValue The value to clam    p */
+      /** Clamp a value to [minChanVal, infinity).
+          @param arithValue The value to clamp */
       template <typename iT>
-      inline clrChanT clipBot(iT arithValue) {
+      inline clrChanT clampBot(iT arithValue) {
         if(arithValue < minChanVal)
-          return minChanVal;
+          return static_cast<clrChanT>(minChanVal);
         else
           return static_cast<clrChanT>(arithValue);
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Clamp a value such that it will fit into a clrChanT type. Input values less than zero are mapped to zero, and input values larger than the maximum
-          channel value are mapped to the maximum q channel value.
+      /** Clamp a value to [minChanVal, maxChanVal].
           @param arithValue The value to clamp */
       template <typename iT>
-      inline clrChanT clipAll(iT arithValue) {
-        if(arithValue > maxChanVal)
-          return maxChanVal;
-        if(arithValue < minChanVal)
-          return minChanVal;
+      inline clrChanT clampAll(iT arithValue) {
+        if     (arithValue > maxChanVal)
+          return static_cast<clrChanT>(maxChanVal);
+        else if(arithValue < minChanVal)
+          return static_cast<clrChanT>(minChanVal);
+        else
         return static_cast<clrChanT>(arithValue);
       }
       //@}

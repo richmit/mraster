@@ -180,11 +180,11 @@ namespace mjr {
       /** Enum for drawing Mode */
       enum class drawModeType { SET,
                                 XOR,
-                                ADDCLIP,
+                                ADDCLAMP,
                                 AND,
                                 OR,
-                                DIFFCLIP,
-                                MULTCLIP
+                                DIFFCLAMP,
+                                MULTCLAMP
       };
 
       /** Enum for drawing Mode */
@@ -3275,13 +3275,13 @@ namespace mjr {
     /* Performance: We are depending on the compiler to eliminate this if statement because enableDrawModes is a compile time constant. */
     if (enableDrawModes)
       switch(drawMode) {
-        case drawModeType::SET:      getPxColorRefNC(x, y).copy(color);        break;
-        case drawModeType::XOR:      getPxColorRefNC(x, y).tfrmXor(color);     break;
-        case drawModeType::ADDCLIP:  getPxColorRefNC(x, y).tfrmAddClp(color);  break;
-        case drawModeType::AND:      getPxColorRefNC(x, y).tfrmAnd(color);     break;
-        case drawModeType::OR:       getPxColorRefNC(x, y).tfrmOr(color);      break;
-        case drawModeType::DIFFCLIP: getPxColorRefNC(x, y).tfrmDiffClp(color); break;
-        case drawModeType::MULTCLIP: getPxColorRefNC(x, y).tfrmMultClp(color); break;
+        case drawModeType::SET:       getPxColorRefNC(x, y).copy(color);          break;
+        case drawModeType::XOR:       getPxColorRefNC(x, y).tfrmXor(color);       break;
+        case drawModeType::ADDCLAMP:  getPxColorRefNC(x, y).tfrmAddClamp(color);  break;
+        case drawModeType::AND:       getPxColorRefNC(x, y).tfrmAnd(color);       break;
+        case drawModeType::OR:        getPxColorRefNC(x, y).tfrmOr(color);        break;
+        case drawModeType::DIFFCLAMP: getPxColorRefNC(x, y).tfrmDiffClamp(color); break;
+        case drawModeType::MULTCLAMP: getPxColorRefNC(x, y).tfrmMultClamp(color); break;
       }
     else 
       getPxColorRefNC(x, y).copy(color);

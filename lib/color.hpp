@@ -150,7 +150,7 @@ namespace mjr {
 
   typedef colorTpl<colChanI8,   4, 1, 2, 3, 0>  colorARGB8b;   //!< colorTpl:  4 Channel @   8-bit unsigned int     32
   typedef colorTpl<colChanI8,   4, 2, 1, 0, 3>  colorBGRA8b;   //!< colorTpl:  4 Channel @   8-bit unsigned int     32
-  typedef colorTpl<colChanI8,   4, 1, 2, 3, 0>  colorABGR8b;   //!< colorTpl:  4 Channel @   8-bit unsigned int     32
+  typedef colorTpl<colChanI8,   4, 3, 2, 1, 0>  colorABGR8b;   //!< colorTpl:  4 Channel @   8-bit unsigned int     32
   //@}
 
 } // end namespace mjr

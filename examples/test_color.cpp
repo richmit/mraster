@@ -102,7 +102,7 @@ int main(void) {
   aColor.setC3_byte(0);                                            std::cout << "aColor.setC3_byte(0);                          " << aColor << std::endl;
   aColor.setChans_byte(123);                                       std::cout << "aColor.setChans_byte(123);                     " << aColor << std::endl;
 
-  aColor.ScaleSignDiff(bColor);                                    std::cout << "aColor.ScaleSignDiff(bColor);                  " << aColor << std::endl;
+  aColor.tfrmSignDiff(bColor);                                    std::cout << "aColor.tfrmSignDiff(bColor);                  " << aColor << std::endl;
   aColor.tfrmOr(bColor);                                           std::cout << "aColor.tfrmOr(bColor);                         " << aColor << std::endl;
   aColor.tfrmNor(bColor);                                          std::cout << "aColor.tfrmNor(bColor);                        " << aColor << std::endl;
   aColor.tfrmCopy(bColor);                                         std::cout << "aColor.tfrmCopy(bColor);                       " << aColor << std::endl;
@@ -111,12 +111,12 @@ int main(void) {
   aColor.tfrmXor(bColor);                                          std::cout << "aColor.tfrmXor(bColor);                        " << aColor << std::endl;
   aColor.tfrmNxor(bColor);                                         std::cout << "aColor.tfrmNxor(bColor);                       " << aColor << std::endl;
   aColor.tfrmNot();                                                std::cout << "aColor.tfrmNot();                              " << aColor << std::endl;
-  aColor.tfrmMultClp(bColor);                                      std::cout << "aColor.tfrmMultClp(bColor);                    " << aColor << std::endl;
-  aColor.tfrmGmeanClp(bColor);                                     std::cout << "aColor.tfrmGmeanClp(bColor);                   " << aColor << std::endl;
-  aColor.tfrmAddClp(bColor);                                       std::cout << "aColor.tfrmAddClp(bColor);                     " << aColor << std::endl;
-  aColor.tfrmAddDivClp(bColor, cColor);                            std::cout << "aColor.tfrmAddDivClp(bColor, cColor);          " << aColor << std::endl;
-  aColor.tfrmDiffClp(bColor);                                      std::cout << "aColor.tfrmDiffClp(bColor);                    " << aColor << std::endl;
-  aColor.tfrmNegDiffClp(bColor);                                   std::cout << "aColor.tfrmNegDiffClp(bColor);                 " << aColor << std::endl;
+  aColor.tfrmMultClamp(bColor);                                      std::cout << "aColor.tfrmMultClamp(bColor);                    " << aColor << std::endl;
+  aColor.tfrmGmeanClamp(bColor);                                     std::cout << "aColor.tfrmGmeanClamp(bColor);                   " << aColor << std::endl;
+  aColor.tfrmAddClamp(bColor);                                       std::cout << "aColor.tfrmAddClamp(bColor);                     " << aColor << std::endl;
+  aColor.tfrmAddDivClamp(bColor, cColor);                            std::cout << "aColor.tfrmAddDivClamp(bColor, cColor);          " << aColor << std::endl;
+  aColor.tfrmDiffClamp(bColor);                                      std::cout << "aColor.tfrmDiffClamp(bColor);                    " << aColor << std::endl;
+  aColor.tfrmNegDiffClamp(bColor);                                   std::cout << "aColor.tfrmNegDiffClamp(bColor);                 " << aColor << std::endl;
   aColor.tfrmAbsDiff(bColor);                                      std::cout << "aColor.tfrmAbsDiff(bColor);                    " << aColor << std::endl;
   aColor.tfrmSqDiff(bColor);                                       std::cout << "aColor.tfrmSqDiff(bColor);                     " << aColor << std::endl;
   aColor.tfrmMax(bColor);                                          std::cout << "aColor.tfrmMax(bColor);                        " << aColor << std::endl;
@@ -189,7 +189,7 @@ int main(void) {
   jColor.setC3_byte(0);                                            std::cout << "jColor.setC3_byte(0);                          " << jColor << std::endl;
   jColor.setChans_byte(123);                                       std::cout << "jColor.setChans_byte(123);                     " << jColor << std::endl;
 
-  jColor.ScaleSignDiff(kColor);                                    std::cout << "jColor.ScaleSignDiff(kColor);                  " << jColor << std::endl;
+  jColor.tfrmSignDiff(kColor);                                    std::cout << "jColor.tfrmSignDiff(kColor);                  " << jColor << std::endl;
   jColor.tfrmOr(kColor);                                           std::cout << "jColor.tfrmOr(kColor);                         " << jColor << std::endl;
   jColor.tfrmNor(kColor);                                          std::cout << "jColor.tfrmNor(kColor);                        " << jColor << std::endl;
   jColor.tfrmCopy(kColor);                                         std::cout << "jColor.tfrmCopy(kColor);                       " << jColor << std::endl;
@@ -198,12 +198,12 @@ int main(void) {
   jColor.tfrmXor(kColor);                                          std::cout << "jColor.tfrmXor(kColor);                        " << jColor << std::endl;
   jColor.tfrmNxor(kColor);                                         std::cout << "jColor.tfrmNxor(kColor);                       " << jColor << std::endl;
   jColor.tfrmNot();                                                std::cout << "jColor.tfrmNot();                              " << jColor << std::endl;
-  jColor.tfrmMultClp(kColor);                                      std::cout << "jColor.tfrmMultClp(kColor);                    " << jColor << std::endl;
-  jColor.tfrmGmeanClp(kColor);                                     std::cout << "jColor.tfrmGmeanClp(kColor);                   " << jColor << std::endl;
-  jColor.tfrmAddClp(kColor);                                       std::cout << "jColor.tfrmAddClp(kColor);                     " << jColor << std::endl;
-  jColor.tfrmAddDivClp(kColor, lColor);                            std::cout << "jColor.tfrmAddDivClp(kColor, lColor);          " << jColor << std::endl;
-  jColor.tfrmDiffClp(kColor);                                      std::cout << "jColor.tfrmDiffClp(kColor);                    " << jColor << std::endl;
-  jColor.tfrmNegDiffClp(kColor);                                   std::cout << "jColor.tfrmNegDiffClp(kColor);                 " << jColor << std::endl;
+  jColor.tfrmMultClamp(kColor);                                      std::cout << "jColor.tfrmMultClamp(kColor);                    " << jColor << std::endl;
+  jColor.tfrmGmeanClamp(kColor);                                     std::cout << "jColor.tfrmGmeanClamp(kColor);                   " << jColor << std::endl;
+  jColor.tfrmAddClamp(kColor);                                       std::cout << "jColor.tfrmAddClamp(kColor);                     " << jColor << std::endl;
+  jColor.tfrmAddDivClamp(kColor, lColor);                            std::cout << "jColor.tfrmAddDivClamp(kColor, lColor);          " << jColor << std::endl;
+  jColor.tfrmDiffClamp(kColor);                                      std::cout << "jColor.tfrmDiffClamp(kColor);                    " << jColor << std::endl;
+  jColor.tfrmNegDiffClamp(kColor);                                   std::cout << "jColor.tfrmNegDiffClamp(kColor);                 " << jColor << std::endl;
   jColor.tfrmAbsDiff(kColor);                                      std::cout << "jColor.tfrmAbsDiff(kColor);                    " << jColor << std::endl;
   jColor.tfrmSqDiff(kColor);                                       std::cout << "jColor.tfrmSqDiff(kColor);                     " << jColor << std::endl;
   jColor.tfrmMax(kColor);                                          std::cout << "jColor.tfrmMax(kColor);                        " << jColor << std::endl;

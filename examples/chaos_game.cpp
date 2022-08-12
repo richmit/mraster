@@ -111,7 +111,7 @@ std::vector<ifs> ifsList {
 int main() {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   mjr::ramCanvas3c8b theRamCanvas(2160, 2160);
-  theRamCanvas.set_drawMode(mjr::ramCanvas3c8b::drawModeType::ADDCLIP);
+  theRamCanvas.set_drawMode(mjr::ramCanvas3c8b::drawModeType::ADDCLAMP);
   std::vector<mjr::ramCanvas3c8b::colorType> aColor{ mjr::ramCanvas3c8b::colorType(1, 1, 1)};
   auto numCol = aColor.size();
 
