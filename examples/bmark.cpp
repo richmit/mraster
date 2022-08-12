@@ -47,6 +47,7 @@
 #define DO_INVERT     1
 #define DO_COL_SET    1
 #define DO_COL_SETC   1
+#define DO_UNPACK     1
 #define DO_MINI       1
 #define DO_CLR_BLK    1
 #define DO_CLR        1
@@ -203,6 +204,18 @@ int main(void) {
   bmEndTime = std::chrono::system_clock::now();
   bmTime = std::chrono::system_clock::now() - bmStartTime;
   std::cout << "  DO_COL_SET Runtime " << bmTime.count() << " sec" << std::endl;
+#endif
+
+#if DO_UNPACK
+  std::cout << "Starting DO_UNPACK" << std::endl;
+  bmStartTime = std::chrono::system_clock::now();
+  for(int i=0;i<REPS*64;i++)
+    for(int y=0;y<=xMax;y++)
+      for(int x=0;x<=yMax;x++)
+        theRamCanvas.getPxColorRefNC(x, y).setRGBfromLogPackIntARGB(0xFFFFFF-i*x*x*y);
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_UNPACK Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
 
 #if DO_MINI
