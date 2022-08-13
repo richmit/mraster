@@ -43,12 +43,12 @@
 
 #include "ramCanvas.hpp"
 
-#if 1
+#if 0
 
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// +----+---------------------------------------------------------------------------------------------------------------
 // |    | Method
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// |    | colorTpl();
+// +----+---------------------------------------------------------------------------------------------------------------
+// | ** | colorTpl();
 // | ** | colorTpl(const colorType& aColor);
 // | ** | colorTpl(clrChanT c1, clrChanT c2, clrChanT c3, clrChanT c4);
 // | ** | colorTpl(clrChanT c1, clrChanT c2, clrChanT c3);
@@ -58,198 +58,198 @@
 // | ** | colorTpl(std::string colorString);
 // | ** | colorTpl(const char* colorCString);
 // | -- | ~colorTpl();
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// +----+---------------------------------------------------------------------------------------------------------------
 // | -- | colorTpl& copy(colorArgType aCol);
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// | ** | clrChanT getC0() const;
-// | ** | clrChanT getC1() const;
-// | ** | clrChanT getC2() const;
-// | ** | clrChanT getC3() const;
-// | ** | clrChanT getChan(int chan) const;
-// | ** | colorTpl& setC0(clrChanT cVal);
-// | ** | colorTpl& setC1(clrChanT cVal);
-// | ** | colorTpl& setC2(clrChanT cVal);
-// | ** | colorTpl& setC3(clrChanT cVal);
-// | ** | colorTpl& setChan(int chan, clrChanT cVal);
-// | -- | colorTpl& setChanToMax(int chan);
-// | -- | colorTpl& setChanToMin(int chan);
-// | ** | colorTpl& setChans(clrChanT c1, clrChanT c2, clrChanT c3, clrChanT c4);
-// | ** | colorTpl& setChans(clrChanT c1, clrChanT c2, clrChanT c3);
-// | ** | colorTpl& setChans(clrChanT c1, clrChanT c2);
-// | ** | colorTpl& setChans(clrChanT cVal);
-// | -- | colorTpl& setChans(std::tuple<clrChanT, clrChanT, clrChanT, clrChanT> chanValues);
-// | -- | colorTpl& setChans(std::tuple<clrChanT, clrChanT, clrChanT> chanValues);
-// |    | colorTpl& setChans(std::vector<clrChanT>& chanValues);
-// | ** | colorTpl& setChans(std::string colorHexString, bool clearUndefinedChannels = false);
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// | ** | double getC0_dbl() const;
-// | ** | double getC1_dbl() const;
-// | ** | double getC2_dbl() const;
-// | ** | double getC3_dbl() const;
-// | ** | double getChan_dbl(int chan) const;
-// | ** | colorTpl& setChan_dbl(int chan, double cVal);
-// | ** | colorTpl& setC0_dbl(double cVal);
-// | ** | colorTpl& setC1_dbl(double cVal);
-// | ** | colorTpl& setC2_dbl(double cVal);
-// | ** | colorTpl& setC3_dbl(double cVal);
-// | ** | colorTpl& setChans_dbl(double c1, double c2, double c3, double c4);
-// | ** | colorTpl& setChans_dbl(double c1, double c2, double c3);
-// | ** | colorTpl& setChans_dbl(double c1, double c2);
-// | ** | colorTpl& setChans_dbl(double cVal);
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// | ** | uint8_t getC0_byte() const;
-// | ** | uint8_t getC1_byte() const;
-// | ** | uint8_t getC2_byte() const;
-// | ** | uint8_t getC3_byte() const;
-// | ** | uint8_t getChan_byte(int chan) const;
-// | ** | colorTpl& setChan_byte(int chan, uint8_t cVal);
-// | ** | colorTpl& setC0_byte(uint8_t cVal);
-// | ** | colorTpl& setC1_byte(uint8_t cVal);
-// | ** | colorTpl& setC2_byte(uint8_t cVal);
-// | ** | colorTpl& setC3_byte(uint8_t cVal);
-// | ** | colorTpl& setChans_byte(uint8_t c1, uint8_t c2, uint8_t c3, uint8_t c4);
-// | ** | colorTpl& setChans_byte(uint8_t c1, uint8_t c2, uint8_t c3);
-// | ** | colorTpl& setChans_byte(uint8_t c1, uint8_t c2);
-// | ** | colorTpl& setChans_byte(uint8_t cVal);
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// | -- | colorTpl& setToBlack();
-// | -- | colorTpl& setToWhite();
-// | -- | colorTpl& setToRed();
-// | -- | colorTpl& setToBlue();
-// | -- | colorTpl& setToGreen();
-// | -- | colorTpl& setToCyan();
-// | -- | colorTpl& setToYellow();
-// | -- | colorTpl& setToMagenta();
-// | ** | colorTpl& setToCorner(char cornerColor);
-// | ** | colorTpl& setToCorner(cornerColorEnum cornerColor);
-// | ** | colorTpl& setToCorner(std::string cornerColor);
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// | ** | colorTpl& setRGBAfromLogPackIntABGR(uint32_t anInt) 
-// | ** | colorTpl& setRGBfromLogPackIntABGR( uint32_t anInt) 
-// | ** | colorTpl& setRGBAfromLogPackIntARGB(uint32_t anInt) 
-// | ** | colorTpl& setRGBfromLogPackIntARGB( uint32_t anInt) 
-// | ** | colorTpl& setRGBAfromLogPackIntRGBA(uint32_t anInt) 
-// | ** | colorTpl& setRGBfromLogPackIntRGBA( uint32_t anInt) 
-// | ** | colorTpl& setRGBAfromLogPackIntABRG(uint32_t anInt)
-// | ** | colorTpl& setRGBfromLogPackIntABRG( uint32_t anInt)
-// | -- | colorTpl& setRGBAfromLogPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx, uint8_t aIdx);
-// | -- | colorTpl& setRGBfromLogPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx);
-// |    | colorTpl& setRGBAfromPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx, uint8_t aIdx);
-// |    | colorTpl& setRGBfromPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx);
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// |    | colorTpl& setRGBfromUnitHSV(double H, double S, double V);
-// |    | colorTpl& setRGBfromUnitHSL(double H, double S, double L);
-// |    | colorTpl& setRGBfromColorSpace(colorSpaceEnum space, double inCh1, double inCh2, double inCh3);
-// |    | colorTpl& setRGBfromColorSpace(colorSpaceEnum space, colorTpl<double, 3> inColor);
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// | ** | colorTpl& setRGBcmpGreyTGA16bit(uint16_t tga16val);
-// | ** | colorTpl& setRGBcmpGreyTGA24bit(uint32_t tga24val);
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// |    | colorTpl& setRGBfromWavelengthCM(double wavelength, cmfInterpolationEnum interpMethod = cmfInterpolationEnum::LINEAR);
-// |    | colorTpl& setRGBfromWavelengthLA(double wavelength);
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// |    | colorTpl& cmpGradiant(double aDouble, std::vector<double> const& anchors, std::vector<colorType> const& colors);
-// |    | colorTpl& cmpGradiant(double aDouble, std::vector<colorType> const& colors);
-// |    | colorTpl& cmpRGBcornerDGradiant(csIntType csIdx, const char *cornerColors);
-// |    | colorTpl& cmpRGBcornerDGradiant(csIntType csIdx, csIntType numColors, const char *cornerColors);
-// |    | colorTpl& cmpRGBcornerCGradiant(csFltType csX, const char *cornerColors) {
-// |    | colorTpl& cmpRGBcornerCGradiant(csFltType csX, csIntType numColors, const ccT* cornerColors) {
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// |    | colorTpl& interplColors(double aDouble, colorArgType col1, colorArgType col2);
-// |    | colorTpl& interplColorSpace(colorSpaceEnum space, double aDouble, colorArgType col1, colorArgType col2);
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// |    | colorTpl& wMean(channelArithFltType w1, channelArithFltType w2, channelArithFltType w3, channelArithFltType w4, colorArgType col1, colorArgType col2, colorArgType col3, colorArgType col4);
-// |    | colorTpl& wMean(channelArithFltType w1, channelArithFltType w2, channelArithFltType w3, colorArgType col1, colorArgType col2, colorArgType col3);
-// |    | colorTpl& wMean(channelArithFltType w1, channelArithFltType w2, colorArgType col1, colorArgType col2);
-// |    | colorTpl& uMean(channelArithFltType w1, channelArithFltType w2, channelArithFltType w3, colorArgType col1, colorArgType col2, colorArgType col3, colorArgType col4);
-// |    | colorTpl& uMean(channelArithFltType w1, channelArithFltType w2, colorArgType col1, colorArgType col2, colorArgType col3);
-// |    | colorTpl& uMean(channelArithFltType w1, colorArgType col1, colorArgType col2);
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// | ** | colorTpl& tfrmOr(colorArgType aCol)         No coverage for floating point clrChanT
-// | ** | colorTpl& tfrmNor(colorArgType aCol)        No coverage for floating point clrChanT
-// | ** | colorTpl& tfrmAnd(colorArgType aCol)        No coverage for floating point clrChanT
-// | ** | colorTpl& tfrmNand(colorArgType aCol)       No coverage for floating point clrChanT
-// | ** | colorTpl& tfrmXor(colorArgType aCol)        No coverage for floating point clrChanT
-// | ** | colorTpl& tfrmNxor(colorArgType aCol)       No coverage for floating point clrChanT
-// | ** | colorTpl& tfrmNot(void)                     No coverage for floating point clrChanT
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// | ** | colorTpl& tfrmSqDiff(colorArgType aCol);
-// | ** | colorTpl& tfrmAbsDiff(colorArgType aCol);
-// | ** | colorTpl& tfrmAdd(colorArgType aCol);
-// | ** | colorTpl& tfrmDiv(colorArgType aCol);
-// | ** | colorTpl& tfrmMult(colorArgType aCol);
-// | ** | colorTpl& tfrmMultClamp(colorArgType aCol);
-// | ** | colorTpl& tfrmSignDiff(colorArgType aCol);
-// | ** | colorTpl& tfrmDiffClamp(colorArgType aCol);
-// | ** | colorTpl& tfrmNegDiffClamp(colorArgType aCol);
-// | ** | colorTpl& tfrmAddClamp(colorArgType aCol);
-// | ** | colorTpl& tfrmAddDivClamp(colorArgType aCol, colorArgType dCol);
-// | ** | colorTpl& tfrmDiff(colorArgType aCol);
-// | ** | colorTpl& tfrmMod(colorArgType aCol) 
-// | ** | colorTpl& tfrmInvert();
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// |    | colorTpl& interplColors(double aDouble, colorArgType tooCol);
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// |    | colorTpl& tfrmCopy(colorArgType aCol);
-// |    | colorTpl& tfrmMaxI(colorArgType aCol);
-// |    | colorTpl& tfrmMinI(colorArgType aCol);
-// |    | colorTpl& tfrmMax(colorArgType aCol);
-// |    | colorTpl& tfrmMin(colorArgType aCol);
-// |    | colorTpl& tfrmShiftL(colorArgType aCol) 
-// |    | colorTpl& tfrmShiftR(colorArgType aCol) 
-// |    | colorTpl& tfrmSaw(colorArgType lowCol, colorArgType highCol);
-// |    | colorTpl& tfrmStep(colorArgType lowCol, colorArgType highCol);
-// |    | colorTpl& tfrmDiracTot(colorArgType aCol);
-// |    | colorTpl& tfrmDirac(colorArgType aCol);
-// |    | colorTpl& tfrmFuzzyDirac(colorArgType ctrCol, colorArgType radCol);
-// |    | colorTpl& tfrmMean(colorArgType aCol);
-// |    | colorTpl& tfrmGmean(colorArgType aCol);
-// |    | colorTpl& tfrmGmeanClamp(colorArgType aCol);
-// |    | colorTpl& tfrmGreyScale(void);
-// |    | colorTpl& tfrmWebSafe216();
-// |    | colorTpl& tfrmWebSafePro216();
-// |    | colorTpl& tfrmWebSafeDeu216();
-// |    | colorTpl& tfrmWebSafeTri216();
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// |    | colorTpl<double, 3> rgb2colorSpace(colorSpaceEnum space);
-// |    | std::string colorSpaceToString(colorSpaceEnum space);
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// |    | colorTpl& tfrmLinearGreyLevelScale(double c, double b);
-// |    | colorTpl& tfrmLinearGreyLevelScale(colorArgType from1, colorArgType from2, colorArgType to1, colorArgType to2);
-// |    | colorTpl& tfrmLinearGreyLevelScale(double rc, double rb, double gc, double gb, double bc, double bb);
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// |    | colorTpl& tfrmStdPow(double p);
-// |    | colorTpl& tfrmStdPow(double rp, double gp, double bp);
-// |    | colorTpl& tfrmStdPowSqr(void);
-// |    | colorTpl& tfrmStdPowSqrt(void);
-// |    | colorTpl& tfrmLn();
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// |    | channelArithSDPType rgb2GreyDotProd(channelArithSDPType redWt, channelArithSDPType greenWt, channelArithSDPType blueWt);
-// |    | channelArithFltType rgbLuminance(void);
-// |    | channelArithSPType rgbSumIntensity(void);
-// |    | channelArithSPType sumIntensity(void);
-// |    | channelArithFltType rgbScaledIntensity(void);
-// |    | channelArithFltType sumScaledIntensity(void);
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// |    | clrChanT getMaxC();
-// |    | clrChanT getMinC();
-// |    | clrChanT getMaxRGB();
-// |    | clrChanT getMinRGB();
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// |    | channelArithSPType dotProd(colorArgType aColor);
-// |    | channelArithSPType distP2sq(colorArgType aColor);
-// |    | channelArithSPType distAbs(colorArgType aColor);
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// |    | bool isEqual(colorArgType aColor);
-// |    | bool isEqualRGB(colorArgType aColor);
-// |    | bool isNotEqual(colorArgType aColor);
-// |    | bool isBlack();
-// |    | bool isBlackRGB();
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// |    | template <typename iT> clrChanT clampTop(iT arithValue);
-// |    | template <typename iT> clrChanT clampBot(iT arithValue);
-// |    | template <typename iT> clrChanT clampAll(iT arithValue);
-// +----+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// +----+---------------------------------------------------------------------------------------------------------------
+// | ** | getC0() const;
+// | ** | getC1() const;
+// | ** | getC2() const;
+// | ** | getC3() const;
+// | ** | getChan(int chan) const;
+// | ** | setC0(clrChanT cVal);
+// | ** | setC1(clrChanT cVal);
+// | ** | setC2(clrChanT cVal);
+// | ** | setC3(clrChanT cVal);
+// | ** | setChan(int chan, clrChanT cVal);
+// | -- | setChanToMax(int chan);
+// | -- | setChanToMin(int chan);
+// | ** | setChans(clrChanT c1, clrChanT c2, clrChanT c3, clrChanT c4);
+// | ** | setChans(clrChanT c1, clrChanT c2, clrChanT c3);
+// | ** | setChans(clrChanT c1, clrChanT c2);
+// | ** | setChans(clrChanT cVal);
+// | -- | setChans(std::tuple<clrChanT, clrChanT, clrChanT, clrChanT> chanValues);
+// | -- | setChans(std::tuple<clrChanT, clrChanT, clrChanT> chanValues);
+// |    | setChans(std::vector<clrChanT>& chanValues);
+// | ** | setChans(std::string colorHexString, bool clearUndefinedChannels = false);
+// +----+---------------------------------------------------------------------------------------------------------------
+// | ** | getC0_dbl() const;
+// | ** | getC1_dbl() const;
+// | ** | getC2_dbl() const;
+// | ** | getC3_dbl() const;
+// | ** | getChan_dbl(int chan) const;
+// | ** | setChan_dbl(int chan, double cVal);
+// | ** | setC0_dbl(double cVal);
+// | ** | setC1_dbl(double cVal);
+// | ** | setC2_dbl(double cVal);
+// | ** | setC3_dbl(double cVal);
+// | ** | setChans_dbl(double c1, double c2, double c3, double c4);
+// | ** | setChans_dbl(double c1, double c2, double c3);
+// | ** | setChans_dbl(double c1, double c2);
+// | ** | setChans_dbl(double cVal);
+// +----+---------------------------------------------------------------------------------------------------------------
+// | ** | getC0_byte() const;
+// | ** | getC1_byte() const;
+// | ** | getC2_byte() const;
+// | ** | getC3_byte() const;
+// | ** | getChan_byte(int chan) const;
+// | ** | setChan_byte(int chan, uint8_t cVal);
+// | ** | setC0_byte(uint8_t cVal);
+// | ** | setC1_byte(uint8_t cVal);
+// | ** | setC2_byte(uint8_t cVal);
+// | ** | setC3_byte(uint8_t cVal);
+// | ** | setChans_byte(uint8_t c1, uint8_t c2, uint8_t c3, uint8_t c4);
+// | ** | setChans_byte(uint8_t c1, uint8_t c2, uint8_t c3);
+// | ** | setChans_byte(uint8_t c1, uint8_t c2);
+// | ** | setChans_byte(uint8_t cVal);
+// +----+---------------------------------------------------------------------------------------------------------------
+// | ** | setToBlack();
+// | ** | setToWhite();
+// | ** | setToRed();
+// | ** | setToBlue();
+// | ** | setToGreen();
+// | ** | setToCyan();
+// | ** | setToYellow();
+// | ** | setToMagenta();
+// | ** | setToCorner(char cornerColor);
+// | ** | setToCorner(cornerColorEnum cornerColor);
+// | ** | setToCorner(std::string cornerColor);
+// +----+---------------------------------------------------------------------------------------------------------------
+// | ** | setRGBAfromLogPackIntABGR(uint32_t anInt) 
+// | ** | setRGBfromLogPackIntABGR( uint32_t anInt) 
+// | ** | setRGBAfromLogPackIntARGB(uint32_t anInt) 
+// | ** | setRGBfromLogPackIntARGB( uint32_t anInt) 
+// | ** | setRGBAfromLogPackIntRGBA(uint32_t anInt) 
+// | ** | setRGBfromLogPackIntRGBA( uint32_t anInt) 
+// | ** | setRGBAfromLogPackIntABRG(uint32_t anInt)
+// | ** | setRGBfromLogPackIntABRG( uint32_t anInt)
+// | -- | setRGBAfromLogPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx, uint8_t aIdx);
+// | -- | setRGBfromLogPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx);
+// |    | setRGBAfromPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx, uint8_t aIdx);
+// |    | setRGBfromPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx);
+// +----+---------------------------------------------------------------------------------------------------------------
+// |    | setRGBfromUnitHSV(double H, double S, double V);
+// |    | setRGBfromUnitHSL(double H, double S, double L);
+// |    | setRGBfromColorSpace(colorSpaceEnum space, double inCh1, double inCh2, double inCh3);
+// |    | setRGBfromColorSpace(colorSpaceEnum space, colorTpl<double, 3> inColor);
+// +----+---------------------------------------------------------------------------------------------------------------
+// | ** | setRGBcmpGreyTGA16bit(uint16_t tga16val);
+// | ** | setRGBcmpGreyTGA24bit(uint32_t tga24val);
+// +----+---------------------------------------------------------------------------------------------------------------
+// |    | setRGBfromWavelengthCM(double wavelength, cmfInterpolationEnum interpMethod = cmfInterpolationEnum::LINEAR);
+// |    | setRGBfromWavelengthLA(double wavelength);
+// +----+---------------------------------------------------------------------------------------------------------------
+// |    | cmpGradiant(double aDouble, std::vector<double> const& anchors, std::vector<colorType> const& colors);
+// |    | cmpGradiant(double aDouble, std::vector<colorType> const& colors);
+// |    | cmpRGBcornerDGradiant(csIntType csIdx, const char *cornerColors);
+// |    | cmpRGBcornerDGradiant(csIntType csIdx, csIntType numColors, const char *cornerColors);
+// |    | cmpRGBcornerCGradiant(csFltType csX, const char *cornerColors) {
+// |    | cmpRGBcornerCGradiant(csFltType csX, csIntType numColors, const ccT* cornerColors) {
+// +----+---------------------------------------------------------------------------------------------------------------
+// |    | interplColors(double aDouble, colorArgType col1, colorArgType col2);
+// |    | interplColorSpace(colorSpaceEnum space, double aDouble, colorArgType col1, colorArgType col2);
+// +----+---------------------------------------------------------------------------------------------------------------
+// |    | wMean( 8 args
+// |    | wMean( 6 args
+// |    | wMean( 4 args
+// |    | uMean( 7 args
+// |    | uMean( 5 args
+// |    | uMean( 3 args
+// +----+---------------------------------------------------------------------------------------------------------------
+// | ** | tfrmOr(colorArgType aCol)         No coverage for floating point clrChanT
+// | ** | tfrmNor(colorArgType aCol)        No coverage for floating point clrChanT
+// | ** | tfrmAnd(colorArgType aCol)        No coverage for floating point clrChanT
+// | ** | tfrmNand(colorArgType aCol)       No coverage for floating point clrChanT
+// | ** | tfrmXor(colorArgType aCol)        No coverage for floating point clrChanT
+// | ** | tfrmNxor(colorArgType aCol)       No coverage for floating point clrChanT
+// | ** | tfrmNot(void)                     No coverage for floating point clrChanT
+// +----+---------------------------------------------------------------------------------------------------------------
+// | ** | tfrmSqDiff(colorArgType aCol);
+// | ** | tfrmAbsDiff(colorArgType aCol);
+// | ** | tfrmAdd(colorArgType aCol);
+// | ** | tfrmDiv(colorArgType aCol);
+// | ** | tfrmMult(colorArgType aCol);
+// | ** | tfrmMultClamp(colorArgType aCol);
+// | ** | tfrmSignDiff(colorArgType aCol);
+// | ** | tfrmDiffClamp(colorArgType aCol);
+// | ** | tfrmNegDiffClamp(colorArgType aCol);
+// | ** | tfrmAddClamp(colorArgType aCol);
+// | ** | tfrmAddDivClamp(colorArgType aCol, colorArgType dCol);
+// | ** | tfrmDiff(colorArgType aCol);
+// | ** | tfrmMod(colorArgType aCol) 
+// | ** | tfrmInvert();
+// |    | interplColors(double aDouble, colorArgType tooCol);
+// +----+---------------------------------------------------------------------------------------------------------------
+// |    | tfrmCopy(colorArgType aCol);
+// |    | tfrmMaxI(colorArgType aCol);
+// |    | tfrmMinI(colorArgType aCol);
+// |    | tfrmMax(colorArgType aCol);
+// |    | tfrmMin(colorArgType aCol);
+// |    | tfrmShiftL(colorArgType aCol) 
+// |    | tfrmShiftR(colorArgType aCol) 
+// |    | tfrmSaw(colorArgType lowCol, colorArgType highCol);
+// |    | tfrmStep(colorArgType lowCol, colorArgType highCol);
+// |    | tfrmDiracTot(colorArgType aCol);
+// |    | tfrmDirac(colorArgType aCol);
+// |    | tfrmFuzzyDirac(colorArgType ctrCol, colorArgType radCol);
+// |    | tfrmMean(colorArgType aCol);
+// |    | tfrmGmean(colorArgType aCol);
+// |    | tfrmGmeanClamp(colorArgType aCol);
+// |    | tfrmGreyScale(void);
+// |    | tfrmWebSafe216();
+// |    | tfrmWebSafePro216();
+// |    | tfrmWebSafeDeu216();
+// |    | tfrmWebSafeTri216();
+// +----+---------------------------------------------------------------------------------------------------------------
+// |    | rgb2colorSpace(colorSpaceEnum space);
+// |    | colorSpaceToString(colorSpaceEnum space);
+// +----+---------------------------------------------------------------------------------------------------------------
+// |    | tfrmLinearGreyLevelScale(double c, double b);
+// |    | tfrmLinearGreyLevelScale(colorArgType from1, colorArgType from2, colorArgType to1, colorArgType to2);
+// |    | tfrmLinearGreyLevelScale(double rc, double rb, double gc, double gb, double bc, double bb);
+// +----+---------------------------------------------------------------------------------------------------------------
+// |    | tfrmStdPow(double p);
+// |    | tfrmStdPow(double rp, double gp, double bp);
+// |    | tfrmStdPowSqr(void);
+// |    | tfrmStdPowSqrt(void);
+// |    | tfrmLn();
+// +----+---------------------------------------------------------------------------------------------------------------
+// | ** | rgb2GreyDotProd(channelArithSDPType redWt, channelArithSDPType greenWt, channelArithSDPType blueWt);
+// | ** | luminanceRGB(void);
+// | ** | intensityRGB(void);
+// | ** | intensity(void);
+// | ** | intensityScaledRGB(void);
+// | ** | intensityScaled(void);
+// +----+---------------------------------------------------------------------------------------------------------------
+// | ** | getMaxC();
+// | ** | getMinC();
+// | ** | getMaxRGB();
+// | ** | getMinRGB();
+// +----+---------------------------------------------------------------------------------------------------------------
+// | ** | dotProd(colorArgType aColor);
+// | ** | distHypot(colorArgType aColor);
+// | ** | distSumAbs(colorArgType aColor);
+// | ** | distMaxAbs
+// +----+---------------------------------------------------------------------------------------------------------------
+// | ** | isEqual(colorArgType aColor);
+// | ** | isEqualRGB(colorArgType aColor);
+// | ** | isNotEqual(colorArgType aColor);
+// | ** | isBlack();
+// | ** | isBlackRGB();
+// +----+---------------------------------------------------------------------------------------------------------------
+// | -- | clampTop(iT arithValue);
+// | -- | clampBot(iT arithValue);
+// | -- | clampAll(iT arithValue);
+// +----+---------------------------------------------------------------------------------------------------------------
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(set_chan_dbl_8) {
@@ -4248,7 +4248,820 @@ BOOST_AUTO_TEST_CASE(tfrm_arith_FLT) {
   BOOST_TEST_CHECK(cColor.getC2() == 0.5);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(isBlack_and_isBlackRGB) {
+
+  mjr::colorRGB8b   aColor; // integer color with imperfect mask
+  mjr::colorRGBA8b  bColor; // integer color with perfect mask
+  mjr::colorRGB64b  cColor; // integer color without mask
+  mjr::colorRGB32F  dColor; // floating point color with mask
+  mjr::colorRGBA32F fColor; // floating point color with perfect mask
+  mjr::colorRGB64F  gColor; // floating point color without mask
+
+  aColor.setToBlack();
+  bColor.setToBlack();
+  cColor.setToBlack();
+  dColor.setToBlack();
+  fColor.setToBlack();
+  gColor.setToBlack();
+
+  BOOST_TEST_CHECK(aColor.isBlack()  == true);
+  BOOST_TEST_CHECK(bColor.isBlack()  == true);
+  BOOST_TEST_CHECK(cColor.isBlack()  == true);
+  BOOST_TEST_CHECK(dColor.isBlack()  == true);
+  BOOST_TEST_CHECK(fColor.isBlack()  == true);
+  BOOST_TEST_CHECK(gColor.isBlack()  == true);
+
+  BOOST_TEST_CHECK(aColor.isBlackRGB()  == true);
+  BOOST_TEST_CHECK(bColor.isBlackRGB()  == true);
+  BOOST_TEST_CHECK(cColor.isBlackRGB()  == true);
+  BOOST_TEST_CHECK(dColor.isBlackRGB()  == true);
+  BOOST_TEST_CHECK(fColor.isBlackRGB()  == true);
+  BOOST_TEST_CHECK(gColor.isBlackRGB()  == true);
+
+  aColor.setChanToMax(0);
+  bColor.setChanToMax(0);
+  cColor.setChanToMax(0);
+  dColor.setChanToMax(0);
+  fColor.setChanToMax(0);
+  gColor.setChanToMax(0);
+
+  BOOST_TEST_CHECK(aColor.isBlack()  == false);
+  BOOST_TEST_CHECK(bColor.isBlack()  == false);
+  BOOST_TEST_CHECK(cColor.isBlack()  == false);
+  BOOST_TEST_CHECK(dColor.isBlack()  == false);
+  BOOST_TEST_CHECK(fColor.isBlack()  == false);
+  BOOST_TEST_CHECK(gColor.isBlack()  == false);
+
+  BOOST_TEST_CHECK(aColor.isBlackRGB()  == false);
+  BOOST_TEST_CHECK(bColor.isBlackRGB()  == false);
+  BOOST_TEST_CHECK(cColor.isBlackRGB()  == false);
+  BOOST_TEST_CHECK(dColor.isBlackRGB()  == false);
+  BOOST_TEST_CHECK(fColor.isBlackRGB()  == false);
+  BOOST_TEST_CHECK(gColor.isBlackRGB()  == false);
+
+  aColor.setToWhite();
+  bColor.setToWhite();
+  cColor.setToWhite();
+  dColor.setToWhite();
+  fColor.setToWhite();
+  gColor.setToWhite();
+
+  BOOST_TEST_CHECK(aColor.isBlack()  == false);
+  BOOST_TEST_CHECK(bColor.isBlack()  == false);
+  BOOST_TEST_CHECK(cColor.isBlack()  == false);
+  BOOST_TEST_CHECK(dColor.isBlack()  == false);
+  BOOST_TEST_CHECK(fColor.isBlack()  == false);
+  BOOST_TEST_CHECK(gColor.isBlack()  == false);
+
+  BOOST_TEST_CHECK(aColor.isBlackRGB()  == false);
+  BOOST_TEST_CHECK(bColor.isBlackRGB()  == false);
+  BOOST_TEST_CHECK(cColor.isBlackRGB()  == false);
+  BOOST_TEST_CHECK(dColor.isBlackRGB()  == false);
+  BOOST_TEST_CHECK(fColor.isBlackRGB()  == false);
+  BOOST_TEST_CHECK(gColor.isBlackRGB()  == false);
+
+  bColor.setChansRGBA(0, 0, 0, 1);
+  fColor.setChansRGBA(0, 0, 0, 1);
+
+  BOOST_TEST_CHECK(bColor.isBlack()  == false);
+  BOOST_TEST_CHECK(fColor.isBlack()  == false);
+
+  BOOST_TEST_CHECK(bColor.isBlackRGB()  == true);
+  BOOST_TEST_CHECK(fColor.isBlackRGB()  == true);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(isEqual_and_isEqualRGB_and_isNotEqual) {
+
+  mjr::colorRGB8b   aLcolor; // integer color with imperfect mask
+  mjr::colorRGBA8b  bLcolor; // integer color with perfect mask
+  mjr::colorRGB64b  cLcolor; // integer color without mask
+  mjr::colorRGB32F  dLcolor; // floating point color with mask
+  mjr::colorRGBA32F fLcolor; // floating point color with perfect mask
+  mjr::colorRGB64F  gLcolor; // floating point color without mask
+
+  mjr::colorRGB8b   aRcolor; // integer color with imperfect mask
+  mjr::colorRGBA8b  bRcolor; // integer color with perfect mask
+  mjr::colorRGB64b  cRcolor; // integer color without mask
+  mjr::colorRGB32F  dRcolor; // floating point color with mask
+  mjr::colorRGBA32F fRcolor; // floating point color with perfect mask
+  mjr::colorRGB64F  gRcolor; // floating point color without mask
+
+  aLcolor.setToBlack();
+  bLcolor.setToBlack();
+  cLcolor.setToBlack();
+  dLcolor.setToBlack();
+  fLcolor.setToBlack();
+  gLcolor.setToBlack();
+
+  aRcolor.setToBlack();
+  bRcolor.setToBlack();
+  cRcolor.setToBlack();
+  dRcolor.setToBlack();
+  fRcolor.setToBlack();
+  gRcolor.setToBlack();
+
+  BOOST_TEST_CHECK(aLcolor.isEqual(aRcolor)  == true);
+  BOOST_TEST_CHECK(bLcolor.isEqual(bRcolor)  == true);
+  BOOST_TEST_CHECK(cLcolor.isEqual(cRcolor)  == true);
+  BOOST_TEST_CHECK(dLcolor.isEqual(dRcolor)  == true);
+  BOOST_TEST_CHECK(fLcolor.isEqual(fRcolor)  == true);
+  BOOST_TEST_CHECK(gLcolor.isEqual(gRcolor)  == true);
+
+  BOOST_TEST_CHECK(aLcolor.isNotEqual(aRcolor)  == false);
+  BOOST_TEST_CHECK(bLcolor.isNotEqual(bRcolor)  == false);
+  BOOST_TEST_CHECK(cLcolor.isNotEqual(cRcolor)  == false);
+  BOOST_TEST_CHECK(dLcolor.isNotEqual(dRcolor)  == false);
+  BOOST_TEST_CHECK(fLcolor.isNotEqual(fRcolor)  == false);
+  BOOST_TEST_CHECK(gLcolor.isNotEqual(gRcolor)  == false);
+
+  BOOST_TEST_CHECK(aLcolor.isEqualRGB(aRcolor)  == true);
+  BOOST_TEST_CHECK(bLcolor.isEqualRGB(bRcolor)  == true);
+  BOOST_TEST_CHECK(cLcolor.isEqualRGB(cRcolor)  == true);
+  BOOST_TEST_CHECK(dLcolor.isEqualRGB(dRcolor)  == true);
+  BOOST_TEST_CHECK(fLcolor.isEqualRGB(fRcolor)  == true);
+  BOOST_TEST_CHECK(gLcolor.isEqualRGB(gRcolor)  == true);
+
+  aLcolor.setChanToMax(0);
+  bLcolor.setChanToMax(0);
+  cLcolor.setChanToMax(0);
+  dLcolor.setChanToMax(0);
+  fLcolor.setChanToMax(0);
+  gLcolor.setChanToMax(0);
+
+  BOOST_TEST_CHECK(aLcolor.isEqual(aRcolor)  == false);
+  BOOST_TEST_CHECK(bLcolor.isEqual(bRcolor)  == false);
+  BOOST_TEST_CHECK(cLcolor.isEqual(cRcolor)  == false);
+  BOOST_TEST_CHECK(dLcolor.isEqual(dRcolor)  == false);
+  BOOST_TEST_CHECK(fLcolor.isEqual(fRcolor)  == false);
+  BOOST_TEST_CHECK(gLcolor.isEqual(gRcolor)  == false);
+
+  BOOST_TEST_CHECK(aLcolor.isNotEqual(aRcolor)  == true);
+  BOOST_TEST_CHECK(bLcolor.isNotEqual(bRcolor)  == true);
+  BOOST_TEST_CHECK(cLcolor.isNotEqual(cRcolor)  == true);
+  BOOST_TEST_CHECK(dLcolor.isNotEqual(dRcolor)  == true);
+  BOOST_TEST_CHECK(fLcolor.isNotEqual(fRcolor)  == true);
+  BOOST_TEST_CHECK(gLcolor.isNotEqual(gRcolor)  == true);
+
+  BOOST_TEST_CHECK(aLcolor.isEqualRGB(aRcolor)  == false);
+  BOOST_TEST_CHECK(bLcolor.isEqualRGB(bRcolor)  == false);
+  BOOST_TEST_CHECK(cLcolor.isEqualRGB(cRcolor)  == false);
+  BOOST_TEST_CHECK(dLcolor.isEqualRGB(dRcolor)  == false);
+  BOOST_TEST_CHECK(fLcolor.isEqualRGB(fRcolor)  == false);
+  BOOST_TEST_CHECK(gLcolor.isEqualRGB(gRcolor)  == false);
+
+  aRcolor.setChanToMax(0);
+  bRcolor.setChanToMax(0);
+  cRcolor.setChanToMax(0);
+  dRcolor.setChanToMax(0);
+  fRcolor.setChanToMax(0);
+  gRcolor.setChanToMax(0);
+
+  BOOST_TEST_CHECK(aLcolor.isEqual(aRcolor)  == true);
+  BOOST_TEST_CHECK(bLcolor.isEqual(bRcolor)  == true);
+  BOOST_TEST_CHECK(cLcolor.isEqual(cRcolor)  == true);
+  BOOST_TEST_CHECK(dLcolor.isEqual(dRcolor)  == true);
+  BOOST_TEST_CHECK(fLcolor.isEqual(fRcolor)  == true);
+  BOOST_TEST_CHECK(gLcolor.isEqual(gRcolor)  == true);
+
+  BOOST_TEST_CHECK(aLcolor.isNotEqual(aRcolor)  == false);
+  BOOST_TEST_CHECK(bLcolor.isNotEqual(bRcolor)  == false);
+  BOOST_TEST_CHECK(cLcolor.isNotEqual(cRcolor)  == false);
+  BOOST_TEST_CHECK(dLcolor.isNotEqual(dRcolor)  == false);
+  BOOST_TEST_CHECK(fLcolor.isNotEqual(fRcolor)  == false);
+  BOOST_TEST_CHECK(gLcolor.isNotEqual(gRcolor)  == false);
+
+  BOOST_TEST_CHECK(aLcolor.isEqualRGB(aRcolor)  == true);
+  BOOST_TEST_CHECK(bLcolor.isEqualRGB(bRcolor)  == true);
+  BOOST_TEST_CHECK(cLcolor.isEqualRGB(cRcolor)  == true);
+  BOOST_TEST_CHECK(dLcolor.isEqualRGB(dRcolor)  == true);
+  BOOST_TEST_CHECK(fLcolor.isEqualRGB(fRcolor)  == true);
+  BOOST_TEST_CHECK(gLcolor.isEqualRGB(gRcolor)  == true);
+
+  aLcolor.setToWhite();
+  bLcolor.setToWhite();
+  cLcolor.setToWhite();
+  dLcolor.setToWhite();
+  fLcolor.setToWhite();
+  gLcolor.setToWhite();
+
+  BOOST_TEST_CHECK(aLcolor.isEqual(aRcolor)  == false);
+  BOOST_TEST_CHECK(bLcolor.isEqual(bRcolor)  == false);
+  BOOST_TEST_CHECK(cLcolor.isEqual(cRcolor)  == false);
+  BOOST_TEST_CHECK(dLcolor.isEqual(dRcolor)  == false);
+  BOOST_TEST_CHECK(fLcolor.isEqual(fRcolor)  == false);
+  BOOST_TEST_CHECK(gLcolor.isEqual(gRcolor)  == false);
+
+  BOOST_TEST_CHECK(aLcolor.isNotEqual(aRcolor)  == true);
+  BOOST_TEST_CHECK(bLcolor.isNotEqual(bRcolor)  == true);
+  BOOST_TEST_CHECK(cLcolor.isNotEqual(cRcolor)  == true);
+  BOOST_TEST_CHECK(dLcolor.isNotEqual(dRcolor)  == true);
+  BOOST_TEST_CHECK(fLcolor.isNotEqual(fRcolor)  == true);
+  BOOST_TEST_CHECK(gLcolor.isNotEqual(gRcolor)  == true);
+
+  BOOST_TEST_CHECK(aLcolor.isEqualRGB(aRcolor)  == false);
+  BOOST_TEST_CHECK(bLcolor.isEqualRGB(bRcolor)  == false);
+  BOOST_TEST_CHECK(cLcolor.isEqualRGB(cRcolor)  == false);
+  BOOST_TEST_CHECK(dLcolor.isEqualRGB(dRcolor)  == false);
+  BOOST_TEST_CHECK(fLcolor.isEqualRGB(fRcolor)  == false);
+  BOOST_TEST_CHECK(gLcolor.isEqualRGB(gRcolor)  == false);
+
+  bLcolor.setChansRGBA(1, 2, 3, 4);
+  fLcolor.setChansRGBA(1, 2, 3, 4);
+
+  bRcolor.setChansRGBA(1, 2, 3, 5);
+  fRcolor.setChansRGBA(1, 2, 3, 5);
+
+  BOOST_TEST_CHECK(bLcolor.isEqual(bRcolor)  == false);
+  BOOST_TEST_CHECK(fLcolor.isEqual(fRcolor)  == false);
+
+  BOOST_TEST_CHECK(bLcolor.isEqualRGB(bRcolor)  == true);
+  BOOST_TEST_CHECK(fLcolor.isEqualRGB(fRcolor)  == true);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(isEqual_and_isEqualRGB_and_isNotEqual) {
+
+  mjr::colorRGBA8b   aColor; // integer color with imperfect mask
+  mjr::colorRGBA64b  bColor; // integer color without mask
+  mjr::colorRGBA32F  cColor; // floating point color with mask
+  mjr::colorRGBA64F  dColor; // floating point color without mask
+
+  ////////////////////////////////////////////////////////////////////////////////
+  aColor.setToWhite();
+  aColor.setToBlack();
+  BOOST_TEST_CHECK(aColor.getC0() == aColor.minChanVal);
+  BOOST_TEST_CHECK(aColor.getC1() == aColor.minChanVal);
+  BOOST_TEST_CHECK(aColor.getC2() == aColor.minChanVal);
+  BOOST_TEST_CHECK(aColor.getC3() == aColor.minChanVal);
+
+  bColor.setToWhite();
+  bColor.setToBlack();
+  BOOST_TEST_CHECK(bColor.getC0() == bColor.minChanVal);
+  BOOST_TEST_CHECK(bColor.getC1() == bColor.minChanVal);
+  BOOST_TEST_CHECK(bColor.getC2() == bColor.minChanVal);
+  BOOST_TEST_CHECK(bColor.getC3() == bColor.minChanVal);
+
+  cColor.setToWhite();
+  cColor.setToBlack();
+  BOOST_TEST_CHECK(cColor.getC0() == cColor.minChanVal);
+  BOOST_TEST_CHECK(cColor.getC1() == cColor.minChanVal);
+  BOOST_TEST_CHECK(cColor.getC2() == cColor.minChanVal);
+  BOOST_TEST_CHECK(cColor.getC3() == cColor.minChanVal);
+
+  dColor.setToWhite();
+  dColor.setToBlack();
+  BOOST_TEST_CHECK(dColor.getC0() == dColor.minChanVal);
+  BOOST_TEST_CHECK(dColor.getC1() == dColor.minChanVal);
+  BOOST_TEST_CHECK(dColor.getC2() == dColor.minChanVal);
+  BOOST_TEST_CHECK(dColor.getC3() == dColor.minChanVal);
+
+  ////////////////////////////////////////////////////////////////////////////////
+  aColor.setToBlack();
+  aColor.setToWhite();
+  BOOST_TEST_CHECK(aColor.getC0() == aColor.maxChanVal);
+  BOOST_TEST_CHECK(aColor.getC1() == aColor.maxChanVal);
+  BOOST_TEST_CHECK(aColor.getC2() == aColor.maxChanVal);
+  BOOST_TEST_CHECK(aColor.getC3() == aColor.maxChanVal);
+
+  bColor.setToBlack();
+  bColor.setToWhite();
+  BOOST_TEST_CHECK(bColor.getC0() == bColor.maxChanVal);
+  BOOST_TEST_CHECK(bColor.getC1() == bColor.maxChanVal);
+  BOOST_TEST_CHECK(bColor.getC2() == bColor.maxChanVal);
+  BOOST_TEST_CHECK(bColor.getC3() == bColor.maxChanVal);
+
+  cColor.setToBlack();
+  cColor.setToWhite();
+  BOOST_TEST_CHECK(cColor.getC0() == cColor.maxChanVal);
+  BOOST_TEST_CHECK(cColor.getC1() == cColor.maxChanVal);
+  BOOST_TEST_CHECK(cColor.getC2() == cColor.maxChanVal);
+  BOOST_TEST_CHECK(cColor.getC3() == cColor.maxChanVal);
+
+  dColor.setToBlack();
+  dColor.setToWhite();
+  BOOST_TEST_CHECK(dColor.getC0() == dColor.maxChanVal);
+  BOOST_TEST_CHECK(dColor.getC1() == dColor.maxChanVal);
+  BOOST_TEST_CHECK(dColor.getC2() == dColor.maxChanVal);
+  BOOST_TEST_CHECK(dColor.getC3() == dColor.maxChanVal);
+
+  ////////////////////////////////////////////////////////////////////////////////
+  aColor.setToBlack();
+  aColor.setToRed();
+  BOOST_TEST_CHECK(aColor.getC0() == aColor.maxChanVal);
+  BOOST_TEST_CHECK(aColor.getC1() == aColor.minChanVal);
+  BOOST_TEST_CHECK(aColor.getC2() == aColor.minChanVal);
+  BOOST_TEST_CHECK(aColor.getC3() == aColor.minChanVal);
+
+  bColor.setToBlack();
+  bColor.setToRed();
+  BOOST_TEST_CHECK(bColor.getC0() == bColor.maxChanVal);
+  BOOST_TEST_CHECK(bColor.getC1() == bColor.minChanVal);
+  BOOST_TEST_CHECK(bColor.getC2() == bColor.minChanVal);
+  BOOST_TEST_CHECK(bColor.getC3() == bColor.minChanVal);
+
+  cColor.setToBlack();
+  cColor.setToRed();
+  BOOST_TEST_CHECK(cColor.getC0() == cColor.maxChanVal);
+  BOOST_TEST_CHECK(cColor.getC1() == cColor.minChanVal);
+  BOOST_TEST_CHECK(cColor.getC2() == cColor.minChanVal);
+  BOOST_TEST_CHECK(cColor.getC3() == cColor.minChanVal);
+
+  dColor.setToBlack();
+  dColor.setToRed();
+  BOOST_TEST_CHECK(dColor.getC0() == dColor.maxChanVal);
+  BOOST_TEST_CHECK(dColor.getC1() == dColor.minChanVal);
+  BOOST_TEST_CHECK(dColor.getC2() == dColor.minChanVal);
+  BOOST_TEST_CHECK(dColor.getC3() == dColor.minChanVal);
+
+  ////////////////////////////////////////////////////////////////////////////////
+  aColor.setToWhite();
+  aColor.setToRed();
+  BOOST_TEST_CHECK(aColor.getC0() == aColor.maxChanVal);
+  BOOST_TEST_CHECK(aColor.getC1() == aColor.minChanVal);
+  BOOST_TEST_CHECK(aColor.getC2() == aColor.minChanVal);
+  BOOST_TEST_CHECK(aColor.getC3() == aColor.minChanVal);
+
+  bColor.setToWhite();
+  bColor.setToRed();
+  BOOST_TEST_CHECK(bColor.getC0() == bColor.maxChanVal);
+  BOOST_TEST_CHECK(bColor.getC1() == bColor.minChanVal);
+  BOOST_TEST_CHECK(bColor.getC2() == bColor.minChanVal);
+  BOOST_TEST_CHECK(bColor.getC3() == bColor.minChanVal);
+
+  cColor.setToWhite();
+  cColor.setToRed();
+  BOOST_TEST_CHECK(cColor.getC0() == cColor.maxChanVal);
+  BOOST_TEST_CHECK(cColor.getC1() == cColor.minChanVal);
+  BOOST_TEST_CHECK(cColor.getC2() == cColor.minChanVal);
+  BOOST_TEST_CHECK(cColor.getC3() == cColor.minChanVal);
+
+  dColor.setToWhite();
+  dColor.setToRed();
+  BOOST_TEST_CHECK(dColor.getC0() == dColor.maxChanVal);
+  BOOST_TEST_CHECK(dColor.getC1() == dColor.minChanVal);
+  BOOST_TEST_CHECK(dColor.getC2() == dColor.minChanVal);
+  BOOST_TEST_CHECK(dColor.getC3() == dColor.minChanVal);
+
+  ////////////////////////////////////////////////////////////////////////////////
+  aColor.setToBlack();
+  aColor.setToGreen();
+  BOOST_TEST_CHECK(aColor.getC0() == aColor.minChanVal);
+  BOOST_TEST_CHECK(aColor.getC1() == aColor.maxChanVal);
+  BOOST_TEST_CHECK(aColor.getC2() == aColor.minChanVal);
+  BOOST_TEST_CHECK(aColor.getC3() == aColor.minChanVal);
+
+  bColor.setToBlack();
+  bColor.setToGreen();
+  BOOST_TEST_CHECK(bColor.getC0() == bColor.minChanVal);
+  BOOST_TEST_CHECK(bColor.getC1() == bColor.maxChanVal);
+  BOOST_TEST_CHECK(bColor.getC2() == bColor.minChanVal);
+  BOOST_TEST_CHECK(bColor.getC3() == bColor.minChanVal);
+
+  cColor.setToBlack();
+  cColor.setToGreen();
+  BOOST_TEST_CHECK(cColor.getC0() == cColor.minChanVal);
+  BOOST_TEST_CHECK(cColor.getC1() == cColor.maxChanVal);
+  BOOST_TEST_CHECK(cColor.getC2() == cColor.minChanVal);
+  BOOST_TEST_CHECK(cColor.getC3() == cColor.minChanVal);
+
+  dColor.setToBlack();
+  dColor.setToGreen();
+  BOOST_TEST_CHECK(dColor.getC0() == dColor.minChanVal);
+  BOOST_TEST_CHECK(dColor.getC1() == dColor.maxChanVal);
+  BOOST_TEST_CHECK(dColor.getC2() == dColor.minChanVal);
+  BOOST_TEST_CHECK(dColor.getC3() == dColor.minChanVal);
+
+  ////////////////////////////////////////////////////////////////////////////////
+  aColor.setToWhite();
+  aColor.setToGreen();
+  BOOST_TEST_CHECK(aColor.getC0() == aColor.minChanVal);
+  BOOST_TEST_CHECK(aColor.getC1() == aColor.maxChanVal);
+  BOOST_TEST_CHECK(aColor.getC2() == aColor.minChanVal);
+  BOOST_TEST_CHECK(aColor.getC3() == aColor.minChanVal);
+
+  bColor.setToWhite();
+  bColor.setToGreen();
+  BOOST_TEST_CHECK(bColor.getC0() == bColor.minChanVal);
+  BOOST_TEST_CHECK(bColor.getC1() == bColor.maxChanVal);
+  BOOST_TEST_CHECK(bColor.getC2() == bColor.minChanVal);
+  BOOST_TEST_CHECK(bColor.getC3() == bColor.minChanVal);
+
+  cColor.setToWhite();
+  cColor.setToGreen();
+  BOOST_TEST_CHECK(cColor.getC0() == cColor.minChanVal);
+  BOOST_TEST_CHECK(cColor.getC1() == cColor.maxChanVal);
+  BOOST_TEST_CHECK(cColor.getC2() == cColor.minChanVal);
+  BOOST_TEST_CHECK(cColor.getC3() == cColor.minChanVal);
+
+  dColor.setToWhite();
+  dColor.setToGreen();
+  BOOST_TEST_CHECK(dColor.getC0() == dColor.minChanVal);
+  BOOST_TEST_CHECK(dColor.getC1() == dColor.maxChanVal);
+  BOOST_TEST_CHECK(dColor.getC2() == dColor.minChanVal);
+  BOOST_TEST_CHECK(dColor.getC3() == dColor.minChanVal);
+
+  ////////////////////////////////////////////////////////////////////////////////
+  aColor.setToBlack();
+  aColor.setToBlue();
+  BOOST_TEST_CHECK(aColor.getC0() == aColor.minChanVal);
+  BOOST_TEST_CHECK(aColor.getC1() == aColor.minChanVal);
+  BOOST_TEST_CHECK(aColor.getC2() == aColor.maxChanVal);
+  BOOST_TEST_CHECK(aColor.getC3() == aColor.minChanVal);
+
+  bColor.setToBlack();
+  bColor.setToBlue();
+  BOOST_TEST_CHECK(bColor.getC0() == bColor.minChanVal);
+  BOOST_TEST_CHECK(bColor.getC1() == bColor.minChanVal);
+  BOOST_TEST_CHECK(bColor.getC2() == bColor.maxChanVal);
+  BOOST_TEST_CHECK(bColor.getC3() == bColor.minChanVal);
+
+  cColor.setToBlack();
+  cColor.setToBlue();
+  BOOST_TEST_CHECK(cColor.getC0() == cColor.minChanVal);
+  BOOST_TEST_CHECK(cColor.getC1() == cColor.minChanVal);
+  BOOST_TEST_CHECK(cColor.getC2() == cColor.maxChanVal);
+  BOOST_TEST_CHECK(cColor.getC3() == cColor.minChanVal);
+
+  dColor.setToBlack();
+  dColor.setToBlue();
+  BOOST_TEST_CHECK(dColor.getC0() == dColor.minChanVal);
+  BOOST_TEST_CHECK(dColor.getC1() == dColor.minChanVal);
+  BOOST_TEST_CHECK(dColor.getC2() == dColor.maxChanVal);
+  BOOST_TEST_CHECK(dColor.getC3() == dColor.minChanVal);
+
+  ////////////////////////////////////////////////////////////////////////////////
+  aColor.setToWhite();
+  aColor.setToBlue();
+  BOOST_TEST_CHECK(aColor.getC0() == aColor.minChanVal);
+  BOOST_TEST_CHECK(aColor.getC1() == aColor.minChanVal);
+  BOOST_TEST_CHECK(aColor.getC2() == aColor.maxChanVal);
+  BOOST_TEST_CHECK(aColor.getC3() == aColor.minChanVal);
+
+  bColor.setToWhite();
+  bColor.setToBlue();
+  BOOST_TEST_CHECK(bColor.getC0() == bColor.minChanVal);
+  BOOST_TEST_CHECK(bColor.getC1() == bColor.minChanVal);
+  BOOST_TEST_CHECK(bColor.getC2() == bColor.maxChanVal);
+  BOOST_TEST_CHECK(bColor.getC3() == bColor.minChanVal);
+
+  cColor.setToWhite();
+  cColor.setToBlue();
+  BOOST_TEST_CHECK(cColor.getC0() == cColor.minChanVal);
+  BOOST_TEST_CHECK(cColor.getC1() == cColor.minChanVal);
+  BOOST_TEST_CHECK(cColor.getC2() == cColor.maxChanVal);
+  BOOST_TEST_CHECK(cColor.getC3() == cColor.minChanVal);
+
+  dColor.setToWhite();
+  dColor.setToBlue();
+  BOOST_TEST_CHECK(dColor.getC0() == dColor.minChanVal);
+  BOOST_TEST_CHECK(dColor.getC1() == dColor.minChanVal);
+  BOOST_TEST_CHECK(dColor.getC2() == dColor.maxChanVal);
+  BOOST_TEST_CHECK(dColor.getC3() == dColor.minChanVal);
+
+  ////////////////////////////////////////////////////////////////////////////////
+  aColor.setToBlack();
+  aColor.setToCyan();
+  BOOST_TEST_CHECK(aColor.getC0() == aColor.minChanVal);
+  BOOST_TEST_CHECK(aColor.getC1() == aColor.maxChanVal);
+  BOOST_TEST_CHECK(aColor.getC2() == aColor.maxChanVal);
+  BOOST_TEST_CHECK(aColor.getC3() == aColor.maxChanVal);
+
+  bColor.setToBlack();
+  bColor.setToCyan();
+  BOOST_TEST_CHECK(bColor.getC0() == bColor.minChanVal);
+  BOOST_TEST_CHECK(bColor.getC1() == bColor.maxChanVal);
+  BOOST_TEST_CHECK(bColor.getC2() == bColor.maxChanVal);
+  BOOST_TEST_CHECK(bColor.getC3() == bColor.maxChanVal);
+
+  cColor.setToBlack();
+  cColor.setToCyan();
+  BOOST_TEST_CHECK(cColor.getC0() == cColor.minChanVal);
+  BOOST_TEST_CHECK(cColor.getC1() == cColor.maxChanVal);
+  BOOST_TEST_CHECK(cColor.getC2() == cColor.maxChanVal);
+  BOOST_TEST_CHECK(cColor.getC3() == cColor.maxChanVal);
+
+  dColor.setToBlack();
+  dColor.setToCyan();
+  BOOST_TEST_CHECK(dColor.getC0() == dColor.minChanVal);
+  BOOST_TEST_CHECK(dColor.getC1() == dColor.maxChanVal);
+  BOOST_TEST_CHECK(dColor.getC2() == dColor.maxChanVal);
+  BOOST_TEST_CHECK(dColor.getC3() == dColor.maxChanVal);
+
+  ////////////////////////////////////////////////////////////////////////////////
+  aColor.setToWhite();
+  aColor.setToCyan();
+  BOOST_TEST_CHECK(aColor.getC0() == aColor.minChanVal);
+  BOOST_TEST_CHECK(aColor.getC1() == aColor.maxChanVal);
+  BOOST_TEST_CHECK(aColor.getC2() == aColor.maxChanVal);
+  BOOST_TEST_CHECK(aColor.getC3() == aColor.maxChanVal);
+
+  bColor.setToWhite();
+  bColor.setToCyan();
+  BOOST_TEST_CHECK(bColor.getC0() == bColor.minChanVal);
+  BOOST_TEST_CHECK(bColor.getC1() == bColor.maxChanVal);
+  BOOST_TEST_CHECK(bColor.getC2() == bColor.maxChanVal);
+  BOOST_TEST_CHECK(bColor.getC3() == bColor.maxChanVal);
+
+  cColor.setToWhite();
+  cColor.setToCyan();
+  BOOST_TEST_CHECK(cColor.getC0() == cColor.minChanVal);
+  BOOST_TEST_CHECK(cColor.getC1() == cColor.maxChanVal);
+  BOOST_TEST_CHECK(cColor.getC2() == cColor.maxChanVal);
+  BOOST_TEST_CHECK(cColor.getC3() == cColor.maxChanVal);
+
+  dColor.setToWhite();
+  dColor.setToCyan();
+  BOOST_TEST_CHECK(dColor.getC0() == dColor.minChanVal);
+  BOOST_TEST_CHECK(dColor.getC1() == dColor.maxChanVal);
+  BOOST_TEST_CHECK(dColor.getC2() == dColor.maxChanVal);
+  BOOST_TEST_CHECK(dColor.getC3() == dColor.maxChanVal);
+
+  ////////////////////////////////////////////////////////////////////////////////
+  aColor.setToBlack();
+  aColor.setToMagenta();
+  BOOST_TEST_CHECK(aColor.getC0() == aColor.maxChanVal);
+  BOOST_TEST_CHECK(aColor.getC1() == aColor.minChanVal);
+  BOOST_TEST_CHECK(aColor.getC2() == aColor.maxChanVal);
+  BOOST_TEST_CHECK(aColor.getC3() == aColor.maxChanVal);
+
+  bColor.setToBlack();
+  bColor.setToMagenta();
+  BOOST_TEST_CHECK(bColor.getC0() == bColor.maxChanVal);
+  BOOST_TEST_CHECK(bColor.getC1() == bColor.minChanVal);
+  BOOST_TEST_CHECK(bColor.getC2() == bColor.maxChanVal);
+  BOOST_TEST_CHECK(bColor.getC3() == bColor.maxChanVal);
+
+  cColor.setToBlack();
+  cColor.setToMagenta();
+  BOOST_TEST_CHECK(cColor.getC0() == cColor.maxChanVal);
+  BOOST_TEST_CHECK(cColor.getC1() == cColor.minChanVal);
+  BOOST_TEST_CHECK(cColor.getC2() == cColor.maxChanVal);
+  BOOST_TEST_CHECK(cColor.getC3() == cColor.maxChanVal);
+
+  dColor.setToBlack();
+  dColor.setToMagenta();
+  BOOST_TEST_CHECK(dColor.getC0() == dColor.maxChanVal);
+  BOOST_TEST_CHECK(dColor.getC1() == dColor.minChanVal);
+  BOOST_TEST_CHECK(dColor.getC2() == dColor.maxChanVal);
+  BOOST_TEST_CHECK(dColor.getC3() == dColor.maxChanVal);
+
+  ////////////////////////////////////////////////////////////////////////////////
+  aColor.setToWhite();
+  aColor.setToMagenta();
+  BOOST_TEST_CHECK(aColor.getC0() == aColor.maxChanVal);
+  BOOST_TEST_CHECK(aColor.getC1() == aColor.minChanVal);
+  BOOST_TEST_CHECK(aColor.getC2() == aColor.maxChanVal);
+  BOOST_TEST_CHECK(aColor.getC3() == aColor.maxChanVal);
+
+  bColor.setToWhite();
+  bColor.setToMagenta();
+  BOOST_TEST_CHECK(bColor.getC0() == bColor.maxChanVal);
+  BOOST_TEST_CHECK(bColor.getC1() == bColor.minChanVal);
+  BOOST_TEST_CHECK(bColor.getC2() == bColor.maxChanVal);
+  BOOST_TEST_CHECK(bColor.getC3() == bColor.maxChanVal);
+
+  cColor.setToWhite();
+  cColor.setToMagenta();
+  BOOST_TEST_CHECK(cColor.getC0() == cColor.maxChanVal);
+  BOOST_TEST_CHECK(cColor.getC1() == cColor.minChanVal);
+  BOOST_TEST_CHECK(cColor.getC2() == cColor.maxChanVal);
+  BOOST_TEST_CHECK(cColor.getC3() == cColor.maxChanVal);
+
+  dColor.setToWhite();
+  dColor.setToMagenta();
+  BOOST_TEST_CHECK(dColor.getC0() == dColor.maxChanVal);
+  BOOST_TEST_CHECK(dColor.getC1() == dColor.minChanVal);
+  BOOST_TEST_CHECK(dColor.getC2() == dColor.maxChanVal);
+  BOOST_TEST_CHECK(dColor.getC3() == dColor.maxChanVal);
+
+  ////////////////////////////////////////////////////////////////////////////////
+  aColor.setToBlack();
+  aColor.setToYellow();
+  BOOST_TEST_CHECK(aColor.getC0() == aColor.maxChanVal);
+  BOOST_TEST_CHECK(aColor.getC1() == aColor.maxChanVal);
+  BOOST_TEST_CHECK(aColor.getC2() == aColor.minChanVal);
+  BOOST_TEST_CHECK(aColor.getC3() == aColor.maxChanVal);
+
+  bColor.setToBlack();
+  bColor.setToYellow();
+  BOOST_TEST_CHECK(bColor.getC0() == bColor.maxChanVal);
+  BOOST_TEST_CHECK(bColor.getC1() == bColor.maxChanVal);
+  BOOST_TEST_CHECK(bColor.getC2() == bColor.minChanVal);
+  BOOST_TEST_CHECK(bColor.getC3() == bColor.maxChanVal);
+
+  cColor.setToBlack();
+  cColor.setToYellow();
+  BOOST_TEST_CHECK(cColor.getC0() == cColor.maxChanVal);
+  BOOST_TEST_CHECK(cColor.getC1() == cColor.maxChanVal);
+  BOOST_TEST_CHECK(cColor.getC2() == cColor.minChanVal);
+  BOOST_TEST_CHECK(cColor.getC3() == cColor.maxChanVal);
+
+  dColor.setToBlack();
+  dColor.setToYellow();
+  BOOST_TEST_CHECK(dColor.getC0() == dColor.maxChanVal);
+  BOOST_TEST_CHECK(dColor.getC1() == dColor.maxChanVal);
+  BOOST_TEST_CHECK(dColor.getC2() == dColor.minChanVal);
+  BOOST_TEST_CHECK(dColor.getC3() == dColor.maxChanVal);
+
+  ////////////////////////////////////////////////////////////////////////////////
+  aColor.setToWhite();
+  aColor.setToYellow();
+  BOOST_TEST_CHECK(aColor.getC0() == aColor.maxChanVal);
+  BOOST_TEST_CHECK(aColor.getC1() == aColor.maxChanVal);
+  BOOST_TEST_CHECK(aColor.getC2() == aColor.minChanVal);
+  BOOST_TEST_CHECK(aColor.getC3() == aColor.maxChanVal);
+
+  bColor.setToWhite();
+  bColor.setToYellow();
+  BOOST_TEST_CHECK(bColor.getC0() == bColor.maxChanVal);
+  BOOST_TEST_CHECK(bColor.getC1() == bColor.maxChanVal);
+  BOOST_TEST_CHECK(bColor.getC2() == bColor.minChanVal);
+  BOOST_TEST_CHECK(bColor.getC3() == bColor.maxChanVal);
+
+  cColor.setToWhite();
+  cColor.setToYellow();
+  BOOST_TEST_CHECK(cColor.getC0() == cColor.maxChanVal);
+  BOOST_TEST_CHECK(cColor.getC1() == cColor.maxChanVal);
+  BOOST_TEST_CHECK(cColor.getC2() == cColor.minChanVal);
+  BOOST_TEST_CHECK(cColor.getC3() == cColor.maxChanVal);
+
+  dColor.setToWhite();
+  dColor.setToYellow();
+  BOOST_TEST_CHECK(dColor.getC0() == dColor.maxChanVal);
+  BOOST_TEST_CHECK(dColor.getC1() == dColor.maxChanVal);
+  BOOST_TEST_CHECK(dColor.getC2() == dColor.minChanVal);
+  BOOST_TEST_CHECK(dColor.getC3() == dColor.maxChanVal);
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(dist_int) {
+
+  mjr::colorRGBA8b   aColor;
+  mjr::colorRGBA8b   bColor;
+
+  ////////////////////////////////////////////////////////////////////////////////
+  aColor.setToWhite();
+  bColor.setToBlack();
+
+  BOOST_TEST_CHECK(aColor.distHypot( bColor) == std::sqrt(mjr::colorRGBA8b::maxChanVal*mjr::colorRGBA8b::maxChanVal*4));
+  BOOST_TEST_CHECK(aColor.distSumAbs(bColor) == mjr::colorRGBA8b::maxChanVal*4);
+  BOOST_TEST_CHECK(aColor.distMaxAbs(bColor) == mjr::colorRGBA8b::maxChanVal);
+
+  BOOST_TEST_CHECK(bColor.distHypot( aColor) == std::sqrt(mjr::colorRGBA8b::maxChanVal*mjr::colorRGBA8b::maxChanVal*4));
+  BOOST_TEST_CHECK(bColor.distSumAbs(aColor) == mjr::colorRGBA8b::maxChanVal*4);
+  BOOST_TEST_CHECK(bColor.distMaxAbs(aColor) == mjr::colorRGBA8b::maxChanVal);
+
+  ////////////////////////////////////////////////////////////////////////////////
+  aColor.setToWhite();
+  bColor.setToWhite();
+
+  BOOST_TEST_CHECK(aColor.distHypot( bColor) == 0);
+  BOOST_TEST_CHECK(aColor.distSumAbs(bColor) == 0);
+  BOOST_TEST_CHECK(aColor.distMaxAbs(bColor) == 0);
+
+  BOOST_TEST_CHECK(bColor.distHypot( aColor) == 0);
+  BOOST_TEST_CHECK(bColor.distSumAbs(aColor) == 0);
+  BOOST_TEST_CHECK(bColor.distMaxAbs(aColor) == 0);
+
+  ////////////////////////////////////////////////////////////////////////////////
+  aColor.setToCyan();
+  bColor.setToBlack();
+
+  BOOST_TEST_CHECK(aColor.distHypot( bColor) == std::sqrt(mjr::colorRGBA8b::maxChanVal*mjr::colorRGBA8b::maxChanVal*3), boost::test_tools::tolerance(0.00001)); 
+  BOOST_TEST_CHECK(aColor.distSumAbs(bColor) == mjr::colorRGBA8b::maxChanVal*3);
+  BOOST_TEST_CHECK(aColor.distMaxAbs(bColor) == mjr::colorRGBA8b::maxChanVal);
+
+  BOOST_TEST_CHECK(bColor.distHypot( aColor) == std::sqrt(mjr::colorRGBA8b::maxChanVal*mjr::colorRGBA8b::maxChanVal*3), boost::test_tools::tolerance(0.00001)); 
+  BOOST_TEST_CHECK(bColor.distSumAbs(aColor) == mjr::colorRGBA8b::maxChanVal*3);                                                                                 
+  BOOST_TEST_CHECK(bColor.distMaxAbs(aColor) == mjr::colorRGBA8b::maxChanVal);                                                                                   
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(dist_flt) {
+
+  mjr::colorRGBA32F   aColor;
+  mjr::colorRGBA32F   bColor;
+
+  ////////////////////////////////////////////////////////////////////////////////
+  aColor.setToWhite();
+  bColor.setToBlack();
+
+  BOOST_TEST_CHECK(aColor.distHypot( bColor) == std::sqrt(mjr::colorRGBA32F::maxChanVal*mjr::colorRGBA32F::maxChanVal*4));
+  BOOST_TEST_CHECK(aColor.distSumAbs(bColor) == mjr::colorRGBA32F::maxChanVal*4);
+  BOOST_TEST_CHECK(aColor.distMaxAbs(bColor) == mjr::colorRGBA32F::maxChanVal);
+
+  BOOST_TEST_CHECK(bColor.distHypot( aColor) == std::sqrt(mjr::colorRGBA32F::maxChanVal*mjr::colorRGBA32F::maxChanVal*4));
+  BOOST_TEST_CHECK(bColor.distSumAbs(aColor) == mjr::colorRGBA32F::maxChanVal*4);
+  BOOST_TEST_CHECK(bColor.distMaxAbs(aColor) == mjr::colorRGBA32F::maxChanVal);
+
+  ////////////////////////////////////////////////////////////////////////////////
+  aColor.setToWhite();
+  bColor.setToWhite();
+
+  BOOST_TEST_CHECK(aColor.distHypot( bColor) == 0);
+  BOOST_TEST_CHECK(aColor.distSumAbs(bColor) == 0);
+  BOOST_TEST_CHECK(aColor.distMaxAbs(bColor) == 0);
+
+  BOOST_TEST_CHECK(bColor.distHypot( aColor) == 0);
+  BOOST_TEST_CHECK(bColor.distSumAbs(aColor) == 0);
+  BOOST_TEST_CHECK(bColor.distMaxAbs(aColor) == 0);
+
+  ////////////////////////////////////////////////////////////////////////////////
+  aColor.setToCyan();
+  bColor.setToBlack();
+
+  BOOST_TEST_CHECK(aColor.distHypot( bColor) == std::sqrt(mjr::colorRGBA32F::maxChanVal*mjr::colorRGBA32F::maxChanVal*3), boost::test_tools::tolerance(0.00001)); 
+  BOOST_TEST_CHECK(aColor.distSumAbs(bColor) == mjr::colorRGBA32F::maxChanVal*3);
+  BOOST_TEST_CHECK(aColor.distMaxAbs(bColor) == mjr::colorRGBA32F::maxChanVal);
+
+  BOOST_TEST_CHECK(bColor.distHypot( aColor) == std::sqrt(mjr::colorRGBA32F::maxChanVal*mjr::colorRGBA32F::maxChanVal*3), boost::test_tools::tolerance(0.00001)); 
+  BOOST_TEST_CHECK(bColor.distSumAbs(aColor) == mjr::colorRGBA32F::maxChanVal*3);                                                                                 
+  BOOST_TEST_CHECK(bColor.distMaxAbs(aColor) == mjr::colorRGBA32F::maxChanVal);                                                                                   
+
+  ////////////////////////////////////////////////////////////////////////////////
+  aColor.setChansRGBA(0.5, 0.5, 0.5, 0.5);
+  bColor.setToBlack();
+
+  BOOST_TEST_CHECK(aColor.distHypot( bColor) == std::sqrt(0.5*0.5*4));
+  BOOST_TEST_CHECK(aColor.distSumAbs(bColor) == 0.5*4);
+  BOOST_TEST_CHECK(aColor.distMaxAbs(bColor) == 0.5);
+
+  BOOST_TEST_CHECK(bColor.distHypot( aColor) == std::sqrt(0.5*0.5*4));
+  BOOST_TEST_CHECK(bColor.distSumAbs(aColor) == 0.5*4);               
+  BOOST_TEST_CHECK(bColor.distMaxAbs(aColor) == 0.5);                 
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(lum_int) {
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).rgb2GreyDotProd(13, 17, 23)  == 272);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).rgb2GreyDotProd(13, 17, 23)  == 272);
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b(255, 255, 255, 255).rgb2GreyDotProd(255, 255, 255)  == 195075); // Too big for an arith SP type...
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).luminanceRGB()   == (2*0.2126 + 5*0.7152 + 7*0.0722)/255, boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).luminanceRGB()   == (2*0.2126 + 5*0.7152 + 7*0.0722), boost::test_tools::tolerance(0.00001));
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).intensityRGB()   == 14);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).intensityRGB()   == 14);
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).intensity()   == 25);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).intensity()   == 25);
+
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).intensityScaledRGB()   == 14/255.0/4.0, boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).intensityScaledRGB()   == 14/4.0, boost::test_tools::tolerance(0.00001));
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).intensityScaled()   == 25/255.0/4.0, boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).intensityScaled()   == 25/4.0, boost::test_tools::tolerance(0.00001));
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(dotProd_getMax_getMin) {
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b(2, 5, 7, 11).dotProd(mjr::colorRGBA8b(13, 17, 23, 27))  == 569);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).dotProd(mjr::colorRGBA32F(13, 17, 23, 27)) == 569);
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b(255, 255, 255, 255).dotProd(mjr::colorRGBA8b(255, 255, 255, 255))  == 260100); // Too big for an arith SP type...
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b(2, 5, 7, 11).getMaxC()    == 11);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b(2, 5, 7, 11).getMaxRGB()  == 7);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).getMaxC()   == 11);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).getMaxRGB() == 7);
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b(2, 5, 7, 1).getMinC()     == 1);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b(2, 5, 7, 1).getMinRGB()   == 2);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 1).getMinC()    == 1);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 1).getMinRGB()  == 2);
+
+  BOOST_TEST_CHECK(mjr::colorRGB8b(2, 5, 7).getMaxC()         == 7);
+  BOOST_TEST_CHECK(mjr::colorRGB32F(2, 5, 7).getMaxC()        == 7);
+
+  BOOST_TEST_CHECK(mjr::colorRGB8b(2, 5, 7).getMinC()         == 2);
+  BOOST_TEST_CHECK(mjr::colorRGB32F(2, 5, 7).getMinC()        == 2);
+
+  mjr::color2c8b aColor; aColor.setC0(5); aColor.setC1(2);
+  mjr::color2c8b bColor; bColor.setC0(5); bColor.setC1(2);
+
+  BOOST_TEST_CHECK(aColor.getMaxC()                           == 5);
+  BOOST_TEST_CHECK(bColor.getMaxC()                           == 5);
+
+  BOOST_TEST_CHECK(aColor.getMinC()                           == 2);
+  BOOST_TEST_CHECK(bColor.getMinC()                           == 2);
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b(2).getMaxC()              == 2);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F(2).getMaxC()             == 2);
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b(2).getMinC()              == 2);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F(2).getMinC()             == 2);
+}
+
 #endif
+
 
 /** @endcond */
 

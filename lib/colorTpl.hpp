@@ -978,10 +978,10 @@ namespace mjr {
           While the assumed color model is RGB, these functions are generalized beyond RGB in that non-RGB channels are uniformly, and usefully, manipulated.
           For example, setToBlack and setToWhite functions set all channels to minimum and maximum respectively -- both reasonable definitions for "black" and
           "white" in many situations.  The "primary" colors (red, blue, and green) set all non-RGB channels to minimum, and the "secondary" colors (cyan,
-          yellow, and magenta) set all non-RGB channels to max.  This odd difference in behavior on non-RGB channels between primary and secondary colors is
-          due to an optimization choice.  This choice allows the setTo*() functions to complete their work using no more than two assignment statements for
-          channel objects with integer channels and good masks.  Note that the other functions in this group end with a call to one of the setTo*()
-          functions. */
+          yellow, and magenta) set all non-RGB channels to max.  The reason for this difference in behavior on non-RGB channels between primary and secondary
+          colors is two fold: 1) It allows the setTo*() functions to complete their work using no more than two assignment statements for channel objects with
+          integer channels and good masks.  2) It makes each secondary an inverse (a logical NOT for integer colors) color from a primary across all
+          channels. Note that the other functions in this group end with a call to one of the setTo*() functions. */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       inline colorTpl& setToBlack()   { setChansToMin();                  return *this; }
@@ -1609,21 +1609,21 @@ namespace mjr {
           @return A reference to this object */
       template <typename ccT>
       inline colorTpl& cmpRGBcornerCGradiant(csFltType csX, csIntType numColors, const ccT* cornerColors) {
-        csX = numberWrap(csX, static_cast<csFltType>(1));
+        /* performance: I have no idea why this is slower than the linear search loop used in cmpGradiant().  Still, the code is cleaner this way.  Perhaps
+           the optimizer will figure it out someday... The optimizer works in strange ways. */
         if(numColors >= 2) {
-          for(csIntType i=0; i<(numColors-1); i++) {
-            csFltType lowAnchor  = static_cast<csFltType>(i)  / static_cast<csFltType>(numColors-1);
-            csFltType highAnchor = static_cast<csFltType>(i+1)/ static_cast<csFltType>(numColors-1);
-            if( (csX >= lowAnchor) && (csX < highAnchor) ) {
-              colorTpl<clrChanT, numChan> c1;
-              colorTpl<clrChanT, numChan> c2;
-              c1.setToCorner(cornerColors[i]);
-              c2.setToCorner(cornerColors[i+1]);
-              return interplColors(std::abs((csX-lowAnchor)/(highAnchor-lowAnchor)), c1, c2);
-            }
-          }
+            csX = numberWrap(csX, static_cast<csFltType>(1));
+            csFltType mF = csX * (numColors - 1);
+            csIntType mI = static_cast<csIntType>(mF);
+            if (mI >= (numColors-2)) mI=numColors-2;
+            colorTpl<clrChanT, numChan> c1;
+            colorTpl<clrChanT, numChan> c2;
+            c1.setToCorner(cornerColors[mI]);
+            c2.setToCorner(cornerColors[mI+1]);
+            return interplColors(mF-mI, c1, c2);
+        } else {
+          return *this;
         }
-        return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the current color to a value linearly interpolated between the two given colors.  When \a aDouble is 0, the color is col1.
@@ -2263,8 +2263,8 @@ namespace mjr {
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Transform the current color by rendering it into a true grey via the same method used by the rgbLuminance() function.
-          Note, the rgbLuminance() function is NOT used internally within this function for performance reasons.  This function will do the best job it can
+      /** Transform the current color by rendering it into a true grey via the same method used by the luminanceRGB() function.
+          Note, the luminanceRGB() function is NOT used internally within this function for performance reasons.  This function will do the best job it can
           within the current color depth.
           @return Returns a reference to the current color object.*/
       inline colorTpl & tfrmGreyScaleRGB(void) {
@@ -2551,17 +2551,17 @@ namespace mjr {
           @param greenWt The green weight
           @param blueWt The blue weight
           @return The integer representing grey value for the given color. */
-      inline channelArithSDPType rgb2GreyDotProd(channelArithSDPType redWt, channelArithSDPType greenWt, channelArithSDPType blueWt) {
+      inline channelArithFltType rgb2GreyDotProd(channelArithFltType redWt, channelArithFltType greenWt, channelArithFltType blueWt) {
         /* Requires: Inherits numChan>2 from getC2. */
-        return static_cast<int>(static_cast<channelArithSDPType>(getC0()) * static_cast<channelArithSDPType>(redWt)   +
-                                static_cast<channelArithSDPType>(getC1()) * static_cast<channelArithSDPType>(greenWt) +
-                                static_cast<channelArithSDPType>(getC2()) * static_cast<channelArithSDPType>(blueWt));
+        return static_cast<int>(static_cast<channelArithFltType>(getC0()) * static_cast<channelArithFltType>(redWt)   +
+                                static_cast<channelArithFltType>(getC1()) * static_cast<channelArithFltType>(greenWt) +
+                                static_cast<channelArithFltType>(getC2()) * static_cast<channelArithFltType>(blueWt));
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the luminance of the current color via the definition given in the ITU-R Recommendation BT.709.
           The output value will be between 0 and 1, and is given by: (RGBluminanceWeightR*R+RGBluminanceWeightG*G+RGBluminanceWeightB*B)/#maxChanVal.
           @return The luminance for the current object. */
-      inline channelArithFltType rgbLuminance(void) {
+      inline channelArithFltType luminanceRGB(void) {
         /* Requires: Inherits numChan>2 from getC2. */
         return (static_cast<channelArithFltType>(getC0()) * static_cast<channelArithFltType>(RGBluminanceWeightR) +
                 static_cast<channelArithFltType>(getC1()) * static_cast<channelArithFltType>(RGBluminanceWeightG) +
@@ -2570,16 +2570,16 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the unscaled intensity (sum of the first three components) of the current color
           @return The unscaled intensity for the current object. */
-      inline channelArithSPType rgbSumIntensity(void) {
+      inline channelArithSPType intensityRGB(void) {
         /* Requires: Inherits numChan>2 from getC2. */
-        return (static_cast<channelArithSPType>(getC0()) +
-                static_cast<channelArithSPType>(getC1()) +
-                static_cast<channelArithSPType>(getC2()));
+        return static_cast<channelArithSPType>(static_cast<channelArithSPType>(getC0()) +
+                                               static_cast<channelArithSPType>(getC1()) +
+                                               static_cast<channelArithSPType>(getC2()));
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the sum of the components.
           @return Sum of components. */
-      inline channelArithSPType sumIntensity(void) {
+      inline channelArithSPType intensity(void) {
         channelArithSPType sum = 0;
         for(int i=0; i<numChan; i++)
           sum += getChan(i);
@@ -2588,14 +2588,14 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the scaled intensity (sum of the first three components divided by the maximum intensity possible) of the current color
           @return The scaled intensity for the current object. */
-      inline channelArithFltType rgbScaledIntensity(void) {
-        return (static_cast<channelArithFltType>(rgbSumIntensity()) / static_cast<channelArithFltType>(numChan) / static_cast<channelArithFltType>(maxChanVal));
+      inline channelArithFltType intensityScaledRGB(void) {
+        return (static_cast<channelArithFltType>(intensityRGB()) / static_cast<channelArithFltType>(numChan) / static_cast<channelArithFltType>(maxChanVal));
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the scaled intensity (sum of the components divided by the maximum intensity possible) of the current color
           @return Sum of components. */
-      inline channelArithFltType sumScaledIntensity(void) {
-        return (static_cast<channelArithFltType>(sumIntensity()) / static_cast<channelArithFltType>(numChan) / static_cast<channelArithFltType>(maxChanVal));
+      inline channelArithFltType intensityScaled(void) {
+        return (static_cast<channelArithFltType>(intensity()) / static_cast<channelArithFltType>(numChan) / static_cast<channelArithFltType>(maxChanVal));
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns the value of the largest component.
@@ -2652,35 +2652,47 @@ namespace mjr {
       /** Compute the dot product between the current color and the given color. i.e. c1.r*c2.r+c1.g*c2.g+...
           @param aColor the given color
           @return Returns dot product.*/
-      inline channelArithSPType dotProd(colorArgType aColor) {
-        channelArithSPType daProd = 0;
+      inline channelArithFltType dotProd(colorArgType aColor) {
+        channelArithFltType daProd = 0;
         for(int i=0; i<numChan; i++)
-          daProd += (static_cast<channelArithSPType>(getChanNC(i)) * static_cast<channelArithSPType>(aColor.getChanNC(i)));
+          daProd += static_cast<channelArithFltType>(static_cast<channelArithFltType>(getChanNC(i)) * static_cast<channelArithFltType>(aColor.getChanNC(i)));
         return daProd;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Distance between current color and given one (sum squares) Returns the sum of the squares of the differences of the components.  Returns |c1-c2|^2
+      /** Distance between current color and given one (sum squares of channel differences -- Euclidean distance squared).
           @param aColor The given color
-          @return Returns distance squared.*/
-      inline channelArithSPType distP2sq(colorArgType aColor) {
-        channelArithSPType daDist = 0;
+          @return Returns Distance */
+      inline channelArithFltType distHypot(colorArgType aColor) {
+        channelArithFltType daDist = 0;
         for(int i=0; i<numChan; i++)
-          daDist += (static_cast<channelArithSPType>((static_cast<channelArithSDPType>(getChanNC(i)) - static_cast<channelArithSDPType>(aColor.getChanNC(i))) *
-                                                     (static_cast<channelArithSDPType>(getChanNC(i)) - static_cast<channelArithSDPType>(aColor.getChanNC(i)))));
-        return daDist;
+          daDist += (static_cast<channelArithFltType>((static_cast<channelArithFltType>(getChanNC(i)) - static_cast<channelArithFltType>(aColor.getChanNC(i))) *
+                                                      (static_cast<channelArithFltType>(getChanNC(i)) - static_cast<channelArithSDPType>(aColor.getChanNC(i)))));
+        return static_cast<channelArithFltType>(std::sqrt(daDist));
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Distance between current color and given one (absolute difference) Returns sum of the absolute value of the differences of the components
+      /** Distance between current color and given one (sum of absolute channel differences).
           @param aColor the given color
-          @return Returns absolute distance squared.*/
-      inline channelArithSPType distAbs(colorArgType aColor) {
+          @return Returns Distance */
+      inline channelArithSPType distSumAbs(colorArgType aColor) {
         channelArithSPType daDist = 0;
         for(int i=0; i<numChan; i++)
           daDist += static_cast<channelArithSPType>(std::abs(static_cast<channelArithDType>(getChanNC(i)) - static_cast<channelArithDType>(aColor.getChanNC(i))));
         return daDist;
       }
-//  MJR TODO NOTE: Add distMaxAbs -- max(|C_i - aC_i|)
-//  MJR TODO NOTE: Add fuzzy isEqual/isNotEqual/isBlack/... for floating point channels.  isBlack vs isBlackEPS? Or overloaded versions with extra arg?
+
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Distance between current color and given one (maximum of absolute value of channel differences).
+          @param aColor the given color
+          @return Returns Distance */
+      inline channelArithSPType distMaxAbs(colorArgType aColor) {
+        channelArithSPType daDist = 0;
+        for(int i=0; i<numChan; i++) {
+          channelArithSPType tmp =static_cast<channelArithSPType>(std::abs(static_cast<channelArithDType>(getChanNC(i)) - static_cast<channelArithDType>(aColor.getChanNC(i))));
+          if (daDist < tmp)
+            daDist = tmp;
+        }
+        return daDist;
+      }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns non-zero if the current color is precicely equal to aColor.
           Note the implications for floating point clrChanT.
@@ -2691,8 +2703,8 @@ namespace mjr {
         else
           for(int i=0; i<numChan; i++)
             if(getChanNC(i) != aColor.getChanNC(i))
-              return 0;
-        return 1;
+              return false;
+        return true;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Like isEual(), but only checks the R, G, & B channels.
@@ -2712,13 +2724,13 @@ namespace mjr {
       /** Returns non-zero if the given color is black (all componnets are zero)
           @return non-zero if the given color is black (all componnets are zero) */
       inline bool isBlack() {
-        if(goodMask)
+        if(perfectMask)
           return (getMaskNC() == maskAllZero);
         else
-          for(int i=4; i<numChan; i++)
+          for(int i=0; i<numChan; i++)
             if(getChanNC(i) != 0)
-              return 0;
-        return 1;
+              return false;
+        return true;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** LIke isBlack(), but only checks the R, G, & B channels

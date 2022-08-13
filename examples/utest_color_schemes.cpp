@@ -43,6 +43,7 @@
 
 #include "ramCanvas.hpp"
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(csCubeHelix_tpl, * boost::unit_test::tolerance(0.01)) {
 
   BOOST_TEST_CHECK(mjr::color3c64F::csCHstd::c(0.25).getC0() == 0.085);
@@ -91,8 +92,40 @@ BOOST_AUTO_TEST_CASE(csCubeHelix_tpl, * boost::unit_test::tolerance(0.01)) {
 
 }
 
-BOOST_AUTO_TEST_CASE(cmpRGBcornerDGradiant_csCColdeRainbow, * boost::unit_test::tolerance(0.01)) {
-  // for(csIt x=0;x<ct::csCColdeRainbow::numC;x++) 
-  //   ct::csCColdeRainbow::c(x) === ct().cmpRGBcornerDGradiant(x, "RYGCBMR");    
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(csCColdeRainbow_int, * boost::unit_test::tolerance(0.01)) {
+
+  mjr::colorRGBA8b aColor;
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(0u).isEqualRGB(aColor.setToRed())        == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(255u).isEqualRGB(aColor.setToYellow())   == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(510u).isEqualRGB(aColor.setToGreen())    == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(765u).isEqualRGB(aColor.setToCyan())     == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1020u).isEqualRGB(aColor.setToBlue())    == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1275u).isEqualRGB(aColor.setToMagenta()) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1530u).isEqualRGB(aColor.setToRed())     == true);
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1531u).isEqualRGB(aColor.setToRed())     == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1786u).isEqualRGB(aColor.setToYellow())  == true);
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(csCColdeRainbow_flt, * boost::unit_test::tolerance(0.01)) {
+
+  mjr::colorRGBA8b aColor;
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(0/6.0).isEqualRGB(aColor.setToRed())     == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1/6.0).isEqualRGB(aColor.setToYellow())  == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(2/6.0).isEqualRGB(aColor.setToGreen())   == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(3/6.0).isEqualRGB(aColor.setToCyan())    == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(4/6.0).isEqualRGB(aColor.setToBlue())    == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(5/6.0).isEqualRGB(aColor.setToMagenta()) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(6/6.0).isEqualRGB(aColor.setToRed())     == true);
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(12/6.0).isEqualRGB(aColor.setToRed())    == true);
+}
+
+
+
+
 /** @endcond */

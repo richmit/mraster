@@ -44,6 +44,7 @@
 #define DO_POINT_NC   1
 #define DO_RAMP       1
 #define DO_RAMP_INT   1
+#define DO_RAMP_CON   1
 #define DO_INVERT     1
 #define DO_COL_SET    1
 #define DO_COL_SETC   1
@@ -132,6 +133,18 @@ int main(void) {
   bmEndTime = std::chrono::system_clock::now();
   bmTime = std::chrono::system_clock::now() - bmStartTime;
   std::cout << "  DO_RAMP_INT Runtime " << bmTime.count() << " sec" << std::endl;
+#endif
+
+#if DO_RAMP_CON
+  std::cout << "Starting DO_RAMP_CON" << std::endl;
+  bmStartTime = std::chrono::system_clock::now();
+  for(int i=0;i<REPS*32;i++)
+    for(int y=0;y<=xMax;y++)
+      for(int x=0;x<=yMax;x++)  
+        theRamCanvas.drawPoint(x, y, cColor.cmpRGBcornerCGradiant(1.0*(x+y)/(yMax+yMax), "0BCGYWMR0"));
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_RAMP_CON Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
 
 #if DO_RAMP

@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
       yC = rEng() % theRamCanvas.get_numYpix();
 
       mjr::ramCanvas3c8b::colorType aColor = theRamCanvas.getPxColor(xC, yC);
-      double lumC = aColor.rgbLuminance();
+      double lumC = aColor.luminanceRGB();
 
       if((lumC > 0) && (lumC < tgtLum)) {
         double maxLum = -1;
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
           xN = xC+stenX[curDir];
           yN = yC+stenY[curDir];
           if(xN>=0 && yN>=0 && xN<theRamCanvas.get_numXpix() && yN<theRamCanvas.get_numYpix()) {
-            double lumN = theRamCanvas.getPxColor(xN, yN).rgbLuminance();
+            double lumN = theRamCanvas.getPxColor(xN, yN).luminanceRGB();
             if(lumN <= 0) {
               lum0ct++;
             } else {

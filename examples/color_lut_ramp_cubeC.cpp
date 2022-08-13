@@ -56,7 +56,7 @@ int main(void) {
      theRC.drawLine(x, 0, x, theRC.get_numYpix()-1, aColor);
    i=-1;
 
-  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csCCdiag01::c(x/maxColorsF));              theRC.drawString("  csCCdiag01",              hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
+  BMP;  for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csCCdiag01::c(x/maxColorsF));              theRC.drawString("  csCCdiag01",              hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
   BMP; 
   BMP; 
   BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csCCsumRGB::c(x/maxColorsF));              theRC.drawString("  csCCsumRGB",              hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
