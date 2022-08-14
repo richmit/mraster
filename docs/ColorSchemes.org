@@ -566,75 +566,110 @@ interesting color schemes can be derived from them.
 :END:
 
  - =csCBAccent= :: \\
-  [[./pics/cs/color_lut_docs_csCBAccent_50.png]]
+  [[./pics/cs/color_lut_docs_csCBAccent_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBAccentC_50.png]]
  - =csCBBlues= :: \\
-  [[./pics/cs/color_lut_docs_csCBBlues_50.png]]
+  [[./pics/cs/color_lut_docs_csCBBlues_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBBluesC_50.png]] 
  - =csCBBrBG= :: \\
-  [[./pics/cs/color_lut_docs_csCBBrBG_50.png]]
+  [[./pics/cs/color_lut_docs_csCBBrBG_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBBrBGC_50.png]]
  - =csCBBuGn= :: \\
-  [[./pics/cs/color_lut_docs_csCBBuGn_50.png]]
+  [[./pics/cs/color_lut_docs_csCBBuGn_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBBuGnC_50.png]]
  - =csCBBuPu= :: \\
-  [[./pics/cs/color_lut_docs_csCBBuPu_50.png]]
+  [[./pics/cs/color_lut_docs_csCBBuPu_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBBuPuC_50.png]]
  - =csCBDark2= :: \\
-  [[./pics/cs/color_lut_docs_csCBDark2_50.png]]
+  [[./pics/cs/color_lut_docs_csCBDark2_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBDark2C_50.png]]
  - =csCBGnBu= :: \\
-  [[./pics/cs/color_lut_docs_csCBGnBu_50.png]]
+  [[./pics/cs/color_lut_docs_csCBGnBu_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBGnBuC_50.png]]
  - =csCBGreens= :: \\
-  [[./pics/cs/color_lut_docs_csCBGreens_50.png]]
+  [[./pics/cs/color_lut_docs_csCBGreens_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBGreensC_50.png]]
  - =csCBGreys= :: \\
-  [[./pics/cs/color_lut_docs_csCBGreys_50.png]]
+  [[./pics/cs/color_lut_docs_csCBGreys_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBGreysC_50.png]]
  - =csCBOranges= :: \\
-  [[./pics/cs/color_lut_docs_csCBOranges_50.png]]
+  [[./pics/cs/color_lut_docs_csCBOranges_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBOrangesC_50.png]]
  - =csCBOrRd= :: \\
-  [[./pics/cs/color_lut_docs_csCBOrRd_50.png]]
+  [[./pics/cs/color_lut_docs_csCBOrRd_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBOrRdC_50.png]]
  - =csCBPaired= :: \\
-  [[./pics/cs/color_lut_docs_csCBPaired_50.png]]
+  [[./pics/cs/color_lut_docs_csCBPaired_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBPairedC_50.png]]
  - =csCBPastel1= :: \\
-  [[./pics/cs/color_lut_docs_csCBPastel1_50.png]]
+  [[./pics/cs/color_lut_docs_csCBPastel1_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBPastel1C_50.png]]
  - =csCBPastel2= :: \\
-  [[./pics/cs/color_lut_docs_csCBPastel2_50.png]]
+  [[./pics/cs/color_lut_docs_csCBPastel2_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBPastel2C_50.png]]
  - =csCBPiYG= :: \\
-  [[./pics/cs/color_lut_docs_csCBPiYG_50.png]]
+  [[./pics/cs/color_lut_docs_csCBPiYG_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBPiYGC_50.png]]
  - =csCBPRGn= :: \\
-  [[./pics/cs/color_lut_docs_csCBPRGn_50.png]]
+  [[./pics/cs/color_lut_docs_csCBPRGn_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBPRGnC_50.png]]
  - =csCBPuBuGn= :: \\
-  [[./pics/cs/color_lut_docs_csCBPuBuGn_50.png]]
+  [[./pics/cs/color_lut_docs_csCBPuBuGn_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBPuBuGnC_50.png]]
  - =csCBPuBu= :: \\
-  [[./pics/cs/color_lut_docs_csCBPuBu_50.png]]
+  [[./pics/cs/color_lut_docs_csCBPuBu_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBPuBuC_50.png]]
  - =csCBPuOr= :: \\
-  [[./pics/cs/color_lut_docs_csCBPuOr_50.png]]
+  [[./pics/cs/color_lut_docs_csCBPuOr_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBPuOrC_50.png]]
  - =csCBPuRd= :: \\
-  [[./pics/cs/color_lut_docs_csCBPuRd_50.png]]
+  [[./pics/cs/color_lut_docs_csCBPuRd_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBPuRdC_50.png]]
  - =csCBPurples= :: \\
-  [[./pics/cs/color_lut_docs_csCBPurples_50.png]]
+  [[./pics/cs/color_lut_docs_csCBPurples_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBPurplesC_50.png]]
  - =csCBRdBu= :: \\
-  [[./pics/cs/color_lut_docs_csCBRdBu_50.png]]
+  [[./pics/cs/color_lut_docs_csCBRdBu_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBRdBuC_50.png]]
  - =csCBRdGy= :: \\
-  [[./pics/cs/color_lut_docs_csCBRdGy_50.png]]
+  [[./pics/cs/color_lut_docs_csCBRdGy_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBRdGyC_50.png]]
  - =csCBRdPu= :: \\
-  [[./pics/cs/color_lut_docs_csCBRdPu_50.png]]
+  [[./pics/cs/color_lut_docs_csCBRdPu_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBRdPuC_50.png]]
  - =csCBRdYlBu= :: \\
-  [[./pics/cs/color_lut_docs_csCBRdYlBu_50.png]]
+  [[./pics/cs/color_lut_docs_csCBRdYlBu_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBRdYlBuC_50.png]]
  - =csCBRdYlGn= :: \\
-  [[./pics/cs/color_lut_docs_csCBRdYlGn_50.png]]
+  [[./pics/cs/color_lut_docs_csCBRdYlGn_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBRdYlGnC_50.png]]
  - =csCBReds= :: \\
-  [[./pics/cs/color_lut_docs_csCBReds_50.png]]
+  [[./pics/cs/color_lut_docs_csCBReds_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBRedsC_50.png]]
  - =csCBSet1= :: \\
-  [[./pics/cs/color_lut_docs_csCBSet1_50.png]]
+  [[./pics/cs/color_lut_docs_csCBSet1_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBSet1C_50.png]]
  - =csCBSet2= :: \\
-  [[./pics/cs/color_lut_docs_csCBSet2_50.png]]
+  [[./pics/cs/color_lut_docs_csCBSet2_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBSet2C_50.png]]
  - =csCBSet3= :: \\
-  [[./pics/cs/color_lut_docs_csCBSet3_50.png]]
+  [[./pics/cs/color_lut_docs_csCBSet3_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBSet3C_50.png]]
  - =csCBSpectral= :: \\
-  [[./pics/cs/color_lut_docs_csCBSpectral_50.png]]
+  [[./pics/cs/color_lut_docs_csCBSpectral_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBSpectralC_50.png]]
  - =csCBYlGnBu= :: \\
-  [[./pics/cs/color_lut_docs_csCBYlGnBu_50.png]]
+  [[./pics/cs/color_lut_docs_csCBYlGnBu_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBYlGnBuC_50.png]]
  - =csCBYlGn= :: \\
-  [[./pics/cs/color_lut_docs_csCBYlGn_50.png]]
+  [[./pics/cs/color_lut_docs_csCBYlGn_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBYlGnC_50.png]]
  - =csCBYlOrBr= :: \\
-  [[./pics/cs/color_lut_docs_csCBYlOrBr_50.png]]
+  [[./pics/cs/color_lut_docs_csCBYlOrBr_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBYlOrBrC_50.png]]
  - =csCBYlOrRd= :: \\
-  [[./pics/cs/color_lut_docs_csCBYlOrRd_50.png]]
+  [[./pics/cs/color_lut_docs_csCBYlOrRd_50.png]] \\
+  [[./pics/cs/color_lut_docs_csCBYlOrRdC_50.png]]
 
 * Web Safe & Color Blind Pallets
 :PROPERTIES:
@@ -715,6 +750,6 @@ make color_lut_docs && ./color_lut_docs.exe
 In this directory, we run the following to create PNGs:
 
 #+begin_src zsh
-for f in ../build/color_lut_docs_*.tiff(:r); do echo $f; nf=pics/cs/`basename $f`_50.png; convert $f.tiff $nf; done
-for f in ../build/color_lut_docs_*.tiff(:r); do echo $f; nf=pics/cs/`basename $f`_50_50.png; convert -resize 50% $f.tiff $nf; done
+for f in ../build/color_lut_docs_*.tiff(:r); do echo $f; nf=pics/cs/`basename $f`.png; convert $f.tiff $nf; done
+for f in ../build/color_lut_docs_*.tiff(:r); do echo $f; nf=pics/cs/`basename $f`_50.png; convert -resize 50% $f.tiff $nf; done
 #+end_src
