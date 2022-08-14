@@ -1316,6 +1316,9 @@ namespace mjr {
           This function uses an algorithm based upon the color matching functions as tabulated in table 3 from Stockman and Sharpe (2000) -- I believe they
           are taken from Stiles and Burch 10-degree (1959).  Four of the algorithms are based upon simple linear interpolation, while one is based upon
           exponential bump functions closely matching the color matching functions.  The method of interpolation may be specified via the final argument.
+
+          @warning If you are looking for a wavelength color scheme, then see the csRainbowCM class: http://richmit.github.io/mraster/ColorSchemes.html
+
           @param wavelength   The wavelength to convert into RGB
           @param interpMethod Specify the interpolation method (see: cmfInterpolationEnum)
           @return Returns a reference to the current color object. */
@@ -1433,6 +1436,9 @@ namespace mjr {
       /** Set the color indicated by the given wavelength.
           This function uses an algorithm based upon linear approximations to the color match functions.  I believe the original algorithm is due to Dan
           Bruton, and his FORTRAN version is available (at least as of 1997) at http://www.physics.sfasu.edu/astro/color.html
+
+          @warning If you are looking for a wavelength color scheme, then see the csRainbowLA class: http://richmit.github.io/mraster/ColorSchemes.html
+
           @param wavelength to convert
           @return Returns a reference to the current color object. */
       inline colorTpl& setRGBfromWavelengthLA(double wavelength) {
@@ -1499,7 +1505,10 @@ namespace mjr {
           replicating many of the more precise color ramp sequence functions in this library.  The only defects are the lack of bit level precision and the
           poor performance -- both due to the use of floating point arithmetic.  Note this function operates correctly with any channel type and with an
           arbitrary number of channels -- it is NOT limited to RGB colors or RGB color corners for anchors.
-          @param aDouble The value to convert
+
+          @warning Many gradient color schemes are predefined: http://richmit.github.io/mraster/ColorSchemes.html
+
+          @param csX The value to convert
           @param anchors Doubles for which color equals the corresponding corner.
           @param colors  A vector  of colors to use
           @return A reference to this object */
@@ -1553,6 +1562,9 @@ namespace mjr {
       /** This is simply a version of cmpRGBcornerCGradiant() that computes the length of the final argument as a C-string.
           Unlike the version of cmpRGBcornerDGradiant() specifying numColors, this one requires the final argument to be a real C-string -- i.e. it must have a
           terminating NULL.  Note this function uses RGB corner colors as anchors, and is thus designed to work with RGB colors.  
+
+          @warning Many gradient color schemes are predefined: http://richmit.github.io/mraster/ColorSchemes.html
+
           @param csX The value to convert
           @param cornerColors Characters specifying color (as used by setColor)
           @return A reference to this object */
@@ -1563,6 +1575,9 @@ namespace mjr {
       /** This is simply a version of cmpRGBcornerDGradiant() that computes the length of the final argument as a C-string.
           Unlike the version of cmpRGBcornerDGradiant() specifying numColors, this one requires the final argument to be a real C-string -- i.e. it must have a
           terminating NULL.  Note this function uses RGB corner colors as anchors, and is thus designed to work with RGB colors.  
+
+          @warning Many gradient color schemes are predefined: http://richmit.github.io/mraster/ColorSchemes.html
+
           @param csIdx The value to convert
           @param cornerColors Characters specifying color (as used by setColor)
           @return A reference to this object */
@@ -1574,6 +1589,9 @@ namespace mjr {
           (numColors - 1) + 1)].  At 0, the color will be the first specified color.  At (mjr::colorTpl::chanStepMax * ( numColors - 1) + 1) it will be the
           last color specified color.  This function uses precise integer arithmetic.  cornerColors need not be a real C-string -- i.e. no need for an
           terminating NULL.  Note this function uses RGB corner colors as anchors, and is thus designed to work with RGB colors.
+
+          @warning Many gradient color schemes are predefined: http://richmit.github.io/mraster/ColorSchemes.html
+
           @param csIdx The value to convert
           @param numColors The number of colors
           @param cornerColors An array of things that can be passed to setToCorner() -- usually char or cornerColorEnum
@@ -1628,6 +1646,8 @@ namespace mjr {
       /** Color value based upon a color ramp passing through the given sequence of corner colors at equal intervals along [0.0, 1.0].  At 0, the color will
           be the first specified color.  At 1.0 it will be the last color specified color. CornerColors need not be a real C-string -- i.e. no need for an
           terminating NULL.  Note this function uses RGB corner colors as anchors, and is thus designed to work with RGB colors.  
+
+          @warning Many gradient color schemes are predefined: http://richmit.github.io/mraster/ColorSchemes.html
 
           @param csX The value to convert
           @param numColors The number of colors
@@ -1703,7 +1723,9 @@ namespace mjr {
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the weighted mean of the given colors.
-          In order to keep the result in range, w1,w2 must be in [0,1] and w1+w2=1. See uMean().
+
+          @warning In order to keep the result in range, w1,w2,w3,s4 must be in [0,1] and w1+w2+w3_w5=1. See uMean() for a way to do that automatically.
+
           @param w1   The first weight
           @param w2   The second weight
           @param w3   The third weight
@@ -1743,10 +1765,9 @@ namespace mjr {
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the unit weighted mean of the given colors -- like wMean(), but last weight is computed such that weights sum to 1.0.
-          In order to keep the result in range, w1,w2 must be in [0,1] and w1+w2=1.  This constraint is *not* checked -- see uMean for an alterantive!
-          @param w1   The first weight in the range [0, 1)
-          @param w2   The second weight in the range [0, 1)
-          @param w3   The third weight in the range [0, 1)
+          @param w1   The first weight in the range [0, 1) -- the range not checked!
+          @param w2   The second weight in the range [0, 1) -- the range not checked!
+          @param w3   The third weight in the range [0, 1) -- the range not checked!
           @param col1 The first color
           @param col2 The second color
           @param col3 The third color

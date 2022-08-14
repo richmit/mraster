@@ -379,6 +379,9 @@
 // |    | csRainbowLA
 // +----+---------------------------------------------------------------------------------------------------------------
 
+// | ** | setRGBfromWavelengthCM(double wavelength, cmfInterpolationEnum interpMethod = cmfInterpolationEnum::LINEAR);
+// | ** | setRGBfromWavelengthLA(double wavelength);
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(set_chan_dbl_8) {
