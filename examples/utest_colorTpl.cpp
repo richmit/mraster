@@ -251,6 +251,134 @@
 // | -- | clampBot(iT arithValue);
 // | -- | clampAll(iT arithValue);
 // +----+---------------------------------------------------------------------------------------------------------------
+// |    | csBin_tpl
+// +----+---------------------------------------------------------------------------------------------------------------
+// |    | csCBAccent
+// |    | csCBBlues
+// |    | csCBBrBG
+// |    | csCBBuGn
+// |    | csCBBuPu
+// |    | csCBDark2
+// |    | csCBGnBu
+// |    | csCBGreens
+// |    | csCBGreys
+// |    | csCBOrRd
+// |    | csCBOranges
+// |    | csCBPRGn
+// |    | csCBPaired
+// |    | csCBPastel1
+// |    | csCBPastel2
+// |    | csCBPiYG
+// |    | csCBPuBu
+// |    | csCBPuBuGn
+// |    | csCBPuOr
+// |    | csCBPuRd
+// |    | csCBPurples
+// |    | csCBRdBu
+// |    | csCBRdGy
+// |    | csCBRdPu
+// |    | csCBRdYlBu
+// |    | csCBRdYlGn
+// |    | csCBReds
+// |    | csCBSet1
+// |    | csCBSet2
+// |    | csCBSet3
+// |    | csCBSpectral
+// |    | csCBYlGn
+// |    | csCBYlGnBu
+// |    | csCBYlOrBr
+// |    | csCBYlOrRd
+// +----+---------------------------------------------------------------------------------------------------------------
+// |    | csCB_tpl
+// +----+---------------------------------------------------------------------------------------------------------------
+// | -- | csCC_tpl
+// +----+---------------------------------------------------------------------------------------------------------------
+// |    | csCCconsOne
+// |    | csCCconsTwo
+// |    | csCCdiag01
+// |    | csCCdiagCR
+// |    | csCCdiagMG
+// |    | csCCdiagYB
+// |    | csCColdeColdToHot
+// |    | csCColdeFireRamp
+// |    | csCColdeIceToWaterToHot
+// | ** | csCColdeRainbow
+// |    | csCCsumBGR
+// |    | csCCsumBRG
+// |    | csCCsumGBR
+// |    | csCCsumGRB
+// |    | csCCsumRBG
+// |    | csCCsumRGB
+// |    | csCCudBg
+// |    | csCCudBr
+// |    | csCCudGb
+// |    | csCCudGr
+// |    | csCCudRb
+// |    | csCCudRg
+// +----+---------------------------------------------------------------------------------------------------------------
+// |    | csCHblu
+// |    | csCHstd
+// |    | csCHvio
+// +----+---------------------------------------------------------------------------------------------------------------
+// | ** | csCubeHelix_tpl
+// +----+---------------------------------------------------------------------------------------------------------------
+// |    | csFP_tpl
+// +----+---------------------------------------------------------------------------------------------------------------
+// |    | csFPblAqGrYeOrReVi200
+// |    | csFPcircular12
+// |    | csFPcircular24
+// |    | csFPcmoceanAlgae
+// |    | csFPcmoceanAmp
+// |    | csFPcmoceanBalance
+// |    | csFPcmoceanCurl
+// |    | csFPcmoceanDeep
+// |    | csFPcmoceanDense
+// |    | csFPcmoceanHaline
+// |    | csFPcmoceanIce
+// |    | csFPcmoceanTempo
+// |    | csFPmplBrBG
+// |    | csFPmplOcean
+// |    | csFPmplOranges
+// |    | csFPneoDdivVegetationA
+// |    | csFPneoDivVegetationC
+// |    | csFPneoModisNdvi
+// |    | csFPwebSafeDeutanopia
+// |    | csFPwebSafeDeutanopiaAlt
+// |    | csFPwebSafeNormalVision
+// |    | csFPwebSafeProtanopia
+// |    | csFPwebSafeProtanopiaAlt
+// |    | csFPwebSafeTritanoptia
+// |    | csFPwebSafeTritanoptiaAlt
+// +----+---------------------------------------------------------------------------------------------------------------
+// |    | csHSLhB
+// |    | csHSLhC
+// |    | csHSLhG
+// |    | csHSLhM
+// |    | csHSLhR
+// |    | csHSLhY
+// +----+---------------------------------------------------------------------------------------------------------------
+// |    | csHSLh_tpl
+// +----+---------------------------------------------------------------------------------------------------------------
+// |    | csPGrey3x
+// |    | csPGrey4x
+// +----+---------------------------------------------------------------------------------------------------------------
+// |    | csPLY_tpl
+// +----+---------------------------------------------------------------------------------------------------------------
+// |    | csPLYcividis
+// |    | csPLYgrey
+// |    | csPLYhsvRB
+// |    | csPLYinferno
+// |    | csPLYmagma
+// |    | csPLYparula
+// |    | csPLYplasma
+// |    | csPLYquad
+// |    | csPLYturbo
+// |    | csPLYviridis
+// +----+---------------------------------------------------------------------------------------------------------------
+// |    | csRainbowCM
+// |    | csRainbowLA
+// +----+---------------------------------------------------------------------------------------------------------------
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(set_chan_dbl_8) {
@@ -5210,7 +5338,91 @@ BOOST_AUTO_TEST_CASE(WavelengthLA) {
 
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(csCubeHelix_tpl, * boost::unit_test::tolerance(0.01)) {
+
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHstd::c(0.25).getC0() == 0.085);
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHstd::c(0.25).getC1() == 0.325);
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHstd::c(0.25).getC2() == 0.298);
+
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHstd::c(0.50).getC0() == 0.628);
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHstd::c(0.50).getC1() == 0.475);
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHstd::c(0.50).getC2() == 0.286);
+
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHstd::c(0.75).getC0() == 0.780);
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHstd::c(0.75).getC1() == 0.702);
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHstd::c(0.75).getC2() == 0.929);
+
+
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHblu::c(0.25).getC0() == 0.280);
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHblu::c(0.25).getC1() == 0.202);
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHblu::c(0.25).getC2() == 0.429);
+
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHblu::c(0.50).getC0() == 0.372);
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHblu::c(0.50).getC1() == 0.525);
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHblu::c(0.50).getC2() == 0.714);
+
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHblu::c(0.75).getC0() == 0.585);
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHblu::c(0.75).getC1() == 0.825);
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHblu::c(0.75).getC2() == 0.798);
+
+
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHvio::c(0.25).getC0() == 0.388);
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHvio::c(0.25).getC1() == 0.163);
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHvio::c(0.25).getC2() == 0.342);
+
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHvio::c(0.50).getC0() == 0.684);
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHvio::c(0.50).getC1() == 0.384);
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHvio::c(0.50).getC2() == 0.623);
+
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHvio::c(0.75).getC0() == 0.888);
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHvio::c(0.75).getC1() == 0.663);
+  BOOST_TEST_CHECK(mjr::color3c64F::csCHvio::c(0.75).getC2() == 0.842);
+
+  typedef mjr::colorTpl<double, 3, 2, 1, 0> permcolor3c64F;
+
+  BOOST_TEST_CHECK(permcolor3c64F::csCHstd::c(0.25).getC2() == 0.085);
+  BOOST_TEST_CHECK(permcolor3c64F::csCHstd::c(0.25).getC1() == 0.325);
+  BOOST_TEST_CHECK(permcolor3c64F::csCHstd::c(0.25).getC0() == 0.298);
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(csCColdeRainbow_int, * boost::unit_test::tolerance(0.01)) {
+
+  mjr::colorRGBA8b aColor;
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(0u).isEqualRGB(aColor.setToRed())        == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(255u).isEqualRGB(aColor.setToYellow())   == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(510u).isEqualRGB(aColor.setToGreen())    == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(765u).isEqualRGB(aColor.setToCyan())     == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1020u).isEqualRGB(aColor.setToBlue())    == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1275u).isEqualRGB(aColor.setToMagenta()) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1530u).isEqualRGB(aColor.setToRed())     == true);
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1531u).isEqualRGB(aColor.setToRed())     == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1786u).isEqualRGB(aColor.setToYellow())  == true);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(csCColdeRainbow_flt, * boost::unit_test::tolerance(0.01)) {
+
+  mjr::colorRGBA8b aColor;
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(0/6.0).isEqualRGB(aColor.setToRed())     == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1/6.0).isEqualRGB(aColor.setToYellow())  == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(2/6.0).isEqualRGB(aColor.setToGreen())   == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(3/6.0).isEqualRGB(aColor.setToCyan())    == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(4/6.0).isEqualRGB(aColor.setToBlue())    == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(5/6.0).isEqualRGB(aColor.setToMagenta()) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(6/6.0).isEqualRGB(aColor.setToRed())     == true);
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(12/6.0).isEqualRGB(aColor.setToRed())    == true);
+}
+
 #endif
 
 
 /** @endcond */
+
+

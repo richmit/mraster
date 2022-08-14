@@ -85,7 +85,7 @@ set(TARGETS_REQ_OPENGL "glut_image")
 set(TARGETS_REQ_TIFF   "brownianDiffusion" "dlaBrownian" "dlaDrift" "img_process" "test_interp_scale" "geomTfrm_LensDistortion" "geomTfrm_Arb" 
                        "geomTfrm_Rotate")
 set(TARGETS_REQ_OPENMP "mandelbrot_bm_cplx_openmp")
-set(TARGETS_REQ_BTEST  "utest_color_types_ia64nGCC" "utest_color_methods" "utest_color_schemes")
+set(TARGETS_REQ_BTEST  "utest_colorTpl_ia64nGCC" "utest_colorTpl")
 set(TARGETS_REQ_FLTK   )
 
 # Construct list of targets we can build
