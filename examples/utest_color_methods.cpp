@@ -4997,28 +4997,27 @@ BOOST_AUTO_TEST_CASE(dist_flt) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(lum_int) {
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).rgb2GreyDotProd(13, 17, 23)  == 272);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).rgb2GreyDotProd(13, 17, 23)  == 272);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).rgb2GreyDotProd(13, 17, 23)          == 272);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).rgb2GreyDotProd(13, 17, 23)          == 272);
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b(255, 255, 255, 255).rgb2GreyDotProd(255, 255, 255)  == 195075); // Too big for an arith SP type...
+  BOOST_TEST_CHECK(mjr::colorRGBA8b(255, 255, 255, 255).rgb2GreyDotProd(255, 255, 255) == 195075); // Too big for an arith SP type...
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).luminanceRGB()   == (2*0.2126 + 5*0.7152 + 7*0.0722)/255, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).luminanceRGB()   == (2*0.2126 + 5*0.7152 + 7*0.0722), boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).luminanceRGB()                       == 0.0176729411765, boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).luminanceRGB()                       == 4.5066,          boost::test_tools::tolerance(0.00001));
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).intensityRGB()   == 14);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).intensityRGB()   == 14);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).intensityRGB()                       == 14);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).intensityRGB()                       == 14);
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).intensity()   == 25);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).intensity()   == 25);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).intensity()                          == 25);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).intensity()                          == 25);
 
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).intensityScaledRGB()   == 14/255.0/4.0, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).intensityScaledRGB()   == 14/4.0, boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).intensityScaledRGB()                 == 0.0137254901961, boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).intensityScaledRGB()                 == 3.5,             boost::test_tools::tolerance(0.00001));
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).intensityScaled()   == 25/255.0/4.0, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).intensityScaled()   == 25/4.0, boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).intensityScaled()                    == 0.0245098039216, boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).intensityScaled()                    == 6.25,            boost::test_tools::tolerance(0.00001));
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(dotProd_getMax_getMin) {

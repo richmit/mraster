@@ -3,7 +3,7 @@
 /**
  @file      color_lut_indexed.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Draw several examples of indexed color pallets.@EOL
+ @brief     Draw colorbrewer2 color pallets.@EOL
  @std       C++20
  @copyright
   @parblock
@@ -45,7 +45,7 @@ typedef mjr::hershey::font          hft;
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  mjr::ramCanvas3c8b theRamCanvas(1800+500, 36*64+62);
+  mjr::ramCanvas3c8b theRamCanvas(800+500, 36*64+62);
   mjr::ramCanvas3c8b::colorType aColor;
   theRamCanvas.clrCanvasToBlack();
   int j = 0;

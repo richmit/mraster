@@ -219,7 +219,6 @@ namespace mjr {
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Public types for std::tuple & std::vector containing clrChanT values */
       //@{
-      /** Tuple for RGBA & 4 chan */
       typedef std::tuple<clrChanT, clrChanT, clrChanT, clrChanT> clrChanTup6;
       typedef std::tuple<clrChanT, clrChanT, clrChanT, clrChanT> clrChanTup5;
       typedef std::tuple<clrChanT, clrChanT, clrChanT, clrChanT> clrChanTup4;
@@ -228,6 +227,15 @@ namespace mjr {
       typedef std::tuple<clrChanT>                               clrChanTup1;
 
       typedef std::vector<clrChanT>                              clrChanVec;
+      //@}
+
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Public types for std::tuple & std::vector containing clrChanT values */
+      //@{
+      /** Tuple for RGBA & 4 chan */
+      typedef uint32_t            packed4Cint;             //!< Used for passing & returning integers with packed 8-bit channels
+      typedef colorTpl<double, 3> colSpaceDblTrip;         //!< Color for space computations
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1078,7 +1086,7 @@ namespace mjr {
           @param bIdx Location of blue byte in \a anInt
           @param aIdx Location of alpha byte in \a anInt
           @return Returns a reference to the current color object.*/
-      inline colorTpl& setRGBAfromLogPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx, uint8_t aIdx) {
+      inline colorTpl& setRGBAfromLogPackIntGen(packed4Cint anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx, uint8_t aIdx) {
         /* Requires: Inherits numChan>3 from setAlpha. */
         uint8_t bytes[4];
         bytes[0] = (0xFF & anInt); anInt = anInt >> 8;
@@ -1093,7 +1101,7 @@ namespace mjr {
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Just like setRGBAfromLogPackIntGen, but no A */
-      inline colorTpl& setRGBfromLogPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx) {
+      inline colorTpl& setRGBfromLogPackIntGen(packed4Cint anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx) {
         uint8_t bytes[4];
         /* Requires: Inherits numChan>2 from setBlue. */
         bytes[0] = (0xFF & anInt); anInt = anInt >> 8;
@@ -1106,14 +1114,14 @@ namespace mjr {
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      inline colorTpl& setRGBAfromLogPackIntARGB(uint32_t anInt) { return setRGBAfromLogPackIntGen(anInt, 2, 1, 0, 3); } /* Requires: Inherits numChan>3 from setAlpha. */
-      inline colorTpl& setRGBfromLogPackIntARGB( uint32_t anInt) { return setRGBfromLogPackIntGen( anInt, 2, 1, 0);    } /* Requires: Inherits numChan>2 from setBlue.  */
-      inline colorTpl& setRGBAfromLogPackIntRGBA(uint32_t anInt) { return setRGBAfromLogPackIntGen(anInt, 3, 2, 1, 0); } /* Requires: Inherits numChan>3 from setAlpha. */
-      inline colorTpl& setRGBfromLogPackIntRGBA( uint32_t anInt) { return setRGBfromLogPackIntGen( anInt, 3, 2, 1);    } /* Requires: Inherits numChan>2 from setBlue.  */
-      inline colorTpl& setRGBAfromLogPackIntABGR(uint32_t anInt) { return setRGBAfromLogPackIntGen(anInt, 0, 1, 2, 3); } /* Requires: Inherits numChan>3 from setAlpha. */
-      inline colorTpl& setRGBfromLogPackIntABGR( uint32_t anInt) { return setRGBfromLogPackIntGen( anInt, 0, 1, 2);    } /* Requires: Inherits numChan>2 from setBlue.  */
-      inline colorTpl& setRGBAfromLogPackIntABRG(uint32_t anInt) { return setRGBAfromLogPackIntGen(anInt, 1, 0, 2, 3); } /* Requires: Inherits numChan>3 from setAlpha. */
-      inline colorTpl& setRGBfromLogPackIntABRG( uint32_t anInt) { return setRGBfromLogPackIntGen( anInt, 1, 0, 2);    } /* Requires: Inherits numChan>2 from setBlue.  */
+      inline colorTpl& setRGBAfromLogPackIntARGB(packed4Cint anInt) { return setRGBAfromLogPackIntGen(anInt, 2, 1, 0, 3); } /* Requires: Inherits numChan>3 from setAlpha. */
+      inline colorTpl& setRGBfromLogPackIntARGB( packed4Cint anInt) { return setRGBfromLogPackIntGen( anInt, 2, 1, 0);    } /* Requires: Inherits numChan>2 from setBlue.  */
+      inline colorTpl& setRGBAfromLogPackIntRGBA(packed4Cint anInt) { return setRGBAfromLogPackIntGen(anInt, 3, 2, 1, 0); } /* Requires: Inherits numChan>3 from setAlpha. */
+      inline colorTpl& setRGBfromLogPackIntRGBA( packed4Cint anInt) { return setRGBfromLogPackIntGen( anInt, 3, 2, 1);    } /* Requires: Inherits numChan>2 from setBlue.  */
+      inline colorTpl& setRGBAfromLogPackIntABGR(packed4Cint anInt) { return setRGBAfromLogPackIntGen(anInt, 0, 1, 2, 3); } /* Requires: Inherits numChan>3 from setAlpha. */
+      inline colorTpl& setRGBfromLogPackIntABGR( packed4Cint anInt) { return setRGBfromLogPackIntGen( anInt, 0, 1, 2);    } /* Requires: Inherits numChan>2 from setBlue.  */
+      inline colorTpl& setRGBAfromLogPackIntABRG(packed4Cint anInt) { return setRGBAfromLogPackIntGen(anInt, 1, 0, 2, 3); } /* Requires: Inherits numChan>3 from setAlpha. */
+      inline colorTpl& setRGBfromLogPackIntABRG( packed4Cint anInt) { return setRGBfromLogPackIntGen( anInt, 1, 0, 2);    } /* Requires: Inherits numChan>2 from setBlue.  */
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1162,7 +1170,7 @@ namespace mjr {
           @param bIdx Location of blue byte in \a anInt
           @param aIdx Location of alpha byte in \a anInt
           @return Returns a reference to the current color object.*/
-      inline colorTpl& setRGBAfromPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx, uint8_t aIdx) {
+      inline colorTpl& setRGBAfromPackIntGen(packed4Cint anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx, uint8_t aIdx) {
         /* Requires: Inherits numChan>3 from setAlpha. */
         uint8_t *curByte = (uint8_t *)(&anInt);
         setRed_byte(  curByte[rIdx]);
@@ -1173,7 +1181,7 @@ namespace mjr {
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Just like setRGBAfromPackIntGen, but no A */
-      inline colorTpl& setRGBfromPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx) {
+      inline colorTpl& setRGBfromPackIntGen(packed4Cint anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx) {
         /* Requires: Inherits numChan>2 from setBlue. */
         uint8_t *curByte = (uint8_t *)(&anInt);
         setRed_byte(  curByte[rIdx]);
@@ -1294,7 +1302,7 @@ namespace mjr {
 
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @overload */
-      inline colorTpl& setRGBfromColorSpace(colorSpaceEnum space, colorTpl<double, 3> inColor) {
+      inline colorTpl& setRGBfromColorSpace(colorSpaceEnum space, colSpaceDblTrip inColor) {
         /* Requires: Inherits numChan>2 from getC2. */
         return setRGBfromColorSpace(space, inColor.getC0(), inColor.getC1(), inColor.getC2());
       }
@@ -1495,14 +1503,14 @@ namespace mjr {
           @param anchors Doubles for which color equals the corresponding corner.
           @param colors  A vector  of colors to use
           @return A reference to this object */
-      inline colorTpl& cmpGradiant(double aDouble, std::vector<double> const& anchors, std::vector<colorType> const& colors) {
+      inline colorTpl& cmpGradiant(csFltType csX, std::vector<csFltType > const& anchors, std::vector<colorType> const& colors) {
         typename std::vector<colorType>::size_type numColors = colors.size();
         if((numColors >= 2) && (anchors.size() == numColors)) {
           for(typename std::vector<colorType>::size_type i=0; i<(numColors-1); i++) {
-            double lowAnchor  = anchors[i];
-            double highAnchor = anchors[i+1];
-            if( (aDouble >= lowAnchor) && (aDouble < highAnchor) ) {
-              return interplColors(std::abs((aDouble-lowAnchor)/(highAnchor-lowAnchor)), colors[i], colors[i+1]);
+            csFltType lowAnchor  = anchors[i];
+            csFltType highAnchor = anchors[i+1];
+            if( (csX >= lowAnchor) && (csX < highAnchor) ) {
+              return interplColors(std::abs((csX-lowAnchor)/(highAnchor-lowAnchor)), colors[i], colors[i+1]);
             }
           }
         }
@@ -1510,14 +1518,32 @@ namespace mjr {
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Identical to the other cmpGradiant() function except that equidistant anchors are automatically generated on [0, 1] for the given colors array. */
-      inline colorTpl& cmpGradiant(double aDouble, std::vector<colorType> const& colors) {
+      inline colorTpl& cmpGradiant(csFltType csX, std::vector<colorType> const& colors) {
         typename std::vector<colorType>::size_type numColors = colors.size();
         if(numColors >= 2) {
           for(typename std::vector<colorType>::size_type i=0; i<(numColors-1); i++) {
-            double lowAnchor  = static_cast<double>(i)  / (numColors-1);
-            double highAnchor = static_cast<double>(i+1)/ (numColors-1);
-            if( (aDouble >= lowAnchor) && (aDouble < highAnchor) ) {
-              return interplColors(std::abs((aDouble-lowAnchor)/(highAnchor-lowAnchor)), colors[i], colors[i+1]);
+            csFltType lowAnchor  = static_cast<csFltType>(i)  / static_cast<csFltType>(numColors-1);
+            csFltType highAnchor = static_cast<csFltType>(i+1)/ static_cast<csFltType>(numColors-1);
+            if( (csX >= lowAnchor) && (csX < highAnchor) ) {
+              return interplColors(std::abs((csX-lowAnchor)/(highAnchor-lowAnchor)), colors[i], colors[i+1]);
+            }
+          }
+        }
+        return *this;
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Identical to the other equidistant cmpGradiant() function except that this one takes an array of packed integers. */
+      inline colorTpl& cmpGradiant(csFltType csX, csIntType numColors, const packed4Cint* colors) {
+        if(numColors >= 2) {
+          for(csIntType i=0; i<(numColors-1); i++) {
+            csFltType lowAnchor  = static_cast<csFltType>(i)  / static_cast<csFltType>(numColors-1);
+            csFltType highAnchor = static_cast<csFltType>(i+1)/ static_cast<csFltType>(numColors-1);
+            if( (csX >= lowAnchor) && (csX < highAnchor) ) {
+              colorTpl c1;
+              colorTpl c2;
+              c1.setRGBfromLogPackIntARGB(colors[i]);
+              c2.setRGBfromLogPackIntARGB(colors[i+1]);
+              return interplColors(std::abs((csX-lowAnchor)/(highAnchor-lowAnchor)), c1, c2);
             }
           }
         }
@@ -1561,8 +1587,8 @@ namespace mjr {
             if(csIdx <= chanStepMax) {
               clrChanT csIdxNoMore = static_cast<clrChanT>(csIdx);
               // Note: This could be MUCH better optimized!
-              colorTpl<clrChanT, numChan> c1;
-              colorTpl<clrChanT, numChan> c2;
+              colorTpl c1;
+              colorTpl c2;
               c1.setToCorner(cornerColors[i]);
               c2.setToCorner(cornerColors[i+1]);
               clrChanT r, g, b;
@@ -1616,8 +1642,8 @@ namespace mjr {
             csFltType mF = csX * (numColors - 1);
             csIntType mI = static_cast<csIntType>(mF);
             if (mI >= (numColors-2)) mI=numColors-2;
-            colorTpl<clrChanT, numChan> c1;
-            colorTpl<clrChanT, numChan> c2;
+            colorTpl c1;
+            colorTpl c2;
             c1.setToCorner(cornerColors[mI]);
             c2.setToCorner(cornerColors[mI+1]);
             return interplColors(mF-mI, c1, c2);
@@ -1654,8 +1680,8 @@ namespace mjr {
         /* Requires: Inherits numChan>2 from getC2. */
         if( (aDouble >= 0.0) && (aDouble <= 1.0) ) {
           // Convert our given colors into HSL
-          colorTpl<double, 3> acol1 = col1.rgb2colorSpace(space);
-          colorTpl<double, 3> acol2 = col2.rgb2colorSpace(space);
+          colSpaceDblTrip acol1 = col1.rgb2colorSpace(space);
+          colSpaceDblTrip acol2 = col2.rgb2colorSpace(space);
 
           // Interpolate values
           double out1, out2, out3;
@@ -2085,7 +2111,7 @@ namespace mjr {
           @param aDouble Distance from the current color (on a unit interval)
           @param tooCol  The color we are interpolating with.
           @return Returns a reference to the current color object.*/
-      inline colorTpl & interplColors(double aDouble, colorArgType tooCol) {
+      inline colorTpl& interplColors(double aDouble, colorArgType tooCol) {
         if( (aDouble >= 0.0) && (aDouble <= 1.0) )
           for(int i=0; i<numChan; i++)
             setChanNC(i, static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(getChanNC(i)), static_cast<double>(tooCol.getChanNC(i)), aDouble)));
@@ -2267,7 +2293,7 @@ namespace mjr {
           Note, the luminanceRGB() function is NOT used internally within this function for performance reasons.  This function will do the best job it can
           within the current color depth.
           @return Returns a reference to the current color object.*/
-      inline colorTpl & tfrmGreyScaleRGB(void) {
+      inline colorTpl& tfrmGreyScaleRGB(void) {
         /* Requires: Inherits numChan>2 from getC2. */
         setChanNC(0, static_cast<clrChanT>(static_cast<channelArithFltType>(getC0()) * static_cast<channelArithFltType>(RGBluminanceWeightR) +
                                            static_cast<channelArithFltType>(getC1()) * static_cast<channelArithFltType>(RGBluminanceWeightG) +
@@ -2284,7 +2310,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** The 216 Palate Web Safe Transform modifies the current color into the closest web safe color from the 216 color web safe pallet.
           @return Returns a reference to the current color object.*/
-      inline colorTpl<clrChanT, numChan>& tfrmWebSafe216() {
+      inline colorTpl& tfrmWebSafe216() {
         for(int i=0; i<numChan; i++)
           setChanNC(i, colorComp2WebSafeColorComp(getChanNC(i)));
         return *this;
@@ -2292,7 +2318,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Transforms the current color into the nearest web safe color, and then transforms it into what a person with Protanopia might see.
           @return Returns a reference to the current color object.*/
-      inline colorTpl<clrChanT, numChan>& tfrmWebSafePro216() {
+      inline colorTpl& tfrmWebSafePro216() {
         /* Requires: Inherits numChan>2 from getC2. */
         tfrmWebSafe216();
         int colIdx = 36 * (getC0_byte() / 0x33) + 6 * (getC1_byte() / 0x33) + 1 * (getC2_byte() / 0x33) + 1;
@@ -2301,7 +2327,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Transforms the current color into the nearest web safe color, and then transforms it into what a person with Deutanopia might see.
           @return Returns a reference to the current color object.*/
-      inline colorTpl<clrChanT, numChan>& tfrmWebSafeDeu216() {
+      inline colorTpl& tfrmWebSafeDeu216() {
         /* Requires: Inherits numChan>2 from getC2. */
         tfrmWebSafe216();
         int colIdx = 36 * (getC0_byte() / 0x33) + 6 * (getC1_byte() / 0x33) + 1 * (getC2_byte() / 0x33) + 1;
@@ -2310,7 +2336,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Transforms the current color into the nearest web safe color, and then transforms it into what a person with Tritanoptia might see.
           @return Returns a reference to the current color object.*/
-      inline colorTpl<clrChanT, numChan>& tfrmWebSafeTri216() {
+      inline colorTpl& tfrmWebSafeTri216() {
         /* Requires: Inherits numChan>2 from getC2. */
         tfrmWebSafe216();
         int colIdx = 36 * (getC0_byte() / 0x33) + 6 * (getC1_byte() / 0x33) + 1 * (getC2_byte() / 0x33) + 1;
@@ -2326,7 +2352,7 @@ namespace mjr {
           Note RGB returns float RGB normalized to 1.0.
           @param space The color space to convert to
           @return An RGB color with double channels. */
-      inline colorTpl<double, 3> rgb2colorSpace(colorSpaceEnum space) {
+      inline colSpaceDblTrip rgb2colorSpace(colorSpaceEnum space) {
         /* Requires: Inherits numChan>2 from getC2. */
 
         double redF   = getC0_dbl();
@@ -2334,7 +2360,7 @@ namespace mjr {
         double blueF  = getC2_dbl();
 
         if (space == colorSpaceEnum::RGB)
-          return colorTpl<double, 3>(redF, greenF, blueF);
+          return colSpaceDblTrip(redF, greenF, blueF);
 
         if ((space == colorSpaceEnum::HSL) || (space == colorSpaceEnum::HSV)) {
           clrChanT rgbMaxI = getMaxRGB();
@@ -2378,9 +2404,9 @@ namespace mjr {
             H = realWrap(H * 60.0, 360.0);
           }
           if (space == colorSpaceEnum::HSL)
-            return colorTpl<double, 3>(H, S, L);
+            return colSpaceDblTrip(H, S, L);
           else
-            return colorTpl<double, 3>(H, S, V);
+            return colSpaceDblTrip(H, S, V);
         } else {
           redF   = 100.0 * ((redF   > 0.04045) ? std::pow((redF   + 0.055) / 1.055, 2.4) : redF   / 12.92);
           greenF = 100.0 * ((greenF > 0.04045) ? std::pow((greenF + 0.055) / 1.055, 2.4) : greenF / 12.92);
@@ -2391,7 +2417,7 @@ namespace mjr {
           double Z = (0.0193 * redF + 0.1192 * greenF + 0.9505 * blueF);
 
           if (space == colorSpaceEnum::XYZ)
-            return colorTpl<double, 3>(X, Y, Z);
+            return colSpaceDblTrip(X, Y, Z);
 
           X /= 95.0429;
           Y /= 100.0;
@@ -2406,7 +2432,7 @@ namespace mjr {
           double B = 200.0 * (Y - Z);
 
           if (space == colorSpaceEnum::LAB)
-            return colorTpl<double, 3>(L, A, B);
+            return colSpaceDblTrip(L, A, B);
 
           double C = std::hypot(A, B);
 
@@ -2415,10 +2441,10 @@ namespace mjr {
             H = realWrap(atan2(B,A) * 180.0 / std::numbers::pi, 360.0);
 
           if (space == colorSpaceEnum::LCH)
-            return colorTpl<double, 3>(L, C, H);
+            return colSpaceDblTrip(L, C, H);
         }
 
-        return colorTpl<double, 3>(0.0, 0.0, 0.0);
+        return colSpaceDblTrip(0.0, 0.0, 0.0);
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute channels for given color space coordinates for the current color.
@@ -2447,7 +2473,7 @@ namespace mjr {
           @param c The "contrast" value
           @param b The "brightness" value
           @return Returns a reference to the current color object.*/
-      inline colorTpl & tfrmLinearGreyLevelScale(double c, double b) {
+      inline colorTpl& tfrmLinearGreyLevelScale(double c, double b) {
         for(int i=0; i<numChan; i++)
           setChanNC(i, static_cast<clrChanT>(c * static_cast<double>(getChanNC(i)) + b));
         return *this;
@@ -4026,6 +4052,23 @@ namespace mjr {
           static colorTpl c(csIntType csIdx, csIntType numC=maxNumC) {
             colorTpl tmp;
             return c(tmp, csIdx, numC);
+          }
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csX A value in [0, 1] that identifies the color in the scheme.
+              @param numC Number of colors for the given scheme.  Will be clamped to [minNumC, maxNumC].
+              @return Returns a reference to \a aColor. */
+          static colorTpl&  c(colorRefType aColor, csFltType csX, csIntType numC=maxNumC) {
+            csIntType b = std::clamp(numC, minNumC, maxNumC);
+            return aColor.cmpGradiant(numberWrap(csX, 1.0), b, &d[b*(b-1)/2-3+0]);
+          }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csX A value in [0, 1] that identifies the color in the scheme.
+              @param numC Number of colors for the given scheme.  Will be clamped to [minNumC, maxNumC].
+              @return Returns a reference a colorTpl value. */
+          static colorTpl c(csFltType csX, csIntType numC=maxNumC) {
+            colorTpl tmp;
+            return c(tmp, csX, numC);
           }
         private:
           constexpr static uint32_t d[] = { colors... };
