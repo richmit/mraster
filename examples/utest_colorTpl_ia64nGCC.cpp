@@ -1,7 +1,7 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      utest_color_types_ia64nGCC.cpp
+ @file      utest_colorTpl_ia64nGCC.cpp
  @author    Mitch Richling http://www.mitchr.me/
  @date      2022-08-11
  @brief     Unit tests for basic color types on ia64 with GCC.@EOL

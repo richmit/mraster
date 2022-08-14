@@ -1,7 +1,7 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      utest_color_methods.cpp
+ @file      utest_colorTpl.cpp
  @author    Mitch Richling http://www.mitchr.me/
  @date      2022-08-11
  @brief     Unit tests for basic color methods.@EOL
