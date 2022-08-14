@@ -565,6 +565,13 @@ interesting color schemes can be derived from them.
 :CUSTOM_ID: csCB
 :END:
 
+The discreet schemes in this section are all from the =colorbrewer2= collection:
+#+BEGIN_QUOTE
+Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30.
+#+END_QUOTE
+Most of these schemes can provide a variable number of steps from 3 up to what is illustrated in each color swatch below.  Also note that =colorTpl= provides
+a continuous gradient version of each color scheme -- which is kinda weird, but I like some of them.
+
  - =csCBAccent= :: \\
   [[./pics/cs/color_lut_docs_csCBAccent_50.png]] \\
   [[./pics/cs/color_lut_docs_csCBAccentC_50.png]]
