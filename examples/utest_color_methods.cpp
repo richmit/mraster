@@ -43,7 +43,7 @@
 
 #include "ramCanvas.hpp"
 
-#if 0
+#if 1
 
 // +----+---------------------------------------------------------------------------------------------------------------
 // |    | Method
@@ -4481,7 +4481,7 @@ BOOST_AUTO_TEST_CASE(isEqual_and_isEqualRGB_and_isNotEqual) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(isEqual_and_isEqualRGB_and_isNotEqual) {
+BOOST_AUTO_TEST_CASE(setColorCons) {
 
   mjr::colorRGBA8b   aColor; // integer color with imperfect mask
   mjr::colorRGBA64b  bColor; // integer color without mask
