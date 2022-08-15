@@ -1080,6 +1080,20 @@ namespace mjr {
       /** Set the color based upon the bytes of the given integer ordered from LSB to MSB.
           The *Idx arguments select which byte of the int is used for each channel -- with LSB equal to index 0 and MSB equal to index 3. The extracted bytes
           are interpreted as by setChans_byte.  Any channels beyond four are left untouched.
+
+          @warning Note conviencie functions are provided for
+
+
+
+SDL_PIXELFORMAT_BGRA32
+
+alias for BGRA byte array of color data, for the current platform (>= SDL 2.0.5)
+
+SDL_PIXELFORMAT_ABGR32
+
+alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
+
+
           @param anInt The integer from which to extract bytes to set color
           @param rIdx Location of red byte in \a anInt
           @param gIdx Location of green byte in \a anInt
@@ -1114,12 +1128,17 @@ namespace mjr {
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /* These four pixel formats (ARGB, RGBA, ABGR, & BGRA) are commonly used (SDL, OpenGL, ImageJ, etc...).  Note we have two methods per pixel format --
+         one for RGB & one for RGBA */
       inline colorTpl& setRGBAfromLogPackIntARGB(packed4Cint anInt) { return setRGBAfromLogPackIntGen(anInt, 2, 1, 0, 3); } /* Requires: Inherits numChan>3 from setAlpha. */
       inline colorTpl& setRGBfromLogPackIntARGB( packed4Cint anInt) { return setRGBfromLogPackIntGen( anInt, 2, 1, 0);    } /* Requires: Inherits numChan>2 from setBlue.  */
       inline colorTpl& setRGBAfromLogPackIntRGBA(packed4Cint anInt) { return setRGBAfromLogPackIntGen(anInt, 3, 2, 1, 0); } /* Requires: Inherits numChan>3 from setAlpha. */
       inline colorTpl& setRGBfromLogPackIntRGBA( packed4Cint anInt) { return setRGBfromLogPackIntGen( anInt, 3, 2, 1);    } /* Requires: Inherits numChan>2 from setBlue.  */
       inline colorTpl& setRGBAfromLogPackIntABGR(packed4Cint anInt) { return setRGBAfromLogPackIntGen(anInt, 0, 1, 2, 3); } /* Requires: Inherits numChan>3 from setAlpha. */
       inline colorTpl& setRGBfromLogPackIntABGR( packed4Cint anInt) { return setRGBfromLogPackIntGen( anInt, 0, 1, 2);    } /* Requires: Inherits numChan>2 from setBlue.  */
+      inline colorTpl& setRGBAfromLogPackIntBGRA(packed4Cint anInt) { return setRGBAfromLogPackIntGen(anInt, 1, 2, 3, 0); } /* Requires: Inherits numChan>3 from setAlpha. */
+      inline colorTpl& setRGBfromLogPackIntBGRA( packed4Cint anInt) { return setRGBfromLogPackIntGen( anInt, 1, 2, 3);    } /* Requires: Inherits numChan>2 from setBlue.  */
+      /* This pixel format (ABRG) is used by POV-Ray for height fields */
       inline colorTpl& setRGBAfromLogPackIntABRG(packed4Cint anInt) { return setRGBAfromLogPackIntGen(anInt, 1, 0, 2, 3); } /* Requires: Inherits numChan>3 from setAlpha. */
       inline colorTpl& setRGBfromLogPackIntABRG( packed4Cint anInt) { return setRGBfromLogPackIntGen( anInt, 1, 0, 2);    } /* Requires: Inherits numChan>2 from setBlue.  */
       //@}
@@ -1506,7 +1525,9 @@ namespace mjr {
           poor performance -- both due to the use of floating point arithmetic.  Note this function operates correctly with any channel type and with an
           arbitrary number of channels -- it is NOT limited to RGB colors or RGB color corners for anchors.
 
-          @warning Many gradient color schemes are predefined: http://richmit.github.io/mraster/ColorSchemes.html
+          @warning In many cases it is better to use csFP_tpl, csCC_tpl, or csHSLh_tpl to define a continuous gradient color scheme than to use this function
+          directly.  In fact, the first step might be to see if a suitable gradient color scheme is already are predefined:
+          http://richmit.github.io/mraster/ColorSchemes.html
 
           @param csX The value to convert
           @param anchors Doubles for which color equals the corresponding corner.
@@ -2132,7 +2153,7 @@ namespace mjr {
           @param aDouble Distance from the current color (on a unit interval)
           @param tooCol  The color we are interpolating with.
           @return Returns a reference to the current color object.*/
-      inline colorTpl& interplColors(double aDouble, colorArgType tooCol) {
+      inline colorTpl& tfrmMix(double aDouble, colorArgType tooCol) {
         if( (aDouble >= 0.0) && (aDouble <= 1.0) )
           for(int i=0; i<numChan; i++)
             setChanNC(i, static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(getChanNC(i)), static_cast<double>(tooCol.getChanNC(i)), aDouble)));
@@ -2316,9 +2337,9 @@ namespace mjr {
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmGreyScaleRGB(void) {
         /* Requires: Inherits numChan>2 from getC2. */
-        setChanNC(0, static_cast<clrChanT>(static_cast<channelArithFltType>(getC0()) * static_cast<channelArithFltType>(RGBluminanceWeightR) +
-                                           static_cast<channelArithFltType>(getC1()) * static_cast<channelArithFltType>(RGBluminanceWeightG) +
-                                           static_cast<channelArithFltType>(getC2()) * static_cast<channelArithFltType>(RGBluminanceWeightB)));
+        setChanNC(0, static_cast<clrChanT>(static_cast<channelArithFltType>(getRed())   * static_cast<channelArithFltType>(RGBluminanceWeightR) +
+                                           static_cast<channelArithFltType>(getGreen()) * static_cast<channelArithFltType>(RGBluminanceWeightG) +
+                                           static_cast<channelArithFltType>(getBlue())  * static_cast<channelArithFltType>(RGBluminanceWeightB)));
         for(int i=1; i<numChan; i++)
           setChanNC(i, getChanNC(0));
         return *this;
@@ -2340,27 +2361,24 @@ namespace mjr {
       /** Transforms the current color into the nearest web safe color, and then transforms it into what a person with Protanopia might see.
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmWebSafePro216() {
-        /* Requires: Inherits numChan>2 from getC2. */
         tfrmWebSafe216();
-        int colIdx = 36 * (getC0_byte() / 0x33) + 6 * (getC1_byte() / 0x33) + 1 * (getC2_byte() / 0x33) + 1;
+        int colIdx = 36 * (getRed_byte() / 0x33) + 6 * (getGreen_byte() / 0x33) + 1 * (getBlue_byte() / 0x33) + 1;
         return csSet<colorTpl::csFPwebSafeNormalVision>(colIdx);
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Transforms the current color into the nearest web safe color, and then transforms it into what a person with Deutanopia might see.
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmWebSafeDeu216() {
-        /* Requires: Inherits numChan>2 from getC2. */
         tfrmWebSafe216();
-        int colIdx = 36 * (getC0_byte() / 0x33) + 6 * (getC1_byte() / 0x33) + 1 * (getC2_byte() / 0x33) + 1;
+        int colIdx = 36 * (getRed_byte() / 0x33) + 6 * (getGreen_byte() / 0x33) + 1 * (getBlue_byte() / 0x33) + 1;
         return csSet<colorTpl::csFPwebSafeDeutanopia>(colIdx);
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Transforms the current color into the nearest web safe color, and then transforms it into what a person with Tritanoptia might see.
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmWebSafeTri216() {
-        /* Requires: Inherits numChan>2 from getC2. */
         tfrmWebSafe216();
-        int colIdx = 36 * (getC0_byte() / 0x33) + 6 * (getC1_byte() / 0x33) + 1 * (getC2_byte() / 0x33) + 1;
+        int colIdx = 36 * (getRed_byte() / 0x33) + 6 * (getGreen_byte() / 0x33) + 1 * (getBlue_byte() / 0x33) + 1;
         return csSet<colorTpl::csFPwebSafeTritanoptia>(colIdx);
       }
       //@}
@@ -2824,16 +2842,9 @@ namespace mjr {
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-      /** @cond color-schemes */
-      /* Doxygen is pretty bad at formatting these bits... */
-
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** @defgroup cs Color Schemes */
-
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Meta Color Schemes */
+      //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute a color from a polynomial space curve in the RGB color space. This is a continuous color scheme!
           @tparam coefs Polynomial coefficients*/
       template<double...coefs>
@@ -2862,6 +2873,170 @@ namespace mjr {
           constexpr static int    psize   = (sizeof...(coefs)) / 3;
           constexpr static double pcoff[] = { coefs... };
       };
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Compute a color from Dave Green's cubehelix scheme.  See: Green, D. A., 2011, Bulletin of the Astronomical Society of India, Vol.39, p.289.
+          This is a continous color scheme!
+          @tparam start colour (1=red, 2=green, 3=blue; ex: 0.5=purple;
+          @tparam rots  Rotations in colour in [-1.5, 1.5]. ex: -1.0 is one blue->green->red cycle;
+          @tparam hue   Hue intensity scaling in [0, 1] (0 == greyscale).
+          @tparam gamma Gamma correction for intensity. */
+      template<double start, double rots, double hue, double gamma>
+      class csCubeHelix_tpl {
+        public:
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csX A value in [0, 1] that identifies the color in the scheme.
+              @return Returns a reference to \a aColor. */
+          static inline colorTpl& c(colorRefType aColor, csFltType csX) {
+            //csX=mjr::numberWrap(csX, 0.0, 1.0);
+            double angle=2*std::numbers::pi*(start/3.0+1.0+rots*csX);
+            csX=std::pow(csX, gamma);
+            double ampl=hue*csX*(1-csX)/2.0;
+            return aColor.setChansRGB_dbl(std::clamp(csX+ampl*(-0.14861*std::cos(angle)+1.78277*std::sin(angle)), 0.0, 1.0),
+                                          std::clamp(csX+ampl*(-0.29227*std::cos(angle)-0.90649*std::sin(angle)), 0.0, 1.0),
+                                          std::clamp(csX+ampl*(+1.97294*std::cos(angle)),                         0.0, 1.0));
+          }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csX A value in [0, 1] that identifies the color in the scheme.
+              @return Returns a colorTpl value */
+          static inline colorTpl c(csFltType csX) { colorTpl tmp; return c(tmp, csX); }
+      };
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Template for HSL color schemes.
+          If clrChanT is integral, this is a discrete color scheme, otherwise it is continuous.. */
+      template<cornerColorEnum corner>
+      class csHSLh_tpl {
+        public:
+          constexpr static csIntType numC = (chanIsInt ? meanChanVal : 0);
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csIdx Index of color in pallet.  Wrapped to [0, meanChanVal].
+              @return Returns a reference to \a aColor. */
+          static inline colorTpl& c(colorRefType aColor, csNatType csIdx) {
+            clrChanT cVal = static_cast<clrChanT>(numberWrap(csIdx, meanChanVal));
+            colorTpl cc(corner);
+            return aColor.setChansRGB(static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getC0() ? cVal : -cVal)),
+                                      static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getC1() ? cVal : -cVal)),
+                                      static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getC2() ? cVal : -cVal)));
+          }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csIdx Index of color in pallet.  Wrapped to [0, meanChanVal].
+              @return Returns a colorTpl value */
+          static inline colorTpl c(csNatType csIdx) { colorTpl tmp; return c(tmp, csIdx); }
+      };
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Template providing RGB color cube gradiant color schemes */
+      template<cornerColorEnum...corners>
+      class csCC_tpl {
+        public:
+          constexpr static csIntType numC = ((sizeof...(corners)) - 1) * chanStepMax + 1;
+          static inline colorTpl&  c(colorRefType aColor, csFltType csX)   { return aColor.cmpRGBcornerCGradiant(csX, numA, cols);          }
+          static inline colorTpl   c(                     csFltType csX)   { colorTpl tmp; return c(tmp, csX);                              }
+          static inline colorTpl&  c(colorRefType aColor, csIntType csIdx) { return aColor.cmpRGBcornerDGradiant(csIdx % numC, numA, cols); }
+          static inline colorTpl   c(                     csIntType csIdx) { colorTpl tmp; return c(tmp, csIdx);                            }
+        private:
+          constexpr static int numA = (sizeof...(corners));
+          constexpr static cornerColorEnum cols[] = { corners... };
+      };
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Binary color scheme. First color for even inputs and second color for odd. */
+      template<cornerColorEnum a, cornerColorEnum b>
+      class csBin_tpl {
+        public:
+          constexpr static csIntType numC = 2;
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csIdx Index of color in pallet.  Not wrapped or clipped.  Even values get color \a a, while odd values get color \a b.
+              @return Returns a reference to \a aColor. */
+          static inline colorTpl& c(colorRefType aColor, csIntType csIdx) { if (csIdx % 2) return aColor.setToCorner(b); else return aColor.setToCorner(a); }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csIdx Index of color in pallet.  Not wrapped or clipped.  Even values get color \a a, while odd values get color \a b.
+              @return Returns a colorTpl value */
+          static inline colorTpl c(csIntType csIdx) { colorTpl tmp; return c(tmp, csIdx); }
+      };
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Template for fixed size pallets. */
+      template<uint32_t...colors>
+      class csFP_tpl {
+        public:
+          constexpr static csIntType numC = (sizeof...(colors));
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
+              @return Returns a reference to \a aColor. */
+          static inline colorTpl&  c(colorRefType aColor, csIntType csIdx) { return aColor.setRGBfromLogPackIntARGB(d[csIdx % numC]);  }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
+              @return Returns a reference a colorTpl value. */
+          static inline colorTpl c(csIntType csIdx) { colorTpl tmp; return c(tmp, csIdx); }
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csX A value in [0, 1] that identifies the color in the scheme.
+              @return Returns a reference to \a aColor. */
+          static colorTpl&  c(colorRefType aColor, csFltType csX) { return aColor.cmpGradiant(numberWrap(csX, 1.0), numC, d); }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csX A value in [0, 1] that identifies the color in the scheme.
+              @return Returns a reference a colorTpl value. */
+          static colorTpl c(csFltType csX) { colorTpl tmp; return c(tmp, csX); }
+        private:
+          constexpr static uint32_t d[] = { colors... };
+      };
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Template for Color Brewer 2 variable sized pallets. */
+      template<csIntType mx, uint32_t...colors>
+      class csCB_tpl {
+        public:
+          constexpr static csIntType minNumC = 3;
+          constexpr static csIntType maxNumC = mx;
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
+              @param numC Number of colors for the given scheme.  Will be clamped to [minNumC, maxNumC].
+              @return Returns a reference to \a aColor. */
+          static colorTpl&  c(colorRefType aColor, csIntType csIdx, csIntType numC=maxNumC) {
+            csIntType b = std::clamp(numC, minNumC, maxNumC);
+            csIntType i = csIdx % b;
+            return aColor.setRGBfromLogPackIntARGB(d[b*(b-1)/2-3+i]);
+          }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
+              @param numC Number of colors for the given scheme.  Will be clamped to [minNumC, maxNumC].
+              @return Returns a reference a colorTpl value. */
+          static colorTpl c(csIntType csIdx, csIntType numC=maxNumC) {
+            colorTpl tmp;
+            return c(tmp, csIdx, numC);
+          }
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csX A value in [0, 1] that identifies the color in the scheme.
+              @param numC Number of colors for the given scheme.  Will be clamped to [minNumC, maxNumC].
+              @return Returns a reference to \a aColor. */
+          static colorTpl&  c(colorRefType aColor, csFltType csX, csIntType numC=maxNumC) {
+            csIntType b = std::clamp(numC, minNumC, maxNumC);
+            return aColor.cmpGradiant(numberWrap(csX, 1.0), b, &d[b*(b-1)/2-3+0]);
+          }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csX A value in [0, 1] that identifies the color in the scheme.
+              @param numC Number of colors for the given scheme.  Will be clamped to [minNumC, maxNumC].
+              @return Returns a reference a colorTpl value. */
+          static colorTpl c(csFltType csX, csIntType numC=maxNumC) {
+            colorTpl tmp;
+            return c(tmp, csX, numC);
+          }
+        private:
+          constexpr static uint32_t d[] = { colors... };
+      };
+      //@}
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+      /** @cond color-schemes */
+      /* Doxygen is pretty bad at formatting these bits... */
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @defgroup cs Color Schemes */
 
       //========================================================================================================================================================
       /** @name Color Schemes: Polynomial */
@@ -2973,35 +3148,6 @@ namespace mjr {
                        -1.200000000e+01,  15.000000000, -3.023809524,  2.380952381e-02>                                                 csPLYhsvRB;
       //@}
 
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** Compute a color from Dave Green's cubehelix scheme.  See: Green, D. A., 2011, Bulletin of the Astronomical Society of India, Vol.39, p.289.
-          This is a continous color scheme!
-          @tparam start colour (1=red, 2=green, 3=blue; ex: 0.5=purple;
-          @tparam rots  Rotations in colour in [-1.5, 1.5]. ex: -1.0 is one blue->green->red cycle;
-          @tparam hue   Hue intensity scaling in [0, 1] (0 == greyscale).
-          @tparam gamma Gamma correction for intensity. */
-      template<double start, double rots, double hue, double gamma>
-      class csCubeHelix_tpl {
-        public:
-          /** Set given colorTpl instance to the selected color in the color scheme.
-              @param aColor color object to set.
-              @param csX A value in [0, 1] that identifies the color in the scheme.
-              @return Returns a reference to \a aColor. */
-          static inline colorTpl& c(colorRefType aColor, csFltType csX) {
-            //csX=mjr::numberWrap(csX, 0.0, 1.0);
-            double angle=2*std::numbers::pi*(start/3.0+1.0+rots*csX);
-            csX=std::pow(csX, gamma);
-            double ampl=hue*csX*(1-csX)/2.0;
-            return aColor.setChansRGB_dbl(std::clamp(csX+ampl*(-0.14861*std::cos(angle)+1.78277*std::sin(angle)), 0.0, 1.0),
-                                          std::clamp(csX+ampl*(-0.29227*std::cos(angle)-0.90649*std::sin(angle)), 0.0, 1.0),
-                                          std::clamp(csX+ampl*(+1.97294*std::cos(angle)),                         0.0, 1.0));
-          }
-          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
-              @param csX A value in [0, 1] that identifies the color in the scheme.
-              @return Returns a colorTpl value */
-          static inline colorTpl c(csFltType csX) { colorTpl tmp; return c(tmp, csX); }
-      };
-
       //========================================================================================================================================================
       /** @name Color Schemes: CubeHelix */
       //@{
@@ -3024,21 +3170,6 @@ namespace mjr {
           The "violets" cubehelix color scheme with start=0.5, rots=0.0, hue=1, and gamma=1. */
       typedef csCubeHelix_tpl<0.5,  0.0, 1.0, 1.0> csCHvio;
       //@}
-
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** Template providing RGB color cube gradiant color schemes */
-      template<cornerColorEnum...corners>
-      class csCC_tpl {
-        public:
-          constexpr static csIntType numC = ((sizeof...(corners)) - 1) * chanStepMax + 1;
-          static inline colorTpl&  c(colorRefType aColor, csFltType csX)   { return aColor.cmpRGBcornerCGradiant(csX, numA, cols);          }
-          static inline colorTpl   c(                     csFltType csX)   { colorTpl tmp; return c(tmp, csX);                              }
-          static inline colorTpl&  c(colorRefType aColor, csIntType csIdx) { return aColor.cmpRGBcornerDGradiant(csIdx % numC, numA, cols); }
-          static inline colorTpl   c(                     csIntType csIdx) { colorTpl tmp; return c(tmp, csIdx);                            }
-        private:
-          constexpr static int numA = (sizeof...(corners));
-          constexpr static cornerColorEnum cols[] = { corners... };
-      };
 
       //========================================================================================================================================================
       /** @name Color Schemes: RGB Constant Brightness Ramps */
@@ -3201,23 +3332,6 @@ namespace mjr {
       typedef csCC_tpl<cornerColorEnum::YELLOW,  cornerColorEnum::MAGENTA> csCCudBg;
       //@}
 
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** Binary color scheme. First color for even inputs and second color for odd. */
-      template<cornerColorEnum a, cornerColorEnum b>
-      class csBin_tpl {
-        public:
-          constexpr static csIntType numC = 2;
-          /** Set given colorTpl instance to the selected color in the color scheme.
-              @param aColor color object to set.
-              @param csIdx Index of color in pallet.  Not wrapped or clipped.  Even values get color \a a, while odd values get color \a b.
-              @return Returns a reference to \a aColor. */
-          static inline colorTpl& c(colorRefType aColor, csIntType csIdx) { if (csIdx % 2) return aColor.setToCorner(b); else return aColor.setToCorner(a); }
-          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
-              @param csIdx Index of color in pallet.  Not wrapped or clipped.  Even values get color \a a, while odd values get color \a b.
-              @return Returns a colorTpl value */
-          static inline colorTpl c(csIntType csIdx) { colorTpl tmp; return c(tmp, csIdx); }
-      };
-
       //========================================================================================================================================================
       /** @name Color Schemes: Binary */
       //@{
@@ -3230,7 +3344,7 @@ namespace mjr {
       typedef csBin_tpl<cornerColorEnum::MAGENTA, cornerColorEnum::YELLOW> ccBinMY; //!< Binary Magenta-Yellow color scheme. First color for even inputs and second color for odd.
       //@}
 
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      //========================================================================================================================================================
       /** @name Color Schemes: Pseudo-Grey
        These color schemes start with black and move toward white trying to increase perceptional brightness, they don't stay precisely on the diagonal. */
       //@{
@@ -3279,30 +3393,6 @@ namespace mjr {
       };
       //@}
 
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** Template for HSL color schemes.
-          If clrChanT is integral, this is a discrete color scheme, otherwise it is continuous.. */
-      template<cornerColorEnum corner>
-      class csHSLh_tpl {
-        public:
-          constexpr static csIntType numC = (chanIsInt ? meanChanVal : 0);
-          /** Set given colorTpl instance to the selected color in the color scheme.
-              @param aColor color object to set.
-              @param csIdx Index of color in pallet.  Wrapped to [0, meanChanVal].
-              @return Returns a reference to \a aColor. */
-          static inline colorTpl& c(colorRefType aColor, csNatType csIdx) {
-            clrChanT cVal = static_cast<clrChanT>(numberWrap(csIdx, meanChanVal));
-            colorTpl cc(corner);
-            return aColor.setChansRGB(static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getC0() ? cVal : -cVal)),
-                                      static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getC1() ? cVal : -cVal)),
-                                      static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getC2() ? cVal : -cVal)));
-          }
-          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
-              @param csIdx Index of color in pallet.  Wrapped to [0, meanChanVal].
-              @return Returns a colorTpl value */
-          static inline colorTpl c(csNatType csIdx) { colorTpl tmp; return c(tmp, csIdx); }
-      };
-
       //========================================================================================================================================================
       /** @name Color Schemes: HSL Saturation Ramps */
       //@{
@@ -3350,7 +3440,7 @@ namespace mjr {
       typedef csHSLh_tpl<cornerColorEnum::YELLOW> csHSLhY;
       //@}
 
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      //========================================================================================================================================================
       /** @name Color Schemes: Rainbows */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3415,25 +3505,6 @@ namespace mjr {
           }
       };
       //@}
-
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** Template for fixed size pallets. */
-      template<uint32_t...colors>
-      class csFP_tpl {
-        public:
-          constexpr static csIntType numC = (sizeof...(colors));
-          /** Set given colorTpl instance to the selected color in the color scheme.
-              @param aColor color object to set.
-              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
-              @return Returns a reference to \a aColor. */
-          static inline colorTpl&  c(colorRefType aColor, csIntType csIdx) { return aColor.setRGBfromLogPackIntARGB(d[csIdx % numC]);  }
-          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
-              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
-              @return Returns a reference a colorTpl value. */
-          static inline colorTpl c(csIntType csIdx) { colorTpl tmp; return c(tmp, csIdx); }
-        private:
-          constexpr static uint32_t d[] = { colors... };
-      };
 
       //========================================================================================================================================================
       /** @name "Web Safe" Color Schemes */
@@ -4048,52 +4119,6 @@ namespace mjr {
                        0x0B2403, 0x0B2403, 0x000000>                                                                                  csFPneoModisNdvi;
       //@}
 
-
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** Template for Color Brewer 2 variable sized pallets. */
-      template<csIntType mx, uint32_t...colors>
-      class csCB_tpl {
-        public:
-          constexpr static csIntType minNumC = 3;
-          constexpr static csIntType maxNumC = mx;
-          /** Set given colorTpl instance to the selected color in the color scheme.
-              @param aColor color object to set.
-              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
-              @param numC Number of colors for the given scheme.  Will be clamped to [minNumC, maxNumC].
-              @return Returns a reference to \a aColor. */
-          static colorTpl&  c(colorRefType aColor, csIntType csIdx, csIntType numC=maxNumC) {
-            csIntType b = std::clamp(numC, minNumC, maxNumC);
-            csIntType i = csIdx % b;
-            return aColor.setRGBfromLogPackIntARGB(d[b*(b-1)/2-3+i]);
-          }
-          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
-              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
-              @param numC Number of colors for the given scheme.  Will be clamped to [minNumC, maxNumC].
-              @return Returns a reference a colorTpl value. */
-          static colorTpl c(csIntType csIdx, csIntType numC=maxNumC) {
-            colorTpl tmp;
-            return c(tmp, csIdx, numC);
-          }
-          /** Set given colorTpl instance to the selected color in the color scheme.
-              @param aColor color object to set.
-              @param csX A value in [0, 1] that identifies the color in the scheme.
-              @param numC Number of colors for the given scheme.  Will be clamped to [minNumC, maxNumC].
-              @return Returns a reference to \a aColor. */
-          static colorTpl&  c(colorRefType aColor, csFltType csX, csIntType numC=maxNumC) {
-            csIntType b = std::clamp(numC, minNumC, maxNumC);
-            return aColor.cmpGradiant(numberWrap(csX, 1.0), b, &d[b*(b-1)/2-3+0]);
-          }
-          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
-              @param csX A value in [0, 1] that identifies the color in the scheme.
-              @param numC Number of colors for the given scheme.  Will be clamped to [minNumC, maxNumC].
-              @return Returns a reference a colorTpl value. */
-          static colorTpl c(csFltType csX, csIntType numC=maxNumC) {
-            colorTpl tmp;
-            return c(tmp, csX, numC);
-          }
-        private:
-          constexpr static uint32_t d[] = { colors... };
-      };
 
       //========================================================================================================================================================
       /** @name ColorBrewer2 Color Schemes */

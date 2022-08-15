@@ -1536,19 +1536,24 @@ namespace mjr {
   inline void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::clrCanvasToBlack() {
     ////// Diffrent ways to do it -- unless otherwise noted, all of them are about the same performance with GCC if colorT has a fast mask
+
     //// Use std:memset
     // std::memset((void*)pixels, 0, numPix*sizeof(colorT));
-    //// Use std:fill
+
+    //// Use std::fill
     // colorT black;
     // black.setToBlack();
     // std::fill(pixels, pixelsE, black);
+
     //// Loop over pixel array
     // for(colorT* p=pixels; p<pixelsE; p++)
     //   p->setToBlack();
+
     //// loop over x & y coordinates
     for(intCrdT y=0; y<numYpix; y++)
       for(intCrdT x=0; x<numXpix; x++)
         getPxColorRefNC(x, y).setToBlack();
+
     //// Call clrCanvas with black (this one is *way* slower)
     // clrCanvas(colorT(colorCornerEnum::BLACK));
   }
