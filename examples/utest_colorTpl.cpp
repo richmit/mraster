@@ -45,341 +45,351 @@
 
 #if 0
 
-// +----+---------------------------------------------------------------------------------------------------------------
-// |    | Method
-// +----+---------------------------------------------------------------------------------------------------------------
-// | ** | colorTpl();
-// | ** | colorTpl(const colorType& aColor);
-// | ** | colorTpl(clrChanT c1, clrChanT c2, clrChanT c3, clrChanT c4);
-// | ** | colorTpl(clrChanT c1, clrChanT c2, clrChanT c3);
-// | ** | colorTpl(clrChanT c1, clrChanT c2);
-// | ** | colorTpl(clrChanT cVal);
-// | ** | colorTpl(cornerColorEnum cornerColor);
-// | ** | colorTpl(std::string colorString);
-// | ** | colorTpl(const char* colorCString);
-// | -- | ~colorTpl();
-// +----+---------------------------------------------------------------------------------------------------------------
-// | -- | colorTpl& copy(colorArgType aCol);
-// +----+---------------------------------------------------------------------------------------------------------------
-// | ** | getC0() const;
-// | ** | getC1() const;
-// | ** | getC2() const;
-// | ** | getC3() const;
-// | ** | getChan(int chan) const;
-// | ** | setC0(clrChanT cVal);
-// | ** | setC1(clrChanT cVal);
-// | ** | setC2(clrChanT cVal);
-// | ** | setC3(clrChanT cVal);
-// | ** | setChan(int chan, clrChanT cVal);
-// | -- | setChanToMax(int chan);
-// | -- | setChanToMin(int chan);
-// | ** | setChans(clrChanT c1, clrChanT c2, clrChanT c3, clrChanT c4);
-// | ** | setChans(clrChanT c1, clrChanT c2, clrChanT c3);
-// | ** | setChans(clrChanT c1, clrChanT c2);
-// | ** | setChans(clrChanT cVal);
-// | -- | setChans(std::tuple<clrChanT, clrChanT, clrChanT, clrChanT> chanValues);
-// | -- | setChans(std::tuple<clrChanT, clrChanT, clrChanT> chanValues);
-// |    | setChans(std::vector<clrChanT>& chanValues);
-// | ** | setChans(std::string colorHexString, bool clearUndefinedChannels = false);
-// +----+---------------------------------------------------------------------------------------------------------------
-// | ** | getC0_dbl() const;
-// | ** | getC1_dbl() const;
-// | ** | getC2_dbl() const;
-// | ** | getC3_dbl() const;
-// | ** | getChan_dbl(int chan) const;
-// | ** | setChan_dbl(int chan, double cVal);
-// | ** | setC0_dbl(double cVal);
-// | ** | setC1_dbl(double cVal);
-// | ** | setC2_dbl(double cVal);
-// | ** | setC3_dbl(double cVal);
-// | ** | setChans_dbl(double c1, double c2, double c3, double c4);
-// | ** | setChans_dbl(double c1, double c2, double c3);
-// | ** | setChans_dbl(double c1, double c2);
-// | ** | setChans_dbl(double cVal);
-// +----+---------------------------------------------------------------------------------------------------------------
-// | ** | getC0_byte() const;
-// | ** | getC1_byte() const;
-// | ** | getC2_byte() const;
-// | ** | getC3_byte() const;
-// | ** | getChan_byte(int chan) const;
-// | ** | setChan_byte(int chan, uint8_t cVal);
-// | ** | setC0_byte(uint8_t cVal);
-// | ** | setC1_byte(uint8_t cVal);
-// | ** | setC2_byte(uint8_t cVal);
-// | ** | setC3_byte(uint8_t cVal);
-// | ** | setChans_byte(uint8_t c1, uint8_t c2, uint8_t c3, uint8_t c4);
-// | ** | setChans_byte(uint8_t c1, uint8_t c2, uint8_t c3);
-// | ** | setChans_byte(uint8_t c1, uint8_t c2);
-// | ** | setChans_byte(uint8_t cVal);
-// +----+---------------------------------------------------------------------------------------------------------------
-// | ** | setToBlack();
-// | ** | setToWhite();
-// | ** | setToRed();
-// | ** | setToBlue();
-// | ** | setToGreen();
-// | ** | setToCyan();
-// | ** | setToYellow();
-// | ** | setToMagenta();
-// | ** | setToCorner(char cornerColor);
-// | ** | setToCorner(cornerColorEnum cornerColor);
-// | ** | setToCorner(std::string cornerColor);
-// +----+---------------------------------------------------------------------------------------------------------------
-// | ** | setRGBAfromLogPackIntABGR(packed4Cint anInt)
-// | ** | setRGBfromLogPackIntABGR( packed4Cint anInt)
-// | ** | setRGBAfromLogPackIntARGB(packed4Cint anInt)
-// | ** | setRGBfromLogPackIntARGB( packed4Cint anInt)
-// | ** | setRGBAfromLogPackIntRGBA(packed4Cint anInt)
-// | ** | setRGBfromLogPackIntRGBA( packed4Cint anInt)
-// | ** | setRGBAfromLogPackIntABRG(packed4Cint anInt)
-// | ** | setRGBfromLogPackIntABRG( packed4Cint anInt)
-// | ** | setRGBAfromLogPackIntBGRA(packed4Cint anInt)
-// | ** | setRGBfromLogPackIntBGRA( packed4Cint anInt)
-// | -- | setRGBAfromLogPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx, uint8_t aIdx);
-// | -- | setRGBfromLogPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx);
-// |    | setRGBAfromPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx, uint8_t aIdx);
-// |    | setRGBfromPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx);
-// +----+---------------------------------------------------------------------------------------------------------------
-// |    | setRGBfromUnitHSV(double H, double S, double V);
-// |    | setRGBfromUnitHSL(double H, double S, double L);
-// |    | setRGBfromColorSpace(colorSpaceEnum space, double inCh1, double inCh2, double inCh3);
-// |    | setRGBfromColorSpace(colorSpaceEnum space, colorTpl<double, 3> inColor);
-// |    | interplColorSpace(colorSpaceEnum space, double aDouble, colorArgType col1, colorArgType col2);
-// +----+---------------------------------------------------------------------------------------------------------------
-// |    | rgb2colorSpace(colorSpaceEnum space);
-// |    | colorSpaceToString(colorSpaceEnum space);
-// +----+---------------------------------------------------------------------------------------------------------------
-// | ** | setRGBcmpGreyTGA16bit(uint16_t tga16val);
-// | ** | setRGBcmpGreyTGA24bit(uint32_t tga24val);
-// +----+---------------------------------------------------------------------------------------------------------------
-// | ** | setRGBfromWavelengthCM(double wavelength, cmfInterpolationEnum interpMethod = cmfInterpolationEnum::LINEAR);
-// | ** | setRGBfromWavelengthLA(double wavelength);
-// +----+---------------------------------------------------------------------------------------------------------------
-// |    | cmpGradiant(csFltType csX, std::vector<csFltType> const& anchors, std::vector<colorType> const& colors);
-// |    | cmpGradiant(csFltType csX, std::vector<colorType> const& colors);
-// |    | cmpGradiant(csFltType csX, csIntType numColors, const packed4Cint* colors) {
-// |    | cmpRGBcornerDGradiant(csIntType csIdx, const char *cornerColors);
-// |    | cmpRGBcornerDGradiant(csIntType csIdx, csIntType numColors, const char *cornerColors);
-// |    | cmpRGBcornerCGradiant(csFltType csX, const char *cornerColors) {
-// |    | cmpRGBcornerCGradiant(csFltType csX, csIntType numColors, const ccT* cornerColors) {
-// +----+---------------------------------------------------------------------------------------------------------------
-// | ** | wMean( 8 args
-// | ** | wMean( 6 args
-// | ** | wMean( 4 args
-// | ** | uMean( 7 args
-// | ** | uMean( 5 args
-// | ** | uMean( 3 args
-// | ** | linearInterpolate(double aDouble, colorArgType col1, colorArgType col2);
-// +----+---------------------------------------------------------------------------------------------------------------
-// | ** | tfrmOr(colorArgType aCol)         No coverage for floating point clrChanT
-// | ** | tfrmNor(colorArgType aCol)        No coverage for floating point clrChanT
-// | ** | tfrmAnd(colorArgType aCol)        No coverage for floating point clrChanT
-// | ** | tfrmNand(colorArgType aCol)       No coverage for floating point clrChanT
-// | ** | tfrmXor(colorArgType aCol)        No coverage for floating point clrChanT
-// | ** | tfrmNxor(colorArgType aCol)       No coverage for floating point clrChanT
-// | ** | tfrmNot(void)                     No coverage for floating point clrChanT
-// +----+---------------------------------------------------------------------------------------------------------------
-// | ** | tfrmSqDiff(colorArgType aCol);
-// | ** | tfrmAbsDiff(colorArgType aCol);
-// | ** | tfrmAdd(colorArgType aCol);
-// | ** | tfrmDiv(colorArgType aCol);
-// | ** | tfrmMult(colorArgType aCol);
-// | ** | tfrmMultClamp(colorArgType aCol);
-// | ** | tfrmSignDiff(colorArgType aCol);
-// | ** | tfrmDiffClamp(colorArgType aCol);
-// | ** | tfrmNegDiffClamp(colorArgType aCol);
-// | ** | tfrmAddClamp(colorArgType aCol);
-// | ** | tfrmAddDivClamp(colorArgType aCol, colorArgType dCol);
-// | ** | tfrmDiff(colorArgType aCol);
-// | ** | tfrmMod(colorArgType aCol)
-// | ** | tfrmInvert();
-// | ** | tfrmMix(double aDouble, colorArgType tooCol);
-// +----+---------------------------------------------------------------------------------------------------------------
-// | ** | tfrmCopy(colorArgType aCol);
-// | ** | tfrmMaxI(colorArgType aCol);
-// | ** | tfrmMinI(colorArgType aCol);
-// | ** | tfrmMax(colorArgType aCol);
-// | ** | tfrmMin(colorArgType aCol);
-// | ** | tfrmShiftL(colorArgType aCol)
-// | ** | tfrmShiftR(colorArgType aCol)
-// | ** | tfrmSaw(colorArgType lowCol, colorArgType highCol);
-// | ** | tfrmStep(colorArgType lowCol, colorArgType highCol);
-// | ** | tfrmDiracTot(colorArgType aCol);
-// | ** | tfrmDirac(colorArgType aCol);
-// | ** | tfrmFuzzyDirac(colorArgType ctrCol, colorArgType radCol);
-// | ** | tfrmMean(colorArgType aCol);
-// | ** | tfrmGmean(colorArgType aCol);
-// | ** | tfrmGmeanClamp(colorArgType aCol);
-// | ** | tfrmGreyScaleRGB(void);
-// | ** | tfrmWebSafeRGB();
-// +----+---------------------------------------------------------------------------------------------------------------
-// | ** | tfrmLinearGreyLevelScale(double c, double b);
-// | ** | tfrmLinearGreyLevelScaleRGB(double rc, double rb, double gc, double gb, double bc, double bb);
-// +----+---------------------------------------------------------------------------------------------------------------
-// | ** | tfrmStdPow(double p);
-// | ** | tfrmStdPowRGB(double rp, double gp, double bp);
-// | ** | tfrmStdPowSqr(void);
-// | ** | tfrmStdPowSqrt(void);
-// | ** | tfrmLn();
-// +----+---------------------------------------------------------------------------------------------------------------
-// | ** | rgb2GreyDotProd(channelArithSDPType redWt, channelArithSDPType greenWt, channelArithSDPType blueWt);
-// | ** | luminanceRGB(void);
-// | ** | intensityRGB(void);
-// | ** | intensity(void);
-// | ** | intensityScaledRGB(void);
-// | ** | intensityScaled(void);
-// +----+---------------------------------------------------------------------------------------------------------------
-// | ** | getMaxC();
-// | ** | getMinC();
-// | ** | getMaxRGB();
-// | ** | getMinRGB();
-// +----+---------------------------------------------------------------------------------------------------------------
-// | ** | dotProd(colorArgType aColor);
-// | ** | distHypot(colorArgType aColor);
-// | ** | distSumAbs(colorArgType aColor);
-// | ** | distMaxAbs
-// +----+---------------------------------------------------------------------------------------------------------------
-// | ** | isEqual(colorArgType aColor);
-// | ** | isEqualRGB(colorArgType aColor);
-// | ** | isNotEqual(colorArgType aColor);
-// | ** | isBlack();
-// | ** | isBlackRGB();
-// +----+---------------------------------------------------------------------------------------------------------------
-// | -- | clampTop(iT arithValue);
-// | -- | clampBot(iT arithValue);
-// | -- | clampAll(iT arithValue);
-// +----+---------------------------------------------------------------------------------------------------------------
-// |    | csBin_tpl
-// +----+---------------------------------------------------------------------------------------------------------------
-// |    | csCBAccent
-// |    | csCBBlues
-// |    | csCBBrBG
-// |    | csCBBuGn
-// |    | csCBBuPu
-// |    | csCBDark2
-// |    | csCBGnBu
-// |    | csCBGreens
-// |    | csCBGreys
-// |    | csCBOrRd
-// |    | csCBOranges
-// |    | csCBPRGn
-// |    | csCBPaired
-// |    | csCBPastel1
-// |    | csCBPastel2
-// |    | csCBPiYG
-// |    | csCBPuBu
-// |    | csCBPuBuGn
-// |    | csCBPuOr
-// |    | csCBPuRd
-// |    | csCBPurples
-// |    | csCBRdBu
-// |    | csCBRdGy
-// |    | csCBRdPu
-// |    | csCBRdYlBu
-// |    | csCBRdYlGn
-// |    | csCBReds
-// |    | csCBSet1
-// |    | csCBSet2
-// |    | csCBSet3
-// |    | csCBSpectral
-// |    | csCBYlGn
-// |    | csCBYlGnBu
-// |    | csCBYlOrBr
-// |    | csCBYlOrRd
-// +----+---------------------------------------------------------------------------------------------------------------
-// |    | csCB_tpl
-// +----+---------------------------------------------------------------------------------------------------------------
-// | -- | csCC_tpl
-// +----+---------------------------------------------------------------------------------------------------------------
-// |    | csCCconsOne
-// |    | csCCconsTwo
-// |    | csCCdiag01
-// |    | csCCdiagCR
-// |    | csCCdiagMG
-// |    | csCCdiagYB
-// |    | csCColdeColdToHot
-// |    | csCColdeFireRamp
-// |    | csCColdeIceToWaterToHot
-// | ** | csCColdeRainbow
-// |    | csCCsumBGR
-// |    | csCCsumBRG
-// |    | csCCsumGBR
-// |    | csCCsumGRB
-// |    | csCCsumRBG
-// |    | csCCsumRGB
-// |    | csCCudBg
-// |    | csCCudBr
-// |    | csCCudGb
-// |    | csCCudGr
-// |    | csCCudRb
-// |    | csCCudRg
-// +----+---------------------------------------------------------------------------------------------------------------
-// |    | csCHblu
-// |    | csCHstd
-// |    | csCHvio
-// +----+---------------------------------------------------------------------------------------------------------------
-// | ** | csCubeHelix_tpl
-// +----+---------------------------------------------------------------------------------------------------------------
-// |    | csFP_tpl
-// +----+---------------------------------------------------------------------------------------------------------------
-// |    | csFPblAqGrYeOrReVi200
-// |    | csFPcircular12
-// |    | csFPcircular24
-// |    | csFPcmoceanAlgae
-// |    | csFPcmoceanAmp
-// |    | csFPcmoceanBalance
-// |    | csFPcmoceanCurl
-// |    | csFPcmoceanDeep
-// |    | csFPcmoceanDense
-// |    | csFPcmoceanHaline
-// |    | csFPcmoceanIce
-// |    | csFPcmoceanTempo
-// |    | csFPmplBrBG
-// |    | csFPmplOcean
-// |    | csFPmplOranges
-// |    | csFPneoDdivVegetationA
-// |    | csFPneoDivVegetationC
-// |    | csFPneoModisNdvi
-// +----+---------------------------------------------------------------------------------------------------------------
-// |    | csWS_tpl
-// +----+---------------------------------------------------------------------------------------------------------------
-// |    | csWSnormalVision
-// |    | csWSnrotanopia
-// |    | csWSdeutanopia
-// |    | csWStritanoptia
-// |    | csWSprotanopiaAlt
-// |    | csWSdeutanopiaAlt
-// |    | csWStritanoptiaAlt
-// +----+---------------------------------------------------------------------------------------------------------------
-// |    | csHSLhB
-// |    | csHSLhC
-// |    | csHSLhG
-// |    | csHSLhM
-// |    | csHSLhR
-// |    | csHSLhY
-// +----+---------------------------------------------------------------------------------------------------------------
-// |    | csHSLh_tpl
-// +----+---------------------------------------------------------------------------------------------------------------
-// |    | csPGrey3x
-// |    | csPGrey4x
-// +----+---------------------------------------------------------------------------------------------------------------
-// |    | csPLY_tpl
-// +----+---------------------------------------------------------------------------------------------------------------
-// |    | csPLYcividis
-// |    | csPLYgrey
-// |    | csPLYhsvRB
-// |    | csPLYinferno
-// |    | csPLYmagma
-// |    | csPLYparula
-// |    | csPLYplasma
-// |    | csPLYquad
-// |    | csPLYturbo
-// |    | csPLYviridis
-// +----+---------------------------------------------------------------------------------------------------------------
-// |    | csRainbowCM
-// |    | csRainbowLA
-// +----+---------------------------------------------------------------------------------------------------------------
-// | ** | setRGBfromWavelengthCM(double wavelength, cmfInterpolationEnum interpMethod = cmfInterpolationEnum::LINEAR);
-// | ** | setRGBfromWavelengthLA(double wavelength);
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | Coverage | Method                                                                                                       |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | colorTpl();                                                                                                  |
+// | DIRECT   | colorTpl(const colorType& aColor);                                                                           |
+// | DIRECT   | colorTpl(clrChanT c1, clrChanT c2, clrChanT c3, clrChanT c4);                                                |
+// | DIRECT   | colorTpl(clrChanT c1, clrChanT c2, clrChanT c3);                                                             |
+// | DIRECT   | colorTpl(clrChanT c1, clrChanT c2);                                                                          |
+// | DIRECT   | colorTpl(clrChanT cVal);                                                                                     |
+// | DIRECT   | colorTpl(cornerColorEnum cornerColor);                                                                       |
+// | DIRECT   | colorTpl(std::string colorString);                                                                           |
+// | DIRECT   | colorTpl(const char* colorCString);                                                                          |
+// | INDIRECT | ~colorTpl();                                                                                                 |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | INDIRECT | colorTpl& copy(colorArgType aCol);                                                                           |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | getC0() const;                                                                                               |
+// | DIRECT   | getC1() const;                                                                                               |
+// | DIRECT   | getC2() const;                                                                                               |
+// | DIRECT   | getC3() const;                                                                                               |
+// | DIRECT   | getChan(int chan) const;                                                                                     |
+// | DIRECT   | setC0(clrChanT cVal);                                                                                        |
+// | DIRECT   | setC1(clrChanT cVal);                                                                                        |
+// | DIRECT   | setC2(clrChanT cVal);                                                                                        |
+// | DIRECT   | setC3(clrChanT cVal);                                                                                        |
+// | DIRECT   | setChan(int chan, clrChanT cVal);                                                                            |
+// | INDIRECT | setChanToMax(int chan);                                                                                      |
+// | INDIRECT | setChanToMin(int chan);                                                                                      |
+// | DIRECT   | setChans(clrChanT c1, clrChanT c2, clrChanT c3, clrChanT c4);                                                |
+// | DIRECT   | setChans(clrChanT c1, clrChanT c2, clrChanT c3);                                                             |
+// | DIRECT   | setChans(clrChanT c1, clrChanT c2);                                                                          |
+// | DIRECT   | setChans(clrChanT cVal);                                                                                     |
+// | INDIRECT | setChans(std::tuple<clrChanT, clrChanT, clrChanT, clrChanT> chanValues);                                     |
+// | INDIRECT | setChans(std::tuple<clrChanT, clrChanT, clrChanT> chanValues);                                               |
+// |          | setChans(std::vector<clrChanT>& chanValues);                                                                 |
+// | DIRECT   | setChans(std::string colorHexString, bool clearUndefinedChannels = false);                                   |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | getC0_dbl() const;                                                                                           |
+// | DIRECT   | getC1_dbl() const;                                                                                           |
+// | DIRECT   | getC2_dbl() const;                                                                                           |
+// | DIRECT   | getC3_dbl() const;                                                                                           |
+// | DIRECT   | getChan_dbl(int chan) const;                                                                                 |
+// | DIRECT   | setChan_dbl(int chan, double cVal);                                                                          |
+// | DIRECT   | setC0_dbl(double cVal);                                                                                      |
+// | DIRECT   | setC1_dbl(double cVal);                                                                                      |
+// | DIRECT   | setC2_dbl(double cVal);                                                                                      |
+// | DIRECT   | setC3_dbl(double cVal);                                                                                      |
+// | DIRECT   | setChans_dbl(double c1, double c2, double c3, double c4);                                                    |
+// | DIRECT   | setChans_dbl(double c1, double c2, double c3);                                                               |
+// | DIRECT   | setChans_dbl(double c1, double c2);                                                                          |
+// | DIRECT   | setChans_dbl(double cVal);                                                                                   |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | getC0_byte() const;                                                                                          |
+// | DIRECT   | getC1_byte() const;                                                                                          |
+// | DIRECT   | getC2_byte() const;                                                                                          |
+// | DIRECT   | getC3_byte() const;                                                                                          |
+// | DIRECT   | getChan_byte(int chan) const;                                                                                |
+// | DIRECT   | setChan_byte(int chan, uint8_t cVal);                                                                        |
+// | DIRECT   | setC0_byte(uint8_t cVal);                                                                                    |
+// | DIRECT   | setC1_byte(uint8_t cVal);                                                                                    |
+// | DIRECT   | setC2_byte(uint8_t cVal);                                                                                    |
+// | DIRECT   | setC3_byte(uint8_t cVal);                                                                                    |
+// | DIRECT   | setChans_byte(uint8_t c1, uint8_t c2, uint8_t c3, uint8_t c4);                                               |
+// | DIRECT   | setChans_byte(uint8_t c1, uint8_t c2, uint8_t c3);                                                           |
+// | DIRECT   | setChans_byte(uint8_t c1, uint8_t c2);                                                                       |
+// | DIRECT   | setChans_byte(uint8_t cVal);                                                                                 |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | setToBlack();                                                                                                |
+// | DIRECT   | setToWhite();                                                                                                |
+// | DIRECT   | setToRed();                                                                                                  |
+// | DIRECT   | setToBlue();                                                                                                 |
+// | DIRECT   | setToGreen();                                                                                                |
+// | DIRECT   | setToCyan();                                                                                                 |
+// | DIRECT   | setToYellow();                                                                                               |
+// | DIRECT   | setToMagenta();                                                                                              |
+// | DIRECT   | setToCorner(char cornerColor);                                                                               |
+// | DIRECT   | setToCorner(cornerColorEnum cornerColor);                                                                    |
+// | DIRECT   | setToCorner(std::string cornerColor);                                                                        |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | setRGBAfromLogPackIntABGR(packed4Cint anInt)                                                                 |
+// | DIRECT   | setRGBfromLogPackIntABGR( packed4Cint anInt)                                                                 |
+// | DIRECT   | setRGBAfromLogPackIntARGB(packed4Cint anInt)                                                                 |
+// | DIRECT   | setRGBfromLogPackIntARGB( packed4Cint anInt)                                                                 |
+// | DIRECT   | setRGBAfromLogPackIntRGBA(packed4Cint anInt)                                                                 |
+// | DIRECT   | setRGBfromLogPackIntRGBA( packed4Cint anInt)                                                                 |
+// | DIRECT   | setRGBAfromLogPackIntABRG(packed4Cint anInt)                                                                 |
+// | DIRECT   | setRGBfromLogPackIntABRG( packed4Cint anInt)                                                                 |
+// | DIRECT   | setRGBAfromLogPackIntBGRA(packed4Cint anInt)                                                                 |
+// | DIRECT   | setRGBfromLogPackIntBGRA( packed4Cint anInt)                                                                 |
+// | INDIRECT | setRGBAfromLogPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx, uint8_t aIdx);            |
+// | INDIRECT | setRGBfromLogPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx);                           |
+// |          | setRGBAfromPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx, uint8_t aIdx);               |
+// |          | setRGBfromPackIntGen(uint32_t anInt, uint8_t rIdx, uint8_t gIdx, uint8_t bIdx);                              |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | setRGBfromUnitHSV(double H, double S, double V);                                                             |
+// | DIRECT   | setRGBfromUnitHSL(double H, double S, double L);                                                             |
+// | INDIRECT | setRGBfromColorSpace(colorSpaceEnum space, double inCh1, double inCh2, double inCh3);                        |
+// |          | setRGBfromColorSpace(colorSpaceEnum space, colorTpl<double, 3> inColor);                                     |
+// |          | interplColorSpace(colorSpaceEnum space, double aDouble, colorArgType col1, colorArgType col2);               |
+// |          | rgb2colorSpace(colorSpaceEnum space);                                                                        |
+// |          | colorSpaceToString(colorSpaceEnum space);                                                                    |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | setRGBcmpGreyTGA16bit(uint16_t tga16val);                                                                    |
+// | DIRECT   | setRGBcmpGreyTGA24bit(uint32_t tga24val);                                                                    |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | setRGBfromWavelengthCM(double wavelength, cmfInterpolationEnum interpMethod = cmfInterpolationEnum::LINEAR); |
+// | DIRECT   | setRGBfromWavelengthLA(double wavelength);                                                                   |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// |          | cmpGradiant(csFltType csX, std::vector<csFltType> const& anchors, std::vector<colorType> const& colors);     |
+// |          | cmpGradiant(csFltType csX, std::vector<colorType> const& colors);                                            |
+// | INDIRECT | cmpGradiant(csFltType csX, csIntType numColors, const packed4Cint* colors)                                   |
+// | DIRECT   | cmpRGBcornerDGradiant(csIntType csIdx, const char *cornerColors);                                            |
+// | INDIRECT | cmpRGBcornerDGradiant(csIntType csIdx, csIntType numColors, const ccT* cornerColors)                         |
+// | DIRECT   | cmpRGBcornerCGradiant(csFltType csX, const char *cornerColors) {                                             |
+// | INDIRECT | cmpRGBcornerCGradiant(csFltType csX, csIntType numColors, const ccT* cornerColors)                           |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | wMean( 8 args                                                                                                |
+// | DIRECT   | wMean( 6 args                                                                                                |
+// | DIRECT   | wMean( 4 args                                                                                                |
+// | DIRECT   | uMean( 7 args                                                                                                |
+// | DIRECT   | uMean( 5 args                                                                                                |
+// | DIRECT   | uMean( 3 args                                                                                                |
+// | DIRECT   | linearInterpolate(double aDouble, colorArgType col1, colorArgType col2);                                     |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | tfrmOr(colorArgType aCol)         No coverage for floating point clrChanT                                    |
+// | DIRECT   | tfrmNor(colorArgType aCol)        No coverage for floating point clrChanT                                    |
+// | DIRECT   | tfrmAnd(colorArgType aCol)        No coverage for floating point clrChanT                                    |
+// | DIRECT   | tfrmNand(colorArgType aCol)       No coverage for floating point clrChanT                                    |
+// | DIRECT   | tfrmXor(colorArgType aCol)        No coverage for floating point clrChanT                                    |
+// | DIRECT   | tfrmNxor(colorArgType aCol)       No coverage for floating point clrChanT                                    |
+// | DIRECT   | tfrmNot(void)                     No coverage for floating point clrChanT                                    |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | tfrmSqDiff(colorArgType aCol);                                                                               |
+// | DIRECT   | tfrmAbsDiff(colorArgType aCol);                                                                              |
+// | DIRECT   | tfrmAdd(colorArgType aCol);                                                                                  |
+// | DIRECT   | tfrmDiv(colorArgType aCol);                                                                                  |
+// | DIRECT   | tfrmMult(colorArgType aCol);                                                                                 |
+// | DIRECT   | tfrmMultClamp(colorArgType aCol);                                                                            |
+// | DIRECT   | tfrmSignDiff(colorArgType aCol);                                                                             |
+// | DIRECT   | tfrmDiffClamp(colorArgType aCol);                                                                            |
+// | DIRECT   | tfrmNegDiffClamp(colorArgType aCol);                                                                         |
+// | DIRECT   | tfrmAddClamp(colorArgType aCol);                                                                             |
+// | DIRECT   | tfrmAddDivClamp(colorArgType aCol, colorArgType dCol);                                                       |
+// | DIRECT   | tfrmDiff(colorArgType aCol);                                                                                 |
+// | DIRECT   | tfrmMod(colorArgType aCol)                                                                                   |
+// | DIRECT   | tfrmInvert();                                                                                                |
+// | DIRECT   | tfrmMix(double aDouble, colorArgType tooCol);                                                                |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | tfrmCopy(colorArgType aCol);                                                                                 |
+// | DIRECT   | tfrmMaxI(colorArgType aCol);                                                                                 |
+// | DIRECT   | tfrmMinI(colorArgType aCol);                                                                                 |
+// | DIRECT   | tfrmMax(colorArgType aCol);                                                                                  |
+// | DIRECT   | tfrmMin(colorArgType aCol);                                                                                  |
+// | DIRECT   | tfrmShiftL(colorArgType aCol)                                                                                |
+// | DIRECT   | tfrmShiftR(colorArgType aCol)                                                                                |
+// | DIRECT   | tfrmSaw(colorArgType lowCol, colorArgType highCol);                                                          |
+// | DIRECT   | tfrmStep(colorArgType lowCol, colorArgType highCol);                                                         |
+// | DIRECT   | tfrmDiracTot(colorArgType aCol);                                                                             |
+// | DIRECT   | tfrmDirac(colorArgType aCol);                                                                                |
+// | DIRECT   | tfrmFuzzyDirac(colorArgType ctrCol, colorArgType radCol);                                                    |
+// | DIRECT   | tfrmMean(colorArgType aCol);                                                                                 |
+// | DIRECT   | tfrmGmean(colorArgType aCol);                                                                                |
+// | DIRECT   | tfrmGmeanClamp(colorArgType aCol);                                                                           |
+// | DIRECT   | tfrmGreyScaleRGB(void);                                                                                      |
+// | DIRECT   | tfrmWebSafeRGB();                                                                                            |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | tfrmLinearGreyLevelScale(double c, double b);                                                                |
+// | DIRECT   | tfrmLinearGreyLevelScaleRGB(double rc, double rb, double gc, double gb, double bc, double bb);               |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | tfrmStdPow(double p);                                                                                        |
+// | DIRECT   | tfrmStdPowRGB(double rp, double gp, double bp);                                                              |
+// | DIRECT   | tfrmStdPowSqr(void);                                                                                         |
+// | DIRECT   | tfrmStdPowSqrt(void);                                                                                        |
+// | DIRECT   | tfrmLn();                                                                                                    |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | rgb2GreyDotProd(channelArithSDPType redWt, channelArithSDPType greenWt, channelArithSDPType blueWt);         |
+// | DIRECT   | luminanceRGB(void);                                                                                          |
+// | DIRECT   | intensityRGB(void);                                                                                          |
+// | DIRECT   | intensity(void);                                                                                             |
+// | DIRECT   | intensityScaledRGB(void);                                                                                    |
+// | DIRECT   | intensityScaled(void);                                                                                       |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | getMaxC();                                                                                                   |
+// | DIRECT   | getMinC();                                                                                                   |
+// | DIRECT   | getMaxRGB();                                                                                                 |
+// | DIRECT   | getMinRGB();                                                                                                 |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | dotProd(colorArgType aColor);                                                                                |
+// | DIRECT   | distHypot(colorArgType aColor);                                                                              |
+// | DIRECT   | distSumAbs(colorArgType aColor);                                                                             |
+// | DIRECT   | distMaxAbs                                                                                                   |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | isEqual(colorArgType aColor);                                                                                |
+// | DIRECT   | isEqualRGB(colorArgType aColor);                                                                             |
+// | DIRECT   | isClose                                                                                                      |
+// | DIRECT   | isCloseRGB                                                                                                   |
+// | DIRECT   | isNotEqual(colorArgType aColor);                                                                             |
+// | DIRECT   | isBlack();                                                                                                   |
+// | DIRECT   | isBlackRGB();                                                                                                |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | INDIRECT | clampTop(iT arithValue);                                                                                     |
+// | INDIRECT | clampBot(iT arithValue);                                                                                     |
+// | INDIRECT | clampAll(iT arithValue);                                                                                     |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// |          | ccBin01                                                                                                      |
+// |          | ccBinGB                                                                                                      |
+// |          | ccBinRB                                                                                                      |
+// |          | ccBinMC                                                                                                      |
+// |          | ccBinYC                                                                                                      |
+// |          | ccBinRG                                                                                                      |
+// |          | ccBinMY                                                                                                      |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// |          | csBin_tpl                                                                                                    |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | SIMILAR  | csCBAccent                                                                                                   |
+// | SIMILAR  | csCBBlues                                                                                                    |
+// | SIMILAR  | csCBBrBG                                                                                                     |
+// | SIMILAR  | csCBBuGn                                                                                                     |
+// | SIMILAR  | csCBBuPu                                                                                                     |
+// | SIMILAR  | csCBDark2                                                                                                    |
+// | SIMILAR  | csCBGnBu                                                                                                     |
+// | SIMILAR  | csCBGreens                                                                                                   |
+// | SIMILAR  | csCBGreys                                                                                                    |
+// | SIMILAR  | csCBOrRd                                                                                                     |
+// | SIMILAR  | csCBOranges                                                                                                  |
+// | SIMILAR  | csCBPRGn                                                                                                     |
+// | SIMILAR  | csCBPaired                                                                                                   |
+// | SIMILAR  | csCBPastel1                                                                                                  |
+// | SIMILAR  | csCBPastel2                                                                                                  |
+// | SIMILAR  | csCBPiYG                                                                                                     |
+// | SIMILAR  | csCBPuBu                                                                                                     |
+// | SIMILAR  | csCBPuBuGn                                                                                                   |
+// | SIMILAR  | csCBPuOr                                                                                                     |
+// | SIMILAR  | csCBPuRd                                                                                                     |
+// | SIMILAR  | csCBPurples                                                                                                  |
+// | SIMILAR  | csCBRdBu                                                                                                     |
+// | SIMILAR  | csCBRdGy                                                                                                     |
+// | SIMILAR  | csCBRdPu                                                                                                     |
+// | SIMILAR  | csCBRdYlBu                                                                                                   |
+// | SIMILAR  | csCBRdYlGn                                                                                                   |
+// | SIMILAR  | csCBReds                                                                                                     |
+// | SIMILAR  | csCBSet1                                                                                                     |
+// | SIMILAR  | csCBSet2                                                                                                     |
+// | SIMILAR  | csCBSet3                                                                                                     |
+// | DIRECT   | csCBSpectral                                                                                                 |
+// | SIMILAR  | csCBYlGn                                                                                                     |
+// | SIMILAR  | csCBYlGnBu                                                                                                   |
+// | SIMILAR  | csCBYlOrBr                                                                                                   |
+// | SIMILAR  | csCBYlOrRd                                                                                                   |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | INDIRECT | csCB_tpl                                                                                                     |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | INDIRECT | csCC_tpl                                                                                                     |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | SIMILAR  | csCCconsOne                                                                                                  |
+// | SIMILAR  | csCCconsTwo                                                                                                  |
+// | SIMILAR  | csCCdiag01                                                                                                   |
+// | SIMILAR  | csCCdiagCR                                                                                                   |
+// | SIMILAR  | csCCdiagMG                                                                                                   |
+// | SIMILAR  | csCCdiagYB                                                                                                   |
+// | SIMILAR  | csCColdeColdToHot                                                                                            |
+// | SIMILAR  | csCColdeFireRamp                                                                                             |
+// | SIMILAR  | csCColdeIceToWaterToHot                                                                                      |
+// | DIRECT   | csCColdeRainbow                                                                                              |
+// | SIMILAR  | csCCsumBGR                                                                                                   |
+// | SIMILAR  | csCCsumBRG                                                                                                   |
+// | SIMILAR  | csCCsumGBR                                                                                                   |
+// | SIMILAR  | csCCsumGRB                                                                                                   |
+// | SIMILAR  | csCCsumRBG                                                                                                   |
+// | SIMILAR  | csCCsumRGB                                                                                                   |
+// | SIMILAR  | csCCudBg                                                                                                     |
+// | SIMILAR  | csCCudBr                                                                                                     |
+// | SIMILAR  | csCCudGb                                                                                                     |
+// | SIMILAR  | csCCudGr                                                                                                     |
+// | SIMILAR  | csCCudRb                                                                                                     |
+// | SIMILAR  | csCCudRg                                                                                                     |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | csCHblu                                                                                                      |
+// | DIRECT   | csCHstd                                                                                                      |
+// | DIRECT   | csCHvio                                                                                                      |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | INDIRECT | csCubeHelix_tpl                                                                                              |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// |          | csFP_tpl                                                                                                     |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// |          | csFPblAqGrYeOrReVi200                                                                                        |
+// |          | csFPcircular12                                                                                               |
+// |          | csFPcircular24                                                                                               |
+// |          | csFPcmoceanAlgae                                                                                             |
+// |          | csFPcmoceanAmp                                                                                               |
+// |          | csFPcmoceanBalance                                                                                           |
+// |          | csFPcmoceanCurl                                                                                              |
+// |          | csFPcmoceanDeep                                                                                              |
+// |          | csFPcmoceanDense                                                                                             |
+// |          | csFPcmoceanHaline                                                                                            |
+// |          | csFPcmoceanIce                                                                                               |
+// |          | csFPcmoceanTempo                                                                                             |
+// |          | csFPmplBrBG                                                                                                  |
+// |          | csFPmplOcean                                                                                                 |
+// |          | csFPmplOranges                                                                                               |
+// |          | csFPneoDdivVegetationA                                                                                       |
+// |          | csFPneoDivVegetationC                                                                                        |
+// |          | csFPneoModisNdvi                                                                                             |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// |          | csWS_tpl                                                                                                     |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// |          | csWSnormalVision                                                                                             |
+// |          | csWSnrotanopia                                                                                               |
+// |          | csWSdeutanopia                                                                                               |
+// |          | csWStritanoptia                                                                                              |
+// |          | csWSprotanopiaAlt                                                                                            |
+// |          | csWSdeutanopiaAlt                                                                                            |
+// |          | csWStritanoptiaAlt                                                                                           |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// |          | csHSLhB                                                                                                      |
+// |          | csHSLhC                                                                                                      |
+// |          | csHSLhG                                                                                                      |
+// |          | csHSLhM                                                                                                      |
+// |          | csHSLhR                                                                                                      |
+// |          | csHSLhY                                                                                                      |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// |          | csHSLh_tpl                                                                                                   |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// |          | csPGrey3x                                                                                                    |
+// |          | csPGrey4x                                                                                                    |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// |          | csPLY_tpl                                                                                                    |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// |          | csPLYcividis                                                                                                 |
+// |          | csPLYgrey                                                                                                    |
+// |          | csPLYhsvRB                                                                                                   |
+// |          | csPLYinferno                                                                                                 |
+// |          | csPLYmagma                                                                                                   |
+// |          | csPLYparula                                                                                                  |
+// |          | csPLYplasma                                                                                                  |
+// |          | csPLYquad                                                                                                    |
+// |          | csPLYturbo                                                                                                   |
+// |          | csPLYviridis                                                                                                 |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// |          | csRainbowCM                                                                                                  |
+// |          | csRainbowLA                                                                                                  |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | setRGBfromWavelengthCM(double wavelength, cmfInterpolationEnum interpMethod = cmfInterpolationEnum::LINEAR); |
+// | DIRECT   | setRGBfromWavelengthLA(double wavelength);                                                                   |
+// |----------+--------------------------------------------------------------------------------------------------------------|
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -5560,39 +5570,6 @@ BOOST_AUTO_TEST_CASE(csCubeHelix_tpl, * boost::unit_test::tolerance(0.01)) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(csCColdeRainbow_int, * boost::unit_test::tolerance(0.01)) {
-
-  mjr::colorRGBA8b aColor;
-
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(0u).isEqualRGB(aColor.setToRed())        == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(255u).isEqualRGB(aColor.setToYellow())   == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(510u).isEqualRGB(aColor.setToGreen())    == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(765u).isEqualRGB(aColor.setToCyan())     == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1020u).isEqualRGB(aColor.setToBlue())    == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1275u).isEqualRGB(aColor.setToMagenta()) == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1530u).isEqualRGB(aColor.setToRed())     == true);
-
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1531u).isEqualRGB(aColor.setToRed())     == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1786u).isEqualRGB(aColor.setToYellow())  == true);
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(csCColdeRainbow_flt, * boost::unit_test::tolerance(0.01)) {
-
-  mjr::colorRGBA8b aColor;
-
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(0/6.0).isEqualRGB(aColor.setToRed())     == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1/6.0).isEqualRGB(aColor.setToYellow())  == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(2/6.0).isEqualRGB(aColor.setToGreen())   == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(3/6.0).isEqualRGB(aColor.setToCyan())    == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(4/6.0).isEqualRGB(aColor.setToBlue())    == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(5/6.0).isEqualRGB(aColor.setToMagenta()) == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(6/6.0).isEqualRGB(aColor.setToRed())     == true);
-
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(12/6.0).isEqualRGB(aColor.setToRed())    == true);
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(tfrm_misc) {
 
   mjr::colorRGB8b aColor;
@@ -5965,15 +5942,15 @@ BOOST_AUTO_TEST_CASE(tfrm_PowPow_flt, * boost::unit_test::tolerance(0.00001)) {
 
   aColor.setChansRGB(0, 50, 100);
   aColor.tfrmStdPow(2.0);
-  BOOST_TEST_CHECK(aColor.getRed()   == 0);    
-  BOOST_TEST_CHECK(aColor.getGreen() == 2500); 
+  BOOST_TEST_CHECK(aColor.getRed()   == 0);
+  BOOST_TEST_CHECK(aColor.getGreen() == 2500);
   BOOST_TEST_CHECK(aColor.getBlue()  == 10000);
 
   aColor.setChansRGB(0, 50, 100);
   aColor.tfrmStdPow(0.5);
-  BOOST_TEST_CHECK(aColor.getRed()   == 0);         
+  BOOST_TEST_CHECK(aColor.getRed()   == 0);
   BOOST_TEST_CHECK(aColor.getGreen() == 7.07106781);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 10);        
+  BOOST_TEST_CHECK(aColor.getBlue()  == 10);
 
   aColor.setChansRGB(0, 50, 100);
   aColor.tfrmStdPowRGB(1, 2.0, 0.5);
@@ -6232,43 +6209,856 @@ BOOST_AUTO_TEST_CASE(wmean, * boost::unit_test::tolerance(0.01)) {
  BOOST_TEST_CHECK(bColor.getC1() == .1*20+.3*30+0.4*20+0.2*70);
  BOOST_TEST_CHECK(bColor.getC2() == .1*30+.3*20+0.4*30+0.2*10);
  BOOST_TEST_CHECK(bColor.getC3() == .1*40+.3*40+0.4*10+0.2*20);
+}
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(hsl_hsv_int) {
+
+  mjr::colorRGB8b aColor;
+  mjr::colorRGB8b bColor;
+
+  aColor.setRGBfromUnitHSL(  0/360.0, 1, 0.5);
+  bColor.setToRed();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSL( 60/360.0, 1, 0.5);
+  bColor.setToYellow();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSL(120/360.0, 1, 0.5);
+  bColor.setToGreen();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSL(180/360.0, 1, 0.5);
+  bColor.setToCyan();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSL(240/360.0, 1, 0.5);
+  bColor.setToBlue();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSL(300/360.0, 1, 0.5);
+  bColor.setToMagenta();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+////////////////////////////////////////////////////////////////////////////////
+
+  aColor.setRGBfromUnitHSV(  0/360.0, 1, 1.0);
+  bColor.setToRed();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSV( 60/360.0, 1, 1.0);
+  bColor.setToYellow();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSV( 420/360.0, 1, 1.0);
+  bColor.setToYellow();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSV(120/360.0, 1, 1.0);
+  bColor.setToGreen();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSV(180/360.0, 1, 1.0);
+  bColor.setToCyan();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSV(240/360.0, 1, 1.0);
+  bColor.setToBlue();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSV(300/360.0, 1, 1.0);
+  bColor.setToMagenta();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+////////////////////////////////////////////////////////////////////////////////
+
+  aColor.setRGBfromUnitHSL(  0/360.0, 1, 0);
+  bColor.setToBlack();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSL(180/360.0, 1, 0);
+  bColor.setToBlack();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSL(  0/360.0, 1, 1);
+  bColor.setToWhite();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSL(180/360.0, 1, 1);
+  bColor.setToWhite();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+////////////////////////////////////////////////////////////////////////////////
+
+  aColor.setRGBfromUnitHSV(  0/360.0, 0, 1);
+  bColor.setToWhite();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSV(180/360.0, 0, 1);
+  bColor.setToWhite();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSV(  0/360.0, 0, 0);
+  bColor.setToBlack();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSV(180/360.0, 0, 0);
+  bColor.setToBlack();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSV(  0/360.0, 1, 0);
+  bColor.setToBlack();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSV(180/360.0, 1, 0);
+  bColor.setToBlack();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(hsl_hsv_flt, * boost::unit_test::tolerance(0.01)) {
+
+  mjr::colorRGB32F aColor;
+  mjr::colorRGB32F bColor;
+
+  aColor.setRGBfromUnitHSL(  0/360.0, 1, 0.5);
+  bColor.setToRed();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSL( 60/360.0, 1, 0.5);
+  bColor.setToYellow();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSL( 420/360.0, 1, 0.5);
+  bColor.setToYellow();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSL(120/360.0, 1, 0.5);
+  bColor.setToGreen();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSL(180/360.0, 1, 0.5);
+  bColor.setToCyan();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSL(240/360.0, 1, 0.5);
+  bColor.setToBlue();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSL(300/360.0, 1, 0.5);
+  bColor.setToMagenta();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+////////////////////////////////////////////////////////////////////////////////
+
+  aColor.setRGBfromUnitHSV(  0/360.0, 1, 1.0);
+  bColor.setToRed();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSV( 60/360.0, 1, 1.0);
+  bColor.setToYellow();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSV(120/360.0, 1, 1.0);
+  bColor.setToGreen();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSV(180/360.0, 1, 1.0);
+  bColor.setToCyan();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSV(240/360.0, 1, 1.0);
+  bColor.setToBlue();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSV(300/360.0, 1, 1.0);
+  bColor.setToMagenta();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+////////////////////////////////////////////////////////////////////////////////
+
+  aColor.setRGBfromUnitHSL(  0/360.0, 1, 0);
+  bColor.setToBlack();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSL(180/360.0, 1, 0);
+  bColor.setToBlack();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSL(  0/360.0, 1, 1);
+  bColor.setToWhite();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSL(180/360.0, 1, 1);
+  bColor.setToWhite();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+////////////////////////////////////////////////////////////////////////////////
+
+  aColor.setRGBfromUnitHSV(  0/360.0, 0, 1);
+  bColor.setToWhite();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSV(180/360.0, 0, 1);
+  bColor.setToWhite();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSV(  0/360.0, 0, 0);
+  bColor.setToBlack();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSV(180/360.0, 0, 0);
+  bColor.setToBlack();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSV(  0/360.0, 1, 0);
+  bColor.setToBlack();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+
+  aColor.setRGBfromUnitHSV(180/360.0, 1, 0);
+  bColor.setToBlack();
+  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
+  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
+  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(csCColdeRainbow_int, * boost::unit_test::tolerance(0.01)) {
+
+  mjr::colorRGBA8b  aColor;
+  mjr::colorRGBA32F bColor;
+
+  aColor.setToWhite();
+  mjr::colorRGBA8b::csCColdeRainbow::c(aColor, 0u);
+  BOOST_TEST_CHECK(aColor.getRed()   == mjr::colorRGBA8b::maxChanVal);
+  BOOST_TEST_CHECK(aColor.getGreen() == mjr::colorRGBA8b::minChanVal);
+  BOOST_TEST_CHECK(aColor.getBlue()  == mjr::colorRGBA8b::minChanVal);
+  BOOST_TEST_CHECK(aColor.getAlpha() == mjr::colorRGBA8b::minChanVal); // Corner colors set ALL channels -- primary colors set them all to minChanVal
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(   0u).isEqualRGB(aColor.setToRed())     == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 255u).isEqualRGB(aColor.setToYellow())  == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 510u).isEqualRGB(aColor.setToGreen())   == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 765u).isEqualRGB(aColor.setToCyan())    == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1020u).isEqualRGB(aColor.setToBlue())    == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1275u).isEqualRGB(aColor.setToMagenta()) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1530u).isEqualRGB(aColor.setToRed())     == true);
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1531u).isEqualRGB(aColor.setToRed())     == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1786u).isEqualRGB(aColor.setToYellow())  == true);
+
+  for(unsigned int i=0; i<1531; i++)   // BOOST_TEST_CHECK x 1531
+    BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(i).isEqualRGB(aColor.cmpRGBcornerDGradiant(i, "RYGCBMR")) == true);
+
+  aColor.cmpRGBcornerDGradiant(10u, "RYGCBMR");
+  BOOST_TEST_CHECK(aColor.getRed()   == 0xff);
+  BOOST_TEST_CHECK(aColor.getGreen() == 10);
+  BOOST_TEST_CHECK(aColor.getBlue()  == 0);
+
+////////////////////////////////////////////////////////////////////////////////
+
+  bColor.setToWhite();
+  mjr::colorRGBA32F::csCColdeRainbow::c(bColor, 0u);
+  BOOST_TEST_CHECK(bColor.getRed()   == mjr::colorRGBA32F::maxChanVal);
+  BOOST_TEST_CHECK(bColor.getGreen() == mjr::colorRGBA32F::minChanVal);
+  BOOST_TEST_CHECK(bColor.getBlue()  == mjr::colorRGBA32F::minChanVal);
+  BOOST_TEST_CHECK(bColor.getAlpha() == mjr::colorRGBA32F::minChanVal); // Corner colors set ALL channels -- primary colors set them all to minChanVal
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(0*0x100000000ul).isEqualRGB(bColor.setToRed())     == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(1*0x100000000ul).isEqualRGB(bColor.setToYellow())  == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(2*0x100000000ul).isEqualRGB(bColor.setToGreen())   == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(3*0x100000000ul).isEqualRGB(bColor.setToCyan())    == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(4*0x100000000ul).isEqualRGB(bColor.setToBlue())    == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(5*0x100000000ul).isEqualRGB(bColor.setToMagenta()) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(6*0x100000000ul).isEqualRGB(bColor.setToRed())     == true);
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(6*0x100000000ul+1).isEqualRGB(bColor.setToRed())     == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(7*0x100000000ul+1).isEqualRGB(bColor.setToYellow())  == true);
+
+  for(uint64_t i=0; i<0x600000000; i=i+0x60000)  // BOOST_TEST_CHECK x 65536
+    BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(i).isEqualRGB(bColor.cmpRGBcornerDGradiant(i, "RYGCBMR")) == true);
+
+  bColor.cmpRGBcornerDGradiant(168430090, "RYGCBMR");
+  BOOST_TEST_CHECK(bColor.getRed()   == 1);
+  BOOST_TEST_CHECK(bColor.getGreen() == 0.0392156862745);
+  BOOST_TEST_CHECK(bColor.getBlue()  == 0);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(csCColdeRainbow_flt, * boost::unit_test::tolerance(0.01)) {
+
+  mjr::colorRGBA8b  aColor;
+  mjr::colorRGBA32F bColor;
+
+  aColor.setToWhite();
+  mjr::colorRGBA8b::csCColdeRainbow::c(aColor, 0.0);
+  BOOST_TEST_CHECK(aColor.getRed()   == mjr::colorRGBA8b::maxChanVal);
+  BOOST_TEST_CHECK(aColor.getGreen() == mjr::colorRGBA8b::minChanVal);
+  BOOST_TEST_CHECK(aColor.getBlue()  == mjr::colorRGBA8b::minChanVal);
+  BOOST_TEST_CHECK(aColor.getAlpha() == mjr::colorRGBA8b::minChanVal); // Corner colors set ALL channels -- primary colors set them all to minChanVal
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(   0/1530.0).isEqualRGB(aColor.setToRed())     == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 255/1530.0).isEqualRGB(aColor.setToYellow())  == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 510/1530.0).isEqualRGB(aColor.setToGreen())   == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 765/1530.0).isEqualRGB(aColor.setToCyan())    == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1020/1530.0).isEqualRGB(aColor.setToBlue())    == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1275/1530.0).isEqualRGB(aColor.setToMagenta()) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1530/1530.0).isEqualRGB(aColor.setToRed())     == true);
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(2.0).isEqualRGB(aColor.setToRed())  == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(3.0).isEqualRGB(aColor.setToRed())  == true);
+
+  for(double i=0.0; i<1.0; i=i+0.001) // BOOST_TEST_CHECK x 1000
+    BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(i).isEqualRGB(aColor.cmpRGBcornerCGradiant(i, "RYGCBMR")) == true);
+
+  aColor.cmpRGBcornerCGradiant(10/1530.0, "RYGCBMR");
+  BOOST_TEST_CHECK(aColor.getRed()   == 0xff);
+  BOOST_TEST_CHECK(aColor.getGreen() == 10);
+  BOOST_TEST_CHECK(aColor.getBlue()  == 0);
+
+////////////////////////////////////////////////////////////////////////////////
+
+  bColor.setToWhite();
+  mjr::colorRGBA32F::csCColdeRainbow::c(bColor, 0.0F);
+  BOOST_TEST_CHECK(bColor.getRed()   == mjr::colorRGBA32F::maxChanVal);
+  BOOST_TEST_CHECK(bColor.getGreen() == mjr::colorRGBA32F::minChanVal);
+  BOOST_TEST_CHECK(bColor.getBlue()  == mjr::colorRGBA32F::minChanVal);
+  BOOST_TEST_CHECK(bColor.getAlpha() == mjr::colorRGBA32F::minChanVal); // Corner colors set ALL channels -- primary colors set them all to minChanVal
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(   0/1530.0).isEqualRGB(bColor.setToRed())     == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c( 255/1530.0).isEqualRGB(bColor.setToYellow())  == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c( 510/1530.0).isEqualRGB(bColor.setToGreen())   == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c( 765/1530.0).isEqualRGB(bColor.setToCyan())    == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(1020/1530.0).isEqualRGB(bColor.setToBlue())    == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(1275/1530.0).isEqualRGB(bColor.setToMagenta()) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(1530/1530.0).isEqualRGB(bColor.setToRed())     == true);
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(2.0).isEqualRGB(bColor.setToRed())  == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(3.0).isEqualRGB(bColor.setToRed())  == true);
+
+  for(double i=0.0; i<1.0; i=i+0.001) // BOOST_TEST_CHECK x 1000
+    BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(i).isEqualRGB(bColor.cmpRGBcornerCGradiant(i, "RYGCBMR")) == true);
+
+  bColor.cmpRGBcornerCGradiant(10/1530.0, "RYGCBMR");
+  BOOST_TEST_CHECK(bColor.getRed()   == 1);
+  BOOST_TEST_CHECK(bColor.getGreen() == 0.0392156862745);
+  BOOST_TEST_CHECK(bColor.getBlue()  == 0);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(csCBSpectral_int) {
+
+  mjr::colorRGBA8b  aColor;
+  mjr::colorRGBA32F bColor;
+
+////////////////////////////////////////////////////////////////////////////////
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 0,  3).isEqualRGB(aColor.setChansRGB(252, 141,  89))); // smallest
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 1,  3).isEqualRGB(aColor.setChansRGB(255, 255, 191)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 2,  3).isEqualRGB(aColor.setChansRGB(153, 213, 148)));
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 0, 11).isEqualRGB(aColor.setChansRGB(158,   1,  66))); // biggest
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 1, 11).isEqualRGB(aColor.setChansRGB(213,  62,  79)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 2, 11).isEqualRGB(aColor.setChansRGB(244, 109,  67)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 3, 11).isEqualRGB(aColor.setChansRGB(253, 174,  97)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 4, 11).isEqualRGB(aColor.setChansRGB(254, 224, 139)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 5, 11).isEqualRGB(aColor.setChansRGB(255, 255, 191)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 6, 11).isEqualRGB(aColor.setChansRGB(230, 245, 152)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 7, 11).isEqualRGB(aColor.setChansRGB(171, 221, 164)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 8, 11).isEqualRGB(aColor.setChansRGB(102, 194, 165)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 9, 11).isEqualRGB(aColor.setChansRGB( 50, 136, 189)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(10, 11).isEqualRGB(aColor.setChansRGB( 94,  79, 162)));
+
+////////////////////////////////////////////////////////////////////////////////
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 3,  3).isEqualRGB(aColor.setChansRGB(252, 141,  89))); // wrap index
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 4,  3).isEqualRGB(aColor.setChansRGB(255, 255, 191)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 5,  3).isEqualRGB(aColor.setChansRGB(153, 213, 148)));
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(11, 11).isEqualRGB(aColor.setChansRGB(158,   1,  66))); // wrap index
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(12, 11).isEqualRGB(aColor.setChansRGB(213,  62,  79)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(13, 11).isEqualRGB(aColor.setChansRGB(244, 109,  67)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(14, 11).isEqualRGB(aColor.setChansRGB(253, 174,  97)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(15, 11).isEqualRGB(aColor.setChansRGB(254, 224, 139)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(16, 11).isEqualRGB(aColor.setChansRGB(255, 255, 191)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(17, 11).isEqualRGB(aColor.setChansRGB(230, 245, 152)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(18, 11).isEqualRGB(aColor.setChansRGB(171, 221, 164)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(19, 11).isEqualRGB(aColor.setChansRGB(102, 194, 165)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(20, 11).isEqualRGB(aColor.setChansRGB( 50, 136, 189)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(21, 11).isEqualRGB(aColor.setChansRGB( 94,  79, 162)));
+
+////////////////////////////////////////////////////////////////////////////////
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 0    ).isEqualRGB(aColor.setChansRGB(158,   1,  66)));  // missing -> 11
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 1    ).isEqualRGB(aColor.setChansRGB(213,  62,  79)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 2    ).isEqualRGB(aColor.setChansRGB(244, 109,  67)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 3    ).isEqualRGB(aColor.setChansRGB(253, 174,  97)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 4    ).isEqualRGB(aColor.setChansRGB(254, 224, 139)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 5    ).isEqualRGB(aColor.setChansRGB(255, 255, 191)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 6    ).isEqualRGB(aColor.setChansRGB(230, 245, 152)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 7    ).isEqualRGB(aColor.setChansRGB(171, 221, 164)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 8    ).isEqualRGB(aColor.setChansRGB(102, 194, 165)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 9    ).isEqualRGB(aColor.setChansRGB( 50, 136, 189)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(10    ).isEqualRGB(aColor.setChansRGB( 94,  79, 162)));
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 0,  1).isEqualRGB(aColor.setChansRGB(252, 141,  89)));  // too small -> 3
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 1,  1).isEqualRGB(aColor.setChansRGB(255, 255, 191)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 2,  1).isEqualRGB(aColor.setChansRGB(153, 213, 148)));
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 0, 50).isEqualRGB(aColor.setChansRGB(158,   1,  66)));  // too big -> 11
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 1, 50).isEqualRGB(aColor.setChansRGB(213,  62,  79)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 2, 50).isEqualRGB(aColor.setChansRGB(244, 109,  67)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 3, 50).isEqualRGB(aColor.setChansRGB(253, 174,  97)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 4, 50).isEqualRGB(aColor.setChansRGB(254, 224, 139)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 5, 50).isEqualRGB(aColor.setChansRGB(255, 255, 191)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 6, 50).isEqualRGB(aColor.setChansRGB(230, 245, 152)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 7, 50).isEqualRGB(aColor.setChansRGB(171, 221, 164)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 8, 50).isEqualRGB(aColor.setChansRGB(102, 194, 165)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 9, 50).isEqualRGB(aColor.setChansRGB( 50, 136, 189)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(10, 50).isEqualRGB(aColor.setChansRGB( 94,  79, 162)));
+
+////////////////////////////////////////////////////////////////////////////////
+
+  aColor.setToBlack();
+  mjr::colorRGBA8b::csCBSpectral::c(aColor, 0, 3);
+  BOOST_TEST_CHECK(aColor.getRed()   == 252);
+  BOOST_TEST_CHECK(aColor.getGreen() == 141);
+  BOOST_TEST_CHECK(aColor.getBlue()  ==  89);
+  BOOST_TEST_CHECK(aColor.getAlpha() ==   mjr::colorRGBA8b::minChanVal); // Not set!
+
+  aColor.setToWhite();
+  mjr::colorRGBA8b::csCBSpectral::c(aColor, 0, 3);
+  BOOST_TEST_CHECK(aColor.getRed()   ==  252);
+  BOOST_TEST_CHECK(aColor.getGreen() ==  141);
+  BOOST_TEST_CHECK(aColor.getBlue()  ==   89);
+  BOOST_TEST_CHECK(aColor.getAlpha() == mjr::colorRGBA8b::maxChanVal); // Not set!
+
+////////////////////////////////////////////////////////////////////////////////
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 0,  3).isCloseRGB(bColor.setChansRGB(252/255.0F, 141/255.0F,  89/255.0F), 0.00001F)); // smallest
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 1,  3).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 2,  3).isCloseRGB(bColor.setChansRGB(153/255.0F, 213/255.0F, 148/255.0F), 0.00001F));
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 0, 11).isCloseRGB(bColor.setChansRGB(158/255.0F,   1/255.0F,  66/255.0F), 0.00001F)); // biggest
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 1, 11).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 2, 11).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 3, 11).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 4, 11).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 5, 11).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 6, 11).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 7, 11).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 8, 11).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 9, 11).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(10, 11).isCloseRGB(bColor.setChansRGB( 94/255.0F,  79/255.0F, 162/255.0F), 0.00001F));
+
+////////////////////////////////////////////////////////////////////////////////
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 3,  3).isCloseRGB(bColor.setChansRGB(252/255.0F, 141/255.0F,  89/255.0F), 0.00001F)); // wrap index
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 4,  3).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 5,  3).isCloseRGB(bColor.setChansRGB(153/255.0F, 213/255.0F, 148/255.0F), 0.00001F));
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(11, 11).isCloseRGB(bColor.setChansRGB(158/255.0F,   1/255.0F,  66/255.0F), 0.00001F)); // wrap index
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(12, 11).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(13, 11).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(14, 11).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(15, 11).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(16, 11).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(17, 11).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(18, 11).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(19, 11).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(20, 11).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(21, 11).isCloseRGB(bColor.setChansRGB( 94/255.0F,  79/255.0F, 162/255.0F), 0.00001F));
+
+////////////////////////////////////////////////////////////////////////////////
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 0    ).isCloseRGB(bColor.setChansRGB(158/255.0F,   1/255.0F,  66/255.0F), 0.00001F));  // missing -> 11
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 1    ).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 2    ).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 3    ).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 4    ).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 5    ).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 6    ).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 7    ).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 8    ).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 9    ).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(10    ).isCloseRGB(bColor.setChansRGB( 94/255.0F,  79/255.0F, 162/255.0F), 0.00001F));
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 0,  1).isCloseRGB(bColor.setChansRGB(252/255.0F, 141/255.0F,  89/255.0F), 0.00001F));  // too small -> 3
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 1,  1).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 2,  1).isCloseRGB(bColor.setChansRGB(153/255.0F, 213/255.0F, 148/255.0F), 0.00001F));
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 0, 50).isCloseRGB(bColor.setChansRGB(158/255.0F,   1/255.0F,  66/255.0F), 0.00001F));  // too big -> 11
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 1, 50).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 2, 50).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 3, 50).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 4, 50).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 5, 50).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 6, 50).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 7, 50).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 8, 50).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 9, 50).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(10, 50).isCloseRGB(bColor.setChansRGB( 94/255.0F,  79/255.0F, 162/255.0F), 0.00001F));
+
+////////////////////////////////////////////////////////////////////////////////
+
+  bColor.setToBlack();
+  mjr::colorRGBA32F::csCBSpectral::c(bColor, 0, 3);
+  BOOST_TEST_CHECK(bColor.getAlpha() ==   mjr::colorRGBA32F::minChanVal); // Not set!
+
+  bColor.setToWhite();
+  mjr::colorRGBA32F::csCBSpectral::c(bColor, 0, 3);
+  BOOST_TEST_CHECK(bColor.getAlpha() == mjr::colorRGBA32F::maxChanVal); // Not set!
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(csCBSpectral_flt) {
+
+  mjr::colorRGBA8b  aColor;
+  mjr::colorRGBA32F bColor;
+
+////////////////////////////////////////////////////////////////////////////////
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(  0/2.0F,  3).isCloseRGB(aColor.setChansRGB(252, 141,  89), 2)); // smallest
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(  1/2.0F,  3).isCloseRGB(aColor.setChansRGB(255, 255, 191), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(  2/2.0F,  3).isCloseRGB(aColor.setChansRGB(153, 213, 148), 2));
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 0/10.0F, 11).isCloseRGB(aColor.setChansRGB(158,   1,  66), 2)); // biggest
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 1/10.0F, 11).isCloseRGB(aColor.setChansRGB(213,  62,  79), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 2/10.0F, 11).isCloseRGB(aColor.setChansRGB(244, 109,  67), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 3/10.0F, 11).isCloseRGB(aColor.setChansRGB(253, 174,  97), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 4/10.0F, 11).isCloseRGB(aColor.setChansRGB(254, 224, 139), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 5/10.0F, 11).isCloseRGB(aColor.setChansRGB(255, 255, 191), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 6/10.0F, 11).isCloseRGB(aColor.setChansRGB(230, 245, 152), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 7/10.0F, 11).isCloseRGB(aColor.setChansRGB(171, 221, 164), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 8/10.0F, 11).isCloseRGB(aColor.setChansRGB(102, 194, 165), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 9/10.0F, 11).isCloseRGB(aColor.setChansRGB( 50, 136, 189), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(10/10.0F, 11).isCloseRGB(aColor.setChansRGB( 94,  79, 162), 2));
+
+////////////////////////////////////////////////////////////////////////////////
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(  3/2.0F,  3).isCloseRGB(aColor.setChansRGB(255, 255, 191), 2)); // wrap index
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(1+ 1/10.0F, 11).isCloseRGB(aColor.setChansRGB(213,  62,  79), 2)); // wrap index
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(1+ 2/10.0F, 11).isCloseRGB(aColor.setChansRGB(244, 109,  67), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(1+ 3/10.0F, 11).isCloseRGB(aColor.setChansRGB(253, 174,  97), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(1+ 4/10.0F, 11).isCloseRGB(aColor.setChansRGB(254, 224, 139), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(1+ 5/10.0F, 11).isCloseRGB(aColor.setChansRGB(255, 255, 191), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(1+ 6/10.0F, 11).isCloseRGB(aColor.setChansRGB(230, 245, 152), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(1+ 7/10.0F, 11).isCloseRGB(aColor.setChansRGB(171, 221, 164), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(1+ 8/10.0F, 11).isCloseRGB(aColor.setChansRGB(102, 194, 165), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(1+ 9/10.0F, 11).isCloseRGB(aColor.setChansRGB( 50, 136, 189), 2));
+
+////////////////////////////////////////////////////////////////////////////////
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 0/10.0F    ).isCloseRGB(aColor.setChansRGB(158,   1,  66), 2));  // missing -> 11
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 1/10.0F    ).isCloseRGB(aColor.setChansRGB(213,  62,  79), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 2/10.0F    ).isCloseRGB(aColor.setChansRGB(244, 109,  67), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 3/10.0F    ).isCloseRGB(aColor.setChansRGB(253, 174,  97), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 4/10.0F    ).isCloseRGB(aColor.setChansRGB(254, 224, 139), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 5/10.0F    ).isCloseRGB(aColor.setChansRGB(255, 255, 191), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 6/10.0F    ).isCloseRGB(aColor.setChansRGB(230, 245, 152), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 7/10.0F    ).isCloseRGB(aColor.setChansRGB(171, 221, 164), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 8/10.0F    ).isCloseRGB(aColor.setChansRGB(102, 194, 165), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 9/10.0F    ).isCloseRGB(aColor.setChansRGB( 50, 136, 189), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(10/10.0F    ).isCloseRGB(aColor.setChansRGB( 94,  79, 162), 2));
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(  0/2.0F,  1).isCloseRGB(aColor.setChansRGB(252, 141,  89), 2));  // too small -> 3
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(  1/2.0F,  1).isCloseRGB(aColor.setChansRGB(255, 255, 191), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(  2/2.0F,  1).isCloseRGB(aColor.setChansRGB(153, 213, 148), 2));
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 0/10.0F, 50).isCloseRGB(aColor.setChansRGB(158,   1,  66), 2));  // too big -> 11
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 1/10.0F, 50).isCloseRGB(aColor.setChansRGB(213,  62,  79), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 2/10.0F, 50).isCloseRGB(aColor.setChansRGB(244, 109,  67), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 3/10.0F, 50).isCloseRGB(aColor.setChansRGB(253, 174,  97), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 4/10.0F, 50).isCloseRGB(aColor.setChansRGB(254, 224, 139), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 5/10.0F, 50).isCloseRGB(aColor.setChansRGB(255, 255, 191), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 6/10.0F, 50).isCloseRGB(aColor.setChansRGB(230, 245, 152), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 7/10.0F, 50).isCloseRGB(aColor.setChansRGB(171, 221, 164), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 8/10.0F, 50).isCloseRGB(aColor.setChansRGB(102, 194, 165), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 9/10.0F, 50).isCloseRGB(aColor.setChansRGB( 50, 136, 189), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(10/10.0F, 50).isCloseRGB(aColor.setChansRGB( 94,  79, 162), 2));
+
+////////////////////////////////////////////////////////////////////////////////
+
+  aColor.setToBlack();
+  mjr::colorRGBA8b::csCBSpectral::c(aColor, 0/2.0F, 3);
+  BOOST_TEST_CHECK(aColor.getAlpha() ==   mjr::colorRGBA8b::minChanVal); // Not set!
+
+  aColor.setToWhite();
+  mjr::colorRGBA8b::csCBSpectral::c(aColor, 0/2.0F, 3);
+  BOOST_TEST_CHECK(aColor.getAlpha() == mjr::colorRGBA8b::maxChanVal); // Not set!
+
+////////////////////////////////////////////////////////////////////////////////
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 0/2.0F,  3).isCloseRGB(bColor.setChansRGB(252/255.0F, 141/255.0F,  89/255.0F), 0.00001F)); // smallest
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 1/2.0F,  3).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 2/2.0F,  3).isCloseRGB(bColor.setChansRGB(153/255.0F, 213/255.0F, 148/255.0F), 0.00001F));
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 0/10.0F, 11).isCloseRGB(bColor.setChansRGB(158/255.0F,   1/255.0F,  66/255.0F), 0.00001F)); // biggest
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 1/10.0F, 11).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 2/10.0F, 11).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 3/10.0F, 11).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 4/10.0F, 11).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 5/10.0F, 11).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 6/10.0F, 11).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 7/10.0F, 11).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 8/10.0F, 11).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 9/10.0F, 11).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(10/10.0F, 11).isCloseRGB(bColor.setChansRGB( 94/255.0F,  79/255.0F, 162/255.0F), 0.00001F));
+
+////////////////////////////////////////////////////////////////////////////////
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 3/2.0F,  3).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(1+1/10.0F, 11).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(1+2/10.0F, 11).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(1+3/10.0F, 11).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(1+4/10.0F, 11).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(1+5/10.0F, 11).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(1+6/10.0F, 11).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(1+7/10.0F, 11).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(1+8/10.0F, 11).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(1+9/10.0F, 11).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
+
+// ////////////////////////////////////////////////////////////////////////////////
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 0/10.0F    ).isCloseRGB(bColor.setChansRGB(158/255.0F,   1/255.0F,  66/255.0F), 0.00001F));  // missing -> 11
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 1/10.0F    ).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 2/10.0F    ).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 3/10.0F    ).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 4/10.0F    ).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 5/10.0F    ).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 6/10.0F    ).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 7/10.0F    ).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 8/10.0F    ).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 9/10.0F    ).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(10/10.0F    ).isCloseRGB(bColor.setChansRGB( 94/255.0F,  79/255.0F, 162/255.0F), 0.00001F));
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 0/2.0F,  1).isCloseRGB(bColor.setChansRGB(252/255.0F, 141/255.0F,  89/255.0F), 0.00001F));  // too small -> 3
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 1/2.0F,  1).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 2/2.0F,  1).isCloseRGB(bColor.setChansRGB(153/255.0F, 213/255.0F, 148/255.0F), 0.00001F));
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 0/10.0F, 50).isCloseRGB(bColor.setChansRGB(158/255.0F,   1/255.0F,  66/255.0F), 0.00001F));  // too big -> 11
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 1/10.0F, 50).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 2/10.0F, 50).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 3/10.0F, 50).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 4/10.0F, 50).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 5/10.0F, 50).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 6/10.0F, 50).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 7/10.0F, 50).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 8/10.0F, 50).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 9/10.0F, 50).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(10/10.0F, 50).isCloseRGB(bColor.setChansRGB( 94/255.0F,  79/255.0F, 162/255.0F), 0.00001F));
+
+////////////////////////////////////////////////////////////////////////////////
+
+  bColor.setToBlack();
+  mjr::colorRGBA32F::csCBSpectral::c(bColor, 0/2.0F, 3);
+  BOOST_TEST_CHECK(bColor.getAlpha() ==   mjr::colorRGBA32F::minChanVal); // Not set!
+
+  bColor.setToWhite();
+  mjr::colorRGBA32F::csCBSpectral::c(bColor, 0/2.0F, 3);
+  BOOST_TEST_CHECK(bColor.getAlpha() == mjr::colorRGBA32F::maxChanVal); // Not set!
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(isClose_and_isCloseRGB) {
+
+  mjr::colorRGB8b   aLcolor;
+  mjr::colorRGBA8b  bLcolor;
+  mjr::colorRGB32F  cLcolor;
+  mjr::colorRGBA32F dLcolor;
+
+  mjr::colorRGB8b   aRcolor;
+  mjr::colorRGBA8b  bRcolor;
+  mjr::colorRGB32F  cRcolor;
+  mjr::colorRGBA32F dRcolor;
+
+  aLcolor.setToBlack();
+  bLcolor.setToBlack();
+  cLcolor.setToBlack();
+  dLcolor.setToBlack();
+
+  aRcolor.setToBlack();
+  bRcolor.setToBlack();
+  cRcolor.setToBlack();
+  dRcolor.setToBlack();
+
+  BOOST_TEST_CHECK(aLcolor.isClose(aRcolor, 0)  == true);
+  BOOST_TEST_CHECK(bLcolor.isClose(bRcolor, 0)  == true);
+  BOOST_TEST_CHECK(cLcolor.isClose(cRcolor, 0)  == true);
+  BOOST_TEST_CHECK(dLcolor.isClose(dRcolor, 0)  == true);
+
+  BOOST_TEST_CHECK(aLcolor.isCloseRGB(aRcolor, 0)  == true);
+  BOOST_TEST_CHECK(bLcolor.isCloseRGB(bRcolor, 0)  == true);
+  BOOST_TEST_CHECK(cLcolor.isCloseRGB(cRcolor, 0)  == true);
+  BOOST_TEST_CHECK(dLcolor.isCloseRGB(dRcolor, 0)  == true);
+
+  aLcolor.setChanToMax(0);
+  bLcolor.setChanToMax(0);
+  cLcolor.setChanToMax(0);
+  dLcolor.setChanToMax(0);
+
+  BOOST_TEST_CHECK(aLcolor.isClose(aRcolor, 0)  == false);
+  BOOST_TEST_CHECK(bLcolor.isClose(bRcolor, 0)  == false);
+  BOOST_TEST_CHECK(cLcolor.isClose(cRcolor, 0)  == false);
+  BOOST_TEST_CHECK(dLcolor.isClose(dRcolor, 0)  == false);
+
+  BOOST_TEST_CHECK(aLcolor.isCloseRGB(aRcolor, 0)  == false);
+  BOOST_TEST_CHECK(bLcolor.isCloseRGB(bRcolor, 0)  == false);
+  BOOST_TEST_CHECK(cLcolor.isCloseRGB(cRcolor, 0)  == false);
+  BOOST_TEST_CHECK(dLcolor.isCloseRGB(dRcolor, 0)  == false);
+
+  aRcolor.setChanToMax(0);
+  bRcolor.setChanToMax(0);
+  cRcolor.setChanToMax(0);
+  dRcolor.setChanToMax(0);
+
+  BOOST_TEST_CHECK(aLcolor.isClose(aRcolor, 0)  == true);
+  BOOST_TEST_CHECK(bLcolor.isClose(bRcolor, 0)  == true);
+  BOOST_TEST_CHECK(cLcolor.isClose(cRcolor, 0)  == true);
+  BOOST_TEST_CHECK(dLcolor.isClose(dRcolor, 0)  == true);
+
+  BOOST_TEST_CHECK(aLcolor.isCloseRGB(aRcolor, 0)  == true);
+  BOOST_TEST_CHECK(bLcolor.isCloseRGB(bRcolor, 0)  == true);
+  BOOST_TEST_CHECK(cLcolor.isCloseRGB(cRcolor, 0)  == true);
+  BOOST_TEST_CHECK(dLcolor.isCloseRGB(dRcolor, 0)  == true);
+
+  bRcolor.setChanToMax(3);
+  dRcolor.setChanToMax(3);
+
+  BOOST_TEST_CHECK(bLcolor.isClose(bRcolor, 0)  == false);
+  BOOST_TEST_CHECK(dLcolor.isClose(dRcolor, 0)  == false);
+
+  BOOST_TEST_CHECK(bLcolor.isCloseRGB(bRcolor, 0)  == true);
+  BOOST_TEST_CHECK(dLcolor.isCloseRGB(dRcolor, 0)  == true);
+
+  aLcolor.setChansRGB(1, 2, 3);
+  aRcolor.setChansRGB(1, 3, 4);
+
+  BOOST_TEST_CHECK(aLcolor.isClose(aRcolor, 0)  == false);
+  BOOST_TEST_CHECK(aRcolor.isClose(aLcolor, 0)  == false);
+
+  BOOST_TEST_CHECK(aLcolor.isClose(aRcolor, 1)  == true);  // false only if a channel delta is GREATER THAN epsilon
+  BOOST_TEST_CHECK(aRcolor.isClose(aLcolor, 1)  == true);
+
+  BOOST_TEST_CHECK(aLcolor.isClose(aRcolor, 2)  == true);
+  BOOST_TEST_CHECK(aRcolor.isClose(aLcolor, 2)  == true);
+
+  cLcolor.setChansRGB(1, 2, 3);
+  cRcolor.setChansRGB(1, 3, 4);
+
+  BOOST_TEST_CHECK(cLcolor.isClose(cRcolor, 0.0F)  == false);
+  BOOST_TEST_CHECK(cRcolor.isClose(cLcolor, 0.0F)  == false);
+
+  BOOST_TEST_CHECK(cLcolor.isClose(cRcolor, 0.9999F)  == false);
+  BOOST_TEST_CHECK(cRcolor.isClose(cLcolor, 0.9999F)  == false);
+
+  BOOST_TEST_CHECK(cLcolor.isClose(cRcolor, 1.0F)  == true);  // Edge case is ill-defined for FP arithmetic, but OK here as we used numbers that are exactly representable -- might fail on other hardware.
+  BOOST_TEST_CHECK(cRcolor.isClose(cLcolor, 1.0F)  == true);
+
+  BOOST_TEST_CHECK(cLcolor.isClose(cRcolor, 1.0001F)  == true); 
+  BOOST_TEST_CHECK(cRcolor.isClose(cLcolor, 1.0001F)  == true);
+
+  BOOST_TEST_CHECK(cLcolor.isClose(cRcolor, 2.0F)  == true);
+  BOOST_TEST_CHECK(cRcolor.isClose(cLcolor, 2.0F)  == true);
 }
 
 #endif
 
-
 /** @endcond */
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(colorSpaces, * boost::unit_test::tolerance(0.01)) {
 
-  mjr::colorRGB8b aColor;
-  //mjr::colorRGBA8b bColor;
-
-
-  std::cout << aColor.setRGBfromUnitHSL(  0/360.0, 1, 0.5) << std::endl;
-  std::cout << aColor.setRGBfromUnitHSL( 60/360.0, 1, 0.5) << std::endl;
-  std::cout << aColor.setRGBfromUnitHSL(120/360.0, 1, 0.5) << std::endl;
-  std::cout << aColor.setRGBfromUnitHSL(180/360.0, 1, 0.5) << std::endl;
-  std::cout << aColor.setRGBfromUnitHSL(240/360.0, 1, 0.5) << std::endl;
-  std::cout << aColor.setRGBfromUnitHSL(300/360.0, 1, 0.5) << std::endl;
-  std::cout << aColor.setRGBfromUnitHSL(360/360.0, 1, 0.5) << std::endl;
-
-
-  // std::cout << aColor.setRGBfromUnitHSV(  0/360.0, 1, 1) << std::endl;
-  // std::cout << aColor.setRGBfromUnitHSV( 60/360.0, 1, 1) << std::endl;
-  // std::cout << aColor.setRGBfromUnitHSV(120/360.0, 1, 1) << std::endl;
-  // std::cout << aColor.setRGBfromUnitHSV(180/360.0, 1, 1) << std::endl;
-  // std::cout << aColor.setRGBfromUnitHSV(240/360.0, 1, 1) << std::endl;
-  // std::cout << aColor.setRGBfromUnitHSV(300/360.0, 1, 1) << std::endl;
-  // std::cout << aColor.setRGBfromUnitHSV(360/360.0, 1, 1) << std::endl;
-
-}
-  
-
-// |    | setRGBfromUnitHSV(double H, double S, double V);
-// |    | setRGBfromUnitHSL(double H, double S, double L);
-
-
-// So far: 3270 tests
+// So far:  3779 hand written test cases
+// So far: 69067 generated test cases

@@ -1174,8 +1174,7 @@ namespace mjr {
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the color indicated by the given HSV values.
-          The 'unit' in the name indicates that the values for h, s, and v are the unit interval, [0,1].  This function is based upon the HSV_TO_RGB found in
-          Foley and Van Dam.
+          The 'unit' in the name indicates that the values for h, s, and v are the unit interval, [0,1].  
           @param H The Hue.
           @param S The Saturation.
           @param V The Value
@@ -1183,8 +1182,7 @@ namespace mjr {
       inline colorTpl& setRGBfromUnitHSV(double H, double S, double V) { return setRGBfromColorSpace(colorSpaceEnum::HSV, H*360.0, S, V); }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the color indicated by the given HSL values.
-          The 'unit' in the name indicates that The ranges for h, s, and v are the the unit interval -- i.e. [0,1].  The algorithm is that presented in
-          Computer Graphics by Foley, Van Dam, Feiner, and Hughes -- 2nd edition page 596.  I have corrected a typeo in the text algorithm.
+          The 'unit' in the name indicates that The ranges for h, s, and v are the the unit interval -- i.e. [0,1].  
           @param H The Hue.
           @param S The Saturation.
           @param L The Lightness or Luminescence
@@ -1494,7 +1492,7 @@ namespace mjr {
           for(typename std::vector<colorType>::size_type i=0; i<(numColors-1); i++) {
             csFltType lowAnchor  = anchors[i];
             csFltType highAnchor = anchors[i+1];
-            if( (csX >= lowAnchor) && (csX < highAnchor) ) {
+            if( (csX >= lowAnchor) && (csX <= highAnchor) ) {
               return linearInterpolate(std::abs((csX-lowAnchor)/(highAnchor-lowAnchor)), colors[i], colors[i+1]);
             }
           }
@@ -1509,7 +1507,7 @@ namespace mjr {
           for(typename std::vector<colorType>::size_type i=0; i<(numColors-1); i++) {
             csFltType lowAnchor  = static_cast<csFltType>(i)  / static_cast<csFltType>(numColors-1);
             csFltType highAnchor = static_cast<csFltType>(i+1)/ static_cast<csFltType>(numColors-1);
-            if( (csX >= lowAnchor) && (csX < highAnchor) ) {
+            if( (csX >= lowAnchor) && (csX <= highAnchor) ) {
               return linearInterpolate(std::abs((csX-lowAnchor)/(highAnchor-lowAnchor)), colors[i], colors[i+1]);
             }
           }
@@ -1517,18 +1515,18 @@ namespace mjr {
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Identical to the other equidistant cmpGradiant() function except that this one takes an array of packed integers. */
+      /** Identical to the other equidistant cmpGradiant() function except that this one works on just the RGB channels and takes an array of packed integers. */
       inline colorTpl& cmpGradiant(csFltType csX, csIntType numColors, const packed4Cint* colors) {
         if(numColors >= 2) {
           for(csIntType i=0; i<(numColors-1); i++) {
             csFltType lowAnchor  = static_cast<csFltType>(i)  / static_cast<csFltType>(numColors-1);
             csFltType highAnchor = static_cast<csFltType>(i+1)/ static_cast<csFltType>(numColors-1);
-            if( (csX >= lowAnchor) && (csX < highAnchor) ) {
+            if( (csX >= lowAnchor) && (csX <= highAnchor) ) {
               colorTpl c1;
               colorTpl c2;
               c1.setRGBfromLogPackIntARGB(colors[i]);
               c2.setRGBfromLogPackIntARGB(colors[i+1]);
-              return linearInterpolate(std::abs((csX-lowAnchor)/(highAnchor-lowAnchor)), c1, c2);
+              return linearInterpolateRGB(std::abs((csX-lowAnchor)/(highAnchor-lowAnchor)), c1, c2);
             }
           }
         }
@@ -1574,7 +1572,7 @@ namespace mjr {
           @return A reference to this object */
       template <typename ccT>
       inline colorTpl& cmpRGBcornerDGradiant(csIntType csIdx, csIntType numColors, const ccT* cornerColors) {
-        /* Requires: Inherits numChan>2 from getC2. */
+        /* Requires: Inherits numChan>2 from getBlue. */
         csIdx = numberWrap(csIdx, static_cast<csIntType>(chanStepMax * numColors - chanStepMax));
         if(csIdx != 0) { [[likely]]
           for(csIntType i=0; i<(numColors-1); i++) {
@@ -1586,26 +1584,31 @@ namespace mjr {
               c1.setToCorner(cornerColors[i]);
               c2.setToCorner(cornerColors[i+1]);
               clrChanT r, g, b;
-              if(c1.getC0() > c2.getC0()) {
+              if(c1.getRed() > c2.getRed()) {
                 r = chanStepMax - csIdxNoMore;
-              } else if(c1.getC0() < c2.getC0()) {
+              } else if(c1.getRed() < c2.getRed()) {
                 r = csIdxNoMore;
               } else {
-                r = c1.getC0();
+                r = ( c1.getRed() ? chanStepMax : 0);
               }
-              if(c1.getC1() > c2.getC1()) {
+              if(c1.getGreen() > c2.getGreen()) {
                 g = chanStepMax - csIdxNoMore;
-              } else if(c1.getC1() < c2.getC1()) {
+              } else if(c1.getGreen() < c2.getGreen()) {
                 g = csIdxNoMore;
               } else {
-                g = c1.getC1();
+                g =  ( c1.getGreen() ? chanStepMax : 0);
               }
-              if(c1.getC2() > c2.getC2()) {
+              if(c1.getBlue() > c2.getBlue()) {
                 b = chanStepMax - csIdxNoMore;
-              } else if(c1.getC2() < c2.getC2()) {
+              } else if(c1.getBlue() < c2.getBlue()) {
                 b = csIdxNoMore;
               } else {
-                b = c1.getC2();
+                b =  ( c1.getBlue() ? chanStepMax : 0);
+              }
+              if (chanIsFloat) {
+                r = r / chanStepMax;
+                g = g / chanStepMax;
+                b = b / chanStepMax;
               }
               return setChansRGB(r, g, b);
             } else {
@@ -1635,14 +1638,14 @@ namespace mjr {
            the optimizer will figure it out someday... The optimizer works in strange ways. */
         if(numColors >= 2) {
             csX = numberWrap(csX, static_cast<csFltType>(1));
-            csFltType mF = csX * (numColors - 1);
+            csFltType mF = csX * static_cast<csFltType>(numColors - 1);
             csIntType mI = static_cast<csIntType>(mF);
             if (mI >= (numColors-2)) mI=numColors-2;
             colorTpl c1;
             colorTpl c2;
             c1.setToCorner(cornerColors[mI]);
             c2.setToCorner(cornerColors[mI+1]);
-            return linearInterpolate(mF-mI, c1, c2);
+            return linearInterpolate(mF-static_cast<csFltType>(mI), c1, c2);
         } else {
           return *this;
         }
@@ -1750,9 +1753,9 @@ namespace mjr {
         return wMean(w1, 1-w1, col1, col2);
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Set the current color to a value linearly interpolated between the two given colors.  When \a aDouble is 0, the color is col1.
-          When \a aDouble is 1 the new value is col2.  This method interpolates all channels without any color space conversions and as few type conversions as
-          possible.
+      /** Set the current color to a value linearly interpolated between the two given colors.  
+          When \a aDouble is 0, the color is col1.  When \a aDouble is 1 the new value is col2.  This method interpolates all channels without any color space
+          conversions and as few type conversions as possible.
           @param aDouble The distance from col1
           @param col1 The starting color
           @param col2 The ending color
@@ -1760,6 +1763,20 @@ namespace mjr {
       inline colorTpl& linearInterpolate(double aDouble, colorArgType col1, colorArgType col2) {
         if( (aDouble >= 0.0) && (aDouble <= 1.0) )
           for(int i=0; i<numChan; i++)
+            setChanNC(i, static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(col1.getChanNC(i)), static_cast<double>(col2.getChanNC(i)), aDouble)));
+        return *this;
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Set the RGB channels of the current color to a value linearly interpolated between the two given colors.  
+          When \a aDouble is 0, the color is col1.  When \a aDouble is 1 the new value is col2.  This method interpolates all channels without any color space
+          conversions and as few type conversions as possible.
+          @param aDouble The distance from col1
+          @param col1 The starting color
+          @param col2 The ending color
+          @return Returns a reference to the current color object.*/
+      inline colorTpl& linearInterpolateRGB(double aDouble, colorArgType col1, colorArgType col2) {
+        if( (aDouble >= 0.0) && (aDouble <= 1.0) )
+          for (int i : {redChan, blueChan, greenChan}) 
             setChanNC(i, static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(col1.getChanNC(i)), static_cast<double>(col2.getChanNC(i)), aDouble)));
         return *this;
       }
@@ -2651,7 +2668,6 @@ namespace mjr {
           daDist += static_cast<channelArithSPType>(std::abs(static_cast<channelArithDType>(getChanNC(i)) - static_cast<channelArithDType>(aColor.getChanNC(i))));
         return daDist;
       }
-
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Distance between current color and given one (maximum of absolute value of channel differences).
           @param aColor the given color
@@ -2659,11 +2675,30 @@ namespace mjr {
       inline channelArithSPType distMaxAbs(colorArgType aColor) {
         channelArithSPType daDist = 0;
         for(int i=0; i<numChan; i++) {
-          channelArithSPType tmp =static_cast<channelArithSPType>(std::abs(static_cast<channelArithDType>(getChanNC(i)) - static_cast<channelArithDType>(aColor.getChanNC(i))));
+          channelArithSPType tmp = static_cast<channelArithSPType>(std::abs(static_cast<channelArithDType>(getChanNC(i)) - static_cast<channelArithDType>(aColor.getChanNC(i))));
           if (daDist < tmp)
             daDist = tmp;
         }
         return daDist;
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Returns non-zero if the current color is close to aColor (the maximum delta between any two channels is less than or equal to epsilon).
+          Note the implications for floating point clrChanT.
+          @return non-zero if the given color is logically the same as the current color*/
+      inline bool isClose(colorArgType aColor, clrChanT epsilon) {
+        for(int i=0; i<numChan; i++)
+          if (std::abs(static_cast<channelArithDType>(getChanNC(i)) - static_cast<channelArithDType>(aColor.getChanNC(i))) > epsilon)
+            return false;
+        return true;
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Like isClose(), but only checks the R, G, & B channels.
+          @return non-zero if the given RGB color is the same as the current color*/
+      inline bool isCloseRGB(colorArgType aColor, clrChanT epsilon) requires(blueChan >= 0) {
+        for (int i : {redChan, blueChan, greenChan}) 
+          if (std::abs(static_cast<channelArithDType>(getChanNC(i)) - static_cast<channelArithDType>(aColor.getChanNC(i))) > epsilon)
+            return false;
+        return true;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns non-zero if the current color is precicely equal to aColor.
@@ -2679,13 +2714,13 @@ namespace mjr {
         return true;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Like isEual(), but only checks the R, G, & B channels.
+      /** Like isEqual(), but only checks the R, G, & B channels.
           @return non-zero if the given RGB color is the same as the current color*/
       inline bool isEqualRGB(colorArgType aColor) {
-        /* Requires: Inherits numChan>2 from getC2. */
-        return ((getC0() == aColor.getC0()) &&
-                (getC1() == aColor.getC1()) &&
-                (getC2() == aColor.getC2()));
+        /* Requires: Inherits RGB channel requirements from getRed/getGreen/getBlue. */
+        return ((getRed()   == aColor.getRed()  ) &&
+                (getGreen() == aColor.getGreen()) &&
+                (getBlue()  == aColor.getBlue()));
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns non-zero if the given color is logically NOT the same as the current color.
@@ -2707,7 +2742,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** LIke isBlack(), but only checks the R, G, & B channels
           @return non-zero if the given color is black (R, G, & B are  are zero) */
-      inline bool isBlackRGB() { return ((getC0() == 0) && (getC1() == 0) && (getC2() == 0)); } /* Requires: Inherits numChan>2 from getC2. */
+      inline bool isBlackRGB() { return ((getRed() == 0) && (getGreen() == 0) && (getBlue() == 0)); } /* Requires: Inherits RGB channel requirements from getRed/getGreen/getBlue. */
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2837,10 +2872,29 @@ namespace mjr {
       class csCC_tpl {
         public:
           constexpr static csIntType numC = ((sizeof...(corners)) - 1) * chanStepMax + 1;
-          static inline colorTpl&  c(colorRefType aColor, csFltType csX)   { return aColor.cmpRGBcornerCGradiant(csX, numA, cols);          }
-          static inline colorTpl   c(                     csFltType csX)   { colorTpl tmp; return c(tmp, csX);                              }
-          static inline colorTpl&  c(colorRefType aColor, csIntType csIdx) { return aColor.cmpRGBcornerDGradiant(csIdx % numC, numA, cols); }
-          static inline colorTpl   c(                     csIntType csIdx) { colorTpl tmp; return c(tmp, csIdx);                            }
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csIdx Integer used to select a color from the discrete gradiaant.
+              @return Returns a reference to \a aColor. */
+          template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG) requires (std::floating_point<saT>) { 
+            csFltType csX = static_cast<csFltType>(csG);
+            return aColor.cmpRGBcornerCGradiant(csX, numA, cols);          
+          }
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csG    Floating point value in [0, 1] used to select a color from the continuous color gradiant.
+              @return Returns a reference to \a aColor. */
+          template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG) requires (std::integral<saT>) { 
+            csIntType csIdx = static_cast<csIntType>(csG);
+            return aColor.cmpRGBcornerDGradiant(csIdx % numC, numA, cols); 
+          }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csG color scheme selector
+              @return Returns a colorTpl value */
+          template<typename saT> static inline colorTpl c(saT csG) requires (std::integral<saT> || std::floating_point<saT>) { 
+            colorTpl tmp; 
+            return c(tmp, csG); 
+          }
         private:
           constexpr static int numA = (sizeof...(corners));
           constexpr static cornerColorEnum cols[] = { corners... };
@@ -2869,22 +2923,27 @@ namespace mjr {
           constexpr static csIntType numC = (sizeof...(colors));
           /** Set given colorTpl instance to the selected color in the color scheme.
               @param aColor color object to set.
-              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
+              @param csIdx Integer used to select a color from the discrete gradiaant.
               @return Returns a reference to \a aColor. */
-          static inline colorTpl&  c(colorRefType aColor, csIntType csIdx) { return aColor.setRGBfromLogPackIntARGB(d[csIdx % numC]);  }
-          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
-              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
-              @return Returns a reference a colorTpl value. */
-          static inline colorTpl c(csIntType csIdx) { colorTpl tmp; return c(tmp, csIdx); }
+          template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG) requires (std::floating_point<saT>) { 
+            csFltType csX = static_cast<csFltType>(csG);
+            return aColor.cmpGradiant(numberWrap(csX, 1.0), numC, d);
+          }
           /** Set given colorTpl instance to the selected color in the color scheme.
               @param aColor color object to set.
-              @param csX A value in [0, 1] that identifies the color in the scheme.
+              @param csG    Floating point value in [0, 1] used to select a color from the continuous color gradiant.
               @return Returns a reference to \a aColor. */
-          static colorTpl&  c(colorRefType aColor, csFltType csX) { return aColor.cmpGradiant(numberWrap(csX, 1.0), numC, d); }
+          template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG) requires (std::integral<saT>) { 
+            csIntType csIdx = static_cast<csIntType>(csG);
+            return aColor.setRGBfromLogPackIntARGB(d[csIdx % numC]);
+          }
           /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
-              @param csX A value in [0, 1] that identifies the color in the scheme.
-              @return Returns a reference a colorTpl value. */
-          static colorTpl c(csFltType csX) { colorTpl tmp; return c(tmp, csX); }
+              @param csG color scheme color selector
+              @return Returns a colorTpl value */
+          template<typename saT> static inline colorTpl c(saT csG) requires (std::integral<saT> || std::floating_point<saT>) { 
+            colorTpl tmp; 
+            return c(tmp, csG); 
+          }
         private:
           constexpr static uint32_t d[] = { colors... };
       };
@@ -2897,38 +2956,30 @@ namespace mjr {
           constexpr static csIntType maxNumC = mx;
           /** Set given colorTpl instance to the selected color in the color scheme.
               @param aColor color object to set.
-              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
-              @param numC Number of colors for the given scheme.  Will be clamped to [minNumC, maxNumC].
+              @param csIdx Integer used to select a color from the discrete gradiaant.
               @return Returns a reference to \a aColor. */
-          static colorTpl&  c(colorRefType aColor, csIntType csIdx, csIntType numC=maxNumC) {
+          template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG, csIntType numC=maxNumC) requires (std::floating_point<saT>) { 
+            csFltType csX = static_cast<csFltType>(csG);
+            csIntType b = std::clamp(numC, minNumC, maxNumC);
+            return aColor.cmpGradiant(numberWrap(csX, 1.0), b, &d[b*(b-1)/2-3+0]);
+          }
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csG    Floating point value in [0, 1] used to select a color from the continuous color gradiant.
+              @return Returns a reference to \a aColor. */
+          template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG, csIntType numC=maxNumC) requires (std::integral<saT>) { 
+            csIntType csIdx = static_cast<csIntType>(csG);
             csIntType b = std::clamp(numC, minNumC, maxNumC);
             csIntType i = csIdx % b;
             return aColor.setRGBfromLogPackIntARGB(d[b*(b-1)/2-3+i]);
           }
           /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
-              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
+              @param csG color scheme color selector
               @param numC Number of colors for the given scheme.  Will be clamped to [minNumC, maxNumC].
-              @return Returns a reference a colorTpl value. */
-          static colorTpl c(csIntType csIdx, csIntType numC=maxNumC) {
-            colorTpl tmp;
-            return c(tmp, csIdx, numC);
-          }
-          /** Set given colorTpl instance to the selected color in the color scheme.
-              @param aColor color object to set.
-              @param csX A value in [0, 1] that identifies the color in the scheme.
-              @param numC Number of colors for the given scheme.  Will be clamped to [minNumC, maxNumC].
-              @return Returns a reference to \a aColor. */
-          static colorTpl&  c(colorRefType aColor, csFltType csX, csIntType numC=maxNumC) {
-            csIntType b = std::clamp(numC, minNumC, maxNumC);
-            return aColor.cmpGradiant(numberWrap(csX, 1.0), b, &d[b*(b-1)/2-3+0]);
-          }
-          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
-              @param csX A value in [0, 1] that identifies the color in the scheme.
-              @param numC Number of colors for the given scheme.  Will be clamped to [minNumC, maxNumC].
-              @return Returns a reference a colorTpl value. */
-          static colorTpl c(csFltType csX, csIntType numC=maxNumC) {
-            colorTpl tmp;
-            return c(tmp, csX, numC);
+              @return Returns a colorTpl value */
+          template<typename saT> static inline colorTpl c(saT csG, csIntType numC=maxNumC) requires (std::integral<saT> || std::floating_point<saT>) { 
+            colorTpl tmp; 
+            return c(tmp, csG, numC); 
           }
         private:
           constexpr static uint32_t d[] = { colors... };

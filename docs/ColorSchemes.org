@@ -101,18 +101,20 @@ Not all color scheme classes have the same interface; however, the interfaces ar
     - Color schemes with the number of colors set at run time, will have a =numC= argument for the =c= methods.
       - These schemes have two members specifying the range for =numC=: =minNumC= & =maxNumC=.
   - *=c=:* methods are used to set colors
-    - The =c= methods come in two general forms:
+    - The =c= methods come in pairs:
       - A =colorTpl= factory methodand that takes one or more arguments identifying the color within the color scheme
-        - The first argument is a "locator" that selects a color in a scheme.  This locater takes one of three forms:
-          - *=csIntType csInx=:* An integer "index" for descrete color schemes (like Colorbrewer schemes)
-          - *=csFltType csX=:* A floating point value in [0, 1] used to select colors from continuous schemes (like gradiants)
-          - *=csNatType csVal=:* These are highly dependant upon the color scheme.  See the =csHSLh*= schemes as an example.
+        - The first argument is the color scheme selector used to select a color from the scheme:
+          - *=csIntType csIdx=:* An integer "index" for descrete color schemes (like Colorbrewer schemes)
+          - *=csFltType csX=:*   A floating point value in [0, 1] used to select colors from continuous schemes (like gradiants)
+          - *=csNatType csVal=:* A =csFltType= or =csIntType= depending on the =clrChanT=.  Used as described above.
+          - *=colorTpl  csCol=:* A color object to be converted to a color.  See the =csHSLh*= schemes as an example.
+          - *=typename  csG=:*   A generic color selector used in a template
         - The remaining arguments are generally used to specify some characterstic of the scheme itself.  Examples:
           - A =numC= argument specifying the number of elements in a discrete scheme (like Colorbrewer schemes)
           - The color match function based rainbow color schemes take an argument =interpMethod= specifiying an interpolation method. is 
-      - A method that takes a =colorTpl= as it's first argument, with the remaining argument as in the factory method form of =c=.
-      - It is entirely possilbe that a color scheme object may have more than two =c= methods.  For example, a discrete and continous versions of =c= for
-        color schems that may be used both ways.
+      - A method that takes a =colorTpl= as it's first argument, with the remaining arguments as in the factory method form of =c=.
+    - It is entirely possilbe that a color scheme object may have more than two =c= methods.  For example, =csCC*= color schemes have a pair of =c= methods
+      taking integer color selectors and another pair taking a floating point color selectors.
 
 Many color schemes provide a number of colors that is a function of =chanStepMax=, which is directly related to the value of =clrChanT=.  For integral
 =clrChanT= types, =chanStepMax= will be equal to =maxChanVal=. For floating point =clrChanT= types, =chanStepMax= will be equal to $2^32$.
