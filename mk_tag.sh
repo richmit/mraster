@@ -43,7 +43,7 @@ else
   exit
 fi
 
-#git tag "$TAG_NAME" -F next-tag.org
+git tag "$TAG_NAME" -F next-tag.org
 
 echo "TAG CREATED WITH FOLLOWING COMMIT MESSAGE:"
 echo "================================================================================"
