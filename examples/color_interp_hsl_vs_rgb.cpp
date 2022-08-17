@@ -58,7 +58,7 @@ int main(void) {
                                                                            mjr::ramCanvas3c8b::colorType::colorSpaceEnum::RGB
                                                                          };
   for(int x=0; x<512; x++)
-    theRamCanvas.drawLine(x,   0,  x,  250, aColor.interplColors(x/512.0, startColor, endColor));
+    theRamCanvas.drawLine(x,   0,  x,  250, aColor.linearInterpolate(x/512.0, startColor, endColor));
   theRamCanvas.drawString("RGB", mjr::hershey::font::ROMAN_SL_SANSERIF, 532, (   0+ 250)/2, "red",  1, 20);
 
 for(int j=1; j<1000; j++) {

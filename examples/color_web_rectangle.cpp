@@ -44,7 +44,7 @@ int main(void) {
     if (i < 216) {
       int x = (i % 15) * 50;
       int y = (i / 15) * 50;
-      theRamCanvas.drawFillRectangle(x, y, x+45, y+45, mjr::color3c8b::csFPwebSafeNormalVision::c(i));
+      theRamCanvas.drawFillRectangle(x, y, x+45, y+45, mjr::color3c8b::csWSnormalVision::c(i));
     }
   theRamCanvas.writeTIFFfile("color_web_rectangle.tiff");
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;

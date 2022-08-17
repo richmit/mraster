@@ -67,7 +67,7 @@ int main(void) {
       theRamCanvas_gry.drawPoint(x, y, aColor);
       aColor.setChansRGB(red, green, blue);
       theRamCanvas_rgb.drawPoint(x, y, aColor);
-      aColor.tfrmWebSafe216();
+      aColor.tfrmWebSafeRGB();
       theRamCanvas_web.drawPoint(x, y, aColor);
       count++;
       if(red < 255) {

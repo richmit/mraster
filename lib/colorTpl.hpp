@@ -355,37 +355,6 @@ namespace mjr {
       /** @name Private utility functions */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Helper function for converting to web safe colors.  This function is highly optimized. */
-      inline clrChanT colorComp2WebSafeColorComp(clrChanT aColorComp) {
-        clrChanT minCol;
-        int minDist;
-        uint8_t charCompVal = convertChanToByte(aColorComp);
-        // Find the closest component
-        uint8_t posValue[6] = { 0x0, 0x33, 0x66, 0x99, 0xCC, 0xFF };
-        minDist = charCompVal;
-        minCol = 0;
-        for(int i=1;i<6;i++)
-          if( std::abs(charCompVal - posValue[i]) < minDist ) {
-            minDist = std::abs(charCompVal - posValue[i]);
-            minCol = posValue[i];
-          }
-        return(minCol);
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Find the element in the discreet value list that is closest to the given component value.
-          The intended use is to reduce colors down to a smaller set of values -- ex: convert a color to the nearest web safe value. */
-      inline clrChanT colorComp2CloseColorComp(clrChanT aColorComp, clrChanT *discreetVals, int numVals) {
-        clrChanT minCol = -1;
-        int minDist = maxChanVal;
-        // Find the closest of the discreetVals
-        for(int i=0;i<numVals;i++)
-          if( std::abs(aColorComp - discreetVals[i]) < minDist ) {
-            minDist = std::abs(aColorComp - discreetVals[i]);
-            minCol = discreetVals[i];
-          }
-        return(minCol);
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** This is a helper function for setRGBfromColorSpace. */
       inline double hslHelperVal(double n1, double n2, double hue) {
         hue = realWrap(hue, 360.0);
@@ -1080,20 +1049,6 @@ namespace mjr {
       /** Set the color based upon the bytes of the given integer ordered from LSB to MSB.
           The *Idx arguments select which byte of the int is used for each channel -- with LSB equal to index 0 and MSB equal to index 3. The extracted bytes
           are interpreted as by setChans_byte.  Any channels beyond four are left untouched.
-
-          @warning Note conviencie functions are provided for
-
-
-
-SDL_PIXELFORMAT_BGRA32
-
-alias for BGRA byte array of color data, for the current platform (>= SDL 2.0.5)
-
-SDL_PIXELFORMAT_ABGR32
-
-alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
-
-
           @param anInt The integer from which to extract bytes to set color
           @param rIdx Location of red byte in \a anInt
           @param gIdx Location of green byte in \a anInt
@@ -1540,7 +1495,7 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
             csFltType lowAnchor  = anchors[i];
             csFltType highAnchor = anchors[i+1];
             if( (csX >= lowAnchor) && (csX < highAnchor) ) {
-              return interplColors(std::abs((csX-lowAnchor)/(highAnchor-lowAnchor)), colors[i], colors[i+1]);
+              return linearInterpolate(std::abs((csX-lowAnchor)/(highAnchor-lowAnchor)), colors[i], colors[i+1]);
             }
           }
         }
@@ -1555,7 +1510,7 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
             csFltType lowAnchor  = static_cast<csFltType>(i)  / static_cast<csFltType>(numColors-1);
             csFltType highAnchor = static_cast<csFltType>(i+1)/ static_cast<csFltType>(numColors-1);
             if( (csX >= lowAnchor) && (csX < highAnchor) ) {
-              return interplColors(std::abs((csX-lowAnchor)/(highAnchor-lowAnchor)), colors[i], colors[i+1]);
+              return linearInterpolate(std::abs((csX-lowAnchor)/(highAnchor-lowAnchor)), colors[i], colors[i+1]);
             }
           }
         }
@@ -1573,7 +1528,7 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
               colorTpl c2;
               c1.setRGBfromLogPackIntARGB(colors[i]);
               c2.setRGBfromLogPackIntARGB(colors[i+1]);
-              return interplColors(std::abs((csX-lowAnchor)/(highAnchor-lowAnchor)), c1, c2);
+              return linearInterpolate(std::abs((csX-lowAnchor)/(highAnchor-lowAnchor)), c1, c2);
             }
           }
         }
@@ -1687,29 +1642,15 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
             colorTpl c2;
             c1.setToCorner(cornerColors[mI]);
             c2.setToCorner(cornerColors[mI+1]);
-            return interplColors(mF-mI, c1, c2);
+            return linearInterpolate(mF-mI, c1, c2);
         } else {
           return *this;
         }
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Set the current color to a value linearly interpolated between the two given colors.  When \a aDouble is 0, the color is col1.
-          When \a aDouble is 1 the new value is col2.  This method interpolates all channels without any color space conversions and as few type conversions as
-          possible.
-          @param aDouble The distance from col1
-          @param col1 The starting color
-          @param col2 The ending color
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& interplColors(double aDouble, colorArgType col1, colorArgType col2) {
-        if( (aDouble >= 0.0) && (aDouble <= 1.0) )
-          for(int i=0; i<numChan; i++)
-            setChanNC(i, static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(col1.getChanNC(i)), static_cast<double>(col2.getChanNC(i)), aDouble)));
-        return *this;
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the current color to a value linearly interpolated between the two given colors.
           When \a aDouble is 0, the color is col1.  When \a aDouble is 1 the new value is col2.  The interpolation is done in HSL space -- i.e. the given colors are
-          converted to HSL, the interpolation is done, and the result is converted back to RGB and the current color is set.  Unlike interplColors, this
+          converted to HSL, the interpolation is done, and the result is converted back to RGB and the current color is set.  Unlike linearInterpolate, this
           function will NOT interpolate every channel.  Rather, as this function deals specifically with RGB and HSL space, only the RGB channels will be
           interpolated.
           @param space The color space to use
@@ -1807,6 +1748,20 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
       /** @overload */
       inline colorTpl& uMean(channelArithFltType w1, colorArgType col1, colorArgType col2) {
         return wMean(w1, 1-w1, col1, col2);
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Set the current color to a value linearly interpolated between the two given colors.  When \a aDouble is 0, the color is col1.
+          When \a aDouble is 1 the new value is col2.  This method interpolates all channels without any color space conversions and as few type conversions as
+          possible.
+          @param aDouble The distance from col1
+          @param col1 The starting color
+          @param col2 The ending color
+          @return Returns a reference to the current color object.*/
+      inline colorTpl& linearInterpolate(double aDouble, colorArgType col1, colorArgType col2) {
+        if( (aDouble >= 0.0) && (aDouble <= 1.0) )
+          for(int i=0; i<numChan; i++)
+            setChanNC(i, static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(col1.getChanNC(i)), static_cast<double>(col2.getChanNC(i)), aDouble)));
+        return *this;
       }
       //@}
 
@@ -2144,7 +2099,7 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
       inline colorTpl& tfrmLn() {
         /* Performance: Even if the compiler fails to unroll this loop, the runtime is dominated by the double computations. */
         for(int i=0; i<numChan; i++)
-          setChanNC(i, std::log(1.0 + static_cast<double>(getChanNC(i))));
+          setChanNC(i, static_cast<clrChanT>(std::log(1.0 + static_cast<double>(getChanNC(i)))));
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2251,17 +2206,17 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** The Saw Transform modifies the current color: R=R iff(ra<=R<=rb), G=G iff(ga<=G<=gb), B=B iff(ba<=B<=bb).
+      /** The Saw Transform modifies the current color: C_i = ifelse(ra<=C_i<=rb, C_i, 0)
           @param lowCol lower cutoff value
           @param highCol upper cutoff value
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmSaw(colorArgType lowCol, colorArgType highCol) {
         for(int i=0; i<numChan; i++)
-          setChanNC(i, ((lowCol.getChanNC(i) <= getChanNC(i)) && (highCol.getChanNC(i) >= getChanNC(i)) ? getChanNC(1) : 0));
+          setChanNC(i, ((lowCol.getChanNC(i) <= getChanNC(i)) && (highCol.getChanNC(i) >= getChanNC(i)) ? getChanNC(i) : 0));
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** The Saw Transform modifies the current color: R=#maxChanVal iff(ra<=R<=rb), G=#maxChanVal iff(ga<=G<=gb), B=#maxChanVal iff(ba<=B<=bb)
+      /** The Saw Transform modifies the current color: C_i = ifelse(ra<=C_i<=rb, maxChanVal, 0)
           @param lowCol lower cutoff value
           @param highCol upper cutoff value
           @return Returns a reference to the current color object.*/
@@ -2271,19 +2226,17 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** The DiracTot (total) Transform modifies the current color: R=MAX,G=MAX, B=MAX iff ((R==aCol.R)&&(G==aCol.G)&&(B==aCol.B)).
+      /** The DiracTot (total) Transform modifies the current color: Set current color to white if it equals aCol, and black otherwise.
           @param aCol Dirac trigger value
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmDiracTot(colorArgType aCol) {
         for(int i=0; i<numChan; i++)
-          if(aCol.getChanNC(i) != getChanNC(i)) {
+          if(aCol.getChanNC(i) != getChanNC(i))
             return setToBlack();
-            break;
-          }
-        return setToBlack();
+        return setToWhite();
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** The Dirac Transform modifies the current color: R=MAX iff(R==aCol.R), G=MAX iff(G==aCol.G), B=MAX iff(B==aCol.B).
+      /** The Dirac Transform modifies the current color: C_i = ifelse(C_i==aCol.C_i, maxChanVal, 0)
           @param aCol Dirac trigger value
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmDirac(colorArgType aCol) {
@@ -2292,7 +2245,7 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** The Fuzzy Dirac Transform modifies the current color: R=MAX iff(|R-ctrCol.R|<=radCol.R), G=MAX iff(|G-ctrCol.G|<=radCol.G), B=MAX iff(|B-ctrCol.B|<=radCol.B).
+      /** The Fuzzy Dirac Transform modifies the current color: C_i=ifelse(|R-ctrCol.R|<=radCol.R), maxChanVal, 0)
           @param ctrCol Center Color
           @param radCol Radius Color
           @return Returns a reference to the current color object.*/
@@ -2317,31 +2270,19 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmGmean(colorArgType aCol) {
         for(int i=0; i<numChan; i++)
-          setChanNC(i, static_cast<clrChanT>(std::sqrt(static_cast<double>(getChanNC(i)) * static_cast<double>(aCol.getChanNC(i)))));
-        return *this;
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Computes the clipped  geometric mean of the given color and the current one.
-          Floating point Numbers re used for intermediate values and the result cast to a colorChanType at the end.
-          @param aCol The color to use in the computation.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& tfrmGmeanClamp(colorArgType aCol) {
-        for(int i=0; i<numChan; i++)
-          setChanNC(i, clampTop(static_cast<channelArithSPType>(std::sqrt(static_cast<double>(getChanNC(i))   * static_cast<double>(aCol.getChanNC(i))))));
+          setChanNC(i, static_cast<clrChanT>(std::sqrt(static_cast<channelArithFltType>(getChanNC(i)) * static_cast<channelArithFltType>(aCol.getChanNC(i)))));
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Transform the current color by rendering it into a true grey via the same method used by the luminanceRGB() function.
-          Note, the luminanceRGB() function is NOT used internally within this function for performance reasons.  This function will do the best job it can
-          within the current color depth.
+          This function only sets the red, blue, and green channels -- all other channels are left untouched.
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmGreyScaleRGB(void) {
         /* Requires: Inherits numChan>2 from getC2. */
-        setChanNC(0, static_cast<clrChanT>(static_cast<channelArithFltType>(getRed())   * static_cast<channelArithFltType>(RGBluminanceWeightR) +
-                                           static_cast<channelArithFltType>(getGreen()) * static_cast<channelArithFltType>(RGBluminanceWeightG) +
-                                           static_cast<channelArithFltType>(getBlue())  * static_cast<channelArithFltType>(RGBluminanceWeightB)));
-        for(int i=1; i<numChan; i++)
-          setChanNC(i, getChanNC(0));
+        double lumU = static_cast<double>(luminanceRGB());
+        setRed_dbl( lumU);
+        setGreen_dbl(lumU);
+        setBlue_dbl( lumU);
         return *this;
       }
       //@}
@@ -2351,35 +2292,23 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** The 216 Palate Web Safe Transform modifies the current color into the closest web safe color from the 216 color web safe pallet.
+          This function only sets the red, blue, and green channels -- all other channels are left untouched.
           @return Returns a reference to the current color object.*/
-      inline colorTpl& tfrmWebSafe216() {
-        for(int i=0; i<numChan; i++)
-          setChanNC(i, colorComp2WebSafeColorComp(getChanNC(i)));
+      inline colorTpl& tfrmWebSafeRGB() requires (redChan>=0) {
+        for (int c : {redChan, blueChan, greenChan}) {
+          int charCompVal = convertChanToByte(getChanNC(c));
+          int minDist     = 256;
+          int minCol;
+          for(int pv : { 0x0, 0x33, 0x66, 0x99, 0xCC, 0xFF }) {
+            int curDist = std::abs(charCompVal - pv);
+            if( curDist < minDist ) {
+              minDist = curDist;
+              minCol  = pv;
+            }
+          }
+          setChanNC(c, convertByteToChan(static_cast<uint8_t>(minCol)));
+        }
         return *this;
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Transforms the current color into the nearest web safe color, and then transforms it into what a person with Protanopia might see.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& tfrmWebSafePro216() {
-        tfrmWebSafe216();
-        int colIdx = 36 * (getRed_byte() / 0x33) + 6 * (getGreen_byte() / 0x33) + 1 * (getBlue_byte() / 0x33) + 1;
-        return csSet<colorTpl::csFPwebSafeNormalVision>(colIdx);
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Transforms the current color into the nearest web safe color, and then transforms it into what a person with Deutanopia might see.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& tfrmWebSafeDeu216() {
-        tfrmWebSafe216();
-        int colIdx = 36 * (getRed_byte() / 0x33) + 6 * (getGreen_byte() / 0x33) + 1 * (getBlue_byte() / 0x33) + 1;
-        return csSet<colorTpl::csFPwebSafeDeutanopia>(colIdx);
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Transforms the current color into the nearest web safe color, and then transforms it into what a person with Tritanoptia might see.
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& tfrmWebSafeTri216() {
-        tfrmWebSafe216();
-        int colIdx = 36 * (getRed_byte() / 0x33) + 6 * (getGreen_byte() / 0x33) + 1 * (getBlue_byte() / 0x33) + 1;
-        return csSet<colorTpl::csFPwebSafeTritanoptia>(colIdx);
       }
       //@}
 
@@ -2518,26 +2447,6 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Linear Grey Level Scale transform defined by two control points for each channel of the current color.
-          The linear Grey Level Scale transform is defined by the control points, such that the "from" points are mapped into the "to" points.  For example,
-          from1.red will map onto to1.red and from2.red will .  Two points define a line for each channel, and thus define a linear grey level scale transform
-          for each channel.  Note, this function transforms all channels.  This function is quite slow because of all of the floating point operations
-          required.
-          @param from1 Control point mapped to argument to1
-          @param from2 Control point mapped to argument to2
-          @param to1 Control point mapped from argument from1
-          @param to2 Control point mapped from argument from2
-          @return Returns a reference to the current color object.*/
-      inline colorTpl& tfrmLinearGreyLevelScale(colorArgType from1, colorArgType from2, colorArgType to1, colorArgType to2) {
-        for(int i=0; i<numChan; i++) {
-          double c = ( (static_cast<double>(to1.getChanNC(i))   - static_cast<double>(to2.getChanNC(i))) /
-                       (static_cast<double>(from1.getChanNC(i)) - static_cast<double>(from2.getChanNC(i))) );
-          double b = static_cast<double>(to1.getChanNC(i)) - c * static_cast<double>(from1.getChanNC(i));
-          setChanNC(i, static_cast<clrChanT>(c * getChanNC(i) + b));
-        }
-        return *this;
-      }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** The Linear Grey Level Scale transform modifies the current color such that: R=rc*R+rb, G=gc*G+gb, B=bc*B+bb.
           This function ONLY transforms the red, green, and blue channels.
           @param rc The "contrast" value for red
@@ -2549,10 +2458,9 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmLinearGreyLevelScaleRGB(double rc, double rb, double gc, double gb, double bc, double bb) {
         /* Requires: Inherits numChan>3 from setAlpha & getC3. */
-        setRed(  static_cast<clrChanT>(rc * static_cast<double>(theColor.getC0()) + rb));
-        setGreen(static_cast<clrChanT>(gc * static_cast<double>(theColor.getC1()) + gb));
-        setBlue( static_cast<clrChanT>(bc * static_cast<double>(theColor.getC2()) + bb));
-        setAlpha(static_cast<clrChanT>(bc * static_cast<double>(theColor.getC3()) + bb));
+        setRed(  static_cast<clrChanT>(rc * static_cast<double>(getRed()) + rb));
+        setGreen(static_cast<clrChanT>(gc * static_cast<double>(getGreen()) + gb));
+        setBlue( static_cast<clrChanT>(bc * static_cast<double>(getBlue()) + bb));
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2570,14 +2478,14 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmStdPowRGB(double rp, double gp, double bp) {
         /* Requires: Inherits numChan>2 from setBlue & getC2. */
-        setRed(  static_cast<clrChanT>(std::pow(static_cast<double>(getC0) / static_cast<double>(maxChanVal), rp) * static_cast<double>(maxChanVal)));
-        setGreen(static_cast<clrChanT>(std::pow(static_cast<double>(getC1) / static_cast<double>(maxChanVal), gp) * static_cast<double>(maxChanVal)));
-        setBlue( static_cast<clrChanT>(std::pow(static_cast<double>(getC2) / static_cast<double>(maxChanVal), bp) * static_cast<double>(maxChanVal)));
+        setRed(  static_cast<clrChanT>(std::pow(static_cast<double>(getC0()) / static_cast<double>(maxChanVal), rp) * static_cast<double>(maxChanVal)));
+        setGreen(static_cast<clrChanT>(std::pow(static_cast<double>(getC1()) / static_cast<double>(maxChanVal), gp) * static_cast<double>(maxChanVal)));
+        setBlue( static_cast<clrChanT>(std::pow(static_cast<double>(getC2()) / static_cast<double>(maxChanVal), bp) * static_cast<double>(maxChanVal)));
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** The Standard Power Transform with p=2. The new color will be:
-          R=#maxChanVal*(R/#maxChanVal)**2, G=#maxChanVal*(G/#maxChanVal)**2, B=#maxChanVal*(B/#maxChanVal)**2
+      /** The Standard Power Transform with p=2. The new color will be: C_i = C_i * C_i / maxChanVal == (C_i/maxChanVal)^2*maxChanVal
+          This computation is done with integer math if clrChanT is integral.
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmStdPowSqr(void) {
         for(int i=0; i<numChan; i++)
@@ -2586,8 +2494,7 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** The Standard Power Transform with p=1/2. The new color will be:
-          R=#maxChanVal*(R/#maxChanVal)**(1/2), G=#maxChanVal*(G/#maxChanVal)**(1/2), B=#maxChanVal*(B/#maxChanVal)**(1/2)
+      /** The Standard Power Transform with p=1/2. The new color will be: C_i = sqrt(C_i / maxChanVal) * maxChanVal
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmStdPowSqrt(void) {
         for(int i=0; i<numChan; i++)
@@ -2628,9 +2535,9 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
           @return The luminance for the current object. */
       inline channelArithFltType luminanceRGB(void) {
         /* Requires: Inherits numChan>2 from getC2. */
-        return (static_cast<channelArithFltType>(getC0()) * static_cast<channelArithFltType>(RGBluminanceWeightR) +
-                static_cast<channelArithFltType>(getC1()) * static_cast<channelArithFltType>(RGBluminanceWeightG) +
-                static_cast<channelArithFltType>(getC2()) * static_cast<channelArithFltType>(RGBluminanceWeightB)) / static_cast<channelArithFltType>(maxChanVal);
+        return ((static_cast<channelArithFltType>(getC0()) * static_cast<channelArithFltType>(RGBluminanceWeightR) +
+                 static_cast<channelArithFltType>(getC1()) * static_cast<channelArithFltType>(RGBluminanceWeightG) +
+                 static_cast<channelArithFltType>(getC2()) * static_cast<channelArithFltType>(RGBluminanceWeightB)) / static_cast<channelArithFltType>(maxChanVal));
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the unscaled intensity (sum of the first three components) of the current color
@@ -2654,7 +2561,7 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
       /** Compute the scaled intensity (sum of the first three components divided by the maximum intensity possible) of the current color
           @return The scaled intensity for the current object. */
       inline channelArithFltType intensityScaledRGB(void) {
-        return (static_cast<channelArithFltType>(intensityRGB()) / static_cast<channelArithFltType>(numChan) / static_cast<channelArithFltType>(maxChanVal));
+        return (static_cast<channelArithFltType>(intensityRGB()) / static_cast<channelArithFltType>(3) / static_cast<channelArithFltType>(maxChanVal));
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the scaled intensity (sum of the components divided by the maximum intensity possible) of the current color
@@ -3026,6 +2933,41 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
         private:
           constexpr static uint32_t d[] = { colors... };
       };
+
+
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Template for web safe 216 pallets. */
+      template<uint32_t...colors>
+      class csWS_tpl {
+        public:
+          constexpr static csIntType numC = (sizeof...(colors));
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
+              @return Returns a reference to \a aColor. */
+          static inline colorTpl&  c(colorRefType aColor, csIntType csIdx) { return aColor.setRGBfromLogPackIntARGB(d[csIdx % numC]);  }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
+              @return Returns a reference a colorTpl value. */
+          static inline colorTpl c(csIntType csIdx) { colorTpl tmp; return c(tmp, csIdx); }
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csCol input color to convert to a web safe color.
+              @return Returns a reference to \a aColor. */
+          static colorTpl&  c(colorRefType aColor, colorRefType csCol) {
+            aColor.copy(csCol);
+            aColor.tfrmWebSafeRGB();
+            int colIdx = 36 * (aColor.getRed_byte() / 0x33) + 6 * (aColor.getGreen_byte() / 0x33) + 1 * (aColor.getBlue_byte() / 0x33) + 1;
+            return aColor.setRGBfromLogPackIntARGB(d[colIdx]);
+          }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csCol input color to convert to a web safe color.
+              @return Returns a reference a colorTpl value. */
+          static colorTpl c(colorRefType csCol) { colorTpl tmp; return c(tmp, csCol); }
+        private:
+          constexpr static uint32_t d[] = { colors... };
+      };
+
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3510,14 +3452,14 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
       /** @name "Web Safe" Color Schemes */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** @class csFPwebSafeNormalVision
+      /** @class csWSnormalVision
           @ingroup cs
-          @extends csFP_tpl
+          @extends csWS_tpl
           The "web safe" color pallet of 216 colors as seen by someone with normal color vision.
           These colors were originally designed for low color web browsers in the early days of the internet.  Today they provide a simple (easy to compute)
           pallet for color reduction.  The colors are ordered in lexicographical ordering based upon the hexadecimal web-based color name scheme "#RRGGBB" --
-          0 maps to "#000000", and 215 maps to "#ffffff".  Note that one can transform an rgb color into the nearest web safe color via tfrmWebSafe216(). */
-      typedef csFP_tpl<0x000000, 0x000033, 0x000066, 0x000099, 0x0000CC, 0x0000FF, 0x003300, 0x003333, 0x003366, 0x003399, 0x0033CC,
+          0 maps to "#000000", and 215 maps to "#ffffff".  Note that one can transform an rgb color into the nearest web safe color via tfrmWebSafeRGB(). */
+      typedef csWS_tpl<0x000000, 0x000033, 0x000066, 0x000099, 0x0000CC, 0x0000FF, 0x003300, 0x003333, 0x003366, 0x003399, 0x0033CC,
                        0x0033FF, 0x006600, 0x006633, 0x006666, 0x006699, 0x0066CC, 0x0066FF, 0x009900, 0x009933, 0x009966, 0x009999,
                        0x0099CC, 0x0099FF, 0x00CC00, 0x00CC33, 0x00CC66, 0x00CC99, 0x00CCCC, 0x00CCFF, 0x00FF00, 0x00FF33, 0x00FF66,
                        0x00FF99, 0x00FFCC, 0x00FFFF, 0x330000, 0x330033, 0x330066, 0x330099, 0x3300CC, 0x3300FF, 0x333300, 0x333333,
@@ -3536,14 +3478,14 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
                        0xCCFF66, 0xCCFF99, 0xCCFFCC, 0xCCFFFF, 0xFF0000, 0xFF0033, 0xFF0066, 0xFF0099, 0xFF00CC, 0xFF00FF, 0xFF3300,
                        0xFF3333, 0xFF3366, 0xFF3399, 0xFF33CC, 0xFF33FF, 0xFF6600, 0xFF6633, 0xFF6666, 0xFF6699, 0xFF66CC, 0xFF66FF,
                        0xFF9900, 0xFF9933, 0xFF9966, 0xFF9999, 0xFF99CC, 0xFF99FF, 0xFFCC00, 0xFFCC33, 0xFFCC66, 0xFFCC99, 0xFFCCCC,
-                       0xFFCCFF, 0xFFFF00, 0xFFFF33, 0xFFFF66, 0xFFFF99, 0xFFFFCC, 0xFFFFFF>                                          csFPwebSafeNormalVision;
+                       0xFFCCFF, 0xFFFF00, 0xFFFF33, 0xFFFF66, 0xFFFF99, 0xFFFFCC, 0xFFFFFF>                                          csWSnormalVision;
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** @class csFPwebSafeProtanopia
+      /** @class csWSnrotanopia
           @ingroup cs
-          @extends csFP_tpl
+          @extends csWS_tpl
           The "web safe" color pallet of 216 colors as seen by someone with Protanopia.
-          For more about web safe colors, see mjr::colorTpl::csFPwebSafeNormalVision. Also seemjr::colorTpl::csFPwebSafeProtanopiaAlt. */
-      typedef csFP_tpl<0x000000, 0x002346, 0x004487, 0x0060C1, 0x0078F0, 0x719CFF, 0x312C00, 0x2E2E30, 0x0D3366, 0x0053A6,
+          For more about web safe colors, see mjr::colorTpl::csWSnormalVision. Also seemjr::colorTpl::csWSprotanopiaAlt. */
+      typedef csWS_tpl<0x000000, 0x002346, 0x004487, 0x0060C1, 0x0078F0, 0x719CFF, 0x312C00, 0x2E2E30, 0x0D3366, 0x0053A6,
                        0x006FDE, 0x5B91FF, 0x635800, 0x61592E, 0x5C5B5F, 0x4E5F93, 0x1A66CC, 0x007EFE, 0x948500, 0x93852D, 0x90865E,
                        0x8A898F, 0x7E8DC2, 0x6792F8, 0xC5B000, 0xC5B12B, 0xC3B25D, 0xBFB38D, 0xB8B6BF, 0xADBAF2, 0xF6DC00, 0xF6DD29,
                        0xF5DD5C, 0xF2DF8C, 0xEDE1BD, 0xE6E4EE, 0x1E1B08, 0x002448, 0x00468B, 0x0062C4, 0x0079F2, 0x739DFF, 0x373200,
@@ -3562,14 +3504,14 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
                        0xFFE75C, 0xFFE873, 0xFFEB97, 0xFFF1C5, 0xF8F4F8, 0x968726, 0x93874E, 0x888892, 0x6E89D7, 0x7BA0FF, 0x96B1FF,
                        0x9A8B23, 0x988B4A, 0x8F8C8B, 0x7A8ECE, 0x779DFF, 0x96B1FF, 0xAC9A1E, 0xAA9A42, 0xA59B7C, 0x999DB9, 0x82A0F6,
                        0x98B2FF, 0xC8B317, 0xC7B43A, 0xC4B470, 0xBDB6A8, 0xB1B8E0, 0xAABDFF, 0xECD30F, 0xECD435, 0xE9D469, 0xE5D69D,
-                       0xDED8D2, 0xCFD7FF, 0xFFE871, 0xFFE975, 0xFFEA86, 0xFFEDA2, 0xFFF2C8, 0xFFFAFA>                                csFPwebSafeProtanopia;
+                       0xDED8D2, 0xCFD7FF, 0xFFE871, 0xFFE975, 0xFFEA86, 0xFFEDA2, 0xFFF2C8, 0xFFFAFA>                                csWSnrotanopia;
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** @class csFPwebSafeDeutanopia
+      /** @class csWSdeutanopia
           @ingroup cs
-          @extends csFP_tpl
+          @extends csWS_tpl
           The "web safe" color pallet of 216 colors as seen by someone with Deutanopia.
-          For more about web safe colors, see mjr::colorTpl::csFPwebSafeNormalVision. Also seemjr::colorTpl::csFPwebSafeDeutanopiaAlt. */
-      typedef csFP_tpl<0x000000, 0x002135, 0x004168, 0x005E97, 0x0076BE, 0x008BDF, 0x362A0C, 0x2F2D34, 0x003E68, 0x005E9A, 0x0078C2,
+          For more about web safe colors, see mjr::colorTpl::csWSnormalVision. Also seemjr::colorTpl::csWSdeutanopiaAlt. */
+      typedef csWS_tpl<0x000000, 0x002135, 0x004168, 0x005E97, 0x0076BE, 0x008BDF, 0x362A0C, 0x2F2D34, 0x003E68, 0x005E9A, 0x0078C2,
                        0x008CE2, 0x6D5418, 0x6A5538, 0x5E5A69, 0x3D629A, 0x0078C9, 0x0090EC, 0xA37E25, 0xA27E3D, 0x9B816C, 0x8D869D,
                        0x728ECF, 0x3398FF, 0xDAA831, 0xD9A844, 0xD4AA6F, 0xCBAEA0, 0xBBB3D1, 0xA5BBFF, 0xFFCD72, 0xFFCD77, 0xFFCF87,
                        0xFFD3A6, 0xFBDAD4, 0xE6DCFF, 0x221A00, 0x131E30, 0x003F67, 0x005D96, 0x0076BF, 0x008BDF, 0x3D2F09, 0x373133,
@@ -3588,14 +3530,14 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
                        0xFFD497, 0xFFD8AB, 0xFFDECC, 0xFFEAFD, 0xA98200, 0xA8801A, 0xA2835B, 0x97888E, 0x838FC0, 0x5E98F1, 0xAE8600,
                        0xAD841C, 0xA7875C, 0x9D8B8F, 0x8A92C1, 0x679BF2, 0xC09300, 0xBF9322, 0xBB955E, 0xB19992, 0xA09FC3, 0x85A7F5,
                        0xDFAA00, 0xDEAB2A, 0xDAAC62, 0xD2B095, 0xC5B5C7, 0xB0BCF9, 0xFFC750, 0xFFC857, 0xFFCA6F, 0xFCCD99, 0xF1D2CB,
-                       0xE1D8FD, 0xFFD592, 0xFFD594, 0xFFD79D, 0xFFDAAD, 0xFFDFC8, 0xFFE8EF>                                          csFPwebSafeDeutanopia;
+                       0xE1D8FD, 0xFFD592, 0xFFD594, 0xFFD79D, 0xFFDAAD, 0xFFDFC8, 0xFFE8EF>                                          csWSdeutanopia;
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** @class csFPwebSafeTritanoptia
+      /** @class csWStritanoptia
           @ingroup cs
-          @extends csFP_tpl
+          @extends csWS_tpl
           The "web safe" color pallet of 216 colors as seen by someone with Tritanoptia.
-          For more about web safe colors, see mjr::colorTpl::csFPwebSafeNormalVision. Also seemjr::colorTpl::csFPwebSafeTritanoptiaAlt. */
-      typedef csFP_tpl<0x000000, 0x001C1D, 0x003739, 0x005155, 0x006A6E, 0x007F85, 0x173033, 0x0A3236, 0x004347, 0x00595E, 0x006F74,
+          For more about web safe colors, see mjr::colorTpl::csWSnormalVision. Also seemjr::colorTpl::csWStritanoptiaAlt. */
+      typedef csWS_tpl<0x000000, 0x001C1D, 0x003739, 0x005155, 0x006A6E, 0x007F85, 0x173033, 0x0A3236, 0x004347, 0x00595E, 0x006F74,
                        0x008389, 0x2D5F66, 0x2A6068, 0x15656D, 0x00727A, 0x00828A, 0x00929A, 0x448F9A, 0x42909A, 0x39929D, 0x1F97A3,
                        0x00A1AC, 0x00ACB7, 0x5ABFCD, 0x59BFCD, 0x54C1CF, 0x47C4D3, 0x29CAD9, 0x00D0DF, 0x73EDFF, 0x73EDFF, 0x73EEFF,
                        0x72EEFF, 0x70EFFF, 0x6EEFFF, 0x330600, 0x301517, 0x212A2D, 0x00474B, 0x006469, 0x007C82, 0x363033, 0x333236,
@@ -3614,14 +3556,14 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
                        0xDDEEFF, 0xD9EEFF, 0xD3EFFF, 0xCBEFFF, 0xFE1C00, 0xFE1A00, 0xFD2B28, 0xFA4042, 0xF6555A, 0xF06A71, 0xFF3331,
                        0xFF3332, 0xFE3D3E, 0xFB4C4F, 0xF75E63, 0xF07178, 0xFF6569, 0xFF656A, 0xFF666C, 0xFD6E74, 0xF87981, 0xF28791,
                        0xFF949C, 0xFF949D, 0xFF959E, 0xFF99A2, 0xFC9FAA, 0xF6A9B5, 0xFFBECA, 0xFFBFCA, 0xFFC0CD, 0xFFC4D1, 0xFFCAD8,
-                       0xFBD1E1, 0xFFE4F2, 0xFFE5F3, 0xFFE6F5, 0xFFEAF9, 0xFDEFFF, 0xF4F0FF>                                          csFPwebSafeTritanoptia;
+                       0xFBD1E1, 0xFFE4F2, 0xFFE5F3, 0xFFE6F5, 0xFFEAF9, 0xFDEFFF, 0xF4F0FF>                                          csWStritanoptia;
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** @class csFPwebSafeProtanopiaAlt
+      /** @class csWSprotanopiaAlt
           @ingroup cs
-          @extends csFP_tpl
+          @extends csWS_tpl
           The "web safe" color pallet of 216 colors as seen by someone with Protanopia.
-          For more about web safe colors, see mjr::colorTpl::csFPwebSafeNormalVision. Also seemjr::colorTpl::csFPwebSafeProtanopia. */
-      typedef csFP_tpl<0x000000, 0x000E33, 0x001D66, 0x002B99, 0x003ACC, 0x0048FF, 0x422F00, 0x303133, 0x003566, 0x003D99, 0x0047CC,
+          For more about web safe colors, see mjr::colorTpl::csWSnormalVision. Also seemjr::colorTpl::csWSnrotanopia. */
+      typedef csWS_tpl<0x000000, 0x000E33, 0x001D66, 0x002B99, 0x003ACC, 0x0048FF, 0x422F00, 0x303133, 0x003566, 0x003D99, 0x0047CC,
                        0x0053FF, 0x845D00, 0x7E5E33, 0x606266, 0x266699, 0x006BCC, 0x0072FF, 0xC68C00, 0xC38D33, 0xB38F66, 0x909399,
                        0x6896CC, 0x009BFF, 0xFFBB00, 0xFFBB32, 0xFCBD66, 0xE6C099, 0xC0C4CC, 0x9DC7FF, 0xFFE900, 0xFFEA31, 0xFFEB65,
                        0xFFED99, 0xFFF1CC, 0xF0F5FF, 0x1A1202, 0x001633, 0x002166, 0x002E99, 0x003BCC, 0x0049FF, 0x453100, 0x333333,
@@ -3640,14 +3582,14 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
                        0xFFF166, 0xFFF399, 0xFFF6CC, 0xF9FBFF, 0x805B0C, 0x7A5C34, 0x5C6066, 0x006399, 0x0069CC, 0x0070FF, 0x8A620C,
                        0x856334, 0x676766, 0x396A99, 0x006FCC, 0x0076FF, 0xAE7B0B, 0xAA7C34, 0x967E66, 0x738299, 0x2786CC, 0x008BFF,
                        0xE19F08, 0xDE9F33, 0xD1A166, 0xB3A599, 0x90A9CC, 0x4FACFF, 0xFFC800, 0xFFC833, 0xFFCA66, 0xFCCC99, 0xD7D1CC,
-                       0xB7D4FF, 0xFFF300, 0xFFF332, 0xFFF466, 0xFFF799, 0xFFFACC, 0xFFFFFF>                                          csFPwebSafeProtanopiaAlt;
+                       0xB7D4FF, 0xFFF300, 0xFFF332, 0xFFF466, 0xFFF799, 0xFFFACC, 0xFFFFFF>                                          csWSprotanopiaAlt;
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** @class csFPwebSafeDeutanopiaAlt
+      /** @class csWSdeutanopiaAlt
           @ingroup cs
-          @extends csFP_tpl
+          @extends csWS_tpl
           The "web safe" color pallet of 216 colors as seen by someone with Deutanopia.
-          For more about web safe colors, see mjr::colorTpl::csFPwebSafeNormalVision. Also seemjr::colorTpl::csFPwebSafeDeutanopia. */
-      typedef csFP_tpl<0x000000, 0x001433, 0x002866, 0x003C99, 0x0050CB, 0x0064FE, 0x3A2A0B, 0x2C2F33, 0x003866, 0x004699, 0x0057CB,
+          For more about web safe colors, see mjr::colorTpl::csWSnormalVision. Also seemjr::colorTpl::csWSdeutanopia. */
+      typedef csWS_tpl<0x000000, 0x001433, 0x002866, 0x003C99, 0x0050CB, 0x0064FE, 0x3A2A0B, 0x2C2F33, 0x003866, 0x004699, 0x0057CB,
                        0x0069FE, 0x755316, 0x6F5635, 0x585D67, 0x226599, 0x0070CC, 0x007EFF, 0xAF7D20, 0xAC7E39, 0x9E8468, 0x848C9A,
                        0x5F93CC, 0x009DFF, 0xEAA72B, 0xE8A83F, 0xDFAB6B, 0xCBB29B, 0xAFBBCD, 0x8FC2FF, 0xFFD036, 0xFFD146, 0xFFD46E,
                        0xFFD99D, 0xF7E1CE, 0xDBE9FF, 0x231800, 0x001F33, 0x002D66, 0x003F99, 0x0052CB, 0x0065FE, 0x412E09, 0x333333,
@@ -3666,14 +3608,14 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
                        0xFFE16C, 0xFFE69C, 0xFFEDCD, 0xF1F6FF, 0xAE7900, 0xAB7A26, 0x9D8061, 0x818996, 0x5B90CA, 0x009AFD, 0xB37D00,
                        0xB07E27, 0xA38461, 0x878C96, 0x6494CA, 0x009DFD, 0xC78C00, 0xC58D2A, 0xB99162, 0x9F9A96, 0x83A1CA, 0x47AAFD,
                        0xE9A400, 0xE7A52F, 0xDEA964, 0xCAB097, 0xAEB9CA, 0x8DC0FE, 0xFFC319, 0xFFC436, 0xFFC767, 0xFDCD99, 0xE2D6CB,
-                       0xC8DDFE, 0xFFE62B, 0xFFE73F, 0xFFE96B, 0xFFEE9B, 0xFFF5CD, 0xFFFFFF>                                          csFPwebSafeDeutanopiaAlt;
+                       0xC8DDFE, 0xFFE62B, 0xFFE73F, 0xFFE96B, 0xFFEE9B, 0xFFF5CD, 0xFFFFFF>                                          csWSdeutanopiaAlt;
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** @class csFPwebSafeTritanoptiaAlt
+      /** @class csWStritanoptiaAlt
           @ingroup cs
-          @extends csFP_tpl
+          @extends csWS_tpl
           The "web safe" color pallet of 216 colors as seen by someone with Tritanoptia.
-          For more about web safe colors, see mjr::colorTpl::csFPwebSafeNormalVision. Also seemjr::colorTpl::csFPwebSafeTritanoptia. */
-      typedef csFP_tpl<0x000000, 0x00191E, 0x00323D, 0x004B5B, 0x00647A, 0x007C98, 0x202E31, 0x113237, 0x00404A, 0x005463, 0x006A7F,
+          For more about web safe colors, see mjr::colorTpl::csWSnormalVision. Also seemjr::colorTpl::csWStritanoptia. */
+      typedef csWS_tpl<0x000000, 0x00191E, 0x00323D, 0x004B5B, 0x00647A, 0x007C98, 0x202E31, 0x113237, 0x00404A, 0x005463, 0x006A7F,
                        0x00819C, 0x415C61, 0x3C5D63, 0x21646D, 0x00707E, 0x008093, 0x0093AC, 0x618A92, 0x5F8B93, 0x548F99, 0x3296A4,
                        0x00A1B4, 0x00AFC7, 0x82B8C2, 0x80B8C3, 0x79BBC7, 0x69C0CF, 0x42C8DA, 0x00D3EA, 0xA2E6F3, 0xA1E6F3, 0x9CE8F6,
                        0x91ECFC, 0x7DF2FF, 0x53FAFF, 0x340010, 0x2C1A1C, 0x00333A, 0x004B5A, 0x006479, 0x007D98, 0x392E2F, 0x333333,
@@ -3692,7 +3634,7 @@ alias for ABGR byte array of color data, for the current platform (>= SDL 2.0.5)
                        0xEFEBEB, 0xE9EFF0, 0xDFF5FA, 0xD0FDFF, 0xFF0052, 0xFF0054, 0xFE205B, 0xF84668, 0xED6478, 0xDD818B, 0xFF095A,
                        0xFF1B5C, 0xFF3662, 0xF8506E, 0xEE6B7D, 0xDE858F, 0xFF5674, 0xFF5875, 0xFF607A, 0xFB6F83, 0xF1818F, 0xE1979E,
                        0xFF8898, 0xFF8999, 0xFF8E9C, 0xFF96A3, 0xF7A3AC, 0xE8B3B8, 0xFFB8C1, 0xFFB9C2, 0xFFBCC4, 0xFFC2C9, 0xFFCBD0,
-                       0xF2D7D9, 0xFFE7EC, 0xFFE8ED, 0xFFEAEE, 0xFFEFF2, 0xFFF6F7, 0xFFFFFF>                                          csFPwebSafeTritanoptiaAlt;
+                       0xF2D7D9, 0xFFE7EC, 0xFFE8ED, 0xFFEAEE, 0xFFEFF2, 0xFFF6F7, 0xFFFFFF>                                          csWStritanoptiaAlt;
       //@}
       //========================================================================================================================================================
       /** @name Interesting Pallets */

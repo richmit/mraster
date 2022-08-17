@@ -54,7 +54,7 @@ inner classes follow a regular naming convention:
 
   - [[#csCB][=csCB ..........=]] RGB Color Brewer 2 (template: =csCB_tpl=
   - [[#csFPmisc][=csFP ..........=]] RGB Fixed pallets (template: =csFP_tpl=
-  - [[#csFPweb][=csFPwebSafe ...=]] RGB Web safe colors (template: =csFP_tpl=)
+  - [[#csWS][=csFPwebSafe ...=]] RGB Web safe colors (template: =csFP_tpl=)
   - [[#csCCdiag][=csCCdiag ......=]] RGB color cube: diagonal gradients (template: =csCC_tpl=)
   - [[#csCCcons][=csCCcons ......=]] RGB color cube: Gradients with constant brightness (template: =csCC_tpl=)
   - [[#csCColde][=csCColde ......=]] RGB color cube: Some classic color gradients (template: =csCC_tpl=)
@@ -680,23 +680,23 @@ a continuous gradient version of each color scheme -- which is kinda weird, but 
 
 * Web Safe & Color Blind Pallets
 :PROPERTIES:
-:CUSTOM_ID: csFPweb
+:CUSTOM_ID: csWS
 :END:
 
- - =csFPwebSafeDeutanopia= :: \\
-  [[./pics/cs/color_lut_docs_csFPwebSafeDeutanopia_50.png]]
- - =csFPwebSafeDeutanopiaAlt= :: \\
-  [[./pics/cs/color_lut_docs_csFPwebSafeDeutanopiaAlt_50.png]]
- - =csFPwebSafeNormalVision= :: \\
-  [[./pics/cs/color_lut_docs_csFPwebSafeNormalVision_50.png]]
- - =csFPwebSafeProtanopia= :: \\
-  [[./pics/cs/color_lut_docs_csFPwebSafeProtanopia_50.png]]
- - =csFPwebSafeProtanopiaAlt= :: \\
-  [[./pics/cs/color_lut_docs_csFPwebSafeProtanopiaAlt_50.png]]
- - =csFPwebSafeTritanoptia= :: \\
-  [[./pics/cs/color_lut_docs_csFPwebSafeTritanoptia_50.png]]
- - =csFPwebSafeTritanoptiaAlt= :: \\
-  [[./pics/cs/color_lut_docs_csFPwebSafeTritanoptiaAlt_50.png]]
+ - =csWSSafeDeutanopia= :: \\
+  [[./pics/cs/color_lut_docs_csWSSafeDeutanopia_50.png]]
+ - =csWSSafeDeutanopiaAlt= :: \\
+  [[./pics/cs/color_lut_docs_csWSSafeDeutanopiaAlt_50.png]]
+ - =csWSSafeNormalVision= :: \\
+  [[./pics/cs/color_lut_docs_csWSSafeNormalVision_50.png]]
+ - =csWSSafeProtanopia= :: \\
+  [[./pics/cs/color_lut_docs_csWSSafeProtanopia_50.png]]
+ - =csWSSafeProtanopiaAlt= :: \\
+  [[./pics/cs/color_lut_docs_csWSSafeProtanopiaAlt_50.png]]
+ - =csWSSafeTritanoptia= :: \\
+  [[./pics/cs/color_lut_docs_csWSSafeTritanoptia_50.png]]
+ - =csWSSafeTritanoptiaAlt= :: \\
+  [[./pics/cs/color_lut_docs_csWSSafeTritanoptiaAlt_50.png]]
 
 * Miscilanious Pallets
 :PROPERTIES:

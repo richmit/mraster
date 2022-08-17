@@ -47,7 +47,7 @@ int main(void) {
   int x, y;
   int redX=512, redY=512, blueX=1024, blueY=512, greenX=768, greenY=956;
   double sLength = 512;
-  mjr::ramCanvas3c8b::colorType color;
+  mjr::ramCanvas3c8b::colorType aColor;
   mjr::ramCanvas3c8b theRamCanvas_tru(1536, 1536);
   mjr::ramCanvas3c8b theRamCanvas_web(1536, 1536);
   mjr::ramCanvas3c8b theRamCanvas_Pro(1536, 1536);
@@ -59,20 +59,14 @@ int main(void) {
       if( (sqrt(double((x-redX)  *(x-redX)  +(y-redY)  *(y-redY)))    < sLength) ||
           (sqrt(double((x-blueX) *(x-blueX) +(y-blueY) *(y-blueY)))   < sLength) ||
           (sqrt(double((x-greenX)*(x-greenX)+(y-greenY)*(y-greenY)))) < sLength) {
-        color.setChansRGB((mjr::colChanI8)(255-sqrt(double((x-redX)  *(x-redX)   +(y-redY) *(y-redY))  /sLength*255)),
-                          (mjr::colChanI8)(255-sqrt(double((x-blueX) *(x-blueX)  +(y-blueY)*(y-blueY)) /sLength*255)),
-                          (mjr::colChanI8)(255-sqrt(double((x-greenX)*(x-greenX)+(y-greenY)*(y-greenY))/sLength*255)));
-        mjr::ramCanvas3c8b::colorType tmpColor;
-        tmpColor = color;
-        theRamCanvas_tru.drawPoint(x, y, tmpColor);
-        tmpColor = color;
-        theRamCanvas_web.drawPoint(x, y, tmpColor.tfrmWebSafe216());
-        tmpColor = color;
-        theRamCanvas_Pro.drawPoint(x, y, tmpColor.tfrmWebSafePro216());
-        tmpColor = color;
-        theRamCanvas_Deu.drawPoint(x, y, tmpColor.tfrmWebSafeDeu216());
-        tmpColor = color;
-        theRamCanvas_Tri.drawPoint(x, y, tmpColor.tfrmWebSafeTri216());
+        aColor.setChansRGB((mjr::colChanI8)(255-sqrt(double((x-redX)  *(x-redX)   +(y-redY) *(y-redY))  /sLength*255)),
+                           (mjr::colChanI8)(255-sqrt(double((x-blueX) *(x-blueX)  +(y-blueY)*(y-blueY)) /sLength*255)),
+                           (mjr::colChanI8)(255-sqrt(double((x-greenX)*(x-greenX)+(y-greenY)*(y-greenY))/sLength*255)));
+        theRamCanvas_tru.drawPoint(x, y, aColor);
+        theRamCanvas_web.drawPoint(x, y, mjr::color3c8b::csWSnormalVision::c(aColor));
+        theRamCanvas_Pro.drawPoint(x, y, mjr::color3c8b::csWSnrotanopia::c(aColor));
+        theRamCanvas_Deu.drawPoint(x, y, mjr::color3c8b::csWSdeutanopia::c(aColor));
+        theRamCanvas_Tri.drawPoint(x, y, mjr::color3c8b::csWStritanoptia::c(aColor));
       }
     }
   }

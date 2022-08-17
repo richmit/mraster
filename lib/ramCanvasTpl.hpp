@@ -2741,9 +2741,9 @@ namespace mjr {
 
       colorT c1;
       colorT c2;
-      c1.interplColors(wH, getPxColorRefNC(x1i, y1i), getPxColorRefNC(x2i, y1i));
-      c2.interplColors(wH, getPxColorRefNC(x1i, y2i), getPxColorRefNC(x2i, y2i));
-      cF.interplColors(wV, c1, c2);
+      c1.linearInterpolate(wH, getPxColorRefNC(x1i, y1i), getPxColorRefNC(x2i, y1i));
+      c2.linearInterpolate(wH, getPxColorRefNC(x1i, y2i), getPxColorRefNC(x2i, y2i));
+      cF.linearInterpolate(wV, c1, c2);
     } else {
       cF.setToBlack();
     }

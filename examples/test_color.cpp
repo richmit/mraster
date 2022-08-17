@@ -112,7 +112,6 @@ int main(void) {
   aColor.tfrmNxor(bColor);                                         std::cout << "aColor.tfrmNxor(bColor);                       " << aColor << std::endl;
   aColor.tfrmNot();                                                std::cout << "aColor.tfrmNot();                              " << aColor << std::endl;
   aColor.tfrmMultClamp(bColor);                                      std::cout << "aColor.tfrmMultClamp(bColor);                    " << aColor << std::endl;
-  aColor.tfrmGmeanClamp(bColor);                                     std::cout << "aColor.tfrmGmeanClamp(bColor);                   " << aColor << std::endl;
   aColor.tfrmAddClamp(bColor);                                       std::cout << "aColor.tfrmAddClamp(bColor);                     " << aColor << std::endl;
   aColor.tfrmAddDivClamp(bColor, cColor);                            std::cout << "aColor.tfrmAddDivClamp(bColor, cColor);          " << aColor << std::endl;
   aColor.tfrmDiffClamp(bColor);                                      std::cout << "aColor.tfrmDiffClamp(bColor);                    " << aColor << std::endl;
@@ -124,7 +123,6 @@ int main(void) {
   aColor.tfrmAdd(bColor);                                          std::cout << "aColor.tfrmAdd(bColor);                        " << aColor << std::endl;
   aColor.tfrmDiv(bColor);                                          std::cout << "aColor.tfrmDiv(bColor);                        " << aColor << std::endl;
   aColor.tfrmMult(bColor);                                         std::cout << "aColor.tfrmMult(bColor);                       " << aColor << std::endl;
-  aColor.tfrmGmean(bColor);                                        std::cout << "aColor.tfrmGmean(bColor);                      " << aColor << std::endl;
   aColor.tfrmMean(bColor);                                         std::cout << "aColor.tfrmMean(bColor);                       " << aColor << std::endl;
   aColor.tfrmDiff(bColor);                                         std::cout << "aColor.tfrmDiff(bColor);                       " << aColor << std::endl;
   aColor.tfrmMod(bColor);                                          std::cout << "aColor.tfrmMod(bColor);                        " << aColor << std::endl;
@@ -199,7 +197,6 @@ int main(void) {
   jColor.tfrmNxor(kColor);                                         std::cout << "jColor.tfrmNxor(kColor);                       " << jColor << std::endl;
   jColor.tfrmNot();                                                std::cout << "jColor.tfrmNot();                              " << jColor << std::endl;
   jColor.tfrmMultClamp(kColor);                                      std::cout << "jColor.tfrmMultClamp(kColor);                    " << jColor << std::endl;
-  jColor.tfrmGmeanClamp(kColor);                                     std::cout << "jColor.tfrmGmeanClamp(kColor);                   " << jColor << std::endl;
   jColor.tfrmAddClamp(kColor);                                       std::cout << "jColor.tfrmAddClamp(kColor);                     " << jColor << std::endl;
   jColor.tfrmAddDivClamp(kColor, lColor);                            std::cout << "jColor.tfrmAddDivClamp(kColor, lColor);          " << jColor << std::endl;
   jColor.tfrmDiffClamp(kColor);                                      std::cout << "jColor.tfrmDiffClamp(kColor);                    " << jColor << std::endl;

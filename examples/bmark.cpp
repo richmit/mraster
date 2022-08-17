@@ -153,7 +153,7 @@ int main(void) {
   for(int i=0;i<REPS*16;i++)
     for(int y=0;y<=xMax;y++)
       for(int x=0;x<=yMax;x++)
-          theRamCanvas.drawPoint(x, y, cColor.interplColors(x/(double)xMax, aColor, bColor));
+          theRamCanvas.drawPoint(x, y, cColor.linearInterpolate(x/(double)xMax, aColor, bColor));
   bmEndTime = std::chrono::system_clock::now();
   bmTime = std::chrono::system_clock::now() - bmStartTime;
   std::cout << "  DO_RAMP Runtime " << bmTime.count() << " sec" << std::endl;

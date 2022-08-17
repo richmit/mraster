@@ -7,6 +7,11 @@
 
 TAG_NAME="$1"
 
+if git show-ref --tags "$TAG_NAME" --quiet; then
+  echo "Tag already exists!!"
+  exit
+fi
+
 if [ -e CMakeLists.txt ]; then
   echo "Found CMakeLists.txt"
 else
