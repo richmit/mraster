@@ -1189,7 +1189,7 @@ namespace mjr {
           @param S The Saturation.
           @param L The Lightness or Luminescence
           @return Returns a reference to the current color object. */
-      inline colorTpl& setRGBfromUnitHSL(double H, double S, double L) { return setRGBfromColorSpace(colorSpaceEnum::HSL, H*360.0, L, S); }
+      inline colorTpl& setRGBfromUnitHSL(double H, double S, double L) { return setRGBfromColorSpace(colorSpaceEnum::HSL, H*360.0, S, L); }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the color indicated by the color space and values.
           @param space The colorspace

@@ -43,7 +43,7 @@
 
 #include "ramCanvas.hpp"
 
-#if 1
+#if 0
 
 // +----+---------------------------------------------------------------------------------------------------------------
 // |    | Method
@@ -145,8 +145,6 @@
 // |    | setRGBfromColorSpace(colorSpaceEnum space, colorTpl<double, 3> inColor);
 // |    | interplColorSpace(colorSpaceEnum space, double aDouble, colorArgType col1, colorArgType col2);
 // +----+---------------------------------------------------------------------------------------------------------------
-// |    | interplColors(double aDouble, colorArgType col1, colorArgType col2);
-// +----+---------------------------------------------------------------------------------------------------------------
 // |    | rgb2colorSpace(colorSpaceEnum space);
 // |    | colorSpaceToString(colorSpaceEnum space);
 // +----+---------------------------------------------------------------------------------------------------------------
@@ -170,6 +168,7 @@
 // | ** | uMean( 7 args
 // | ** | uMean( 5 args
 // | ** | uMean( 3 args
+// | ** | linearInterpolate(double aDouble, colorArgType col1, colorArgType col2);
 // +----+---------------------------------------------------------------------------------------------------------------
 // | ** | tfrmOr(colorArgType aCol)         No coverage for floating point clrChanT
 // | ** | tfrmNor(colorArgType aCol)        No coverage for floating point clrChanT
@@ -5594,140 +5593,6 @@ BOOST_AUTO_TEST_CASE(csCColdeRainbow_flt, * boost::unit_test::tolerance(0.01)) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(wmean, * boost::unit_test::tolerance(0.01)) {
-
-  mjr::colorRGBA8b a1Color(10, 20, 30, 40);
-  mjr::colorRGBA8b a2Color(10, 30, 20, 40);
-  mjr::colorRGBA8b a3Color(40, 20, 30, 10);
-  mjr::colorRGBA8b a4Color(90, 70, 10, 20);
-
-  mjr::colorRGBA8b aColor;
-
-  mjr::colorRGBA32F b1Color(10, 20, 30, 40);
-  mjr::colorRGBA32F b2Color(10, 30, 20, 40);
-  mjr::colorRGBA32F b3Color(40, 20, 30, 10);
-  mjr::colorRGBA32F b4Color(90, 70, 10, 20);
-
-  mjr::colorRGBA32F bColor;
-
- ////////////////////////////////////////////////////////////////////////////////
-
- aColor.wMean(1.0F, 1.0F, a1Color, a2Color);
- BOOST_TEST_CHECK(aColor.getC0() == 20);
- BOOST_TEST_CHECK(aColor.getC1() == 50);
- BOOST_TEST_CHECK(aColor.getC2() == 50);
- BOOST_TEST_CHECK(aColor.getC3() == 80);
-
- aColor.wMean(1.0F, 1.0F, 1.0F, a1Color, a2Color, a3Color);
- BOOST_TEST_CHECK(aColor.getC0() == 60);
- BOOST_TEST_CHECK(aColor.getC1() == 70);
- BOOST_TEST_CHECK(aColor.getC2() == 80);
- BOOST_TEST_CHECK(aColor.getC3() == 90);
-
- aColor.wMean(1.0F, 1.0F, 1.0F, 1.0F, a1Color, a2Color, a3Color, a4Color);
- BOOST_TEST_CHECK(aColor.getC0() == 150);
- BOOST_TEST_CHECK(aColor.getC1() == 140);
- BOOST_TEST_CHECK(aColor.getC2() ==  90);
- BOOST_TEST_CHECK(aColor.getC3() == 110);
-
- aColor.wMean(0.1F, 1.0F, a1Color, a2Color);
- BOOST_TEST_CHECK(aColor.getC0() == 11);
- BOOST_TEST_CHECK(aColor.getC1() == 32);
- BOOST_TEST_CHECK(aColor.getC2() == 23);
- BOOST_TEST_CHECK(aColor.getC3() == 44);
-
- aColor.wMean(0.1F, 1.0F, 1.0F, a1Color, a2Color, a3Color);
- BOOST_TEST_CHECK(aColor.getC0() == 51);
- BOOST_TEST_CHECK(aColor.getC1() == 52);
- BOOST_TEST_CHECK(aColor.getC2() == 53);
- BOOST_TEST_CHECK(aColor.getC3() == 54);
-
- aColor.wMean(0.1F, 1.0F, 1.0F, 1.0F, a1Color, a2Color, a3Color, a4Color);
- BOOST_TEST_CHECK(aColor.getC0() == 141);
- BOOST_TEST_CHECK(aColor.getC1() == 122);
- BOOST_TEST_CHECK(aColor.getC2() ==  63);
- BOOST_TEST_CHECK(aColor.getC3() ==  74);
-
- ////////////////////////////////////////////////////////////////////////////////
-
- bColor.wMean(1.0F, 1.0F, b1Color, b2Color);
- BOOST_TEST_CHECK(bColor.getC0() == 20);
- BOOST_TEST_CHECK(bColor.getC1() == 50);
- BOOST_TEST_CHECK(bColor.getC2() == 50);
- BOOST_TEST_CHECK(bColor.getC3() == 80);
-
- bColor.wMean(1.0F, 1.0F, 1.0F, b1Color, b2Color, b3Color);
- BOOST_TEST_CHECK(bColor.getC0() == 60);
- BOOST_TEST_CHECK(bColor.getC1() == 70);
- BOOST_TEST_CHECK(bColor.getC2() == 80);
- BOOST_TEST_CHECK(bColor.getC3() == 90);
-
- bColor.wMean(1.0F, 1.0F, 1.0F, 1.0F, b1Color, b2Color, b3Color, b4Color);
- BOOST_TEST_CHECK(bColor.getC0() == 150);
- BOOST_TEST_CHECK(bColor.getC1() == 140);
- BOOST_TEST_CHECK(bColor.getC2() ==  90);
- BOOST_TEST_CHECK(bColor.getC3() == 110);
-
- bColor.wMean(0.1F, 1.0F, b1Color, b2Color);
- BOOST_TEST_CHECK(bColor.getC0() == 11);
- BOOST_TEST_CHECK(bColor.getC1() == 32);
- BOOST_TEST_CHECK(bColor.getC2() == 23);
- BOOST_TEST_CHECK(bColor.getC3() == 44);
-
- bColor.wMean(0.1F, 1.0F, 1.0F, b1Color, b2Color, b3Color);
- BOOST_TEST_CHECK(bColor.getC0() == 51);
- BOOST_TEST_CHECK(bColor.getC1() == 52);
- BOOST_TEST_CHECK(bColor.getC2() == 53);
- BOOST_TEST_CHECK(bColor.getC3() == 54);
-
- bColor.wMean(0.1F, 1.0F, 1.0F, 1.0F, b1Color, b2Color, b3Color, b4Color);
- BOOST_TEST_CHECK(bColor.getC0() == 141);
- BOOST_TEST_CHECK(bColor.getC1() == 122);
- BOOST_TEST_CHECK(bColor.getC2() ==  63);
- BOOST_TEST_CHECK(bColor.getC3() ==  74);
-
- ////////////////////////////////////////////////////////////////////////////////
- aColor.uMean(0.2F, a1Color, a2Color);
- BOOST_TEST_CHECK(aColor.getC0() == .2*10+.8*10);
- BOOST_TEST_CHECK(aColor.getC1() == .2*20+.8*30);
- BOOST_TEST_CHECK(aColor.getC2() == .2*30+.8*20);
- BOOST_TEST_CHECK(aColor.getC3() == .2*40+.8*40);
-
- aColor.uMean(0.1F, 0.3F, a1Color, a2Color, a3Color);
- BOOST_TEST_CHECK(aColor.getC0() == .1*10+.3*10+0.6*40);
- BOOST_TEST_CHECK(aColor.getC1() == .1*20+.3*30+0.6*20);
- BOOST_TEST_CHECK(aColor.getC2() == .1*30+.3*20+0.6*30);
- BOOST_TEST_CHECK(aColor.getC3() == .1*40+.3*40+0.6*10);
-
- aColor.uMean(0.1F, 0.3F, 0.4F, a1Color, a2Color, a3Color, a4Color);
- BOOST_TEST_CHECK(aColor.getC0() == .1*10+.3*10+0.4*40+0.2*90);
- BOOST_TEST_CHECK(aColor.getC1() == .1*20+.3*30+0.4*20+0.2*70);
- BOOST_TEST_CHECK(aColor.getC2() == .1*30+.3*20+0.4*30+0.2*10);
- BOOST_TEST_CHECK(aColor.getC3() == .1*40+.3*40+0.4*10+0.2*20);
-
- ////////////////////////////////////////////////////////////////////////////////
-
- bColor.uMean(0.2F, b1Color, b2Color);
- BOOST_TEST_CHECK(bColor.getC0() == .2*10+.8*10);
- BOOST_TEST_CHECK(bColor.getC1() == .2*20+.8*30);
- BOOST_TEST_CHECK(bColor.getC2() == .2*30+.8*20);
- BOOST_TEST_CHECK(bColor.getC3() == .2*40+.8*40);
-
- bColor.uMean(0.1F, 0.3F, b1Color, b2Color, b3Color);
- BOOST_TEST_CHECK(bColor.getC0() == .1*10+.3*10+0.6*40);
- BOOST_TEST_CHECK(bColor.getC1() == .1*20+.3*30+0.6*20);
- BOOST_TEST_CHECK(bColor.getC2() == .1*30+.3*20+0.6*30);
- BOOST_TEST_CHECK(bColor.getC3() == .1*40+.3*40+0.6*10);
-
- bColor.uMean(0.1F, 0.3F, 0.4F, b1Color, b2Color, b3Color, b4Color);
- BOOST_TEST_CHECK(bColor.getC0() == .1*10+.3*10+0.4*40+0.2*90);
- BOOST_TEST_CHECK(bColor.getC1() == .1*20+.3*30+0.4*20+0.2*70);
- BOOST_TEST_CHECK(bColor.getC2() == .1*30+.3*20+0.4*30+0.2*10);
- BOOST_TEST_CHECK(bColor.getC3() == .1*40+.3*40+0.4*10+0.2*20);
-
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(tfrm_misc) {
 
   mjr::colorRGB8b aColor;
@@ -6199,9 +6064,211 @@ BOOST_AUTO_TEST_CASE(tfrm_GryLevSclflt, * boost::unit_test::tolerance(0.00001)) 
   BOOST_TEST_CHECK(cColor.getAlpha() ==  0.0);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(wmean, * boost::unit_test::tolerance(0.01)) {
+
+  mjr::colorRGBA8b a1Color(10, 20, 30, 40);
+  mjr::colorRGBA8b a2Color(10, 30, 20, 40);
+  mjr::colorRGBA8b a3Color(40, 20, 30, 10);
+  mjr::colorRGBA8b a4Color(90, 70, 10, 20);
+
+  mjr::colorRGBA8b aColor;
+  mjr::colorRGBA8b cColor;
+
+  mjr::colorRGBA32F b1Color(10, 20, 30, 40);
+  mjr::colorRGBA32F b2Color(10, 30, 20, 40);
+  mjr::colorRGBA32F b3Color(40, 20, 30, 10);
+  mjr::colorRGBA32F b4Color(90, 70, 10, 20);
+
+  mjr::colorRGBA32F bColor;
+
+ ////////////////////////////////////////////////////////////////////////////////
+
+ aColor.wMean(1.0F, 1.0F, a1Color, a2Color);
+ BOOST_TEST_CHECK(aColor.getC0() == 20);
+ BOOST_TEST_CHECK(aColor.getC1() == 50);
+ BOOST_TEST_CHECK(aColor.getC2() == 50);
+ BOOST_TEST_CHECK(aColor.getC3() == 80);
+
+ aColor.wMean(1.0F, 1.0F, 1.0F, a1Color, a2Color, a3Color);
+ BOOST_TEST_CHECK(aColor.getC0() == 60);
+ BOOST_TEST_CHECK(aColor.getC1() == 70);
+ BOOST_TEST_CHECK(aColor.getC2() == 80);
+ BOOST_TEST_CHECK(aColor.getC3() == 90);
+
+ aColor.wMean(1.0F, 1.0F, 1.0F, 1.0F, a1Color, a2Color, a3Color, a4Color);
+ BOOST_TEST_CHECK(aColor.getC0() == 150);
+ BOOST_TEST_CHECK(aColor.getC1() == 140);
+ BOOST_TEST_CHECK(aColor.getC2() ==  90);
+ BOOST_TEST_CHECK(aColor.getC3() == 110);
+
+ aColor.wMean(0.1F, 1.0F, a1Color, a2Color);
+ BOOST_TEST_CHECK(aColor.getC0() == 11);
+ BOOST_TEST_CHECK(aColor.getC1() == 32);
+ BOOST_TEST_CHECK(aColor.getC2() == 23);
+ BOOST_TEST_CHECK(aColor.getC3() == 44);
+
+ aColor.wMean(0.1F, 1.0F, 1.0F, a1Color, a2Color, a3Color);
+ BOOST_TEST_CHECK(aColor.getC0() == 51);
+ BOOST_TEST_CHECK(aColor.getC1() == 52);
+ BOOST_TEST_CHECK(aColor.getC2() == 53);
+ BOOST_TEST_CHECK(aColor.getC3() == 54);
+
+ aColor.wMean(0.1F, 1.0F, 1.0F, 1.0F, a1Color, a2Color, a3Color, a4Color);
+ BOOST_TEST_CHECK(aColor.getC0() == 141);
+ BOOST_TEST_CHECK(aColor.getC1() == 122);
+ BOOST_TEST_CHECK(aColor.getC2() ==  63);
+ BOOST_TEST_CHECK(aColor.getC3() ==  74);
+
+ ////////////////////////////////////////////////////////////////////////////////
+
+ bColor.wMean(1.0F, 1.0F, b1Color, b2Color);
+ BOOST_TEST_CHECK(bColor.getC0() == 20);
+ BOOST_TEST_CHECK(bColor.getC1() == 50);
+ BOOST_TEST_CHECK(bColor.getC2() == 50);
+ BOOST_TEST_CHECK(bColor.getC3() == 80);
+
+ bColor.wMean(1.0F, 1.0F, 1.0F, b1Color, b2Color, b3Color);
+ BOOST_TEST_CHECK(bColor.getC0() == 60);
+ BOOST_TEST_CHECK(bColor.getC1() == 70);
+ BOOST_TEST_CHECK(bColor.getC2() == 80);
+ BOOST_TEST_CHECK(bColor.getC3() == 90);
+
+ bColor.wMean(1.0F, 1.0F, 1.0F, 1.0F, b1Color, b2Color, b3Color, b4Color);
+ BOOST_TEST_CHECK(bColor.getC0() == 150);
+ BOOST_TEST_CHECK(bColor.getC1() == 140);
+ BOOST_TEST_CHECK(bColor.getC2() ==  90);
+ BOOST_TEST_CHECK(bColor.getC3() == 110);
+
+ bColor.wMean(0.1F, 1.0F, b1Color, b2Color);
+ BOOST_TEST_CHECK(bColor.getC0() == 11);
+ BOOST_TEST_CHECK(bColor.getC1() == 32);
+ BOOST_TEST_CHECK(bColor.getC2() == 23);
+ BOOST_TEST_CHECK(bColor.getC3() == 44);
+
+ bColor.wMean(0.1F, 1.0F, 1.0F, b1Color, b2Color, b3Color);
+ BOOST_TEST_CHECK(bColor.getC0() == 51);
+ BOOST_TEST_CHECK(bColor.getC1() == 52);
+ BOOST_TEST_CHECK(bColor.getC2() == 53);
+ BOOST_TEST_CHECK(bColor.getC3() == 54);
+
+ bColor.wMean(0.1F, 1.0F, 1.0F, 1.0F, b1Color, b2Color, b3Color, b4Color);
+ BOOST_TEST_CHECK(bColor.getC0() == 141);
+ BOOST_TEST_CHECK(bColor.getC1() == 122);
+ BOOST_TEST_CHECK(bColor.getC2() ==  63);
+ BOOST_TEST_CHECK(bColor.getC3() ==  74);
+
+
+ ////////////////////////////////////////////////////////////////////////////////
+
+ aColor.linearInterpolate(0.0, a1Color, a2Color);
+ BOOST_TEST_CHECK(aColor.getC0() == a1Color.getC0());
+ BOOST_TEST_CHECK(aColor.getC1() == a1Color.getC1());
+ BOOST_TEST_CHECK(aColor.getC2() == a1Color.getC2());
+ BOOST_TEST_CHECK(aColor.getC3() == a1Color.getC3());
+
+ aColor.linearInterpolate(1.0, a1Color, a2Color);
+ BOOST_TEST_CHECK(aColor.getC0() == a2Color.getC0());
+ BOOST_TEST_CHECK(aColor.getC1() == a2Color.getC1());
+ BOOST_TEST_CHECK(aColor.getC2() == a2Color.getC2());
+ BOOST_TEST_CHECK(aColor.getC3() == a2Color.getC3());
+
+ aColor.linearInterpolate(0.5, a1Color, a2Color);
+ cColor.uMean(0.5F, a1Color, a2Color);
+ BOOST_TEST_CHECK(aColor.getC0() == cColor.getC0());
+ BOOST_TEST_CHECK(aColor.getC1() == cColor.getC1());
+ BOOST_TEST_CHECK(aColor.getC2() == cColor.getC2());
+ BOOST_TEST_CHECK(aColor.getC3() == cColor.getC3());
+
+ aColor.linearInterpolate(0.25, a1Color, a2Color);
+ cColor.uMean(0.75F, a1Color, a2Color);
+ BOOST_TEST_CHECK(aColor.getC0() == cColor.getC0());
+ BOOST_TEST_CHECK(aColor.getC1() == cColor.getC1());
+ BOOST_TEST_CHECK(aColor.getC2() == cColor.getC2());
+ BOOST_TEST_CHECK(aColor.getC3() == cColor.getC3());
+
+ aColor.linearInterpolate(0.75, a1Color, a2Color);
+ cColor.uMean(0.25F, a1Color, a2Color);
+ BOOST_TEST_CHECK(aColor.getC0() == cColor.getC0());
+ BOOST_TEST_CHECK(aColor.getC1() == cColor.getC1());
+ BOOST_TEST_CHECK(aColor.getC2() == cColor.getC2());
+ BOOST_TEST_CHECK(aColor.getC3() == cColor.getC3());
+
+ ////////////////////////////////////////////////////////////////////////////////
+ aColor.uMean(0.2F, a1Color, a2Color);
+ BOOST_TEST_CHECK(aColor.getC0() == .2*10+.8*10);
+ BOOST_TEST_CHECK(aColor.getC1() == .2*20+.8*30);
+ BOOST_TEST_CHECK(aColor.getC2() == .2*30+.8*20);
+ BOOST_TEST_CHECK(aColor.getC3() == .2*40+.8*40);
+
+ aColor.uMean(0.1F, 0.3F, a1Color, a2Color, a3Color);
+ BOOST_TEST_CHECK(aColor.getC0() == .1*10+.3*10+0.6*40);
+ BOOST_TEST_CHECK(aColor.getC1() == .1*20+.3*30+0.6*20);
+ BOOST_TEST_CHECK(aColor.getC2() == .1*30+.3*20+0.6*30);
+ BOOST_TEST_CHECK(aColor.getC3() == .1*40+.3*40+0.6*10);
+
+ aColor.uMean(0.1F, 0.3F, 0.4F, a1Color, a2Color, a3Color, a4Color);
+ BOOST_TEST_CHECK(aColor.getC0() == .1*10+.3*10+0.4*40+0.2*90);
+ BOOST_TEST_CHECK(aColor.getC1() == .1*20+.3*30+0.4*20+0.2*70);
+ BOOST_TEST_CHECK(aColor.getC2() == .1*30+.3*20+0.4*30+0.2*10);
+ BOOST_TEST_CHECK(aColor.getC3() == .1*40+.3*40+0.4*10+0.2*20);
+
+ ////////////////////////////////////////////////////////////////////////////////
+
+ bColor.uMean(0.2F, b1Color, b2Color);
+ BOOST_TEST_CHECK(bColor.getC0() == .2*10+.8*10);
+ BOOST_TEST_CHECK(bColor.getC1() == .2*20+.8*30);
+ BOOST_TEST_CHECK(bColor.getC2() == .2*30+.8*20);
+ BOOST_TEST_CHECK(bColor.getC3() == .2*40+.8*40);
+
+ bColor.uMean(0.1F, 0.3F, b1Color, b2Color, b3Color);
+ BOOST_TEST_CHECK(bColor.getC0() == .1*10+.3*10+0.6*40);
+ BOOST_TEST_CHECK(bColor.getC1() == .1*20+.3*30+0.6*20);
+ BOOST_TEST_CHECK(bColor.getC2() == .1*30+.3*20+0.6*30);
+ BOOST_TEST_CHECK(bColor.getC3() == .1*40+.3*40+0.6*10);
+
+ bColor.uMean(0.1F, 0.3F, 0.4F, b1Color, b2Color, b3Color, b4Color);
+ BOOST_TEST_CHECK(bColor.getC0() == .1*10+.3*10+0.4*40+0.2*90);
+ BOOST_TEST_CHECK(bColor.getC1() == .1*20+.3*30+0.4*20+0.2*70);
+ BOOST_TEST_CHECK(bColor.getC2() == .1*30+.3*20+0.4*30+0.2*10);
+ BOOST_TEST_CHECK(bColor.getC3() == .1*40+.3*40+0.4*10+0.2*20);
+
+}
+
 #endif
 
+
 /** @endcond */
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(colorSpaces, * boost::unit_test::tolerance(0.01)) {
+
+  mjr::colorRGB8b aColor;
+  //mjr::colorRGBA8b bColor;
+
+
+  std::cout << aColor.setRGBfromUnitHSL(  0/360.0, 1, 0.5) << std::endl;
+  std::cout << aColor.setRGBfromUnitHSL( 60/360.0, 1, 0.5) << std::endl;
+  std::cout << aColor.setRGBfromUnitHSL(120/360.0, 1, 0.5) << std::endl;
+  std::cout << aColor.setRGBfromUnitHSL(180/360.0, 1, 0.5) << std::endl;
+  std::cout << aColor.setRGBfromUnitHSL(240/360.0, 1, 0.5) << std::endl;
+  std::cout << aColor.setRGBfromUnitHSL(300/360.0, 1, 0.5) << std::endl;
+  std::cout << aColor.setRGBfromUnitHSL(360/360.0, 1, 0.5) << std::endl;
+
+
+  // std::cout << aColor.setRGBfromUnitHSV(  0/360.0, 1, 1) << std::endl;
+  // std::cout << aColor.setRGBfromUnitHSV( 60/360.0, 1, 1) << std::endl;
+  // std::cout << aColor.setRGBfromUnitHSV(120/360.0, 1, 1) << std::endl;
+  // std::cout << aColor.setRGBfromUnitHSV(180/360.0, 1, 1) << std::endl;
+  // std::cout << aColor.setRGBfromUnitHSV(240/360.0, 1, 1) << std::endl;
+  // std::cout << aColor.setRGBfromUnitHSV(300/360.0, 1, 1) << std::endl;
+  // std::cout << aColor.setRGBfromUnitHSV(360/360.0, 1, 1) << std::endl;
+
+}
+  
+
+// |    | setRGBfromUnitHSV(double H, double S, double V);
+// |    | setRGBfromUnitHSL(double H, double S, double L);
 
 
 // So far: 3270 tests
