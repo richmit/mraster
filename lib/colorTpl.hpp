@@ -590,13 +590,13 @@ namespace mjr {
                                  };
       /** Color spaces.
           This ENUM is used by setRGBfromColorSpace(), interplColorSpace(), and rgb2colorSpace().  In this context these color spaces use double values for each
-          channel.  Angles (the H of HSV, HSL, & LAB) are in degrees, and will always be normalized to [0, 360).  */
-      enum class colorSpaceEnum { RGB, //!< RGB color space.  Note: R, G, & B are in [0, 1] not [0, 255]
-                                  HSL, //!< HSL color space.  Note: S & L are in [0, 1] not [0, 100]
-                                  HSV, //!< HSV color space.
-                                  LAB, //!< CIE-L*ab color space.
-                                  XYZ, //!< XYZ color space.
-                                  LCH, //!< CIE-L*ch color space.
+          channel.  Angles (the H of HSV, HSL, & LCH) are in degrees, and will always be normalized to [0, 360).  */
+      enum class colorSpaceEnum { RGB, //!< RGB color space.       R in [0, 1].   G in [0, 1].   B in [0, 1].
+                                  HSL, //!< HSL color space.       H in [0, 360]. S in [0, 1].   L in [0, 1].
+                                  HSV, //!< HSV color space.       H in [0, 360]. S in [0, 1].   V in [0, 1].
+                                  LAB, //!< CIE-L*ab color space.  L in [0, 100]. A in REALS.    B in REALS.
+                                  XYZ, //!< XYZ color space.       X in [0, 1].   Y in [0, 1].   Z in [0, 1].
+                                  LCH, //!< CIE-L*ch color space.  L in [0, 100]. C in [0, 100]. H in [0, 360]
                                   NONE //!< Used when the color channels don't have an assocaited color space
                                 };
       /** Interpolation methods for emperical color matching functions. */
@@ -1196,6 +1196,7 @@ namespace mjr {
           @param inCh3 Channel three value for given colorspace
           @return Returns a reference to the current color object. */
       inline colorTpl& setRGBfromColorSpace(colorSpaceEnum space, double inCh1, double inCh2, double inCh3) {
+        // Note: If space==RGB => C0==R, C1=G, C2=B regardless of redChan, blueChan, & greenChan.
         double outR = 0.0, outG = 0.0, outB = 0.0;
         if (space == colorSpaceEnum::HSL) {
           if( (inCh3 >= 0.0) && (inCh3 <= 1.0) && (inCh2 >= 0.0) && (inCh2 <= 1.0) ) {
@@ -2338,11 +2339,11 @@ namespace mjr {
           @param space The color space to convert to
           @return An RGB color with double channels. */
       inline colSpaceDblTrip rgb2colorSpace(colorSpaceEnum space) {
-        /* Requires: Inherits numChan>2 from getC2. */
+        /* Requires: Inherits numChan>2 from getBlue. */
 
-        double redF   = getC0_dbl();
-        double greenF = getC1_dbl();
-        double blueF  = getC2_dbl();
+        double redF   = getRed_dbl();
+        double greenF = getGreen_dbl();
+        double blueF  = getBlue_dbl();
 
         if (space == colorSpaceEnum::RGB)
           return colSpaceDblTrip(redF, greenF, blueF);
@@ -2380,11 +2381,11 @@ namespace mjr {
             }
 
             H = 0.0;
-            if(getC0() == rgbMaxI)
+            if(getRed() == rgbMaxI)
               H = 0.0 + (greenF - blueF) / rangeF;
-            else if(getC1() == rgbMaxI)
+            else if(getGreen() == rgbMaxI)
               H = 2.0 + (blueF - redF) / rangeF;
-            else if(getC2() == rgbMaxI)
+            else if(getBlue() == rgbMaxI)
               H = 4.0 + (redF - greenF) / rangeF;
             H = realWrap(H * 60.0, 360.0);
           }
