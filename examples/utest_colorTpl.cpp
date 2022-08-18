@@ -43,7 +43,7 @@
 
 #include "ramCanvas.hpp"
 
-#if 1
+#if 0
 
 // |----------+--------------------------------------------------------------------------------------------------------------|
 // | Coverage | Method                                                                                                       |
@@ -142,7 +142,7 @@
 // | DIRECT   | setRGBfromUnitHSV(double H, double S, double V);                                                             |
 // | DIRECT   | setRGBfromUnitHSL(double H, double S, double L);                                                             |
 // | DIRECT   | setRGBfromColorSpace(colorSpaceEnum space, double inCh1, double inCh2, double inCh3);                        |
-// |          | setRGBfromColorSpace(colorSpaceEnum space, colorTpl<double, 3> inColor);                                     |
+// | SIMILAR  | setRGBfromColorSpace(colorSpaceEnum space, colorTpl<double, 3> inColor);                                     |
 // |          | interplColorSpace(colorSpaceEnum space, double aDouble, colorArgType col1, colorArgType col2);               |
 // | DIRECT   | rgb2colorSpace(colorSpaceEnum space);                                                                        |
 // |          | colorSpaceToString(colorSpaceEnum space);                                                                    |
@@ -328,31 +328,31 @@
 // |----------+--------------------------------------------------------------------------------------------------------------|
 // | INDIRECT | csCubeHelix_tpl                                                                                              |
 // |----------+--------------------------------------------------------------------------------------------------------------|
-// |          | csFP_tpl                                                                                                     |
+// | INDIRECT | csFP_tpl                                                                                                     |
 // |----------+--------------------------------------------------------------------------------------------------------------|
-// |          | csFPblAqGrYeOrReVi200                                                                                        |
-// |          | csFPcircular12                                                                                               |
-// |          | csFPcircular24                                                                                               |
-// |          | csFPcmoceanAlgae                                                                                             |
-// |          | csFPcmoceanAmp                                                                                               |
-// |          | csFPcmoceanBalance                                                                                           |
-// |          | csFPcmoceanCurl                                                                                              |
-// |          | csFPcmoceanDeep                                                                                              |
-// |          | csFPcmoceanDense                                                                                             |
-// |          | csFPcmoceanHaline                                                                                            |
-// |          | csFPcmoceanIce                                                                                               |
-// |          | csFPcmoceanTempo                                                                                             |
-// |          | csFPmplBrBG                                                                                                  |
-// |          | csFPmplOcean                                                                                                 |
-// |          | csFPmplOranges                                                                                               |
-// |          | csFPneoDdivVegetationA                                                                                       |
-// |          | csFPneoDivVegetationC                                                                                        |
-// |          | csFPneoModisNdvi                                                                                             |
+// | SIMILAR  | csFPblAqGrYeOrReVi200                                                                                        |
+// | DIRECT   | csFPcircular12                                                                                               |
+// | SIMILAR  | csFPcircular24                                                                                               |
+// | SIMILAR  | csFPcmoceanAlgae                                                                                             |
+// | SIMILAR  | csFPcmoceanAmp                                                                                               |
+// | SIMILAR  | csFPcmoceanBalance                                                                                           |
+// | SIMILAR  | csFPcmoceanCurl                                                                                              |
+// | SIMILAR  | csFPcmoceanDeep                                                                                              |
+// | SIMILAR  | csFPcmoceanDense                                                                                             |
+// | SIMILAR  | csFPcmoceanHaline                                                                                            |
+// | SIMILAR  | csFPcmoceanIce                                                                                               |
+// | SIMILAR  | csFPcmoceanTempo                                                                                             |
+// | SIMILAR  | csFPmplBrBG                                                                                                  |
+// | SIMILAR  | csFPmplOcean                                                                                                 |
+// | SIMILAR  | csFPmplOranges                                                                                               |
+// | SIMILAR  | csFPneoDdivVegetationA                                                                                       |
+// | SIMILAR  | csFPneoDivVegetationC                                                                                        |
+// | SIMILAR  | csFPneoModisNdvi                                                                                             |
 // |----------+--------------------------------------------------------------------------------------------------------------|
 // |          | csWS_tpl                                                                                                     |
 // |----------+--------------------------------------------------------------------------------------------------------------|
 // |          | csWSnormalVision                                                                                             |
-// |          | csWSnrotanopia                                                                                               |
+// |          | csWSprotanopia                                                                                               |
 // |          | csWSdeutanopia                                                                                               |
 // |          | csWStritanoptia                                                                                              |
 // |          | csWSprotanopiaAlt                                                                                            |
@@ -7271,10 +7271,167 @@ BOOST_AUTO_TEST_CASE(rgb2colorSpace) {
   BOOST_TEST_CHECK(dColor.getC2() == 285.033419356169360, boost::test_tools::tolerance(0.00001));
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(csFPcircular12_int) {
+
+  mjr::colorRGBA8b  aColor;
+  mjr::colorRGBA32F bColor;
+
+////////////////////////////////////////////////////////////////////////////////
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 0).isEqualRGB(aColor.setChansRGB(0xFF, 0x00, 0x00)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 1).isEqualRGB(aColor.setChansRGB(0xFF, 0x7D, 0x00)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 2).isEqualRGB(aColor.setChansRGB(0xFF, 0xFF, 0x00)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 3).isEqualRGB(aColor.setChansRGB(0x7D, 0xFF, 0x00)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 4).isEqualRGB(aColor.setChansRGB(0x66, 0xCC, 0x00)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 5).isEqualRGB(aColor.setChansRGB(0x66, 0xFF, 0xB2)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 6).isEqualRGB(aColor.setChansRGB(0x00, 0xFF, 0xFF)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 7).isEqualRGB(aColor.setChansRGB(0x00, 0x7D, 0xFF)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 8).isEqualRGB(aColor.setChansRGB(0x00, 0x00, 0xFF)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 9).isEqualRGB(aColor.setChansRGB(0x7D, 0x00, 0xFF)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(10).isEqualRGB(aColor.setChansRGB(0xFF, 0x00, 0xFF)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(11).isEqualRGB(aColor.setChansRGB(0xFF, 0x00, 0x7D)));
+
+////////////////////////////////////////////////////////////////////////////////
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(12).isEqualRGB(aColor.setChansRGB(0xFF, 0x00, 0x00))); // wrap
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(13).isEqualRGB(aColor.setChansRGB(0xFF, 0x7D, 0x00)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(14).isEqualRGB(aColor.setChansRGB(0xFF, 0xFF, 0x00)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(15).isEqualRGB(aColor.setChansRGB(0x7D, 0xFF, 0x00)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(16).isEqualRGB(aColor.setChansRGB(0x66, 0xCC, 0x00)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(17).isEqualRGB(aColor.setChansRGB(0x66, 0xFF, 0xB2)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(18).isEqualRGB(aColor.setChansRGB(0x00, 0xFF, 0xFF)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(19).isEqualRGB(aColor.setChansRGB(0x00, 0x7D, 0xFF)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(20).isEqualRGB(aColor.setChansRGB(0x00, 0x00, 0xFF)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(21).isEqualRGB(aColor.setChansRGB(0x7D, 0x00, 0xFF)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(22).isEqualRGB(aColor.setChansRGB(0xFF, 0x00, 0xFF)));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(23).isEqualRGB(aColor.setChansRGB(0xFF, 0x00, 0x7D)));
+
+////////////////////////////////////////////////////////////////////////////////
+
+  aColor.setToBlack();
+  mjr::colorRGBA8b::csFPcircular12::c(aColor, 0);
+  BOOST_TEST_CHECK(aColor.getRed()   == 0xFF);
+  BOOST_TEST_CHECK(aColor.getGreen() == 0x00);
+  BOOST_TEST_CHECK(aColor.getBlue()  == 0x00);
+  BOOST_TEST_CHECK(aColor.getAlpha() ==   mjr::colorRGBA8b::minChanVal); // Not set!
+
+  aColor.setToWhite();
+  mjr::colorRGBA8b::csFPcircular12::c(aColor, 0);
+  BOOST_TEST_CHECK(aColor.getRed()   ==  0xFF);
+  BOOST_TEST_CHECK(aColor.getGreen() ==  0x00);
+  BOOST_TEST_CHECK(aColor.getBlue()  ==  0x00);
+  BOOST_TEST_CHECK(aColor.getAlpha() == mjr::colorRGBA8b::maxChanVal); // Not set!
+
+////////////////////////////////////////////////////////////////////////////////
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 0).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x00/255.0F, 0x00/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 1).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x7D/255.0F, 0x00/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 2).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0xFF/255.0F, 0x00/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 3).isCloseRGB(bColor.setChansRGB(0x7D/255.0F, 0xFF/255.0F, 0x00/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 4).isCloseRGB(bColor.setChansRGB(0x66/255.0F, 0xCC/255.0F, 0x00/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 5).isCloseRGB(bColor.setChansRGB(0x66/255.0F, 0xFF/255.0F, 0xB2/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 6).isCloseRGB(bColor.setChansRGB(0x00/255.0F, 0xFF/255.0F, 0xFF/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 7).isCloseRGB(bColor.setChansRGB(0x00/255.0F, 0x7D/255.0F, 0xFF/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 8).isCloseRGB(bColor.setChansRGB(0x00/255.0F, 0x00/255.0F, 0xFF/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 9).isCloseRGB(bColor.setChansRGB(0x7D/255.0F, 0x00/255.0F, 0xFF/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c(10).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x00/255.0F, 0xFF/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c(11).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x00/255.0F, 0x7D/255.0F), 0.00001F));
+
+////////////////////////////////////////////////////////////////////////////////
+
+  bColor.setToBlack();
+  mjr::colorRGBA32F::csCBSpectral::c(bColor, 0);
+  BOOST_TEST_CHECK(bColor.getAlpha() ==   mjr::colorRGBA32F::minChanVal); // Not set!
+
+  bColor.setToWhite();
+  mjr::colorRGBA32F::csCBSpectral::c(bColor, 0);
+  BOOST_TEST_CHECK(bColor.getAlpha() == mjr::colorRGBA32F::maxChanVal); // Not set!
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(csCBSpectral_flt) {
+
+  mjr::colorRGBA8b  aColor;
+  mjr::colorRGBA32F bColor;
+
+////////////////////////////////////////////////////////////////////////////////
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 0/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0x00, 0x00), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 1/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0x7D, 0x00), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 2/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0xFF, 0x00), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 3/11.0F).isCloseRGB(aColor.setChansRGB(0x7D, 0xFF, 0x00), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 4/11.0F).isCloseRGB(aColor.setChansRGB(0x66, 0xCC, 0x00), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 5/11.0F).isCloseRGB(aColor.setChansRGB(0x66, 0xFF, 0xB2), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 6/11.0F).isCloseRGB(aColor.setChansRGB(0x00, 0xFF, 0xFF), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 7/11.0F).isCloseRGB(aColor.setChansRGB(0x00, 0x7D, 0xFF), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 8/11.0F).isCloseRGB(aColor.setChansRGB(0x00, 0x00, 0xFF), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 9/11.0F).isCloseRGB(aColor.setChansRGB(0x7D, 0x00, 0xFF), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(10/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0x00, 0xFF), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(11/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0x00, 0x7D), 2));
+
+////////////////////////////////////////////////////////////////////////////////
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(1+ 1/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0x7D, 0x00), 2)); // wrap
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(1+ 2/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0xFF, 0x00), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(1+ 3/11.0F).isCloseRGB(aColor.setChansRGB(0x7D, 0xFF, 0x00), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(1+ 4/11.0F).isCloseRGB(aColor.setChansRGB(0x66, 0xCC, 0x00), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(1+ 5/11.0F).isCloseRGB(aColor.setChansRGB(0x66, 0xFF, 0xB2), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(1+ 6/11.0F).isCloseRGB(aColor.setChansRGB(0x00, 0xFF, 0xFF), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(1+ 7/11.0F).isCloseRGB(aColor.setChansRGB(0x00, 0x7D, 0xFF), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(1+ 8/11.0F).isCloseRGB(aColor.setChansRGB(0x00, 0x00, 0xFF), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(1+ 9/11.0F).isCloseRGB(aColor.setChansRGB(0x7D, 0x00, 0xFF), 2));
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(1+10/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0x00, 0xFF), 2));
+
+////////////////////////////////////////////////////////////////////////////////
+
+  aColor.setToBlack();
+  mjr::colorRGBA8b::csFPcircular12::c(aColor, 0.0F);
+  BOOST_TEST_CHECK(aColor.getRed()   == 0xFF);
+  BOOST_TEST_CHECK(aColor.getGreen() == 0x00);
+  BOOST_TEST_CHECK(aColor.getBlue()  == 0x00);
+  BOOST_TEST_CHECK(aColor.getAlpha() ==   mjr::colorRGBA8b::minChanVal); // Not set!
+
+  aColor.setToWhite();
+  mjr::colorRGBA8b::csFPcircular12::c(aColor, 0.0F);
+  BOOST_TEST_CHECK(aColor.getRed()   ==  0xFF);
+  BOOST_TEST_CHECK(aColor.getGreen() ==  0x00);
+  BOOST_TEST_CHECK(aColor.getBlue()  ==  0x00);
+  BOOST_TEST_CHECK(aColor.getAlpha() == mjr::colorRGBA8b::maxChanVal); // Not set!
+
+////////////////////////////////////////////////////////////////////////////////
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 0/11.0F).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x00/255.0F, 0x00/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 1/11.0F).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x7D/255.0F, 0x00/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 2/11.0F).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0xFF/255.0F, 0x00/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 3/11.0F).isCloseRGB(bColor.setChansRGB(0x7D/255.0F, 0xFF/255.0F, 0x00/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 4/11.0F).isCloseRGB(bColor.setChansRGB(0x66/255.0F, 0xCC/255.0F, 0x00/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 5/11.0F).isCloseRGB(bColor.setChansRGB(0x66/255.0F, 0xFF/255.0F, 0xB2/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 6/11.0F).isCloseRGB(bColor.setChansRGB(0x00/255.0F, 0xFF/255.0F, 0xFF/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 7/11.0F).isCloseRGB(bColor.setChansRGB(0x00/255.0F, 0x7D/255.0F, 0xFF/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 8/11.0F).isCloseRGB(bColor.setChansRGB(0x00/255.0F, 0x00/255.0F, 0xFF/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 9/11.0F).isCloseRGB(bColor.setChansRGB(0x7D/255.0F, 0x00/255.0F, 0xFF/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c(10/11.0F).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x00/255.0F, 0xFF/255.0F), 0.00001F));
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c(11/11.0F).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x00/255.0F, 0x7D/255.0F), 0.00001F));
+
+////////////////////////////////////////////////////////////////////////////////
+
+  bColor.setToBlack();
+  mjr::colorRGBA32F::csCBSpectral::c(bColor, 0.0F);
+  BOOST_TEST_CHECK(bColor.getAlpha() ==   mjr::colorRGBA32F::minChanVal); // Not set!
+
+  bColor.setToWhite();
+  mjr::colorRGBA32F::csCBSpectral::c(bColor, 0.0F);
+  BOOST_TEST_CHECK(bColor.getAlpha() == mjr::colorRGBA32F::maxChanVal); // Not set!
+}
+
 #endif
+
+
 
 /** @endcond */
 
 
-// So far:  3877 hand written test cases
+// So far:  3967 hand written test cases
 // So far: 70067 generated test cases

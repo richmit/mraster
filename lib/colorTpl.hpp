@@ -1277,6 +1277,7 @@ namespace mjr {
       /** @overload */
       inline colorTpl& setRGBfromColorSpace(colorSpaceEnum space, colSpaceDbl3 inColor) {
         /* Requires: Inherits numChan>2 from getC2. */
+        /* This use of getC0/getC1/getC2 for RGB is OK -- that is how colSpaceDbl3 objects work */
         return setRGBfromColorSpace(space, inColor.getC0(), inColor.getC1(), inColor.getC2());
       }
       //@}
@@ -1664,6 +1665,7 @@ namespace mjr {
           @return Returns a reference to the current color object.*/
       inline colorTpl& interplColorSpace(colorSpaceEnum space, double aDouble, colorArgType col1, colorArgType col2) {
         /* Requires: Inherits numChan>2 from getC2. */
+        /* This use of getC0/getC1/getC2 for RGB is OK -- that is how colSpaceDbl3 objects work */
         if( (aDouble >= 0.0) && (aDouble <= 1.0) ) {
           // Convert our given colors into HSL
           colSpaceDbl3 acol1 = col1.rgb2colorSpace(space);
@@ -2482,8 +2484,7 @@ namespace mjr {
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** The Standard Power Transform modifies the current color such that:
-          R=#maxChanVal*(R/#maxChanVal)**p, G=#maxChanVal*(G/#maxChanVal)**p, B=#maxChanVal*(B/#maxChanVal)**p
+      /** The Standard Power Transform modifies the current color such that: C_i = maxChanVal*(C_i / maxChanVal)**p.
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmStdPow(double p) {
         for(int i=0; i<numChan; i++)
@@ -2496,9 +2497,9 @@ namespace mjr {
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmStdPowRGB(double rp, double gp, double bp) {
         /* Requires: Inherits numChan>2 from setBlue & getC2. */
-        setRed(  static_cast<clrChanT>(std::pow(static_cast<double>(getC0()) / static_cast<double>(maxChanVal), rp) * static_cast<double>(maxChanVal)));
-        setGreen(static_cast<clrChanT>(std::pow(static_cast<double>(getC1()) / static_cast<double>(maxChanVal), gp) * static_cast<double>(maxChanVal)));
-        setBlue( static_cast<clrChanT>(std::pow(static_cast<double>(getC2()) / static_cast<double>(maxChanVal), bp) * static_cast<double>(maxChanVal)));
+        setRed(  static_cast<clrChanT>(std::pow(static_cast<double>(getRed())    / static_cast<double>(maxChanVal), rp) * static_cast<double>(maxChanVal)));
+        setGreen(static_cast<clrChanT>(std::pow(static_cast<double>(getGreen()) / static_cast<double>(maxChanVal), gp) * static_cast<double>(maxChanVal)));
+        setBlue( static_cast<clrChanT>(std::pow(static_cast<double>(getBlue())  / static_cast<double>(maxChanVal), bp) * static_cast<double>(maxChanVal)));
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2527,7 +2528,7 @@ namespace mjr {
           result. */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Use the first three channels to compute an integer representing a grey scale.
+      /** Use the  R, G, & B channels to compute an integer representing a grey scale.
           What is returned is the dot product of the given color and the three scalars: R*redWt+G*greenWt+B*blueWt.  This dot product is not scaled.  Common
           values for (redWt, greenWt, blueWt) are:
           - (     1,      1,     1)  b=3
@@ -2543,9 +2544,9 @@ namespace mjr {
           @return The integer representing grey value for the given color. */
       inline channelArithFltType rgb2GreyDotProd(channelArithFltType redWt, channelArithFltType greenWt, channelArithFltType blueWt) {
         /* Requires: Inherits numChan>2 from getC2. */
-        return static_cast<int>(static_cast<channelArithFltType>(getC0()) * static_cast<channelArithFltType>(redWt)   +
-                                static_cast<channelArithFltType>(getC1()) * static_cast<channelArithFltType>(greenWt) +
-                                static_cast<channelArithFltType>(getC2()) * static_cast<channelArithFltType>(blueWt));
+        return static_cast<int>(static_cast<channelArithFltType>(getRed())   * static_cast<channelArithFltType>(redWt)   +
+                                static_cast<channelArithFltType>(getGreen()) * static_cast<channelArithFltType>(greenWt) +
+                                static_cast<channelArithFltType>(getBlue())  * static_cast<channelArithFltType>(blueWt));
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the luminance of the current color via the definition given in the ITU-R Recommendation BT.709.
@@ -2553,17 +2554,17 @@ namespace mjr {
           @return The luminance for the current object. */
       inline channelArithFltType luminanceRGB(void) {
         /* Requires: Inherits numChan>2 from getC2. */
-        return ((static_cast<channelArithFltType>(getC0()) * static_cast<channelArithFltType>(RGBluminanceWeightR) +
-                 static_cast<channelArithFltType>(getC1()) * static_cast<channelArithFltType>(RGBluminanceWeightG) +
-                 static_cast<channelArithFltType>(getC2()) * static_cast<channelArithFltType>(RGBluminanceWeightB)) / static_cast<channelArithFltType>(maxChanVal));
+        return ((static_cast<channelArithFltType>(getRed())   * static_cast<channelArithFltType>(RGBluminanceWeightR) +
+                 static_cast<channelArithFltType>(getGreen()) * static_cast<channelArithFltType>(RGBluminanceWeightG) +
+                 static_cast<channelArithFltType>(getBlue())  * static_cast<channelArithFltType>(RGBluminanceWeightB)) / static_cast<channelArithFltType>(maxChanVal));
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Compute the unscaled intensity (sum of the first three components) of the current color
+      /** Compute the unscaled intensity (sum of the R, G, & B components) of the current color
           @return The unscaled intensity for the current object. */
       inline channelArithSPType intensityRGB(void) {
         /* Requires: Inherits numChan>2 from getC2. */
-        return static_cast<channelArithSPType>(static_cast<channelArithSPType>(getC0()) +
-                                               static_cast<channelArithSPType>(getC1()) +
+        return static_cast<channelArithSPType>(static_cast<channelArithSPType>(getRed()) +
+                                               static_cast<channelArithSPType>(getGreen()) +
                                                static_cast<channelArithSPType>(getC2()));
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2633,11 +2634,11 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns the value of the largest component from R, G, and B. This function is highly optimized.
           @return The value of the largest color component.*/
-      inline clrChanT getMaxRGB() { return mjr::max3(getC0(), getC1(), getC2()); } /* Requires: Inherits numChan>2 from getC2. */
+      inline clrChanT getMaxRGB() { return mjr::max3(getRed(), getGreen(), getBlue()); } /* Requires: Inherits numChan>2 from getC2. */
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns the value of the smallest component from R, G, and B. This function is highly optimized.
           @return The value of the smallest color component.*/
-      inline clrChanT getMinRGB() { return mjr::min3(getC0(), getC1(), getC2()); } /* Requires: Inherits numChan>2 from getC2. */
+      inline clrChanT getMinRGB() { return mjr::min3(getRed(), getGreen(), getBlue()); } /* Requires: Inherits numChan>2 from getC2. */
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the dot product between the current color and the given color. i.e. c1.r*c2.r+c1.g*c2.g+...
           @param aColor the given color
@@ -2858,9 +2859,9 @@ namespace mjr {
           static inline colorTpl& c(colorRefType aColor, csNatType csIdx) {
             clrChanT cVal = static_cast<clrChanT>(numberWrap(csIdx, meanChanVal));
             colorTpl cc(corner);
-            return aColor.setChansRGB(static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getC0() ? cVal : -cVal)),
-                                      static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getC1() ? cVal : -cVal)),
-                                      static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getC2() ? cVal : -cVal)));
+            return aColor.setChansRGB(static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getRed()   ? cVal : -cVal)),
+                                      static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getGreen() ? cVal : -cVal)),
+                                      static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getBlue()  ? cVal : -cVal)));
           }
           /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
               @param csIdx Index of color in pallet.  Wrapped to [0, meanChanVal].
@@ -3532,7 +3533,7 @@ namespace mjr {
                        0xFF9900, 0xFF9933, 0xFF9966, 0xFF9999, 0xFF99CC, 0xFF99FF, 0xFFCC00, 0xFFCC33, 0xFFCC66, 0xFFCC99, 0xFFCCCC,
                        0xFFCCFF, 0xFFFF00, 0xFFFF33, 0xFFFF66, 0xFFFF99, 0xFFFFCC, 0xFFFFFF>                                          csWSnormalVision;
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** @class csWSnrotanopia
+      /** @class csWSprotanopia
           @ingroup cs
           @extends csWS_tpl
           The "web safe" color pallet of 216 colors as seen by someone with Protanopia.
@@ -3556,7 +3557,7 @@ namespace mjr {
                        0xFFE75C, 0xFFE873, 0xFFEB97, 0xFFF1C5, 0xF8F4F8, 0x968726, 0x93874E, 0x888892, 0x6E89D7, 0x7BA0FF, 0x96B1FF,
                        0x9A8B23, 0x988B4A, 0x8F8C8B, 0x7A8ECE, 0x779DFF, 0x96B1FF, 0xAC9A1E, 0xAA9A42, 0xA59B7C, 0x999DB9, 0x82A0F6,
                        0x98B2FF, 0xC8B317, 0xC7B43A, 0xC4B470, 0xBDB6A8, 0xB1B8E0, 0xAABDFF, 0xECD30F, 0xECD435, 0xE9D469, 0xE5D69D,
-                       0xDED8D2, 0xCFD7FF, 0xFFE871, 0xFFE975, 0xFFEA86, 0xFFEDA2, 0xFFF2C8, 0xFFFAFA>                                csWSnrotanopia;
+                       0xDED8D2, 0xCFD7FF, 0xFFE871, 0xFFE975, 0xFFEA86, 0xFFEDA2, 0xFFF2C8, 0xFFFAFA>                                csWSprotanopia;
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csWSdeutanopia
           @ingroup cs
@@ -3614,7 +3615,7 @@ namespace mjr {
           @ingroup cs
           @extends csWS_tpl
           The "web safe" color pallet of 216 colors as seen by someone with Protanopia.
-          For more about web safe colors, see mjr::colorTpl::csWSnormalVision. Also seemjr::colorTpl::csWSnrotanopia. */
+          For more about web safe colors, see mjr::colorTpl::csWSnormalVision. Also seemjr::colorTpl::csWSprotanopia. */
       typedef csWS_tpl<0x000000, 0x000E33, 0x001D66, 0x002B99, 0x003ACC, 0x0048FF, 0x422F00, 0x303133, 0x003566, 0x003D99, 0x0047CC,
                        0x0053FF, 0x845D00, 0x7E5E33, 0x606266, 0x266699, 0x006BCC, 0x0072FF, 0xC68C00, 0xC38D33, 0xB38F66, 0x909399,
                        0x6896CC, 0x009BFF, 0xFFBB00, 0xFFBB32, 0xFCBD66, 0xE6C099, 0xC0C4CC, 0x9DC7FF, 0xFFE900, 0xFFEA31, 0xFFEB65,
