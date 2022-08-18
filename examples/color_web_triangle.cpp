@@ -64,7 +64,7 @@ int main(void) {
                            (mjr::colChanI8)(255-sqrt(double((x-greenX)*(x-greenX)+(y-greenY)*(y-greenY))/sLength*255)));
         theRamCanvas_tru.drawPoint(x, y, aColor);
         theRamCanvas_web.drawPoint(x, y, mjr::color3c8b::csWSnormalVision::c(aColor));
-        theRamCanvas_Pro.drawPoint(x, y, mjr::color3c8b::csWSnrotanopia::c(aColor));
+        theRamCanvas_Pro.drawPoint(x, y, mjr::color3c8b::csWSprotanopia::c(aColor));
         theRamCanvas_Deu.drawPoint(x, y, mjr::color3c8b::csWSdeutanopia::c(aColor));
         theRamCanvas_Tri.drawPoint(x, y, mjr::color3c8b::csWStritanoptia::c(aColor));
       }
