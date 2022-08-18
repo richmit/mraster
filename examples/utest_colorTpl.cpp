@@ -144,7 +144,7 @@
 // | DIRECT   | setRGBfromColorSpace(colorSpaceEnum space, double inCh1, double inCh2, double inCh3);                        |
 // |          | setRGBfromColorSpace(colorSpaceEnum space, colorTpl<double, 3> inColor);                                     |
 // |          | interplColorSpace(colorSpaceEnum space, double aDouble, colorArgType col1, colorArgType col2);               |
-// |          | rgb2colorSpace(colorSpaceEnum space);                                                                        |
+// | DIRECT   | rgb2colorSpace(colorSpaceEnum space);                                                                        |
 // |          | colorSpaceToString(colorSpaceEnum space);                                                                    |
 // |----------+--------------------------------------------------------------------------------------------------------------|
 // | DIRECT   | setRGBcmpGreyTGA16bit(uint16_t tga16val);                                                                    |
@@ -7197,12 +7197,84 @@ BOOST_AUTO_TEST_CASE(setRGBfromColorSpace) {
   BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LCH, 100.0,  100.0,   60.0).isCloseRGB(fColor.setChansRGB(255.00000000000000F/255.0F, 211.98994181103800F/255.0F,  78.02765922273178F/255.0F), 0.00001F) == true);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(rgb2colorSpace) {
+
+  mjr::colorRGB8b                aColor;
+  mjr::colorRGB8b::colSpaceDbl3  bColor;
+  mjr::colorRGB32F               cColor;
+  mjr::colorRGB32F::colSpaceDbl3 dColor;
+  mjr::colorRGB16b               eColor;
+  mjr::colorRGB16b::colSpaceDbl3 fColor;
+  mjr::colorRGB32b               gColor;
+  mjr::colorRGB32b::colSpaceDbl3 hColor;
+
+  ////////////////////////////////////////////////////////////////////////////////
+
+  aColor.setChansRGB(mjr::colorRGB8b::minChanVal, mjr::colorRGB8b::meanChanVal, mjr::colorRGB8b::maxChanVal);
+  bColor = aColor.rgb2colorSpace(mjr::colorRGB8b::colorSpaceEnum::RGB);
+  BOOST_TEST_CHECK(bColor.getC0() == 0.0,    boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(bColor.getC1() == 0.5,    boost::test_tools::tolerance(0.01));        // Can't get much accuracy with 8-bit
+  BOOST_TEST_CHECK(bColor.getC2() == 1.0,    boost::test_tools::tolerance(0.00001));
+
+  eColor.setChansRGB(mjr::colorRGB16b::minChanVal, mjr::colorRGB16b::meanChanVal, mjr::colorRGB16b::maxChanVal);
+  fColor = eColor.rgb2colorSpace(mjr::colorRGB16b::colorSpaceEnum::RGB);
+  BOOST_TEST_CHECK(fColor.getC0() == 0.0,    boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(fColor.getC1() == 0.5,    boost::test_tools::tolerance(0.0001));      // A bit more accuracy with 16-bit
+  BOOST_TEST_CHECK(fColor.getC2() == 1.0,    boost::test_tools::tolerance(0.00001));
+
+  gColor.setChansRGB(mjr::colorRGB32b::minChanVal, mjr::colorRGB32b::meanChanVal, mjr::colorRGB32b::maxChanVal);
+  hColor = gColor.rgb2colorSpace(mjr::colorRGB32b::colorSpaceEnum::RGB);
+  BOOST_TEST_CHECK(hColor.getC0() == 0.0,    boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(hColor.getC1() == 0.5,    boost::test_tools::tolerance(0.00001));     // A bit more accuracy with 32-bit
+  BOOST_TEST_CHECK(hColor.getC2() == 1.0,    boost::test_tools::tolerance(0.00001));
+
+  ////////////////////////////////////////////////////////////////////////////////
+
+  //   0.00000000000000   0.5000000000000000   1.00000000000000000 RGB 
+  // 210.11764705181122   1.0000000000000000   0.50000000000000000 HSL
+  // 210.11764705181122   1.0000000000000000   1.00000000000000000 HSV
+  //  54.58302990500775  19.1017817806751750 -71.14430025970830000 LAB
+  //  25.704111183644635 22.5282223672892700  97.60137039454821000 XYZ
+  //  54.58302990500775  73.6640314308147600 285.02909316255295000 LCH
+
+  cColor.setChansRGB(mjr::colorRGB32F::minChanVal, mjr::colorRGB32F::meanChanVal, mjr::colorRGB32F::maxChanVal);
+
+  dColor = cColor.rgb2colorSpace(mjr::colorRGB32F::colorSpaceEnum::RGB);
+  BOOST_TEST_CHECK(dColor.getC0() ==   0.000000000000000, boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(dColor.getC1() ==   0.500000000000000, boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(dColor.getC2() ==   1.000000000000000, boost::test_tools::tolerance(0.00001));
+
+  dColor = cColor.rgb2colorSpace(mjr::colorRGB32F::colorSpaceEnum::HSL);
+  BOOST_TEST_CHECK(dColor.getC0() == 210.000000000000000, boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(dColor.getC1() ==   1.000000000000000, boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(dColor.getC2() ==   0.500000000000000, boost::test_tools::tolerance(0.00001));
+
+  dColor = cColor.rgb2colorSpace(mjr::colorRGB32F::colorSpaceEnum::HSV);
+  BOOST_TEST_CHECK(dColor.getC0() == 210.000000000000000, boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(dColor.getC1() ==   1.000000000000000, boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(dColor.getC2() ==   1.000000000000000, boost::test_tools::tolerance(0.00001));
+
+  dColor = cColor.rgb2colorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB);
+  BOOST_TEST_CHECK(dColor.getC0() ==  54.583029905007749, boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(dColor.getC1() ==  19.106431157445371, boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(dColor.getC2() == -71.140167945193781, boost::test_tools::tolerance(0.00001));
+
+  dColor = cColor.rgb2colorSpace(mjr::colorRGB32F::colorSpaceEnum::XYZ);
+  BOOST_TEST_CHECK(dColor.getC0() ==  25.704111183644635, boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(dColor.getC1() ==  22.528222367289271, boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(dColor.getC2() ==  97.601370394548212, boost::test_tools::tolerance(0.00001));
+
+  dColor = cColor.rgb2colorSpace(mjr::colorRGB32F::colorSpaceEnum::LCH);
+  BOOST_TEST_CHECK(dColor.getC0() ==  54.583029905007749, boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(dColor.getC1() ==  73.661246302547553, boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(dColor.getC2() == 285.033419356169360, boost::test_tools::tolerance(0.00001));
+}
+
 #endif
-
-
 
 /** @endcond */
 
 
-// So far:  3850 hand written test cases
+// So far:  3877 hand written test cases
 // So far: 70067 generated test cases

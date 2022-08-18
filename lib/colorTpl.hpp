@@ -235,7 +235,7 @@ namespace mjr {
       //@{
       /** Tuple for RGBA & 4 chan */
       typedef uint32_t            packed4Cint;             //!< Used for passing & returning integers with packed 8-bit channels
-      typedef colorTpl<double, 3> colSpaceDblTrip;         //!< Color for space computations
+      typedef colorTpl<double, 3> colSpaceDbl3;         //!< Color for space computations
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1275,7 +1275,7 @@ namespace mjr {
 
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @overload */
-      inline colorTpl& setRGBfromColorSpace(colorSpaceEnum space, colSpaceDblTrip inColor) {
+      inline colorTpl& setRGBfromColorSpace(colorSpaceEnum space, colSpaceDbl3 inColor) {
         /* Requires: Inherits numChan>2 from getC2. */
         return setRGBfromColorSpace(space, inColor.getC0(), inColor.getC1(), inColor.getC2());
       }
@@ -1666,8 +1666,8 @@ namespace mjr {
         /* Requires: Inherits numChan>2 from getC2. */
         if( (aDouble >= 0.0) && (aDouble <= 1.0) ) {
           // Convert our given colors into HSL
-          colSpaceDblTrip acol1 = col1.rgb2colorSpace(space);
-          colSpaceDblTrip acol2 = col2.rgb2colorSpace(space);
+          colSpaceDbl3 acol1 = col1.rgb2colorSpace(space);
+          colSpaceDbl3 acol2 = col2.rgb2colorSpace(space);
 
           // Interpolate values
           double out1, out2, out3;
@@ -2338,7 +2338,7 @@ namespace mjr {
           Note RGB returns float RGB normalized to 1.0.
           @param space The color space to convert to
           @return An RGB color with double channels. */
-      inline colSpaceDblTrip rgb2colorSpace(colorSpaceEnum space) {
+      inline colSpaceDbl3 rgb2colorSpace(colorSpaceEnum space) {
         /* Requires: Inherits numChan>2 from getBlue. */
 
         double redF   = getRed_dbl();
@@ -2346,7 +2346,7 @@ namespace mjr {
         double blueF  = getBlue_dbl();
 
         if (space == colorSpaceEnum::RGB)
-          return colSpaceDblTrip(redF, greenF, blueF);
+          return colSpaceDbl3(redF, greenF, blueF);
 
         if ((space == colorSpaceEnum::HSL) || (space == colorSpaceEnum::HSV)) {
           clrChanT rgbMaxI = getMaxRGB();
@@ -2390,9 +2390,9 @@ namespace mjr {
             H = realWrap(H * 60.0, 360.0);
           }
           if (space == colorSpaceEnum::HSL)
-            return colSpaceDblTrip(H, S, L);
+            return colSpaceDbl3(H, S, L);
           else
-            return colSpaceDblTrip(H, S, V);
+            return colSpaceDbl3(H, S, V);
         } else {
           redF   = 100.0 * ((redF   > 0.04045) ? std::pow((redF   + 0.055) / 1.055, 2.4) : redF   / 12.92);
           greenF = 100.0 * ((greenF > 0.04045) ? std::pow((greenF + 0.055) / 1.055, 2.4) : greenF / 12.92);
@@ -2403,7 +2403,7 @@ namespace mjr {
           double Z = (0.0193 * redF + 0.1192 * greenF + 0.9505 * blueF);
 
           if (space == colorSpaceEnum::XYZ)
-            return colSpaceDblTrip(X, Y, Z);
+            return colSpaceDbl3(X, Y, Z);
 
           X /= 95.0429;
           Y /= 100.0;
@@ -2418,7 +2418,7 @@ namespace mjr {
           double B = 200.0 * (Y - Z);
 
           if (space == colorSpaceEnum::LAB)
-            return colSpaceDblTrip(L, A, B);
+            return colSpaceDbl3(L, A, B);
 
           double C = std::hypot(A, B);
 
@@ -2427,10 +2427,10 @@ namespace mjr {
             H = realWrap(atan2(B,A) * 180.0 / std::numbers::pi, 360.0);
 
           if (space == colorSpaceEnum::LCH)
-            return colSpaceDblTrip(L, C, H);
+            return colSpaceDbl3(L, C, H);
         }
 
-        return colSpaceDblTrip(0.0, 0.0, 0.0);
+        return colSpaceDbl3(0.0, 0.0, 0.0);
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute channels for given color space coordinates for the current color.
