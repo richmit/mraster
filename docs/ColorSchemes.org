@@ -54,20 +54,20 @@ inner classes follow a regular naming convention:
 
   - [[#csCB][=csCB ..........=]] RGB Color Brewer 2 (template: =csCB_tpl=
   - [[#csFPmisc][=csFP ..........=]] RGB Fixed pallets (template: =csFP_tpl=
-  - [[#csWS][=csFPwebSafe ...=]] RGB Web safe colors (template: =csFP_tpl=)
+  - [[#csWS][=csWS ..........=]] RGB Web safe colors (template: =csFP_tpl=)
   - [[#csCCdiag][=csCCdiag ......=]] RGB color cube: diagonal gradients (template: =csCC_tpl=)
   - [[#csCCcons][=csCCcons ......=]] RGB color cube: Gradients with constant brightness (template: =csCC_tpl=)
   - [[#csCColde][=csCColde ......=]] RGB color cube: Some classic color gradients (template: =csCC_tpl=)
   - [[#csCCud][=csCCud ........=]] RGB color cube: Two color up-down ramps (template: =csCC_tpl=)
   - [[#csCCsum][=csCCSum .......=]] RGB color cube: Sum ramp (template: =csCC_tpl=)
-  - [[#csHSLh][=csHSLh ........=]] RGB color cube: Gradients starting at the center of the cube and extending to a corner
+  - [[#csHSLh][=csHSLh ........=]] RGB color cube: Gradients from the cube center to a corner (template: =csHSLh_tpl=)
   - =csBin .........= RGB Binary Schemes (template: =csCC_tpl=)
   - [[#csPGrey][=csPGrey .......=]] RGB Pseudo-greyscale
   - [[#csRainbow][=csRainbow .....=]] RGB spectrum based colors
-  - [[#csCH][=csCH ..........=]] RGB Cubehelix colors (template: csCubeHelix_tpl)
+  - [[#csCH][=csCH ..........=]] RGB Cubehelix colors (template: =csCubeHelix_tpl=)
 
-These classes are static in nature, and an instance is not required to use them.  They all have a member named "=c=" which is used to set the components of a
-=colorTpl= instance passed as argument, or as a factory for =colorTpl= instances.
+These classes are static in nature, and an instance is not required to use them.  They all have members named "=c=" which can set the color of an existing
+=colorTpl= instance (a "setter") or create a brand new instance (a "factory").
 
 When used as a factory, color scheme classes return fully constructed  =colorTpl=  objects:
 
@@ -117,7 +117,7 @@ Not all color scheme classes have the same interface; however, the interfaces ar
       taking integer color selectors and another pair taking a floating point color selectors.
 
 Many color schemes provide a number of colors that is a function of =chanStepMax=, which is directly related to the value of =clrChanT=.  For integral
-=clrChanT= types, =chanStepMax= will be equal to =maxChanVal=. For floating point =clrChanT= types, =chanStepMax= will be equal to $2^32$.
+=clrChanT= types, =chanStepMax= will be equal to =maxChanVal=. For floating point =clrChanT= types, =chanStepMax= will be equal to $2^{31}$.
 
 * Color Cube Edge/Diagonal Graph Color Schemes
 :PROPERTIES:
@@ -199,7 +199,7 @@ as "complete cube graph with center" in this documentation.
 Every color scheme in this section can be created via the =cmpRGBcornerDGradiant()= method of =colorTpl=; however, many are also available as predefined color
 scheme objects.  The color schemes provided by the =csCC_tpl= template provide a dual interface.  One provides a discreet view of gradients (the =c= methods
 with =csIdx= arguments), and the other provides a continuous view of gradients (the =c= methods with =csX= arguments).  When the colors use floating point
-channels, the discreet gradients have $2^{32}$ steps between corner colors.
+channels, the discreet gradients have $2^{31}$ steps between corner colors.
 
 ** Maximal circuits in the cube edge graph
 :PROPERTIES:
@@ -686,19 +686,19 @@ a continuous gradient version of each color scheme -- which is kinda weird, but 
 :END:
 
  - =csWSSafeDeutanopia= :: \\
-  [[./pics/cs/color_lut_docs_csWSSafeDeutanopia_50.png]]
+  [[./pics/cs/color_lut_docs_csWSdeutanopia_50.png]]
  - =csWSSafeDeutanopiaAlt= :: \\
-  [[./pics/cs/color_lut_docs_csWSSafeDeutanopiaAlt_50.png]]
+  [[./pics/cs/color_lut_docs_csWSdeutanopiaAlt_50.png]]
  - =csWSSafeNormalVision= :: \\
-  [[./pics/cs/color_lut_docs_csWSSafeNormalVision_50.png]]
+  [[./pics/cs/color_lut_docs_csWSnormalVision_50.png]]
  - =csWSSafeProtanopia= :: \\
-  [[./pics/cs/color_lut_docs_csWSSafeProtanopia_50.png]]
+  [[./pics/cs/color_lut_docs_csWSprotanopia_50.png]]
  - =csWSSafeProtanopiaAlt= :: \\
-  [[./pics/cs/color_lut_docs_csWSSafeProtanopiaAlt_50.png]]
+  [[./pics/cs/color_lut_docs_csWSprotanopiaAlt_50.png]]
  - =csWSSafeTritanoptia= :: \\
-  [[./pics/cs/color_lut_docs_csWSSafeTritanoptia_50.png]]
+  [[./pics/cs/color_lut_docs_csWStritanoptia_50.png]]
  - =csWSSafeTritanoptiaAlt= :: \\
-  [[./pics/cs/color_lut_docs_csWSSafeTritanoptiaAlt_50.png]]
+  [[./pics/cs/color_lut_docs_csWStritanoptiaAlt_50.png]]
 
 * Miscilanious Pallets
 :PROPERTIES:

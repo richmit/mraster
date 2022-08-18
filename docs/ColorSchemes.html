@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-08-17 Wed 18:04 -->
+<!-- 2022-08-18 Thu 17:56 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster Color Schemes</title>
@@ -323,22 +323,22 @@ inner classes follow a regular naming convention:
 <ul class="org-ul">
 <li><a href="#csCB"><code>csCB ..........</code></a> RGB Color Brewer 2 (template: <code>csCB_tpl</code></li>
 <li><a href="#csFPmisc"><code>csFP ..........</code></a> RGB Fixed pallets (template: <code>csFP_tpl</code></li>
-<li><a href="#csWS"><code>csFPwebSafe ...</code></a> RGB Web safe colors (template: <code>csFP_tpl</code>)</li>
+<li><a href="#csWS"><code>csWS ..........</code></a> RGB Web safe colors (template: <code>csFP_tpl</code>)</li>
 <li><a href="#csCCdiag"><code>csCCdiag ......</code></a> RGB color cube: diagonal gradients (template: <code>csCC_tpl</code>)</li>
 <li><a href="#csCCcons"><code>csCCcons ......</code></a> RGB color cube: Gradients with constant brightness (template: <code>csCC_tpl</code>)</li>
 <li><a href="#csCColde"><code>csCColde ......</code></a> RGB color cube: Some classic color gradients (template: <code>csCC_tpl</code>)</li>
 <li><a href="#csCCud"><code>csCCud ........</code></a> RGB color cube: Two color up-down ramps (template: <code>csCC_tpl</code>)</li>
 <li><a href="#csCCsum"><code>csCCSum .......</code></a> RGB color cube: Sum ramp (template: <code>csCC_tpl</code>)</li>
-<li><a href="#csHSLh"><code>csHSLh ........</code></a> RGB color cube: Gradients starting at the center of the cube and extending to a corner</li>
+<li><a href="#csHSLh"><code>csHSLh ........</code></a> RGB color cube: Gradients from the cube center to a corner (template: <code>csHSLh_tpl</code>)</li>
 <li><code>csBin .........</code> RGB Binary Schemes (template: <code>csCC_tpl</code>)</li>
 <li><a href="#csPGrey"><code>csPGrey .......</code></a> RGB Pseudo-greyscale</li>
 <li><a href="#csRainbow"><code>csRainbow .....</code></a> RGB spectrum based colors</li>
-<li><a href="#csCH"><code>csCH ..........</code></a> RGB Cubehelix colors (template: csCubeHelix_tpl)</li>
+<li><a href="#csCH"><code>csCH ..........</code></a> RGB Cubehelix colors (template: <code>csCubeHelix_tpl</code>)</li>
 </ul>
 
 <p>
-These classes are static in nature, and an instance is not required to use them.  They all have a member named "<code>c</code>" which is used to set the components of a
-<code>colorTpl</code> instance passed as argument, or as a factory for <code>colorTpl</code> instances.
+These classes are static in nature, and an instance is not required to use them.  They all have members named "<code>c</code>" which can set the color of an existing
+<code>colorTpl</code> instance (a "setter") or create a brand new instance (a "factory").
 </p>
 
 <p>
@@ -416,7 +416,7 @@ taking integer color selectors and another pair taking a floating point color se
 
 <p>
 Many color schemes provide a number of colors that is a function of <code>chanStepMax</code>, which is directly related to the value of <code>clrChanT</code>.  For integral
-<code>clrChanT</code> types, <code>chanStepMax</code> will be equal to <code>maxChanVal</code>. For floating point <code>clrChanT</code> types, <code>chanStepMax</code> will be equal to \(2^32\).
+<code>clrChanT</code> types, <code>chanStepMax</code> will be equal to <code>maxChanVal</code>. For floating point <code>clrChanT</code> types, <code>chanStepMax</code> will be equal to \(2^{31}\).
 </p>
 </div>
 </div>
@@ -520,7 +520,7 @@ as "complete cube graph with center" in this documentation.
 Every color scheme in this section can be created via the <code>cmpRGBcornerDGradiant()</code> method of <code>colorTpl</code>; however, many are also available as predefined color
 scheme objects.  The color schemes provided by the <code>csCC_tpl</code> template provide a dual interface.  One provides a discreet view of gradients (the <code>c</code> methods
 with <code>csIdx</code> arguments), and the other provides a continuous view of gradients (the <code>c</code> methods with <code>csX</code> arguments).  When the colors use floating point
-channels, the discreet gradients have \(2^{32}\) steps between corner colors.
+channels, the discreet gradients have \(2^{31}\) steps between corner colors.
 </p>
 </div>
 
@@ -1103,19 +1103,19 @@ a continuous gradient version of each color scheme &#x2013; which is kinda weird
 <div class="outline-text-2" id="text-csWS">
 <dl class="org-dl">
 <dt><code>csWSSafeDeutanopia</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csWSSafeDeutanopia_50.png" alt="color_lut_docs_csWSSafeDeutanopia_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csWSdeutanopia_50.png" alt="color_lut_docs_csWSdeutanopia_50.png" /></dd>
 <dt><code>csWSSafeDeutanopiaAlt</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csWSSafeDeutanopiaAlt_50.png" alt="color_lut_docs_csWSSafeDeutanopiaAlt_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csWSdeutanopiaAlt_50.png" alt="color_lut_docs_csWSdeutanopiaAlt_50.png" /></dd>
 <dt><code>csWSSafeNormalVision</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csWSSafeNormalVision_50.png" alt="color_lut_docs_csWSSafeNormalVision_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csWSnormalVision_50.png" alt="color_lut_docs_csWSnormalVision_50.png" /></dd>
 <dt><code>csWSSafeProtanopia</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csWSSafeProtanopia_50.png" alt="color_lut_docs_csWSSafeProtanopia_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csWSprotanopia_50.png" alt="color_lut_docs_csWSprotanopia_50.png" /></dd>
 <dt><code>csWSSafeProtanopiaAlt</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csWSSafeProtanopiaAlt_50.png" alt="color_lut_docs_csWSSafeProtanopiaAlt_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csWSprotanopiaAlt_50.png" alt="color_lut_docs_csWSprotanopiaAlt_50.png" /></dd>
 <dt><code>csWSSafeTritanoptia</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csWSSafeTritanoptia_50.png" alt="color_lut_docs_csWSSafeTritanoptia_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csWStritanoptia_50.png" alt="color_lut_docs_csWStritanoptia_50.png" /></dd>
 <dt><code>csWSSafeTritanoptiaAlt</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csWSSafeTritanoptiaAlt_50.png" alt="color_lut_docs_csWSSafeTritanoptiaAlt_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csWStritanoptiaAlt_50.png" alt="color_lut_docs_csWStritanoptiaAlt_50.png" /></dd>
 </dl>
 </div>
 </div>
