@@ -2877,7 +2877,7 @@ namespace mjr {
           constexpr static csIntType numC = ((sizeof...(corners)) - 1) * chanStepMax + 1;
           /** Set given colorTpl instance to the selected color in the color scheme.
               @param aColor color object to set.
-              @param csIdx Integer used to select a color from the discrete gradiaant.
+              @param csG Integer used to select a color from the discrete gradiaant.
               @return Returns a reference to \a aColor. */
           template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG) requires (std::floating_point<saT>) {
             csFltType csX = static_cast<csFltType>(csG);
@@ -2926,7 +2926,7 @@ namespace mjr {
           constexpr static csIntType numC = (sizeof...(colors));
           /** Set given colorTpl instance to the selected color in the color scheme.
               @param aColor color object to set.
-              @param csIdx Integer used to select a color from the discrete gradiaant.
+              @param csG Integer used to select a color from the discrete gradiaant.
               @return Returns a reference to \a aColor. */
           template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG) requires (std::floating_point<saT>) {
             csFltType csX = static_cast<csFltType>(csG);
@@ -2959,7 +2959,8 @@ namespace mjr {
           constexpr static csIntType maxNumC = mx;
           /** Set given colorTpl instance to the selected color in the color scheme.
               @param aColor color object to set.
-              @param csIdx Integer used to select a color from the discrete gradiaant.
+              @param csG Integer used to select a color from the discrete gradiaant.
+              @param numC Number of colors for the given scheme.  Will be clamped to [minNumC, maxNumC].
               @return Returns a reference to \a aColor. */
           template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG, csIntType numC=maxNumC) requires (std::floating_point<saT>) {
             csFltType csX = static_cast<csFltType>(csG);
@@ -2969,6 +2970,7 @@ namespace mjr {
           /** Set given colorTpl instance to the selected color in the color scheme.
               @param aColor color object to set.
               @param csG    Floating point value in [0, 1] used to select a color from the continuous color gradiant.
+              @param numC Number of colors for the given scheme.  Will be clamped to [minNumC, maxNumC].
               @return Returns a reference to \a aColor. */
           template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG, csIntType numC=maxNumC) requires (std::integral<saT>) {
             csIntType csIdx = static_cast<csIntType>(csG);
