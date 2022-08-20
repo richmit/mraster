@@ -44,8 +44,6 @@ int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   std::tuple<mjr::colorRGBA8b::channelType, mjr::colorRGBA8b::channelType, mjr::colorRGBA8b::channelType> tc3 {128, 255, 128};
   std::tuple<mjr::colorRGBA8b::channelType, mjr::colorRGBA8b::channelType, mjr::colorRGBA8b::channelType, mjr::colorRGBA8b::channelType> tc4 {255, 128, 255, 128};
-  std::vector<mjr::colorRGBA8b::channelType> vc2B {128, 255};
-  std::vector<mjr::colorRGBA32F::channelType> vc2F {0.5, 1.0};
 
   mjr::colorRGBA8b  aColor(255, 200, 100);
   mjr::colorRGBA8b  bColor(255, 200, 100, 20);
@@ -88,7 +86,6 @@ int main(void) {
   aColor.setC1(0);                                                 std::cout << "aColor.setC1(0);                               " << aColor << std::endl;
   aColor.setC3(0);                                                 std::cout << "aColor.setC3(0);                               " << aColor << std::endl;
   aColor.setChans(2);                                              std::cout << "aColor.setChans(2);                            " << aColor << std::endl;
-  aColor.setChans(vc2B);                                           std::cout << "aColor.setChans(vc2B);                         " << aColor << std::endl;
 
   aColor.setChan_dbl(0, 0.0);                                      std::cout << "aColor.setChan_dbl(0, 0.0);                    " << aColor << std::endl;
   aColor.setC0_dbl(0.0);                                           std::cout << "aColor.setC0_dbl(0.0);                         " << aColor << std::endl;
@@ -173,7 +170,6 @@ int main(void) {
   jColor.setC1(0);                                                 std::cout << "jColor.setC1(0);                               " << jColor << std::endl;
   jColor.setC3(0);                                                 std::cout << "jColor.setC3(0);                               " << jColor << std::endl;
   jColor.setChans(2);                                              std::cout << "jColor.setChans(2);                            " << jColor << std::endl;
-  jColor.setChans(vc2F);                                           std::cout << "jColor.setChans(vc2F);                         " << jColor << std::endl;
 
   jColor.setChan_dbl(0, 0.0);                                      std::cout << "jColor.setChan_dbl(0, 0.0);                    " << jColor << std::endl;
   jColor.setC0_dbl(0.0);                                           std::cout << "jColor.setC0_dbl(0.0);                         " << jColor << std::endl;
