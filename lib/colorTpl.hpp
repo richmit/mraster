@@ -78,7 +78,7 @@ typedef mjr_uint128_t mjr_uintBiggest_t;  //!< The largest unsigned integer supp
 typedef mjr_int128_t  mjr_intBiggest_t;   //!< The largest signed integer supported on the platform
 #else
 typedef uint64_t      mjr_uintBiggest_t;   //!< The largest unsigned integer supported on the platform
-typedef int64_t       mjr_intBiggest_t;    //!< The largest signed integer supported on the platform  
+typedef int64_t       mjr_intBiggest_t;    //!< The largest signed integer supported on the platform
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -563,7 +563,7 @@ namespace mjr {
 
       /** @name Color Scheme Constants */
       //@{
-      constexpr static csIntType chanStepMax   = (chanIsInt ? maxChanVal : std::numeric_limits<uint32_t>::max());  //!< Number of discreet "steps" for channel value
+      constexpr static csIntType chanStepMax   = (chanIsInt ? maxChanVal : std::numeric_limits<uint32_t>::max());  //!< Finite "steps" for a color scheme: [0, chanStepMax]
       constexpr static int       minWavelength = 360;                                                              //!< Minimum wavelength for wavelength conversion
       constexpr static int       maxWavelength = 830;                                                              //!< Maximum wavelength for wavelength conversion
       //@}
@@ -969,6 +969,7 @@ namespace mjr {
       inline colorTpl& setToCyan()    { setChansToMax(); setChanToMin(0); return *this; }
       inline colorTpl& setToYellow()  { setChansToMax(); setChanToMin(2); return *this; }
       inline colorTpl& setToMagenta() { setChansToMax(); setChanToMin(1); return *this; }
+      inline colorTpl& setToHalf()    { setChansToMean();                 return *this; }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the current color based upon the single character given -- 0==black, R, G, B, M, C, Y, W/1==white).
           The color is acutally set using one of the setTo*() functions.  If \a cornerColor is invalid, then setToBlack().
@@ -1040,7 +1041,7 @@ namespace mjr {
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** @name Color Setting Methods via Logically Packed Integers. 
+      /** @name Color Setting Methods via Logically Packed Integers.
        By "logically" we mean as if the integers were written on paper left to right with MSB on the left -- the same way they are "written" in C++ source code.
        ex: 0x11223344u has 11 as the most significant byte, but it might be placed in memory differently.  These functions are very usefully for unpacking integers
        derived from integer literals in C++ code.  setRGBfromLogPackIntARGB() is heavily used for color schemes. */
@@ -1131,7 +1132,7 @@ namespace mjr {
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** @name Color Setting Methods via Physically Packed Integers. 
+      /** @name Color Setting Methods via Physically Packed Integers.
        By "physically" we mean as the bytes are physically ordered in RAM -- which may differ from how we write them on paper or in C++ code. */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1174,7 +1175,7 @@ namespace mjr {
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the color indicated by the given HSV values.
-          The 'unit' in the name indicates that the values for h, s, and v are the unit interval, [0,1].  
+          The 'unit' in the name indicates that the values for h, s, and v are the unit interval, [0,1].
           @param H The Hue.
           @param S The Saturation.
           @param V The Value
@@ -1182,7 +1183,7 @@ namespace mjr {
       inline colorTpl& setRGBfromUnitHSV(double H, double S, double V) { return setRGBfromColorSpace(colorSpaceEnum::HSV, H*360.0, S, V); }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the color indicated by the given HSL values.
-          The 'unit' in the name indicates that The ranges for h, s, and v are the the unit interval -- i.e. [0,1].  
+          The 'unit' in the name indicates that The ranges for h, s, and v are the the unit interval -- i.e. [0,1].
           @param H The Hue.
           @param S The Saturation.
           @param L The Lightness or Luminescence
@@ -1537,7 +1538,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** This is simply a version of cmpRGBcornerCGradiant() that computes the length of the final argument as a C-string.
           Unlike the version of cmpRGBcornerDGradiant() specifying numColors, this one requires the final argument to be a real C-string -- i.e. it must have a
-          terminating NULL.  Note this function uses RGB corner colors as anchors, and is thus designed to work with RGB colors.  
+          terminating NULL.  Note this function uses RGB corner colors as anchors, and is thus designed to work with RGB colors.
 
           @warning Many gradient color schemes are predefined: http://richmit.github.io/mraster/ColorSchemes.html
 
@@ -1550,7 +1551,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** This is simply a version of cmpRGBcornerDGradiant() that computes the length of the final argument as a C-string.
           Unlike the version of cmpRGBcornerDGradiant() specifying numColors, this one requires the final argument to be a real C-string -- i.e. it must have a
-          terminating NULL.  Note this function uses RGB corner colors as anchors, and is thus designed to work with RGB colors.  
+          terminating NULL.  Note this function uses RGB corner colors as anchors, and is thus designed to work with RGB colors.
 
           @warning Many gradient color schemes are predefined: http://richmit.github.io/mraster/ColorSchemes.html
 
@@ -1626,7 +1627,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Color value based upon a color ramp passing through the given sequence of corner colors at equal intervals along [0.0, 1.0].  At 0, the color will
           be the first specified color.  At 1.0 it will be the last color specified color. CornerColors need not be a real C-string -- i.e. no need for an
-          terminating NULL.  Note this function uses RGB corner colors as anchors, and is thus designed to work with RGB colors.  
+          terminating NULL.  Note this function uses RGB corner colors as anchors, and is thus designed to work with RGB colors.
 
           @warning Many gradient color schemes are predefined: http://richmit.github.io/mraster/ColorSchemes.html
 
@@ -1756,7 +1757,7 @@ namespace mjr {
         return wMean(w1, 1-w1, col1, col2);
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Set the current color to a value linearly interpolated between the two given colors.  
+      /** Set the current color to a value linearly interpolated between the two given colors.
           When \a aDouble is 0, the color is col1.  When \a aDouble is 1 the new value is col2.  This method interpolates all channels without any color space
           conversions and as few type conversions as possible.
           @param aDouble The distance from col1
@@ -1770,7 +1771,7 @@ namespace mjr {
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Set the RGB channels of the current color to a value linearly interpolated between the two given colors.  
+      /** Set the RGB channels of the current color to a value linearly interpolated between the two given colors.
           When \a aDouble is 0, the color is col1.  When \a aDouble is 1 the new value is col2.  This method interpolates all channels without any color space
           conversions and as few type conversions as possible.
           @param aDouble The distance from col1
@@ -1779,7 +1780,7 @@ namespace mjr {
           @return Returns a reference to the current color object.*/
       inline colorTpl& linearInterpolateRGB(double aDouble, colorArgType col1, colorArgType col2) {
         if( (aDouble >= 0.0) && (aDouble <= 1.0) )
-          for (int i : {redChan, blueChan, greenChan}) 
+          for (int i : {redChan, blueChan, greenChan})
             setChanNC(i, static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(col1.getChanNC(i)), static_cast<double>(col2.getChanNC(i)), aDouble)));
         return *this;
       }
@@ -2697,7 +2698,7 @@ namespace mjr {
       /** Like isClose(), but only checks the R, G, & B channels.
           @return non-zero if the given RGB color is the same as the current color*/
       inline bool isCloseRGB(colorArgType aColor, clrChanT epsilon) requires(blueChan >= 0) {
-        for (int i : {redChan, blueChan, greenChan}) 
+        for (int i : {redChan, blueChan, greenChan})
           if (std::abs(static_cast<channelArithDType>(getChanNC(i)) - static_cast<channelArithDType>(aColor.getChanNC(i))) > epsilon)
             return false;
         return true;
@@ -2854,19 +2855,19 @@ namespace mjr {
           constexpr static csIntType numC = (chanIsInt ? meanChanVal : 0);
           /** Set given colorTpl instance to the selected color in the color scheme.
               @param aColor color object to set.
-              @param csIdx Index of color in pallet.  Wrapped to [0, meanChanVal].
+              @param csVal Index of color in pallet.  Wrapped to [0, meanChanVal].
               @return Returns a reference to \a aColor. */
-          static inline colorTpl& c(colorRefType aColor, csNatType csIdx) {
-            clrChanT cVal = static_cast<clrChanT>(numberWrap(csIdx, meanChanVal));
+          static inline colorTpl& c(colorRefType aColor, csNatType csVal) {
+            clrChanT cVal = static_cast<clrChanT>(numberWrap(csVal, meanChanVal));
             colorTpl cc(corner);
             return aColor.setChansRGB(static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getRed()   ? cVal : -cVal)),
                                       static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getGreen() ? cVal : -cVal)),
                                       static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getBlue()  ? cVal : -cVal)));
           }
           /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
-              @param csIdx Index of color in pallet.  Wrapped to [0, meanChanVal].
+              @param csVal Index of color in pallet.  Wrapped to [0, meanChanVal].
               @return Returns a colorTpl value */
-          static inline colorTpl c(csNatType csIdx) { colorTpl tmp; return c(tmp, csIdx); }
+          static inline colorTpl c(csNatType csVal) { colorTpl tmp; return c(tmp, csVal); }
       };
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Template providing RGB color cube gradiant color schemes */
@@ -2878,24 +2879,24 @@ namespace mjr {
               @param aColor color object to set.
               @param csIdx Integer used to select a color from the discrete gradiaant.
               @return Returns a reference to \a aColor. */
-          template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG) requires (std::floating_point<saT>) { 
+          template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG) requires (std::floating_point<saT>) {
             csFltType csX = static_cast<csFltType>(csG);
-            return aColor.cmpRGBcornerCGradiant(csX, numA, cols);          
+            return aColor.cmpRGBcornerCGradiant(csX, numA, cols);
           }
           /** Set given colorTpl instance to the selected color in the color scheme.
               @param aColor color object to set.
               @param csG    Floating point value in [0, 1] used to select a color from the continuous color gradiant.
               @return Returns a reference to \a aColor. */
-          template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG) requires (std::integral<saT>) { 
+          template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG) requires (std::integral<saT>) {
             csIntType csIdx = static_cast<csIntType>(csG);
-            return aColor.cmpRGBcornerDGradiant(csIdx % numC, numA, cols); 
+            return aColor.cmpRGBcornerDGradiant(csIdx % numC, numA, cols);
           }
           /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
               @param csG color scheme selector
               @return Returns a colorTpl value */
-          template<typename saT> static inline colorTpl c(saT csG) requires (std::integral<saT> || std::floating_point<saT>) { 
-            colorTpl tmp; 
-            return c(tmp, csG); 
+          template<typename saT> static inline colorTpl c(saT csG) requires (std::integral<saT> || std::floating_point<saT>) {
+            colorTpl tmp;
+            return c(tmp, csG);
           }
         private:
           constexpr static int numA = (sizeof...(corners));
@@ -2927,7 +2928,7 @@ namespace mjr {
               @param aColor color object to set.
               @param csIdx Integer used to select a color from the discrete gradiaant.
               @return Returns a reference to \a aColor. */
-          template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG) requires (std::floating_point<saT>) { 
+          template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG) requires (std::floating_point<saT>) {
             csFltType csX = static_cast<csFltType>(csG);
             return aColor.cmpGradiant(numberWrap(csX, 1.0), numC, d);
           }
@@ -2935,16 +2936,16 @@ namespace mjr {
               @param aColor color object to set.
               @param csG    Floating point value in [0, 1] used to select a color from the continuous color gradiant.
               @return Returns a reference to \a aColor. */
-          template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG) requires (std::integral<saT>) { 
+          template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG) requires (std::integral<saT>) {
             csIntType csIdx = static_cast<csIntType>(csG);
             return aColor.setRGBfromLogPackIntARGB(d[csIdx % numC]);
           }
           /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
               @param csG color scheme color selector
               @return Returns a colorTpl value */
-          template<typename saT> static inline colorTpl c(saT csG) requires (std::integral<saT> || std::floating_point<saT>) { 
-            colorTpl tmp; 
-            return c(tmp, csG); 
+          template<typename saT> static inline colorTpl c(saT csG) requires (std::integral<saT> || std::floating_point<saT>) {
+            colorTpl tmp;
+            return c(tmp, csG);
           }
         private:
           constexpr static uint32_t d[] = { colors... };
@@ -2960,7 +2961,7 @@ namespace mjr {
               @param aColor color object to set.
               @param csIdx Integer used to select a color from the discrete gradiaant.
               @return Returns a reference to \a aColor. */
-          template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG, csIntType numC=maxNumC) requires (std::floating_point<saT>) { 
+          template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG, csIntType numC=maxNumC) requires (std::floating_point<saT>) {
             csFltType csX = static_cast<csFltType>(csG);
             csIntType b = std::clamp(numC, minNumC, maxNumC);
             return aColor.cmpGradiant(numberWrap(csX, 1.0), b, &d[b*(b-1)/2-3+0]);
@@ -2969,7 +2970,7 @@ namespace mjr {
               @param aColor color object to set.
               @param csG    Floating point value in [0, 1] used to select a color from the continuous color gradiant.
               @return Returns a reference to \a aColor. */
-          template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG, csIntType numC=maxNumC) requires (std::integral<saT>) { 
+          template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG, csIntType numC=maxNumC) requires (std::integral<saT>) {
             csIntType csIdx = static_cast<csIntType>(csG);
             csIntType b = std::clamp(numC, minNumC, maxNumC);
             csIntType i = csIdx % b;
@@ -2979,9 +2980,9 @@ namespace mjr {
               @param csG color scheme color selector
               @param numC Number of colors for the given scheme.  Will be clamped to [minNumC, maxNumC].
               @return Returns a colorTpl value */
-          template<typename saT> static inline colorTpl c(saT csG, csIntType numC=maxNumC) requires (std::integral<saT> || std::floating_point<saT>) { 
-            colorTpl tmp; 
-            return c(tmp, csG, numC); 
+          template<typename saT> static inline colorTpl c(saT csG, csIntType numC=maxNumC) requires (std::integral<saT> || std::floating_point<saT>) {
+            colorTpl tmp;
+            return c(tmp, csG, numC);
           }
         private:
           constexpr static uint32_t d[] = { colors... };
@@ -3184,6 +3185,23 @@ namespace mjr {
       //@}
 
       //========================================================================================================================================================
+      /** @name Color Schemes: RGB Divergent Ramps */
+      //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csCCdivBWR
+          @ingroup cs
+          @extends csCC_tpl
+          Divergent color scheme with blue on one end and red on the other -- white in the middle. Provides (mjr::colorTpl::chanStepMax*2+1) unique colors. */
+      typedef csCC_tpl<cornerColorEnum::BLUE, cornerColorEnum::WHITE, cornerColorEnum::RED>     csCCdivBWR;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csCCdivCWM
+          @ingroup cs
+          @extends csCC_tpl
+          Divergent color scheme with cyan on one end and magenta on the other -- white in the middle. Provides (mjr::colorTpl::chanStepMax*2+1) unique colors. */
+      typedef csCC_tpl<cornerColorEnum::CYAN, cornerColorEnum::WHITE, cornerColorEnum::MAGENTA> csCCdivCWM;
+      //@}
+
+      //========================================================================================================================================================
       /** @name Color Schemes: RGB Cube Diagional Ramps */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3330,13 +3348,13 @@ namespace mjr {
       //========================================================================================================================================================
       /** @name Color Schemes: Binary */
       //@{
-      typedef csBin_tpl<cornerColorEnum::BLACK,   cornerColorEnum::WHITE>  ccBin01; //!< Binary Black-White color scheme. First color for even inputs and second color for odd.
-      typedef csBin_tpl<cornerColorEnum::GREEN,   cornerColorEnum::BLUE>   ccBinGB; //!< Binary Green-Blue color scheme. First color for even inputs and second color for odd.
-      typedef csBin_tpl<cornerColorEnum::RED,     cornerColorEnum::BLUE>   ccBinRB; //!< Binary Red-Blue color scheme. First color for even inputs and second color for odd.
-      typedef csBin_tpl<cornerColorEnum::MAGENTA, cornerColorEnum::CYAN>   ccBinMC; //!< Binary Magenta-Cyan color scheme. First color for even inputs and second color for odd.
-      typedef csBin_tpl<cornerColorEnum::YELLOW,  cornerColorEnum::CYAN>   ccBinYC; //!< Binary Yellow-Cyan color scheme. First color for even inputs and second color for odd.
-      typedef csBin_tpl<cornerColorEnum::RED,     cornerColorEnum::GREEN>  ccBinRG; //!< Binary Red-Green color scheme. First color for even inputs and second color for odd.
-      typedef csBin_tpl<cornerColorEnum::MAGENTA, cornerColorEnum::YELLOW> ccBinMY; //!< Binary Magenta-Yellow color scheme. First color for even inputs and second color for odd.
+      typedef csBin_tpl<cornerColorEnum::BLACK,   cornerColorEnum::WHITE>  csBin01; //!< Binary Black-White color scheme. First color for even inputs and second color for odd.
+      typedef csBin_tpl<cornerColorEnum::GREEN,   cornerColorEnum::BLUE>   csBinGB; //!< Binary Green-Blue color scheme. First color for even inputs and second color for odd.
+      typedef csBin_tpl<cornerColorEnum::RED,     cornerColorEnum::BLUE>   csBinRB; //!< Binary Red-Blue color scheme. First color for even inputs and second color for odd.
+      typedef csBin_tpl<cornerColorEnum::MAGENTA, cornerColorEnum::CYAN>   csBinMC; //!< Binary Magenta-Cyan color scheme. First color for even inputs and second color for odd.
+      typedef csBin_tpl<cornerColorEnum::YELLOW,  cornerColorEnum::CYAN>   csBinYC; //!< Binary Yellow-Cyan color scheme. First color for even inputs and second color for odd.
+      typedef csBin_tpl<cornerColorEnum::RED,     cornerColorEnum::GREEN>  csBinRG; //!< Binary Red-Green color scheme. First color for even inputs and second color for odd.
+      typedef csBin_tpl<cornerColorEnum::MAGENTA, cornerColorEnum::YELLOW> csBinMY; //!< Binary Magenta-Yellow color scheme. First color for even inputs and second color for odd.
       //@}
 
       //========================================================================================================================================================
@@ -3358,7 +3376,8 @@ namespace mjr {
             csIdx = csIdx % numC;
             return aColor.setChansRGB(static_cast<clrChanT>(csIdx / 3 + (csIdx%3==0?1:0)),
                                       static_cast<clrChanT>(csIdx / 3 + (csIdx%3==1?1:0)),
-                                      static_cast<clrChanT>(csIdx / 3 + (csIdx%3==2?1:0)));            }
+                                      static_cast<clrChanT>(csIdx / 3 + (csIdx%3==2?1:0)));
+          }
           /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
               @param csIdx Index of color in pallet.  Wrapped to [0, numC-1].
               @return Returns a colorTpl value */

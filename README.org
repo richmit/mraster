@@ -3,7 +3,7 @@ espeically things like fractals.
 
 It is designed to be easy enough for beginners, but advanced enough
 for experts.  It integrates well into existing code, uses pure C++20,
-has a minimum of external depeadancies, and is quite fast.
+requires no external dependencies, and is quite fast.
 
 Some examples of what can be done with *MRaster*:
 
