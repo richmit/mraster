@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-08-18 Thu 17:56 -->
+<!-- 2022-08-20 Sat 11:51 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster Color Schemes</title>
@@ -288,7 +288,11 @@
 <li><a href="#csCCud">2.9.1. Predefined Schemes</a></li>
 </ul>
 </li>
-<li><a href="#cc-div-3">2.10. Three Segment Diverging Maps</a></li>
+<li><a href="#cc-div-3">2.10. Three Segment Diverging Maps</a>
+<ul>
+<li><a href="#csCCdiv">2.10.1. Predefined Schemes</a></li>
+</ul>
+</li>
 <li><a href="#cc-h-rmp">2.11. Center point ramps (HSL schemes)</a>
 <ul>
 <li><a href="#csHSLh">2.11.1. Predefined Schemes</a></li>
@@ -302,12 +306,22 @@
 </ul>
 </li>
 <li><a href="#csPLY">3. Continuous Polynomial Schemes</a></li>
-<li><a href="#csCH">4. Dav Green's cubehelix color maps</a></li>
+<li><a href="#csCH">4. Dave Green's cubehelix color maps</a></li>
 <li><a href="#csPGrey">5. Pseudo-Greyscale</a></li>
 <li><a href="#csRainbow">6. Spectral</a></li>
 <li><a href="#csCB">7. Color Brewer</a></li>
 <li><a href="#csWS">8. Web Safe &amp; Color Blind Pallets</a></li>
 <li><a href="#csFPmisc">9. Miscilanious Pallets</a></li>
+<li><a href="#csBin">10. Binary Pallets</a></li>
+<li><a href="#xRef">11. Predefined Color Scheme Cross Reference</a>
+<ul>
+<li><a href="#xRefGrey">11.1. Greys</a></li>
+<li><a href="#xRefCirc">11.2. Circular</a></li>
+<li><a href="#xRefDiv">11.3. Divergent</a></li>
+<li><a href="#xRefQual">11.4. Qualitative</a></li>
+<li><a href="#xRefSeq">11.5. Sequential</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -328,12 +342,14 @@ inner classes follow a regular naming convention:
 <li><a href="#csCCcons"><code>csCCcons ......</code></a> RGB color cube: Gradients with constant brightness (template: <code>csCC_tpl</code>)</li>
 <li><a href="#csCColde"><code>csCColde ......</code></a> RGB color cube: Some classic color gradients (template: <code>csCC_tpl</code>)</li>
 <li><a href="#csCCud"><code>csCCud ........</code></a> RGB color cube: Two color up-down ramps (template: <code>csCC_tpl</code>)</li>
+<li><a href="#csCCdiv"><code>csCCdiv .......</code></a> RGB color cube: Three Segment Diverging Maps (template: <code>csCC_tpl</code>)</li>
 <li><a href="#csCCsum"><code>csCCSum .......</code></a> RGB color cube: Sum ramp (template: <code>csCC_tpl</code>)</li>
 <li><a href="#csHSLh"><code>csHSLh ........</code></a> RGB color cube: Gradients from the cube center to a corner (template: <code>csHSLh_tpl</code>)</li>
-<li><code>csBin .........</code> RGB Binary Schemes (template: <code>csCC_tpl</code>)</li>
+<li><a href="#csBin"><code>csBin .........</code></a> RGB Binary Schemes (template: <code>csCC_tpl</code>)</li>
 <li><a href="#csPGrey"><code>csPGrey .......</code></a> RGB Pseudo-greyscale</li>
 <li><a href="#csRainbow"><code>csRainbow .....</code></a> RGB spectrum based colors</li>
 <li><a href="#csCH"><code>csCH ..........</code></a> RGB Cubehelix colors (template: <code>csCubeHelix_tpl</code>)</li>
+<li><a href="#csBin"><code>csBin .........</code></a> Defined by parametric polynomial curves in the RGB color cube. (template: <code>csPLY_tpl</code>)</li>
 </ul>
 
 <p>
@@ -474,7 +490,7 @@ together.  The next most popular is a pairwise linear curve connecting several c
 </p>
 
 <p>
-Digital images are mos commonly represented with integer values for \(R\), \(G\), &amp; \(B\).  Most commonly unsigned, 8-bit integers &#x2013; \(0.0\) mapping to \(0\) and \(1.0\)
+Digital images are most commonly represented with integer values for \(R\), \(G\), &amp; \(B\).  Most commonly unsigned, 8-bit integers &#x2013; \(0.0\) mapping to \(0\) and \(1.0\)
 mapping to \(255\).  In this scenario one might think of the RGB color space as a discrete set of \(16777216\) values, and color gradients as finite sequences of
 discrete "steps" from one discrete color value to another.  For example, a linear gradient from "green" to "yellow" will have precisely \(256\) unique steps when
 the color space is defined in terms of 8-bit, integer color channels.  Note that a linear gradient from "green" to "magenta", across the diagonal of the cube,
@@ -802,6 +818,18 @@ supported via named methods (selected for attractiveness):
 <li><code>CWM</code> &#x2013; intensity between 2 and 3</li>
 </ul>
 </div>
+
+<div id="outline-container-csCCdiv" class="outline-4">
+<h4 id="csCCdiv"><span class="section-number-4">2.10.1.</span> Predefined Schemes</h4>
+<div class="outline-text-4" id="text-csCCdiv">
+<dl class="org-dl">
+<dt><code>csCCdivBWR</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCdivBWR_50.png" alt="color_lut_docs_csCCdivBWR_50.png" /></dd>
+<dt><code>csCCdivCWM</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCdivCWM_50.png" alt="color_lut_docs_csCCdivCWM_50.png" /></dd>
+</dl>
+</div>
+</div>
 </div>
 
 <div id="outline-container-cc-h-rmp" class="outline-3">
@@ -914,7 +942,7 @@ color maps that don't require fancy interpolating schemes.
 </div>
 
 <div id="outline-container-csCH" class="outline-2">
-<h2 id="csCH"><span class="section-number-2">4.</span> Dav Green's cubehelix color maps</h2>
+<h2 id="csCH"><span class="section-number-2">4.</span> Dave Green's cubehelix color maps</h2>
 <div class="outline-text-2" id="text-csCH">
 <p>
 The <code>csCubeHelix_tpl</code> templte can geneate any of the cubehelix schemes, but <code>colorTpl</code> predefines three I particularly like:
@@ -1130,42 +1158,336 @@ the origonal sources.
 
 <dl class="org-dl">
 <dt><code>csFPblAqGrYeOrReVi200</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csFPblAqGrYeOrReVi200_50.png" alt="color_lut_docs_csFPblAqGrYeOrReVi200_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csFPblAqGrYeOrReVi200_50.png" alt="color_lut_docs_csFPblAqGrYeOrReVi200_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPblAqGrYeOrReVi200C_50.png" alt="color_lut_docs_csFPblAqGrYeOrReVi200C_50.png" /></dd>
 <dt><code>csFPcircular12</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csFPcircular12_50.png" alt="color_lut_docs_csFPcircular12_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csFPcircular12_50.png" alt="color_lut_docs_csFPcircular12_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPcircular12C_50.png" alt="color_lut_docs_csFPcircular12C_50.png" /></dd>
 <dt><code>csFPcircular24</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csFPcircular24_50.png" alt="color_lut_docs_csFPcircular24_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csFPcircular24_50.png" alt="color_lut_docs_csFPcircular24_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPcircular24C_50.png" alt="color_lut_docs_csFPcircular24C_50.png" /></dd>
 <dt><code>csFPcmoceanAlgae</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csFPcmoceanAlgae_50.png" alt="color_lut_docs_csFPcmoceanAlgae_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csFPcmoceanAlgae_50.png" alt="color_lut_docs_csFPcmoceanAlgae_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanAlgaeC_50.png" alt="color_lut_docs_csFPcmoceanAlgaeC_50.png" /></dd>
 <dt><code>csFPcmoceanAmp</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csFPcmoceanAmp_50.png" alt="color_lut_docs_csFPcmoceanAmp_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csFPcmoceanAmp_50.png" alt="color_lut_docs_csFPcmoceanAmp_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanAmpC_50.png" alt="color_lut_docs_csFPcmoceanAmpC_50.png" /></dd>
 <dt><code>csFPcmoceanBalance</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csFPcmoceanBalance_50.png" alt="color_lut_docs_csFPcmoceanBalance_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csFPcmoceanBalance_50.png" alt="color_lut_docs_csFPcmoceanBalance_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanBalanceC_50.png" alt="color_lut_docs_csFPcmoceanBalanceC_50.png" /></dd>
 <dt><code>csFPcmoceanCurl</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csFPcmoceanCurl_50.png" alt="color_lut_docs_csFPcmoceanCurl_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csFPcmoceanCurl_50.png" alt="color_lut_docs_csFPcmoceanCurl_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanCurlC_50.png" alt="color_lut_docs_csFPcmoceanCurlC_50.png" /></dd>
 <dt><code>csFPcmoceanDeep</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csFPcmoceanDeep_50.png" alt="color_lut_docs_csFPcmoceanDeep_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csFPcmoceanDeep_50.png" alt="color_lut_docs_csFPcmoceanDeep_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanDeepC_50.png" alt="color_lut_docs_csFPcmoceanDeepC_50.png" /></dd>
 <dt><code>csFPcmoceanDense</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csFPcmoceanDense_50.png" alt="color_lut_docs_csFPcmoceanDense_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csFPcmoceanDense_50.png" alt="color_lut_docs_csFPcmoceanDense_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanDenseC_50.png" alt="color_lut_docs_csFPcmoceanDenseC_50.png" /></dd>
 <dt><code>csFPcmoceanHaline</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csFPcmoceanHaline_50.png" alt="color_lut_docs_csFPcmoceanHaline_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csFPcmoceanHaline_50.png" alt="color_lut_docs_csFPcmoceanHaline_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanHalineC_50.png" alt="color_lut_docs_csFPcmoceanHalineC_50.png" /></dd>
 <dt><code>csFPcmoceanIce</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csFPcmoceanIce_50.png" alt="color_lut_docs_csFPcmoceanIce_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csFPcmoceanIce_50.png" alt="color_lut_docs_csFPcmoceanIce_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanIceC_50.png" alt="color_lut_docs_csFPcmoceanIceC_50.png" /></dd>
 <dt><code>csFPcmoceanTempo</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csFPcmoceanTempo_50.png" alt="color_lut_docs_csFPcmoceanTempo_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csFPcmoceanTempo_50.png" alt="color_lut_docs_csFPcmoceanTempo_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanTempoC_50.png" alt="color_lut_docs_csFPcmoceanTempoC_50.png" /></dd>
 <dt><code>csFPmplBrBG</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csFPmplBrBG_50.png" alt="color_lut_docs_csFPmplBrBG_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csFPmplBrBG_50.png" alt="color_lut_docs_csFPmplBrBG_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPmplBrBGC_50.png" alt="color_lut_docs_csFPmplBrBGC_50.png" /></dd>
 <dt><code>csFPmplOcean</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csFPmplOcean_50.png" alt="color_lut_docs_csFPmplOcean_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csFPmplOcean_50.png" alt="color_lut_docs_csFPmplOcean_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPmplOceanC_50.png" alt="color_lut_docs_csFPmplOceanC_50.png" /></dd>
 <dt><code>csFPmplOranges</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csFPmplOranges_50.png" alt="color_lut_docs_csFPmplOranges_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csFPmplOranges_50.png" alt="color_lut_docs_csFPmplOranges_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPmplOrangesC_50.png" alt="color_lut_docs_csFPmplOrangesC_50.png" /></dd>
 <dt><code>csFPneoDdivVegetationA</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csFPneoDdivVegetationA_50.png" alt="color_lut_docs_csFPneoDdivVegetationA_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csFPneoDdivVegetationA_50.png" alt="color_lut_docs_csFPneoDdivVegetationA_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPneoDdivVegetationAC_50.png" alt="color_lut_docs_csFPneoDdivVegetationAC_50.png" /></dd>
 <dt><code>csFPneoDivVegetationC</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csFPneoDivVegetationC_50.png" alt="color_lut_docs_csFPneoDivVegetationC_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csFPneoDivVegetationC_50.png" alt="color_lut_docs_csFPneoDivVegetationC_50.png" />
+<img src="./pics/cs/color_lut_docs_csFPneoDivVegetationCC_50.png" alt="color_lut_docs_csFPneoDivVegetationCC_50.png" /></dd>
 <dt><code>csFPneoModisNdvi</code></dt><dd><br />
-<img src="./pics/cs/color_lut_docs_csFPneoModisNdvi_50.png" alt="color_lut_docs_csFPneoModisNdvi_50.png" /></dd>
+<img src="./pics/cs/color_lut_docs_csFPneoModisNdvi_50.png" alt="color_lut_docs_csFPneoModisNdvi_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPneoModisNdviC_50.png" alt="color_lut_docs_csFPneoModisNdviC_50.png" /></dd>
 </dl>
+</div>
+</div>
+
+<div id="outline-container-csBin" class="outline-2">
+<h2 id="csBin"><span class="section-number-2">10.</span> Binary Pallets</h2>
+<div class="outline-text-2" id="text-csBin">
+<p>
+These are really just two color fixed pallets; however, they are generally used as infinite pallets that take on the first color for even indexes and the
+second color for odd indexes. Unlike fixed pallets, these do not have a "continuous" option and they are restricted to RGB corner colors.
+</p>
+
+<dl class="org-dl">
+<dt><code>csBin01</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csBin01_50.png" alt="color_lut_docs_csBin01_50.png" /></dd>
+<dt><code>csBinGB</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csBinGB_50.png" alt="color_lut_docs_csBinGB_50.png" /></dd>
+<dt><code>csBinMC</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csBinMC_50.png" alt="color_lut_docs_csBinMC_50.png" /></dd>
+<dt><code>csBinMY</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csBinMY_50.png" alt="color_lut_docs_csBinMY_50.png" /></dd>
+<dt><code>csBinRB</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csBinRB_50.png" alt="color_lut_docs_csBinRB_50.png" /></dd>
+<dt><code>csBinRG</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csBinRG_50.png" alt="color_lut_docs_csBinRG_50.png" /></dd>
+<dt><code>csBinYC</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csBinYC_50.png" alt="color_lut_docs_csBinYC_50.png" /></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-xRef" class="outline-2">
+<h2 id="xRef"><span class="section-number-2">11.</span> Predefined Color Scheme Cross Reference</h2>
+<div class="outline-text-2" id="text-xRef">
+</div>
+
+<div id="outline-container-xRefGrey" class="outline-3">
+<h3 id="xRefGrey"><span class="section-number-3">11.1.</span> Greys</h3>
+<div class="outline-text-3" id="text-xRefGrey">
+<p>
+Note <code>csCubeHelix_tpl</code> with very small amplitude produces greys similar to <code>csPGrey3x</code> &amp; <code>csPGrey4x</code>.
+</p>
+
+<dl class="org-dl">
+<dt><code>csPGrey3x</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPGrey3x_50.png" alt="color_lut_docs_csPGrey3x_50.png" /></dd>
+<dt><code>csPGrey4x</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPGrey4x_50.png" alt="color_lut_docs_csPGrey4x_50.png" /></dd>
+<dt><code>csCBGreys</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBGreys_50.png" alt="color_lut_docs_csCBGreys_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBGreysC_50.png" alt="color_lut_docs_csCBGreysC_50.png" /></dd>
+<dt><code>csBin01</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csBin01_50.png" alt="color_lut_docs_csBin01_50.png" /></dd>
+<dt><code>csPLYgrey</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPLYgrey_50.png" alt="color_lut_docs_csPLYgrey_50.png" /></dd>
+<dt><code>csPLYquad</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPLYquad_50.png" alt="color_lut_docs_csPLYquad_50.png" /></dd>
+<dt><code>csCCdiag01</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCdiag01_50.png" alt="color_lut_docs_csCCdiag01_50.png" /></dd>
+</dl>
+</div>
+</div>
+
+
+<div id="outline-container-xRefCirc" class="outline-3">
+<h3 id="xRefCirc"><span class="section-number-3">11.2.</span> Circular</h3>
+<div class="outline-text-3" id="text-xRefCirc">
+<p>
+Note <code>csCC_tpl</code> can be used to make circular color schemes &#x2013; any cycle in the color cube vertex graph forms a circular color scheme.
+</p>
+
+<p>
+Note <code>csPLY_tpl</code> can be used to make circular color schemes &#x2013; any closed parametric curve in the RGB color cube space forms a circular color scheme.
+</p>
+
+<dl class="org-dl">
+<dt><code>csFPblAqGrYeOrReVi200</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csFPblAqGrYeOrReVi200_50.png" alt="color_lut_docs_csFPblAqGrYeOrReVi200_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPblAqGrYeOrReVi200C_50.png" alt="color_lut_docs_csFPblAqGrYeOrReVi200C_50.png" /></dd>
+<dt><code>csFPcircular12</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csFPcircular12_50.png" alt="color_lut_docs_csFPcircular12_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPcircular12C_50.png" alt="color_lut_docs_csFPcircular12C_50.png" /></dd>
+<dt><code>csFPcircular24</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csFPcircular24_50.png" alt="color_lut_docs_csFPcircular24_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPcircular24C_50.png" alt="color_lut_docs_csFPcircular24C_50.png" /></dd>
+<dt><code>csCColdeRainbow</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCColdeRainbow_50.png" alt="color_lut_docs_csCColdeRainbow_50.png" /></dd>
+<dt><code>csPLYhsvRB</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPLYhsvRB_50.png" alt="color_lut_docs_csPLYhsvRB_50.png" /></dd>
+<dt><code>csCCconsTwo</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCconsTwo_50.png" alt="color_lut_docs_csCCconsTwo_50.png" /></dd>
+<dt><code>csCCconsOne</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCconsOne_50.png" alt="color_lut_docs_csCCconsOne_50.png" /></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-xRefDiv" class="outline-3">
+<h3 id="xRefDiv"><span class="section-number-3">11.3.</span> Divergent</h3>
+<div class="outline-text-3" id="text-xRefDiv">
+<dl class="org-dl">
+<dt><code>csFPcmoceanBalance</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanBalance_50.png" alt="color_lut_docs_csFPcmoceanBalance_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanBalanceC_50.png" alt="color_lut_docs_csFPcmoceanBalanceC_50.png" /></dd>
+<dt><code>csFPcmoceanCurl</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanCurl_50.png" alt="color_lut_docs_csFPcmoceanCurl_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanCurlC_50.png" alt="color_lut_docs_csFPcmoceanCurlC_50.png" /></dd>
+<dt><code>csFPneoDdivVegetationA</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csFPneoDdivVegetationA_50.png" alt="color_lut_docs_csFPneoDdivVegetationA_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPneoDdivVegetationAC_50.png" alt="color_lut_docs_csFPneoDdivVegetationAC_50.png" /></dd>
+<dt><code>csFPneoDivVegetationC</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csFPneoDivVegetationC_50.png" alt="color_lut_docs_csFPneoDivVegetationC_50.png" />
+<img src="./pics/cs/color_lut_docs_csFPneoDivVegetationCC_50.png" alt="color_lut_docs_csFPneoDivVegetationCC_50.png" /></dd>
+<dt><code>csFPmplBrBG</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csFPmplBrBG_50.png" alt="color_lut_docs_csFPmplBrBG_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPmplBrBGC_50.png" alt="color_lut_docs_csFPmplBrBGC_50.png" /></dd>
+<dt><code>csCBBrBG</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBBrBG_50.png" alt="color_lut_docs_csCBBrBG_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBBrBGC_50.png" alt="color_lut_docs_csCBBrBGC_50.png" /></dd>
+<dt><code>csCBPuOr</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBPuOr_50.png" alt="color_lut_docs_csCBPuOr_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBPuOrC_50.png" alt="color_lut_docs_csCBPuOrC_50.png" /></dd>
+<dt><code>csCBPiYG</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBPiYG_50.png" alt="color_lut_docs_csCBPiYG_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBPiYGC_50.png" alt="color_lut_docs_csCBPiYGC_50.png" /></dd>
+<dt><code>csCBPRGn</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBPRGn_50.png" alt="color_lut_docs_csCBPRGn_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBPRGnC_50.png" alt="color_lut_docs_csCBPRGnC_50.png" /></dd>
+<dt><code>csCBRdBu</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBRdBu_50.png" alt="color_lut_docs_csCBRdBu_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBRdBuC_50.png" alt="color_lut_docs_csCBRdBuC_50.png" /></dd>
+<dt><code>csCBRdGy</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBRdGy_50.png" alt="color_lut_docs_csCBRdGy_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBRdGyC_50.png" alt="color_lut_docs_csCBRdGyC_50.png" /></dd>
+<dt><code>csCBRdYlGn</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBRdYlGn_50.png" alt="color_lut_docs_csCBRdYlGn_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBRdYlGnC_50.png" alt="color_lut_docs_csCBRdYlGnC_50.png" /></dd>
+<dt><code>csCBRdYlBu</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBRdYlBu_50.png" alt="color_lut_docs_csCBRdYlBu_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBRdYlBuC_50.png" alt="color_lut_docs_csCBRdYlBuC_50.png" /></dd>
+<dt><code>csCBSpectral</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBSpectral_50.png" alt="color_lut_docs_csCBSpectral_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBSpectralC_50.png" alt="color_lut_docs_csCBSpectralC_50.png" /></dd>
+<dt><code>csCCdivBWR</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCdivBWR_50.png" alt="color_lut_docs_csCCdivBWR_50.png" /></dd>
+<dt><code>csCCdivCWM</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCdivCWM_50.png" alt="color_lut_docs_csCCdivCWM_50.png" /></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-xRefQual" class="outline-3">
+<h3 id="xRefQual"><span class="section-number-3">11.4.</span> Qualitative</h3>
+<div class="outline-text-3" id="text-xRefQual">
+<dl class="org-dl">
+<dt><code>csCBDark2</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBDark2_50.png" alt="color_lut_docs_csCBDark2_50.png" /></dd>
+<dt><code>csCBPaired</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBPaired_50.png" alt="color_lut_docs_csCBPaired_50.png" /></dd>
+<dt><code>csCBSet1</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBSet1_50.png" alt="color_lut_docs_csCBSet1_50.png" /></dd>
+<dt><code>csCBSet2</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBSet2_50.png" alt="color_lut_docs_csCBSet2_50.png" /></dd>
+<dt><code>csCBSet3</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBSet3_50.png" alt="color_lut_docs_csCBSet3_50.png" /></dd>
+</dl>
+</div>
+</div>
+
+<div id="outline-container-xRefSeq" class="outline-3">
+<h3 id="xRefSeq"><span class="section-number-3">11.5.</span> Sequential</h3>
+<div class="outline-text-3" id="text-xRefSeq">
+<dl class="org-dl">
+<dt><code>csCBBlues</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBBlues_50.png" alt="color_lut_docs_csCBBlues_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBBluesC_50.png" alt="color_lut_docs_csCBBluesC_50.png" /></dd>
+
+<dt><code>csCBBuGn</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBBuGn_50.png" alt="color_lut_docs_csCBBuGn_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBBuGnC_50.png" alt="color_lut_docs_csCBBuGnC_50.png" /></dd>
+<dt><code>csCBBuPu</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBBuPu_50.png" alt="color_lut_docs_csCBBuPu_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBBuPuC_50.png" alt="color_lut_docs_csCBBuPuC_50.png" /></dd>
+<dt><code>csCBGnBu</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBGnBu_50.png" alt="color_lut_docs_csCBGnBu_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBGnBuC_50.png" alt="color_lut_docs_csCBGnBuC_50.png" /></dd>
+<dt><code>csCBGreens</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBGreens_50.png" alt="color_lut_docs_csCBGreens_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBGreensC_50.png" alt="color_lut_docs_csCBGreensC_50.png" /></dd>
+<dt><code>csCBGreys</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBGreys_50.png" alt="color_lut_docs_csCBGreys_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBGreysC_50.png" alt="color_lut_docs_csCBGreysC_50.png" /></dd>
+<dt><code>csCBOranges</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBOranges_50.png" alt="color_lut_docs_csCBOranges_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBOrangesC_50.png" alt="color_lut_docs_csCBOrangesC_50.png" /></dd>
+<dt><code>csCBPuBuGn</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBPuBuGn_50.png" alt="color_lut_docs_csCBPuBuGn_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBPuBuGnC_50.png" alt="color_lut_docs_csCBPuBuGnC_50.png" /></dd>
+<dt><code>csCBPuBu</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBPuBu_50.png" alt="color_lut_docs_csCBPuBu_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBPuBuC_50.png" alt="color_lut_docs_csCBPuBuC_50.png" /></dd>
+<dt><code>csCBPuRd</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBPuRd_50.png" alt="color_lut_docs_csCBPuRd_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBPuRdC_50.png" alt="color_lut_docs_csCBPuRdC_50.png" /></dd>
+<dt><code>csCBPurples</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBPurples_50.png" alt="color_lut_docs_csCBPurples_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBPurplesC_50.png" alt="color_lut_docs_csCBPurplesC_50.png" /></dd>
+<dt><code>csCBRdPu</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBRdPu_50.png" alt="color_lut_docs_csCBRdPu_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBRdPuC_50.png" alt="color_lut_docs_csCBRdPuC_50.png" /></dd>
+<dt><code>csCBReds</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBReds_50.png" alt="color_lut_docs_csCBReds_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBRedsC_50.png" alt="color_lut_docs_csCBRedsC_50.png" /></dd>
+<dt><code>csCBYlGnBu</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBYlGnBu_50.png" alt="color_lut_docs_csCBYlGnBu_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBYlGnBuC_50.png" alt="color_lut_docs_csCBYlGnBuC_50.png" /></dd>
+<dt><code>csCBYlGn</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBYlGn_50.png" alt="color_lut_docs_csCBYlGn_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBYlGnC_50.png" alt="color_lut_docs_csCBYlGnC_50.png" /></dd>
+<dt><code>csCBYlOrBr</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBYlOrBr_50.png" alt="color_lut_docs_csCBYlOrBr_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBYlOrBrC_50.png" alt="color_lut_docs_csCBYlOrBrC_50.png" /></dd>
+<dt><code>csCBYlOrRd</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCBYlOrRd_50.png" alt="color_lut_docs_csCBYlOrRd_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csCBYlOrRdC_50.png" alt="color_lut_docs_csCBYlOrRdC_50.png" /></dd>
+<dt><code>csFPcmoceanAlgae</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanAlgae_50.png" alt="color_lut_docs_csFPcmoceanAlgae_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanAlgaeC_50.png" alt="color_lut_docs_csFPcmoceanAlgaeC_50.png" /></dd>
+<dt><code>csFPcmoceanAmp</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanAmp_50.png" alt="color_lut_docs_csFPcmoceanAmp_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanAmpC_50.png" alt="color_lut_docs_csFPcmoceanAmpC_50.png" /></dd>
+<dt><code>csFPcmoceanDeep</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanDeep_50.png" alt="color_lut_docs_csFPcmoceanDeep_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanDeepC_50.png" alt="color_lut_docs_csFPcmoceanDeepC_50.png" /></dd>
+<dt><code>csFPcmoceanDense</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanDense_50.png" alt="color_lut_docs_csFPcmoceanDense_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanDenseC_50.png" alt="color_lut_docs_csFPcmoceanDenseC_50.png" /></dd>
+<dt><code>csFPcmoceanHaline</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanHaline_50.png" alt="color_lut_docs_csFPcmoceanHaline_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanHalineC_50.png" alt="color_lut_docs_csFPcmoceanHalineC_50.png" /></dd>
+<dt><code>csFPcmoceanIce</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanIce_50.png" alt="color_lut_docs_csFPcmoceanIce_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanIceC_50.png" alt="color_lut_docs_csFPcmoceanIceC_50.png" /></dd>
+<dt><code>csFPcmoceanTempo</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanTempo_50.png" alt="color_lut_docs_csFPcmoceanTempo_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPcmoceanTempoC_50.png" alt="color_lut_docs_csFPcmoceanTempoC_50.png" /></dd>
+<dt><code>csFPmplOcean</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csFPmplOcean_50.png" alt="color_lut_docs_csFPmplOcean_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPmplOceanC_50.png" alt="color_lut_docs_csFPmplOceanC_50.png" /></dd>
+<dt><code>csFPmplOranges</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csFPmplOranges_50.png" alt="color_lut_docs_csFPmplOranges_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPmplOrangesC_50.png" alt="color_lut_docs_csFPmplOrangesC_50.png" /></dd>
+<dt><code>csFPneoModisNdvi</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csFPneoModisNdvi_50.png" alt="color_lut_docs_csFPneoModisNdvi_50.png" /> <br />
+<img src="./pics/cs/color_lut_docs_csFPneoModisNdviC_50.png" alt="color_lut_docs_csFPneoModisNdviC_50.png" /></dd>
+<dt><code>csCCsumRGB</code> &amp; <code>csCColdeFireRamp</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCsumRGB_50.png" alt="color_lut_docs_csCCsumRGB_50.png" /></dd>
+<dt><code>csPLYinferno</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPLYinferno_50.png" alt="color_lut_docs_csPLYinferno_50.png" /></dd>
+<dt><code>csPLYmagma</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPLYmagma_50.png" alt="color_lut_docs_csPLYmagma_50.png" /></dd>
+<dt><code>csPLYparula</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPLYparula_50.png" alt="color_lut_docs_csPLYparula_50.png" /></dd>
+<dt><code>csPLYplasma</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPLYplasma_50.png" alt="color_lut_docs_csPLYplasma_50.png" /></dd>
+<dt><code>csPLYviridis</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPLYviridis_50.png" alt="color_lut_docs_csPLYviridis_50.png" /></dd>
+<dt><code>csPLYcividis</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csPLYcividis_50.png" alt="color_lut_docs_csPLYcividis_50.png" /></dd>
+<dt><code>csCHstd</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCHstd_50.png" alt="color_lut_docs_csCHstd_50.png" /></dd>
+<dt><code>csCHblu</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCHblu_50.png" alt="color_lut_docs_csCHblu_50.png" /></dd>
+<dt><code>csCHvio</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCHvio_50.png" alt="color_lut_docs_csCHvio_50.png" /></dd>
+</dl>
+</div>
 </div>
 </div>
 </div>

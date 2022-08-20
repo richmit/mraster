@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-08-12 Fri 16:18 -->
+<!-- 2022-08-20 Sat 11:51 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster</title>
@@ -256,7 +256,7 @@ espeically things like fractals.
 <p>
 It is designed to be easy enough for beginners, but advanced enough
 for experts.  It integrates well into existing code, uses pure C++20,
-has a minimum of external depeadancies, and is quite fast.
+requires no external dependencies, and is quite fast.
 </p>
 
 <p>
@@ -338,6 +338,9 @@ Image size, channel depth, and channel count are limited only by available RAM.<
 schemes, transformations, etc&#x2026;  And they do so with <b>zero</b> overhead in RAM or runtime performance.  In fact, these templated objects are one of the
 primary tools used to optimize <b><code>MRaster</code></b> performance.  Before the conversion to C++20, <code>colorTpl</code> made up about 80% of the code base &#x2013; yes larger than
 <code>ramCanvasTpl</code> even with the complexity of the scanline conversion code in the canvas object.</li>
+<li><b>High reliability</b> <br />
+The library is very mature and has been in published since 1991.  While the code has undergone major rewrites in that time, each rewrite has been
+regression tested against the previously stable version.  More recently, an extensive unit test suite has been built up against the <code>colorTpl</code> class.</li>
 <li><b>Mathematical Use cases</b><br />
 Images have both real &amp; integer coordinates, so they may be thought of as part of the real plane.  In addition a great many
 <a href="./ColorSchemes.html">discrete and continuous color schemes</a> are supported.  Together these features make <b><code>MRaster</code></b> a very friendly environment for

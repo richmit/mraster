@@ -71,6 +71,17 @@ int main(void) {
   theRC.resizeCanvas(ct::csPGrey3x::numC, tall); for(csIt x=0;x<ct::csPGrey3x::numC;x++) { theRC.drawLine(x, 0, x, tall, ct::csPGrey3x::c(x));      } theRC.writeTIFFfile("color_lut_docs_csPGrey3x.tiff");
   theRC.resizeCanvas(ct::csPGrey4x::numC, tall); for(csIt x=0;x<ct::csPGrey4x::numC;x++) { theRC.drawLine(x, 0, x, tall, ct::csPGrey4x::c(x));      } theRC.writeTIFFfile("color_lut_docs_csPGrey4x.tiff");
 
+
+  theRC.resizeCanvas(2*tall+gap, tall); 
+  theRC.clrCanvas("white");
+  theRC.drawFillRectangle(0, 0, tall, tall, ct::csBin01::c(0)); theRC.drawFillRectangle(tall+gap, 0, 2*tall+gap, tall, ct::csBin01::c(1)); theRC.writeTIFFfile("color_lut_docs_csBin01.tiff");
+  theRC.drawFillRectangle(0, 0, tall, tall, ct::csBinGB::c(0)); theRC.drawFillRectangle(tall+gap, 0, 2*tall+gap, tall, ct::csBinGB::c(1)); theRC.writeTIFFfile("color_lut_docs_csBinGB.tiff");
+  theRC.drawFillRectangle(0, 0, tall, tall, ct::csBinRB::c(0)); theRC.drawFillRectangle(tall+gap, 0, 2*tall+gap, tall, ct::csBinRB::c(1)); theRC.writeTIFFfile("color_lut_docs_csBinRB.tiff");
+  theRC.drawFillRectangle(0, 0, tall, tall, ct::csBinMC::c(0)); theRC.drawFillRectangle(tall+gap, 0, 2*tall+gap, tall, ct::csBinMC::c(1)); theRC.writeTIFFfile("color_lut_docs_csBinMC.tiff");
+  theRC.drawFillRectangle(0, 0, tall, tall, ct::csBinYC::c(0)); theRC.drawFillRectangle(tall+gap, 0, 2*tall+gap, tall, ct::csBinYC::c(1)); theRC.writeTIFFfile("color_lut_docs_csBinYC.tiff");
+  theRC.drawFillRectangle(0, 0, tall, tall, ct::csBinRG::c(0)); theRC.drawFillRectangle(tall+gap, 0, 2*tall+gap, tall, ct::csBinRG::c(1)); theRC.writeTIFFfile("color_lut_docs_csBinRG.tiff");
+  theRC.drawFillRectangle(0, 0, tall, tall, ct::csBinMY::c(0)); theRC.drawFillRectangle(tall+gap, 0, 2*tall+gap, tall, ct::csBinMY::c(1)); theRC.writeTIFFfile("color_lut_docs_csBinMY.tiff");
+
   theRC.resizeCanvas(ct::csCCdiag01::numC,              tall); for(csIt x=0;x<ct::csCCdiag01::numC;             x++) { theRC.drawLine(x, 0, x, tall, ct::csCCdiag01::c(x));              } theRC.writeTIFFfile("color_lut_docs_csCCdiag01.tiff");
   theRC.resizeCanvas(ct::csPGrey3x::numC,               tall); for(csIt x=0;x<ct::csPGrey3x::numC;              x++) { theRC.drawLine(x, 0, x, tall, ct::csPGrey3x::c(x));               } theRC.writeTIFFfile("color_lut_docs_csPGrey3x.tiff");
   theRC.resizeCanvas(ct::csPGrey4x::numC,               tall); for(csIt x=0;x<ct::csPGrey4x::numC;              x++) { theRC.drawLine(x, 0, x, tall, ct::csPGrey4x::c(x));               } theRC.writeTIFFfile("color_lut_docs_csPGrey4x.tiff");
@@ -101,6 +112,9 @@ int main(void) {
   theRC.resizeCanvas(ct::csHSLhM::numC,                 tall); for(csNt x=0;x<ct::csHSLhM::numC;                x++) { theRC.drawLine(x, 0, x, tall, ct::csHSLhM::c(x));                 } theRC.writeTIFFfile("color_lut_docs_csHSLhM.tiff");
   theRC.resizeCanvas(ct::csHSLhY::numC,                 tall); for(csNt x=0;x<ct::csHSLhY::numC;                x++) { theRC.drawLine(x, 0, x, tall, ct::csHSLhY::c(x));                 } theRC.writeTIFFfile("color_lut_docs_csHSLhY.tiff");
   theRC.resizeCanvas(ct::csHSLhC::numC,                 tall); for(csNt x=0;x<ct::csHSLhC::numC;                x++) { theRC.drawLine(x, 0, x, tall, ct::csHSLhC::c(x));                 } theRC.writeTIFFfile("color_lut_docs_csHSLhC.tiff");
+  theRC.resizeCanvas(ct::csCCdivBWR::numC,              tall); for(csNt x=0;x<ct::csCCdivBWR::numC;             x++) { theRC.drawLine(x, 0, x, tall, ct::csCCdivBWR::c(x));              } theRC.writeTIFFfile("color_lut_docs_csCCdivBWR.tiff");
+  theRC.resizeCanvas(ct::csCCdivCWM::numC,              tall); for(csNt x=0;x<ct::csCCdivCWM::numC;             x++) { theRC.drawLine(x, 0, x, tall, ct::csCCdivCWM::c(x));              } theRC.writeTIFFfile("color_lut_docs_csCCdivCWM.tiff");
+
 
   int tg = tall+gap;
   theRC.resizeCanvas(ct::csCBAccent::maxNumC*tg,  tall); theRC.clrCanvas("white");for(csIt x=0;x<ct::csCBAccent::maxNumC;   x++) { theRC.drawFillRectangle(x*tg, 0, x*tg+tall, tall, ct::csCBAccent::c(x));   } theRC.writeTIFFfile("color_lut_docs_csCBAccent.tiff");
@@ -138,10 +152,6 @@ int main(void) {
   theRC.resizeCanvas(ct::csCBYlGnBu::maxNumC*tg,  tall); theRC.clrCanvas("white");for(csIt x=0;x<ct::csCBYlGnBu::maxNumC;   x++) { theRC.drawFillRectangle(x*tg, 0, x*tg+tall, tall, ct::csCBYlGnBu::c(x));   } theRC.writeTIFFfile("color_lut_docs_csCBYlGnBu.tiff");
   theRC.resizeCanvas(ct::csCBYlOrBr::maxNumC*tg,  tall); theRC.clrCanvas("white");for(csIt x=0;x<ct::csCBYlOrBr::maxNumC;   x++) { theRC.drawFillRectangle(x*tg, 0, x*tg+tall, tall, ct::csCBYlOrBr::c(x));   } theRC.writeTIFFfile("color_lut_docs_csCBYlOrBr.tiff");
   theRC.resizeCanvas(ct::csCBYlOrRd::maxNumC*tg,  tall); theRC.clrCanvas("white");for(csIt x=0;x<ct::csCBYlOrRd::maxNumC;   x++) { theRC.drawFillRectangle(x*tg, 0, x*tg+tall, tall, ct::csCBYlOrRd::c(x));   } theRC.writeTIFFfile("color_lut_docs_csCBYlOrRd.tiff");
-
-
-
-
 
   // theRC.resizeCanvas(ct::csCBAccent::maxNumC*tg,  tall); theRC.clrCanvas("white");for(csIt x=0;x<tg*ct::csCBAccent::maxNumC;   x++) { theRC.drawLine(x, 0, x, tall, ct::csCBAccent::c(1.0*x/tg/ct::csCBAccent::maxNumC));   } theRC.writeTIFFfile("color_lut_docs_csCBAccentC.tiff");
 
@@ -183,6 +193,25 @@ int main(void) {
 
   theRC.set_yIntAxisOrientation(  mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
 
+  theRC.resizeCanvas(maxColors,  tall); for(int x=0;x<maxColors; x++) { theRC.drawLine(x, 0, x, tall, ct::csFPcircular12::c(1.0*x/maxColors));         } theRC.writeTIFFfile("color_lut_docs_csFPcircular12C.tiff");
+  theRC.resizeCanvas(maxColors,  tall); for(int x=0;x<maxColors; x++) { theRC.drawLine(x, 0, x, tall, ct::csFPcircular24::c(1.0*x/maxColors));         } theRC.writeTIFFfile("color_lut_docs_csFPcircular24C.tiff");
+  theRC.resizeCanvas(maxColors,  tall); for(int x=0;x<maxColors; x++) { theRC.drawLine(x, 0, x, tall, ct::csFPblAqGrYeOrReVi200::c(1.0*x/maxColors));  } theRC.writeTIFFfile("color_lut_docs_csFPblAqGrYeOrReVi200C.tiff");
+  theRC.resizeCanvas(maxColors,  tall); for(int x=0;x<maxColors; x++) { theRC.drawLine(x, 0, x, tall, ct::csFPcmoceanAlgae::c(1.0*x/maxColors));       } theRC.writeTIFFfile("color_lut_docs_csFPcmoceanAlgaeC.tiff");
+  theRC.resizeCanvas(maxColors,  tall); for(int x=0;x<maxColors; x++) { theRC.drawLine(x, 0, x, tall, ct::csFPcmoceanAmp::c(1.0*x/maxColors));         } theRC.writeTIFFfile("color_lut_docs_csFPcmoceanAmpC.tiff");
+  theRC.resizeCanvas(maxColors,  tall); for(int x=0;x<maxColors; x++) { theRC.drawLine(x, 0, x, tall, ct::csFPcmoceanBalance::c(1.0*x/maxColors));     } theRC.writeTIFFfile("color_lut_docs_csFPcmoceanBalanceC.tiff");
+  theRC.resizeCanvas(maxColors,  tall); for(int x=0;x<maxColors; x++) { theRC.drawLine(x, 0, x, tall, ct::csFPcmoceanCurl::c(1.0*x/maxColors));        } theRC.writeTIFFfile("color_lut_docs_csFPcmoceanCurlC.tiff");
+  theRC.resizeCanvas(maxColors,  tall); for(int x=0;x<maxColors; x++) { theRC.drawLine(x, 0, x, tall, ct::csFPcmoceanDeep::c(1.0*x/maxColors));        } theRC.writeTIFFfile("color_lut_docs_csFPcmoceanDeepC.tiff");
+  theRC.resizeCanvas(maxColors,  tall); for(int x=0;x<maxColors; x++) { theRC.drawLine(x, 0, x, tall, ct::csFPcmoceanDense::c(1.0*x/maxColors));       } theRC.writeTIFFfile("color_lut_docs_csFPcmoceanDenseC.tiff");
+  theRC.resizeCanvas(maxColors,  tall); for(int x=0;x<maxColors; x++) { theRC.drawLine(x, 0, x, tall, ct::csFPcmoceanHaline::c(1.0*x/maxColors));      } theRC.writeTIFFfile("color_lut_docs_csFPcmoceanHalineC.tiff");
+  theRC.resizeCanvas(maxColors,  tall); for(int x=0;x<maxColors; x++) { theRC.drawLine(x, 0, x, tall, ct::csFPcmoceanIce::c(1.0*x/maxColors));         } theRC.writeTIFFfile("color_lut_docs_csFPcmoceanIceC.tiff");
+  theRC.resizeCanvas(maxColors,  tall); for(int x=0;x<maxColors; x++) { theRC.drawLine(x, 0, x, tall, ct::csFPcmoceanTempo::c(1.0*x/maxColors));       } theRC.writeTIFFfile("color_lut_docs_csFPcmoceanTempoC.tiff");
+  theRC.resizeCanvas(maxColors,  tall); for(int x=0;x<maxColors; x++) { theRC.drawLine(x, 0, x, tall, ct::csFPmplBrBG::c(1.0*x/maxColors));            } theRC.writeTIFFfile("color_lut_docs_csFPmplBrBGC.tiff");
+  theRC.resizeCanvas(maxColors,  tall); for(int x=0;x<maxColors; x++) { theRC.drawLine(x, 0, x, tall, ct::csFPmplOcean::c(1.0*x/maxColors));           } theRC.writeTIFFfile("color_lut_docs_csFPmplOceanC.tiff");
+  theRC.resizeCanvas(maxColors,  tall); for(int x=0;x<maxColors; x++) { theRC.drawLine(x, 0, x, tall, ct::csFPmplOranges::c(1.0*x/maxColors));         } theRC.writeTIFFfile("color_lut_docs_csFPmplOrangesC.tiff");
+  theRC.resizeCanvas(maxColors,  tall); for(int x=0;x<maxColors; x++) { theRC.drawLine(x, 0, x, tall, ct::csFPneoDdivVegetationA::c(1.0*x/maxColors)); } theRC.writeTIFFfile("color_lut_docs_csFPneoDdivVegetationAC.tiff");
+  theRC.resizeCanvas(maxColors,  tall); for(int x=0;x<maxColors; x++) { theRC.drawLine(x, 0, x, tall, ct::csFPneoDivVegetationC::c(1.0*x/maxColors));  } theRC.writeTIFFfile("color_lut_docs_csFPneoDivVegetationCC.tiff");
+  theRC.resizeCanvas(maxColors,  tall); for(int x=0;x<maxColors; x++) { theRC.drawLine(x, 0, x, tall, ct::csFPneoModisNdvi::c(1.0*x/maxColors));       } theRC.writeTIFFfile("color_lut_docs_csFPneoModisNdviC.tiff");
+
   tall = 64;
   tg = tall+gap;
 
@@ -213,6 +242,8 @@ int main(void) {
   sd = std::ceil(std::sqrt(ct::csFPneoDdivVegetationA::numC)); theRC.resizeCanvas(sd*tg-gap, sd*tg-gap); theRC.clrCanvas("white"); for(int x=0;x<(int)ct::csFPneoDdivVegetationA::numC; x++) { theRC.drawFillRectangle((x%sd)*tg, (x/sd)*tg, (x%sd)*tg+tall, (x/sd)*tg+tall, ct::csFPneoDdivVegetationA::c((csIt)x)); } theRC.writeTIFFfile("color_lut_docs_csFPneoDdivVegetationA.tiff");
   sd = std::ceil(std::sqrt(ct::csFPneoDivVegetationC::numC));  theRC.resizeCanvas(sd*tg-gap, sd*tg-gap); theRC.clrCanvas("white"); for(int x=0;x<(int)ct::csFPneoDivVegetationC::numC; x++)  { theRC.drawFillRectangle((x%sd)*tg, (x/sd)*tg, (x%sd)*tg+tall, (x/sd)*tg+tall, ct::csFPneoDivVegetationC::c((csIt)x));  } theRC.writeTIFFfile("color_lut_docs_csFPneoDivVegetationC.tiff");
   sd = std::ceil(std::sqrt(ct::csFPneoModisNdvi::numC));       theRC.resizeCanvas(sd*tg-gap, sd*tg-gap); theRC.clrCanvas("white"); for(int x=0;x<(int)ct::csFPneoModisNdvi::numC; x++)       { theRC.drawFillRectangle((x%sd)*tg, (x/sd)*tg, (x%sd)*tg+tall, (x/sd)*tg+tall, ct::csFPneoModisNdvi::c((csIt)x));       } theRC.writeTIFFfile("color_lut_docs_csFPneoModisNdvi.tiff");
+
+
 
 }
 /** @endcond */
