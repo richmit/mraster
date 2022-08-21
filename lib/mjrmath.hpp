@@ -34,7 +34,7 @@
 
 #include <type_traits>                                                   /* C++ metaprogramming     C++11    */
 #include <cmath>                                                         /* std:: C math.h          C++11    */
-#include <ctgmath>                                                       /* std:: C tgmath.h        C++11    */
+#include <cmath>                                                         /* std:: C math.h          C++11    */
 #include <numbers>                                                       /* C++ math constants      C++20    */
 
 // Put everything in the mjr namespace

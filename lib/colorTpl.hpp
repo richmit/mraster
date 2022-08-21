@@ -37,8 +37,8 @@
 #include <array>                                                         /* array template          C++11    */
 #include <climits>                                                       /* std:: C limits.h        C++11    */
 #include <cmath>                                                         /* std:: C math.h          C++11    */
+#include <complex>
 #include <cstring>                                                       /* std:: C string.h        C++11    */
-#include <ctgmath>                                                       /* C++ math                C++11    */
 #include <iomanip>                                                       /* C++ stream formatting   C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
 #include <limits>                                                        /* C++ Numeric limits      C++11    */
@@ -571,9 +571,10 @@ namespace mjr {
 
       /** @name Color Scheme Constants */
       //@{
-      constexpr static csIntType chanStepMax   = (chanIsInt ? maxChanVal : std::numeric_limits<uint32_t>::max());  //!< Finite "steps" for a color scheme: [0, chanStepMax]
-      constexpr static int       minWavelength = 360;                                                              //!< Minimum wavelength for wavelength conversion
-      constexpr static int       maxWavelength = 830;                                                              //!< Maximum wavelength for wavelength conversion
+      /* The cast to csIntType is required to prevent std::numeric_limits<uint32_t>::max from being cast to a float when maxChanVal is a float. */
+      constexpr static csIntType chanStepMax   = (chanIsInt ? static_cast<csIntType>(maxChanVal) : std::numeric_limits<uint32_t>::max());  //!< Finite "steps" for a color scheme: [0, chanStepMax]
+      constexpr static int       minWavelength = 360;                                                                                      //!< Minimum wavelength for wavelength conversion
+      constexpr static int       maxWavelength = 830;                                                                                      //!< Maximum wavelength for wavelength conversion
       //@}
 
       /** @name Default RGB Luminescence Weights */
