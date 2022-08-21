@@ -30,8 +30,10 @@ The code: [[https://github.com/richmit/mraster/]]
 
 *Version 20 Warning:*
 
-Starting with v20, I'm refactoring the library.  I'm doing small
-releases as functionality in a given area is complete.  The releases
-are fully functional, but the API is still in flux.  I encourage you
-to use v20, and provide feedback; however, don't put it in a
-production system just yet. ;)
+Starting with v20, I'm refactoring the library.  
+  - The work is iterative with fully functional releases.
+  - The API is in flux.  
+  - I encourage you to use v20, and provide feedback!
+  - I do *not* encourage you to use it in production!
+  - As of v20.7.0b, the refactor of the colorTpl template is complete
+  - Right now work is ongoing on the ramCanvasTpl template
