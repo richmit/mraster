@@ -120,7 +120,7 @@ int main(int argc, char *argv[]) {
   /* **************************************************************************************************************************************************************** */
   /* Extract two images that have been combined.                                                      */
   /* **************************************************************************************************************************************************************** */
-  // listOcanv[1].reallocCanvas(listOcanv[0].get_numXpix(), listOcanv[0].get_numYpix());
+  // listOcanv[1].reallocCanvas(listOcanv[0].getNumPixX(), listOcanv[0].getNumPixY());
   // listOcanv[1].combineRamCanvasBinOp(&mjr::ramCanvas3c8b::colorType::tfrmCopy, listOcanv[0]);
   // listOcanv[0].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmAnd, mjr::ramCanvas3c8b::colorType(0xF0, 0xF0, 0xF0));
   // listOcanv[1].applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmShiftL, mjr::ramCanvas3c8b::colorType(4, 4, 4));
@@ -185,7 +185,7 @@ int main(int argc, char *argv[]) {
   /* **************************************************************************************************************************************************************** */
   /* Multi-image statstical combinations.                                                             */
   /* **************************************************************************************************************************************************************** */
-  //aRamCanvas = ramCanvas3c8b(listOcanv[0].get_numXpix(), listOcanv[0].get_numYpix());
+  //aRamCanvas = ramCanvas3c8b(listOcanv[0].getNumPixX(), listOcanv[0].getNumPixY());
   //aRamCanvas.combineRamCanvasMean(listOcanv, numFiles);
   //aRamCanvas.writeTIFFfile("img_process.tiff");
 

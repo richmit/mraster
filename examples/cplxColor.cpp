@@ -59,9 +59,9 @@ int main(void) {
   const double absCuts  = 2.0;           // Number of grey cuts for abs
   const int    numColor = 6*255;         // Number of colors in setRGBcmpClrCubeRainbow -1
 
-  for(int y=0;y<theRamCanvas.get_numYpix();y++)  {
+  for(int y=0;y<theRamCanvas.getNumPixY();y++)  {
     //std::cout << "LINE: " << y << " of " << (1080*hdLevel) << std::endl;
-    for(int x=0;x<theRamCanvas.get_numXpix();x++) {
+    for(int x=0;x<theRamCanvas.getNumPixX();x++) {
       cplx z { theRamCanvas.int2realX(x), theRamCanvas.int2realY(y) };
       cplx fz      = f(z);
 

@@ -49,8 +49,8 @@ int main(void) {
   std::complex<double> r3(-0.5, -sin(2*std::numbers::pi/3));
   mjr::ramCanvas3c8b theRamCanvas(4096, 4096, -2.15, 1.85, -2.0, 2.0);
 
-  for(int y=0;y<theRamCanvas.get_numYpix();y++) {
-    for(int x=0;x<theRamCanvas.get_numXpix();x++) {
+  for(int y=0;y<theRamCanvas.getNumPixY();y++) {
+    for(int x=0;x<theRamCanvas.getNumPixX();x++) {
       std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
       int  count = 0;
       double maxMod = 0.0;

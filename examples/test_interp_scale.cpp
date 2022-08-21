@@ -55,47 +55,47 @@ int main(int argc, char *argv[]) {
   // aRamCanvas.writeTGAfile("test_interp_scale_orig.tga");
   // aRamCanvas.writeTGAfile("test_interp_scale_orig.tiff");
 
-  mjr::ramCanvas3c8b::coordIntType width  = aRamCanvas.get_numXpix();
-  mjr::ramCanvas3c8b::coordIntType height = aRamCanvas.get_numYpix();
+  mjr::ramCanvas3c8b::coordIntType width  = aRamCanvas.getNumPixX();
+  mjr::ramCanvas3c8b::coordIntType height = aRamCanvas.getNumPixY();
   double magr = 7.0;
   int magi = 7.0;
 
   mjr::ramCanvas3c8b bRamCanvas(width * magi, height * magi);
 
-  for(mjr::ramCanvas3c8b::coordIntType x = 0; x < bRamCanvas.get_numXpix(); x++) {
-    for(mjr::ramCanvas3c8b::coordIntType y = 0; y < bRamCanvas.get_numYpix(); y++) {
+  for(mjr::ramCanvas3c8b::coordIntType x = 0; x < bRamCanvas.getNumPixX(); x++) {
+    for(mjr::ramCanvas3c8b::coordIntType y = 0; y < bRamCanvas.getNumPixY(); y++) {
       aColor = aRamCanvas.getPxColorInterpTrunc(x/magi, y/magi);
       bRamCanvas.drawPointNC(x, y, aColor);
     }
   }
   bRamCanvas.writeTIFFfile("test_interp_scale_trunc.tiff");
 
-  for(mjr::ramCanvas3c8b::coordIntType x = 0; x < bRamCanvas.get_numXpix(); x++) {
-    for(mjr::ramCanvas3c8b::coordIntType y = 0; y < bRamCanvas.get_numYpix(); y++) {
+  for(mjr::ramCanvas3c8b::coordIntType x = 0; x < bRamCanvas.getNumPixX(); x++) {
+    for(mjr::ramCanvas3c8b::coordIntType y = 0; y < bRamCanvas.getNumPixY(); y++) {
       aColor = aRamCanvas.getPxColorInterpNear(x/magi, y/magi);
       bRamCanvas.drawPointNC(x, y, aColor);
     }
   }
   bRamCanvas.writeTIFFfile("test_interp_scale_near.tiff");
 
-  for(mjr::ramCanvas3c8b::coordIntType x = 0; x < bRamCanvas.get_numXpix(); x++) {
-    for(mjr::ramCanvas3c8b::coordIntType y = 0; y < bRamCanvas.get_numYpix(); y++) {
+  for(mjr::ramCanvas3c8b::coordIntType x = 0; x < bRamCanvas.getNumPixX(); x++) {
+    for(mjr::ramCanvas3c8b::coordIntType y = 0; y < bRamCanvas.getNumPixY(); y++) {
       aColor = aRamCanvas.getPxColorInterpBLin(x/magr, y/magr);
       bRamCanvas.drawPointNC(x, y, aColor);
     }
   }
   bRamCanvas.writeTIFFfile("test_interp_scale_bil.tiff");
 
-  for(mjr::ramCanvas3c8b::coordIntType x = 0; x < bRamCanvas.get_numXpix(); x++) {
-    for(mjr::ramCanvas3c8b::coordIntType y = 0; y < bRamCanvas.get_numYpix(); y++) {
+  for(mjr::ramCanvas3c8b::coordIntType x = 0; x < bRamCanvas.getNumPixX(); x++) {
+    for(mjr::ramCanvas3c8b::coordIntType y = 0; y < bRamCanvas.getNumPixY(); y++) {
       aColor = aRamCanvas.getPxColorInterpAvg4(x/magr, y/magr);
       bRamCanvas.drawPointNC(x, y, aColor);
     }
   }
   bRamCanvas.writeTIFFfile("test_interp_scale_avg4.tiff");
 
-  for(mjr::ramCanvas3c8b::coordIntType x = 0; x < bRamCanvas.get_numXpix(); x++) {
-    for(mjr::ramCanvas3c8b::coordIntType y = 0; y < bRamCanvas.get_numYpix(); y++) {
+  for(mjr::ramCanvas3c8b::coordIntType x = 0; x < bRamCanvas.getNumPixX(); x++) {
+    for(mjr::ramCanvas3c8b::coordIntType y = 0; y < bRamCanvas.getNumPixY(); y++) {
       aColor = aRamCanvas.getPxColorInterpAvg9(x/magr, y/magr);
       bRamCanvas.drawPointNC(x, y, aColor);
     }

@@ -53,8 +53,8 @@ int main(void) {
   const int LASTSIZE = 16*16*4;
   mjr::ramCanvas3c8b theRamCanvas(CSIZE, CSIZE, -1.45, 0.5, -1.05, 1.05);
 
-  for(int y=0;y<theRamCanvas.get_numYpix();y++) {
-    for(int x=0;x<theRamCanvas.get_numXpix();x++) {
+  for(int y=0;y<theRamCanvas.getNumPixY();y++) {
+    for(int x=0;x<theRamCanvas.getNumPixX();x++) {
       int count, lastIdx=0;
       double cr = theRamCanvas.int2realX(x);
       double ci = theRamCanvas.int2realY(y);

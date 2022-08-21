@@ -64,8 +64,8 @@ int main(int argc, char *argv[]) {
   for(int numPt=1;numPt<MAXNUMPT;numPt++) {
     // Get a random point not near the tree
     mjr::ramCanvas3c8b::coordIntType x, y;
-    x = rEng() % theRamCanvas.get_numXpix();
-    y = rEng() % theRamCanvas.get_numYpix();
+    x = rEng() % theRamCanvas.getNumPixX();
+    y = rEng() % theRamCanvas.getNumPixY();
     if(theRamCanvas.getPxColor(x+0, y+0).getC2()) {
       numCloseRel++;
     } else {
@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
           case 4:
             x--; y++; break;
         }
-        if(x<1 || y<1 || x>(theRamCanvas.get_numXpix()-2) || y>(theRamCanvas.get_numYpix()-2)) {
+        if(x<1 || y<1 || x>(theRamCanvas.getNumPixX()-2) || y>(theRamCanvas.getNumPixY()-2)) {
           numClipRel++;
           break;
         }

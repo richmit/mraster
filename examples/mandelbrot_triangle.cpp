@@ -81,8 +81,8 @@ int main(void) {
   if(true) {
     MAXCOUNT = 255;
     std::cout << "INFO(main): Draw reference set via fill algorithm." << std::endl;
-    for(int yy=0;yy<theRamCanvas.get_numYpix();yy++) {
-      for(int xx=0;xx<theRamCanvas.get_numXpix();xx++) {
+    for(int yy=0;yy<theRamCanvas.getNumPixY();yy++) {
+      for(int xx=0;xx<theRamCanvas.getNumPixX();xx++) {
         complex tpt;
         tpt.x = theRamCanvas.int2realX(xx);
         tpt.y = theRamCanvas.int2realY(yy);

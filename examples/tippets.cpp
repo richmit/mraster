@@ -62,10 +62,10 @@ int main(void) {
   for(int i=0; i<6; i++) {
     theRamCanvas.newRealCoords(ranges[i][0], ranges[i][1], ranges[i][2], ranges[i][3]);
     theRamCanvas.clrCanvasToBlack();
-    for(int y=0;y<theRamCanvas.get_numYpix();y++) {
+    for(int y=0;y<theRamCanvas.getNumPixY();y++) {
       if((y%(CSIZE/10))==0)
         std::cout << "    CASE: " << i << " LINE: " << y << "/" << CSIZE << std::endl;
-      for(int x=0;x<theRamCanvas.get_numXpix();x++) {
+      for(int x=0;x<theRamCanvas.getNumPixX();x++) {
         for(a=theRamCanvas.int2realX(x),b=theRamCanvas.int2realY(y),zx=zy=0.0,count=0;
             (zx*zx+zy*zy<100000)&&(count<=NUMITR);
             count++,zx=zx*zx-zy*zy+a,zy=2*zx*zy+b) ;

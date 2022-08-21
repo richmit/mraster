@@ -96,8 +96,8 @@
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   canvasType theRamCanvas(BSIZE, BSIZE);
-  int xMax = theRamCanvas.get_numXpix()-1;
-  int yMax = theRamCanvas.get_numYpix()-1;
+  int xMax = theRamCanvas.getNumPixX()-1;
+  int yMax = theRamCanvas.getNumPixY()-1;
   canvasType::colorType aColor("red");
   canvasType::colorType bColor("cyan");
   canvasType::colorType cColor("black");

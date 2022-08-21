@@ -191,7 +191,7 @@ int main(void) {
   theRC.resizeCanvas(ct::csCBYlOrBr::maxNumC*tg,  tall); theRC.clrCanvas("white");for(csIt x=0;x<tg*ct::csCBYlOrBr::maxNumC-gap;   x++) { theRC.drawLine(x, 0, x, tall, ct::csCBYlOrBr::c(   1.0*x/(tg*ct::csCBYlOrBr::maxNumC-gap)));   } theRC.writeTIFFfile("color_lut_docs_csCBYlOrBrC.tiff");
   theRC.resizeCanvas(ct::csCBYlOrRd::maxNumC*tg,  tall); theRC.clrCanvas("white");for(csIt x=0;x<tg*ct::csCBYlOrRd::maxNumC-gap;   x++) { theRC.drawLine(x, 0, x, tall, ct::csCBYlOrRd::c(   1.0*x/(tg*ct::csCBYlOrRd::maxNumC-gap)));   } theRC.writeTIFFfile("color_lut_docs_csCBYlOrRdC.tiff");
 
-  theRC.set_yIntAxisOrientation(  mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
+  theRC.setIntAxOrientationY(  mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
 
   theRC.resizeCanvas(maxColors,  tall); for(int x=0;x<maxColors; x++) { theRC.drawLine(x, 0, x, tall, ct::csFPcircular12::c(1.0*x/maxColors));         } theRC.writeTIFFfile("color_lut_docs_csFPcircular12C.tiff");
   theRC.resizeCanvas(maxColors,  tall); for(int x=0;x<maxColors; x++) { theRC.drawLine(x, 0, x, tall, ct::csFPcircular24::c(1.0*x/maxColors));         } theRC.writeTIFFfile("color_lut_docs_csFPcircular24C.tiff");

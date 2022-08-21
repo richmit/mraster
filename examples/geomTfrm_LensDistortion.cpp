@@ -83,7 +83,7 @@ std::cout << poly[1] << std::endl;
    // mjr::ramCanvas3c8b uRamCanvas = dRamCanvas.genGeomTfrmArb(funny);
 
   // ramCanvasTpl<colorT, intCrdT, fltCrdT>::genGeomTfrmArb(pointFltType (*f)(double, double)) {
-  //   ramCanvasTpl<colorT, intCrdT, fltCrdT> newRamCanvas(numXpix, numYpix);
+  //   ramCanvasTpl<colorT, intCrdT, fltCrdT> newRamCanvas(numPixX, numPixY);
 
   uRamCanvas.writeTIFFfile("geomTfrm_LensDistortion.tiff");
 

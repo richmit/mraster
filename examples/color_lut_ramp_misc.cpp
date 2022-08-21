@@ -58,13 +58,13 @@ int main(void) {
   aColor.setToWhite();
   for(auto x : anchors) {
     int xi = static_cast<int>(x) - 380;
-    theRamCanvas.drawLine(xi, 0, xi, theRamCanvas.get_numYpix()-1, aColor);
+    theRamCanvas.drawLine(xi, 0, xi, theRamCanvas.getNumPixY()-1, aColor);
   }
 
   for(int i=0; i<100; i++) 
     for(int x=390;x<=830;x++) {
       int xi = static_cast<int>(x) - 380;
-      theRamCanvas.drawVertLineNC(50, theRamCanvas.get_numYpix()-50, xi, aColor.cmpGradiant(x, anchors, corners));
+      theRamCanvas.drawVertLineNC(50, theRamCanvas.getNumPixY()-50, xi, aColor.cmpGradiant(x, anchors, corners));
     }
 
   theRamCanvas.writeTIFFfile("color_lut_ramp_misc.tiff");

@@ -87,8 +87,8 @@ int main(void) {
        that we could pass a conversion routine to writeTIFFfile (see sic.cpp for an example of how to do just that). */
     mjr::ramCanvas3c8b anotherRamCanvas(BSIZ, BSIZ);
     mjr::ramCanvas3c8b::colorType bColor;
-    for(int yi=0;yi<theRamCanvas.get_numYpix();yi++)
-      for(int xi=0;xi<theRamCanvas.get_numXpix();xi++)
+    for(int yi=0;yi<theRamCanvas.getNumPixY();yi++)
+      for(int xi=0;xi<theRamCanvas.getNumPixX();xi++)
         anotherRamCanvas.drawPoint(xi, yi, bColor.cmpRGBcornerDGradiant(static_cast<mjr::ramCanvas3c8b::csIntType>(theRamCanvas.getPxColor(xi, yi).getC0() * 1275 / maxII), "0RYBCW"));
 
     anotherRamCanvas.writeTIFFfile("sprott2d.tiff");

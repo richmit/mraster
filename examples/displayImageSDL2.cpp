@@ -48,7 +48,7 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(int argc, char *argv[]) {
   mjr::ramCanvas3c8b theRamCanvas;
-  theRamCanvas.set_yIntAxisOrientation(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED); // In SDL2, the 0 row of pixels is at the bottom.
+  theRamCanvas.setIntAxOrientationY(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED); // In SDL2, the 0 row of pixels is at the bottom.
 
   if (argc < 2) {
     std::cout << "ERROR argument required!" << std::endl;
@@ -74,12 +74,12 @@ int main(int argc, char *argv[]) {
     return 4;
   }
 
-  if ((daDisplayMode.w-100) < theRamCanvas.get_numXpix()) {
+  if ((daDisplayMode.w-100) < theRamCanvas.getNumPixX()) {
     std::cout << "ERROR: The display is not wide enough for image" << std::endl;
     return 5;
   }
 
-  if ((daDisplayMode.h-200) < theRamCanvas.get_numYpix()) {
+  if ((daDisplayMode.h-200) < theRamCanvas.getNumPixY()) {
     std::cout << "ERROR: The display is not tall enough for image" << std::endl;
     return 6;
   }
@@ -88,12 +88,12 @@ int main(int argc, char *argv[]) {
   SDL_Window*   daSDLwindow;
   SDL_Surface*  daSDLsurface;
 
-  daSDLwindow  = SDL_CreateWindow("ramCanvas Observer", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, theRamCanvas.get_numXpix(), theRamCanvas.get_numYpix(), SDL_WINDOW_SHOWN);
+  daSDLwindow  = SDL_CreateWindow("ramCanvas Observer", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, theRamCanvas.getNumPixX(), theRamCanvas.getNumPixY(), SDL_WINDOW_SHOWN);
   daSDLsurface = SDL_GetWindowSurface(daSDLwindow); 
 
   /* Note we could SDL_BlitSurface, but it takes more code to set that up than to just copy over the bytes. :)  */
-  for (int y=0; y<theRamCanvas.get_numYpix(); ++y)
-    for (int x=0; x<theRamCanvas.get_numXpix(); ++x)
+  for (int y=0; y<theRamCanvas.getNumPixY(); ++y)
+    for (int x=0; x<theRamCanvas.getNumPixX(); ++x)
       ((Uint32*)daSDLsurface->pixels)[(y*daSDLsurface->w) + x] = SDL_MapRGB(daSDLsurface->format, theRamCanvas.getPxColorNC(x, y).getRed_byte(), theRamCanvas.getPxColorNC(x, y).getGreen_byte(), theRamCanvas.getPxColorNC(x, y).getBlue_byte());
   SDL_UpdateWindowSurface(daSDLwindow);
 

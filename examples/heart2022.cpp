@@ -49,8 +49,8 @@ int main(void) {
   double maxH = std::hypot(512, 512);
   mjr::ramCanvas3c8b theRamCanvas(1024, 1024, -2, 2, -2, 2);
 
-  for(y=0;y<theRamCanvas.get_numYpix();y++)  
-    for(x=0;x<theRamCanvas.get_numXpix();x++) {
+  for(y=0;y<theRamCanvas.getNumPixY();y++)  
+    for(x=0;x<theRamCanvas.getNumPixX();x++) {
       if(f(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y)) > 0) 
         theRamCanvas.drawPoint(x, y, "red");
       else

@@ -82,8 +82,8 @@ int main(void) {
   bool doStatusPrint = false;
 
   std::vector<std::complex<double>> lastZs(LASTMAX);
-  for(int y=0;y<theRamCanvas.get_numYpix();y++) {
-    for(int x=0;x<theRamCanvas.get_numXpix();x++) {
+  for(int y=0;y<theRamCanvas.getNumPixY();y++) {
+    for(int x=0;x<theRamCanvas.getNumPixX();x++) {
       int count;
       double cr = theRamCanvas.int2realX(x);
       double ci = theRamCanvas.int2realY(y);

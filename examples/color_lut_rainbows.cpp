@@ -45,7 +45,7 @@ int main(void) {
   mjr::ramCanvas3c8b::colorType aColor(255, 255, 255);
 
   for(int x=0; x<(maxColors+rampGap);x=x+256)
-    theRamCanvas.drawLine(x, 0, x, theRamCanvas.get_numYpix()-1, aColor);
+    theRamCanvas.drawLine(x, 0, x, theRamCanvas.getNumPixY()-1, aColor);
 
   for(int x=0;x<(maxColors);x++)
     for(int i=0; i<numRamps; i++) {

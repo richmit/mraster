@@ -62,8 +62,8 @@ int main(void) {
 
   mjr::ramCanvas1c16b::coordFltType cr, ci;
   std::complex<mjr::ramCanvas1c16b::coordFltType> c, z, zero(0.0, 0.0);
-  for(int y=0;y<theRamCanvas.get_numYpix();y++) {
-    for(int x=0;x<theRamCanvas.get_numXpix();x++) {
+  for(int y=0;y<theRamCanvas.getNumPixY();y++) {
+    for(int x=0;x<theRamCanvas.getNumPixX();x++) {
       cr = theRamCanvas.int2realX(x);
       ci = theRamCanvas.int2realY(y);
       c  = std::complex<mjr::ramCanvas1c16b::coordFltType>(cr, ci);

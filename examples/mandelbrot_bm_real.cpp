@@ -47,8 +47,8 @@ int main(void) {
   mjr::ramCanvas3c8b::coordFltType xr, yr, zx, zy, tempx;
   mjr::ramCanvas3c8b theRamCanvas(7680, 7680, -2.2, 0.8, -1.5, 1.5);
 
-  for(int x=0;x<theRamCanvas.get_numXpix();x++) {
-    for(int y=0;y<theRamCanvas.get_numYpix();y++) {
+  for(int x=0;x<theRamCanvas.getNumPixX();x++) {
+    for(int y=0;y<theRamCanvas.getNumPixY();y++) {
       for(xr=theRamCanvas.int2realX(x),yr=theRamCanvas.int2realY(y),zx=zy=0.0,count=0; (zx*zx+zy*zy<4)&&(count<=NUMITR); count++,tempx=zx*zx-zy*zy+xr,zy=2*zx*zy+yr,zx=tempx)
         ;
       if(count < NUMITR)

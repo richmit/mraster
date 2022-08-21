@@ -79,10 +79,10 @@ int main(void) {
     /* Compute the potential function on our grid.  For off-set points we store the potential in an array,
        for in-set points we store a -1.  */
     std::complex<double> z;
-    for(int y=0;y<theRamCanvas.get_numYpix();y++) {
+    for(int y=0;y<theRamCanvas.getNumPixY();y++) {
       if((y%(CSIZE/10))==0)
         std::cout << "    CASE: " << i << " LINE: " << y << "/" << CSIZE << std::endl;
-      for(int x=0;x<theRamCanvas.get_numXpix();x++) {
+      for(int x=0;x<theRamCanvas.getNumPixX();x++) {
         int count;
         double cr = theRamCanvas.int2realX(x);
         double ci = theRamCanvas.int2realY(y);
@@ -128,8 +128,8 @@ int main(void) {
        will tend to emphasize the edge of the set (the walls of the canyon), so a high maximum iteration
        count will yield better results. */
     std::cout << "TGA_1" << std::endl;
-    for(int x=0;x<theRamCanvas.get_numXpix();x++) {
-      for(int y=0;y<theRamCanvas.get_numYpix();y++) {
+    for(int x=0;x<theRamCanvas.getNumPixX();x++) {
+      for(int y=0;y<theRamCanvas.getNumPixY();y++) {
         double pot=theValues[x][y];
         if(pot >=  0) {
           pot = pot - minPot;
@@ -146,8 +146,8 @@ int main(void) {
     /* Draw a POV-Ray height field from the potential data.  This one will have the Mandelbrot set itself
        set the maximum height.  This allows us to render plateau-like images. */
     std::cout << "TGA_2" << std::endl;
-    for(int x=0;x<theRamCanvas.get_numXpix();x++)
-      for(int y=0;y<theRamCanvas.get_numYpix();y++)
+    for(int x=0;x<theRamCanvas.getNumPixX();x++)
+      for(int y=0;y<theRamCanvas.getNumPixY();y++)
         if(theValues[x][y] <  0)
           theRamCanvas.drawPoint(x, y, aColor.setRGBcmpGreyTGA16bit(0xffff-1));
     theRamCanvas.writeTGAfile("mandelbrot_potential_b_" + std::to_string(i) + ".tga");
@@ -156,8 +156,8 @@ int main(void) {
        integers by tools like VisIT which might read the data via the BOV file. */
     std::cout << "RAW_2" << std::endl;
     mjr::ramCanvas1c16b theRamCanvasG(CSIZE, CSIZE);
-    for(int x=0;x<theRamCanvasG.get_numXpix();x++) {
-      for(int y=0;y<theRamCanvasG.get_numYpix();y++) {
+    for(int x=0;x<theRamCanvasG.getNumPixX();x++) {
+      for(int y=0;y<theRamCanvasG.getNumPixY();y++) {
         double pot=theValues[x][y];
         if(pot >= 0) {
           pot = pot - minPot;

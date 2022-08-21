@@ -55,8 +55,8 @@ int main(int argc, char *argv[]) {
   // Eigen::Matrix <float, 3, 3> rotMatrix;
 
   // transMatrix << 
-  //   1,   0,  -dRamCanvas.get_numXpix()/2,  
-  //   0,   1,  -dRamCanvas.get_numYpix()/2,
+  //   1,   0,  -dRamCanvas.getNumPixX()/2,  
+  //   0,   1,  -dRamCanvas.getNumPixY()/2,
   //   0,   0,  0;
 
   // rotMatrix << 

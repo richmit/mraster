@@ -42,7 +42,7 @@ int main(void) {
   int y;
 
   mjr::ramCanvas3c8b theRamCanvas1(700, 240);
-  theRamCanvas1.set_yIntAxisOrientation(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
+  theRamCanvas1.setIntAxOrientationY(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
   theRamCanvas1.drawLine(100, 0,  100, 512, "blue");
   y = 50;
   theRamCanvas1.drawLine(0, y,   1024, y, "blue");
@@ -56,7 +56,7 @@ int main(void) {
   theRamCanvas1.writeTIFFfile("test_draw_strings_1.tiff");
 
   mjr::ramCanvas3c8b theRamCanvas2(740, 420);
-  theRamCanvas2.set_yIntAxisOrientation(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
+  theRamCanvas2.setIntAxOrientationY(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
   y = 50;
   theRamCanvas2.drawStringBox("Hello, World!", mjr::hershey::font::ROMAN_SL_SANSERIF, 100, y, "red", "green",  1, 16);
   theRamCanvas2.drawLine(0, y,   1024, y, "blue");

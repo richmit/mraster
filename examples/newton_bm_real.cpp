@@ -43,8 +43,8 @@ int main(void) {
   int                                    MultCol   = 15;
   mjr::ramCanvas3c8b::coordFltType       Tol       = (.0001 * .0001);
   mjr::ramCanvas3c8b                     theRamCanvas(4096, 4096, -2.0, 2, -2, 2); // -0.9, -0.7, -0.1, 0.1
-  for(int y=0;y<theRamCanvas.get_numYpix();y++) {
-    for(int x=0;x<theRamCanvas.get_numXpix();x++) {
+  for(int y=0;y<theRamCanvas.getNumPixY();y++) {
+    for(int x=0;x<theRamCanvas.getNumPixX();x++) {
       mjr::ramCanvas3c8b::coordFltType zx = theRamCanvas.int2realX(x);
       mjr::ramCanvas3c8b::coordFltType zy = theRamCanvas.int2realY(y);
       int count = 0;

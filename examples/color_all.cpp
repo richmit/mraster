@@ -57,8 +57,8 @@ int main(void) {
   mjr::ramCanvasRGB8b::colorChanType red=0, blue=0, green=0;
   uint32_t count=0;
   mjr::ramCanvas3c8b::colorType aColor;
-  for(int y=0;y<theRamCanvas_int.get_numYpix();y++) {
-    for(int x=0;x<theRamCanvas_int.get_numXpix();x++) {
+  for(int y=0;y<theRamCanvas_int.getNumPixY();y++) {
+    for(int x=0;x<theRamCanvas_int.getNumPixX();x++) {
       aColor.setRGBfromLogPackIntGen(count, 0, 1, 2);
       theRamCanvas_iii.drawPoint(x, y, aColor);
       aColor.setRGBfromLogPackIntABGR(count);

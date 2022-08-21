@@ -59,11 +59,11 @@ int main() {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   std::cout << "apollony start" << std::endl;
   const int   CSIZE = 1080*2;          // Quad HD
-  const int ITRTOSS = std::pow(2, 10); // Throw away first iterations
-  const long NUMITR = std::pow(2, 29); // Needs to be big
+  const int ITRTOSS = static_cast<int>(std::pow(2, 10)); // Throw away first iterations
+  const long NUMITR = static_cast<int>(std::pow(2, 29)); // Needs to be big
 
   mjr::ramCanvas3c8b theRamCanvas(CSIZE, CSIZE, -4.0, 4.0, -4.0, 4.0);
-  theRamCanvas.set_drawMode(mjr::ramCanvas3c8b::drawModeType::ADDCLAMP);
+  theRamCanvas.setDrawMode(mjr::ramCanvas3c8b::drawModeType::ADDCLAMP);
 
 #if SUPPORT_DRAWING_MODE
   mjr::ramCanvas3c8b::colorType aColor[] = { mjr::ramCanvas3c8b::colorType(1, 0, 0),
@@ -79,7 +79,7 @@ int main() {
   std::minstd_rand0 rEng(rd()); // Fast is better than high quality for this application.
 
   const double s = 1.73205080757;
-  const std::complex<double> i(0, 1);
+//  const std::complex<double> i(0, 1);
   const std::complex<double> si(0, s);
   const std::complex<double> c1 = (1+s)/(2+s);
   const std::complex<double> c2 =  0.5*(si-1.0);

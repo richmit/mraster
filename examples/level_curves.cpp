@@ -70,8 +70,8 @@ void drawLevelCurves(int numBand, drT bandWidth, drT zMin, drT zMax, drT minReal
   if( (zMax == 0) && (zMin == 0) ) {
     fprintf(stderr, "Compute zMax and zMin\n");
     zMax = zMin = f(theRamCanvas.int2realX(0), theRamCanvas.int2realY(0));
-    for(y=0;y<theRamCanvas.get_numYpix();y++)  {
-      for(x=0;x<theRamCanvas.get_numXpix();x++) {
+    for(y=0;y<theRamCanvas.getNumPixY();y++)  {
+      for(x=0;x<theRamCanvas.getNumPixX();x++) {
         fxy = f(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
         if(fxy > zMax) zMax=fxy;
         if(fxy < zMin) zMin=fxy;
@@ -81,8 +81,8 @@ void drawLevelCurves(int numBand, drT bandWidth, drT zMin, drT zMax, drT minReal
 
   bandGap = 1.0*(zMax-zMin)/numBand;
   fprintf(stderr, "Compute curves\n");
-  for(y=0;y<theRamCanvas.get_numYpix();y++)  {
-    for(x=0;x<theRamCanvas.get_numXpix();x++) {
+  for(y=0;y<theRamCanvas.getNumPixY();y++)  {
+    for(x=0;x<theRamCanvas.getNumPixX();x++) {
       fxy = f(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
       if(fxy < zMin) {
         theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType(255, 0, 0));

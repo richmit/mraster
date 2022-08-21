@@ -51,8 +51,8 @@ int main(void) {
   cplx c, z, zero(0.0, 0.0);
   mjr::ramCanvas3c8b theRamCanvas(7680, 7680, -2.2, 0.8, -1.5, 1.5);
 
-  for(int y=0;y<theRamCanvas.get_numYpix();y++) {
-    for(int x=0;x<theRamCanvas.get_numXpix();x++) {
+  for(int y=0;y<theRamCanvas.getNumPixY();y++) {
+    for(int x=0;x<theRamCanvas.getNumPixX();x++) {
       for(c=cplx(theRamCanvas.int2realX(x),theRamCanvas.int2realY(y)),z=zero,count=0; 
           (std::norm(z)<4)&&(count<=NUMITR); 
           count++,z=z*z+c)

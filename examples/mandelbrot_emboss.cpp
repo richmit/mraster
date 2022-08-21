@@ -80,10 +80,10 @@ int main(void) {
     potRamCanvas.clrCanvasToBlack();
     /* Compute the potential function on our grid.  For off-set points we store the potential in an array, for in-set points we store a -1.  */
     std::complex<double> z;
-    for(int y=0;y<potRamCanvas.get_numYpix();y++) {
+    for(int y=0;y<potRamCanvas.getNumPixY();y++) {
       if((y%(CSIZE/10))==0)
         std::cout << "    CASE: " << i << " LINE: " << y << "/" << CSIZE << std::endl;
-      for(int x=0;x<potRamCanvas.get_numXpix();x++) {
+      for(int x=0;x<potRamCanvas.getNumPixX();x++) {
         int count;
         double cr = potRamCanvas.int2realX(x);
         double ci = potRamCanvas.int2realY(y);

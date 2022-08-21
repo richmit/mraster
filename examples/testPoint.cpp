@@ -45,7 +45,7 @@ int main(void) {
 
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   mjr::ramCanvasRGB8b theRamCanvas(BSIZE, BSIZE, 0, BSIZE-1, 0, BSIZE-1);
-  theRamCanvas.set_yRealAxisOrientation(mjr::ramCanvasRGB8b::realAxisOrientation::INVERTED);
+  theRamCanvas.setRealAxOrientationY(mjr::ramCanvasRGB8b::realAxisOrientation::INVERTED);
   mjr::colorRGB8b aColor(mjr::colorRGB8b::cornerColorEnum::RED);
   mjr::colorRGB8b bColor(mjr::colorRGB8b::cornerColorEnum::BLUE);
   mjr::colorRGB8b cColor(mjr::colorRGB8b::cornerColorEnum::MAGENTA);

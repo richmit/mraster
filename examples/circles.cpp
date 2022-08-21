@@ -48,7 +48,7 @@ int main(void) {
   const double      aspect  = 1.0*width/height;
   mjr::ramCanvas3c8b theRamCanvas(width*1, height*1, -1.2*aspect, 1.2*aspect, -1.2, 1.2);
 
-  theRamCanvas.set_drawMode(mjr::ramCanvasRGB8b::drawModeType::ADDCLAMP);
+  theRamCanvas.setDrawMode(mjr::ramCanvasRGB8b::drawModeType::ADDCLAMP);
 
   for(int k=0; k<n; k++) {
 

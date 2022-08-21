@@ -53,10 +53,10 @@ int main(void) {
   mjr::ramCanvas3c8b theRamCanvasK(CSIZE, CSIZE, -1.0, 1.4, -1.0, 1.4);
   mjr::ramCanvas3c8b theRamCanvasL(CSIZE, CSIZE, -1.0, 1.4, -1.0, 1.4);
 
-  for(int y=0;y<theRamCanvasA.get_numYpix();y++) {
+  for(int y=0;y<theRamCanvasA.getNumPixY();y++) {
     if((y%(CSIZE/10))==0)
       std::cout << " LINE: " << y << "/" << CSIZE << std::endl;
-    for(int x=0;x<theRamCanvasA.get_numXpix();x++) {
+    for(int x=0;x<theRamCanvasA.getNumPixX();x++) {
       for(z=std::complex<double>(theRamCanvasA.int2realX(x),theRamCanvasA.int2realY(y)),count=0;
           ((std::abs(std::real(z))<LIM)||(std::abs(std::imag(z))<LIM))&&(count<=NUMITR);
           count++,z=std::sin(z)+oneone) ;

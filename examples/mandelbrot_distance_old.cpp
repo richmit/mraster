@@ -46,8 +46,8 @@ int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   mjr::ramCanvas4c8b theRamCanvas = mjr::ramCanvas4c8b(1024*2, 1024*2, -1.9, 0.5, -1.2, 1.2);
 
-  for(int x=0; x<theRamCanvas.get_numXpix(); x++) {
-    for(int y=0; y<theRamCanvas.get_numYpix(); y++) {
+  for(int x=0; x<theRamCanvas.getNumPixX(); x++) {
+    for(int y=0; y<theRamCanvas.getNumPixY(); y++) {
       double xr    = theRamCanvas.int2realX(x);
       double yr    = theRamCanvas.int2realY(y);
       double zx    = 0.0;

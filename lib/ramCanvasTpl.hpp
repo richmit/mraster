@@ -94,13 +94,13 @@ namespace mjr {
       typical layout of 2D arrays in RAM.
 
 
-                        (0,0)   +------------+ (numXpix-1, 0)
+                        (0,0)   +------------+ (numPixX-1, 0)
                                 |            |
                                 |            |
                                 |            |
                                 |            |
                                 |            |
-                 (numYpix-1, 0) +------------+ (numXpix-1, numYpix-1)
+                 (numPixY-1, 0) +------------+ (numPixX-1, numPixY-1)
 
       ramCanvas Coordinate Systems
       ----------------------------
@@ -119,10 +119,10 @@ namespace mjr {
       indexes of the image array.  What is the point?  The location of the origin is taken into consideration when the image is exported/imported by functions like
       writeRAWfile.
 
-      @tparam intCrdT An integral type used for the integer image coordinates.  Should be signed, and at least  @f$ 4\cdot\log_2(\mathtt{numXpix} \cdot \mathtt{numYpix}) @f$ bits in size
+      @tparam intCrdT An integral type used for the integer image coordinates.  Should be signed, and at least  @f$ 4\cdot\log_2(\mathtt{numPixX} \cdot \mathtt{numPixY}) @f$ bits in size
       @tparam colorT  A type for the image pixels (a color)
       @tparam fltCrdT A floating point type used for the floating point image coordinates
-  */
+      @tparam enableDrawModes If true, enables drawing modes othe than drawModeType::SET. */
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   //requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
   class ramCanvasTpl {
@@ -131,11 +131,11 @@ namespace mjr {
 
       /** @name Typedefs related to template parameters */
       //@{
-      typedef          point2d<fltCrdT>             pointFltType;            //!< Real coordinate pair type
-      typedef          point2d<intCrdT>             pointIntType;            //!< Integer coordinate pair type
-      typedef          intCrdT                      coordIntType;            //!< Integer type for coordinates
-      typedef          fltCrdT                      coordFltType;            //!< Real type for coordinates
-      typedef          colorT                       colorType;               //!< Color type for pixels
+      typedef point2d<fltCrdT> pointFltType;            //!< Real coordinate pair type
+      typedef point2d<intCrdT> pointIntType;            //!< Integer coordinate pair type
+      typedef intCrdT          coordIntType;            //!< Integer type for coordinates
+      typedef fltCrdT          coordFltType;            //!< Real type for coordinates
+      typedef colorT           colorType;               //!< Color type for pixels
       //@}
 
       /** @name Typedefs related to colorT */
@@ -198,7 +198,7 @@ namespace mjr {
 
       /** @name Logical Maximum for intCrdT values */
       //@{
-      const static intCrdT intCrdMax = (1ul << ((sizeof(intCrdT)*CHAR_BIT-1)/2)) - 3;        //!< maximum ro numXpix, numYpix, & numPix.
+      const static intCrdT intCrdMax = (1ul << ((sizeof(intCrdT)*CHAR_BIT-1)/2)) - 3;        //!< maximum ro numPixX, numPixY, & numPix.
       //@}
 
     private:
@@ -228,8 +228,8 @@ namespace mjr {
 
       /** @name Canvas integer coordinates */
       //@{
-      intCrdT numXpix;     //!< Number of x pixels
-      intCrdT numYpix;     //!< Number of y pixels
+      intCrdT numPixX;     //!< Number of x pixels
+      intCrdT numPixY;     //!< Number of y pixels
       intCrdT numPix;      //!< Number of pixels
       //@}
 
@@ -243,19 +243,19 @@ namespace mjr {
 
       /** @name Canvas real/integer coordinates conversion */
       //@{
-      fltCrdT xPixWid;     //!< Width of a pixel (real coord)
-      fltCrdT yPixWid;     //!< Height of a pixel (real coord)
+      fltCrdT pixWidX;     //!< Width of a pixel (real coord)
+      fltCrdT pixWidY;     //!< Height of a pixel (real coord)
 
-      fltCrdT xWid;        //!< Width of the canvas (real coord)
-      fltCrdT yWid;        //!< height of the canvas (real coord)
+      fltCrdT canvasWidX;        //!< Width of the canvas (real coord)
+      fltCrdT canvasWidY;        //!< height of the canvas (real coord)
       //@}
 
       /** @name Axis orientation */
       //@{
-      realAxisOrientation xRealAxOrientation; //!< Orientation of x axis
-      realAxisOrientation yRealAxOrientation; //!< Orientation of y axis
-      intAxisOrientation  xIntAxOrientation;  //!< Flip horizontally
-      intAxisOrientation  yIntAxOrientation;  //!< Flip vertically
+      realAxisOrientation realAxOrientationX; //!< Orientation of x axis
+      realAxisOrientation realAxOrientationY; //!< Orientation of y axis
+      intAxisOrientation  intAxOrientationX;  //!< Flip horizontally
+      intAxisOrientation  intAxOrientationY;  //!< Flip vertically
       //@}
 
       /** @name Canvas pixel store pointers */
@@ -315,7 +315,7 @@ namespace mjr {
               - No more than 2^16-1 channels
               - Image width no more than 2^32-1 (normally intCrdT limits this to 2^31-1)
               - Image height no more than 2^32-1 (normally intCrdT limits this to 2^31-1)
-              - Image row data size (numXpix * colorT::bitsPerChan * colorT::channelCount / 8) must be less than 2^32-1 bytes
+              - Image row data size (numPixX * colorT::bitsPerChan * colorT::channelCount / 8) must be less than 2^32-1 bytes
               - Image data must be less than 2^32-1 bytes
 
           Limitations for bit perfect (toTRU is NULL) files:
@@ -411,9 +411,9 @@ namespace mjr {
           new pixel array, so the previous array contents will be interpreted as valid data -- just at different coordinates.  This function causes no memory
           leaks.  This function will NOT update the internal parameters related to real coordinate systems and so updRealCoords() should be called after this
           function in most cases.  This function is intended for internal use and provides no safety checks.
-          @param numXpix_p The width of the new canvas
-          @param numYpix_p The height of the new canvas */
-      void newIntCoordsNC(intCrdT numXpix_p, intCrdT numYpix_p);
+          @param numPixX_p The width of the new canvas
+          @param numPixY_p The height of the new canvas */
+      void newIntCoordsNC(intCrdT numPixX_p, intCrdT numPixY_p);
       //@}
 
       /** @name Plane Manipulation Methods */
@@ -421,13 +421,13 @@ namespace mjr {
       /** Destroy the current pixel memory and reallocate a new pixel space of the given size.
           This will not clear the canvas.  IT will not reallocate the canvas unless the new size is different from the current size.  It will not allocate a
           new canvas if either argument is zero or less.  Updates coordinates.
-          @param numXpix_p The width of the new canvas
-          @param numYpix_p The height of the new canvas */
-      void reallocCanvas(intCrdT numXpix_p, intCrdT numYpix_p);
+          @param numPixX_p The width of the new canvas
+          @param numPixY_p The height of the new canvas */
+      void reallocCanvas(intCrdT numPixX_p, intCrdT numPixY_p);
       /** Free the pixel memory (i) */
       void freeCanvas();
       /** Points the pixels pointer at a new pixel store, and updates coordinates.  Pixels pointer not changed if new_pixels is NULL */
-      void rePointPixels(colorT *new_pixels, intCrdT new_numXpix, intCrdT new_numYpix);
+      void rePointPixels(colorT *new_pixels, intCrdT new_numPixX, intCrdT new_numPixY);
       //@}
 
       /** @name Various helper functions */
@@ -470,19 +470,19 @@ namespace mjr {
 
       /** @name Constructors & Assignment Operators */
       //@{
-      /** No arg constructor.  Sets numXpix and numYpix to -1, and pixels to NULL. */
+      /** No arg constructor.  Sets numPixX and numPixY to -1, and pixels to NULL. */
       ramCanvasTpl();
       /** Copy constructor */
       ramCanvasTpl(const ramCanvasTpl &theCanvas);
       /** Most commonly used constructor.
           The real coordinates have default values with -1 as the min values and 1 used as the max values.
-          @param numXpix_p   Number of pixels in the X direction
-          @param numYpix_p   Number of pixels in the Y direction
+          @param numPixX_p   Number of pixels in the X direction
+          @param numPixY_p   Number of pixels in the Y direction
           @param minRealX_p  Minimum real x coordinate value
           @param maxRealX_p  Maximum real x coordinate value
           @param minRealY_p  Minimum real y coordinate value
           @param maxRealY_p  Maximum real y coordinate value */
-      ramCanvasTpl(intCrdT numXpix_p, intCrdT numYpix_p, fltCrdT minRealX_p=-1, fltCrdT maxRealX_p=1, fltCrdT minRealY_p=-1, fltCrdT maxRealY_p=1);
+      ramCanvasTpl(intCrdT numPixX_p, intCrdT numPixY_p, fltCrdT minRealX_p=-1, fltCrdT maxRealX_p=1, fltCrdT minRealY_p=-1, fltCrdT maxRealY_p=1);
       /** Move constructor */
       ramCanvasTpl(ramCanvasTpl&& theCanvas);
       /** Move assignment operator */
@@ -500,18 +500,18 @@ namespace mjr {
       //@{
       /** Resize the canvas to the  given size.
           Contents of new canvas may be random data.  Not guarnteed to reallocate the canvas.
-          @param new_numXpix_p The width of the new canvas
-          @param new_numYpix_p The height of the new canvas */
-      void resizeCanvas(intCrdT new_numXpix_p, intCrdT new_numYpix_p);
+          @param new_numPixX_p The width of the new canvas
+          @param new_numPixY_p The height of the new canvas */
+      void resizeCanvas(intCrdT new_numPixX_p, intCrdT new_numPixY_p);
       /** Expand the current canvas.
           The current image will appear within the new canvas at the specified location.  All pixels not set by the previous image
           will be set to the given color.
-          @param new_numXpix_p The width of the new canvas
-          @param new_numYpix_p The height of the new canvas
+          @param new_numPixX_p The width of the new canvas
+          @param new_numPixY_p The height of the new canvas
           @param x1            Coord at which the left of the old image will appear in the new image
           @param y1            Coord at which the top of the old image will appear in the new image
           @param color         Color to use for the background of the new image. */
-      void expandCanvas(intCrdT new_numXpix_p, intCrdT new_numYpix_p, intCrdT x1 = 0, intCrdT y1 = 0, colorArgType color = colorT(0,0,0));
+      void expandCanvas(intCrdT new_numPixX_p, intCrdT new_numPixY_p, intCrdT x1 = 0, intCrdT y1 = 0, colorArgType color = colorT(0,0,0));
       /** This function will crop the canvas to the given rectangular region.
           @param x1 Left, or right, edge of region to keep.
           @param x2 Right, or left, edge of region to keep.
@@ -624,9 +624,9 @@ namespace mjr {
       /** @name Apply Convolution */
       //@{
       /** Apply a convolution filter.
-          The implementation for this method is quite naive and super slow!  Frankly, this kind of functionality should be pulled from an image processing
-          library tuned for this kind of work; however, sometimes you just need a convolution filter and you don't want to go to the extra effort of using yet
-          another external library.  Pixels outside the canvas are considered black. So here it is.
+          The implementation for this method is quite naive and super slow!  Frankly, this kind of functionality is beyond the scope of this library; however,
+          sometimes you just need a convolution filter and you don't want to go to the extra effort of using yet another external library.  Pixels outside the
+          canvas are considered black. 
           @param kernel  The convolution kernel.   Must be of length kWide*kTall.
           @param kWide   The width of the kernel.  Must be odd.
           @param kTall   The height of the kernel. Must be odd.
@@ -1138,13 +1138,13 @@ namespace mjr {
           @param y The y coordinate of the point to test
           @return Returns true if the point would be clipped. */
       inline int isCliped(fltCrdT x, fltCrdT y) const { return isCliped(real2intX(x), real2intY(y)); }
-      inline int isCliped(intCrdT x, intCrdT y) const { return ((x < 0) || (y < 0) || (x >= numXpix) || (y >= numYpix)); }
+      inline int isCliped(intCrdT x, intCrdT y) const { return ((x < 0) || (y < 0) || (x >= numPixX) || (y >= numPixY)); }
       /** Determine if the given point is within the bounds of the ramCanvasTpl.
           @param x The x coordinate of the point to test
           @param y The y coordinate of the point to test
           @return Returns true if the point would be not be clipped. */
       inline int isOnCanvas(fltCrdT x, fltCrdT y) const { return isCliped(real2intX(x), real2intY(y)); }
-      inline int isOnCanvas(intCrdT x, intCrdT y) const { return ((x >= 0) && (y >= 0) && (x < numXpix) && (y < numYpix)); }
+      inline int isOnCanvas(intCrdT x, intCrdT y) const { return ((x >= 0) && (y >= 0) && (x < numPixX) && (y < numPixY)); }
       //@}
 
       /** @name Coordinate Conversions. */
@@ -1172,76 +1172,76 @@ namespace mjr {
       /** Convert real distance on the x coordinate axis to an integral distance
           @param x The real delta x to be converted
           @return integer delta x */
-      inline intCrdT realDelta2intX(fltCrdT x) const { return static_cast<intCrdT>(static_cast<fltCrdT>(x)/xPixWid); }
+      inline intCrdT realDelta2intX(fltCrdT x) const { return static_cast<intCrdT>(static_cast<fltCrdT>(x)/pixWidX); }
       /** Convert real distance on the y coordinate axis to an integral distance
           @param y The real delta y to be converted
           @return integer delta y */
-      inline intCrdT realDelta2intY(fltCrdT y) const { return static_cast<intCrdT>(static_cast<fltCrdT>(y)/yPixWid); }
+      inline intCrdT realDelta2intY(fltCrdT y) const { return static_cast<intCrdT>(static_cast<fltCrdT>(y)/pixWidY); }
       /** Convert integral distance on the x coordinate to a real distance
           @param x The real x coordinate value to be converted.
           @return The integer x coordinate corresponding to the given x coordinate */
-      inline fltCrdT intDelta2realX(intCrdT x) const { return static_cast<fltCrdT>(x)*xPixWid; }
+      inline fltCrdT intDelta2realX(intCrdT x) const { return static_cast<fltCrdT>(x)*pixWidX; }
       /** Convert integral distance on the y coordinate to a real distance
           @param y real y coordinate value to be converted.
           @return The integer y coordinate corresponding to the given y coordinate */
-      inline fltCrdT intDelta2realY(intCrdT y) const { return static_cast<fltCrdT>(y)*yPixWid; }
+      inline fltCrdT intDelta2realY(intCrdT y) const { return static_cast<fltCrdT>(y)*pixWidY; }
       //@}
 
       /** @name Orientation of Real Coordinate Systems */
       //@{
       /** Get the real X axis orientation
           @return INVERTED means inverted with respect to the integer axis, and NATURAL otherwise.    */
-      inline realAxisOrientation get_xRealAxisOrientation() { return xRealAxOrientation; }
+      inline realAxisOrientation getRealAxOrientationX() { return realAxOrientationX; }
       /** Set the real X axis orientation
           @param orientation The orientation (INVERTED or NATURAL)*/
-       inline void set_xRealAxisOrientation(realAxisOrientation orientation) { xRealAxOrientation = orientation; }
+       inline void setRealAxOrientationX(realAxisOrientation orientation) { realAxOrientationX = orientation; }
       /** Get the real Y axis orientation
           @return INVERTED means inverted with respect to the integer axis, and NATURAL otherwise.    */
-      inline realAxisOrientation get_yRealAxisOrientation() { return xRealAxOrientation; }
+      inline realAxisOrientation getRealAxOrientationY() { return realAxOrientationX; }
       /** Set the real Y axis orientation
           @param orientation The orientation (INVERTED or NATURAL) */
-      inline void set_yRealAxisOrientation(realAxisOrientation orientation) { yRealAxOrientation = orientation; }
+      inline void setRealAxOrientationY(realAxisOrientation orientation) { realAxOrientationY = orientation; }
       /** Set the real axis orientation to default (NATURAL for both X and Y axes) */
-      inline void set_realAxisDefaultOrientation() { set_xRealAxisOrientation(realAxisOrientation::NATURAL); set_yRealAxisOrientation(realAxisOrientation::NATURAL); }
+      inline void setRealAxisDefaultOrientation() { setRealAxOrientationX(realAxisOrientation::NATURAL); setRealAxOrientationY(realAxisOrientation::NATURAL); }
       //@}
 
       /** @name Drawing Mode */
       //@{
       /** Get the current drawing mode.
        @return The drawing mode */
-      inline drawModeType get_drawMode()                         { return drawMode; }
+      inline drawModeType getDrawMode()                         { return drawMode; }
       /** Set the current drawing mode
           NOOP if enableDrawModes is false.
           @param newDrawMode The drawing mode */
-      inline void         set_drawMode(drawModeType newDrawMode) { if (enableDrawModes) drawMode = newDrawMode; }
+      inline void         setDrawMode(drawModeType newDrawMode) { if (enableDrawModes) drawMode = newDrawMode; }
       /** Set the default draw mode */
-      inline void         set_DefaultDrawMode()                  { set_drawMode(drawModeType::SET); }
+      inline void         setDefaultDrawMode()                  { setDrawMode(drawModeType::SET); }
       //@}
 
       /** @name Orientation of Integer Coordinate Systems */
       //@{
       /** Get the integer X axis orientation
           @return NATURAL means increasing to the right. */
-      inline intAxisOrientation get_xIntAxisOrientation() { return xIntAxOrientation; }
+      inline intAxisOrientation getIntAxOrientationX() { return intAxOrientationX; }
       /** Set the integer X axis orientation
           @param orientation The orientation (INVERTED or NATURAL) */
-      inline void set_xIntAxisOrientation(intAxisOrientation orientation) { xIntAxOrientation = orientation; }
+      inline void setIntAxOrientationX(intAxisOrientation orientation) { intAxOrientationX = orientation; }
       /** Get the integer Y axis orientation
           @return NATURAL means increasing in the upward direction. */
-      inline intAxisOrientation get_yIntAxisOrientation() { return yIntAxOrientation; }
+      inline intAxisOrientation getIntAxOrientationY() { return intAxOrientationY; }
       /** Set the integer Y axis orientation
           @param orientation The orientation (INVERTED or NATURAL) */
-      inline void set_yIntAxisOrientation(intAxisOrientation orientation) { yIntAxOrientation = orientation; }
+      inline void setIntAxOrientationY(intAxisOrientation orientation) { intAxOrientationY = orientation; }
       /** Set the integer axis orientation to default (NATURAL for both X and Y axes) */
-      inline void set_intAxisDefaultOrientation() { set_xIntAxisOrientation(intAxisOrientation::NATURAL); set_yIntAxisOrientation(intAxisOrientation::NATURAL); }
+      inline void setIntAxisDefaultOrientation() { setIntAxOrientationX(intAxisOrientation::NATURAL); setIntAxOrientationY(intAxisOrientation::NATURAL); }
       //@}
 
       /** @name Accessor Methods */
       //@{
       /** @return The number of pixels in the x direction. */
-      inline intCrdT get_numXpix() const { return numXpix; }
+      inline intCrdT getNumPixX() const { return numPixX; }
       /** @return The number of pixels in the y direction. */
-      inline intCrdT get_numYpix() const { return numYpix; }
+      inline intCrdT getNumPixY() const { return numPixY; }
       /** Returns a pointer to the raw pixel store.
           This generally violates the ramCanvasTpl object interface; however, this may be required for performance.
           @return The number a pointer to the raw pixel store. */
@@ -1252,23 +1252,23 @@ namespace mjr {
       colorT *clonePixels();
       //@}
 
-      /** @name Accessor Methods */
+      /** @name Real Coordinate Accessor Methods */
       //@{
-      fltCrdT get_minRealX() { return minRealX; } //!< x coord of min (real coord)
-      fltCrdT get_maxRealX() { return maxRealX; } //!< x coord of max (real coord)
-      fltCrdT get_minRealY() { return minRealY; } //!< y coord of min (real coord)
-      fltCrdT get_maxRealY() { return maxRealY; } //!< y coord of max (real coord)
-      fltCrdT get_xPixWid()  { return xPixWid;  } //!< Width of a pixel (real coord)
-      fltCrdT get_yPixWid()  { return yPixWid;  } //!< Height of a pixel (real coord)
-      fltCrdT get_xWid()     { return xWid;     } //!< Width of the display (real coord)
-      fltCrdT get_yWid()     { return yWid;     } //!< height of the display(real coord)
+      fltCrdT getMinRealX()   { return minRealX;    } //!< x coord of min (real coord)
+      fltCrdT getMaxRealX()   { return maxRealX;    } //!< x coord of max (real coord)
+      fltCrdT getMinRealY()   { return minRealY;    } //!< y coord of min (real coord)
+      fltCrdT getMaxRealY()   { return maxRealY;    } //!< y coord of max (real coord)
+      fltCrdT getPixWidX()    { return pixWidX;     } //!< Width of a pixel (real coord)
+      fltCrdT getPixWidY()    { return pixWidY;     } //!< Height of a pixel (real coord)
+      fltCrdT getCanvasWidX() { return canvasWidX;  } //!< Width of the display (real coord)
+      fltCrdT getCanvasWidY() { return canvasWidY;  } //!< height of the display(real coord)
       //@}
 
       /** @name Pixel Value Accessor Methods */
       //@{
       /** Returns a copy of the color at the given coordinates */
       colorT getPxColor(intCrdT x, intCrdT y) const;
-      inline colorT getPxColor(fltCrdT x, fltCrdT y) const { return getPxColor(real2intX(x), real2intY(y)); }
+      inline colorT getPxColor(fltCrdT x, fltCrdT y)  const { return getPxColor(real2intX(x), real2intY(y)); }
       inline colorT getPxColor(pointIntType thePoint) const { return getPxColor(thePoint.x, thePoint.y); }
       inline colorT getPxColor(pointFltType thePoint) const { return getPxColor(thePoint.x, thePoint.y); }
       //@}
@@ -1337,24 +1337,24 @@ namespace mjr {
       /** Get the default point to the specified coordinates with no clipping or bounds checking.
           @param x The x coordinate of the point
           @param y The y coordinate of the point */
-      colorT getPxColorNC(intCrdT x, intCrdT y) const;
+      inline colorT  getPxColorNC(intCrdT x, intCrdT y) const { return pixels[numPixX * y + x]; }
       /** Returns a reference to the color object for the given pixel with no clipping or bounds checking.
           @param x The x coordinate of the point
           @param y The y coordinate of the point
           @return Reference to the color object associated with the specified point */
-      colorT& getPxColorRefNC(intCrdT x, intCrdT y) const;
+      inline colorT& getPxColorRefNC(intCrdT x, intCrdT y) const { return pixels[numPixX * y + x]; }
       /** Draw a horizontal line with no clipping or bounds checking.
           @param xMin The MINIMUM x coordinate of the line to be drawn
           @param xMax The MAXIMUM x coordinate of the line to be drawn
           @param yConst The y coordinate at which the line is to be drawn
           @param color The color to draw the line */
-      void drawHorzLineNC(intCrdT xMin, intCrdT xMax, intCrdT yConst, colorArgType color);
+      inline void drawHorzLineNC(intCrdT xMin, intCrdT xMax, intCrdT yConst, colorArgType color) { for(intCrdT x=xMin;x<=xMax;x++) drawPointNC(x, yConst, color); }
       /** Draw a vertical line with no clipping or bounds checking.
           @param yMin The MINIMUM y coordinate of the line to be drawn
           @param yMax The MAXIMUM y coordinate of the line to be drawn
           @param xConst The x coordinate at which the line is to be drawn
           @param color The color to draw the line */
-      void drawVertLineNC(intCrdT yMin, intCrdT yMax, intCrdT xConst, colorArgType color);
+      inline void drawVertLineNC(intCrdT yMin, intCrdT yMax, intCrdT xConst, colorArgType color) { for(intCrdT y=yMin;y<=yMax;y++) drawPointNC(xConst, y, color); }
       //@}
 
       /** @name S stands for Simple */
@@ -1367,7 +1367,7 @@ namespace mjr {
           @param x The x coordinate of the point
           @param y The y coordinate of the point
           @param color The color with which to draw the point */
-      void drawPointS(intCrdT x, intCrdT y, colorArgType color);
+      inline void drawPointS(intCrdT x, intCrdT y, colorArgType color) { pixels[numPixX * y + x] = color; }
       //@}
 
       /** @name Canvas Level Colorization.
@@ -1391,9 +1391,9 @@ namespace mjr {
     newIntCoordsNC(-1, -1);
     pixels = NULL;
     pixelsE = NULL;
-    set_realAxisDefaultOrientation();
-    set_intAxisDefaultOrientation();
-    set_DefaultDrawMode();
+    setRealAxisDefaultOrientation();
+    setIntAxisDefaultOrientation();
+    setDefaultDrawMode();
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1401,17 +1401,17 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::ramCanvasTpl(const ramCanvasTpl &theCanvas) {
     //std::cout << "DEBUG: ramCanvasTpl copy constructor" << std::endl;
-    newIntCoordsNC(theCanvas.numXpix, theCanvas.numYpix);
+    newIntCoordsNC(theCanvas.numPixX, theCanvas.numPixY);
     newRealCoords(theCanvas.minRealX, theCanvas.maxRealX, theCanvas.minRealY, theCanvas.maxRealY);
-    pixels = new colorT[theCanvas.numXpix * theCanvas.numYpix];
-    pixelsE = pixels + (theCanvas.numXpix * theCanvas.numYpix);
-    xRealAxOrientation = theCanvas.xRealAxOrientation;
-    yRealAxOrientation = theCanvas.yRealAxOrientation;
-    xIntAxOrientation = theCanvas.xIntAxOrientation;
-    yIntAxOrientation = theCanvas.yIntAxOrientation;
+    pixels = new colorT[theCanvas.numPixX * theCanvas.numPixY];
+    pixelsE = pixels + (theCanvas.numPixX * theCanvas.numPixY);
+    realAxOrientationX = theCanvas.realAxOrientationX;
+    realAxOrientationY = theCanvas.realAxOrientationY;
+    intAxOrientationX = theCanvas.intAxOrientationX;
+    intAxOrientationY = theCanvas.intAxOrientationY;
     drawMode = theCanvas.drawMode;
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
         getPxColorRefNC(x, y) = theCanvas.getPxColorRefNC(x, y);
   }
 
@@ -1420,12 +1420,12 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::ramCanvasTpl(ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>&& theCanvas) {
     //std::cout << "DEBUG: ramCanvasTpl move constructor" << std::endl;
-    newIntCoordsNC(theCanvas.numXpix, theCanvas.numYpix);
+    newIntCoordsNC(theCanvas.numPixX, theCanvas.numPixY);
     newRealCoords(theCanvas.minRealX, theCanvas.maxRealX, theCanvas.minRealY, theCanvas.maxRealY);
-    xRealAxOrientation = theCanvas.xRealAxOrientation;
-    yRealAxOrientation = theCanvas.yRealAxOrientation;
-    xIntAxOrientation  = theCanvas.xIntAxOrientation;
-    yIntAxOrientation  = theCanvas.yIntAxOrientation;
+    realAxOrientationX = theCanvas.realAxOrientationX;
+    realAxOrientationY = theCanvas.realAxOrientationY;
+    intAxOrientationX  = theCanvas.intAxOrientationX;
+    intAxOrientationY  = theCanvas.intAxOrientationY;
     drawMode           = theCanvas.drawMode;
     pixels             = theCanvas.pixels;
     pixelsE            = theCanvas.pixelsE;
@@ -1438,12 +1438,12 @@ namespace mjr {
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::operator=(ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>&& theCanvas) {
     //std::cout << "DEBUG: ramCanvasTpl move assignment operator" << std::endl;
     if (this != &theCanvas) {
-      newIntCoordsNC(theCanvas.numXpix, theCanvas.numYpix);
+      newIntCoordsNC(theCanvas.numPixX, theCanvas.numPixY);
       newRealCoords(theCanvas.minRealX, theCanvas.maxRealX, theCanvas.minRealY, theCanvas.maxRealY);
-      xRealAxOrientation = theCanvas.xRealAxOrientation;
-      yRealAxOrientation = theCanvas.yRealAxOrientation;
-      xIntAxOrientation  = theCanvas.xIntAxOrientation;
-      yIntAxOrientation  = theCanvas.yIntAxOrientation;
+      realAxOrientationX = theCanvas.realAxOrientationX;
+      realAxOrientationY = theCanvas.realAxOrientationY;
+      intAxOrientationX  = theCanvas.intAxOrientationX;
+      intAxOrientationY  = theCanvas.intAxOrientationY;
       drawMode           = theCanvas.drawMode;
       pixels             = theCanvas.pixels;
       pixelsE            = theCanvas.pixelsE;
@@ -1454,15 +1454,15 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Normal Constructor
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::ramCanvasTpl(intCrdT numXpix_p, intCrdT numYpix_p, fltCrdT minRealX_p, fltCrdT maxRealX_p, fltCrdT minRealY_p, fltCrdT maxRealY_p) {
+  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::ramCanvasTpl(intCrdT numPixX_p, intCrdT numPixY_p, fltCrdT minRealX_p, fltCrdT maxRealX_p, fltCrdT minRealY_p, fltCrdT maxRealY_p) {
     // std::cout << "DEBUG: ramCanvasTpl normal constructor" << std::endl;
-    newIntCoordsNC(numXpix_p, numYpix_p);
+    newIntCoordsNC(numPixX_p, numPixY_p);
     newRealCoords(minRealX_p, maxRealX_p, minRealY_p, maxRealY_p);
-    pixels = new colorT[numXpix * numYpix];
-    pixelsE = pixels + (numXpix * numYpix);
-    set_realAxisDefaultOrientation();
-    set_intAxisDefaultOrientation();
-    set_DefaultDrawMode();
+    pixels = new colorT[numPixX * numPixY];
+    pixelsE = pixels + (numPixX * numPixY);
+    setRealAxisDefaultOrientation();
+    setIntAxisDefaultOrientation();
+    setDefaultDrawMode();
     clrCanvasToBlack();
   }
 
@@ -1478,11 +1478,11 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::newIntCoordsNC(intCrdT numXpix_p, intCrdT numYpix_p) {
-    if( (numXpix_p <= intCrdMax) && (numYpix_p <= intCrdMax) ) {
-      numPix  = numXpix_p * numYpix_p;;
-      numXpix = numXpix_p;
-      numYpix = numYpix_p;
+  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::newIntCoordsNC(intCrdT numPixX_p, intCrdT numPixY_p) {
+    if( (numPixX_p <= intCrdMax) && (numPixY_p <= intCrdMax) ) {
+      numPix  = numPixX_p * numPixY_p;;
+      numPixX = numPixX_p;
+      numPixY = numPixY_p;
     } else {
       // ERROR!!!
     }
@@ -1507,18 +1507,18 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::updRealCoords() {
-    xWid = maxRealX - minRealX;
-    yWid = maxRealY - minRealY;
-    xPixWid = xWid / numXpix;
-    yPixWid = yWid / numYpix;
+    canvasWidX = maxRealX - minRealX;
+    canvasWidY = maxRealY - minRealY;
+    pixWidX = canvasWidX / numPixX;
+    pixWidY = canvasWidY / numPixY;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::clrCanvasChannelToMin(int chan) {
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
         getPxColorRefNC(x, y).setChanToMin(chan);
   }
 
@@ -1526,8 +1526,8 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::clrCanvasChannelToMax(int chan) {
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
         getPxColorRefNC(x, y).setChanToMax(chan);
   }
 
@@ -1550,8 +1550,8 @@ namespace mjr {
     //   p->setToBlack();
 
     //// loop over x & y coordinates
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
         getPxColorRefNC(x, y).setToBlack();
 
     //// Call clrCanvas with black (this one is *way* slower)
@@ -1562,8 +1562,8 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::clrCanvasToWhite() {
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
         getPxColorRefNC(x, y).setToWhite();
   }
 
@@ -1578,8 +1578,8 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::clrCanvas(colorArgType color) {
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
         drawPointS(x, y, color);
   }
 
@@ -1589,8 +1589,8 @@ namespace mjr {
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::autoHistStrech() {
     colorChanType cmin = colorT::maxChanVal;
     colorChanType cmax = colorT::minChanVal;
-    for(intCrdT y=0;y<numYpix;y++) {
-      for(intCrdT x=0;x<numXpix;x++) {
+    for(intCrdT y=0;y<numPixY;y++) {
+      for(intCrdT x=0;x<numPixX;x++) {
         colorT daColor = getPxColorNC(x, y);
         colorChanType curMin = daColor.getMinC();
         colorChanType curMax = daColor.getMaxC();
@@ -1615,8 +1615,8 @@ namespace mjr {
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::autoMaxHistStrech() {
     colorT cmin; cmin.setChans(cmin.maxChanVal);
     colorT cmax; cmax.setChans(cmin.minChanVal);
-    for(intCrdT y=0;y<numYpix;y++) {
-      for(intCrdT x=0;x<numXpix;x++) {
+    for(intCrdT y=0;y<numPixY;y++) {
+      for(intCrdT x=0;x<numPixX;x++) {
         colorT daColor = getPxColorNC(x, y);
         cmin.tfrmMin(daColor);
         cmax.tfrmMax(daColor);
@@ -1639,8 +1639,8 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)()) {
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)();
   }
 
@@ -1648,8 +1648,8 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT), colorT arg1) {
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1);
   }
 
@@ -1657,8 +1657,8 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT, colorT), colorT arg1, colorT arg2) {
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2);
   }
 
@@ -1666,8 +1666,8 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT, colorT, colorT), colorT arg1, colorT arg2, colorT arg3) {
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3);
   }
 
@@ -1675,8 +1675,8 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT, colorT, colorT, colorT), colorT arg1, colorT arg2, colorT arg3, colorT arg4) {
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3, arg4);
   }
 
@@ -1684,8 +1684,8 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(int), int arg1) {
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1);
   }
 
@@ -1693,8 +1693,8 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(int, int), int arg1, int arg2) {
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2);
   }
 
@@ -1702,8 +1702,8 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(int, int, int), int arg1, int arg2, int arg3) {
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3);
   }
 
@@ -1711,8 +1711,8 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(int, int, int, int), int arg1, int arg2, int arg3, int arg4) {
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3, arg4);
   }
 
@@ -1720,8 +1720,8 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(double), double arg1) {
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1);
   }
 
@@ -1729,8 +1729,8 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(double, double), double arg1, double arg2) {
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2);
   }
 
@@ -1738,8 +1738,8 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(double, double, double), double arg1, double arg2, double arg3) {
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3);
   }
 
@@ -1748,8 +1748,8 @@ namespace mjr {
   inline void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(double, double, double, double),
                                                            double arg1, double arg2, double arg3, double arg4) {
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3, arg4);
   }
 
@@ -1758,8 +1758,8 @@ namespace mjr {
   inline void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(double, double, double, double, double),
                                                            double arg1, double arg2, double arg3, double arg4, double arg5) {
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3, arg4, arg5);
   }
 
@@ -1767,8 +1767,8 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline void ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(double, double, double, double, double, double),
                                                                        double arg1, double arg2, double arg3, double arg4, double arg5, double arg6) {
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3, arg4, arg5, arg6);
   }
 
@@ -1781,27 +1781,27 @@ namespace mjr {
                                                                             intCrdT srcX, intCrdT srcY) {
     // Figure out real default width
     if(wide < 0)
-      wide = numXpix-trgX;
+      wide = numPixX-trgX;
 
     // Make sure wide is not wider than current canvas.
-    if(wide > (numXpix-srcX))
-      wide = theCanvas.get_numXpix()-srcX;
+    if(wide > (numPixX-srcX))
+      wide = theCanvas.getNumPixX()-srcX;
 
     // Make sure wide is not wider than given canvas.
-    if(wide > (theCanvas.get_numXpix()-srcX))
-      wide = theCanvas.get_numXpix()-srcX;
+    if(wide > (theCanvas.getNumPixX()-srcX))
+      wide = theCanvas.getNumPixX()-srcX;
 
     // Figure out real default tall
     if(tall < 0)
-      tall = numYpix-srcY;
+      tall = numPixY-srcY;
 
     // Make sure tall is not taller than current canvas.
-    if(tall > (numYpix-srcY))
-      tall = numYpix-srcY;
+    if(tall > (numPixY-srcY))
+      tall = numPixY-srcY;
 
     // Make sure tall is not taller than given canvas.
-    if(tall > (theCanvas.get_numYpix()-srcY))
-      tall = theCanvas.get_numYpix()-srcY;
+    if(tall > (theCanvas.getNumPixY()-srcY))
+      tall = theCanvas.getNumPixY()-srcY;
 
     intCrdT xMax = trgX+wide;
     intCrdT yMax = trgY+tall;
@@ -1817,24 +1817,24 @@ namespace mjr {
     moveTo(x2, y2);                                                           // Do this first
     intCrdT x, y;
     if(y1 == y2) {                                                            // slope = 0
-      if( (y1 < 0) || (y1 >= numYpix) )                                       // . Line off canvas case
+      if( (y1 < 0) || (y1 >= numPixY) )                                       // . Line off canvas case
         return;
       if(x1 > x2)                                                             // . Fix point ordering
         std::swap(x1, x2);
       if(x1 < 0)                                                              // . Clip left
         x1 = 0;
-      if(x2 >= numXpix)                                                       // . Clip right
-        x2 = numXpix - 1;
+      if(x2 >= numPixX)                                                       // . Clip right
+        x2 = numPixX - 1;
       drawHorzLineNC(x1, x2, y1, color);                                      // . Draw Pixels
     } else if(x1 == x2) {                                                     // slope = infinity
-      if( (x1 < 0) || (x1 >= numXpix) )                                       // . Line off canvas case
+      if( (x1 < 0) || (x1 >= numPixX) )                                       // . Line off canvas case
         return;
       if(y1 > y2)                                                             // . Fix point ordering
         std::swap(y1, y2);
       if(y1 < 0)                                                              // . Clip top
         y1 = 0;
-      if(y2 >= numYpix)                                                       // . Clip bottom
-        y2 = numYpix - 1;
+      if(y2 >= numPixY)                                                       // . Clip bottom
+        y2 = numPixY - 1;
       drawVertLineNC(y1, y2, x1, color);                                      // . Draw Pixels
     } else {                                                                  // Slope is not infinity or 0...
       int dx, dy;
@@ -1845,7 +1845,7 @@ namespace mjr {
       dx = x2 - x1;                                                           // . Compute the slope
       dy = y2 - y1;
       if(dx == dy) {                                                          // . Slope = 1
-        if( (y2 < 0) || (x2 < 0) || (x1 >= numXpix) || (y1 >= numYpix) )      // .. Line off canvas case
+        if( (y2 < 0) || (x2 < 0) || (x1 >= numPixX) || (y1 >= numPixY) )      // .. Line off canvas case
           return;
         if(x1 < 0) {                                                          // .. Clip left
           y1 = y1 - x1;
@@ -1855,34 +1855,34 @@ namespace mjr {
           x1 = x1 - y1;
           y1 = 0;
         }
-        if(x2 >= numXpix) {                                                   // .. Clip right
-          y2 = y2 - (x2 - numXpix) - 1;
-          x2 = numXpix - 1;
+        if(x2 >= numPixX) {                                                   // .. Clip right
+          y2 = y2 - (x2 - numPixX) - 1;
+          x2 = numPixX - 1;
         }
-        if(y2 >= numYpix) {                                                   // .. Clip bottom
-          x2 = x2 - (y2 - numYpix) - 1;
-          y2 = numYpix - 1;
+        if(y2 >= numPixY) {                                                   // .. Clip bottom
+          x2 = x2 - (y2 - numPixY) - 1;
+          y2 = numPixY - 1;
         }
         for(x=x1,y=y1;x<=x2;y++,x++)                                          // .. Draw Pixels
           drawPointNC(x, y, color);
       } else if(dx == -dy) {                                                  // . Slope = -1
-        if( (x2 < 0) || (y2 >= numYpix) || (x1 >= numXpix) || (y1 < 0) )      // .. Line off canvas case
+        if( (x2 < 0) || (y2 >= numPixY) || (x1 >= numPixX) || (y1 < 0) )      // .. Line off canvas case
           return;
         if(x1 < 0) {                                                          // .. Clip left
           y1 = y1 + x1;
           x1 = 0;
         }
-        if(x2 >= numXpix) {                                                   // .. Clip right
-          y2 = y2 + (x2 - (numXpix - 1));
-          x2 = numXpix - 1;
+        if(x2 >= numPixX) {                                                   // .. Clip right
+          y2 = y2 + (x2 - (numPixX - 1));
+          x2 = numPixX - 1;
         }
         if(y2 < 0) {                                                          // .. Clip top
           x2 = x2 + y2;
           y2 = 0;
         }
-        if(y1 >= numYpix) {                                                   // .. Clip bottom
-          x1 = x1 + (y1 - (numYpix - 1));
-          y1 = numYpix - 1;
+        if(y1 >= numPixY) {                                                   // .. Clip bottom
+          x1 = x1 + (y1 - (numPixY - 1));
+          y1 = numPixY - 1;
         }
         for(x=x1,y=y1;x<=x2;y--,x++)                                          // .. Draw Pixels
           drawPointNC(x, y, color);
@@ -1891,7 +1891,7 @@ namespace mjr {
         dx2 = 2*dx;
         dy2 = 2*dy;
         if(dy > 0) {                                                          // .. Positive Slope
-          if( (y2 < 0) || (x2 < 0) || (x1 >= numXpix) || (y1 >= numYpix) )    // ... Line off canvas case
+          if( (y2 < 0) || (x2 < 0) || (x1 >= numPixX) || (y1 >= numPixY) )    // ... Line off canvas case
             return;
           if(x1 < 0) {                                                        // ... Clip left
             y1 = (int)(1.0*y1-x1*dy/dx);
@@ -1901,13 +1901,13 @@ namespace mjr {
             x1 = (int)(1.0*x1-y1*dx/dy);
             y1 = 0;
           }
-          if(x2 >= numXpix) {                                                 // ... Clip right
-            y2 = (int)((1.0*dy*(numXpix-1)+y1*dx-x1*dy)/dx);
-            x2 = numXpix - 1;
+          if(x2 >= numPixX) {                                                 // ... Clip right
+            y2 = (int)((1.0*dy*(numPixX-1)+y1*dx-x1*dy)/dx);
+            x2 = numPixX - 1;
           }
-          if(y2 >= numYpix) {                                                 // ... Clip bottom
-            x2 = (int)(((numYpix-1)*dx-y2*dx+x2*dy)/dy);
-            y2 = numYpix - 1;
+          if(y2 >= numPixY) {                                                 // ... Clip bottom
+            x2 = (int)(((numPixY-1)*dx-y2*dx+x2*dy)/dy);
+            y2 = numPixY - 1;
           }
 //  MJR TODO NOTE drawLine: We use drawPoint instead of drawPointNC, can we make an off canvas decesion instead? Similar case down below.
           if(dx > dy) {                                                       // ... 0 < Slope < 1
@@ -1940,7 +1940,7 @@ namespace mjr {
             }
           }
         } else {                                                              // .. Negative Slope
-          if( (x2 < 0) || (y2 >= numYpix) || (x1 >= numXpix) || (y1 < 0) )    // ... Line off canvas case
+          if( (x2 < 0) || (y2 >= numPixY) || (x1 >= numPixX) || (y1 < 0) )    // ... Line off canvas case
             return;
           if(x1 < 0) {                                                        // ... Clip left
             y1 = (int)(1.0*y1-x1*dy/dx);
@@ -1950,13 +1950,13 @@ namespace mjr {
             x2 = (int)(1.0*x2-y2*dx/dy);
             y2 = 0;
           }
-          if(x2 >= numXpix) {                                                 // ... Clip right
-            y2 = (int)((1.0*dy*(numXpix-1)+y2*dx-x2*dy)/dx);
-            x2 = numXpix - 1;
+          if(x2 >= numPixX) {                                                 // ... Clip right
+            y2 = (int)((1.0*dy*(numPixX-1)+y2*dx-x2*dy)/dx);
+            x2 = numPixX - 1;
           }
-          if(y1 >= numYpix) {                                                 // ... Clip bottom
-            x1 = (int)(((numYpix-1)*dx-y1*dx+x1*dy)/dy);
-            y1 = numYpix - 1;
+          if(y1 >= numPixY) {                                                 // ... Clip bottom
+            x1 = (int)(((numPixY-1)*dx-y1*dx+x1*dy)/dy);
+            y1 = numPixY - 1;
           }
           if(dx > -dy) {                                                      // ... 0 > Slope > -infinity
             s = dy2 + dx;
@@ -2007,28 +2007,28 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::rePointPixels(colorT *new_pixels, intCrdT new_numXpix, intCrdT new_numYpix) {
+  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::rePointPixels(colorT *new_pixels, intCrdT new_numPixX, intCrdT new_numPixY) {
     freeCanvas();
-    newIntCoordsNC(new_numXpix, new_numYpix);
+    newIntCoordsNC(new_numPixX, new_numPixY);
     updRealCoords();
     if(new_pixels != NULL)
       pixels = new_pixels;
     if(pixels == NULL)
       pixelsE = NULL;
     else
-      pixelsE = pixels+(new_numXpix * new_numYpix);
+      pixelsE = pixels+(new_numPixX * new_numPixY);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::reallocCanvas(intCrdT numXpix_p, intCrdT numYpix_p) {
-    if((numXpix_p<=0) || (numYpix_p<=0)) {
+  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::reallocCanvas(intCrdT numPixX_p, intCrdT numPixY_p) {
+    if((numPixX_p<=0) || (numPixY_p<=0)) {
       freeCanvas();
     } else {
-      if( (numXpix_p!=numXpix) || (numYpix_p!=numYpix) ) {
-        colorT *new_pixels = new colorT[numXpix_p * numYpix_p];
-        rePointPixels(new_pixels, numXpix_p, numYpix_p);
+      if( (numPixX_p!=numPixX) || (numPixY_p!=numPixY) ) {
+        colorT *new_pixels = new colorT[numPixX_p * numPixY_p];
+        rePointPixels(new_pixels, numPixX_p, numPixY_p);
       } else {
         // Don't really do anything as the new size is the same as the old size...
       }
@@ -2038,41 +2038,41 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::resizeCanvas(intCrdT new_numXpix_p, intCrdT new_numYpix_p) {
-    reallocCanvas(new_numXpix_p, new_numYpix_p);
+  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::resizeCanvas(intCrdT new_numPixX_p, intCrdT new_numPixY_p) {
+    reallocCanvas(new_numPixX_p, new_numPixY_p);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::expandCanvas(intCrdT new_numXpix_p, intCrdT new_numYpix_p, intCrdT x1, intCrdT y1, colorArgType color) {
-    if( (new_numXpix_p != numXpix) || (new_numYpix_p != numYpix) ) {
-      if(x1 >= new_numXpix_p)
+  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::expandCanvas(intCrdT new_numPixX_p, intCrdT new_numPixY_p, intCrdT x1, intCrdT y1, colorArgType color) {
+    if( (new_numPixX_p != numPixX) || (new_numPixY_p != numPixY) ) {
+      if(x1 >= new_numPixX_p)
         x1=0;
-      if(y1 >= new_numYpix_p)
+      if(y1 >= new_numPixY_p)
         y1=0;
 
-      colorT *new_pixels = new colorT[new_numXpix_p * new_numYpix_p];
+      colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
 
       // Fill it up with the default color.  Should only draw the ones that need it, but computers are fast...
-      for(intCrdT y=0;y<new_numYpix_p;y++)
-        for(intCrdT x=0;x<new_numXpix_p;x++)
-          new_pixels[new_numXpix_p * (y) + (x)] = color;
+      for(intCrdT y=0;y<new_numPixY_p;y++)
+        for(intCrdT x=0;x<new_numPixX_p;x++)
+          new_pixels[new_numPixX_p * (y) + (x)] = color;
 
-      intCrdT yMax = new_numYpix_p;
-      if(yMax > (new_numYpix_p-y1))
-        yMax = new_numYpix_p-y1;
+      intCrdT yMax = new_numPixY_p;
+      if(yMax > (new_numPixY_p-y1))
+        yMax = new_numPixY_p-y1;
 
-      intCrdT xMax = new_numXpix_p;
-      if(xMax > (new_numXpix_p-x1))
-        xMax = new_numXpix_p-x1;
+      intCrdT xMax = new_numPixX_p;
+      if(xMax > (new_numPixX_p-x1))
+        xMax = new_numPixX_p-x1;
 
       // Copy the old image to the new space.
       for(intCrdT y=y1;y<yMax;y++)
         for(intCrdT x=0;x<xMax;x++)
-          new_pixels[new_numXpix_p * (y) + (x)] = getPxColor(x-x1, y-y1);
+          new_pixels[new_numPixX_p * (y) + (x)] = getPxColor(x-x1, y-y1);
 
-      rePointPixels(new_pixels, new_numXpix_p, new_numYpix_p);
+      rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
     }
   }
 
@@ -2086,16 +2086,16 @@ namespace mjr {
       if(y1 > y2)
         std::swap(y1, y2);
       intCrdT xp, yp, x, y;
-      intCrdT new_numXpix_p = x2-x1+1;
-      intCrdT new_numYpix_p = y2-y1+1;
-      colorT *new_pixels = new colorT[new_numXpix_p * new_numYpix_p];
+      intCrdT new_numPixX_p = x2-x1+1;
+      intCrdT new_numPixY_p = y2-y1+1;
+      colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
 
       // Copy the old image to the new space.
       for(y=y1,yp=0;y<=y2;y++,yp++)
         for(x=x1,xp=0;x<=x2;x++,xp++)
-          new_pixels[new_numXpix_p * yp + xp] = getPxColor(x, y);
+          new_pixels[new_numPixX_p * yp + xp] = getPxColor(x, y);
 
-      rePointPixels(new_pixels, new_numXpix_p, new_numYpix_p);
+      rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
     }
   }
 
@@ -2103,10 +2103,10 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::flipHorz() {
-    for(intCrdT y=0; y<numYpix/2; y++)
-      for(intCrdT x=0; x<numXpix; x++) {
-        colorT aColor = getPxColor(x, numYpix-y-1);
-        drawPointNC(x, numYpix-y-1, getPxColor(x, y));
+    for(intCrdT y=0; y<numPixY/2; y++)
+      for(intCrdT x=0; x<numPixX; x++) {
+        colorT aColor = getPxColor(x, numPixY-y-1);
+        drawPointNC(x, numPixY-y-1, getPxColor(x, y));
         drawPointNC(x, y, aColor);
       }
   }
@@ -2115,10 +2115,10 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::flipVert() {
-    for(intCrdT x=0; x<numXpix/2; x++)
-      for(intCrdT y=0; y<numYpix; y++) {
-        colorT aColor = getPxColor(numXpix-x-1, y);
-        drawPointNC(numXpix-x-1, y, getPxColor(x, y));
+    for(intCrdT x=0; x<numPixX/2; x++)
+      for(intCrdT y=0; y<numPixY; y++) {
+        colorT aColor = getPxColor(numPixX-x-1, y);
+        drawPointNC(numPixX-x-1, y, getPxColor(x, y));
         drawPointNC(x, y, aColor);
       }
   }
@@ -2127,52 +2127,52 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::flipTranspose() {
-    intCrdT new_numXpix_p = numYpix;
-    intCrdT new_numYpix_p = numXpix;
-    colorT *new_pixels = new colorT[new_numXpix_p * new_numYpix_p];
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
-        new_pixels[new_numXpix_p * (x/*y-crd*/) + (y/*x-crd*/)] = getPxColor(x, y);
-    rePointPixels(new_pixels, new_numXpix_p, new_numYpix_p);
+    intCrdT new_numPixX_p = numPixY;
+    intCrdT new_numPixY_p = numPixX;
+    colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
+        new_pixels[new_numPixX_p * (x/*y-crd*/) + (y/*x-crd*/)] = getPxColor(x, y);
+    rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::rotate90CW() {
-    intCrdT new_numXpix_p = numYpix;
-    intCrdT new_numYpix_p = numXpix;
-    colorT *new_pixels = new colorT[new_numXpix_p * new_numYpix_p];
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
-        new_pixels[new_numXpix_p * (x/*y-crd*/) + (numYpix-y-1/*x-crd*/)] = getPxColor(x, y);
-    rePointPixels(new_pixels, new_numXpix_p, new_numYpix_p);
+    intCrdT new_numPixX_p = numPixY;
+    intCrdT new_numPixY_p = numPixX;
+    colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
+        new_pixels[new_numPixX_p * (x/*y-crd*/) + (numPixY-y-1/*x-crd*/)] = getPxColor(x, y);
+    rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::rotate90CCW() {
-    intCrdT new_numXpix_p = numYpix;
-    intCrdT new_numYpix_p = numXpix;
-    colorT *new_pixels = new colorT[new_numXpix_p * new_numYpix_p];
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
-        new_pixels[new_numXpix_p * (numXpix-x-1/*y-crd*/) + (y/*x-crd*/)] = getPxColor(x, y);
-    rePointPixels(new_pixels, new_numXpix_p, new_numYpix_p);
+    intCrdT new_numPixX_p = numPixY;
+    intCrdT new_numPixY_p = numPixX;
+    colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
+        new_pixels[new_numPixX_p * (numPixX-x-1/*y-crd*/) + (y/*x-crd*/)] = getPxColor(x, y);
+    rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::rotate180() {
-    intCrdT new_numXpix_p = numXpix;
-    intCrdT new_numYpix_p = numYpix;
-    colorT *new_pixels = new colorT[new_numXpix_p * new_numYpix_p];
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
-        new_pixels[new_numXpix_p * (numYpix-y-1/*y-crd*/) + (numXpix-x-1/*x-crd*/)] = getPxColor(x, y);
-    rePointPixels(new_pixels, new_numXpix_p, new_numYpix_p);
+    intCrdT new_numPixX_p = numPixX;
+    intCrdT new_numPixY_p = numPixY;
+    colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
+        new_pixels[new_numPixX_p * (numPixY-y-1/*y-crd*/) + (numPixX-x-1/*x-crd*/)] = getPxColor(x, y);
+    rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2234,23 +2234,23 @@ namespace mjr {
       if(colorT::channelCount > 0xffff)                                                    // too many channels
         return 5;
     }
-    if(numXpix < 1)                                                                        // too skinny
+    if(numPixX < 1)                                                                        // too skinny
       return 6;
-    if(numXpix > 0x7fffffff)                                                               // too wide
+    if(numPixX > 0x7fffffff)                                                               // too wide
       return 7;
-    if(numYpix < 1)                                                                        // too short
+    if(numPixY < 1)                                                                        // too short
       return 8;
-    if(numYpix > 0x7fffffff)                                                               // too tall
+    if(numPixY > 0x7fffffff)                                                               // too tall
       return 9;
-    if(numXpix * colorT::bitsPerChan / 8ul * colorT::channelCount > 0xffffffff)            // rows too big
+    if(numPixX * colorT::bitsPerChan / 8ul * colorT::channelCount > 0xffffffff)            // rows too big
       return 10;
-    if(numXpix * numYpix * colorT::channelCount * colorT::bitsPerChan / 8ul > 0xfffffffff) // image too big
+    if(numPixX * numPixY * colorT::channelCount * colorT::bitsPerChan / 8ul > 0xfffffffff) // image too big
       return 11;
 
     endianType fe        = platformEndianness();                         // Endian Type
     uint16_t endianNum   = (fe == endianType::LITTLE ? 0x4949 : 0x4d4d); // Endianness Magic Number
-    uint32_t tifWidth    = (uint32_t)numXpix;                            // ImageWidth
-    uint32_t tifLength   = (uint32_t)numYpix;                            // ImageLength & RowsPerStrip
+    uint32_t tifWidth    = (uint32_t)numPixX;                            // ImageWidth
+    uint32_t tifLength   = (uint32_t)numPixY;                            // ImageLength & RowsPerStrip
     uint32_t tifSPP      = (uint32_t)(toTRU ? 3 : colorT::channelCount); // SamplesPerPixel
     uint16_t tifBPS      = (uint16_t)(toTRU ? 8 : colorT::bitsPerChan);  // BitsPerSample
     uint32_t bytePerSmp  = tifBPS / 8;                                   // Bytes per sample
@@ -2338,10 +2338,10 @@ namespace mjr {
     }
                                                                                                                               // Image data
     intCrdT x, y;
-    bool yNat = !(yIntAxOrientation==intAxisOrientation::NATURAL);
-    bool xNat = xIntAxOrientation==intAxisOrientation::NATURAL;
-    for((yNat?y=0:y=(numYpix-1)); (yNat?y<numYpix:y>=0); (yNat?y++:y--)) {
-      for((xNat?x=0:x=(numXpix-1)); (xNat?x<numXpix:x>=0); (xNat?x++:x--)) {
+    bool yNat = !(intAxOrientationY==intAxisOrientation::NATURAL);
+    bool xNat = intAxOrientationX==intAxisOrientation::NATURAL;
+    for((yNat?y=0:y=(numPixY-1)); (yNat?y<numPixY:y>=0); (yNat?y++:y--)) {
+      for((xNat?x=0:x=(numPixX-1)); (xNat?x<numPixX:x>=0); (xNat?x++:x--)) {
         colorT aColor = getPxColorRefNC(x, y);
         if(filter != NULL)
           aColor = filter(aColor);
@@ -2370,8 +2370,8 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::colorizeFltCanvas(std::function<colorT (fltCrdT, fltCrdT)> cFun) {
-    for(intCrdT yi=0;yi<numYpix;yi++) {
-      for(intCrdT xi=0;xi<numXpix;xi++) {
+    for(intCrdT yi=0;yi<numPixY;yi++) {
+      for(intCrdT xi=0;xi<numPixX;xi++) {
         fltCrdT xf = int2realX(xi);
         fltCrdT yf = int2realY(yi);
         colorT aColor = cFun(xf, yf);
@@ -2384,8 +2384,8 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::colorizeFltCanvas(std::function<colorT (pointFltType)> cFun) {
-    for(intCrdT yi=0;yi<numYpix;yi++) {
-      for(intCrdT xi=0;xi<numXpix;xi++) {
+    for(intCrdT yi=0;yi<numPixY;yi++) {
+      for(intCrdT xi=0;xi<numPixX;xi++) {
         pointFltType xyPt(int2realX(xi), int2realY(yi));
         colorT aColor = cFun(xyPt);
         drawPoint(xi, yi, aColor);
@@ -2397,8 +2397,8 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::colorizeIntCanvas(std::function<colorT (intCrdT, intCrdT)> cFun) {
-    for(intCrdT yi=0;yi<numYpix;yi++) {
-      for(intCrdT xi=0;xi<numXpix;xi++) {
+    for(intCrdT yi=0;yi<numPixY;yi++) {
+      for(intCrdT xi=0;xi<numPixX;xi++) {
         colorT aColor = cFun(xi, yi);
         drawPoint(xi, yi, aColor);
       }
@@ -2409,8 +2409,8 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::colorizeIntCanvas(std::function<colorT (pointIntType)> cFun) {
-    for(intCrdT yi=0;yi<numYpix;yi++) {
-      for(intCrdT xi=0;xi<numXpix;xi++) {
+    for(intCrdT yi=0;yi<numPixY;yi++) {
+      for(intCrdT xi=0;xi<numPixX;xi++) {
         pointIntType xyPt(xi, yi);
         colorT aColor = cFun(xyPt);
         drawPoint(xi, yi, aColor);
@@ -2424,13 +2424,13 @@ namespace mjr {
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeTGAstream(std::ostream& oStream,
                                                          std::function<colorRGB8b (colorT&)> toTRU,
                                                          std::function<colorT     (colorT&)> filter) {
-    if(numXpix < 1)      // too skinny
+    if(numPixX < 1)      // too skinny
       return 6;
-    if(numXpix > 0xffff) // too wide
+    if(numPixX > 0xffff) // too wide
       return 7;
-    if(numYpix < 1)      // too short
+    if(numPixY < 1)      // too short
       return 8;
-    if(numYpix > 0xffff) // too tall
+    if(numPixY > 0xffff) // too tall
       return 9;
 
     /* Write header */
@@ -2442,19 +2442,19 @@ namespace mjr {
     writeUIntToStream(oStream, endianType::LITTLE, 1, 0);       // colormapdepth
     writeUIntToStream(oStream, endianType::LITTLE, 2, 0);       // 16-bit x_origin
     writeUIntToStream(oStream, endianType::LITTLE, 2, 0);       // 16-bit y_origon
-    writeUIntToStream(oStream, endianType::LITTLE, 2, numXpix); // Width
-    writeUIntToStream(oStream, endianType::LITTLE, 2, numYpix); // Height
+    writeUIntToStream(oStream, endianType::LITTLE, 2, numPixX); // Width
+    writeUIntToStream(oStream, endianType::LITTLE, 2, numPixY); // Height
     writeUIntToStream(oStream, endianType::LITTLE, 1, 24);      // bits per pixel
     writeUIntToStream(oStream, endianType::LITTLE, 1, 0);       // imagedescriptor
 
     /* Write data */
     intCrdT x, y;
     /* Normally I would not resort to such trickery; however, this is an exception.  The following for loop is equivalent to switching between the two forms
-       "for(y=(numYpix-1); y>=0; y--)" and "for(y=0; y<numYpix; y++)". */
-    bool yNat = yIntAxOrientation==intAxisOrientation::NATURAL;
-    bool xNat = xIntAxOrientation==intAxisOrientation::NATURAL;
-    for((yNat?y=0:y=(numYpix-1)); (yNat?y<numYpix:y>=0); (yNat?y++:y--)) {
-      for((xNat?x=0:x=(numXpix-1)); (xNat?x<numXpix:x>=0); (xNat?x++:x--)) {
+       "for(y=(numPixY-1); y>=0; y--)" and "for(y=0; y<numPixY; y++)". */
+    bool yNat = intAxOrientationY==intAxisOrientation::NATURAL;
+    bool xNat = intAxOrientationX==intAxisOrientation::NATURAL;
+    for((yNat?y=0:y=(numPixY-1)); (yNat?y<numPixY:y>=0); (yNat?y++:y--)) {
+      for((xNat?x=0:x=(numPixX-1)); (xNat?x<numPixX:x>=0); (xNat?x++:x--)) {
         colorT aColor = getPxColorRefNC(x, y);
         if(filter != NULL)
           aColor = filter(aColor);
@@ -2479,11 +2479,11 @@ namespace mjr {
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeBINstream(std::ostream& oStream, std::function<colorT (colorT&)> filter) {
     intCrdT x, y;
     /* Normally I would not resort to such trickery; however, this is an exception.  The following for loop is equivalent to switching between the two forms
-       "for(y=(numYpix-1); y>=0; y--)" and "for(y=0; y<numYpix; y++)". */
-    bool yNat = !(yIntAxOrientation==intAxisOrientation::NATURAL);
-    bool xNat = xIntAxOrientation==intAxisOrientation::NATURAL;
-    for((yNat?y=0:y=(numYpix-1)); (yNat?y<numYpix:y>=0); (yNat?y++:y--)) {
-      for((xNat?x=0:x=(numXpix-1)); (xNat?x<numXpix:x>=0); (xNat?x++:x--)) {
+       "for(y=(numPixY-1); y>=0; y--)" and "for(y=0; y<numPixY; y++)". */
+    bool yNat = !(intAxOrientationY==intAxisOrientation::NATURAL);
+    bool xNat = intAxOrientationX==intAxisOrientation::NATURAL;
+    for((yNat?y=0:y=(numPixY-1)); (yNat?y<numPixY:y>=0); (yNat?y++:y--)) {
+      for((xNat?x=0:x=(numPixX-1)); (xNat?x<numPixX:x>=0); (xNat?x++:x--)) {
         colorT aColor = getPxColorRefNC(x, y);
         if(filter != NULL)
           aColor = filter(aColor);
@@ -2502,8 +2502,8 @@ namespace mjr {
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeRAWstream(std::ostream& oStream, std::function<colorT (colorT&)> filter) {
     std::ostringstream outStringStream;
     outStringStream << "MJRRAW\n";                                                                   //  7   7
-    outStringStream << std::setw(19) << std::setfill('0') << numXpix                 << "x";         // 20  27
-    outStringStream << std::setw(19) << std::setfill('0') << numYpix                 << "y";         // 20  47
+    outStringStream << std::setw(19) << std::setfill('0') << numPixX                 << "x";         // 20  27
+    outStringStream << std::setw(19) << std::setfill('0') << numPixY                 << "y";         // 20  47
     outStringStream << std::setw(27) << std::setfill('0') << colorT::channelCount    << "c";         // 28  75
     outStringStream << std::setw(11) << std::setfill('0') << colorT::bitsPerChan     << "b";         // 12  87
     outStringStream << "UNS"                                                         << "s";         //  4  91
@@ -2587,9 +2587,9 @@ namespace mjr {
       std::swap(y1, y2);
 
     if(x1 <  0)        return 1; // Outside of canvas
-    if(x2 >= numXpix)  return 1; // Outside of canvas
+    if(x2 >= numPixX)  return 1; // Outside of canvas
     if(y1 <  0)        return 1; // Outside of canvas
-    if(y2 >= numYpix)  return 1; // Outside of canvas
+    if(y2 >= numPixY)  return 1; // Outside of canvas
     if(x2 <  x1)       return 2; // Region too small (x direction)
     if(y2 <  y1)       return 3; // Region too small (y direction)
 
@@ -2620,50 +2620,50 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline intCrdT
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::real2intX(fltCrdT x) const {
-    if(xRealAxOrientation == realAxisOrientation::NATURAL)
-      return static_cast<intCrdT>((static_cast<fltCrdT>(x) - minRealX) / xPixWid);
+    if(realAxOrientationX == realAxisOrientation::NATURAL)
+      return static_cast<intCrdT>((static_cast<fltCrdT>(x) - minRealX) / pixWidX);
     else
-      return static_cast<intCrdT>((maxRealX - static_cast<fltCrdT>(x)) / xPixWid);
+      return static_cast<intCrdT>((maxRealX - static_cast<fltCrdT>(x)) / pixWidX);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline intCrdT
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::real2intY(fltCrdT y) const {
-    if(yRealAxOrientation == realAxisOrientation::NATURAL)
-      return static_cast<intCrdT>((static_cast<fltCrdT>(y) - minRealY) / yPixWid);
+    if(realAxOrientationY == realAxisOrientation::NATURAL)
+      return static_cast<intCrdT>((static_cast<fltCrdT>(y) - minRealY) / pixWidY);
     else
-      return static_cast<intCrdT>((maxRealY - static_cast<fltCrdT>(y)) / yPixWid);
+      return static_cast<intCrdT>((maxRealY - static_cast<fltCrdT>(y)) / pixWidY);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline fltCrdT
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::int2realX(intCrdT x) {
-    if(xRealAxOrientation == realAxisOrientation::NATURAL)
-      return static_cast<fltCrdT>(x) * xPixWid + minRealX;
+    if(realAxOrientationX == realAxisOrientation::NATURAL)
+      return static_cast<fltCrdT>(x) * pixWidX + minRealX;
     else
-      return maxRealX - static_cast<fltCrdT>(x) * xPixWid;
+      return maxRealX - static_cast<fltCrdT>(x) * pixWidX;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   inline fltCrdT
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::int2realY(intCrdT y) {
-    if(yRealAxOrientation == realAxisOrientation::NATURAL)
-      return static_cast<fltCrdT>(y) * yPixWid + minRealY;
+    if(realAxOrientationY == realAxisOrientation::NATURAL)
+      return static_cast<fltCrdT>(y) * pixWidY + minRealY;
     else
-      return maxRealY - static_cast<fltCrdT>(y) * yPixWid;
+      return maxRealY - static_cast<fltCrdT>(y) * pixWidY;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   colorT*
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::clonePixels() {
-    colorT *pixelsCopy = new colorT[numXpix * numYpix];
-    for(intCrdT y=0; y<numYpix; y++)
-      for(intCrdT x=0; x<numXpix; x++)
-        pixelsCopy[numXpix * y + x] = getPxColorNC(x, y);
+    colorT *pixelsCopy = new colorT[numPixX * numPixY];
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
+        pixelsCopy[numPixX * y + x] = getPxColorNC(x, y);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2671,7 +2671,7 @@ namespace mjr {
   inline colorT
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::getPxColor(intCrdT x, intCrdT y) const {
     if(isOnCanvas(x, y)) [[likely]]
-      return pixels[numXpix * y + x];
+      return pixels[numPixX * y + x];
     else 
       return colorT().setToBlack();
   }
@@ -2684,12 +2684,12 @@ namespace mjr {
       new ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>(width, height);
 
     intCrdT xMax = width+x;
-    if(xMax>numXpix)
-      xMax = numXpix;
+    if(xMax>numPixX)
+      xMax = numPixX;
 
     intCrdT yMax = height+y;
-    if(yMax>numYpix)
-      yMax = numYpix;
+    if(yMax>numPixY)
+      yMax = numPixY;
 
     for(intCrdT yi=y; yi<yMax; yi++)
       for(intCrdT xi=x; xi<xMax; xi++)
@@ -2728,7 +2728,7 @@ namespace mjr {
 
     colorT cF;
 
-    if ((x1i >= 0) && (y1i >= 0) && (x2i < numXpix) && (y2i < numYpix)) {
+    if ((x1i >= 0) && (y1i >= 0) && (x2i < numPixX) && (y2i < numPixY)) {
       double eps = 0.00001;
       double xD21 = x2 - x1;
       double yD21 = y2 - y1;
@@ -2801,13 +2801,13 @@ namespace mjr {
     intCrdT x2i = static_cast<intCrdT>(x2);
     intCrdT y2i = static_cast<intCrdT>(y2);
 
-    if ((x1i >= 0) && (y1i >= 0) && (x2i < numXpix) && (y2i < numYpix)) {
+    if ((x1i >= 0) && (y1i >= 0) && (x2i < numPixX) && (y2i < numPixY)) {
 
-      colorT c1 = pixels[numXpix * y1i + x1i];
-      c1.tfrmMean(pixels[numXpix * y1i + x2i]);
+      colorT c1 = pixels[numPixX * y1i + x1i];
+      c1.tfrmMean(pixels[numPixX * y1i + x2i]);
 
-      colorT c2 = pixels[numXpix * y2i + x1i];
-      c2.tfrmMean(pixels[numXpix * y2i + x2i]);
+      colorT c2 = pixels[numPixX * y2i + x1i];
+      c2.tfrmMean(pixels[numPixX * y2i + x2i]);
 
       c1.tfrmMean(c2);
 
@@ -2942,16 +2942,16 @@ namespace mjr {
       ///////////////////////////////////////////////////////////////////////////////////
       // Check our work space, and allocate/reallocate as required.
       if(wkPts1 == NULL) {               // First time in function -- allocate
-        wkPts1 = new intCrdT[numYpix];
-        wkPts2 = new intCrdT[numYpix];
-        numPts = numYpix;
+        wkPts1 = new intCrdT[numPixY];
+        wkPts2 = new intCrdT[numPixY];
+        numPts = numPixY;
       } else {                           // Not our first time!  We have a work space.
-        if(numPts != numYpix) {          // Work space is wrong size -- reallocate
+        if(numPts != numPixY) {          // Work space is wrong size -- reallocate
           delete[] wkPts1;
           delete[] wkPts2;
-          wkPts1 = new intCrdT[numYpix];
-          wkPts2 = new intCrdT[numYpix];
-          numPts = numYpix;
+          wkPts1 = new intCrdT[numPixY];
+          wkPts2 = new intCrdT[numPixY];
+          numPts = numPixY;
         }
       }
 
@@ -3228,16 +3228,16 @@ namespace mjr {
       std::swap(x1, x2);
     if(y1 > y2) // Get y1 < y2
       std::swap(y1, y2);
-    if( (y1 < numYpix) && (x1 < numXpix) && (y2 >= 0) && (x2 >= 0) ) { // Part of rect visible
+    if( (y1 < numPixY) && (x1 < numPixX) && (y2 >= 0) && (x2 >= 0) ) { // Part of rect visible
       int noTop, noBottom, noLeft, noRight;
       if((noTop=(y1 < 0)))
         y1 = 0;
       if((noLeft=(x1 < 0)))
         x1 = 0;
-      if((noBottom=(y2 >= numYpix)))
-        y2 = numYpix - 1;
-      if((noRight=(x2 >= numXpix)))
-        x2 = numXpix - 1;
+      if((noBottom=(y2 >= numPixY)))
+        y2 = numPixY - 1;
+      if((noRight=(x2 >= numPixX)))
+        x2 = numPixX - 1;
       // Draw top/bottom/left/right lines
       if(!noLeft) // Have left
         drawVertLineNC(y1, y2, x1, color);
@@ -3259,16 +3259,16 @@ namespace mjr {
     if(y1 > y2) // Get y1 < y2
       std::swap(y1, y2);
     // Clip
-    if( (y1 >= numYpix) || (x1 >= numXpix) || (y2 < 0) || (x2 < 0) )
+    if( (y1 >= numPixY) || (x1 >= numPixX) || (y2 < 0) || (x2 < 0) )
       return;
     if(y1 < 0)
       y1 = 0;
     if(x1 < 0)
       x1 = 0;
-    if(y2 >= numYpix)
-      y2 = numYpix - 1;
-    if(x2 >= numXpix)
-      x2 = numXpix - 1;
+    if(y2 >= numPixY)
+      y2 = numPixY - 1;
+    if(x2 >= numPixX)
+      x2 = numPixX - 1;
     for(intCrdT y=y1;y<=y2;y++)
       drawHorzLineNC(x1, x2, y, color);
   }
@@ -3294,59 +3294,16 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
-  inline colorT&
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::getPxColorRefNC(intCrdT x, intCrdT y) const {
-    return pixels[numXpix * y + x];
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
-  inline colorT
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::getPxColorNC(intCrdT x, intCrdT y) const {
-    return pixels[numXpix * y + x];
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawHorzLineNC(intCrdT xMin, intCrdT xMax, intCrdT yConst, colorArgType color) {
-    // We could use a memory fill operation here if SUPPORT_ALWAYS_PRESERVE_ALPHA is OFF and SUPPORT_DRAWING_MODE is OFF or set to drawModeType::SET
-    // For long line this could be WAY faster.  Just use a memfill-type operation, or even the STD algroithm fill might do that inside...
-    // colorT* starti = pixels + numXpix * yConst + xMin;
-    // colorT* endi   = pixels + numXpix * yConst + xMax;
-    // std::fill(starti, endi, color);
-
-    for(intCrdT x=xMin;x<=xMax;x++)
-      drawPointNC(x, yConst, color);
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawVertLineNC(intCrdT yMin, intCrdT yMax, intCrdT xConst, colorArgType color) {
-    for(intCrdT y=yMin;y<=yMax;y++)
-      drawPointNC(xConst, y, color);
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawPointS(intCrdT x, intCrdT y, colorArgType color) {
-    pixels[numXpix * y + x] = color;
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleUpProximal(int xfactor) {
-    intCrdT new_numXpix_p = xfactor*numXpix;
-    intCrdT new_numYpix_p = xfactor*numYpix;
-    colorT *new_pixels = new colorT[new_numXpix_p * new_numYpix_p];
-    for(intCrdT y=0, y1=0; y<numYpix; y++) {
-      for(intCrdT x=0, x1=0; x<numXpix; x++) {
+    intCrdT new_numPixX_p = xfactor*numPixX;
+    intCrdT new_numPixY_p = xfactor*numPixY;
+    colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
+    for(intCrdT y=0, y1=0; y<numPixY; y++) {
+      for(intCrdT x=0, x1=0; x<numPixX; x++) {
         for(int i=0; i<xfactor; i++) {
           for(int j=0; j<xfactor; j++) {
-            new_pixels[new_numXpix_p * y1 + x1] = getPxColor(x, y);
+            new_pixels[new_numPixX_p * y1 + x1] = getPxColor(x, y);
             x1++;
           }
           x1-=xfactor;
@@ -3357,32 +3314,32 @@ namespace mjr {
       }
       y1+=xfactor;
     }
-    rePointPixels(new_pixels, new_numXpix_p, new_numYpix_p);
+    rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleDown1pt(int xfactor) {
-    intCrdT new_numXpix_p = numXpix/xfactor;
-    intCrdT new_numYpix_p = numYpix/xfactor;
-    colorT *new_pixels = new colorT[new_numXpix_p * new_numYpix_p];
-    for(intCrdT y=0, y1=0; y<new_numYpix_p; y++, y1+=xfactor)
-      for(intCrdT x=0, x1=0; x<new_numXpix_p; x++, x1+=xfactor)
-        new_pixels[new_numXpix_p * y + x] = getPxColor(x1, y1);
+    intCrdT new_numPixX_p = numPixX/xfactor;
+    intCrdT new_numPixY_p = numPixY/xfactor;
+    colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
+    for(intCrdT y=0, y1=0; y<new_numPixY_p; y++, y1+=xfactor)
+      for(intCrdT x=0, x1=0; x<new_numPixX_p; x++, x1+=xfactor)
+        new_pixels[new_numPixX_p * y + x] = getPxColor(x1, y1);
 
-    rePointPixels(new_pixels, new_numXpix_p, new_numYpix_p);
+    rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleDownMean(int xfactor) {
-    intCrdT new_numXpix_p = numXpix/xfactor;
-    intCrdT new_numYpix_p = numYpix/xfactor;
-    colorT *new_pixels = new colorT[new_numXpix_p * new_numYpix_p];
-    for(intCrdT y=0, y1=0; y<new_numYpix_p; y++, y1+=xfactor)
-      for(intCrdT x=0, x1=0; x<new_numXpix_p; x++, x1+=xfactor) {
+    intCrdT new_numPixX_p = numPixX/xfactor;
+    intCrdT new_numPixY_p = numPixY/xfactor;
+    colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
+    for(intCrdT y=0, y1=0; y<new_numPixY_p; y++, y1+=xfactor)
+      for(intCrdT x=0, x1=0; x<new_numPixX_p; x++, x1+=xfactor) {
         std::vector<colorChanArithSDPType> sums(colorT::channelCount, static_cast<colorChanArithSDPType>(0));
         for(int j=0; j<xfactor; j++) 
           for(int i=0; i<xfactor; i++) 
@@ -3391,30 +3348,30 @@ namespace mjr {
         colorT aColor;
         for(int c=0; c<colorT::channelCount; c++) 
           aColor.setChan(c, static_cast<colorChanType>(sums[c] / (xfactor*xfactor)));
-        new_pixels[new_numXpix_p * y + x] = aColor;
+        new_pixels[new_numPixX_p * y + x] = aColor;
       }
 
-    rePointPixels(new_pixels, new_numXpix_p, new_numYpix_p);
+    rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleDownMax(int xfactor) {
-    intCrdT new_numXpix_p = numXpix/xfactor;
-    intCrdT new_numYpix_p = numYpix/xfactor;
-    colorT *new_pixels = new colorT[new_numXpix_p * new_numYpix_p];
+    intCrdT new_numPixX_p = numPixX/xfactor;
+    intCrdT new_numPixY_p = numPixY/xfactor;
+    colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
 
-    for(intCrdT y=0, y1=0; y<new_numYpix_p; y++, y1+=xfactor)
-      for(intCrdT x=0, x1=0; x<new_numXpix_p; x++, x1+=xfactor) {
+    for(intCrdT y=0, y1=0; y<new_numPixY_p; y++, y1+=xfactor)
+      for(intCrdT x=0, x1=0; x<new_numPixX_p; x++, x1+=xfactor) {
         colorT maxColor = getPxColor(xfactor*x, xfactor*y);
         for(int yi=0; yi<xfactor; yi++)
           for(int xi=0; xi<xfactor; xi++)
             maxColor.tfrmMaxI(getPxColor(xfactor*x+xi, xfactor*y+yi));
-        new_pixels[new_numXpix_p * y + x] = maxColor;
+        new_pixels[new_numPixX_p * y + x] = maxColor;
       }
 
-    rePointPixels(new_pixels, new_numXpix_p, new_numYpix_p);
+    rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3444,7 +3401,7 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::convolution(double *kernel, int kWide, int kTall, double divisor) {
-    colorT *new_pixels = new colorT[numXpix * numYpix];
+    colorT *new_pixels = new colorT[numPixX * numPixY];
     // Divisor is invalid, so we compute one to use
     if(std::abs(divisor) < 0.0001) {
       divisor = 0.0;
@@ -3453,8 +3410,8 @@ namespace mjr {
     }
     // Apply filter
     double tmp[colorT::channelCount];
-    for(intCrdT y=0; y<numYpix; y++) {
-      for(intCrdT x=0; x<numXpix; x++) {
+    for(intCrdT y=0; y<numPixY; y++) {
+      for(intCrdT x=0; x<numPixX; x++) {
         colorT newColor;
         for(int chan=0; chan<colorT::channelCount; chan++)
           tmp[chan] = 0.0;
@@ -3469,10 +3426,10 @@ namespace mjr {
           }
         }
         for(int chan=0; chan<colorT::channelCount; chan++)
-          new_pixels[numXpix * y + x].setChan(chan, static_cast<colorChanType>(tmp[chan] / divisor));
+          new_pixels[numPixX * y + x].setChan(chan, static_cast<colorChanType>(tmp[chan] / divisor));
       }
     }
-    rePointPixels(new_pixels, numXpix, numYpix);
+    rePointPixels(new_pixels, numPixX, numPixY);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3503,12 +3460,12 @@ namespace mjr {
       if((mjr::hershey::chars[glyphNum]).components[2*i] == ' ') {
         actionIsMoveTo = 1;
       } else {
-        if(xIntAxOrientation == intAxisOrientation::INVERTED)
+        if(intAxOrientationX == intAxisOrientation::INVERTED)
           x1 = static_cast<intCrdT>(magX * ('R'  -  (mjr::hershey::chars[glyphNum]).components[2*i]));
         else
           x1 = static_cast<intCrdT>(magX * ((mjr::hershey::chars[glyphNum]).components[2*i]  -  'R'));
 
-        if(yIntAxOrientation == intAxisOrientation::NATURAL)
+        if(intAxOrientationY == intAxisOrientation::NATURAL)
           y1 = static_cast<intCrdT>(magY * ('R' - (mjr::hershey::chars[glyphNum]).components[2*i+1]));
         else
           y1 = static_cast<intCrdT>(magY * ((mjr::hershey::chars[glyphNum]).components[2*i+1] - 'R'));
@@ -3557,6 +3514,7 @@ namespace mjr {
   int
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::readTIFFfile(std::string fileName) {
 #ifndef TIFF_FOUND
+    std::cerr << "ERROR: libTIFF no supported: readTIFFfile can't read " << fileName << std::endl;
     return 32;
 #else
     TIFF* tif;
@@ -3610,7 +3568,7 @@ namespace mjr {
 
     resizeCanvas(wTIFF, hTIFF);
 
-    uint32_t wRC   = get_numXpix();
+    uint32_t wRC   = getNumPixX();
 
     if ((pcTIFF != PLANARCONFIG_CONTIG) && (pcTIFF != PLANARCONFIG_SEPARATE))
       return 22;
@@ -3618,7 +3576,7 @@ namespace mjr {
     if(wTIFF != wRC)
       return 12;
 
-    uint32_t hRC   = get_numYpix();
+    uint32_t hRC   = getNumPixY();
 
     if(hTIFF != hRC)
       return 14;
@@ -3641,8 +3599,8 @@ namespace mjr {
         (!(colorType::chanIsInt) && (SAMPLEFORMAT_IEEEFP != 3))) 
       return 21;
 
-    bool yNat  = !(get_yIntAxisOrientation()==intAxisOrientation::NATURAL);
-    bool xNat  = get_xIntAxisOrientation()==intAxisOrientation::NATURAL;
+    bool yNat  = !(getIntAxOrientationY()==intAxisOrientation::NATURAL);
+    bool xNat  = getIntAxOrientationX()==intAxisOrientation::NATURAL;
 
     tsize_t scanlinesize = TIFFScanlineSize(tif);
     tdata_t scanLineBuffer = _TIFFmalloc(scanlinesize);
@@ -3701,9 +3659,9 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::geomTfrmRevArb(mjr::point2d<double> (*f)(double, double), colorArgType errorColor, interpolationType interpMethod) {
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes> newRamCanvas(numXpix, numYpix);
-    for(intCrdT y=0; y<numYpix; y++) {
-      for(intCrdT x=0; x<numXpix; x++) {
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes> newRamCanvas(numPixX, numPixY);
+    for(intCrdT y=0; y<numPixY; y++) {
+      for(intCrdT x=0; x<numPixX; x++) {
         mjr::point2d<double> fv = f(x, y);
         double xD = fv.x;
         double yD = fv.y;
@@ -3721,9 +3679,9 @@ namespace mjr {
   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::geomTfrmRevAff(std::vector<double> const& HAMatrix, colorArgType errorColor, interpolationType interpMethod) {
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes> newRamCanvas(numXpix, numYpix);
-    for(intCrdT y=0; y<numYpix; y++) {
-      for(intCrdT x=0; x<numXpix; x++) {
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes> newRamCanvas(numPixX, numPixY);
+    for(intCrdT y=0; y<numPixY; y++) {
+      for(intCrdT x=0; x<numPixX; x++) {
         double xD = HAMatrix[0] * x + HAMatrix[1] * y + HAMatrix[2];
         double yD = HAMatrix[3] * x + HAMatrix[4] * y + HAMatrix[5];
         if (isCliped(xD, yD)) {
@@ -3744,12 +3702,12 @@ namespace mjr {
                                                            double Yo,
                                                            colorArgType errorColor,
                                                            interpolationType interpMethod) {
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes> newRamCanvas(numXpix, numYpix);
-    double srcCtrX = numXpix / 2 + Xo;
-    double srcCtrY = numYpix / 2 + Yo;
-    double rScale  = std::min(numXpix, numYpix) / 2;
-    for(intCrdT y=0; y<numYpix; y++) {
-      for(intCrdT x=0; x<numXpix; x++) {
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes> newRamCanvas(numPixX, numPixY);
+    double srcCtrX = numPixX / 2 + Xo;
+    double srcCtrY = numPixY / 2 + Yo;
+    double rScale  = std::min(numPixX, numPixY) / 2;
+    for(intCrdT y=0; y<numPixY; y++) {
+      for(intCrdT x=0; x<numPixX; x++) {
         double xU = (x - srcCtrX);
         double yU = (y - srcCtrY);
         double rU = std::hypot(xU, yU) / rScale;

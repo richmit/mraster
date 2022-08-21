@@ -52,8 +52,8 @@ int main(void) {
 
   mjr::ramCanvas3c8b theRamCanvas(4096, 4096, -1.20, 1.20, -1.20, 1.20);
 
-  for(int y=0;y<theRamCanvas.get_numYpix();y++) {
-    for(int x=0;x<theRamCanvas.get_numXpix();x++) {
+  for(int y=0;y<theRamCanvas.getNumPixY();y++) {
+    for(int x=0;x<theRamCanvas.getNumPixX();x++) {
       std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
       int  count = 0;
       while((count < MaxCount) &&

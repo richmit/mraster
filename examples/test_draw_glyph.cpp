@@ -41,8 +41,8 @@ int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
 
   mjr::ramCanvas3c8b theRamCanvasNN(511, 511);
-  theRamCanvasNN.set_xIntAxisOrientation(mjr::ramCanvas3c8b::intAxisOrientation::NATURAL);
-  theRamCanvasNN.set_yIntAxisOrientation(mjr::ramCanvas3c8b::intAxisOrientation::NATURAL);
+  theRamCanvasNN.setIntAxOrientationX(mjr::ramCanvas3c8b::intAxisOrientation::NATURAL);
+  theRamCanvasNN.setIntAxOrientationY(mjr::ramCanvas3c8b::intAxisOrientation::NATURAL);
   theRamCanvasNN.drawLine(0, 255, 511, 255, "blue");
   theRamCanvasNN.drawLine(255, 0, 255, 511, "blue");
   theRamCanvasNN.drawHersheyGlyph(518, 255, 255,  1,  1, "red");
@@ -53,8 +53,8 @@ int main(void) {
   theRamCanvasNN.writeTIFFfile("test_draw_glyph_NN.tiff");
 
   mjr::ramCanvas3c8b theRamCanvasIN(511, 511);
-  theRamCanvasIN.set_xIntAxisOrientation(mjr::ramCanvas3c8b::intAxisOrientation::NATURAL);
-  theRamCanvasIN.set_yIntAxisOrientation(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
+  theRamCanvasIN.setIntAxOrientationX(mjr::ramCanvas3c8b::intAxisOrientation::NATURAL);
+  theRamCanvasIN.setIntAxOrientationY(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
   theRamCanvasIN.drawLine(0, 255, 511, 255, "blue");
   theRamCanvasIN.drawLine(255, 0, 255, 511, "blue");
   theRamCanvasIN.drawHersheyGlyph(518, 255, 255,  1,  1, "red");
@@ -65,8 +65,8 @@ int main(void) {
   theRamCanvasIN.writeTIFFfile("test_draw_glyph_NI.tiff");
 
   mjr::ramCanvas3c8b theRamCanvasNI(511, 511);
-  theRamCanvasNI.set_xIntAxisOrientation(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
-  theRamCanvasNI.set_yIntAxisOrientation(mjr::ramCanvas3c8b::intAxisOrientation::NATURAL);
+  theRamCanvasNI.setIntAxOrientationX(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
+  theRamCanvasNI.setIntAxOrientationY(mjr::ramCanvas3c8b::intAxisOrientation::NATURAL);
   theRamCanvasNI.drawLine(0, 255, 511, 255, "blue");
   theRamCanvasNI.drawLine(255, 0, 255, 511, "blue");
   theRamCanvasNI.drawHersheyGlyph(518, 255, 255,  1,  1, "red");
@@ -77,8 +77,8 @@ int main(void) {
   theRamCanvasNI.writeTIFFfile("test_draw_glyph_IN.tiff");
 
   mjr::ramCanvas3c8b theRamCanvasII(511, 511);
-  theRamCanvasII.set_xIntAxisOrientation(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
-  theRamCanvasII.set_yIntAxisOrientation(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
+  theRamCanvasII.setIntAxOrientationX(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
+  theRamCanvasII.setIntAxOrientationY(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
   theRamCanvasII.drawLine(0, 255, 511, 255, "blue");
   theRamCanvasII.drawLine(255, 0, 255, 511, "blue");
   theRamCanvasII.drawHersheyGlyph(518, 255, 255,  1,  1, "red");

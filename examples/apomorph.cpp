@@ -53,7 +53,7 @@ int main() {
   const long NUMITR = 400000000; // Needs to be big
 
   mjr::ramCanvas3c8b theRamCanvas(CSIZE, CSIZE, -4.0, 4.0, -4.0, 4.0);
-  theRamCanvas.set_drawMode(mjr::ramCanvas3c8b::drawModeType::ADDCLAMP);
+  theRamCanvas.setDrawMode(mjr::ramCanvas3c8b::drawModeType::ADDCLAMP);
 
   mjr::ramCanvas3c8b::colorType aColor[] = { mjr::ramCanvas3c8b::colorType(1, 0, 0), mjr::ramCanvas3c8b::colorType(0, 1, 0), mjr::ramCanvas3c8b::colorType(0, 0, 1) };
 
@@ -61,7 +61,7 @@ int main() {
   std::minstd_rand0 rEng(rd()); // Fast is better than high quality for this application.
 
   const double s = 1.73205080757;
-  const std::complex<double> i(0.0, 1.0);
+//  const std::complex<double> i(0.0, 1.0);
   const std::complex<double> si(0.0, s);
   const std::complex<double> c1 = (1.0+s)/(2.0+s);
   const std::complex<double> c2 =  0.5*(si-1.0);

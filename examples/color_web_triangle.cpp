@@ -54,8 +54,8 @@ int main(void) {
   mjr::ramCanvas3c8b theRamCanvas_Deu(1536, 1536);
   mjr::ramCanvas3c8b theRamCanvas_Tri(1536, 1536);
 
-  for(y=0;y<theRamCanvas_web.get_numYpix();y++) {
-    for(x=0;x<theRamCanvas_web.get_numXpix();x++) {
+  for(y=0;y<theRamCanvas_web.getNumPixY();y++) {
+    for(x=0;x<theRamCanvas_web.getNumPixX();x++) {
       if( (sqrt(double((x-redX)  *(x-redX)  +(y-redY)  *(y-redY)))    < sLength) ||
           (sqrt(double((x-blueX) *(x-blueX) +(y-blueY) *(y-blueY)))   < sLength) ||
           (sqrt(double((x-greenX)*(x-greenX)+(y-greenY)*(y-greenY)))) < sLength) {

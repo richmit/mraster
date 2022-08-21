@@ -66,8 +66,8 @@ int main(int argc, char *argv[]) {
 
     for(int numItr=1;numItr<MAXCOUNT;numItr++) {
       mjr::ramCanvas3c8b::coordIntType xC, yC;
-      xC = rEng() % theRamCanvas.get_numXpix();
-      yC = rEng() % theRamCanvas.get_numYpix();
+      xC = rEng() % theRamCanvas.getNumPixX();
+      yC = rEng() % theRamCanvas.getNumPixY();
 
       mjr::ramCanvas3c8b::colorType aColor = theRamCanvas.getPxColor(xC, yC);
       double lumC = aColor.luminanceRGB();
@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
           mjr::ramCanvas3c8b::coordIntType xN, yN;
           xN = xC+stenX[curDir];
           yN = yC+stenY[curDir];
-          if(xN>=0 && yN>=0 && xN<theRamCanvas.get_numXpix() && yN<theRamCanvas.get_numYpix()) {
+          if(xN>=0 && yN>=0 && xN<theRamCanvas.getNumPixX() && yN<theRamCanvas.getNumPixY()) {
             double lumN = theRamCanvas.getPxColor(xN, yN).luminanceRGB();
             if(lumN <= 0) {
               lum0ct++;
@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
           mjr::ramCanvas3c8b::coordIntType xN, yN;
           xN = xC+stenX[curDir];
           yN = yC+stenY[curDir];
-          if(xN>=0 && yN>=0 && xN<theRamCanvas.get_numXpix() && yN<theRamCanvas.get_numYpix()) {
+          if(xN>=0 && yN>=0 && xN<theRamCanvas.getNumPixX() && yN<theRamCanvas.getNumPixY()) {
             maxDir = curDir;
           }
         }

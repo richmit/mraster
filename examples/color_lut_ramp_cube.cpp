@@ -51,7 +51,7 @@ int main(void) {
   mjr::ramCanvas3c8b::colorType aColor(255, 255, 255);
 
    for(int x=0; x<maxColors+rampGap;x=x+256)
-     theRC.drawLine(x, 0, x, theRC.get_numYpix()-1, aColor);
+     theRC.drawLine(x, 0, x, theRC.getNumPixY()-1, aColor);
    i=-1;
 
   BMP; for(csIt x=0;x<ct::csCCdiag01::numC;             x++) theRC.drawLine(x, y1, x, y2, ct::csCCdiag01::c(x));              theRC.drawString("  csCCdiag01",              hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 

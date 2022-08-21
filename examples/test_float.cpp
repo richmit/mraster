@@ -48,14 +48,14 @@ int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
 
   mjr::ramCanvasRGB64F theFltRamCanvas(1024, 1024);
-  for(int x=0;x<theFltRamCanvas.get_numXpix();x++)
-    for(int y=0;y<theFltRamCanvas.get_numYpix();y++) 
+  for(int x=0;x<theFltRamCanvas.getNumPixX();x++)
+    for(int y=0;y<theFltRamCanvas.getNumPixY();y++) 
       theFltRamCanvas.drawPoint(x, y, mjr::ramCanvasRGB64F::colorType(x/1024.0, y/1024.0, 0.0));
   theFltRamCanvas.writeTIFFfile("test_floatF.tiff");
 
   mjr::ramCanvasRGB8b theIntRamCanvas(1024, 1024);
-  for(int x=0;x<theIntRamCanvas.get_numXpix();x++)
-    for(int y=0;y<theIntRamCanvas.get_numYpix();y++) 
+  for(int x=0;x<theIntRamCanvas.getNumPixX();x++)
+    for(int y=0;y<theIntRamCanvas.getNumPixY();y++) 
       theIntRamCanvas.drawPoint(x, y, mjr::ramCanvasRGB8b::colorType((uint8_t)(x/4), (uint8_t)(y/4), (uint8_t)0));
   theIntRamCanvas.writeTIFFfile("test_floatI.tiff");
 

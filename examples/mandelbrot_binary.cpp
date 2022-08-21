@@ -71,10 +71,10 @@ int main(void) {
     binRamCanvas.newRealCoords(ranges[i][0], ranges[i][1], ranges[i][2], ranges[i][3]);
     binRamCanvas.clrCanvasToBlack();
     std::complex<rc::coordFltType> z;
-    for(rc::coordIntType y=0;y<binRamCanvas.get_numYpix();y++) {
+    for(rc::coordIntType y=0;y<binRamCanvas.getNumPixY();y++) {
       if((y%(CSIZE/10))==0)
         std::cout << "    CASE: " << i << " LINE: " << y << "/" << CSIZE << std::endl;
-      for(rc::coordIntType x=0;x<binRamCanvas.get_numXpix();x++) {
+      for(rc::coordIntType x=0;x<binRamCanvas.getNumPixX();x++) {
         int count;
         rc::coordFltType cr = binRamCanvas.int2realX(x);
         rc::coordFltType ci = binRamCanvas.int2realY(y);

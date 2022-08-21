@@ -73,8 +73,8 @@ void reshapeCall(int h, int w) {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 void idleCall() {
   static int offset;
-  for(int x=0; x<theRamCanvas.get_numXpix(); x++)
-    for(int y=0; y<theRamCanvas.get_numXpix(); y++)
+  for(int x=0; x<theRamCanvas.getNumPixX(); x++)
+    for(int y=0; y<theRamCanvas.getNumPixX(); y++)
       theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(static_cast<mjr::ramCanvas3c8b::colorChanType>(offset+y-x),
                                                                  static_cast<mjr::ramCanvas3c8b::colorChanType>(offset+x+y),
                                                                  static_cast<mjr::ramCanvas3c8b::colorChanType>(offset+x-y)));
@@ -88,7 +88,7 @@ void displayCall() {
   float xMag, yMag;
 
   int retVal;
-  if((retVal=theRamCanvas.exportRasterData(image, 0, 0, theRamCanvas.get_numXpix()-1, theRamCanvas.get_numYpix()-1, 0, 1, 2, 3))) {
+  if((retVal=theRamCanvas.exportRasterData(image, 0, 0, theRamCanvas.getNumPixX()-1, theRamCanvas.getNumPixY()-1, 0, 1, 2, 3))) {
     printf("ERROR: Nonzero return from exportRasterData(): %d\n", retVal);
     return;
   }
@@ -97,18 +97,18 @@ void displayCall() {
   glRasterPos2i(0,0);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-  xMag = static_cast<float>(XSIZE) / static_cast<float>(theRamCanvas.get_numXpix());
-  yMag = static_cast<float>(YSIZE) / static_cast<float>(theRamCanvas.get_numYpix());
+  xMag = static_cast<float>(XSIZE) / static_cast<float>(theRamCanvas.getNumPixX());
+  yMag = static_cast<float>(YSIZE) / static_cast<float>(theRamCanvas.getNumPixY());
 
   glPixelZoom(xMag, yMag);
-  glDrawPixels(theRamCanvas.get_numXpix(), theRamCanvas.get_numYpix(), GL_RGBA, GL_UNSIGNED_BYTE, (GLubyte*)image);
+  glDrawPixels(theRamCanvas.getNumPixX(), theRamCanvas.getNumPixY(), GL_RGBA, GL_UNSIGNED_BYTE, (GLubyte*)image);
   glFlush();
 }  /* end func displayCall */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(int argc, char *argv[]) {
-  for(int x=0; x<theRamCanvas.get_numXpix(); x++)
-    for(int y=0; y<theRamCanvas.get_numXpix(); y++)
+  for(int x=0; x<theRamCanvas.getNumPixX(); x++)
+    for(int y=0; y<theRamCanvas.getNumPixX(); y++)
       theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(static_cast<mjr::ramCanvas3c8b::colorChanType>(y-x),
                                                                  static_cast<mjr::ramCanvas3c8b::colorChanType>(x+y),
                                                                  static_cast<mjr::ramCanvas3c8b::colorChanType>(x-y)));

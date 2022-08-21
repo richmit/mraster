@@ -45,8 +45,8 @@ int main(void) {
   const int NUMITR = 1024;
   mjr::ramCanvas3c8b theRamCanvas(7680, 7680, -2.2, 0.8, -1.5, 1.5);
 
-  for(int y=0;y<theRamCanvas.get_numYpix();y++) {
-    for(int x=0;x<theRamCanvas.get_numXpix();x++) {
+  for(int y=0;y<theRamCanvas.getNumPixY();y++) {
+    for(int x=0;x<theRamCanvas.getNumPixX();x++) {
         mjr::ramCanvas3c8b::coordFltType xr = theRamCanvas.int2realX(x);
         mjr::ramCanvas3c8b::coordFltType yr = theRamCanvas.int2realY(y);
         mjr::ramCanvas3c8b::coordFltType zx = 0.0;

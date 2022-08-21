@@ -42,7 +42,7 @@ int main(void) {
   const char *str1 = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNO";
   const char *str2 = " PQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
   mjr::ramCanvas3c8b theRamCanvas(1600, 540);
-  theRamCanvas.set_yIntAxisOrientation(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
+  theRamCanvas.setIntAxOrientationY(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
   int y = 50;
   theRamCanvas.drawFillRectangle(0, 0, 2500, 600, "cyan");
   theRamCanvas.drawStringBox("GREEK_SL_SANSERIF", mjr::hershey::font::ROMAN_SL_SANSERIF,  50, y, "red", "green", 1, 20);
