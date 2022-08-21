@@ -437,17 +437,17 @@ namespace mjr {
           return static_cast<clrChanT>(std::stoull(hexString, nullptr, 16)) / static_cast<clrChanT>((chanIsInt ? 1 : std::pow(2, bitsPerChan)));
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Convert a clrChanT to a uint8_t (for integral clrChanT) */
+      /** Convert a clrChanT to a uint8_t (for floating point clrChanT) */
       inline uint8_t convertChanToByte(clrChanT cVal) const requires (std::floating_point<clrChanT>) {
         return static_cast<uint8_t>(cVal * static_cast<clrChanT>(255) / maxChanVal);
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Convert a clrChanT to a uint8_t (for floating point clrChanT) */
+      /** Convert a clrChanT to a uint8_t (for integral clrChanT) */
       inline uint8_t convertChanToByte(clrChanT cVal) const requires (std::integral<clrChanT>) {
         /* Performance: A good compiler *should* recgonize the case when bitsPerChan-8==0, and render this function an NOOP.  Some don't.  Hence the if-then
            below. */
         if(chanIsByte)
-          return cVal;
+          return static_cast<uint8_t>(cVal);  // Cast is unnessary because we only get uint8_t cVal in this branch, but some compilers issue a warning.
         else
           return static_cast<uint8_t>(static_cast<channelArithSPType>(cVal) * static_cast<channelArithSPType>(255) / static_cast<channelArithSPType>(maxChanVal));
       }
@@ -471,10 +471,14 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Return the mask value */
       inline maskType getMaskNC() const {
+#if defined(__GNUC__) && !defined(__llvm__) && !defined(__INTEL_COMPILER)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
         return theColor.theInt;
+#if __GNUC__
 #pragma GCC diagnostic pop
+#endif
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the mask value */
@@ -486,10 +490,14 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Provides access to an specified color channel value with no index check. */
       inline clrChanT getChanNC(int chan) const {
+#if defined(__GNUC__) && !defined(__llvm__) && !defined(__INTEL_COMPILER)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
         return theColor.thePartsA[chan];
+#if defined(__GNUC__) && !defined(__llvm__) && !defined(__INTEL_COMPILER)
 #pragma GCC diagnostic pop
+#endif
       }
       //@}
 
@@ -1592,21 +1600,21 @@ namespace mjr {
               } else if(c1.getRed() < c2.getRed()) {
                 r = csIdxNoMore;
               } else {
-                r = ( c1.getRed() ? chanStepMax : 0);
+                r = ( c1.getRed() > 0 ? chanStepMax : 0);
               }
               if(c1.getGreen() > c2.getGreen()) {
                 g = chanStepMax - csIdxNoMore;
               } else if(c1.getGreen() < c2.getGreen()) {
                 g = csIdxNoMore;
               } else {
-                g =  ( c1.getGreen() ? chanStepMax : 0);
+                g =  ( c1.getGreen() > 0 ? chanStepMax : 0);
               }
               if(c1.getBlue() > c2.getBlue()) {
                 b = chanStepMax - csIdxNoMore;
               } else if(c1.getBlue() < c2.getBlue()) {
                 b = csIdxNoMore;
               } else {
-                b =  ( c1.getBlue() ? chanStepMax : 0);
+                b =  ( c1.getBlue() > 0 ? chanStepMax : 0);
               }
               if (chanIsFloat) {
                 r = r / chanStepMax;
@@ -2529,25 +2537,19 @@ namespace mjr {
           result. */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Use the  R, G, & B channels to compute an integer representing a grey scale.
-          What is returned is the dot product of the given color and the three scalars: R*redWt+G*greenWt+B*blueWt.  This dot product is not scaled.  Common
-          values for (redWt, greenWt, blueWt) are:
-          - (     1,      1,     1)  b=3
-          - (     3,      4,     2)  b=9
-          - (   299,    587,   114)  b=1e3
-          - (  2125,   7154,   721)  b=1e4
-          - (212671, 715160, 72169)  b=1e6
-          - (223002, 749900, 75676)  b=2^20
-          - (  2^17,   2^19,  2^16)  b=2^19
+      /** Use the  R, G, & B channels to compute a floating point value representing a grey scale.
+          What is returned is the dot product of the given color and the three scalars: R*redWt+G*greenWt+B*blueWt.  
           @param redWt The red weight
           @param greenWt The green weight
           @param blueWt The blue weight
           @return The integer representing grey value for the given color. */
-      inline channelArithFltType rgb2GreyDotProd(channelArithFltType redWt, channelArithFltType greenWt, channelArithFltType blueWt) {
+      inline channelArithFltType rgb2GreyDotProd(channelArithFltType redWt   = RGBluminanceWeightR,
+                                                 channelArithFltType greenWt = RGBluminanceWeightG, 
+                                                 channelArithFltType blueWt  = RGBluminanceWeightB) {
         /* Requires: Inherits numChan>2 from getC2. */
-        return static_cast<int>(static_cast<channelArithFltType>(getRed())   * static_cast<channelArithFltType>(redWt)   +
-                                static_cast<channelArithFltType>(getGreen()) * static_cast<channelArithFltType>(greenWt) +
-                                static_cast<channelArithFltType>(getBlue())  * static_cast<channelArithFltType>(blueWt));
+        return (static_cast<channelArithFltType>(getRed())   * static_cast<channelArithFltType>(redWt)   +
+                static_cast<channelArithFltType>(getGreen()) * static_cast<channelArithFltType>(greenWt) +
+                static_cast<channelArithFltType>(getBlue())  * static_cast<channelArithFltType>(blueWt));
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the luminance of the current color via the definition given in the ITU-R Recommendation BT.709.
@@ -2658,7 +2660,7 @@ namespace mjr {
         channelArithFltType daDist = 0;
         for(int i=0; i<numChan; i++)
           daDist += (static_cast<channelArithFltType>((static_cast<channelArithFltType>(getChanNC(i)) - static_cast<channelArithFltType>(aColor.getChanNC(i))) *
-                                                      (static_cast<channelArithFltType>(getChanNC(i)) - static_cast<channelArithSDPType>(aColor.getChanNC(i)))));
+                                                      (static_cast<channelArithFltType>(getChanNC(i)) - static_cast<channelArithFltType>(aColor.getChanNC(i)))));
         return static_cast<channelArithFltType>(std::sqrt(daDist));
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2790,6 +2792,7 @@ namespace mjr {
       /** @name Meta Color Schemes */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
+#if !(MISSING_P1907R1)
       /** Compute a color from a polynomial space curve in the RGB color space. This is a continuous color scheme!
           @tparam coefs Polynomial coefficients*/
       template<double...coefs>
@@ -2818,6 +2821,8 @@ namespace mjr {
           constexpr static int    psize   = (sizeof...(coefs)) / 3;
           constexpr static double pcoff[] = { coefs... };
       };
+#endif
+#if !(MISSING_P1907R1)
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute a color from Dave Green's cubehelix scheme.  See: Green, D. A., 2011, Bulletin of the Astronomical Society of India, Vol.39, p.289.
           This is a continous color scheme!
@@ -2846,6 +2851,7 @@ namespace mjr {
               @return Returns a colorTpl value */
           static inline colorTpl c(csFltType csX) { colorTpl tmp; return c(tmp, csX); }
       };
+#endif
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Template for HSL color schemes.
           If clrChanT is integral, this is a discrete color scheme, otherwise it is continuous.. */
@@ -3036,6 +3042,7 @@ namespace mjr {
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @defgroup cs Color Schemes */
 
+#if !(MISSING_P1907R1)
       //========================================================================================================================================================
       /** @name Color Schemes: Polynomial */
       //@{
@@ -3145,7 +3152,9 @@ namespace mjr {
                         1.200000000e+01, -21.000000000,  9.023809524, -2.161907281e-13,
                        -1.200000000e+01,  15.000000000, -3.023809524,  2.380952381e-02>                                                 csPLYhsvRB;
       //@}
+#endif
 
+#if !(MISSING_P1907R1)
       //========================================================================================================================================================
       /** @name Color Schemes: CubeHelix */
       //@{
@@ -3168,6 +3177,7 @@ namespace mjr {
           The "violets" cubehelix color scheme with start=0.5, rots=0.0, hue=1, and gamma=1. */
       typedef csCubeHelix_tpl<0.5,  0.0, 1.0, 1.0> csCHvio;
       //@}
+#endif
 
       //========================================================================================================================================================
       /** @name Color Schemes: RGB Constant Brightness Ramps */

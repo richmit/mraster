@@ -124,6 +124,13 @@ endif()
 
 list(REMOVE_DUPLICATES EXAMPLE_TARGETS)
 
+if((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "Intel"))
+    message("Warning: Clang & Intel ICC compilers currently have incomplete implimentations of P1907R1.")
+    message("Warning: csPLY_tpl & csCubeHelix_tpl require P1907R1 (floating point template arguments).")
+    message("Warning: Examples that can't be built: color_lut_poly.cpp, color_lut_docs.cpp, color_lut_cubehelix.cpp, heart2022.cpp")
+    list(REMOVE_ITEM EXAMPLE_TARGETS "color_lut_poly" "color_lut_docs" "color_lut_cubehelix" "heart2022")                            # missing floating point template parameters
+endif()
+
 # Add a target for each example we can build
 foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
   add_executable(${CURTGT} "examples/${CURTGT}.cpp")
@@ -141,9 +148,11 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
     target_compile_options(${CURTGT} PUBLIC -ffast-math)
     target_compile_options(${CURTGT} PUBLIC -Wall -Wconversion -Wno-unknown-pragmas -Wextra -Wno-sign-conversion)
     target_compile_options(${CURTGT} PUBLIC -O3)
+    target_compile_options(${CURTGT} PUBLIC -DMISSING_P1907R1=1)                                                       # missing floating point template parameters
   elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
     target_compile_options(${CURTGT} PUBLIC -Wall)
     target_compile_options(${CURTGT} PUBLIC -O3)
+    target_compile_options(${CURTGT} PUBLIC -DMISSING_P1907R1=1)                                                       # missing floating point template parameters
   elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     message("Warning: MSVC support is currently experimental")
   endif()
@@ -159,7 +168,7 @@ endif()
 # Add build requirements for examples using OpenGL
 if(OpenGL_FOUND AND GLUT_FOUND)
   foreach(CURTGT IN LISTS TARGETS_REQ_OPENGL)
-    if(CMAKE_CXX_PLATFORM_ID STREQUAL "MinGW")
+    if((CMAKE_CXX_PLATFORM_ID STREQUAL "MinGW") AND (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
       target_compile_options(${CURTGT} PUBLIC "-mwindows")
       target_link_options(${CURTGT} PUBLIC "-Wl,-subsystem,windows")
     endif()
@@ -189,7 +198,7 @@ endif()
 # Add build requirements for examples using FLTK
 if(FLTK_FOUND)
   foreach(CURTGT IN LISTS TARGETS_REQ_FLTK)
-    if(CMAKE_CXX_PLATFORM_ID STREQUAL "MinGW")
+    if((CMAKE_CXX_PLATFORM_ID STREQUAL "MinGW") AND (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
       target_compile_options(${CURTGT} PUBLIC "-mwindows")
       target_link_options(${CURTGT} PUBLIC "-Wl,-subsystem,windows")
     endif()
@@ -202,7 +211,7 @@ endif()
 # Add build requirements for examples using SDL2
 if(SDL2_FOUND)
   foreach(CURTGT IN LISTS TARGETS_REQ_SDL2)
-    if(CMAKE_CXX_PLATFORM_ID STREQUAL "MinGW")
+    if((CMAKE_CXX_PLATFORM_ID STREQUAL "MinGW") AND (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
       target_compile_options(${CURTGT} PUBLIC "-mwindows")
       target_link_options(${CURTGT} PUBLIC "-Wl,-subsystem,windows")
     endif()

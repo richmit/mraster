@@ -5105,6 +5105,7 @@ BOOST_AUTO_TEST_CASE(WavelengthLA) {
 
 }
 
+#if !(MISSING_P1907R1)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(csCubeHelix_tpl, * boost::unit_test::tolerance(0.01)) {
 
@@ -5153,6 +5154,7 @@ BOOST_AUTO_TEST_CASE(csCubeHelix_tpl, * boost::unit_test::tolerance(0.01)) {
   BOOST_TEST_CHECK(permcolor3c64F::csCHstd::c(0.25).getC0() == 0.298);
 
 }
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(tfrm_misc) {
@@ -7818,6 +7820,7 @@ BOOST_AUTO_TEST_CASE(csHSLh) {
   BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhY::c(mjr::colorRGBA32F::meanChanVal + 1).getBlue()  == mjr::colorRGB32F::meanChanVal);
 }
 
+#if !(MISSING_P1907R1)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(csPLY) {
 
@@ -7889,6 +7892,7 @@ BOOST_AUTO_TEST_CASE(csPLY) {
   BOOST_TEST_CHECK(csPLYfoo::c(1.00).getGreen() == 0.000000, boost::test_tools::tolerance(0.00001));
   BOOST_TEST_CHECK(csPLYfoo::c(1.00).getBlue()  == 0.787800, boost::test_tools::tolerance(0.00001));
 }
+#endif
 
 #endif
 
