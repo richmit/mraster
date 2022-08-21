@@ -121,6 +121,10 @@ if((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "
     list(REMOVE_ITEM EXAMPLE_TARGETS "color_lut_poly" "color_lut_docs" "color_lut_cubehelix" "heart2022")                            # missing floating point template parameters
 endif()
 
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+  message("Warning: MSVC support is currently experimental")
+endif()
+
 # Add a target for each example we can build
 foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
   add_executable(${CURTGT} "examples/${CURTGT}.cpp")
@@ -144,50 +148,45 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
     target_compile_options(${CURTGT} PUBLIC -O3)
     target_compile_options(${CURTGT} PUBLIC -DMISSING_P1907R1=1)                                                       # missing floating point template parameters
   elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    message("Warning: MSVC support is currently experimental")
+    #message("Warning: MSVC support is currently experimental")
   endif()
-endforeach(CURTGT)
 
-# Add build requirements for examples using OpenGL
-if(Boost_FOUND)
-  foreach(CURTGT IN LISTS TARGETS_REQ_BTEST)
+  # Add build requirements for examples using OpenGL
+  list (FIND TARGETS_REQ_BTEST ${CURTGT} TMPR)
+  if((Boost_FOUND) AND (${TMPR} GREATER -1))
     target_link_libraries(${CURTGT} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-  endforeach(CURTGT)
-endif()
+  endif()
 
-# Add build requirements for examples using OpenGL
-if(OpenGL_FOUND AND GLUT_FOUND)
-  foreach(CURTGT IN LISTS TARGETS_REQ_OPENGL)
+  # Add build requirements for examples using OpenGL
+  list (FIND TARGETS_REQ_OPENGL ${CURTGT} TMPR)
+  if(OpenGL_FOUND AND GLUT_FOUND AND (${TMPR} GREATER -1))
     if((CMAKE_CXX_PLATFORM_ID STREQUAL "MinGW") AND (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
       target_compile_options(${CURTGT} PUBLIC "-mwindows")
       target_link_options(${CURTGT} PUBLIC "-Wl,-subsystem,windows")
     endif()
     target_include_directories(${CURTGT} PRIVATE ${OPENGL_INCLUDE_DIRS}  ${GLUT_INCLUDE_DIR} )
     target_link_libraries(${CURTGT} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
-  endforeach(CURTGT)
-endif()
+  endif()
 
-# Add builtd requirements for examples using OpenMP
-if (OPENMP_FOUND)
-  foreach(CURTGT IN LISTS TARGETS_REQ_OPENMP)
+  # Add builtd requirements for examples using OpenMP
+  list (FIND TARGETS_REQ_OPENMP ${CURTGT} TMPR)
+  if (OPENMP_FOUND AND (${TMPR} GREATER -1))
     target_compile_options(${CURTGT} PUBLIC ${OpenMP_CXX_FLAGS})
     target_include_directories(${CURTGT} PRIVATE ${OpenMP_INCLUDE_PATH})
     target_link_libraries(${CURTGT} ${OpenMP_CXX_LIBRARIES}) # ${PROJECT_LINK_LIBS}).
-  endforeach(CURTGT)
-endif()
+  endif()
 
-# Add build requirements for examples using libTIFF
-if(TIFF_FOUND)
-  foreach(CURTGT IN LISTS TARGETS_REQ_TIFF)
+  # Add build requirements for examples using libTIFF
+  list (FIND TARGETS_REQ_TIFF ${CURTGT} TMPR)
+  if(TIFF_FOUND AND (${TMPR} GREATER -1))
     target_compile_definitions(${CURTGT} PUBLIC TIFF_FOUND=1)
     target_include_directories(${CURTGT} PRIVATE ${TIFF_INCLUDE_DIRS})
     target_link_libraries(${CURTGT} ${TIFF_LIBRARIES})
-  endforeach(CURTGT)
-endif()
+  endif()
 
-# Add build requirements for examples using SDL2
-if(SDL2_FOUND)
-  foreach(CURTGT IN LISTS TARGETS_REQ_SDL2)
+  # Add build requirements for examples using SDL2
+  list (FIND TARGETS_REQ_SDL2 ${CURTGT} TMPR)
+  if(SDL2_FOUND AND (${TMPR} GREATER -1))
     if((CMAKE_CXX_PLATFORM_ID STREQUAL "MinGW") AND (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
       target_compile_options(${CURTGT} PUBLIC "-mwindows")
       target_link_options(${CURTGT} PUBLIC "-Wl,-subsystem,windows")
@@ -195,8 +194,8 @@ if(SDL2_FOUND)
     target_compile_definitions(${CURTGT} PUBLIC SDL2_FOUND=1)
     target_include_directories(${CURTGT} PRIVATE ${SDL2_INCLUDE_DIRS})
     target_link_libraries(${CURTGT} ${SDL2_LIBRARIES})
-  endforeach(CURTGT)
-endif()
+  endif()
+endforeach(CURTGT)
 
 # The circles target needs drawing mode support
 target_compile_definitions(circles PUBLIC SUPPORT_DRAWING_MODE=1)
