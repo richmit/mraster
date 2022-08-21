@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-08-07 Sun 16:45 -->
+<!-- 2022-08-21 Sun 15:01 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster Quick Start</title>
@@ -234,16 +234,16 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org5a188c9">1. Quick Start (The Absolute Minimum)</a></li>
-<li><a href="#org9569f70">2. Playing With <b><code>MRaster</code></b>'s Example Programs</a></li>
-<li><a href="#org4ccc952">3. Using <b><code>MRaster</code></b>'s <code>cmake</code> Configuration</a></li>
+<li><a href="#org1735d1a">1. Quick Start (The Absolute Minimum)</a></li>
+<li><a href="#org537cb41">2. Playing With <b><code>MRaster</code></b>'s Example Programs</a></li>
+<li><a href="#orge74fba8">3. Using <b><code>MRaster</code></b>'s <code>cmake</code> Configuration</a></li>
 <li><a href="#meta">4. Meta</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org5a188c9" class="outline-2">
-<h2 id="org5a188c9"><span class="section-number-2">1.</span> Quick Start (The Absolute Minimum)</h2>
+<div id="outline-container-org1735d1a" class="outline-2">
+<h2 id="org1735d1a"><span class="section-number-2">1.</span> Quick Start (The Absolute Minimum)</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 If you are interested playing around with <b><code>MRaster</code></b> as quickly as possible, then this section is for you.
@@ -254,7 +254,7 @@ The first step is to download <b><code>MRaster</code></b>.  You can grab the <a 
 clone the repository with GIT like this:
 </p>
 
-<pre class="example" id="org74d90af">
+<pre class="example" id="org35f592d">
 git clone 'https://github.com/richmit/mraster.git'
 </pre>
 
@@ -268,8 +268,8 @@ can simply put your code right in that directory.  So let's create a file called
 
 <span style="color: #63b8ff;">int</span> <span style="color: #00fa9a; font-weight: bold;">main</span>(<span style="color: #63b8ff;">void</span>) {
   <span style="color: #8470ff; font-weight: bold;">mjr</span>::<span style="color: #63b8ff;">ramCanvas3c8b</span> <span style="color: #7fffd4;">theRamCanvas</span>(1024, 1024);                               <span style="color: #ffa500;">// </span><span style="color: #ff7f24;">Create a canvas object</span>
-  <span style="color: #00ffff;">for</span>(<span style="color: #63b8ff;">int</span> <span style="color: #7fffd4;">y</span>=0;y&lt;theRamCanvas.get_numYpix();y++)                              <span style="color: #ffa500;">// </span><span style="color: #ff7f24;">Run over the rows </span>
-    <span style="color: #00ffff;">for</span>(<span style="color: #63b8ff;">int</span> <span style="color: #7fffd4;">x</span>=0;x&lt;theRamCanvas.get_numXpix();x++)                            <span style="color: #ffa500;">//   </span><span style="color: #ff7f24;">and columns of the image</span>
+  <span style="color: #00ffff;">for</span>(<span style="color: #63b8ff;">int</span> <span style="color: #7fffd4;">y</span>=0;y&lt;theRamCanvas.getNumPixY();y++)                               <span style="color: #ffa500;">// </span><span style="color: #ff7f24;">Run over the rows </span>
+    <span style="color: #00ffff;">for</span>(<span style="color: #63b8ff;">int</span> <span style="color: #7fffd4;">x</span>=0;x&lt;theRamCanvas.getNumPixX();x++)                             <span style="color: #ffa500;">//   </span><span style="color: #ff7f24;">and columns of the image</span>
       theRamCanvas.drawPoint(x, y, <span style="color: #8470ff; font-weight: bold;">mjr</span>::<span style="color: #8470ff; font-weight: bold;">color3c8b</span>::<span style="color: #8470ff; font-weight: bold;">csCColdeRainbow</span>::c(x+y)); <span style="color: #ffa500;">// </span><span style="color: #ff7f24;">Pick a "rainbow" color for the point</span>
   theRamCanvas.writeTIFFfile(<span style="color: #fa8072;">"hello.tiff"</span>);                                  <span style="color: #ffa500;">// </span><span style="color: #ff7f24;">Write out our image to disk</span>
 }
@@ -290,7 +290,7 @@ Now you can run it, and take a look at the file it created ("<code>hello.tiff</c
 </p>
 
 
-<div id="org6bdea4f" class="figure">
+<div id="org4691ee4" class="figure">
 <p><img src="./pics/quick/hello.png" alt="hello.png" width="800" align="center" />
 </p>
 </div>
@@ -341,8 +341,8 @@ you want to turn off 128-bit integers, and use pure C++20 instead with GCC, then
 </div>
 </div>
 
-<div id="outline-container-org9569f70" class="outline-2">
-<h2 id="org9569f70"><span class="section-number-2">2.</span> Playing With <b><code>MRaster</code></b>'s Example Programs</h2>
+<div id="outline-container-org537cb41" class="outline-2">
+<h2 id="org537cb41"><span class="section-number-2">2.</span> Playing With <b><code>MRaster</code></b>'s Example Programs</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The source code for the example programs is located in the "<code>examples</code>" directory.  <b><code>MRaster</code></b> ships with a <code>cmake</code> build system that should be able to
@@ -378,8 +378,8 @@ at the "<code>configure.sh</code>" script in the root directory of the git repos
 </div>
 </div>
 
-<div id="outline-container-org4ccc952" class="outline-2">
-<h2 id="org4ccc952"><span class="section-number-2">3.</span> Using <b><code>MRaster</code></b>'s <code>cmake</code> Configuration</h2>
+<div id="outline-container-orge74fba8" class="outline-2">
+<h2 id="orge74fba8"><span class="section-number-2">3.</span> Using <b><code>MRaster</code></b>'s <code>cmake</code> Configuration</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 For many <b><code>MRaster</code></b> users, <code>cmake</code> is an unfamiliar tool.  Some of them decide to directly use <b><code>MRaster</code></b>'s <code>cmake</code> infrastructure, using the "<code>examples</code>"
