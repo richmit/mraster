@@ -39,13 +39,11 @@ if [[ "$CMD_LINE_ARGS" == *'-h'* ]]; then
        - -DCMAKE_CXX_COMPILER=g++
      * Optional features -- leave them off to enable everythign
        - -DO_DOXYGEN=[YES|NO]
-       - -DO_IM=[YES|NO]
        - -DO_OPENGL=[YES|NO]
        - -DO_OPENMP=[YES|NO]
-       - -DO_PNG=[YES|NO]
-       - -DO_STATIC=[YES|NO]
-       - -DO_TIFF=[YES|NO]
-
+       - -DO_TIFF=[YES|NO]     -- Provides advanced TIFF read functionality
+       - -DO_O_SDL2=[YES|NO]
+       - -DO_O_BTEST=[YES|NO]  -- Used for BOOT unit tests
 EOF
 exit
 fi
