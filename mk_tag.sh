@@ -5,13 +5,7 @@
 #  - Make sure the doxygen documentation has been deployed with the correct tag-name
 #  - Make sure next-tag.org file exists for the tag comment
 
-TAG_NAME="$1"
-
-if git show-ref --tags "$TAG_NAME" --quiet; then
-  echo "Tag already exists!!"
-  exit
-fi
-
+# If we don't have a CMakeLists.txt, then we are in the wrong directory.
 if [ -e CMakeLists.txt ]; then
   echo "Found CMakeLists.txt"
 else
@@ -19,14 +13,16 @@ else
   exit
 fi
 
-if grep -Fq "set(PROJECT_VERSION_ID    $TAG_NAME)" CMakeLists.txt; then
-  echo "CMakeLists.txt has correct tag string"
-else
-  echo "CMakeLists.txt has incorrect tag string:"
-  grep '^set(PROJECT_VERSION_ID' CMakeLists.txt | sed 's/^/   /'
+# Get the tag name out of CMakeLists.txt
+TAG_NAME=$(grep '^set(PROJECT_VERSION_ID' CMakeLists.txt | sed 's/^.* //; s/)$//')
+
+# Make sure the tag doesn't already exist
+if git show-ref --tags "$TAG_NAME" --quiet; then
+  echo "Tag already exists!!"
   exit
 fi
 
+# Make sure the tag is in the doxygen documentation too
 if grep -Fq "PROJECT_NAME           = \"MRaster $TAG_NAME lib\"" ~/world/WWW/site/SS/mraster/doc-lib/Doxyfile; then
   echo "Deployed doxygen documentation has correct tag string"
 else
@@ -36,6 +32,7 @@ else
   exit
 fi
 
+# We need the next-tag.org file for the tag comment.
 if [ -e next-tag.org ]; then
   echo "Found next-tag.org"
 else
@@ -43,11 +40,19 @@ else
   exit
 fi
 
+if git diff-index --quiet HEAD; then
+  echo "git state is clean"
+else
+  echo "git state is unclean."
+  git status  
+  exit
+fi
+
+# Actually do something. :)
 git tag "$TAG_NAME" -F next-tag.org
 
+# Tell the world the good news.
 echo "TAG CREATED WITH FOLLOWING COMMIT MESSAGE:"
 echo "================================================================================"
 cat next-tag.org
 echo "================================================================================"
-
-
