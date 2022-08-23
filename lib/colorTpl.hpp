@@ -1584,53 +1584,32 @@ namespace mjr {
           @return A reference to this object */
       template <typename ccT>
       inline colorTpl& cmpRGBcornerDGradiant(csIntType csIdx, csIntType numColors, const ccT* cornerColors) {
-        /* Requires: Inherits numChan>2 from getBlue. */
-        csIdx = numberWrap(csIdx, static_cast<csIntType>(chanStepMax * numColors - chanStepMax));
-        if(csIdx != 0) { [[likely]]
-          for(csIntType i=0; i<(numColors-1); i++) {
-            if(csIdx <= chanStepMax) {
-              clrChanT csIdxNoMore = static_cast<clrChanT>(csIdx);
-              // Note: This could be MUCH better optimized!
-              colorTpl c1;
-              colorTpl c2;
-              c1.setToCorner(cornerColors[i]);
-              c2.setToCorner(cornerColors[i+1]);
-              clrChanT r, g, b;
-              if(c1.getRed() > c2.getRed()) {
-                r = chanStepMax - csIdxNoMore;
-              } else if(c1.getRed() < c2.getRed()) {
-                r = csIdxNoMore;
-              } else {
-                r = ( c1.getRed() > 0 ? chanStepMax : 0);
-              }
-              if(c1.getGreen() > c2.getGreen()) {
-                g = chanStepMax - csIdxNoMore;
-              } else if(c1.getGreen() < c2.getGreen()) {
-                g = csIdxNoMore;
-              } else {
-                g =  ( c1.getGreen() > 0 ? chanStepMax : 0);
-              }
-              if(c1.getBlue() > c2.getBlue()) {
-                b = chanStepMax - csIdxNoMore;
-              } else if(c1.getBlue() < c2.getBlue()) {
-                b = csIdxNoMore;
-              } else {
-                b =  ( c1.getBlue() > 0 ? chanStepMax : 0);
-              }
-              if (chanIsFloat) {
-                r = r / chanStepMax;
-                g = g / chanStepMax;
-                b = b / chanStepMax;
-              }
-              return setChansRGB(r, g, b);
-            } else {
-              csIdx = csIdx - chanStepMax;
-            }
-          }
+        csIdx = numberWrap(csIdx, static_cast<csIntType>(chanStepMax * numColors - chanStepMax)); // First wrap to the total color count
+        csIntType edgeNum = csIdx / chanStepMax;
+        if (edgeNum == (numColors-1)) {
+          edgeNum = edgeNum - 1;
+          csIdx = chanStepMax;
         } else {
-          return setToCorner(cornerColors[0]);
+          csIdx = csIdx % chanStepMax;
         }
-        // If we got here, we had a problem.  But not much we can do about it...
+        colorTpl c1;
+        colorTpl c2;
+        c1.setToCorner(cornerColors[edgeNum]);
+        c2.setToCorner(cornerColors[edgeNum+1]);
+        for (int j : {redChan, greenChan, blueChan}) {
+          csIntType cVal;
+          if(c1.getChan(j) > c2.getChan(j)) {
+            cVal = chanStepMax - csIdx;
+          } else if(c1.getChan(j) < c2.getChan(j)) {
+            cVal = csIdx;
+          } else {
+            cVal = ( c1.getChan(j) > 0 ? chanStepMax : 0);
+          }
+          if (chanIsFloat)
+            setChan(j, static_cast<clrChanT>(cVal) / static_cast<clrChanT>(chanStepMax));
+          else
+            setChan(j, static_cast<clrChanT>(cVal));
+        }
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -324,7 +324,7 @@ namespace mjr {
           @param oStream    The ostream object to which to write
           @param ch4isAlpha If true, identify the first non-image channel as an alpha channel.  If toTRU!=NULL, then alpha is 255.
           @param toTRU      A functor used to transform native pixels into truecolor RGB pixels.
-          @param filter     A functor used to transform each pixel. 
+          @param filter     A functor used to transform each pixel.
           @return Status of I/O
           @retval  0 Everything seems to have worked
           @retval  2 Image has channels are too shallow for TIFF format
@@ -350,7 +350,7 @@ namespace mjr {
 
           @param oStream The ostream object to which to write
           @param toTRU   A functor used to transform native pixels into truecolor RGB pixels.
-          @param filter  A functor used to transform each pixel. 
+          @param filter  A functor used to transform each pixel.
           @return Status of I/O
           @retval  0 Everything seems to have worked
           @retval  6 Image of zero width
@@ -626,7 +626,7 @@ namespace mjr {
       /** Apply a convolution filter.
           The implementation for this method is quite naive and super slow!  Frankly, this kind of functionality is beyond the scope of this library; however,
           sometimes you just need a convolution filter and you don't want to go to the extra effort of using yet another external library.  Pixels outside the
-          canvas are considered black. 
+          canvas are considered black.
           @param kernel  The convolution kernel.   Must be of length kWide*kTall.
           @param kWide   The width of the kernel.  Must be odd.
           @param kTall   The height of the kernel. Must be odd.
@@ -825,7 +825,7 @@ namespace mjr {
 
       /** @name Unfilled Triangle Drawing Methods */
       //@{
-      /** Draw an un-filled triangle 
+      /** Draw an un-filled triangle
           @bug Some pixels may be drawn more than once.
           @param x1 The x coordinate of the first point
           @param y1 The y coordinate of the first point
@@ -844,11 +844,11 @@ namespace mjr {
                                                                                                                                           real2intX(thePoints[2].x), real2intY(thePoints[2].y), color); }
       inline void drawTriangle(pointIntType *thePoints)                                                                    { drawTriangle(thePoints[0].x, thePoints[0].y, thePoints[1].x, thePoints[1].y, thePoints[2].x, thePoints[2].y, dfltColor); }
       inline void drawTriangle(pointIntType point1, pointIntType point2, pointIntType point3)                              { drawTriangle(point1.x, point1.y, point2.x, point2.y, point3.x, point3.y, dfltColor); }
-      inline void drawTriangle(pointFltType point1, pointFltType point2, pointFltType point3)                              { drawTriangle(real2intX(point1.x), real2intY(point1.y), 
-                                                                                                                                          real2intX(point2.x), real2intY(point2.y), 
+      inline void drawTriangle(pointFltType point1, pointFltType point2, pointFltType point3)                              { drawTriangle(real2intX(point1.x), real2intY(point1.y),
+                                                                                                                                          real2intX(point2.x), real2intY(point2.y),
                                                                                                                                           real2intX(point3.x), real2intY(point3.y), dfltColor); }
-      inline void drawTriangle(pointFltType point1, pointFltType point2, pointFltType point3, colorArgType color)          { drawTriangle(real2intX(point1.x), real2intY(point1.y), 
-                                                                                                                                          real2intX(point2.x), real2intY(point2.y), 
+      inline void drawTriangle(pointFltType point1, pointFltType point2, pointFltType point3, colorArgType color)          { drawTriangle(real2intX(point1.x), real2intY(point1.y),
+                                                                                                                                          real2intX(point2.x), real2intY(point2.y),
                                                                                                                                           real2intX(point3.x), real2intY(point3.y), color); }
       inline void drawTriangle(pointIntType point1, pointIntType point2, pointIntType point3, colorArgType color)          { drawTriangle(point1.x, point1.y, point2.x, point2.y, point3.x, point3.y, color); }
       inline void drawTriangle(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2, fltCrdT x3, fltCrdT y3)                     { drawTriangle(real2intX(x1), real2intY(y1), real2intX(x2), real2intY(y2), real2intX(x3), real2intY(y3), dfltColor); }
@@ -870,21 +870,21 @@ namespace mjr {
           @param color The color to use for the triangle */
       void drawFillTriangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3, colorArgType color);
       inline void drawFillTriangle(pointIntType *thePoints, colorArgType color)                                                { drawFillTriangle(thePoints[0].x, thePoints[0].y, thePoints[1].x, thePoints[1].y, thePoints[2].x, thePoints[2].y, color); }
-      inline void drawFillTriangle(pointFltType *thePoints)                                                                    { drawFillTriangle(real2intX(thePoints[0].x), real2intY(thePoints[0].y), 
-                                                                                                                                                  real2intX(thePoints[1].x), real2intY(thePoints[1].y), 
+      inline void drawFillTriangle(pointFltType *thePoints)                                                                    { drawFillTriangle(real2intX(thePoints[0].x), real2intY(thePoints[0].y),
+                                                                                                                                                  real2intX(thePoints[1].x), real2intY(thePoints[1].y),
                                                                                                                                                   real2intX(thePoints[2].x), real2intY(thePoints[2].y), dfltColor); }
-      inline void drawFillTriangle(pointFltType *thePoints, colorArgType color)                                                { drawFillTriangle(real2intX(thePoints[0].x), real2intY(thePoints[0].y), 
-                                                                                                                                                  real2intX(thePoints[1].x), real2intY(thePoints[1].y), 
+      inline void drawFillTriangle(pointFltType *thePoints, colorArgType color)                                                { drawFillTriangle(real2intX(thePoints[0].x), real2intY(thePoints[0].y),
+                                                                                                                                                  real2intX(thePoints[1].x), real2intY(thePoints[1].y),
                                                                                                                                                   real2intX(thePoints[2].x), real2intY(thePoints[2].y), color); }
-      inline void drawFillTriangle(pointIntType *thePoints)                                                                    { drawFillTriangle(thePoints[0].x, thePoints[0].y, 
-                                                                                                                                                  thePoints[1].x, thePoints[1].y, 
+      inline void drawFillTriangle(pointIntType *thePoints)                                                                    { drawFillTriangle(thePoints[0].x, thePoints[0].y,
+                                                                                                                                                  thePoints[1].x, thePoints[1].y,
                                                                                                                                                   thePoints[2].x, thePoints[2].y, dfltColor); }
       inline void drawFillTriangle(pointIntType point1, pointIntType point2, pointIntType point3)                              { drawFillTriangle(point1.x, point1.y, point2.x, point2.y, point3.x, point3.y, dfltColor); }
-      inline void drawFillTriangle(pointFltType point1, pointFltType point2, pointFltType point3)                              { drawFillTriangle(real2intX(point1.x), real2intY(point1.y), 
-                                                                                                                                                  real2intX(point2.x), real2intY(point2.y), 
+      inline void drawFillTriangle(pointFltType point1, pointFltType point2, pointFltType point3)                              { drawFillTriangle(real2intX(point1.x), real2intY(point1.y),
+                                                                                                                                                  real2intX(point2.x), real2intY(point2.y),
                                                                                                                                                   real2intX(point3.x), real2intY(point3.y), dfltColor); }
-      inline void drawFillTriangle(pointFltType point1, pointFltType point2, pointFltType point3, colorArgType color)          { drawFillTriangle(real2intX(point1.x), real2intY(point1.y), 
-                                                                                                                                                  real2intX(point2.x), real2intY(point2.y), 
+      inline void drawFillTriangle(pointFltType point1, pointFltType point2, pointFltType point3, colorArgType color)          { drawFillTriangle(real2intX(point1.x), real2intY(point1.y),
+                                                                                                                                                  real2intX(point2.x), real2intY(point2.y),
                                                                                                                                                   real2intX(point3.x), real2intY(point3.y), color); }
       inline void drawFillTriangle(pointIntType point1, pointIntType point2, pointIntType point3, colorArgType color)          { drawFillTriangle(point1.x, point1.y, point2.x, point2.y, point3.x, point3.y, color); }
       inline void drawFillTriangle(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2, fltCrdT x3, fltCrdT y3)                     { drawFillTriangle(real2intX(x1), real2intY(y1), real2intX(x2), real2intY(y2), real2intX(x3), real2intY(y3), dfltColor); }
@@ -1012,7 +1012,7 @@ namespace mjr {
 
       /** @name Piece-Wise Linear Curve Drawing Methods */
       //@{
-      /** Draw Piece-Wise Linear Curves 
+      /** Draw Piece-Wise Linear Curves
           @bug Some pixels may be drawn more than once.
       */
       void drawPLCurve(int numPoints, intCrdT *x, intCrdT *y, colorArgType color);
@@ -1100,7 +1100,7 @@ namespace mjr {
           @retval 16 Allocation failed (scan line buffer)
           @retval 17 Read (TIFFReadScanline) failure
           @retval 18 Sample Format is not unsigned integer or IEEE floating point
-          @retval 19 File and ramCanvas samples per pixel (channel count) differs 
+          @retval 19 File and ramCanvas samples per pixel (channel count) differs
           @retval 20 File and ramCanvas channel depth differ
           @retval 21 File and ramCanvas channel format (int vs float) differ
           @retval 22 Planar configuration is invalid (not 1 or 2)
@@ -1387,8 +1387,7 @@ namespace mjr {
   // Constructor
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::ramCanvasTpl() {
-    //std::cout << "DEBUG: ramCanvasTpl no-arg constructor" << std::endl;
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::ramCanvasTpl() {
     newIntCoordsNC(-1, -1);
     pixels = NULL;
     pixelsE = NULL;
@@ -1401,8 +1400,7 @@ namespace mjr {
   // Copy Constructor
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::ramCanvasTpl(const ramCanvasTpl &theCanvas) {
-    //std::cout << "DEBUG: ramCanvasTpl copy constructor" << std::endl;
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::ramCanvasTpl(const ramCanvasTpl &theCanvas) {
     newIntCoordsNC(theCanvas.numPixX, theCanvas.numPixY);
     newRealCoords(theCanvas.minRealX, theCanvas.maxRealX, theCanvas.minRealY, theCanvas.maxRealY);
     pixels = new colorT[theCanvas.numPixX * theCanvas.numPixY];
@@ -1421,8 +1419,7 @@ namespace mjr {
 // Move constructor
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::ramCanvasTpl(ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>&& theCanvas) {
-    //std::cout << "DEBUG: ramCanvasTpl move constructor" << std::endl;
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::ramCanvasTpl(ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>&& theCanvas) {
     newIntCoordsNC(theCanvas.numPixX, theCanvas.numPixY);
     newRealCoords(theCanvas.minRealX, theCanvas.maxRealX, theCanvas.minRealY, theCanvas.maxRealY);
     realAxOrientationX = theCanvas.realAxOrientationX;
@@ -1438,9 +1435,8 @@ namespace mjr {
 // Move assignment operator
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>&
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::operator=(ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>&& theCanvas) {
-    //std::cout << "DEBUG: ramCanvasTpl move assignment operator" << std::endl;
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>&
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::operator=(ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>&& theCanvas) {
     if (this != &theCanvas) {
       newIntCoordsNC(theCanvas.numPixX, theCanvas.numPixY);
       newRealCoords(theCanvas.minRealX, theCanvas.maxRealX, theCanvas.minRealY, theCanvas.maxRealY);
@@ -1459,8 +1455,7 @@ namespace mjr {
   // Normal Constructor
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::ramCanvasTpl(intCrdT numPixX_p, intCrdT numPixY_p, fltCrdT minRealX_p, fltCrdT maxRealX_p, fltCrdT minRealY_p, fltCrdT maxRealY_p) {
-    // std::cout << "DEBUG: ramCanvasTpl normal constructor" << std::endl;
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::ramCanvasTpl(intCrdT numPixX_p, intCrdT numPixY_p, fltCrdT minRealX_p, fltCrdT maxRealX_p, fltCrdT minRealY_p, fltCrdT maxRealY_p) {
     newIntCoordsNC(numPixX_p, numPixY_p);
     newRealCoords(minRealX_p, maxRealX_p, minRealY_p, maxRealY_p);
     pixels = new colorT[numPixX * numPixY];
@@ -1474,7 +1469,7 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::~ramCanvasTpl() {
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::~ramCanvasTpl() {
     if(pixels != NULL) {
       delete[] pixels;
       pixels = NULL;
@@ -1484,38 +1479,34 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::newIntCoordsNC(intCrdT numPixX_p, intCrdT numPixY_p) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::newIntCoordsNC(intCrdT numPixX_p, intCrdT numPixY_p) {
     if( (numPixX_p <= intCrdMax) && (numPixY_p <= intCrdMax) ) {
       numPix  = numPixX_p * numPixY_p;;
       numPixX = numPixX_p;
       numPixY = numPixY_p;
-    } else {
-      // ERROR!!!
     }
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::newRealCoords(fltCrdT minRealX_p, fltCrdT maxRealX_p, fltCrdT minRealY_p, fltCrdT maxRealY_p) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::newRealCoords(fltCrdT minRealX_p, fltCrdT maxRealX_p, fltCrdT minRealY_p, fltCrdT maxRealY_p) {
     if( (minRealX_p <= maxRealX_p) && (minRealY_p <= maxRealY_p) ) {
       minRealX = minRealX_p;
       maxRealX = maxRealX_p;
       minRealY = minRealY_p;
       maxRealY = maxRealY_p;
       updRealCoords();
-    } else {
-      // This is an error.  We should do something about. ;)
     }
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::updRealCoords() {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::updRealCoords() {
     canvasWidX = maxRealX - minRealX;
     canvasWidY = maxRealY - minRealY;
     pixWidX = canvasWidX / numPixX;
@@ -1525,8 +1516,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::clrCanvasChannelToMin(int chan) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::clrCanvasChannelToMin(int chan) {
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
         getPxColorRefNC(x, y).setChanToMin(chan);
@@ -1535,8 +1526,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::clrCanvasChannelToMax(int chan) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::clrCanvasChannelToMax(int chan) {
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
         getPxColorRefNC(x, y).setChanToMax(chan);
@@ -1545,8 +1536,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::clrCanvasToBlack() {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::clrCanvasToBlack() {
     ////// Diffrent ways to do it -- unless otherwise noted, all of them are about the same performance with GCC if colorT has a fast mask
 
     //// Use std:memset
@@ -1573,8 +1564,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::clrCanvasToWhite() {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::clrCanvasToWhite() {
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
         getPxColorRefNC(x, y).setToWhite();
@@ -1583,16 +1574,16 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::clrCanvas() {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::clrCanvas() {
     clrCanvas(dfltColor);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::clrCanvas(colorArgType color) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::clrCanvas(colorArgType color) {
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
         drawPointS(x, y, color);
@@ -1601,8 +1592,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::autoHistStrech() {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::autoHistStrech() {
     colorChanType cmin = colorT::maxChanVal;
     colorChanType cmax = colorT::minChanVal;
     for(intCrdT y=0;y<numPixY;y++) {
@@ -1610,10 +1601,8 @@ namespace mjr {
         colorT daColor = getPxColorNC(x, y);
         colorChanType curMin = daColor.getMinC();
         colorChanType curMax = daColor.getMaxC();
-
         if(curMax > cmax)
           cmax = curMax;
-
         if(curMin < cmin)
           cmin = curMin;
       }
@@ -1628,8 +1617,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::autoMaxHistStrech() {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::autoMaxHistStrech() {
     colorT cmin; cmin.setChans(cmin.maxChanVal);
     colorT cmax; cmax.setChans(cmin.minChanVal);
     for(intCrdT y=0;y<numPixY;y++) {
@@ -1655,8 +1644,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)()) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)()) {
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)();
@@ -1665,8 +1654,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT), colorT arg1) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT), colorT arg1) {
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1);
@@ -1675,8 +1664,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT, colorT), colorT arg1, colorT arg2) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT, colorT), colorT arg1, colorT arg2) {
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2);
@@ -1685,8 +1674,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT, colorT, colorT), colorT arg1, colorT arg2, colorT arg3) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT, colorT, colorT), colorT arg1, colorT arg2, colorT arg3) {
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3);
@@ -1695,8 +1684,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT, colorT, colorT, colorT), colorT arg1, colorT arg2, colorT arg3, colorT arg4) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT, colorT, colorT, colorT), colorT arg1, colorT arg2, colorT arg3, colorT arg4) {
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3, arg4);
@@ -1705,8 +1694,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(int), int arg1) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(int), int arg1) {
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1);
@@ -1715,8 +1704,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(int, int), int arg1, int arg2) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(int, int), int arg1, int arg2) {
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2);
@@ -1725,8 +1714,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(int, int, int), int arg1, int arg2, int arg3) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(int, int, int), int arg1, int arg2, int arg3) {
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3);
@@ -1735,8 +1724,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(int, int, int, int), int arg1, int arg2, int arg3, int arg4) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(int, int, int, int), int arg1, int arg2, int arg3, int arg4) {
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3, arg4);
@@ -1745,8 +1734,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(double), double arg1) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(double), double arg1) {
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1);
@@ -1755,8 +1744,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(double, double), double arg1, double arg2) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(double, double), double arg1, double arg2) {
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2);
@@ -1765,8 +1754,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(double, double, double), double arg1, double arg2, double arg3) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(double, double, double), double arg1, double arg2, double arg3) {
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3);
@@ -1775,9 +1764,9 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(double, double, double, double),
-                                                           double arg1, double arg2, double arg3, double arg4) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(double, double, double, double),
+                                                                              double arg1, double arg2, double arg3, double arg4) {
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3, arg4);
@@ -1786,9 +1775,9 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(double, double, double, double, double),
-                                                           double arg1, double arg2, double arg3, double arg4, double arg5) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(double, double, double, double, double),
+                                                                              double arg1, double arg2, double arg3, double arg4, double arg5) {
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3, arg4, arg5);
@@ -1797,8 +1786,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(double, double, double, double, double, double),
-                                                                       double arg1, double arg2, double arg3, double arg4, double arg5, double arg6) {
+    inline void ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyHomoPixTfrm(colorT& (colorT::*HPT)(double, double, double, double, double, double),
+                                                                                          double arg1, double arg2, double arg3, double arg4, double arg5, double arg6) {
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
         (getPxColorRefNC(x, y).*HPT)(arg1, arg2, arg3, arg4, arg5, arg6);
@@ -1807,11 +1796,11 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::combineRamCanvasBinOp(colorT& (colorT::*HPT)(colorT),
-                                                                            const ramCanvasTpl &theCanvas,
-                                                                            intCrdT trgX, intCrdT trgY,
-                                                                            intCrdT wide, intCrdT tall,
-                                                                            intCrdT srcX, intCrdT srcY) {
+    inline void ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::combineRamCanvasBinOp(colorT& (colorT::*HPT)(colorT),
+                                                                                               const ramCanvasTpl &theCanvas,
+                                                                                               intCrdT trgX, intCrdT trgY,
+                                                                                               intCrdT wide, intCrdT tall,
+                                                                                               intCrdT srcX, intCrdT srcY) {
     // Figure out real default width
     if(wide < 0)
       wide = numPixX-trgX;
@@ -1846,8 +1835,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawLine(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, colorArgType color) {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawLine(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, colorArgType color) {
     moveTo(x2, y2);                                                           // Do this first
     intCrdT x, y;
     if(y1 == y2) {                                                            // slope = 0
@@ -2029,8 +2018,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::freeCanvas() {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::freeCanvas() {
     newIntCoordsNC(-1, -1);
     if(pixels != NULL) {
       delete[] pixels;
@@ -2042,8 +2031,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::rePointPixels(colorT *new_pixels, intCrdT new_numPixX, intCrdT new_numPixY) {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::rePointPixels(colorT *new_pixels, intCrdT new_numPixX, intCrdT new_numPixY) {
     freeCanvas();
     newIntCoordsNC(new_numPixX, new_numPixY);
     updRealCoords();
@@ -2058,8 +2047,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::reallocCanvas(intCrdT numPixX_p, intCrdT numPixY_p) {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::reallocCanvas(intCrdT numPixX_p, intCrdT numPixY_p) {
     if((numPixX_p<=0) || (numPixY_p<=0)) {
       freeCanvas();
     } else {
@@ -2075,16 +2064,16 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::resizeCanvas(intCrdT new_numPixX_p, intCrdT new_numPixY_p) {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::resizeCanvas(intCrdT new_numPixX_p, intCrdT new_numPixY_p) {
     reallocCanvas(new_numPixX_p, new_numPixY_p);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::expandCanvas(intCrdT new_numPixX_p, intCrdT new_numPixY_p, intCrdT x1, intCrdT y1, colorArgType color) {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::expandCanvas(intCrdT new_numPixX_p, intCrdT new_numPixY_p, intCrdT x1, intCrdT y1, colorArgType color) {
     if( (new_numPixX_p != numPixX) || (new_numPixY_p != numPixY) ) {
       if(x1 >= new_numPixX_p)
         x1=0;
@@ -2118,8 +2107,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::cropCanvas(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2) {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::cropCanvas(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2) {
     if( !isCliped(x1, y1) && !isCliped(x2, y2) ) {
       if(x1 > x2)
         std::swap(x1, x2);
@@ -2142,8 +2131,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::flipHorz() {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::flipHorz() {
     for(intCrdT y=0; y<numPixY/2; y++)
       for(intCrdT x=0; x<numPixX; x++) {
         colorT aColor = getPxColor(x, numPixY-y-1);
@@ -2155,8 +2144,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::flipVert() {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::flipVert() {
     for(intCrdT x=0; x<numPixX/2; x++)
       for(intCrdT y=0; y<numPixY; y++) {
         colorT aColor = getPxColor(numPixX-x-1, y);
@@ -2168,8 +2157,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::flipTranspose() {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::flipTranspose() {
     intCrdT new_numPixX_p = numPixY;
     intCrdT new_numPixY_p = numPixX;
     colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
@@ -2182,8 +2171,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::rotate90CW() {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::rotate90CW() {
     intCrdT new_numPixX_p = numPixY;
     intCrdT new_numPixY_p = numPixX;
     colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
@@ -2196,8 +2185,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::rotate90CCW() {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::rotate90CCW() {
     intCrdT new_numPixX_p = numPixY;
     intCrdT new_numPixY_p = numPixX;
     colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
@@ -2210,8 +2199,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::rotate180() {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::rotate180() {
     intCrdT new_numPixX_p = numPixX;
     intCrdT new_numPixY_p = numPixY;
     colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
@@ -2224,8 +2213,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline typename ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::endianType
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::platformEndianness() {
+    inline typename ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::endianType
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::platformEndianness() {
     unsigned int endiannessProbe = 1;
     if(((char *)&endiannessProbe)[0]) {
       return endianType::LITTLE;
@@ -2237,11 +2226,11 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeUIntToStream(std::ostream& oStream,
-                                                            typename ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::endianType endianness,
-                                                            int numBytes,
-                                                            uint64_t data) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeUIntToStream(std::ostream& oStream,
+                                                                               typename ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::endianType endianness,
+                                                                               int numBytes,
+                                                                               uint64_t data) {
     if(numBytes>0) {
       if (numBytes == 1) {
         uint8_t tmp = (data & 0xff);
@@ -2268,11 +2257,11 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  int
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeTIFFstream(std::ostream& oStream,
-                                                          bool ch4isAlpha,
-                                                          std::function<colorRGB8b (colorT&)> toTRU,
-                                                          std::function<colorT (colorT&)> filter) {
+    int
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeTIFFstream(std::ostream& oStream,
+                                                                             bool ch4isAlpha,
+                                                                             std::function<colorRGB8b (colorT&)> toTRU,
+                                                                             std::function<colorT (colorT&)> filter) {
     if( !(toTRU)) {
       if(colorT::bitsPerChan < 8)                                                          // channels too thin
         return 2;
@@ -2385,7 +2374,7 @@ namespace mjr {
           writeUIntToStream(oStream, fe, 4, 0);
         }
     }
-                                                                                                                              // Image data
+    // Image data
     intCrdT x, y;
     bool yNat = !(intAxOrientationY==intAxisOrientation::NATURAL);
     bool xNat = intAxOrientationX==intAxisOrientation::NATURAL;
@@ -2400,9 +2389,9 @@ namespace mjr {
             if (colorT::chanIsInt)
               writeUIntToStream(oStream, fe, bytePerSmp, aChanValue);                                                         // Sample Data
             else
-          oStream.write((const char *)&aChanValue, bytePerSmp);                                                               // Sample Data
+              oStream.write((const char *)&aChanValue, bytePerSmp);                                                               // Sample Data
           }
-         } else {
+        } else {
           colorRGB8b bColor = toTRU(aColor);
           oStream.put(bColor.getC0());
           oStream.put(bColor.getC1());
@@ -2418,8 +2407,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::colorizeFltCanvas(std::function<colorT (fltCrdT, fltCrdT)> cFun) {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::colorizeFltCanvas(std::function<colorT (fltCrdT, fltCrdT)> cFun) {
     for(intCrdT yi=0;yi<numPixY;yi++) {
       for(intCrdT xi=0;xi<numPixX;xi++) {
         fltCrdT xf = int2realX(xi);
@@ -2433,8 +2422,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::colorizeFltCanvas(std::function<colorT (pointFltType)> cFun) {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::colorizeFltCanvas(std::function<colorT (pointFltType)> cFun) {
     for(intCrdT yi=0;yi<numPixY;yi++) {
       for(intCrdT xi=0;xi<numPixX;xi++) {
         pointFltType xyPt(int2realX(xi), int2realY(yi));
@@ -2447,8 +2436,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::colorizeIntCanvas(std::function<colorT (intCrdT, intCrdT)> cFun) {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::colorizeIntCanvas(std::function<colorT (intCrdT, intCrdT)> cFun) {
     for(intCrdT yi=0;yi<numPixY;yi++) {
       for(intCrdT xi=0;xi<numPixX;xi++) {
         colorT aColor = cFun(xi, yi);
@@ -2460,8 +2449,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::colorizeIntCanvas(std::function<colorT (pointIntType)> cFun) {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::colorizeIntCanvas(std::function<colorT (pointIntType)> cFun) {
     for(intCrdT yi=0;yi<numPixY;yi++) {
       for(intCrdT xi=0;xi<numPixX;xi++) {
         pointIntType xyPt(xi, yi);
@@ -2474,10 +2463,10 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  int
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeTGAstream(std::ostream& oStream,
-                                                         std::function<colorRGB8b (colorT&)> toTRU,
-                                                         std::function<colorT     (colorT&)> filter) {
+    int
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeTGAstream(std::ostream& oStream,
+                                                                            std::function<colorRGB8b (colorT&)> toTRU,
+                                                                            std::function<colorT     (colorT&)> filter) {
     if(numPixX < 1)      // too skinny
       return 6;
     if(numPixX > 0xffff) // too wide
@@ -2515,7 +2504,7 @@ namespace mjr {
         if(toTRU == NULL) {
           writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((colorT::blueChan  < 0 ? 0 : colorT::blueChan)));
           writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((colorT::greenChan < 0 ? 0 : colorT::greenChan)));
-          writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((colorT::redChan   < 0 ? 0 : colorT::redChan)));  
+          writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((colorT::redChan   < 0 ? 0 : colorT::redChan)));
         } else {
           colorRGB8b bColor = toTRU(aColor);
           writeUIntToStream(oStream, endianType::LITTLE, 1, bColor.getC2());
@@ -2530,8 +2519,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  int
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeBINstream(std::ostream& oStream, std::function<colorT (colorT&)> filter) {
+    int
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeBINstream(std::ostream& oStream, std::function<colorT (colorT&)> filter) {
     intCrdT x, y;
     /* Normally I would not resort to such trickery; however, this is an exception.  The following for loop is equivalent to switching between the two forms
        "for(y=(numPixY-1); y>=0; y--)" and "for(y=0; y<numPixY; y++)". */
@@ -2554,8 +2543,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  int
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeRAWstream(std::ostream& oStream, std::function<colorT (colorT&)> filter) {
+    int
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeRAWstream(std::ostream& oStream, std::function<colorT (colorT&)> filter) {
     std::ostringstream outStringStream;
     outStringStream << "MJRRAW\n";                                                                   //  7   7
     outStringStream << std::setw(19) << std::setfill('0') << numPixX                 << "x";         // 20  27
@@ -2574,38 +2563,38 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline int
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeRAWfile(std::string fileName, std::function<colorT (colorT&)> filter) {
+    inline int
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeRAWfile(std::string fileName, std::function<colorT (colorT&)> filter) {
     return writeFile(fileName, imgFileType::RAW, false, NULL, filter);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline int
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeTGAfile(std::string fileName) {
+    inline int
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeTGAfile(std::string fileName) {
     return writeFile(fileName, imgFileType::TGA, false, NULL, NULL);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline int
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeTIFFfile(std::string fileName,
-                                                        std::function<colorRGB8b (colorT&)> toTRU,
-                                                        std::function<colorT     (colorT&)> filter) {
+    inline int
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeTIFFfile(std::string fileName,
+                                                                           std::function<colorRGB8b (colorT&)> toTRU,
+                                                                           std::function<colorT     (colorT&)> filter) {
     return writeFile(fileName, imgFileType::TIFF, false, toTRU, filter);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  int
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeFile(std::string fileName,
-                                                    imgFileType fileType,
-                                                    bool ch4isAlpha,
-                                                    std::function<colorRGB8b (colorT&)> toTRU,
-                                                    std::function<colorT     (colorT&)> filter) {
+    int
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeFile(std::string fileName,
+                                                                       imgFileType fileType,
+                                                                       bool ch4isAlpha,
+                                                                       std::function<colorRGB8b (colorT&)> toTRU,
+                                                                       std::function<colorT     (colorT&)> filter) {
     bool useCout = ( (fileName[0] == '-') && (fileName[1] == '\0') );
     std::ostream* oStream;
     std::ofstream oFileStream;
@@ -2637,11 +2626,11 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  int
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::exportRasterData(void* &rasterData,
-                                                           intCrdT x1,  intCrdT y1,
-                                                           intCrdT x2,  intCrdT y2,
-                                                           int redChan, int greenChan, int blueChan, int alphaChan) {
+    int
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::exportRasterData(void* &rasterData,
+                                                                              intCrdT x1,  intCrdT y1,
+                                                                              intCrdT x2,  intCrdT y2,
+                                                                              int redChan, int greenChan, int blueChan, int alphaChan) {
     if(x1 > x2)   // Get x1 < x2
       std::swap(x1, x2);
     if(y1 > y2)   // Get y1 < y2
@@ -2680,8 +2669,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline intCrdT
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::real2intX(fltCrdT x) const {
+    inline intCrdT
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::real2intX(fltCrdT x) const {
     if(realAxOrientationX == realAxisOrientation::NATURAL)
       return static_cast<intCrdT>((static_cast<fltCrdT>(x) - minRealX) / pixWidX);
     else
@@ -2691,8 +2680,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline intCrdT
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::real2intY(fltCrdT y) const {
+    inline intCrdT
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::real2intY(fltCrdT y) const {
     if(realAxOrientationY == realAxisOrientation::NATURAL)
       return static_cast<intCrdT>((static_cast<fltCrdT>(y) - minRealY) / pixWidY);
     else
@@ -2702,8 +2691,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline fltCrdT
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::int2realX(intCrdT x) {
+    inline fltCrdT
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::int2realX(intCrdT x) {
     if(realAxOrientationX == realAxisOrientation::NATURAL)
       return static_cast<fltCrdT>(x) * pixWidX + minRealX;
     else
@@ -2713,8 +2702,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline fltCrdT
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::int2realY(intCrdT y) {
+    inline fltCrdT
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::int2realY(intCrdT y) {
     if(realAxOrientationY == realAxisOrientation::NATURAL)
       return static_cast<fltCrdT>(y) * pixWidY + minRealY;
     else
@@ -2724,8 +2713,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  colorT*
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::clonePixels() {
+    colorT*
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::clonePixels() {
     colorT *pixelsCopy = new colorT[numPixX * numPixY];
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
@@ -2735,19 +2724,19 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline colorT
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::getPxColor(intCrdT x, intCrdT y) const {
+    inline colorT
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::getPxColor(intCrdT x, intCrdT y) const {
     if(isOnCanvas(x, y)) [[likely]]
       return pixels[numPixX * y + x];
-    else 
+    else
       return colorT().setToBlack();
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>*
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::getSubCanvas(intCrdT x, intCrdT y, intCrdT width, intCrdT height) {
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>*
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::getSubCanvas(intCrdT x, intCrdT y, intCrdT width, intCrdT height) {
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes> *subRamCanvas =
       new ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>(width, height);
 
@@ -2769,23 +2758,23 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline colorT
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::getPxColorInterpolate(double x, double y, interpolationType interpMethod) {
-      switch (interpMethod) {
-        case interpolationType::BILINEAR : return getPxColorInterpBLin(x, y);
-        case interpolationType::TRUNCATE : return getPxColorInterpBLin(x, y);
-        case interpolationType::NEAREST  : return getPxColorInterpBLin(x, y);
-        case interpolationType::AVERAGE4 : return getPxColorInterpBLin(x, y);
-        case interpolationType::AVERAGE9 : return getPxColorInterpBLin(x, y);
-        default                          : return colorT("green"); // Just in case I add an enum value, and forget to update this switch.
-      }
+    inline colorT
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::getPxColorInterpolate(double x, double y, interpolationType interpMethod) {
+    switch (interpMethod) {
+      case interpolationType::BILINEAR : return getPxColorInterpBLin(x, y);
+      case interpolationType::TRUNCATE : return getPxColorInterpBLin(x, y);
+      case interpolationType::NEAREST  : return getPxColorInterpBLin(x, y);
+      case interpolationType::AVERAGE4 : return getPxColorInterpBLin(x, y);
+      case interpolationType::AVERAGE9 : return getPxColorInterpBLin(x, y);
+      default                          : return colorT("green"); // Just in case I add an enum value, and forget to update this switch.
+    }
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  colorT
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::getPxColorInterpBLin(double x, double y) {
+    colorT
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::getPxColorInterpBLin(double x, double y) {
     double x1 = std::floor(x);
     double y1 = std::floor(y);
     double x2 = std::ceil(x);
@@ -2823,24 +2812,24 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline colorT
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::getPxColorInterpTrunc(double x, double y) {
+    inline colorT
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::getPxColorInterpTrunc(double x, double y) {
     return getPxColor(static_cast<intCrdT>(std::trunc(x)), static_cast<intCrdT>(std::trunc(y)));
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline colorT
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::getPxColorInterpNear(double x, double y) {
+    inline colorT
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::getPxColorInterpNear(double x, double y) {
     return getPxColor(static_cast<intCrdT>(std::round(x)), static_cast<intCrdT>(std::round(y)));
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline colorT
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::getPxColorInterpAvg9(double x, double y) {
+    inline colorT
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::getPxColorInterpAvg9(double x, double y) {
     intCrdT xi = static_cast<intCrdT>(std::round(x));
     intCrdT yi = static_cast<intCrdT>(std::round(y));
     colorT newColor;
@@ -2863,8 +2852,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  colorT
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::getPxColorInterpAvg4(double x, double y) {
+    colorT
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::getPxColorInterpAvg4(double x, double y) {
     double x1 = std::floor(x);
     double y1 = std::floor(y);
     double x2 = std::ceil(x);
@@ -2894,8 +2883,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::triangleEdger(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT* pts) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::triangleEdger(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT* pts) {
     // This code is essentially the line drawing code with some simplifications.
     intCrdT x, y;
     if(x1 == x2) {                                                            // slope = infinity
@@ -2989,30 +2978,30 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawFillTriangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3, colorArgType color) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawFillTriangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3, colorArgType color) {
     drawFillTriangleUtl(x1, y1, x2, y2, x3, y3, color, color, color, true);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawFillTriangle(intCrdT x1, intCrdT y1,
-                                                           intCrdT x2, intCrdT y2,
-                                                           intCrdT x3, intCrdT y3,
-                                                           colorArgType  color1, colorArgType color2, colorArgType  color3) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawFillTriangle(intCrdT x1, intCrdT y1,
+                                                                              intCrdT x2, intCrdT y2,
+                                                                              intCrdT x3, intCrdT y3,
+                                                                              colorArgType  color1, colorArgType color2, colorArgType  color3) {
     drawFillTriangleUtl(x1, y1, x2, y2, x3, y3, color1, color2, color3, false);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawFillTriangleUtl(intCrdT x1, intCrdT y1,
-                                                              intCrdT x2, intCrdT y2,
-                                                              intCrdT x3, intCrdT y3,
-                                                              colorT c1, colorT c2, colorT c3, bool solid) { // Not colorArgType because of std::swap
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawFillTriangleUtl(intCrdT x1, intCrdT y1,
+                                                                                 intCrdT x2, intCrdT y2,
+                                                                                 intCrdT x3, intCrdT y3,
+                                                                                 colorT c1, colorT c2, colorT c3, bool solid) { // Not colorArgType because of std::swap
     static intCrdT *wkPts1, *wkPts2;
     static intCrdT  numPts;
 
@@ -3077,9 +3066,9 @@ namespace mjr {
         }
       }
       ///////////////////////////////////////////////////////////////////////////////////
-      /*   1   1---2  2---1  1       1 */          
-      /*   |    \ /    \ /   |\     /| */          
-      /*   3     3      3    | 2   2 | */          
+      /*   1   1---2  2---1  1       1 */
+      /*   |    \ /    \ /   |\     /| */
+      /*   3     3      3    | 2   2 | */
       /*                     |/     \| */
       /*   1     1      1    3   ^   3 */
       /*   |    / \    / \       |     */
@@ -3089,13 +3078,13 @@ namespace mjr {
       /*      right most two cases     */
 
       triangleEdger(x1, y1, x3, y3,      wkPts1);
-      if(y1==y2) {  
+      if(y1==y2) {
         // Flat top or bottom case.
         if(x1 != x2)
           triangleEdger(x2, y2, x3, y3,  wkPts2);
-        else if(y2==y3)                          
+        else if(y2==y3)
           triangleEdger(x2, y2, x1, y1,  wkPts2);
-      } else {                                   
+      } else {
         // General case
         triangleEdger(x2, y2, x1, y1,    wkPts2);
         triangleEdger(x2, y2, x3, y3,    wkPts2);
@@ -3103,12 +3092,12 @@ namespace mjr {
 
       intCrdT *minPts, *maxPts;
       if (wkPts1[y2] < wkPts2[y2]) {
-          minPts = wkPts1;
-          maxPts = wkPts2;
-        } else {
-          minPts = wkPts2;
-          maxPts = wkPts1;
-        }
+        minPts = wkPts1;
+        maxPts = wkPts2;
+      } else {
+        minPts = wkPts2;
+        maxPts = wkPts1;
+      }
 
       ///////////////////////////////////////////////////////////////////////////////////
       // Fill between the left and right bits.
@@ -3138,16 +3127,16 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawPLCurve(int numPoints, fltCrdT *x, fltCrdT *y) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawPLCurve(int numPoints, fltCrdT *x, fltCrdT *y) {
     drawPLCurve(numPoints, x, y, dfltColor);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawPLCurve(int numPoints, fltCrdT *x, fltCrdT *y, colorArgType color) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawPLCurve(int numPoints, fltCrdT *x, fltCrdT *y, colorArgType color) {
     for(int i=0; i<numPoints-1; i++)
       drawLine(real2intX(x[i]), real2intY(y[i]), real2intX(x[i+1]), real2intY(y[i+1]), color);
   }
@@ -3155,16 +3144,16 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawPLCurve(int numPoints, intCrdT *x, intCrdT *y) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawPLCurve(int numPoints, intCrdT *x, intCrdT *y) {
     drawPLCurve(numPoints, x, y, dfltColor);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawPLCurve(int numPoints, intCrdT *x, intCrdT *y, colorArgType color) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawPLCurve(int numPoints, intCrdT *x, intCrdT *y, colorArgType color) {
     for(int i=0; i<numPoints-1; i++)
       drawLine(x[i], y[i], x[i+1], y[i+1], color);
   }
@@ -3172,8 +3161,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawPLCurve(int numPoints, pointIntType *thePoints, colorArgType color) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawPLCurve(int numPoints, pointIntType *thePoints, colorArgType color) {
     for(int i=0; i<numPoints-1; i++)
       drawLine(thePoints[i].x, thePoints[i].y, thePoints[i+1].x, thePoints[i+1].y, color);
   }
@@ -3181,8 +3170,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawPLCurve(int numPoints, pointFltType *thePoints, colorArgType color) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawPLCurve(int numPoints, pointFltType *thePoints, colorArgType color) {
     for(int i=0; i<numPoints-1; i++)
       drawLine(thePoints[i].x, thePoints[i].y, thePoints[i+1].x, thePoints[i+1].y, color);
   }
@@ -3190,24 +3179,24 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawPLCurve(int numPoints, pointIntType *thePoints) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawPLCurve(int numPoints, pointIntType *thePoints) {
     drawPLCurve(numPoints, thePoints, dfltColor);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawPLCurve(int numPoints, pointFltType *thePoints) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawPLCurve(int numPoints, pointFltType *thePoints) {
     drawPLCurve(numPoints, thePoints, dfltColor);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawTriangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3, colorArgType color) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawTriangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3, colorArgType color) {
     drawLine(x1, y1, x2, y2, color);
     drawLine(x2, y2, x3, y3, color);
     drawLine(x3, y3, x1, y1, color);
@@ -3216,8 +3205,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawCircle(intCrdT centerX, intCrdT centerY, intCrdT radiusX, colorArgType  color) {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawCircle(intCrdT centerX, intCrdT centerY, intCrdT radiusX, colorArgType  color) {
     int x = 0;
     int y = radiusX;
     int d = 1 - radiusX;
@@ -3259,8 +3248,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawFillCircle(intCrdT centerX, intCrdT centerY, intCrdT radiusX, colorArgType  color) {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawFillCircle(intCrdT centerX, intCrdT centerY, intCrdT radiusX, colorArgType  color) {
     int minXY;
     int x = 0;
     int y = radiusX;
@@ -3312,8 +3301,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawRectangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, colorArgType color) {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawRectangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, colorArgType color) {
     if(x1 > x2) // Get x1 < x2
       std::swap(x1, x2);
     if(y1 > y2) // Get y1 < y2
@@ -3343,8 +3332,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawFillRectangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, colorArgType color) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawFillRectangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, colorArgType color) {
     if(x1 > x2) // Get x1 < x2
       std::swap(x1, x2);
     if(y1 > y2) // Get y1 < y2
@@ -3367,8 +3356,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawPointNC(intCrdT x, intCrdT y, colorArgType color) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawPointNC(intCrdT x, intCrdT y, colorArgType color) {
     /* Performance: We are depending on the compiler to eliminate this if statement because enableDrawModes is a compile time constant. */
     if (enableDrawModes)
       switch(drawMode) {
@@ -3380,15 +3369,15 @@ namespace mjr {
         case drawModeType::DIFFCLAMP: getPxColorRefNC(x, y).tfrmDiffClamp(color); break;
         case drawModeType::MULTCLAMP: getPxColorRefNC(x, y).tfrmMultClamp(color); break;
       }
-    else 
+    else
       getPxColorRefNC(x, y).copy(color);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleUpProximal(int xfactor) {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleUpProximal(int xfactor) {
     intCrdT new_numPixX_p = xfactor*numPixX;
     intCrdT new_numPixY_p = xfactor*numPixY;
     colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
@@ -3413,8 +3402,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleDown1pt(int xfactor) {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleDown1pt(int xfactor) {
     intCrdT new_numPixX_p = numPixX/xfactor;
     intCrdT new_numPixY_p = numPixY/xfactor;
     colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
@@ -3428,20 +3417,20 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleDownMean(int xfactor) {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleDownMean(int xfactor) {
     intCrdT new_numPixX_p = numPixX/xfactor;
     intCrdT new_numPixY_p = numPixY/xfactor;
     colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
     for(intCrdT y=0, y1=0; y<new_numPixY_p; y++, y1+=xfactor)
       for(intCrdT x=0, x1=0; x<new_numPixX_p; x++, x1+=xfactor) {
         std::vector<colorChanArithSDPType> sums(colorT::channelCount, static_cast<colorChanArithSDPType>(0));
-        for(int j=0; j<xfactor; j++) 
-          for(int i=0; i<xfactor; i++) 
-            for(int c=0; c<colorT::channelCount; c++) 
+        for(int j=0; j<xfactor; j++)
+          for(int i=0; i<xfactor; i++)
+            for(int c=0; c<colorT::channelCount; c++)
               sums[c] += getPxColor(x1+i, y1+j).getChan(c);
         colorT aColor;
-        for(int c=0; c<colorT::channelCount; c++) 
+        for(int c=0; c<colorT::channelCount; c++)
           aColor.setChan(c, static_cast<colorChanType>(sums[c] / (xfactor*xfactor)));
         new_pixels[new_numPixX_p * y + x] = aColor;
       }
@@ -3452,8 +3441,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleDownMax(int xfactor) {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleDownMax(int xfactor) {
     intCrdT new_numPixX_p = numPixX/xfactor;
     intCrdT new_numPixY_p = numPixY/xfactor;
     colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
@@ -3473,8 +3462,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::computeConvolutionMatrixGausian(double *kernel, int kSize, double sd) {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::computeConvolutionMatrixGausian(double *kernel, int kSize, double sd) {
     for(int yi=0, yis=-(kSize/2); yi<kSize; yi++, yis++)
       for(int xi=0,xis=-(kSize/2); xi<kSize; xi++, xis++)
         kernel[kSize * yi + xi] = exp(-(xis*xis+yis*yis)/(2*sd*sd))/(sd*sd*6.283185307179586477);
@@ -3488,8 +3477,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::computeConvolutionMatrixBox(double *kernel, int kSize) {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::computeConvolutionMatrixBox(double *kernel, int kSize) {
     for(int yi=0, yis=-(kSize/2); yi<kSize; yi++, yis++)
       for(int xi=0,xis=-(kSize/2); xi<kSize; xi++, xis++)
         kernel[kSize * yi + xi] = 1.0/(kSize*kSize);
@@ -3498,8 +3487,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::convolution(double *kernel, int kWide, int kTall, double divisor) {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::convolution(double *kernel, int kWide, int kTall, double divisor) {
     colorT *new_pixels = new colorT[numPixX * numPixY];
     // Divisor is invalid, so we compute one to use
     if(std::abs(divisor) < 0.0001) {
@@ -3534,23 +3523,23 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::convolution(double *kernel, int kSize, double divisor) {
-      convolution(kernel, kSize, kSize, divisor);
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::convolution(double *kernel, int kSize, double divisor) {
+    convolution(kernel, kSize, kSize, divisor);
   }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::convolution(double *kernel, int kSize) {
-      convolution(kernel, kSize, kSize, 1.0);
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::convolution(double *kernel, int kSize) {
+    convolution(kernel, kSize, kSize, 1.0);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawHersheyGlyph(int glyphNum, intCrdT x, intCrdT y, double magX, double magY, colorArgType aColor) {
+    void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawHersheyGlyph(int glyphNum, intCrdT x, intCrdT y, double magX, double magY, colorArgType aColor) {
     intCrdT x1, y1;
     int actionIsMoveTo;
 
@@ -3585,8 +3574,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawString(std::string aString, mjr::hershey::font aFont, intCrdT x, intCrdT y, colorArgType aColor, double cex, intCrdT spc) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawString(std::string aString, mjr::hershey::font aFont, intCrdT x, intCrdT y, colorArgType aColor, double cex, intCrdT spc) {
     for(auto &c : aString) {
       int glyphNum = 0;
       if((c>=32) && (c<=126))
@@ -3599,12 +3588,12 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline void
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawStringBox(std::string aString,
-                                                        mjr::hershey::font aFont,
-                                                        intCrdT x, intCrdT y,
-                                                        colorArgType stringColor, colorArgType boxColor,
-                                                        double cex, intCrdT spc) {
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawStringBox(std::string aString,
+                                                                           mjr::hershey::font aFont,
+                                                                           intCrdT x, intCrdT y,
+                                                                           colorArgType stringColor, colorArgType boxColor,
+                                                                           double cex, intCrdT spc) {
     drawFillRectangle(static_cast<intCrdT>(x-spc*cex),
                       static_cast<intCrdT>(y-spc*cex),
                       static_cast<intCrdT>(x+spc*cex*static_cast<int>(aString.length())),
@@ -3616,8 +3605,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  int
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::readTIFFfile(std::string fileName) {
+    int
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::readTIFFfile(std::string fileName) {
 #ifndef TIFF_FOUND
     std::cerr << "ERROR: libTIFF no supported: readTIFFfile can't read " << fileName << std::endl;
     return 32;
@@ -3645,7 +3634,7 @@ namespace mjr {
       return 7;
 
     // This one is not required.  If it's missing, it's 1 (unsigned integer).
-    if( 1 != TIFFGetField(tif, TIFFTAG_SAMPLEFORMAT,   &fmtTIFF)) 
+    if( 1 != TIFFGetField(tif, TIFFTAG_SAMPLEFORMAT,   &fmtTIFF))
       fmtTIFF = 1;
 
     //  MJR TODO NOTE We don't know how to deal with pallet images (pmTIFF == PHOTOMETRIC_PALETTE).  Should check for that.
@@ -3688,20 +3677,20 @@ namespace mjr {
 
     uint16_t sppRC = colorT::channelCount;
 
-    if(sppTIFF != sppRC)  
+    if(sppTIFF != sppRC)
       return 19;
 
     uint16_t bpsRC = colorT::bitsPerPixel / sppRC;
 
-    if(bpsTIFF != bpsRC) 
+    if(bpsTIFF != bpsRC)
       return 20;
 
     // We only suport SAMPLEFORMAT_UINT & SAMPLEFORMAT_IEEEFP
     if ((fmtTIFF != SAMPLEFORMAT_UINT) && (fmtTIFF != SAMPLEFORMAT_IEEEFP))
       return 18;
 
-    if ((  colorType::chanIsInt  && (SAMPLEFORMAT_UINT != 1)) || 
-        (!(colorType::chanIsInt) && (SAMPLEFORMAT_IEEEFP != 3))) 
+    if ((  colorType::chanIsInt  && (SAMPLEFORMAT_UINT != 1)) ||
+        (!(colorType::chanIsInt) && (SAMPLEFORMAT_IEEEFP != 3)))
       return 21;
 
     bool yNat  = !(getIntAxOrientationY()==intAxisOrientation::NATURAL);
@@ -3752,8 +3741,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  inline bool
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::supportLibTIFF() {
+    inline bool
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::supportLibTIFF() {
 #ifndef TIFF_FOUND
     return true;
 #else
@@ -3764,8 +3753,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::geomTfrmRevArb(mjr::point2d<double> (*f)(double, double), colorArgType errorColor, interpolationType interpMethod) {
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::geomTfrmRevArb(mjr::point2d<double> (*f)(double, double), colorArgType errorColor, interpolationType interpMethod) {
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes> newRamCanvas(numPixX, numPixY);
     for(intCrdT y=0; y<numPixY; y++) {
       for(intCrdT x=0; x<numPixX; x++) {
@@ -3785,8 +3774,8 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::geomTfrmRevAff(std::vector<double> const& HAMatrix, colorArgType errorColor, interpolationType interpMethod) {
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::geomTfrmRevAff(std::vector<double> const& HAMatrix, colorArgType errorColor, interpolationType interpMethod) {
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes> newRamCanvas(numPixX, numPixY);
     for(intCrdT y=0; y<numPixY; y++) {
       for(intCrdT x=0; x<numPixX; x++) {
@@ -3805,12 +3794,12 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>
-  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::geomTfrmRevRPoly(std::vector<double> const& RPoly,
-                                                           double Xo,
-                                                           double Yo,
-                                                           colorArgType errorColor,
-                                                           interpolationType interpMethod) {
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::geomTfrmRevRPoly(std::vector<double> const& RPoly,
+                                                                              double Xo,
+                                                                              double Yo,
+                                                                              colorArgType errorColor,
+                                                                              interpolationType interpMethod) {
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes> newRamCanvas(numPixX, numPixY);
     double srcCtrX = numPixX / 2 + Xo;
     double srcCtrY = numPixY / 2 + Yo;

@@ -6101,128 +6101,6 @@ BOOST_AUTO_TEST_CASE(hsl_hsv_flt, * boost::unit_test::tolerance(0.01)) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(csCColdeRainbow_int, * boost::unit_test::tolerance(0.01)) {
-
-  mjr::colorRGBA8b  aColor;
-  mjr::colorRGBA32F bColor;
-
-  aColor.setToWhite();
-  mjr::colorRGBA8b::csCColdeRainbow::c(aColor, 0u);
-  BOOST_TEST_CHECK(aColor.getRed()   == mjr::colorRGBA8b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getGreen() == mjr::colorRGBA8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getBlue()  == mjr::colorRGBA8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getAlpha() == mjr::colorRGBA8b::minChanVal); // Corner colors set ALL channels -- primary colors set them all to minChanVal
-
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(   0u).isEqualRGB(aColor.setToRed())     == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 255u).isEqualRGB(aColor.setToYellow())  == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 510u).isEqualRGB(aColor.setToGreen())   == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 765u).isEqualRGB(aColor.setToCyan())    == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1020u).isEqualRGB(aColor.setToBlue())    == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1275u).isEqualRGB(aColor.setToMagenta()) == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1530u).isEqualRGB(aColor.setToRed())     == true);
-
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1531u).isEqualRGB(aColor.setToRed())     == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1786u).isEqualRGB(aColor.setToYellow())  == true);
-
-  for(unsigned int i=0; i<1531; i++)   // BOOST_TEST_CHECK x 1531
-    BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(i).isEqualRGB(aColor.cmpRGBcornerDGradiant(i, "RYGCBMR")) == true);
-
-  aColor.cmpRGBcornerDGradiant(10u, "RYGCBMR");
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xff);
-  BOOST_TEST_CHECK(aColor.getGreen() == 10);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0);
-
-////////////////////////////////////////////////////////////////////////////////
-
-  bColor.setToWhite();
-  mjr::colorRGBA32F::csCColdeRainbow::c(bColor, 0u);
-  BOOST_TEST_CHECK(bColor.getRed()   == mjr::colorRGBA32F::maxChanVal);
-  BOOST_TEST_CHECK(bColor.getGreen() == mjr::colorRGBA32F::minChanVal);
-  BOOST_TEST_CHECK(bColor.getBlue()  == mjr::colorRGBA32F::minChanVal);
-  BOOST_TEST_CHECK(bColor.getAlpha() == mjr::colorRGBA32F::minChanVal); // Corner colors set ALL channels -- primary colors set them all to minChanVal
-
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(0*0x100000000ul).isEqualRGB(bColor.setToRed())     == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(1*0x100000000ul).isEqualRGB(bColor.setToYellow())  == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(2*0x100000000ul).isEqualRGB(bColor.setToGreen())   == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(3*0x100000000ul).isEqualRGB(bColor.setToCyan())    == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(4*0x100000000ul).isEqualRGB(bColor.setToBlue())    == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(5*0x100000000ul).isEqualRGB(bColor.setToMagenta()) == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(6*0x100000000ul).isEqualRGB(bColor.setToRed())     == true);
-
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(6*0x100000000ul+1).isEqualRGB(bColor.setToRed())     == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(7*0x100000000ul+1).isEqualRGB(bColor.setToYellow())  == true);
-
-  for(uint64_t i=0; i<0x600000000; i=i+0x60000)  // BOOST_TEST_CHECK x 65536
-    BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(i).isEqualRGB(bColor.cmpRGBcornerDGradiant(i, "RYGCBMR")) == true);
-
-  bColor.cmpRGBcornerDGradiant(168430090, "RYGCBMR");
-  BOOST_TEST_CHECK(bColor.getRed()   == 1);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0.0392156862745);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0);
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(csCColdeRainbow_flt, * boost::unit_test::tolerance(0.01)) {
-
-  mjr::colorRGBA8b  aColor;
-  mjr::colorRGBA32F bColor;
-
-  aColor.setToWhite();
-  mjr::colorRGBA8b::csCColdeRainbow::c(aColor, 0.0);
-  BOOST_TEST_CHECK(aColor.getRed()   == mjr::colorRGBA8b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getGreen() == mjr::colorRGBA8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getBlue()  == mjr::colorRGBA8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getAlpha() == mjr::colorRGBA8b::minChanVal); // Corner colors set ALL channels -- primary colors set them all to minChanVal
-
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(   0/1530.0).isEqualRGB(aColor.setToRed())     == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 255/1530.0).isEqualRGB(aColor.setToYellow())  == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 510/1530.0).isEqualRGB(aColor.setToGreen())   == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 765/1530.0).isEqualRGB(aColor.setToCyan())    == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1020/1530.0).isEqualRGB(aColor.setToBlue())    == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1275/1530.0).isEqualRGB(aColor.setToMagenta()) == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1530/1530.0).isEqualRGB(aColor.setToRed())     == true);
-
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(2.0).isEqualRGB(aColor.setToRed())  == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(3.0).isEqualRGB(aColor.setToRed())  == true);
-
-  for(double i=0.0; i<1.0; i=i+0.001) // BOOST_TEST_CHECK x 1000
-    BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(i).isEqualRGB(aColor.cmpRGBcornerCGradiant(i, "RYGCBMR")) == true);
-
-  aColor.cmpRGBcornerCGradiant(10/1530.0, "RYGCBMR");
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xff);
-  BOOST_TEST_CHECK(aColor.getGreen() == 10);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0);
-
-////////////////////////////////////////////////////////////////////////////////
-
-  bColor.setToWhite();
-  mjr::colorRGBA32F::csCColdeRainbow::c(bColor, 0.0F);
-  BOOST_TEST_CHECK(bColor.getRed()   == mjr::colorRGBA32F::maxChanVal);
-  BOOST_TEST_CHECK(bColor.getGreen() == mjr::colorRGBA32F::minChanVal);
-  BOOST_TEST_CHECK(bColor.getBlue()  == mjr::colorRGBA32F::minChanVal);
-  BOOST_TEST_CHECK(bColor.getAlpha() == mjr::colorRGBA32F::minChanVal); // Corner colors set ALL channels -- primary colors set them all to minChanVal
-
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(   0/1530.0).isEqualRGB(bColor.setToRed())     == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c( 255/1530.0).isEqualRGB(bColor.setToYellow())  == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c( 510/1530.0).isEqualRGB(bColor.setToGreen())   == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c( 765/1530.0).isEqualRGB(bColor.setToCyan())    == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(1020/1530.0).isEqualRGB(bColor.setToBlue())    == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(1275/1530.0).isEqualRGB(bColor.setToMagenta()) == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(1530/1530.0).isEqualRGB(bColor.setToRed())     == true);
-
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(2.0).isEqualRGB(bColor.setToRed())  == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(3.0).isEqualRGB(bColor.setToRed())  == true);
-
-  for(double i=0.0; i<1.0; i=i+0.001) // BOOST_TEST_CHECK x 1000
-    BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(i).isEqualRGB(bColor.cmpRGBcornerCGradiant(i, "RYGCBMR")) == true);
-
-  bColor.cmpRGBcornerCGradiant(10/1530.0, "RYGCBMR");
-  BOOST_TEST_CHECK(bColor.getRed()   == 1);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0.0392156862745);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0);
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(csCBSpectral_int) {
 
   mjr::colorRGBA8b  aColor;
@@ -7894,13 +7772,136 @@ BOOST_AUTO_TEST_CASE(csPLY) {
 }
 #endif
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(csCColdeRainbow_flt) {
+
+  mjr::colorRGBA8b  aColor;
+  mjr::colorRGBA32F bColor;
+
+  aColor.setToWhite();
+  mjr::colorRGBA8b::csCColdeRainbow::c(aColor, 0.0);
+  BOOST_TEST_CHECK(aColor.getRed()   == mjr::colorRGBA8b::maxChanVal);
+  BOOST_TEST_CHECK(aColor.getGreen() == mjr::colorRGBA8b::minChanVal);
+  BOOST_TEST_CHECK(aColor.getBlue()  == mjr::colorRGBA8b::minChanVal);
+  BOOST_TEST_CHECK(aColor.getAlpha() == mjr::colorRGBA8b::minChanVal); // Corner colors set ALL channels -- primary colors set them all to minChanVal
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(   0/1530.0).isEqualRGB(aColor.setToRed())     == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 255/1530.0).isEqualRGB(aColor.setToYellow())  == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 510/1530.0).isEqualRGB(aColor.setToGreen())   == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 765/1530.0).isEqualRGB(aColor.setToCyan())    == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1020/1530.0).isEqualRGB(aColor.setToBlue())    == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1275/1530.0).isEqualRGB(aColor.setToMagenta()) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1530/1530.0).isEqualRGB(aColor.setToRed())     == true);
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(2.0).isEqualRGB(aColor.setToRed())  == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(3.0).isEqualRGB(aColor.setToRed())  == true);
+
+  for(double i=0.0; i<1.0; i=i+0.001) // BOOST_TEST_CHECK x 1000
+    BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(i).isEqualRGB(aColor.cmpRGBcornerCGradiant(i, "RYGCBMR")) == true);
+
+  aColor.cmpRGBcornerCGradiant(10/1530.0, "RYGCBMR");
+  BOOST_TEST_CHECK(aColor.getRed()   == 0xff);
+  BOOST_TEST_CHECK(aColor.getGreen() == 10);
+  BOOST_TEST_CHECK(aColor.getBlue()  == 0);
+
+////////////////////////////////////////////////////////////////////////////////
+
+  bColor.setToWhite();
+  mjr::colorRGBA32F::csCColdeRainbow::c(bColor, 0.0F);
+  BOOST_TEST_CHECK(bColor.getRed()   == mjr::colorRGBA32F::maxChanVal);
+  BOOST_TEST_CHECK(bColor.getGreen() == mjr::colorRGBA32F::minChanVal);
+  BOOST_TEST_CHECK(bColor.getBlue()  == mjr::colorRGBA32F::minChanVal);
+  BOOST_TEST_CHECK(bColor.getAlpha() == mjr::colorRGBA32F::minChanVal); // Corner colors set ALL channels -- primary colors set them all to minChanVal
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(   0/1530.0).isCloseRGB(bColor.setToRed(),     0.000001F) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c( 255/1530.0).isCloseRGB(bColor.setToYellow(),  0.000001F) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c( 510/1530.0).isCloseRGB(bColor.setToGreen(),   0.000001F) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c( 765/1530.0).isCloseRGB(bColor.setToCyan(),    0.000001F) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(1020/1530.0).isCloseRGB(bColor.setToBlue(),    0.000001F) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(1275/1530.0).isCloseRGB(bColor.setToMagenta(), 0.000001F) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(1530/1530.0).isCloseRGB(bColor.setToRed(),     0.000001F) == true);
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(2.0).isCloseRGB(bColor.setToRed(),             0.000001F) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(3.0).isCloseRGB(bColor.setToRed(),             0.000001F) == true);
+
+  for(double i=0.0; i<1.0; i=i+0.001) // BOOST_TEST_CHECK x 1000
+    BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(i).isCloseRGB(bColor.cmpRGBcornerCGradiant(i, "RYGCBMR"), 0.000001F) == true);
+
+  bColor.cmpRGBcornerCGradiant(10/1530.0, "RYGCBMR");
+  BOOST_TEST_CHECK(bColor.getRed()   == 1,               boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(bColor.getGreen() == 0.0392156862745, boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(bColor.getBlue()  == 0,               boost::test_tools::tolerance(0.00001));
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(csCColdeRainbow_int) {
+
+  mjr::colorRGBA8b  aColor;
+  mjr::colorRGBA32F bColor;
+
+  aColor.setToWhite();
+  mjr::colorRGBA8b::csCColdeRainbow::c(aColor, 0u);
+  BOOST_TEST_CHECK(aColor.getRed()   == mjr::colorRGBA8b::maxChanVal);
+  BOOST_TEST_CHECK(aColor.getGreen() == mjr::colorRGBA8b::minChanVal);
+  BOOST_TEST_CHECK(aColor.getBlue()  == mjr::colorRGBA8b::minChanVal);
+  BOOST_TEST_CHECK(aColor.getAlpha() == mjr::colorRGBA8b::maxChanVal); // unchanged
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(   0u).isEqualRGB(aColor.setToRed())     == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 255u).isEqualRGB(aColor.setToYellow())  == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 510u).isEqualRGB(aColor.setToGreen())   == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 765u).isEqualRGB(aColor.setToCyan())    == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1020u).isEqualRGB(aColor.setToBlue())    == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1275u).isEqualRGB(aColor.setToMagenta()) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1530u).isEqualRGB(aColor.setToRed())     == true);
+
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1531u).isEqualRGB(aColor.setToRed())     == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1786u).isEqualRGB(aColor.setToYellow())  == true);
+
+  for(unsigned int i=0; i<1531; i++)   // BOOST_TEST_CHECK x 1531
+    BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(i).isEqualRGB(aColor.cmpRGBcornerDGradiant(i, "RYGCBMR")) == true);
+
+  aColor.cmpRGBcornerDGradiant(10u, "RYGCBMR");
+  BOOST_TEST_CHECK(aColor.getRed()   == 0xff);
+  BOOST_TEST_CHECK(aColor.getGreen() == 10);
+  BOOST_TEST_CHECK(aColor.getBlue()  == 0);
+
+////////////////////////////////////////////////////////////////////////////////
+
+  bColor.setToWhite();
+  mjr::colorRGBA32F::csCColdeRainbow::c(bColor, 0u);
+  BOOST_TEST_CHECK(bColor.getRed()   == mjr::colorRGBA32F::maxChanVal);
+  BOOST_TEST_CHECK(bColor.getGreen() == mjr::colorRGBA32F::minChanVal);
+  BOOST_TEST_CHECK(bColor.getBlue()  == mjr::colorRGBA32F::minChanVal);
+  BOOST_TEST_CHECK(bColor.getAlpha() == mjr::colorRGBA32F::maxChanVal); // unchanged
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(0*0x100000000ul).isCloseRGB(bColor.setToRed(),      0.000001F) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(1*0x100000000ul).isCloseRGB(bColor.setToYellow(),   0.000001F) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(2*0x100000000ul).isCloseRGB(bColor.setToGreen(),    0.000001F) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(3*0x100000000ul).isCloseRGB(bColor.setToCyan(),     0.000001F) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(4*0x100000000ul).isCloseRGB(bColor.setToBlue(),     0.000001F) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(5*0x100000000ul).isCloseRGB(bColor.setToMagenta(),  0.000001F) == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(6*0x100000000ul).isCloseRGB(bColor.setToRed(),      0.000001F) == true);
+
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(6*0x100000000ul+1).isCloseRGB(bColor.setToRed(),    0.000001F)  == true);
+  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(7*0x100000000ul+1).isCloseRGB(bColor.setToYellow(), 0.000001F) == true);
+
+  for(uint64_t i=0; i<0x600000000; i=i+0x600000)  // BOOST_TEST_CHECK x 4096
+    BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(i).isCloseRGB(bColor.cmpRGBcornerDGradiant(i, "RYGCBMR"), 0.000001F) == true);
+
+  bColor.cmpRGBcornerDGradiant(168430090, "RYGCBMR");
+  BOOST_TEST_CHECK(bColor.getRed()   == 1,               boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(bColor.getGreen() == 0.0392156862745, boost::test_tools::tolerance(0.00001));
+  BOOST_TEST_CHECK(bColor.getBlue()  == 0,               boost::test_tools::tolerance(0.00001));
+}
+
 #endif
+
 
 /** @endcond */
 
 
-// So far:  4227 hand written test cases
-// So far: 70067 generated test cases
+// So far: 4239 hand written test cases
+// So far: 8627 generated test cases
 
 
 //  MJR TODO NOTE <2022-08-20T09:34:45-0500> utest_colorTpl.cpp: Add tests to make sure constants are correct for ALL types (minChanVal, maxChanVal, meanChanVal, etc....)
