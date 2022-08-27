@@ -28,15 +28,15 @@ Example Documentation: [[https://www.mitchr.me/SS/mraster/doc-examples/autodocs/
 
 The code: [[https://github.com/richmit/mraster/]]
 
-*Version 20 Warning:*
+*Versions:*
+ - Version 20.x.x
+   - Much more modern API
+   - Good unit test coverage
+   - Requires a compiler with good C++20 support
+   - Still in beta, but pretty solid at this point
+ - Version 6.x.x
+   - Has been published and used since the 1990's
+   - Quite mature
+   - Old school API
 
-Starting with v20, I'm refactoring the library.  
-  - The tagged commits are fully functional releases.
-    - As of v20.7.0b, the refactor of the colorTpl template is complete
-    - As of v20.8.0b, the refactor of the ramCanvasTpl template is complete (I think)
-  - What's left
-    - Some cleanup
-    - Documentation
-    - Testing
-  - I encourage you to use v20, and provide feedback!
-  - I do *not* encourage you to use it in production!
+*Version Recommendation:* Use 20.x.x unless you have an old creepy compiler that just can't do C++20.
