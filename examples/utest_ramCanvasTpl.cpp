@@ -648,6 +648,7 @@ BOOST_AUTO_TEST_CASE(save_file) {
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   // Write TIFF files.  These need to be checked outside of this source.  tiffinfo for starters.
+  //  MJR TODO NOTE BOOST_AUTO_TEST_CASE: Add an external script to check the TIFF files.
   aRamCanvas.writeTIFFfile("ut-save_file-a.tiff");
   bRamCanvas.writeTIFFfile("ut-save_file-b.tiff");
   cRamCanvas.writeTIFFfile("ut-save_file-c.tiff");
@@ -661,9 +662,9 @@ BOOST_AUTO_TEST_CASE(save_file) {
   kRamCanvas.writeTIFFfile("ut-save_file-k.tiff");
   lRamCanvas.writeTIFFfile("ut-save_file-l.tiff");
 
-  //  MJR TODO NOTE BOOST_AUTO_TEST_CASE: Add an external script to check the TIFF files.
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   // Make sure headers are correct for MRW files
+  //  MJR TODO NOTE BOOST_AUTO_TEST_CASE: Should check entire contents of file
 
   aRamCanvas.writeRAWfile("ut-save_file-a.mrw");
   bRamCanvas.writeRAWfile("ut-save_file-b.mrw");
@@ -712,9 +713,6 @@ BOOST_AUTO_TEST_CASE(save_file) {
 
   // Nice way to look at file a
   // head -n 2 ut-save_file-a.mrw; hexDump.rb -t 0 -c -w 16 -b 3 -p 100 ut-save_file-a.mrw
-
-
-  //  MJR TODO NOTE BOOST_AUTO_TEST_CASE: Should check entire contents of file
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -887,11 +885,13 @@ BOOST_AUTO_TEST_CASE(lines_clip) {
   BOOST_CHECK_EQUAL_COLLECTIONS(bhg, ehg, bhr, ehr);
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(triangles_par) {
+BOOST_AUTO_TEST_CASE(triangles) {
 
-  // triangles with one side parallel to an edge of the canvas
+  // Try to hit many of the special cases for triangle rendering. For filled triangles, that includes the cases cA-cS in ramCanvasTpl::drawFillTriangleUtl.
+  // It also means trying to get some good coverage of the special cases in ramCanvasTpl::triangleEdger as well.  One critical care about is that the edges of
+  // triangles (open, solid, and shaded) are *identical*.  Another is that the results should be invariant under permutations of the points in the function
+  // call.
 
   std::vector<std::vector<int>> tri {{ 0,  0, 16,  0,  8,  8}, // flat bot, ctr,  45
                                      { 0,  0, 16,  0,  8, 16}, // flat bot, ctr, <45
@@ -945,7 +945,38 @@ BOOST_AUTO_TEST_CASE(triangles_par) {
                                      { 0,  0,  0,  0,  4, 16}, // line big slope
                                      { 0,  0,  0,  0,  8, 16}, // line big slope
                                      { 0, 16,  0, 16, 12,  0}, // line big -slope
-                                     { 0, 16,  0, 16,  8,  0}  // line big -slope
+                                     { 0, 16,  0, 16,  8,  0}, // line big -slope
+                                     { 0,  0,  8,  8, 16, 16}, // 45 1-3 pt in ctr
+                                     { 0,  0,  4,  8, 16, 16}, // 45 1-3 pt above
+                                     { 0,  0, 12,  8, 16, 16}, // 45 1-3 pt below
+                                     //{ 4,  0,  8,  8, 12, 16}, // >45 1-3 pt in ctr
+                                     { 4,  0,  6,  8, 12, 16}, // >45 1-3 pt off -2
+                                     { 4,  0,  4,  8, 12, 16}, // >45 1-3 pt off -4
+                                     { 4,  0,  0,  8, 12, 16}, // >45 1-3 pt off -8
+                                     { 4,  0, 10,  8, 12, 16}, // >45 1-3 pt off +2
+                                     { 4,  0, 12,  8, 12, 16}, // >45 1-3 pt off +4
+                                     { 4,  0, 16,  8, 12, 16}, // >45 1-3 pt off +8
+                                     //{ 4, 16,  8,  8, 12,  0}, // >-45 1-3 pt in ctr
+                                     { 4, 16,  6,  8, 12,  0}, // >-45 1-3 pt off -2
+                                     { 4, 16,  4,  8, 12,  0}, // >-45 1-3 pt off -4
+                                     { 4, 16,  0,  8, 12,  0}, // >-45 1-3 pt off -8
+                                     { 4, 16, 10,  8, 12,  0}, // >-45 1-3 pt off +2
+                                     { 4, 16, 12,  8, 12,  0}, // >-45 1-3 pt off +4
+                                     { 4, 16, 16,  8, 12,  0}, // >-45 1-3 pt off +8
+                                     //{ 0,  4,  8,  8, 16, 12}, // <45 1-3 pt in ctr
+                                     { 0,  4,  8,  6, 16, 12}, // <45 1-3 pt off -2
+                                     { 0,  4,  8,  4, 16, 12}, // <45 1-3 pt off -4
+                                     { 0,  4,  8,  0, 16, 12}, // <45 1-3 pt off -8
+                                     { 0,  4,  8, 10, 16, 12}, // <45 1-3 pt off +2
+                                     { 0,  4,  8, 12, 16, 12}, // <45 1-3 pt off +4
+                                     { 0,  4,  8, 16, 16, 12}, // <45 1-3 pt off +8
+                                     {16, 4,   8,  6,  0, 12}, // >-45 1-3 pt off -2
+                                     {16, 4,   8,  4,  0, 12}, // >-45 1-3 pt off -4
+                                     {16, 4,   8,  0,  0, 12}, // >-45 1-3 pt off -8
+                                     {16, 4,   8, 10,  0, 12}, // >-45 1-3 pt off +2
+                                     {16, 4,   8, 12,  0, 12}, // >-45 1-3 pt off +4
+                                     {16, 4,   8, 16,  0, 12}, // >-45 1-3 pt off +8
+                                     {16, 4,   8,  8,  0, 12}  // >-45 1-3 pt in ctr
                                     };
 
   mjr::ramCanvas1c8b::colorType aColor(mjr::ramCanvas1c8b::colorType::cornerColorEnum::WHITE);
@@ -953,29 +984,29 @@ BOOST_AUTO_TEST_CASE(triangles_par) {
   mjr::ramCanvas3c8b::colorType cColor(mjr::ramCanvas3c8b::colorType::cornerColorEnum::GREEN);
   mjr::ramCanvas3c8b::colorType dColor(mjr::ramCanvas3c8b::colorType::cornerColorEnum::RED);
 
-  mjr::ramCanvas1c8b aRamCanvas(165, 109);
-  mjr::ramCanvas1c8b bRamCanvas(165, 109);
-  mjr::ramCanvas1c8b cRamCanvas(165, 109);
-  mjr::ramCanvas1c8b dRamCanvas(165, 109);
-  mjr::ramCanvas1c8b eRamCanvas(165, 109);
-  mjr::ramCanvas1c8b fRamCanvas(165, 109);
+  mjr::ramCanvas1c8b aRamCanvas(163, 163);
+  mjr::ramCanvas1c8b bRamCanvas(163, 163);
+  mjr::ramCanvas1c8b cRamCanvas(163, 163);
+  mjr::ramCanvas1c8b dRamCanvas(163, 163);
+  mjr::ramCanvas1c8b eRamCanvas(163, 163);
+  mjr::ramCanvas1c8b fRamCanvas(163, 163);
 
-  mjr::ramCanvas1c8b gRamCanvas(165, 109);
-  mjr::ramCanvas1c8b hRamCanvas(165, 109);
-  mjr::ramCanvas1c8b iRamCanvas(165, 109);
-  mjr::ramCanvas1c8b jRamCanvas(165, 109);
-  mjr::ramCanvas1c8b kRamCanvas(165, 109);
-  mjr::ramCanvas1c8b lRamCanvas(165, 109);
+  mjr::ramCanvas1c8b gRamCanvas(163, 163);
+  mjr::ramCanvas1c8b hRamCanvas(163, 163);
+  mjr::ramCanvas1c8b iRamCanvas(163, 163);
+  mjr::ramCanvas1c8b jRamCanvas(163, 163);
+  mjr::ramCanvas1c8b kRamCanvas(163, 163);
+  mjr::ramCanvas1c8b lRamCanvas(163, 163);
 
-  mjr::ramCanvas3c8b mRamCanvas(165, 109);
-  mjr::ramCanvas3c8b nRamCanvas(165, 109);
-  mjr::ramCanvas3c8b oRamCanvas(165, 109);
-  mjr::ramCanvas3c8b pRamCanvas(165, 109);
-  mjr::ramCanvas3c8b qRamCanvas(165, 109);
-  mjr::ramCanvas3c8b rRamCanvas(165, 109);
+  mjr::ramCanvas3c8b mRamCanvas(163, 163);
+  mjr::ramCanvas3c8b nRamCanvas(163, 163);
+  mjr::ramCanvas3c8b oRamCanvas(163, 163);
+  mjr::ramCanvas3c8b pRamCanvas(163, 163);
+  mjr::ramCanvas3c8b qRamCanvas(163, 163);
+  mjr::ramCanvas3c8b rRamCanvas(163, 163);
 
   for(int i=0; i<9; i++) {
-    for(int j=0; j<6; j++) {
+    for(int j=0; j<9; j++) {
       unsigned k = i + j * 9;
       if (k < tri.size()) {
         auto pts = tri[k];;
@@ -1007,12 +1038,12 @@ BOOST_AUTO_TEST_CASE(triangles_par) {
   }
 
   ////////////////////////////////////////////////////////////////////////////////
-  aRamCanvas.writeRAWfile("ut-triangles_par-a.mrw");
-  bRamCanvas.writeRAWfile("ut-triangles_par-b.mrw");
-  cRamCanvas.writeRAWfile("ut-triangles_par-c.mrw");
-  dRamCanvas.writeRAWfile("ut-triangles_par-d.mrw");
-  eRamCanvas.writeRAWfile("ut-triangles_par-e.mrw");
-  fRamCanvas.writeRAWfile("ut-triangles_par-f.mrw");
+  aRamCanvas.writeRAWfile("ut-triangles-a.mrw");
+  bRamCanvas.writeRAWfile("ut-triangles-b.mrw");
+  cRamCanvas.writeRAWfile("ut-triangles-c.mrw");
+  dRamCanvas.writeRAWfile("ut-triangles-d.mrw");
+  eRamCanvas.writeRAWfile("ut-triangles-e.mrw");
+  fRamCanvas.writeRAWfile("ut-triangles-f.mrw");
 
   aRamCanvas.scaleUpProximal(8);
   bRamCanvas.scaleUpProximal(8);
@@ -1021,12 +1052,12 @@ BOOST_AUTO_TEST_CASE(triangles_par) {
   eRamCanvas.scaleUpProximal(8);
   fRamCanvas.scaleUpProximal(8);
 
-  aRamCanvas.writeTIFFfile("ut-triangles_par-a.tiff");
-  bRamCanvas.writeTIFFfile("ut-triangles_par-b.tiff");
-  cRamCanvas.writeTIFFfile("ut-triangles_par-c.tiff");
-  dRamCanvas.writeTIFFfile("ut-triangles_par-d.tiff");
-  eRamCanvas.writeTIFFfile("ut-triangles_par-e.tiff");
-  fRamCanvas.writeTIFFfile("ut-triangles_par-f.tiff");
+  aRamCanvas.writeTIFFfile("ut-triangles-a.tiff");
+  bRamCanvas.writeTIFFfile("ut-triangles-b.tiff");
+  cRamCanvas.writeTIFFfile("ut-triangles-c.tiff");
+  dRamCanvas.writeTIFFfile("ut-triangles-d.tiff");
+  eRamCanvas.writeTIFFfile("ut-triangles-e.tiff");
+  fRamCanvas.writeTIFFfile("ut-triangles-f.tiff");
 
   BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
   BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), cRamCanvas.begin(), cRamCanvas.end());
@@ -1034,8 +1065,8 @@ BOOST_AUTO_TEST_CASE(triangles_par) {
   BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), eRamCanvas.begin(), eRamCanvas.end());
   BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), fRamCanvas.begin(), fRamCanvas.end());
 
-  std::ifstream ifsag("ut-triangles_par-a.mrw");
-  std::ifstream ifsar("../data/utest/ut-triangles_par-a.mrw");
+  std::ifstream ifsag("ut-triangles-a.mrw");
+  std::ifstream ifsar("../data/utest/ut-triangles-a.mrw");
 
   std::istream_iterator<char> bag(ifsag), eag;
   std::istream_iterator<char> bar(ifsar), ear;
@@ -1043,12 +1074,12 @@ BOOST_AUTO_TEST_CASE(triangles_par) {
   BOOST_CHECK_EQUAL_COLLECTIONS(bag, eag, bar, ear);
 
   ////////////////////////////////////////////////////////////////////////////////
-  gRamCanvas.writeRAWfile("ut-triangles_par-g.mrw");
-  hRamCanvas.writeRAWfile("ut-triangles_par-h.mrw");
-  iRamCanvas.writeRAWfile("ut-triangles_par-i.mrw");
-  jRamCanvas.writeRAWfile("ut-triangles_par-j.mrw");
-  kRamCanvas.writeRAWfile("ut-triangles_par-k.mrw");
-  lRamCanvas.writeRAWfile("ut-triangles_par-l.mrw");
+  gRamCanvas.writeRAWfile("ut-triangles-g.mrw");
+  hRamCanvas.writeRAWfile("ut-triangles-h.mrw");
+  iRamCanvas.writeRAWfile("ut-triangles-i.mrw");
+  jRamCanvas.writeRAWfile("ut-triangles-j.mrw");
+  kRamCanvas.writeRAWfile("ut-triangles-k.mrw");
+  lRamCanvas.writeRAWfile("ut-triangles-l.mrw");
 
   gRamCanvas.scaleUpProximal(8);
   hRamCanvas.scaleUpProximal(8);
@@ -1057,12 +1088,12 @@ BOOST_AUTO_TEST_CASE(triangles_par) {
   kRamCanvas.scaleUpProximal(8);
   lRamCanvas.scaleUpProximal(8);
 
-  gRamCanvas.writeTIFFfile("ut-triangles_par-g.tiff");
-  hRamCanvas.writeTIFFfile("ut-triangles_par-h.tiff");
-  iRamCanvas.writeTIFFfile("ut-triangles_par-i.tiff");
-  jRamCanvas.writeTIFFfile("ut-triangles_par-j.tiff");
-  kRamCanvas.writeTIFFfile("ut-triangles_par-k.tiff");
-  lRamCanvas.writeTIFFfile("ut-triangles_par-l.tiff");
+  gRamCanvas.writeTIFFfile("ut-triangles-g.tiff");
+  hRamCanvas.writeTIFFfile("ut-triangles-h.tiff");
+  iRamCanvas.writeTIFFfile("ut-triangles-i.tiff");
+  jRamCanvas.writeTIFFfile("ut-triangles-j.tiff");
+  kRamCanvas.writeTIFFfile("ut-triangles-k.tiff");
+  lRamCanvas.writeTIFFfile("ut-triangles-l.tiff");
 
   BOOST_CHECK_EQUAL_COLLECTIONS(gRamCanvas.begin(), gRamCanvas.end(), hRamCanvas.begin(), hRamCanvas.end());
   BOOST_CHECK_EQUAL_COLLECTIONS(gRamCanvas.begin(), gRamCanvas.end(), iRamCanvas.begin(), iRamCanvas.end());
@@ -1070,8 +1101,8 @@ BOOST_AUTO_TEST_CASE(triangles_par) {
   BOOST_CHECK_EQUAL_COLLECTIONS(gRamCanvas.begin(), gRamCanvas.end(), kRamCanvas.begin(), kRamCanvas.end());
   BOOST_CHECK_EQUAL_COLLECTIONS(gRamCanvas.begin(), gRamCanvas.end(), lRamCanvas.begin(), lRamCanvas.end());
 
-  std::ifstream ifsgg("ut-triangles_par-g.mrw");
-  std::ifstream ifsgr("../data/utest/ut-triangles_par-g.mrw");
+  std::ifstream ifsgg("ut-triangles-g.mrw");
+  std::ifstream ifsgr("../data/utest/ut-triangles-g.mrw");
 
   std::istream_iterator<char> bgg(ifsgg), egg;
   std::istream_iterator<char> bgr(ifsgr), egr;
@@ -1079,12 +1110,12 @@ BOOST_AUTO_TEST_CASE(triangles_par) {
   BOOST_CHECK_EQUAL_COLLECTIONS(bgg, egg, bgr, egr);
 
   ////////////////////////////////////////////////////////////////////////////////
-  mRamCanvas.writeRAWfile("ut-triangles_par-m.mrw");
-  nRamCanvas.writeRAWfile("ut-triangles_par-n.mrw");
-  oRamCanvas.writeRAWfile("ut-triangles_par-o.mrw");
-  pRamCanvas.writeRAWfile("ut-triangles_par-p.mrw");
-  qRamCanvas.writeRAWfile("ut-triangles_par-q.mrw");
-  rRamCanvas.writeRAWfile("ut-triangles_par-r.mrw");
+  mRamCanvas.writeRAWfile("ut-triangles-m.mrw");
+  nRamCanvas.writeRAWfile("ut-triangles-n.mrw");
+  oRamCanvas.writeRAWfile("ut-triangles-o.mrw");
+  pRamCanvas.writeRAWfile("ut-triangles-p.mrw");
+  qRamCanvas.writeRAWfile("ut-triangles-q.mrw");
+  rRamCanvas.writeRAWfile("ut-triangles-r.mrw");
 
   mRamCanvas.scaleUpProximal(8);
   nRamCanvas.scaleUpProximal(8);
@@ -1093,12 +1124,12 @@ BOOST_AUTO_TEST_CASE(triangles_par) {
   qRamCanvas.scaleUpProximal(8);
   rRamCanvas.scaleUpProximal(8);
 
-  mRamCanvas.writeTIFFfile("ut-triangles_par-m.tiff");
-  nRamCanvas.writeTIFFfile("ut-triangles_par-n.tiff");
-  oRamCanvas.writeTIFFfile("ut-triangles_par-o.tiff");
-  pRamCanvas.writeTIFFfile("ut-triangles_par-p.tiff");
-  qRamCanvas.writeTIFFfile("ut-triangles_par-q.tiff");
-  rRamCanvas.writeTIFFfile("ut-triangles_par-r.tiff");
+  mRamCanvas.writeTIFFfile("ut-triangles-m.tiff");
+  nRamCanvas.writeTIFFfile("ut-triangles-n.tiff");
+  oRamCanvas.writeTIFFfile("ut-triangles-o.tiff");
+  pRamCanvas.writeTIFFfile("ut-triangles-p.tiff");
+  qRamCanvas.writeTIFFfile("ut-triangles-q.tiff");
+  rRamCanvas.writeTIFFfile("ut-triangles-r.tiff");
 
   BOOST_CHECK_EQUAL_COLLECTIONS(mRamCanvas.begin(), mRamCanvas.end(), nRamCanvas.begin(), nRamCanvas.end());
   BOOST_CHECK_EQUAL_COLLECTIONS(mRamCanvas.begin(), mRamCanvas.end(), oRamCanvas.begin(), oRamCanvas.end());
@@ -1106,8 +1137,8 @@ BOOST_AUTO_TEST_CASE(triangles_par) {
   BOOST_CHECK_EQUAL_COLLECTIONS(mRamCanvas.begin(), mRamCanvas.end(), qRamCanvas.begin(), qRamCanvas.end());
   BOOST_CHECK_EQUAL_COLLECTIONS(mRamCanvas.begin(), mRamCanvas.end(), rRamCanvas.begin(), rRamCanvas.end());
 
-  std::ifstream ifsmg("ut-triangles_par-m.mrw");
-  std::ifstream ifsmr("../data/utest/ut-triangles_par-m.mrw");
+  std::ifstream ifsmg("ut-triangles-m.mrw");
+  std::ifstream ifsmr("../data/utest/ut-triangles-m.mrw");
 
   std::istream_iterator<char> bmg(ifsmg), emg;
   std::istream_iterator<char> bmr(ifsmr), emr;
@@ -1116,6 +1147,12 @@ BOOST_AUTO_TEST_CASE(triangles_par) {
 }
 
 #endif
+
+
+// Refrence mrg files:
+
+
+// cp ut-draw_primatives_int.mrw ut-draw_primatives_flt.mrw ut-lines_no_clip.mrw ut-lines_clip-b.mrw ut-lines_clip-d.mrw ut-lines_clip-f.mrw ut-lines_clip-h.mrw ut-triangles-a.mrw ut-triangles-g.mrw ut-triangles-m.mrw ../data/utest/
 
 
 
