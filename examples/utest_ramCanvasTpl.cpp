@@ -1148,12 +1148,16 @@ BOOST_AUTO_TEST_CASE(triangles) {
 
 #endif
 
-
 // Refrence mrg files:
+//   cp ut-draw_primatives_int.mrw ut-draw_primatives_flt.mrw ut-lines_no_clip.mrw ut-lines_clip-b.mrw ut-lines_clip-d.mrw ut-lines_clip-f.mrw ut-lines_clip-h.mrw ut-triangles-a.mrw ut-triangles-g.mrw ut-triangles-m.mrw ../data/utest/
+// Find them in this source by looking for lines with "/data/utest/".
 
-
-// cp ut-draw_primatives_int.mrw ut-draw_primatives_flt.mrw ut-lines_no_clip.mrw ut-lines_clip-b.mrw ut-lines_clip-d.mrw ut-lines_clip-f.mrw ut-lines_clip-h.mrw ut-triangles-a.mrw ut-triangles-g.mrw ut-triangles-m.mrw ../data/utest/
-
-
+// TODO:
+//  - drawLine -- check for invariance under permutation of input points.  Say a grid 16x16 with all lines crossing (8,8).  Use two canvases. For
+//    each line clear both canvases, draw the line in each canvas with reversed points, compare the canvases.  Have code to dump images if we have a failure.
+//  - drawRectangle
+//  - drawFillRectangle
+//  - drawCircle
+//  - drawFillCircle
 
 /** @endcond */
