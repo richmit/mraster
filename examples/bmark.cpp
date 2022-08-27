@@ -52,7 +52,9 @@
 #define DO_MINI       1
 #define DO_CLR_BLK    1
 #define DO_CLR        1
+#define DO_FFBTRI     1
 #define DO_FFTRI      1
+#define DO_FGBTRI     1
 #define DO_FGTRI      1
 #define DO_RECT       1
 #define DO_LINE       1
@@ -101,6 +103,7 @@ int main(void) {
   canvasType::colorType aColor("red");
   canvasType::colorType bColor("cyan");
   canvasType::colorType cColor("black");
+  canvasType::colorType dColor("green");
   std::chrono::time_point<std::chrono::system_clock> bmStartTime, bmEndTime;
   std::chrono::duration<double> bmTime;
 
@@ -315,6 +318,20 @@ int main(void) {
   std::cout << "  DO_LINE Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
 
+#if DO_FFBTRI
+  std::cout << "Starting DO_FFBTRI" << std::endl;
+  bmStartTime = std::chrono::system_clock::now();
+  for(int i=0;i<REPS;i++)
+    for(int y=0;y<=yMax;y+=50)
+      if(y%2)
+        theRamCanvas.drawFillTriangle(xMax/2, 0, 0, y, xMax, yMax-y, aColor, bColor, dColor);
+      else
+        theRamCanvas.drawFillTriangle(xMax/2, 0, 0, y, xMax, yMax-y, bColor, cColor, aColor);
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_FFBTRI Runtime " << bmTime.count() << " sec" << std::endl;
+#endif
+
 #if DO_FFTRI
   std::cout << "Starting DO_FFTRI" << std::endl;
   bmStartTime = std::chrono::system_clock::now();
@@ -327,6 +344,20 @@ int main(void) {
   bmEndTime = std::chrono::system_clock::now();
   bmTime = std::chrono::system_clock::now() - bmStartTime;
   std::cout << "  DO_FFTRI Runtime " << bmTime.count() << " sec" << std::endl;
+#endif
+
+#if DO_FGBTRI
+  std::cout << "Starting DO_FGBTRI" << std::endl;
+  bmStartTime = std::chrono::system_clock::now();
+  for(int i=0;i<REPS*2;i++)
+    for(int x1=xMax,j=0;x1>=0;x1-=BSIZE/64,j++)
+      if(j%2)
+        theRamCanvas.drawFillTriangle(x1, yMax/2, x1+BSIZE/2, yMax/2+x1, x1+BSIZE/2, yMax/2-x1, aColor, bColor, dColor);
+      else
+        theRamCanvas.drawFillTriangle(x1, yMax/2, x1+BSIZE/2, yMax/2+x1, x1+BSIZE/2, yMax/2-x1, bColor, cColor, aColor);
+  bmEndTime = std::chrono::system_clock::now();
+  bmTime = std::chrono::system_clock::now() - bmStartTime;
+  std::cout << "  DO_FGBTRI Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
 
 #if DO_FGTRI
@@ -342,6 +373,7 @@ int main(void) {
   bmTime = std::chrono::system_clock::now() - bmStartTime;
   std::cout << "  DO_FGTRI Runtime " << bmTime.count() << " sec" << std::endl;
 #endif
+
 
 #if DO_RECT
   std::cout << "Starting DO_RECT" << std::endl;
@@ -360,7 +392,7 @@ int main(void) {
 #if DO_HLINE_NC
   std::cout << "Starting DO_HLINE_NC" << std::endl;
   bmStartTime = std::chrono::system_clock::now();
-  for(int i=0;i<REPS*2048;i++)
+  for(int i=0;i<REPS*512;i++)
     for(int y=0;y<=yMax;y+=1)
       if(y%2)
         theRamCanvas.drawHorzLineNC(0, xMax, y, aColor);
