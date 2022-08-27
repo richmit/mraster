@@ -375,7 +375,7 @@ namespace mjr {
           - Header: Byte  74-74: "c"
           - Header: Byte  75-85: Number of bits per channel expressed as a zero padded, decimal integer
           - Header: Byte  86-86: "b"
-          - Header: Byte  87-89: "SGN" for signed channels and "UNS" for unsigned channels
+          - Header: Byte  87-89: "UNS" for unsigned integer channels, "SGN" for signed integer & floating point channels
           - Header: Byte  90-90: "s"
           - Header: Byte  91-93: "INT" for integral channels and "FLT" for floating point channels
           - Header: Byte  94-94: "t"
@@ -433,7 +433,7 @@ namespace mjr {
       /** @name Various helper functions */
       //@{
       /** Used to find the left and right edges of a triangle. */
-      void triangleEdger(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT* pts);
+      void triangleEdger(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT* pts, bool findMin);
       //@}
 
     public:
@@ -892,7 +892,7 @@ namespace mjr {
       inline void drawFillTriangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3)                     { drawFillTriangle(x1, y1, x2, y2, x3, y3, dfltColor); }
       //@}
 
-      /** @name Filled Triangle Drawing Methods */
+      /** @name Shaded Triangle Drawing Methods */
       //@{
       /** Draw a filled triangle using barycentric color interpolation.
           @bug Triangles not entirely on the canvas are not rendered.
@@ -2546,15 +2546,15 @@ namespace mjr {
     int
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeRAWstream(std::ostream& oStream, std::function<colorT (colorT&)> filter) {
     std::ostringstream outStringStream;
-    outStringStream << "MJRRAW\n";                                                                   //  7   7
-    outStringStream << std::setw(19) << std::setfill('0') << numPixX                 << "x";         // 20  27
-    outStringStream << std::setw(19) << std::setfill('0') << numPixY                 << "y";         // 20  47
-    outStringStream << std::setw(27) << std::setfill('0') << colorT::channelCount    << "c";         // 28  75
-    outStringStream << std::setw(11) << std::setfill('0') << colorT::bitsPerChan     << "b";         // 12  87
-    outStringStream << "UNS"                                                         << "s";         //  4  91
-    outStringStream << "FLT"                                                         << "t";         //  4  95
-    outStringStream << (platformEndianness() == endianType::LITTLE ? "LTL" : "BIG")  << "i";         //  4  99
-    outStringStream                                                                  << "\n";        //  1 100
+    outStringStream << "MJRRAW\n";                                                                               //  7   7
+    outStringStream << std::setw(19) << std::setfill('0') << numPixX                             << "x";         // 20  27
+    outStringStream << std::setw(19) << std::setfill('0') << numPixY                             << "y";         // 20  47
+    outStringStream << std::setw(27) << std::setfill('0') << colorT::channelCount                << "c";         // 28  75
+    outStringStream << std::setw(11) << std::setfill('0') << colorT::bitsPerChan                 << "b";         // 12  87
+    outStringStream << (colorT::chanIsUnsigned ? "UNS" : "SGN")                                  << "s";         //  4  91
+    outStringStream << (colorT::chanIsInt ? "INT" : "FLT")                                       << "t";         //  4  95
+    outStringStream << (platformEndianness() == endianType::LITTLE ? "LTL" : "BIG")              << "i";         //  4  99
+    outStringStream                                                                              << "\n";        //  1 100
     oStream << outStringStream.str();
     writeBINstream(oStream, filter);
     return 0;
@@ -2880,11 +2880,201 @@ namespace mjr {
     }
   }
 
+// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
+//   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
+//     void
+//     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::triangleEdger(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT* pts) {
+//     moveTo(x2, y2);                                                           // Do this first
+//     intCrdT x, y;
+//     if(y1 == y2) {                                                            // slope = 0
+//       if( (y1 < 0) || (y1 >= numPixY) )                                       // . Line off canvas case
+//         return;
+//       if(x1 > x2)                                                             // . Fix point ordering
+//         std::swap(x1, x2);
+//       if(x1 < 0)                                                              // . Clip left
+//         x1 = 0;
+//       if(x2 >= numPixX)                                                       // . Clip right
+//         x2 = numPixX - 1;
+//       //drawHorzLineNC(x1, x2, y1, color);                                      // . Draw Pixels
+//       return;  // mark edge
+//     } else if(x1 == x2) {                                                     // slope = infinity
+//       if( (x1 < 0) || (x1 >= numPixX) )                                       // . Line off canvas case
+//         return;
+//       if(y1 > y2)                                                             // . Fix point ordering
+//         std::swap(y1, y2);
+//       if(y1 < 0)                                                              // . Clip top
+//         y1 = 0;
+//       if(y2 >= numPixY)                                                       // . Clip bottom
+//         y2 = numPixY - 1;
+//       //drawVertLineNC(y1, y2, x1, color);                                      // . Draw Pixels
+//       for(y=y1; y<=y2; y++) pts[y] = x1;  // mark edge
+//     } else {                                                                  // Slope is not infinity or 0...
+//       int dx, dy;
+//       if(x1 > x2) {                                                           // . Fix point ordering
+//         std::swap(x1, x2);
+//         std::swap(y1, y2);
+//       }
+//       dx = x2 - x1;                                                           // . Compute the slope
+//       dy = y2 - y1;
+//       if(dx == dy) {                                                          // . Slope = 1
+//         if( (y2 < 0) || (x2 < 0) || (x1 >= numPixX) || (y1 >= numPixY) )      // .. Line off canvas case
+//           return;
+//         if(x1 < 0) {                                                          // .. Clip left
+//           y1 = y1 - x1;
+//           x1 = 0;
+//         }
+//         if(y1 < 0) {                                                          // .. Clip top
+//           x1 = x1 - y1;
+//           y1 = 0;
+//         }
+//         if(x2 >= numPixX) {                                                   // .. Clip right
+//           y2 = y2 - (x2 - numPixX) - 1;
+//           x2 = numPixX - 1;
+//         }
+//         if(y2 >= numPixY) {                                                   // .. Clip bottom
+//           x2 = x2 - (y2 - numPixY) - 1;
+//           y2 = numPixY - 1;
+//         }
+//         for(x=x1,y=y1;x<=x2;y++,x++)                                          // .. Draw Pixels
+//           //drawPointNC(x, y, color);
+//           pts[y] = x; // mark edge
+//       } else if(dx == -dy) {                                                  // . Slope = -1
+//         if( (x2 < 0) || (y2 >= numPixY) || (x1 >= numPixX) || (y1 < 0) )      // .. Line off canvas case
+//           return;
+//         if(x1 < 0) {                                                          // .. Clip left
+//           y1 = y1 + x1;
+//           x1 = 0;
+//         }
+//         if(x2 >= numPixX) {                                                   // .. Clip right
+//           y2 = y2 + (x2 - (numPixX - 1));
+//           x2 = numPixX - 1;
+//         }
+//         if(y2 < 0) {                                                          // .. Clip top
+//           x2 = x2 + y2;
+//           y2 = 0;
+//         }
+//         if(y1 >= numPixY) {                                                   // .. Clip bottom
+//           x1 = x1 + (y1 - (numPixY - 1));
+//           y1 = numPixY - 1;
+//         }
+//         for(x=x1,y=y1;x<=x2;y--,x++)                                          // .. Draw Pixels
+//           //drawPointNC(x, y, color);
+//           pts[y] = x; // mark edge
+//       } else {                                                                // . Slope != 1, -1, 0, \infinity
+//         int s, dx2, dy2;
+//         dx2 = 2*dx;
+//         dy2 = 2*dy;
+//         if(dy > 0) {                                                          // .. Positive Slope
+//           if( (y2 < 0) || (x2 < 0) || (x1 >= numPixX) || (y1 >= numPixY) )    // ... Line off canvas case
+//             return;
+//           if(x1 < 0) {                                                        // ... Clip left
+//             y1 = (int)(1.0*y1-x1*dy/dx);
+//             x1 = 0;
+//           }
+//           if(y1 < 0) {                                                        // ... Clip top
+//             x1 = (int)(1.0*x1-y1*dx/dy);
+//             y1 = 0;
+//           }
+//           if(x2 >= numPixX) {                                                 // ... Clip right
+//             y2 = (int)((1.0*dy*(numPixX-1)+y1*dx-x1*dy)/dx);
+//             x2 = numPixX - 1;
+//           }
+//           if(y2 >= numPixY) {                                                 // ... Clip bottom
+//             x2 = (int)(((numPixY-1)*dx-y2*dx+x2*dy)/dy);
+//             y2 = numPixY - 1;
+//           }
+//           if(dx > dy) {                                                       // ... 0 < Slope < 1
+//             s = dy2 - dx;
+//             x=x1;
+//             y=y1;
+//             while(x<=x2) {                                                    // .... Draw Line
+//               //drawPoint(x, y, color);
+//               pts[y] = x; // mark edge
+//               if(s < 0) {
+//                 s += dy2;
+//               } else {
+//                 y++;
+//                 s += dy2 - dx2;
+//               }
+//               x++;
+//             }
+//           } else {                                                            // ... 1 < Slope < infinity
+//             s = dy - dx2;
+//             x=x1;
+//             y=y1;
+//             while(y<=y2) {                                                    // .... Draw Line
+//               //drawPoint(x, y, color);
+//               pts[y] = x; // mark edge
+//               if(s > 0) {
+//                 s -= dx2;
+//               } else {
+//                 x++;
+//                 s += dy2 - dx2;
+//               }
+//               y++;
+//             }
+//           }
+//         } else {                                                              // .. Negative Slope
+//           if( (x2 < 0) || (y2 >= numPixY) || (x1 >= numPixX) || (y1 < 0) )    // ... Line off canvas case
+//             return;
+//           if(x1 < 0) {                                                        // ... Clip left
+//             y1 = (int)(1.0*y1-x1*dy/dx);
+//             x1 = 0;
+//           }
+//           if(y2 < 0) {                                                        // ... Clip top
+//             x2 = (int)(1.0*x2-y2*dx/dy);
+//             y2 = 0;
+//           }
+//           if(x2 >= numPixX) {                                                 // ... Clip right
+//             y2 = (int)((1.0*dy*(numPixX-1)+y2*dx-x2*dy)/dx);
+//             x2 = numPixX - 1;
+//           }
+//           if(y1 >= numPixY) {                                                 // ... Clip bottom
+//             x1 = (int)(((numPixY-1)*dx-y1*dx+x1*dy)/dy);
+//             y1 = numPixY - 1;
+//           }
+//           if(dx > -dy) {                                                      // ... 0 > Slope > -infinity
+//             s = dy2 + dx;
+//             x=x1;
+//             y=y1;
+//             while(x<=x2) {                                                    // .... Draw Line
+//               //drawPoint(x, y, color);
+//               pts[y] = x; // mark edge
+//               if(s > 0) {
+//                 s += dy2;
+//               } else {
+//                 y--;
+//                 s += dy2 + dx2;
+//               }
+//               x++;
+//             }
+//           } else {                                                            // ... -1 > Slope > -inf
+//             s = dy + dx2;
+//             x=x1;
+//             y=y1;
+//             while(y>=y2) {                                                    // .... Draw Line
+//               //drawPoint(x, y, color);
+//               pts[y] = x; // mark edge
+//               if(s < 0) {
+//                 s += dx2;
+//               } else {
+//                 x++;
+//                 s += dy2 + dx2;
+//               }
+//               y--;
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
     inline void
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::triangleEdger(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT* pts) {
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::triangleEdger(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT* pts, bool findMin) {
     // This code is essentially the line drawing code with some simplifications.
     intCrdT x, y;
     if(x1 == x2) {                                                            // slope = infinity
@@ -2901,7 +3091,7 @@ namespace mjr {
       dx = x2 - x1;                                                           // Compute the slope
       dy = y2 - y1;
       if(dx == dy) {                                                          // Slope = 1
-        for(x=x1,y=y1;x<=x2;y++,x++)                                          // Draw Pixels
+        for(x=x1,y=y1;x<=x2;y++,x++)                                         // Draw Pixels
           pts[y]=x; // set bound
       } else if(dx == -dy) {                                                  // Slope = -1
         for(x=x1,y=y1;x<=x2;y--,x++)                                          // Draw Pixels
@@ -2912,18 +3102,37 @@ namespace mjr {
         dy2 = 2*dy;
         if(dy > 0) {                                                          // Positive Slope
           if(dx > dy) {                                                       // 0 < Slope < 1
-            s = dy2 - dx;
-            x=x1;
-            y=y1;
-            while(x<=x2) {                                                    // Draw Line
-              pts[y]=x; // set bound
-              if(s < 0) {
-                s += dy2;
-              } else {
-                y++;
-                s += dy2 - dx2;
+            if (findMin) {
+              s = dy2 - dx;
+              x=x1;
+              y=y1;
+              intCrdT lastY=y-1;
+              while(x<=x2) {                                                    // Draw Line
+                if (y != lastY)
+                  pts[y]=x; // set bound
+                lastY = y;
+                if(s < 0) {
+                  s += dy2;
+                } else {
+                  y++;
+                  s += dy2 - dx2;
+                }
+                x++;
               }
-              x++;
+            } else { // works.
+              s = dy2 - dx;
+              x=x1;
+              y=y1;
+              while(x<=x2) {                                                    // Draw Line
+                pts[y]=x; // set bound
+                if(s < 0) {
+                  s += dy2;
+                } else {
+                  y++;
+                  s += dy2 - dx2;
+                }
+                x++;
+              }
             }
           } else {                                                            // 1 < Slope < infinity
             s = dy - dx2;
@@ -2941,19 +3150,38 @@ namespace mjr {
             }
           }
         } else {                                                              // Negative Slope
-          if(dx > -dy) {                                                      // 0 > Slope > -infinity
-            s = dy2 + dx;
-            x=x1;
-            y=y1;
-            while(x<=x2) {                                                    // Draw Line
-              pts[y]=x; // set bound
-              if(s > 0) {
-                s += dy2;
-              } else {
-                y--;
-                s += dy2 + dx2;
+          if(dx > -dy) {                                                      // 0 > Slope > -1
+            if (findMin) {
+              s = dy2 + dx;
+              x=x1;
+              y=y1;
+              intCrdT lastY=y-1;
+              while(x<=x2) {                                                    // Draw Line
+                if (y != lastY)
+                  pts[y]=x; // set bound
+                lastY = y;
+                if(s > 0) {
+                  s += dy2;
+                } else {
+                  y--;
+                  s += dy2 + dx2;
+                }
+                x++;
               }
-              x++;
+            } else {
+              s = dy2 + dx;
+              x=x1;
+              y=y1;
+              while(x<=x2) {                                                    // Draw Line
+                pts[y]=x; // set bound
+                if(s > 0) {
+                  s += dy2;
+                } else {
+                  y--;
+                  s += dy2 + dx2;
+                }
+                x++;
+              }
             }
           } else {                                                            // -1 > Slope > -inf
             s = dy + dx2;
@@ -3002,125 +3230,159 @@ namespace mjr {
                                                                                  intCrdT x2, intCrdT y2,
                                                                                  intCrdT x3, intCrdT y3,
                                                                                  colorT c1, colorT c2, colorT c3, bool solid) { // Not colorArgType because of std::swap
-    static intCrdT *wkPts1, *wkPts2;
+    static intCrdT *minPts, *maxPts;
     static intCrdT  numPts;
 
-    if( !(isCliped(x1, y1) || isCliped(x2, y2) || isCliped(x3, y3))) {
-      ///////////////////////////////////////////////////////////////////////////////////
-      // Check our work space, and allocate/reallocate as required.
-      if(wkPts1 == NULL) {               // First time in function -- allocate
-        wkPts1 = new intCrdT[numPixY];
-        wkPts2 = new intCrdT[numPixY];
+    if( isCliped(x1, y1) || isCliped(x2, y2) || isCliped(x3, y3))
+      return;
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // Check our work space, and allocate/reallocate as required.
+    if(minPts == NULL) {               // First time in function -- allocate
+      minPts = new intCrdT[numPixY];
+      maxPts = new intCrdT[numPixY];
+      numPts = numPixY;
+    } else {                           // Not our first time!  We have a work space.
+      if(numPts != numPixY) {          // Work space is wrong size -- reallocate
+        delete[] minPts;
+        delete[] maxPts;
+        minPts = new intCrdT[numPixY];
+        maxPts = new intCrdT[numPixY];
         numPts = numPixY;
-      } else {                           // Not our first time!  We have a work space.
-        if(numPts != numPixY) {          // Work space is wrong size -- reallocate
-          delete[] wkPts1;
-          delete[] wkPts2;
-          wkPts1 = new intCrdT[numPixY];
-          wkPts2 = new intCrdT[numPixY];
-          numPts = numPixY;
+      }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////    
+    if (!(solid) && ((x1*(y2 - y3) + x2*(y3 - y1) + x3*(y1 - y2)) == 0))
+      return;
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // Sort (x1,y1), (x2,y2), (x3,y3) so that y1 >= y2, y3 and y3 <= y2, y1
+    if(y1 > y2) {             // top != 2 && bot != 1
+      if(y1 > y3) {           // top != 3              y1>y2  y1>y3 y2>y3 top bot
+        if(y2 > y3) {         //             bot != 2    .      .     .    .   .
+          //                         T      T     T    1   3   NOP
+        } else {              //             bot != 3    .      .     .    .   .
+          std::swap(y2,y3);   //                         T      T     F    1   2   SWAP(2,3)
+          std::swap(x2,x3);   //                         .      .     .    .   .
+          std::swap(c2,c3);   //                         .      .     .    .   .
+        }                     //                         .      .     .    .   .
+      } else {                // top != 1                .      .     .    .   .
+        std::swap(y1,y3);     //                         T      F     U    3   2   SWAP(1,3) SWAP(2,3)
+        std::swap(y2,y3);     //                         .      .     .    .   .
+        std::swap(x1,x3);     //                         .      .     .    .   .
+        std::swap(x2,x3);     //                         .      .     .    .   .
+        if(!solid) {          //                         .      .     .    .   .
+          std::swap(c1,c3);   //                         .      .     .    .   .
+          std::swap(c2,c3);   //                         .      .     .    .   .
+        }                     //                         .      .     .    .   .
+      }                       //                         .      .     .    .   .
+    } else {                  // top != 1                .      .     .    .   .
+      if(y2 > y3) {           // top != 3 && bot != 2    .      .     .    .   .
+        if(y1 > y3) {         //             bot != 1    .      .     .    .   .
+          std::swap(y1,y2);   //                         F      T     T    2   3   SWAP(1,2)
+          std::swap(x1,x2);   //                         .      .     .    .   .
+          std::swap(c1,c2);   //                         .      .     .    .   .
+        } else {              //             bot != 3    .      .     .    .   .
+          std::swap(y1,y2);   //                         F      F     T    2   1   SWAP(1,2) SWAP(2,3)
+          std::swap(y2,y3);   //                         .      .     .    .   .
+          std::swap(x1,x2);   //                         .      .     .    .   .
+          std::swap(x2,x3);   //                         .      .     .    .   .
+          if(!solid) {        //                         .      .     .    .   .
+            std::swap(c1,c2); //                         .      .     .    .   .
+            std::swap(c2,c3); //                         .      .     .    .   .
+          }                   //                         .      .     .    .   .
+        }                     //                         .      .     .    .   .
+      } else {                // top != 2 && bot != 3    .      .     .    .   .
+        std::swap(y1,y3);     //                         F      U     F    3   1   SWAP(1,3)
+        std::swap(x1,x3);     //                         .      .     .    .   .
+        std::swap(c1,c3);     //                         .      .     .    .   .
+      }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+    /* cA    y1==y2 point    1,2,3                                                       */
+    /* cB-cG y1==y2 h line   1,2---3   3---1,2   1,3---2   2---1,3   2,3---1   1---2,3   */
+    /* cH-cJ y1==y2 v line   1,2  1,2   1,2                                              */
+    /*                         \   |    /                                                */
+    /*                          3  3   3                                                 */
+    /* cK-cL y1==y2 tri      1---2   2---1                                               */
+    /*                        \ /     \ /                                                */
+    /*                         3       3                                                 */
+    /* cM-cO y2=y3 v line     1      1      1                                            */
+    /*                         \     |     /                                             */
+    /*                         2,3  2,3  2,3                                             */
+    /* cP-cQ y2=y3 tri         1      1                                                  */
+    /*                        / \    / \                                                 */      
+    /*                       2---3  3---2                                                */
+    /* cR-cS General         1       1    Note x1 need not equal x3 in these cases!      */
+    /*                       |\     /|    It is just difficult to draw a case with       */
+    /*                       | 2   2 |    x1 != x3 with tiny ASCII art...                */
+    /*                       |/     \|                                                   */
+    /*                       3       3                                                   */
+    ///////////////////////////////////////////////////////////////////////////////////////
+
+    if(y1==y3) {                                        // cA-cG
+      minPts[y1] = mjr::min3(x1, x2, x3);               //
+      maxPts[y1] = mjr::max3(x1, x2, x3);               //
+    } else {                                            // cH-cS
+      if(y1==y2) {                                      //   cH-cL
+        if(x1==x2) {                                    //     cH-cJ
+          triangleEdger(x1, y1, x3, y3, minPts, true);  //
+          triangleEdger(x2, y2, x3, y3, maxPts, false); // 
+        } else if(x1<x2) {                              //     cK
+          triangleEdger(x1, y1, x3, y3, minPts, true);  //
+          triangleEdger(x2, y2, x3, y3, maxPts, false); //
+        } else  {                                       //     cJ
+          triangleEdger(x1, y1, x3, y3, maxPts, false); //
+          triangleEdger(x2, y2, x3, y3, minPts, true);  //
+        }                                               //
+      } else if(y2==y3) {                               //   cM-cQ
+        if(x2==x3) {                                    //     cM-cO
+          triangleEdger(x1, y1, x3, y3, minPts, true);  //
+          triangleEdger(x2, y2, x1, y1, maxPts, false); //
+        } else if(x2<x3) {                              //     cP
+          triangleEdger(x1, y1, x3, y3, maxPts, false); //
+          triangleEdger(x2, y2, x1, y1, minPts, true);  //
+        } else  {                                       //     cQ
+          triangleEdger(x1, y1, x3, y3, minPts, true);  //
+          triangleEdger(x2, y2, x1, y1, maxPts, false); //
+        }                                               //
+      } else {                                          //   cR-cS
+        double xOt = (x1*y3+x3*y2-x1*y2-x3*y1);         //
+        double xOb = (y3-y1);                           //
+        if(xOt/xOb < x2) {                              //     cR
+          triangleEdger(x1, y1, x3, y3, minPts, true);  //
+          triangleEdger(x2, y2, x1, y1, maxPts, false); //
+          triangleEdger(x2, y2, x3, y3, maxPts, false); //
+        } else {                                        //     cS
+          triangleEdger(x1, y1, x3, y3, maxPts, false); //
+          triangleEdger(x2, y2, x1, y1, minPts, true);  //
+          triangleEdger(x2, y2, x3, y3, minPts, true);  //
+        }                                               //
+      }                                                 //
+    }                                                   //
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // Fill between the left and right bits.
+    if(solid) {
+      for(intCrdT y=y3; y<=y1; y++)
+        drawLine(minPts[y], y, maxPts[y], y, c1);
+    } else {
+      for(intCrdT y=y3; y<=y1; y++)
+        for(intCrdT x=minPts[y]; x<=maxPts[y]; x++) {
+          /* Performance & Correctness: This code seems very poorly optimized.  Especially the computation of w3 instead of simply using 1-w1-w2, and the
+             division by the sum w1+w2+s3 instead of by the total triangle area.  We are working with integer coordinates, and thus we have some fluff in the
+             computations.  Sometimes, for example, the coordinates of a fill point won't, technically, be in the triangle.  Or the sum of the areas
+             sub-triangles might not equal the total area.  So we compute w3 and divide by the sum so that we *always* get consistent results and coloring on
+             the edges of triangles regardless of the order of the given points.  Yea, it slows things down, but my use cases for filled triangles demand
+             consistency and accuracy on edges.  The repeated common expressions are optimized by the compiler.  This branch is roughly 15x slower than the
+             solid branch above. */
+          colorChanArithFltType w1 = std::abs(static_cast<colorChanArithFltType>( x*(y2 - y3) + x2*(y3 -  y) + x3*(y  - y2)));
+          colorChanArithFltType w2 = std::abs(static_cast<colorChanArithFltType>(x1*(y  - y3) +  x*(y3 - y1) + x3*(y1 -  y)));
+          colorChanArithFltType w3 = std::abs(static_cast<colorChanArithFltType>(x1*(y2 -  y) + x2*(y  - y1) +  x*(y1 - y2)));
+          drawPointNC(x, y, colorT().wMean(w1/(w1+w2+w3), w2/(w1+w2+w3), w3/(w1+w2+w3), c1, c2, c3));
         }
-      }
-
-      ///////////////////////////////////////////////////////////////////////////////////
-      // Sort (x1,y1), (x2,y2), (x3,y3) so that y1 >= y2, y3 and y3 <= y2, y1
-      if(y1 > y2) {             // top != 2 && bot != 1
-        if(y1 > y3) {           // top != 3              y1>y2  y1>y3 y2>y3 top bot
-          if(y2 > y3) {         //             bot != 2    .      .     .    .   .
-                                //                         T      T     T    1   3   NOP
-          } else {              //             bot != 3    .      .     .    .   .
-            std::swap(y2,y3);   //                         T      T     F    1   2   SWAP(2,3)
-            std::swap(x2,x3);   //                         .      .     .    .   .
-            std::swap(c2,c3);   //                         .      .     .    .   .
-          }                     //                         .      .     .    .   .
-        } else {                // top != 1                .      .     .    .   .
-          std::swap(y1,y3);     //                         T      F     U    3   2   SWAP(1,3) SWAP(2,3)
-          std::swap(y2,y3);     //                         .      .     .    .   .
-          std::swap(x1,x3);     //                         .      .     .    .   .
-          std::swap(x2,x3);     //                         .      .     .    .   .
-          if(!solid) {          //                         .      .     .    .   .
-            std::swap(c1,c3);   //                         .      .     .    .   .
-            std::swap(c2,c3);   //                         .      .     .    .   .
-          }                     //                         .      .     .    .   .
-        }                       //                         .      .     .    .   .
-      } else {                  // top != 1                .      .     .    .   .
-        if(y2 > y3) {           // top != 3 && bot != 2    .      .     .    .   .
-          if(y1 > y3) {         //             bot != 1    .      .     .    .   .
-            std::swap(y1,y2);   //                         F      T     T    2   3   SWAP(1,2)
-            std::swap(x1,x2);   //                         .      .     .    .   .
-            std::swap(c1,c2);   //                         .      .     .    .   .
-          } else {              //             bot != 3    .      .     .    .   .
-            std::swap(y1,y2);   //                         F      F     T    2   1   SWAP(1,2) SWAP(2,3)
-            std::swap(y2,y3);   //                         .      .     .    .   .
-            std::swap(x1,x2);   //                         .      .     .    .   .
-            std::swap(x2,x3);   //                         .      .     .    .   .
-            if(!solid) {        //                         .      .     .    .   .
-              std::swap(c1,c2); //                         .      .     .    .   .
-              std::swap(c2,c3); //                         .      .     .    .   .
-            }                   //                         .      .     .    .   .
-          }                     //                         .      .     .    .   .
-        } else {                // top != 2 && bot != 3    .      .     .    .   .
-          std::swap(y1,y3);     //                         F      U     F    3   1   SWAP(1,3)
-          std::swap(x1,x3);     //                         .      .     .    .   .
-          std::swap(c1,c3);     //                         .      .     .    .   .
-        }
-      }
-      ///////////////////////////////////////////////////////////////////////////////////
-      /*   1   1---2  2---1  1       1 */
-      /*   |    \ /    \ /   |\     /| */
-      /*   3     3      3    | 2   2 | */
-      /*                     |/     \| */
-      /*   1     1      1    3   ^   3 */
-      /*   |    / \    / \       |     */
-      /*   3   2---3  3---2      |     */
-      /*                         |     */
-      /*   x1 need not equal x3 in     */
-      /*      right most two cases     */
-
-      triangleEdger(x1, y1, x3, y3,      wkPts1);
-      if(y1==y2) {
-        // Flat top or bottom case.
-        if(x1 != x2)
-          triangleEdger(x2, y2, x3, y3,  wkPts2);
-        else if(y2==y3)
-          triangleEdger(x2, y2, x1, y1,  wkPts2);
-      } else {
-        // General case
-        triangleEdger(x2, y2, x1, y1,    wkPts2);
-        triangleEdger(x2, y2, x3, y3,    wkPts2);
-      }
-
-      intCrdT *minPts, *maxPts;
-      if (wkPts1[y2] < wkPts2[y2]) {
-        minPts = wkPts1;
-        maxPts = wkPts2;
-      } else {
-        minPts = wkPts2;
-        maxPts = wkPts1;
-      }
-
-      ///////////////////////////////////////////////////////////////////////////////////
-      // Fill between the left and right bits.
-      if(solid) {
-        for(intCrdT y=y3; y<=y1; y++)
-          drawLine(minPts[y], y, maxPts[y], y, c1);
-      } else {
-        intCrdT y12 = (y1 - y2);
-        intCrdT y31 = (y3 - y1);
-        intCrdT y23 = (y2 - y3);
-        for(intCrdT y=y3; y<=y1; y++) {
-          intCrdT y03 = (y - y3);
-          intCrdT y10 = (y1 - y);
-          intCrdT y30 = (y3 - y);
-          intCrdT y02 = (y - y2);
-          for(intCrdT x=minPts[y]; x<=maxPts[y]; x++) {
-            colorChanArithFltType a  = static_cast<colorChanArithFltType>(std::abs(x1 * y23 + x2 * y31 + x3 * y12));
-            colorChanArithFltType w1 = static_cast<colorChanArithFltType>(std::abs(x  * y23 + x2 * y30 + x3 * y02)) / a;
-            colorChanArithFltType w2 = static_cast<colorChanArithFltType>(std::abs(x1 * y03 + x  * y31 + x3 * y10)) / a;
-            drawPoint(x, y, colorT().uMean(w1, w2, c1, c2, c3));
-          }
-        }
-      }
     }
   }
 

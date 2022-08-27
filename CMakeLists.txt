@@ -78,14 +78,14 @@ set(TARGETS_REQ_NONE   "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "
                        "mandelbrot_bm_cplx_hyper" "mandelbrot_bm_real" "mandelbrot_real_cfun" "mandelbrot_bm_real_eqop" "mandelbrot_cycles"
                        "mandelbrot_distance" "mandelbrot_distance_old" "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits"
                        "mandelbrot_potential" "mandelbrot_triangle" "newton_bm_cplx" "newton_bm_real" "newton_half" "newton_max_mod" "newton_vs"
-                       "newton_z6" "peterdejong" "peterdejongM" "sic" "sic_search" "sierpinski_triangle" "sprott2d" "testPoint" "test_color"
-                       "test_draw_btriangle" "test_draw_fonts" "test_draw_glyph" "test_draw_misc" "test_draw_primatives" "test_draw_strings"
-                       "test_float" "tippets" "types" "color_lut_ramp_cubeC")
+                       "newton_z6" "peterdejong" "peterdejongM" "sic" "sic_search" "sierpinski_triangle" "sprott2d" "testPoint" 
+                       "test_draw_btriangle" "test_draw_fonts" "test_draw_glyph" "test_draw_misc" "test_draw_strings"
+                       "tippets" "types" "color_lut_ramp_cubeC")
 set(TARGETS_REQ_OPENGL "glut_image")
 set(TARGETS_REQ_TIFF   "brownianDiffusion" "dlaBrownian" "dlaDrift" "img_process" "test_interp_scale" "geomTfrm_LensDistortion" "geomTfrm_Arb" 
                        "geomTfrm_Rotate" "displayImageSDL2")
 set(TARGETS_REQ_OPENMP "mandelbrot_bm_cplx_openmp")
-set(TARGETS_REQ_BTEST  "utest_colorTpl_ia64nGCC" "utest_colorTpl")
+set(TARGETS_REQ_BTEST  "utest_colorTpl_ia64nGCC" "utest_colorTpl" "utest_ramCanvasTpl")
 set(TARGETS_REQ_SDL2   "displayImageSDL2")
 
 # Construct list of targets we can build

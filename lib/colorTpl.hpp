@@ -2525,7 +2525,7 @@ namespace mjr {
           @return The integer representing grey value for the given color. */
       inline channelArithFltType rgb2GreyDotProd(channelArithFltType redWt   = RGBluminanceWeightR,
                                                  channelArithFltType greenWt = RGBluminanceWeightG, 
-                                                 channelArithFltType blueWt  = RGBluminanceWeightB) {
+                                                 channelArithFltType blueWt  = RGBluminanceWeightB) const {
         /* Requires: Inherits numChan>2 from getC2. */
         return (static_cast<channelArithFltType>(getRed())   * static_cast<channelArithFltType>(redWt)   +
                 static_cast<channelArithFltType>(getGreen()) * static_cast<channelArithFltType>(greenWt) +
@@ -2535,7 +2535,7 @@ namespace mjr {
       /** Compute the luminance of the current color via the definition given in the ITU-R Recommendation BT.709.
           The output value will be between 0 and 1, and is given by: (RGBluminanceWeightR*R+RGBluminanceWeightG*G+RGBluminanceWeightB*B)/#maxChanVal.
           @return The luminance for the current object. */
-      inline channelArithFltType luminanceRGB(void) {
+      inline channelArithFltType luminanceRGB(void) const {
         /* Requires: Inherits numChan>2 from getC2. */
         return ((static_cast<channelArithFltType>(getRed())   * static_cast<channelArithFltType>(RGBluminanceWeightR) +
                  static_cast<channelArithFltType>(getGreen()) * static_cast<channelArithFltType>(RGBluminanceWeightG) +
@@ -2544,7 +2544,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the unscaled intensity (sum of the R, G, & B components) of the current color
           @return The unscaled intensity for the current object. */
-      inline channelArithSPType intensityRGB(void) {
+      inline channelArithSPType intensityRGB(void) const {
         /* Requires: Inherits numChan>2 from getC2. */
         return static_cast<channelArithSPType>(static_cast<channelArithSPType>(getRed()) +
                                                static_cast<channelArithSPType>(getGreen()) +
@@ -2553,7 +2553,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the sum of the components.
           @return Sum of components. */
-      inline channelArithSPType intensity(void) {
+      inline channelArithSPType intensity() const {
         channelArithSPType sum = 0;
         for(int i=0; i<numChan; i++)
           sum += getChan(i);
@@ -2562,19 +2562,19 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the scaled intensity (sum of the first three components divided by the maximum intensity possible) of the current color
           @return The scaled intensity for the current object. */
-      inline channelArithFltType intensityScaledRGB(void) {
+      inline channelArithFltType intensityScaledRGB() const {
         return (static_cast<channelArithFltType>(intensityRGB()) / static_cast<channelArithFltType>(3) / static_cast<channelArithFltType>(maxChanVal));
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the scaled intensity (sum of the components divided by the maximum intensity possible) of the current color
           @return Sum of components. */
-      inline channelArithFltType intensityScaled(void) {
+      inline channelArithFltType intensityScaled() const {
         return (static_cast<channelArithFltType>(intensity()) / static_cast<channelArithFltType>(numChan) / static_cast<channelArithFltType>(maxChanVal));
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns the value of the largest component.
           @return The value of the largest color component currently stored.*/
-      inline clrChanT getMaxC() {
+      inline clrChanT getMaxC() const {
         /* Performance: I'm manually unrolling the loop and using direct calls to max functions because some compilers can't figure out how to optimize this code.
            At some point I expect the C++ reduce or max algorithms to be able to handle this case in an optimal way.  Till then, we get this weird bit of
            code. */
@@ -2597,7 +2597,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns the value of the smallest component.
           @return The value of the smallest color component currently stored.*/
-      inline clrChanT getMinC() {
+      inline clrChanT getMinC() const {
         if(numChan == 1) {                                         // 1 channel
           return getChanNC(0);
         } else if(numChan == 2) {                                  // 2 channels
@@ -2617,16 +2617,16 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns the value of the largest component from R, G, and B. This function is highly optimized.
           @return The value of the largest color component.*/
-      inline clrChanT getMaxRGB() { return mjr::max3(getRed(), getGreen(), getBlue()); } /* Requires: Inherits numChan>2 from getC2. */
+      inline clrChanT getMaxRGB() const { return mjr::max3(getRed(), getGreen(), getBlue()); } /* Requires: Inherits numChan>2 from getC2. */
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns the value of the smallest component from R, G, and B. This function is highly optimized.
           @return The value of the smallest color component.*/
-      inline clrChanT getMinRGB() { return mjr::min3(getRed(), getGreen(), getBlue()); } /* Requires: Inherits numChan>2 from getC2. */
+      inline clrChanT getMinRGB() const { return mjr::min3(getRed(), getGreen(), getBlue()); } /* Requires: Inherits numChan>2 from getC2. */
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the dot product between the current color and the given color. i.e. c1.r*c2.r+c1.g*c2.g+...
           @param aColor the given color
           @return Returns dot product.*/
-      inline channelArithFltType dotProd(colorArgType aColor) {
+      inline channelArithFltType dotProd(colorArgType aColor) const {
         channelArithFltType daProd = 0;
         for(int i=0; i<numChan; i++)
           daProd += static_cast<channelArithFltType>(static_cast<channelArithFltType>(getChanNC(i)) * static_cast<channelArithFltType>(aColor.getChanNC(i)));
@@ -2636,7 +2636,7 @@ namespace mjr {
       /** Distance between current color and given one (sum squares of channel differences -- Euclidean distance squared).
           @param aColor The given color
           @return Returns Distance */
-      inline channelArithFltType distHypot(colorArgType aColor) {
+      inline channelArithFltType distHypot(colorArgType aColor) const {
         channelArithFltType daDist = 0;
         for(int i=0; i<numChan; i++)
           daDist += (static_cast<channelArithFltType>((static_cast<channelArithFltType>(getChanNC(i)) - static_cast<channelArithFltType>(aColor.getChanNC(i))) *
@@ -2647,7 +2647,7 @@ namespace mjr {
       /** Distance between current color and given one (sum of absolute channel differences).
           @param aColor the given color
           @return Returns Distance */
-      inline channelArithSPType distSumAbs(colorArgType aColor) {
+      inline channelArithSPType distSumAbs(colorArgType aColor) const {
         channelArithSPType daDist = 0;
         for(int i=0; i<numChan; i++)
           daDist += static_cast<channelArithSPType>(std::abs(static_cast<channelArithDType>(getChanNC(i)) - static_cast<channelArithDType>(aColor.getChanNC(i))));
@@ -2657,7 +2657,7 @@ namespace mjr {
       /** Distance between current color and given one (maximum of absolute value of channel differences).
           @param aColor the given color
           @return Returns Distance */
-      inline channelArithSPType distMaxAbs(colorArgType aColor) {
+      inline channelArithSPType distMaxAbs(colorArgType aColor) const {
         channelArithSPType daDist = 0;
         for(int i=0; i<numChan; i++) {
           channelArithSPType tmp = static_cast<channelArithSPType>(std::abs(static_cast<channelArithDType>(getChanNC(i)) - static_cast<channelArithDType>(aColor.getChanNC(i))));
@@ -2670,7 +2670,7 @@ namespace mjr {
       /** Returns non-zero if the current color is close to aColor (the maximum delta between any two channels is less than or equal to epsilon).
           Note the implications for floating point clrChanT.
           @return non-zero if the given color is logically the same as the current color*/
-      inline bool isClose(colorArgType aColor, clrChanT epsilon) {
+      inline bool isClose(colorArgType aColor, clrChanT epsilon) const {
         for(int i=0; i<numChan; i++)
           if (std::abs(static_cast<channelArithDType>(getChanNC(i)) - static_cast<channelArithDType>(aColor.getChanNC(i))) > epsilon)
             return false;
@@ -2679,7 +2679,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Like isClose(), but only checks the R, G, & B channels.
           @return non-zero if the given RGB color is the same as the current color*/
-      inline bool isCloseRGB(colorArgType aColor, clrChanT epsilon) requires(blueChan >= 0) {
+      inline bool isCloseRGB(colorArgType aColor, clrChanT epsilon) const requires(blueChan >= 0) {
         for (int i : {redChan, blueChan, greenChan})
           if (std::abs(static_cast<channelArithDType>(getChanNC(i)) - static_cast<channelArithDType>(aColor.getChanNC(i))) > epsilon)
             return false;
@@ -2689,7 +2689,7 @@ namespace mjr {
       /** Returns non-zero if the current color is precicely equal to aColor.
           Note the implications for floating point clrChanT.
           @return non-zero if the given color is logically the same as the current color*/
-      inline bool isEqual(colorArgType aColor) {
+      inline bool isEqual(colorArgType aColor) const {
         if(perfectMask)
           return (getMaskNC() == aColor.getMaskNC());
         else
@@ -2701,7 +2701,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Like isEqual(), but only checks the R, G, & B channels.
           @return non-zero if the given RGB color is the same as the current color*/
-      inline bool isEqualRGB(colorArgType aColor) {
+      inline bool isEqualRGB(colorArgType aColor) const {
         /* Requires: Inherits RGB channel requirements from getRed/getGreen/getBlue. */
         return ((getRed()   == aColor.getRed()  ) &&
                 (getGreen() == aColor.getGreen()) &&
@@ -2711,7 +2711,7 @@ namespace mjr {
       /** Returns non-zero if the given color is logically NOT the same as the current color.
           Note the implications for floating point clrChanT.
           @return non-zero if the given color is logically the same as the current color*/
-      inline bool isNotEqual(colorArgType aColor) { return !(isEqual(aColor)); }
+      inline bool isNotEqual(colorArgType aColor) const { return !(isEqual(aColor)); }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns non-zero if the given color is black (all componnets are zero)
           @return non-zero if the given color is black (all componnets are zero) */
@@ -2727,7 +2727,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** LIke isBlack(), but only checks the R, G, & B channels
           @return non-zero if the given color is black (R, G, & B are  are zero) */
-      inline bool isBlackRGB() { return ((getRed() == 0) && (getGreen() == 0) && (getBlue() == 0)); } /* Requires: Inherits RGB channel requirements from getRed/getGreen/getBlue. */
+      inline bool isBlackRGB() const { return ((getRed() == 0) && (getGreen() == 0) && (getBlue() == 0)); } /* Requires: Inherits RGB channel requirements from getRed/getGreen/getBlue. */
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4644,6 +4644,30 @@ namespace mjr {
       out << static_cast<uint64_t>(color.getChan(numChan-1)) << ">";
     }
     return out;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /** i/O stream output operator for colorTpl types. */
+  template <class clrChanT, int numChan, int redChanIdx = -1, int blueChanIdx = -1, int greenChanIdx = -1, int alphaChanIdx = -1>
+  requires ((numChan>0)                                                                    && // Must have at least 1 chan
+            (std::is_unsigned<clrChanT>::value || std::is_floating_point<clrChanT>::value) && // unsigned integral or floating point
+            (std::is_floating_point<clrChanT>::value || (sizeof(clrChanT) >= 1))           && // If clrChanT int, then must be >= 1 char size
+            (redChanIdx < numChan)                                                         &&
+            (blueChanIdx < numChan)                                                        &&
+            (greenChanIdx < numChan)                                                       &&
+            (alphaChanIdx < numChan)                                                       &&
+            (((blueChanIdx <  0) && (redChanIdx <  0) && (greenChanIdx <  0)) ||
+             ((blueChanIdx >= 0) && (redChanIdx >= 0) && (greenChanIdx >= 0)))             && // R, G, & B all non-negative or all negative
+            ((alphaChanIdx < 0) || (redChanIdx >= 0))                                      && // If A is non-negative, then all non-negative
+            ((redChanIdx < 0) || ((redChanIdx   != greenChanIdx) &&
+                                  (redChanIdx   != blueChanIdx)  &&
+                                  (redChanIdx   != alphaChanIdx) &&
+                                  (greenChanIdx != blueChanIdx)  &&
+                                  (greenChanIdx != alphaChanIdx) &&
+                                  (blueChanIdx  != alphaChanIdx))))                           // Chans can't be teh same if non-negative
+  inline bool
+  operator!= (colorTpl<clrChanT, numChan> const& color1, colorTpl<clrChanT, numChan> const& color2) {
+    return color1.isNotEqual(color2);
   }
 
 } // end namespace mjr
