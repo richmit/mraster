@@ -1536,25 +1536,25 @@ BOOST_AUTO_TEST_CASE(draw_point) {
   aRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointIntType(aArS),                        aColor);  // array of short
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
-  aRamCanvas.drawPoint(std::complex<int>(2, 4),     bColor);  // complex<int>    -- complex<short>   no work
-  aRamCanvas.drawPoint(std::tuple<int,int>(4, 4),   aColor);  // tuple<int,int>  -- tuple<int,short> no work
-  aRamCanvas.drawPoint(std::vector<int>({6, 4}),    bColor);  // vector<int>
+  aRamCanvas.drawPoint(std::complex<int>(2, 4),     bColor);                                     // complex<int>    -- complex<short>   no work
+  aRamCanvas.drawPoint(std::tuple<int,int>(4, 4),   aColor);                                     // tuple<int,int>  -- tuple<int,short> no work
+  aRamCanvas.drawPoint(std::vector<int>({6, 4}),    bColor);                                     // vector<int>
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
-  aRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType({2, 2}),                       cColor);  // Initializeer list
-  aRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(4, 2),                         dColor);  // two arg
-  aRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(std::tuple<int,int>(6, 2)),    cColor);  // tuple<int,int>
-  aRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(std::tuple<int,short>(8, 2)),  dColor);  // tuple<int,short>
-  aRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(std::complex<double>(10, 2)),   cColor);  // complex<double>
-  aRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(std::complex<double>(12, 2)),  dColor);  // complex<double>
-  aRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(std::vector<double>({14, 2})), cColor);  // vector<double>
+  aRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType({2, 2}),                       cColor); // Initializeer list
+  aRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(4, 2),                         dColor); // two arg
+  aRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(std::tuple<int,int>(6, 2)),    cColor); // tuple<int,int>
+  aRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(std::tuple<int,short>(8, 2)),  dColor); // tuple<int,short>
+  aRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(std::complex<double>(10, 2)),  cColor); // complex<double>
+  aRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(std::complex<double>(12, 2)),  dColor); // complex<double>
+  aRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(std::vector<double>({14, 2})), cColor); // vector<double>
   double aArD[2] = {16, 2};
-  aRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(aArD),                         dColor);  // array of double
+  aRamCanvas.drawPoint(mjr::ramCanvasRGB8b::pointFltType(aArD),                         dColor); // array of double
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
-  aRamCanvas.drawPoint(std::complex<double>(2, 4),       dColor);  // complex<double>   -- complex<double> no work
-  aRamCanvas.drawPoint(std::tuple<double,double>(4, 4),  cColor);  // tuple<double,double>  -- tuple<double,double> no work
-  aRamCanvas.drawPoint(std::vector<double>({6, 4}),      dColor);  // vector<double>
+  aRamCanvas.drawPoint(std::complex<double>(2, 4),       dColor);                                // complex<double>   -- complex<double> no work
+  aRamCanvas.drawPoint(std::tuple<double,double>(4, 4),  cColor);                                // tuple<double,double>  -- tuple<double,double> no work
+  aRamCanvas.drawPoint(std::vector<double>({6, 4}),      dColor);                                // vector<double>
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   aRamCanvas.writeRAWfile("ut-points-a.mrw");
@@ -1568,18 +1568,93 @@ BOOST_AUTO_TEST_CASE(draw_point) {
   BOOST_CHECK_EQUAL_COLLECTIONS(bag, eag, bar, ear);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(lines_ep_swap) {
+
+// Make sure we get the same result regardless of point order in drawLine call
+
+  mjr::ramCanvas1c8b aRamCanvas(16, 16);
+  mjr::ramCanvas1c8b bRamCanvas(16, 16);
+  mjr::ramCanvas1c8b::colorType aColor(mjr::ramCanvas1c8b::colorType::cornerColorEnum::WHITE);
+
+  int x1, y1, x2, y2;
+  for(int i=0; i<16; i++) {
+    y1 = i;
+    x1 = 0;
+    y2 = 15-y1;
+    x2 = 15;
+    aRamCanvas.clrCanvasToBlack();
+    aRamCanvas.drawLine(x1, y1, x2, y2, aColor);
+    bRamCanvas.clrCanvasToBlack();
+    bRamCanvas.drawLine(x2, y2, x1, y1, aColor);
+    BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+    y1 = 0;
+    x1 = i;
+    y2 = 15;
+    x2 = 15-x1;
+    aRamCanvas.clrCanvasToBlack();
+    aRamCanvas.drawLine(x1, y1, x2, y2, aColor);
+    bRamCanvas.clrCanvasToBlack();
+    bRamCanvas.drawLine(x2, y2, x1, y1, aColor);
+    BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+    // Clip on right
+    y1 = i;
+    x1 = 0;
+    y2 = 15-y1;
+    x2 = 25;
+    aRamCanvas.clrCanvasToBlack();
+    aRamCanvas.drawLine(x1, y1, x2, y2, aColor);
+    bRamCanvas.clrCanvasToBlack();
+    bRamCanvas.drawLine(x2, y2, x1, y1, aColor);
+    BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+    // Clip on top
+    y1 = 0;
+    x1 = i;
+    y2 = 25;
+    x2 = 15-x1;
+    aRamCanvas.clrCanvasToBlack();
+    aRamCanvas.drawLine(x1, y1, x2, y2, aColor);
+    bRamCanvas.clrCanvasToBlack();
+    bRamCanvas.drawLine(x2, y2, x1, y1, aColor);
+    BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+    // Clip on left
+    y1 = i;
+    x1 = -5;
+    y2 = 15-y1;
+    x2 = 15;
+    aRamCanvas.clrCanvasToBlack();
+    aRamCanvas.drawLine(x1, y1, x2, y2, aColor);
+    bRamCanvas.clrCanvasToBlack();
+    bRamCanvas.drawLine(x2, y2, x1, y1, aColor);
+    BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+    // Clip on bot
+    y1 = -10;
+    x1 = i;
+    y2 = 15;
+    x2 = 15-x1;
+    aRamCanvas.clrCanvasToBlack();
+    aRamCanvas.drawLine(x1, y1, x2, y2, aColor);
+    bRamCanvas.clrCanvasToBlack();
+    bRamCanvas.drawLine(x2, y2, x1, y1, aColor);
+    BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+  }
+}
+
 #endif
-
-
-
 
 // Refrence mrg files:
 //   cp ut-draw_primatives_int.mrw ut-draw_primatives_flt.mrw ut-lines_no_clip.mrw ut-lines_clip-b.mrw ut-lines_clip-d.mrw ut-lines_clip-f.mrw ut-lines_clip-h.mrw ut-triangles-a.mrw ut-triangles-g.mrw ut-triangles-m.mrw ../data/utest/
 // Find them in this source by looking for lines with "/data/utest/".
 
 // TODO:
-//  - drawLine -- check for invariance under permutation of input points.  Say a grid 16x16 with all lines crossing (8,8).  Use two canvases. For
-//    each line clear both canvases, draw the line in each canvas with reversed points, compare the canvases.  Have code to dump images if we have a failure.
+//  - Add unit tests to replace the following test code:
+//    - test_draw_btriangle.cpp
+//    - test_draw_fonts.cpp
+//    - test_draw_glyph.cpp
+//    - test_draw_misc.cpp
+//    - test_draw_strings.cpp
+//    - test_interp_scale.cpp
+
 
   // XRamCanvas.writeRAWfile("ut-circles-X.mrw");
   // XRamCanvas.scaleUpProximal(20);
