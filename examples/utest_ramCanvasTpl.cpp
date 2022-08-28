@@ -1181,6 +1181,62 @@ BOOST_AUTO_TEST_CASE(circles) {
   std::istream_iterator<char> bbg(ifsbg), ebg;
   std::istream_iterator<char> bbr(ifsbr), ebr;
   BOOST_CHECK_EQUAL_COLLECTIONS(bbg, ebg, bbr, ebr);
+
+  mjr::ramCanvas1c8b cRamCanvas(32, 32);
+  cRamCanvas.drawCircle(31, 31, 16, aColor);
+  cRamCanvas.drawCircle(16, -5, 15, aColor);
+  cRamCanvas.drawCircle(5,  20, 8, aColor);
+
+  cRamCanvas.writeRAWfile("ut-circles-c.mrw");
+  cRamCanvas.scaleUpProximal(20);
+  cRamCanvas.writeTIFFfile("ut-circles-c.tiff");
+
+  std::ifstream ifscg("ut-circles-c.mrw");
+  std::ifstream ifscr("../data/utest/ut-circles-c.mrw");
+  std::istream_iterator<char> bcg(ifscg), ecg;
+  std::istream_iterator<char> bcr(ifscr), ecr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bcg, ecg, bcr, ecr);
+
+  mjr::ramCanvas1c8b dRamCanvas(32, 32);
+  dRamCanvas.drawFillCircle(31, 31, 16, aColor);
+  dRamCanvas.drawFillCircle(16, -5, 15, aColor);
+  dRamCanvas.drawFillCircle(5,  20, 8, aColor);
+
+  dRamCanvas.writeRAWfile("ut-circles-d.mrw");
+  dRamCanvas.scaleUpProximal(20);
+  dRamCanvas.writeTIFFfile("ut-circles-d.tiff");
+
+  std::ifstream ifsdg("ut-circles-d.mrw");
+  std::ifstream ifsdr("../data/utest/ut-circles-d.mrw");
+  std::istream_iterator<char> bdg(ifsdg), edg;
+  std::istream_iterator<char> bdr(ifsdr), edr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bdg, edg, bdr, edr);
+
+  mjr::ramCanvas1c8b eRamCanvas(32, 32);
+  eRamCanvas.drawFillCircle(16, 16, 17, aColor);
+
+  eRamCanvas.writeRAWfile("ut-circles-e.mrw");
+  eRamCanvas.scaleUpProximal(20);
+  eRamCanvas.writeTIFFfile("ut-circles-e.tiff");
+
+  std::ifstream ifseg("ut-circles-e.mrw");
+  std::ifstream ifser("../data/utest/ut-circles-e.mrw");
+  std::istream_iterator<char> beg(ifseg), eeg;
+  std::istream_iterator<char> ber(ifser), eer;
+  BOOST_CHECK_EQUAL_COLLECTIONS(beg, eeg, ber, eer);
+
+  mjr::ramCanvas1c8b fRamCanvas(32, 32);
+  fRamCanvas.drawFillCircle(16, 16, 50, aColor);
+
+  fRamCanvas.writeRAWfile("ut-circles-f.mrw");
+  fRamCanvas.scaleUpProximal(20);
+  fRamCanvas.writeTIFFfile("ut-circles-f.tiff");
+
+  std::ifstream ifsfg("ut-circles-f.mrw");
+  std::ifstream ifsfr("../data/utest/ut-circles-f.mrw");
+  std::istream_iterator<char> bfg(ifsfg), efg;
+  std::istream_iterator<char> bfr(ifsfr), efr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bfg, efg, bfr, efr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1224,7 +1280,7 @@ BOOST_AUTO_TEST_CASE(rectanglesO) {
   cRamCanvas.writeRAWfile("ut-rectanglesO-c.mrw");
   cRamCanvas.scaleUpProximal(20);
   cRamCanvas.writeTIFFfile("ut-rectanglesO-c.tiff");
-  
+
   std::ifstream ifscg("ut-rectanglesO-c.mrw");
   std::ifstream ifscr("../data/utest/ut-rectanglesO-c.mrw");
   std::istream_iterator<char> bcg(ifscg), ecg;
@@ -1244,14 +1300,14 @@ BOOST_AUTO_TEST_CASE(rectanglesO) {
   dRamCanvas.writeRAWfile("ut-rectanglesO-d.mrw");
   dRamCanvas.scaleUpProximal(20);
   dRamCanvas.writeTIFFfile("ut-rectanglesO-d.tiff");
-  
+
   std::ifstream ifsdg("ut-rectanglesO-d.mrw");
   std::ifstream ifsdr("../data/utest/ut-rectanglesO-d.mrw");
   std::istream_iterator<char> bdg(ifsdg), edg;
   std::istream_iterator<char> bdr(ifsdr), edr;
   BOOST_CHECK_EQUAL_COLLECTIONS(bdg, edg, bdr, edr);
 
-  // open: clip one corner 
+  // open: clip one corner
   mjr::ramCanvas1c8b eRamCanvas(9, 9);
 
   eRamCanvas.drawRectangle( 6,  6, 12,  12, aColor);
@@ -1361,7 +1417,7 @@ BOOST_AUTO_TEST_CASE(rectanglesF) {
   cRamCanvas.writeRAWfile("ut-rectanglesF-c.mrw");
   cRamCanvas.scaleUpProximal(20);
   cRamCanvas.writeTIFFfile("ut-rectanglesF-c.tiff");
-  
+
   std::ifstream ifscg("ut-rectanglesF-c.mrw");
   std::ifstream ifscr("../data/utest/ut-rectanglesF-c.mrw");
   std::istream_iterator<char> bcg(ifscg), ecg;
@@ -1381,14 +1437,14 @@ BOOST_AUTO_TEST_CASE(rectanglesF) {
   dRamCanvas.writeRAWfile("ut-rectanglesF-d.mrw");
   dRamCanvas.scaleUpProximal(20);
   dRamCanvas.writeTIFFfile("ut-rectanglesF-d.tiff");
-  
+
   std::ifstream ifsdg("ut-rectanglesF-d.mrw");
   std::ifstream ifsdr("../data/utest/ut-rectanglesF-d.mrw");
   std::istream_iterator<char> bdg(ifsdg), edg;
   std::istream_iterator<char> bdr(ifsdr), edr;
   BOOST_CHECK_EQUAL_COLLECTIONS(bdg, edg, bdr, edr);
 
-  // open: clip one corner 
+  // open: clip one corner
   mjr::ramCanvas1c8b eRamCanvas(9, 9);
 
   eRamCanvas.drawFillRectangle( 6,  6, 12,  12, aColor);
@@ -1459,6 +1515,8 @@ BOOST_AUTO_TEST_CASE(rectanglesF) {
 
 #endif
 
+
+
 // Refrence mrg files:
 //   cp ut-draw_primatives_int.mrw ut-draw_primatives_flt.mrw ut-lines_no_clip.mrw ut-lines_clip-b.mrw ut-lines_clip-d.mrw ut-lines_clip-f.mrw ut-lines_clip-h.mrw ut-triangles-a.mrw ut-triangles-g.mrw ut-triangles-m.mrw ../data/utest/
 // Find them in this source by looking for lines with "/data/utest/".
@@ -1467,12 +1525,12 @@ BOOST_AUTO_TEST_CASE(rectanglesF) {
 //  - drawLine -- check for invariance under permutation of input points.  Say a grid 16x16 with all lines crossing (8,8).  Use two canvases. For
 //    each line clear both canvases, draw the line in each canvas with reversed points, compare the canvases.  Have code to dump images if we have a failure.
 
-  // XRamCanvas.writeRAWfile("ut-rectangles-X.mrw");
+  // XRamCanvas.writeRAWfile("ut-circles-X.mrw");
   // XRamCanvas.scaleUpProximal(20);
-  // XRamCanvas.writeTIFFfile("ut-rectangles-X.tiff");
+  // XRamCanvas.writeTIFFfile("ut-circles-X.tiff");
   //
-  // std::ifstream ifsXg("ut-rectangles-X.mrw");
-  // std::ifstream ifsXr("../data/utest/ut-rectangles-X.mrw");
+  // std::ifstream ifsXg("ut-circles-X.mrw");
+  // std::ifstream ifsXr("../data/utest/ut-circles-X.mrw");
   // std::istream_iterator<char> bXg(ifsXg), eXg;
   // std::istream_iterator<char> bXr(ifsXr), eXr;
   // BOOST_CHECK_EQUAL_COLLECTIONS(bXg, eXg, bXr, eXr);
