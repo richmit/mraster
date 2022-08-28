@@ -650,7 +650,6 @@ BOOST_AUTO_TEST_CASE(save_file) {
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   // Write TIFF files.  These need to be checked outside of this source.  tiffinfo for starters.
-  //  MJR TODO NOTE BOOST_AUTO_TEST_CASE: Add an external script to check the TIFF files.
   aRamCanvas.writeTIFFfile("ut-save_file-a.tiff");
   bRamCanvas.writeTIFFfile("ut-save_file-b.tiff");
   cRamCanvas.writeTIFFfile("ut-save_file-c.tiff");
@@ -666,7 +665,6 @@ BOOST_AUTO_TEST_CASE(save_file) {
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   // Make sure headers are correct for MRW files
-  //  MJR TODO NOTE BOOST_AUTO_TEST_CASE: Should check entire contents of file
 
   aRamCanvas.writeRAWfile("ut-save_file-a.mrw");
   bRamCanvas.writeRAWfile("ut-save_file-b.mrw");
@@ -1640,20 +1638,41 @@ BOOST_AUTO_TEST_CASE(lines_ep_swap) {
   }
 }
 
-#endif
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(btriangle) {
 
-// Refrence mrg files:
-//   cp ut-draw_primatives_int.mrw ut-draw_primatives_flt.mrw ut-lines_no_clip.mrw ut-lines_clip-b.mrw ut-lines_clip-d.mrw ut-lines_clip-f.mrw ut-lines_clip-h.mrw ut-triangles-a.mrw ut-triangles-g.mrw ut-triangles-m.mrw ../data/utest/
-// Find them in this source by looking for lines with "/data/utest/".
+  mjr::ramCanvas3c8b aRamCanvas(153, 83);
+
+  aRamCanvas.drawFillTriangle(81, 31, 1, 9, 51, 81, "green", "red",   "blue");
+  aRamCanvas.drawTriangle    (81, 31, 1, 9, 51, 81, "white");
+
+  aRamCanvas.drawFillTriangle(71, 1, 151, 31, 121, 81, "red",   "green", "blue");
+  aRamCanvas.drawTriangle    (71, 1, 151, 31, 121, 81, "white");
+
+  aRamCanvas.writeRAWfile("ut-btriangle-a.mrw");
+  aRamCanvas.scaleUpProximal(20);
+  aRamCanvas.writeTIFFfile("ut-btriangle-a.tiff");
+  
+  std::ifstream ifsag("ut-btriangle-a.mrw");
+  std::ifstream ifsar("../data/utest/ut-btriangle-a.mrw");
+  std::istream_iterator<char> bag(ifsag), eag;
+  std::istream_iterator<char> bar(ifsar), ear;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bag, eag, bar, ear);
+}
+
+#endif
 
 // TODO:
 //  - Add unit tests to replace the following test code:
-//    - test_draw_btriangle.cpp
 //    - test_draw_fonts.cpp
 //    - test_draw_glyph.cpp
 //    - test_draw_misc.cpp
 //    - test_draw_strings.cpp
-//    - test_interp_scale.cpp
+//  - Test TIFF files in save_file test case -- ex: tiffinfo to at least check for correct tags.
+//  - Test MRG files in  save_file test case -- hand verify each MRG file, then copy it into ../data/utest, then add file comparison checks to save_file
+//  - Geometric transforms
+//  - Homogeneous transforms
+//  - Convolution
 
 
   // XRamCanvas.writeRAWfile("ut-circles-X.mrw");
