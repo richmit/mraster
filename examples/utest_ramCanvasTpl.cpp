@@ -47,7 +47,7 @@
 #include <fstream>
 #include <iterator>
 
-#if 1
+#if 0
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(draw_primatives_int) {
@@ -1743,13 +1743,59 @@ BOOST_AUTO_TEST_CASE(glyph_axis) {
   BOOST_CHECK_EQUAL_COLLECTIONS(bdg, edg, badr, eadr);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(strings) {
+
+  mjr::ramCanvas3c8b aRamCanvas(450, 100);
+  int y;
+  aRamCanvas.setIntAxOrientationY(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
+  aRamCanvas.drawLine(50, 0,  50, 512, "blue");
+  y = 18;
+  aRamCanvas.drawLine(0, y,   1024, y, "blue");
+  aRamCanvas.drawString("Hello, World!", mjr::hershey::font::ROMAN_SL_SANSERIF, 50, y, "red",  1, 16);
+  y+=50;
+  aRamCanvas.drawLine(0, y,   1024, y, "blue");
+  aRamCanvas.drawString("Hello, World!", mjr::hershey::font::ROMAN_SL_SANSERIF, 50, y, "red",  2, 15);
+
+  aRamCanvas.writeRAWfile("ut-strings-a.mrw");
+  aRamCanvas.scaleUpProximal(4);
+  aRamCanvas.writeTIFFfile("ut-strings-a.tiff");
+
+  std::ifstream ifsag("ut-strings-a.mrw");
+  std::ifstream ifsar("../data/utest/ut-strings-a.mrw");
+  std::istream_iterator<char> bag(ifsag), eag;
+  std::istream_iterator<char> bar(ifsar), ear;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bag, eag, bar, ear);
+
+  mjr::ramCanvas3c8b bRamCanvas(450, 100);
+  bRamCanvas.setIntAxOrientationY(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
+  y =18;
+  bRamCanvas.drawStringBox("Hello, World!", mjr::hershey::font::ROMAN_SL_SANSERIF, 50, y, "red", "green",  1, 16);
+  bRamCanvas.drawLine(0, y,   1024, y, "blue");
+  y+=50;
+  bRamCanvas.drawStringBox("Hello, World!", mjr::hershey::font::ROMAN_SL_SANSERIF, 50, y, "red", "green",  2, 15);
+  bRamCanvas.drawLine(0, y,   1024, y, "blue");
+  bRamCanvas.drawLine(50, 0,  50, 512, "blue");
+
+  bRamCanvas.writeRAWfile("ut-strings-b.mrw");
+  bRamCanvas.scaleUpProximal(4);
+  bRamCanvas.writeTIFFfile("ut-strings-b.tiff");
+  
+  std::ifstream ifsbg("ut-strings-b.mrw");
+  std::ifstream ifsbr("../data/utest/ut-strings-b.mrw");
+  std::istream_iterator<char> bbg(ifsbg), ebg;
+  std::istream_iterator<char> bbr(ifsbr), ebr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bbg, ebg, bbr, ebr);
+}
+
 #endif
+
+/** @endcond */
 
 
 // TODO:
 //  - Add unit tests to replace the following test code:
 //    - test_draw_fonts.cpp
-//    - test_draw_strings.cpp
 //  - Test TIFF files in save_file test case -- ex: tiffinfo to at least check for correct tags.
 //  - Test MRG files in  save_file test case -- hand verify each MRG file, then copy it into ../data/utest, then add file comparison checks to save_file
 //  - Geometric transforms
@@ -1757,16 +1803,14 @@ BOOST_AUTO_TEST_CASE(glyph_axis) {
 //  - Convolution
 
 
-  // XRamCanvas.writeRAWfile("ut-circles-X.mrw");
+  // XRamCanvas.writeRAWfile("ut-strings-X.mrw");
   // XRamCanvas.scaleUpProximal(20);
-  // XRamCanvas.writeTIFFfile("ut-circles-X.tiff");
+  // XRamCanvas.writeTIFFfile("ut-strings-X.tiff");
   //
-  // std::ifstream ifsXg("ut-circles-X.mrw");
-  // std::ifstream ifsXr("../data/utest/ut-circles-X.mrw");
+  // std::ifstream ifsXg("ut-strings-X.mrw");
+  // std::ifstream ifsXr("../data/utest/ut-strings-X.mrw");
   // std::istream_iterator<char> bXg(ifsXg), eXg;
   // std::istream_iterator<char> bXr(ifsXr), eXr;
   // BOOST_CHECK_EQUAL_COLLECTIONS(bXg, eXg, bXr, eXr);
-  // ifsXg.close();
-  // ifsXr.close();
 
 /** @endcond */
