@@ -1660,12 +1660,95 @@ BOOST_AUTO_TEST_CASE(btriangle) {
   BOOST_CHECK_EQUAL_COLLECTIONS(bag, eag, bar, ear);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(glyph_axis) {
+
+  // Make sure glyphs render right side up and forward.  The images in RAM will differ, but the *FILES* should be identical.
+
+  mjr::ramCanvas3c8b aRamCanvas(127, 127);
+  aRamCanvas.drawLine(0, 63, 127, 63, "blue");
+  aRamCanvas.drawLine(63, 0, 63, 127, "blue");
+  aRamCanvas.setIntAxOrientationX(mjr::ramCanvas3c8b::intAxisOrientation::NATURAL);
+  aRamCanvas.setIntAxOrientationY(mjr::ramCanvas3c8b::intAxisOrientation::NATURAL);
+  aRamCanvas.drawHersheyGlyph(505, 63, 63,  1,  1, "red");
+  aRamCanvas.drawHersheyGlyph(505, 63, 63,  2,  2, "red");
+  aRamCanvas.drawHersheyGlyph(505, 63, 63,  4,  4, "red");
+
+
+  aRamCanvas.writeRAWfile("ut-glyph_axis-a.mrw");
+  aRamCanvas.scaleUpProximal(4);
+  aRamCanvas.writeTIFFfile("ut-glyph_axis-a.tiff");
+
+  mjr::ramCanvas3c8b bRamCanvas(127, 127);
+  bRamCanvas.drawLine(0, 63, 127, 63, "blue");
+  bRamCanvas.drawLine(63, 0, 63, 127, "blue");
+  bRamCanvas.setIntAxOrientationX(mjr::ramCanvas3c8b::intAxisOrientation::NATURAL);
+  bRamCanvas.setIntAxOrientationY(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
+  bRamCanvas.drawHersheyGlyph(505, 63, 63,  1,  1, "red");
+  bRamCanvas.drawHersheyGlyph(505, 63, 63,  2,  2, "red");
+  bRamCanvas.drawHersheyGlyph(505, 63, 63,  4,  4, "red");
+  
+  bRamCanvas.writeRAWfile("ut-glyph_axis-b.mrw");
+  bRamCanvas.scaleUpProximal(4);
+  bRamCanvas.writeTIFFfile("ut-glyph_axis-b.tiff");
+
+  mjr::ramCanvas3c8b cRamCanvas(127, 127);
+  cRamCanvas.drawLine(0, 63, 127, 63, "blue");
+  cRamCanvas.drawLine(63, 0, 63, 127, "blue");
+  cRamCanvas.setIntAxOrientationX(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
+  cRamCanvas.setIntAxOrientationY(mjr::ramCanvas3c8b::intAxisOrientation::NATURAL);
+  cRamCanvas.drawHersheyGlyph(505, 63, 63,  1,  1, "red");
+  cRamCanvas.drawHersheyGlyph(505, 63, 63,  2,  2, "red");
+  cRamCanvas.drawHersheyGlyph(505, 63, 63,  4,  4, "red");
+
+  cRamCanvas.writeRAWfile("ut-glyph_axis-c.mrw");
+  cRamCanvas.scaleUpProximal(4);
+  cRamCanvas.writeTIFFfile("ut-glyph_axis-c.tiff");
+
+  mjr::ramCanvas3c8b dRamCanvas(127, 127);
+  dRamCanvas.drawLine(0, 63, 127, 63, "blue");
+  dRamCanvas.drawLine(63, 0, 63, 127, "blue");
+  dRamCanvas.setIntAxOrientationX(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
+  dRamCanvas.setIntAxOrientationY(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
+  dRamCanvas.drawHersheyGlyph(505, 63, 63,  1,  1, "red");
+  dRamCanvas.drawHersheyGlyph(505, 63, 63,  2,  2, "red");
+  dRamCanvas.drawHersheyGlyph(505, 63, 63,  4,  4, "red");
+
+  dRamCanvas.writeRAWfile("ut-glyph_axis-d.mrw");
+  dRamCanvas.scaleUpProximal(4);
+  dRamCanvas.writeTIFFfile("ut-glyph_axis-d.tiff");
+  
+  std::ifstream ifsag("ut-glyph_axis-a.mrw");
+  std::ifstream ifsaar("../data/utest/ut-glyph_axis-a.mrw");
+  std::istream_iterator<char> bag(ifsag), eag;
+  std::istream_iterator<char> baar(ifsaar), eaar;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bag, eag, baar, eaar);
+
+  std::ifstream ifsbg("ut-glyph_axis-b.mrw");
+  std::ifstream ifsabr("../data/utest/ut-glyph_axis-a.mrw");
+  std::istream_iterator<char> bbg(ifsbg), ebg;
+  std::istream_iterator<char> babr(ifsabr), eabr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bbg, ebg, babr, eabr);
+
+  std::ifstream ifscg("ut-glyph_axis-c.mrw");
+  std::ifstream ifsacr("../data/utest/ut-glyph_axis-a.mrw");
+  std::istream_iterator<char> bcg(ifscg), ecg;
+  std::istream_iterator<char> bacr(ifsacr), eacr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bcg, ecg, bacr, eacr);
+
+  std::ifstream ifsdg("ut-glyph_axis-d.mrw");
+  std::ifstream ifsadr("../data/utest/ut-glyph_axis-a.mrw");
+  std::istream_iterator<char> bdg(ifsdg), edg;
+  std::istream_iterator<char> badr(ifsadr), eadr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bdg, edg, badr, eadr);
+}
+
 #endif
+
 
 // TODO:
 //  - Add unit tests to replace the following test code:
 //    - test_draw_fonts.cpp
-//    - test_draw_glyph.cpp
 //    - test_draw_strings.cpp
 //  - Test TIFF files in save_file test case -- ex: tiffinfo to at least check for correct tags.
 //  - Test MRG files in  save_file test case -- hand verify each MRG file, then copy it into ../data/utest, then add file comparison checks to save_file
@@ -1683,5 +1766,7 @@ BOOST_AUTO_TEST_CASE(btriangle) {
   // std::istream_iterator<char> bXg(ifsXg), eXg;
   // std::istream_iterator<char> bXr(ifsXr), eXr;
   // BOOST_CHECK_EQUAL_COLLECTIONS(bXg, eXg, bXr, eXr);
+  // ifsXg.close();
+  // ifsXr.close();
 
 /** @endcond */
