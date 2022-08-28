@@ -1148,6 +1148,315 @@ BOOST_AUTO_TEST_CASE(triangles) {
   BOOST_CHECK_EQUAL_COLLECTIONS(bmg, emg, bmr, emr);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(circles) {
+
+  mjr::ramCanvas1c8b aRamCanvas(63, 63);
+  mjr::ramCanvas1c8b bRamCanvas(63, 63);
+  mjr::color1c8b aColor(mjr::color1c8b::cornerColorEnum::WHITE);
+  mjr::color1c8b bColor(mjr::color1c8b::cornerColorEnum::BLACK);
+
+  for(int i=2; i<32; i+=2)
+    aRamCanvas.drawCircle(31, 31, i, aColor);
+
+  bRamCanvas.drawFillCircle(31, 31, 30, aColor);
+
+  aRamCanvas.writeRAWfile("ut-circles-a.mrw");
+  bRamCanvas.writeRAWfile("ut-circles-b.mrw");
+
+  aRamCanvas.scaleUpProximal(8);
+  bRamCanvas.scaleUpProximal(8);
+
+  aRamCanvas.writeTIFFfile("ut-circles-a.tiff");
+  bRamCanvas.writeTIFFfile("ut-circles-b.tiff");
+
+  std::ifstream ifsag("ut-circles-a.mrw");
+  std::ifstream ifsar("../data/utest/ut-circles-a.mrw");
+  std::istream_iterator<char> bag(ifsag), eag;
+  std::istream_iterator<char> bar(ifsar), ear;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bag, eag, bar, ear);
+
+  std::ifstream ifsbg("ut-circles-b.mrw");
+  std::ifstream ifsbr("../data/utest/ut-circles-b.mrw");
+  std::istream_iterator<char> bbg(ifsbg), ebg;
+  std::istream_iterator<char> bbr(ifsbr), ebr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bbg, ebg, bbr, ebr);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(rectanglesO) {
+
+  // The drawRectangle method is pretty simple, but has several edge cases around clipping.  It is also weird about how it uses it's arguments.
+
+  mjr::ramCanvas1c8b::colorType aColor(mjr::ramCanvas1c8b::colorType::cornerColorEnum::WHITE);
+
+  // open: The args are used not points (x1, y1) & (x2, y2), but rather as x and y ranges.
+  mjr::ramCanvas1c8b aRamCanvas(9, 9);
+  mjr::ramCanvas1c8b bRamCanvas(9, 9);
+
+  aRamCanvas.drawRectangle(1, 1, 7, 7, aColor);
+
+  bRamCanvas.clrCanvasToBlack();
+  bRamCanvas.drawRectangle(1, 1, 7, 7, aColor);
+  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+
+  bRamCanvas.clrCanvasToBlack();
+  bRamCanvas.drawRectangle(7, 1, 1, 7, aColor);
+  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+
+  bRamCanvas.clrCanvasToBlack();
+  bRamCanvas.drawRectangle(1, 7, 7, 1, aColor);
+  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+
+  bRamCanvas.clrCanvasToBlack();
+  bRamCanvas.drawRectangle(7, 7, 1, 1, aColor);
+  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+
+  aRamCanvas.writeRAWfile("ut-rectanglesO-a.mrw");
+  aRamCanvas.scaleUpProximal(20);
+  aRamCanvas.writeTIFFfile("ut-rectanglesO-a.tiff");
+
+  // open: clip ALL corner (canvas inside rectangle)
+  mjr::ramCanvas1c8b cRamCanvas(9, 9);
+
+  cRamCanvas.drawRectangle(-4, -2, 25,  12, aColor);
+
+  cRamCanvas.writeRAWfile("ut-rectanglesO-c.mrw");
+  cRamCanvas.scaleUpProximal(20);
+  cRamCanvas.writeTIFFfile("ut-rectanglesO-c.tiff");
+  
+  std::ifstream ifscg("ut-rectanglesO-c.mrw");
+  std::ifstream ifscr("../data/utest/ut-rectanglesO-c.mrw");
+  std::istream_iterator<char> bcg(ifscg), ecg;
+  std::istream_iterator<char> bcr(ifscr), ecr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bcg, ecg, bcr, ecr);
+
+  // open: clip ALL corner (canvas inside rectangle)
+  mjr::ramCanvas1c8b dRamCanvas(9, 9);
+
+  dRamCanvas.drawRectangle(-9,  2, -4,   7, aColor); // to left
+  dRamCanvas.drawRectangle(16,  2, 24,   7, aColor); // to right
+  dRamCanvas.drawRectangle( 2,  12, 7,  17, aColor); // to top
+  dRamCanvas.drawRectangle( 2, -17, 7, -10, aColor); // to bot
+  dRamCanvas.drawRectangle(-9, -15, -4, -7, aColor); // to left below
+  dRamCanvas.drawRectangle(10,  15, 14, 17, aColor); // to right up
+
+  dRamCanvas.writeRAWfile("ut-rectanglesO-d.mrw");
+  dRamCanvas.scaleUpProximal(20);
+  dRamCanvas.writeTIFFfile("ut-rectanglesO-d.tiff");
+  
+  std::ifstream ifsdg("ut-rectanglesO-d.mrw");
+  std::ifstream ifsdr("../data/utest/ut-rectanglesO-d.mrw");
+  std::istream_iterator<char> bdg(ifsdg), edg;
+  std::istream_iterator<char> bdr(ifsdr), edr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bdg, edg, bdr, edr);
+
+  // open: clip one corner 
+  mjr::ramCanvas1c8b eRamCanvas(9, 9);
+
+  eRamCanvas.drawRectangle( 6,  6, 12,  12, aColor);
+  eRamCanvas.drawRectangle( 6,  2, 12, -12, aColor);
+  eRamCanvas.drawRectangle(-6,  6,  2,  16, aColor);
+  eRamCanvas.drawRectangle(-6, -6,  2,   2, aColor);
+
+  eRamCanvas.writeRAWfile("ut-rectanglesO-e.mrw");
+  eRamCanvas.scaleUpProximal(20);
+  eRamCanvas.writeTIFFfile("ut-rectanglesO-e.tiff");
+
+  std::ifstream ifseg("ut-rectanglesO-e.mrw");
+  std::ifstream ifser("../data/utest/ut-rectanglesO-e.mrw");
+  std::istream_iterator<char> beg(ifseg), eeg;
+  std::istream_iterator<char> ber(ifser), eer;
+  BOOST_CHECK_EQUAL_COLLECTIONS(beg, eeg, ber, eer);
+
+  // open: clip one side
+  mjr::ramCanvas1c8b fRamCanvas(9, 9);
+
+  fRamCanvas.drawRectangle( 2,   7,  6, 12, aColor); // top
+  fRamCanvas.drawRectangle( 7,   2, 20,  6, aColor); // right
+  fRamCanvas.drawRectangle(-6,   2,  1,  6, aColor);  // left
+  fRamCanvas.drawRectangle( 2, -27,  6,  1, aColor); // bot
+
+  fRamCanvas.writeRAWfile("ut-rectanglesO-f.mrw");
+  fRamCanvas.scaleUpProximal(20);
+  fRamCanvas.writeTIFFfile("ut-rectanglesO-f.tiff");
+
+  std::ifstream ifsfg("ut-rectanglesO-f.mrw");
+  std::ifstream ifsfr("../data/utest/ut-rectanglesO-f.mrw");
+  std::istream_iterator<char> bfg(ifsfg), efg;
+  std::istream_iterator<char> bfr(ifsfr), efr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bfg, efg, bfr, efr);
+
+  // open: clip one side (T/B)
+  mjr::ramCanvas1c8b gRamCanvas(9, 9);
+
+  gRamCanvas.drawRectangle(-3,   7, 26, 12, aColor); // top
+  gRamCanvas.drawRectangle(-4, -27, 30,  1, aColor); // bot
+
+  gRamCanvas.writeRAWfile("ut-rectanglesO-g.mrw");
+  gRamCanvas.scaleUpProximal(20);
+  gRamCanvas.writeTIFFfile("ut-rectanglesO-g.tiff");
+
+  std::ifstream ifsgg("ut-rectanglesO-g.mrw");
+  std::ifstream ifsgr("../data/utest/ut-rectanglesO-g.mrw");
+  std::istream_iterator<char> bgg(ifsgg), egg;
+  std::istream_iterator<char> bgr(ifsgr), egr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bgg, egg, bgr, egr);
+
+  // open: clip one side (L/R)
+  mjr::ramCanvas1c8b hRamCanvas(9, 9);
+
+  hRamCanvas.drawRectangle( 7,  -2, 20, 36, aColor); // right
+  hRamCanvas.drawRectangle(-6,  -5,  1, 16, aColor);  // left
+
+  hRamCanvas.writeRAWfile("ut-rectanglesO-h.mrw");
+  hRamCanvas.scaleUpProximal(20);
+  hRamCanvas.writeTIFFfile("ut-rectanglesO-h.tiff");
+
+  std::ifstream ifshg("ut-rectanglesO-h.mrw");
+  std::ifstream ifshr("../data/utest/ut-rectanglesO-h.mrw");
+  std::istream_iterator<char> bhg(ifshg), ehg;
+  std::istream_iterator<char> bhr(ifshr), ehr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bhg, ehg, bhr, ehr);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(rectanglesF) {
+
+  // The drawFillRectangle method is pretty simple, but has several edge cases around clipping.  It is also weird about how it uses it's arguments.
+
+  mjr::ramCanvas1c8b::colorType aColor(mjr::ramCanvas1c8b::colorType::cornerColorEnum::WHITE);
+
+  // open: The args are used not points (x1, y1) & (x2, y2), but rather as x and y ranges.
+  mjr::ramCanvas1c8b aRamCanvas(9, 9);
+  mjr::ramCanvas1c8b bRamCanvas(9, 9);
+
+  aRamCanvas.drawFillRectangle(1, 1, 7, 7, aColor);
+
+  bRamCanvas.clrCanvasToBlack();
+  bRamCanvas.drawFillRectangle(1, 1, 7, 7, aColor);
+  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+
+  bRamCanvas.clrCanvasToBlack();
+  bRamCanvas.drawFillRectangle(7, 1, 1, 7, aColor);
+  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+
+  bRamCanvas.clrCanvasToBlack();
+  bRamCanvas.drawFillRectangle(1, 7, 7, 1, aColor);
+  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+
+  bRamCanvas.clrCanvasToBlack();
+  bRamCanvas.drawFillRectangle(7, 7, 1, 1, aColor);
+  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+
+  aRamCanvas.writeRAWfile("ut-rectanglesF-a.mrw");
+  aRamCanvas.scaleUpProximal(20);
+  aRamCanvas.writeTIFFfile("ut-rectanglesF-a.tiff");
+
+  // open: clip ALL corner (canvas inside rectangle)
+  mjr::ramCanvas1c8b cRamCanvas(9, 9);
+
+  cRamCanvas.drawFillRectangle(-4, -2, 25,  12, aColor);
+
+  cRamCanvas.writeRAWfile("ut-rectanglesF-c.mrw");
+  cRamCanvas.scaleUpProximal(20);
+  cRamCanvas.writeTIFFfile("ut-rectanglesF-c.tiff");
+  
+  std::ifstream ifscg("ut-rectanglesF-c.mrw");
+  std::ifstream ifscr("../data/utest/ut-rectanglesF-c.mrw");
+  std::istream_iterator<char> bcg(ifscg), ecg;
+  std::istream_iterator<char> bcr(ifscr), ecr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bcg, ecg, bcr, ecr);
+
+  // open: clip ALL corner (canvas inside rectangle)
+  mjr::ramCanvas1c8b dRamCanvas(9, 9);
+
+  dRamCanvas.drawFillRectangle(-9,  2, -4,   7, aColor); // to left
+  dRamCanvas.drawFillRectangle(16,  2, 24,   7, aColor); // to right
+  dRamCanvas.drawFillRectangle( 2,  12, 7,  17, aColor); // to top
+  dRamCanvas.drawFillRectangle( 2, -17, 7, -10, aColor); // to bot
+  dRamCanvas.drawFillRectangle(-9, -15, -4, -7, aColor); // to left below
+  dRamCanvas.drawFillRectangle(10,  15, 14, 17, aColor); // to right up
+
+  dRamCanvas.writeRAWfile("ut-rectanglesF-d.mrw");
+  dRamCanvas.scaleUpProximal(20);
+  dRamCanvas.writeTIFFfile("ut-rectanglesF-d.tiff");
+  
+  std::ifstream ifsdg("ut-rectanglesF-d.mrw");
+  std::ifstream ifsdr("../data/utest/ut-rectanglesF-d.mrw");
+  std::istream_iterator<char> bdg(ifsdg), edg;
+  std::istream_iterator<char> bdr(ifsdr), edr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bdg, edg, bdr, edr);
+
+  // open: clip one corner 
+  mjr::ramCanvas1c8b eRamCanvas(9, 9);
+
+  eRamCanvas.drawFillRectangle( 6,  6, 12,  12, aColor);
+  eRamCanvas.drawFillRectangle( 6,  2, 12, -12, aColor);
+  eRamCanvas.drawFillRectangle(-6,  6,  2,  16, aColor);
+  eRamCanvas.drawFillRectangle(-6, -6,  2,   2, aColor);
+
+  eRamCanvas.writeRAWfile("ut-rectanglesF-e.mrw");
+  eRamCanvas.scaleUpProximal(20);
+  eRamCanvas.writeTIFFfile("ut-rectanglesF-e.tiff");
+
+  std::ifstream ifseg("ut-rectanglesF-e.mrw");
+  std::ifstream ifser("../data/utest/ut-rectanglesF-e.mrw");
+  std::istream_iterator<char> beg(ifseg), eeg;
+  std::istream_iterator<char> ber(ifser), eer;
+  BOOST_CHECK_EQUAL_COLLECTIONS(beg, eeg, ber, eer);
+
+  // open: clip one side
+  mjr::ramCanvas1c8b fRamCanvas(9, 9);
+
+  fRamCanvas.drawFillRectangle( 2,   7,  6, 12, aColor); // top
+  fRamCanvas.drawFillRectangle( 7,   2, 20,  6, aColor); // right
+  fRamCanvas.drawFillRectangle(-6,   2,  1,  6, aColor);  // left
+  fRamCanvas.drawFillRectangle( 2, -27,  6,  1, aColor); // bot
+
+  fRamCanvas.writeRAWfile("ut-rectanglesF-f.mrw");
+  fRamCanvas.scaleUpProximal(20);
+  fRamCanvas.writeTIFFfile("ut-rectanglesF-f.tiff");
+
+  std::ifstream ifsfg("ut-rectanglesF-f.mrw");
+  std::ifstream ifsfr("../data/utest/ut-rectanglesF-f.mrw");
+  std::istream_iterator<char> bfg(ifsfg), efg;
+  std::istream_iterator<char> bfr(ifsfr), efr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bfg, efg, bfr, efr);
+
+  // open: clip one side (T/B)
+  mjr::ramCanvas1c8b gRamCanvas(9, 9);
+
+  gRamCanvas.drawFillRectangle(-3,   7, 26, 12, aColor); // top
+  gRamCanvas.drawFillRectangle(-4, -27, 30,  1, aColor); // bot
+
+  gRamCanvas.writeRAWfile("ut-rectanglesF-g.mrw");
+  gRamCanvas.scaleUpProximal(20);
+  gRamCanvas.writeTIFFfile("ut-rectanglesF-g.tiff");
+
+  std::ifstream ifsgg("ut-rectanglesF-g.mrw");
+  std::ifstream ifsgr("../data/utest/ut-rectanglesF-g.mrw");
+  std::istream_iterator<char> bgg(ifsgg), egg;
+  std::istream_iterator<char> bgr(ifsgr), egr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bgg, egg, bgr, egr);
+
+  // open: clip one side (L/R)
+  mjr::ramCanvas1c8b hRamCanvas(9, 9);
+
+  hRamCanvas.drawFillRectangle( 7,  -2, 20, 36, aColor); // right
+  hRamCanvas.drawFillRectangle(-6,  -5,  1, 16, aColor);  // left
+
+  hRamCanvas.writeRAWfile("ut-rectanglesF-h.mrw");
+  hRamCanvas.scaleUpProximal(20);
+  hRamCanvas.writeTIFFfile("ut-rectanglesF-h.tiff");
+
+  std::ifstream ifshg("ut-rectanglesF-h.mrw");
+  std::ifstream ifshr("../data/utest/ut-rectanglesF-h.mrw");
+  std::istream_iterator<char> bhg(ifshg), ehg;
+  std::istream_iterator<char> bhr(ifshr), ehr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bhg, ehg, bhr, ehr);
+}
+
 #endif
 
 // Refrence mrg files:
@@ -1157,9 +1466,15 @@ BOOST_AUTO_TEST_CASE(triangles) {
 // TODO:
 //  - drawLine -- check for invariance under permutation of input points.  Say a grid 16x16 with all lines crossing (8,8).  Use two canvases. For
 //    each line clear both canvases, draw the line in each canvas with reversed points, compare the canvases.  Have code to dump images if we have a failure.
-//  - drawRectangle
-//  - drawFillRectangle
-//  - drawCircle
-//  - drawFillCircle
+
+  // XRamCanvas.writeRAWfile("ut-rectangles-X.mrw");
+  // XRamCanvas.scaleUpProximal(20);
+  // XRamCanvas.writeTIFFfile("ut-rectangles-X.tiff");
+  //
+  // std::ifstream ifsXg("ut-rectangles-X.mrw");
+  // std::ifstream ifsXr("../data/utest/ut-rectangles-X.mrw");
+  // std::istream_iterator<char> bXg(ifsXg), eXg;
+  // std::istream_iterator<char> bXr(ifsXr), eXr;
+  // BOOST_CHECK_EQUAL_COLLECTIONS(bXg, eXg, bXr, eXr);
 
 /** @endcond */
