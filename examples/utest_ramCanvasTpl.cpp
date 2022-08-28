@@ -1881,16 +1881,13 @@ BOOST_AUTO_TEST_CASE(strings) {
 
 #endif
 
-/** @endcond */
-
-
-// TODO:
-//  - Convert test_draw_fonts.cpp to a demo
-//  - Add unit tests for fonts
-//  - Test TIFF files in save_file test case -- ex: tiffinfo to at least check for correct tags.
-//  - Geometric transforms
-//  - Homogeneous transforms
-//  - Convolution
+//  MJR TODO NOTE utest_ramCanvasTpl.cpp: Instead of compareing files, load files and compare images -- using an endianness aware MRW reader.
+//  MJR TODO NOTE utest_ramCanvasTpl.cpp: Test TIFF files in save_file test case -- by reading them in along with a refrence MRW, and compareing the images in RAM.
+//  MJR TODO NOTE utest_ramCanvasTpl.cpp: Convert test_draw_fonts.cpp to a demo
+//  MJR TODO NOTE utest_ramCanvasTpl.cpp: Add unit tests for fonts
+//  MJR TODO NOTE utest_ramCanvasTpl.cpp: Add unit tests for Geometric transforms
+//  MJR TODO NOTE utest_ramCanvasTpl.cpp: Add unit tests for Homogeneous transforms
+//  MJR TODO NOTE utest_ramCanvasTpl.cpp: Add unit tests for Convolution
 
 
   // XRamCanvas.writeRAWfile("ut-strings-X.mrw");

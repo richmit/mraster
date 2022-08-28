@@ -4106,3 +4106,7 @@ namespace mjr {
 
 #define MJR_INCLUDE_ramCanvasTpl
 #endif
+
+//  MJR TODO NOTE ramCanvasTpl.hpp: Add methods to compare canvas data: isEqual, isClose
+//  MJR TODO NOTE ramCanvasTpl.hpp: Add method to read Mraster RAW (.mrw) files: readRAWfile (needs to get endianness right)
+//  MJR TODO NOTE ramCanvasTpl.hpp: Add operators: ==, !=

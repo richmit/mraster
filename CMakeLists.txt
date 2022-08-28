@@ -7,8 +7,8 @@ cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
 
 project(MRaster CXX)
 
-set(PROJECT_VERSION_DATE  2022-08-20)
-set(PROJECT_VERSION_ID    v20.8.1b)
+set(PROJECT_VERSION_DATE  2022-08-28)
+set(PROJECT_VERSION_ID    v20.8.2rc1)
 mark_as_advanced(PROJECT_VERSION_DATE PROJECT_VERSION_ID)
 
 ######################################################################################################################################################
