@@ -1,0 +1,2 @@
+
+This directory contains scripts that might be usefully to users of *MRaster*.
