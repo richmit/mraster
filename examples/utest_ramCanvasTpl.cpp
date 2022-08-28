@@ -1666,7 +1666,6 @@ BOOST_AUTO_TEST_CASE(btriangle) {
 //  - Add unit tests to replace the following test code:
 //    - test_draw_fonts.cpp
 //    - test_draw_glyph.cpp
-//    - test_draw_misc.cpp
 //    - test_draw_strings.cpp
 //  - Test TIFF files in save_file test case -- ex: tiffinfo to at least check for correct tags.
 //  - Test MRG files in  save_file test case -- hand verify each MRG file, then copy it into ../data/utest, then add file comparison checks to save_file
