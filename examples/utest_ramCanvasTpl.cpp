@@ -4,7 +4,7 @@
  @file      utest_ramCanvasTpl.cpp
  @author    Mitch Richling http://www.mitchr.me/
  @date      2022-08-24
- @brief     unit tests for ramCanvasTpl.@EOL
+ @brief     unit tests for ramCanvasTpl on 64-bit little endian hardware -- like ia64/x86_64.@EOL
  @keywords
  @std       C++20
  @see
@@ -47,7 +47,7 @@
 #include <fstream>
 #include <iterator>
 
-#if 0
+#if 1
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(draw_primatives_int) {
@@ -694,25 +694,116 @@ BOOST_AUTO_TEST_CASE(save_file) {
 
   char strBuf[256];
 
-  std::ifstream ifsa("ut-save_file-a.mrw"); ifsa.get(strBuf, 101, '\0'); ifsa.close(); BOOST_CHECK_EQUAL_COLLECTIONS(aRawHeader, aRawHeader+100, strBuf, strBuf+100);
-  std::ifstream ifsb("ut-save_file-b.mrw"); ifsb.get(strBuf, 101, '\0'); ifsb.close(); BOOST_CHECK_EQUAL_COLLECTIONS(bRawHeader, bRawHeader+100, strBuf, strBuf+100);
-  std::ifstream ifsc("ut-save_file-c.mrw"); ifsc.get(strBuf, 101, '\0'); ifsc.close(); BOOST_CHECK_EQUAL_COLLECTIONS(cRawHeader, cRawHeader+100, strBuf, strBuf+100);
-  std::ifstream ifsd("ut-save_file-d.mrw"); ifsd.get(strBuf, 101, '\0'); ifsd.close(); BOOST_CHECK_EQUAL_COLLECTIONS(dRawHeader, dRawHeader+100, strBuf, strBuf+100);
-  std::ifstream ifse("ut-save_file-e.mrw"); ifse.get(strBuf, 101, '\0'); ifse.close(); BOOST_CHECK_EQUAL_COLLECTIONS(eRawHeader, eRawHeader+100, strBuf, strBuf+100);
-  std::ifstream ifsf("ut-save_file-f.mrw"); ifsf.get(strBuf, 101, '\0'); ifsf.close(); BOOST_CHECK_EQUAL_COLLECTIONS(fRawHeader, fRawHeader+100, strBuf, strBuf+100);
-  std::ifstream ifsg("ut-save_file-g.mrw"); ifsg.get(strBuf, 101, '\0'); ifsg.close(); BOOST_CHECK_EQUAL_COLLECTIONS(gRawHeader, gRawHeader+100, strBuf, strBuf+100);
-  std::ifstream ifsh("ut-save_file-h.mrw"); ifsh.get(strBuf, 101, '\0'); ifsh.close(); BOOST_CHECK_EQUAL_COLLECTIONS(hRawHeader, hRawHeader+100, strBuf, strBuf+100);
-  std::ifstream ifsi("ut-save_file-i.mrw"); ifsi.get(strBuf, 101, '\0'); ifsi.close(); BOOST_CHECK_EQUAL_COLLECTIONS(iRawHeader, iRawHeader+100, strBuf, strBuf+100);
-  std::ifstream ifsj("ut-save_file-j.mrw"); ifsj.get(strBuf, 101, '\0'); ifsj.close(); BOOST_CHECK_EQUAL_COLLECTIONS(jRawHeader, jRawHeader+100, strBuf, strBuf+100);
-  std::ifstream ifsk("ut-save_file-k.mrw"); ifsk.get(strBuf, 101, '\0'); ifsk.close(); BOOST_CHECK_EQUAL_COLLECTIONS(kRawHeader, kRawHeader+100, strBuf, strBuf+100);
-  std::ifstream ifsl("ut-save_file-l.mrw"); ifsl.get(strBuf, 101, '\0'); ifsl.close(); BOOST_CHECK_EQUAL_COLLECTIONS(lRawHeader, lRawHeader+100, strBuf, strBuf+100);
+  std::ifstream ifsHa("ut-save_file-a.mrw"); ifsHa.get(strBuf, 101, '\0'); ifsHa.close(); BOOST_CHECK_EQUAL_COLLECTIONS(aRawHeader, aRawHeader+100, strBuf, strBuf+100);
+  std::ifstream ifsHb("ut-save_file-b.mrw"); ifsHb.get(strBuf, 101, '\0'); ifsHb.close(); BOOST_CHECK_EQUAL_COLLECTIONS(bRawHeader, bRawHeader+100, strBuf, strBuf+100);
+  std::ifstream ifsHc("ut-save_file-c.mrw"); ifsHc.get(strBuf, 101, '\0'); ifsHc.close(); BOOST_CHECK_EQUAL_COLLECTIONS(cRawHeader, cRawHeader+100, strBuf, strBuf+100);
+  std::ifstream ifsHd("ut-save_file-d.mrw"); ifsHd.get(strBuf, 101, '\0'); ifsHd.close(); BOOST_CHECK_EQUAL_COLLECTIONS(dRawHeader, dRawHeader+100, strBuf, strBuf+100);
+  std::ifstream ifsHe("ut-save_file-e.mrw"); ifsHe.get(strBuf, 101, '\0'); ifsHe.close(); BOOST_CHECK_EQUAL_COLLECTIONS(eRawHeader, eRawHeader+100, strBuf, strBuf+100);
+  std::ifstream ifsHf("ut-save_file-f.mrw"); ifsHf.get(strBuf, 101, '\0'); ifsHf.close(); BOOST_CHECK_EQUAL_COLLECTIONS(fRawHeader, fRawHeader+100, strBuf, strBuf+100);
+  std::ifstream ifsHg("ut-save_file-g.mrw"); ifsHg.get(strBuf, 101, '\0'); ifsHg.close(); BOOST_CHECK_EQUAL_COLLECTIONS(gRawHeader, gRawHeader+100, strBuf, strBuf+100);
+  std::ifstream ifsHh("ut-save_file-h.mrw"); ifsHh.get(strBuf, 101, '\0'); ifsHh.close(); BOOST_CHECK_EQUAL_COLLECTIONS(hRawHeader, hRawHeader+100, strBuf, strBuf+100);
+  std::ifstream ifsHi("ut-save_file-i.mrw"); ifsHi.get(strBuf, 101, '\0'); ifsHi.close(); BOOST_CHECK_EQUAL_COLLECTIONS(iRawHeader, iRawHeader+100, strBuf, strBuf+100);
+  std::ifstream ifsHj("ut-save_file-j.mrw"); ifsHj.get(strBuf, 101, '\0'); ifsHj.close(); BOOST_CHECK_EQUAL_COLLECTIONS(jRawHeader, jRawHeader+100, strBuf, strBuf+100);
+  std::ifstream ifsHk("ut-save_file-k.mrw"); ifsHk.get(strBuf, 101, '\0'); ifsHk.close(); BOOST_CHECK_EQUAL_COLLECTIONS(kRawHeader, kRawHeader+100, strBuf, strBuf+100);
+  std::ifstream ifsHl("ut-save_file-l.mrw"); ifsHl.get(strBuf, 101, '\0'); ifsHl.close(); BOOST_CHECK_EQUAL_COLLECTIONS(lRawHeader, lRawHeader+100, strBuf, strBuf+100);
 
-  // Here is a nice way to look at the data part of the image files
-  //   - hexDump.rb -w 16 -b 3 -p 100 ut-save_file-a.mrw | less -RS
-  //   - hexDump.rb -w 16 -b 6 -p 100 ut-save_file-b.mrw | less -RS
+  // I checked this file by hand on 2022-08-28. sha256: 94c07f28db463165acc539a88c8a31c13646890204c7548d72ec3b3bda851c9c
+  // hexDump.rb -t 0 -c -w 16 -b 3 -p 100 ut-save_file-a.mrw | less -SR
+  std::ifstream ifsag("ut-save_file-a.mrw");
+  std::ifstream ifsar("../data/utest/ut-save_file-a.mrw");
+  std::istream_iterator<char> bag(ifsag), eag;
+  std::istream_iterator<char> bar(ifsar), ear;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bag, eag, bar, ear);
 
-  // Nice way to look at file a
-  // head -n 2 ut-save_file-a.mrw; hexDump.rb -t 0 -c -w 16 -b 3 -p 100 ut-save_file-a.mrw
+  // I checked this file by hand on 2022-08-28. sha256: daeac55ba6fdf084ece356ce86fba5f0b501ba375b0765d3b1e0aed91bde78b5
+  // hexDump.rb -t 0 -c -w 16 -b 6 -p 100 ut-save_file-b.mrw | less -RS
+  std::ifstream ifsbg("ut-save_file-b.mrw");
+  std::ifstream ifsbr("../data/utest/ut-save_file-b.mrw");
+  std::istream_iterator<char> bbg(ifsbg), ebg;
+  std::istream_iterator<char> bbr(ifsbr), ebr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bbg, ebg, bbr, ebr);
+
+  // I checked this file qby hand on 2022-08-28. sha256: d29aa9add19842ba1f2cd98e48a5987b645e8357180984b9b88186733ee4b99f
+  // hexDump.rb -t 0 -c -w 16 -b 12 -p 100 ut-save_file-c.mrw | less -RS
+  std::ifstream ifscg("ut-save_file-c.mrw");
+  std::ifstream ifscr("../data/utest/ut-save_file-c.mrw");
+  std::istream_iterator<char> bcg(ifscg), ecg;
+  std::istream_iterator<char> bcr(ifscr), ecr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bcg, ecg, bcr, ecr);
+
+  // I checked this file qby hand on 2022-08-28. sha256: bf987ec465ba232f3339b87bb9a90b52ec282d31f91378821965c06d72cc1720
+  // hexDump.rb -t -1 -c -w 16 -b 24 -p 100 ut-save_file-d.mrw | less -RS
+  std::ifstream ifsdg("ut-save_file-d.mrw");
+  std::ifstream ifsdr("../data/utest/ut-save_file-d.mrw");
+  std::istream_iterator<char> bdg(ifsdg), edg;
+  std::istream_iterator<char> bdr(ifsdr), edr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bdg, edg, bdr, edr);
+
+  // I checked this file qby hand on 2022-08-28. sha256: eb74e602fc69f5755a276c0bcc3c7acc473def2fb7288e324b6463f45d7f8816
+  // hexDump.rb -t 0 -c -w 16 -b 12 -p 100 ut-save_file-e.mrw | less -RS
+  std::ifstream ifseg("ut-save_file-e.mrw");
+  std::ifstream ifser("../data/utest/ut-save_file-e.mrw");
+  std::istream_iterator<char> beg(ifseg), eeg;
+  std::istream_iterator<char> ber(ifser), eer;
+  BOOST_CHECK_EQUAL_COLLECTIONS(beg, eeg, ber, eer);
+
+  // I checked this file qby hand on 2022-08-28. sha256: 060b545e73ce68ea60f9413ba8611cea1ddf30c986c6ad9384d137939927465d
+  // I did the conversion by hand, so I should double check it...
+  // hexDump.rb -t -1 -c -w 16 -b 24 -p 100 ut-save_file-f.mrw | less -RS
+  std::ifstream ifsfg("ut-save_file-f.mrw");
+  std::ifstream ifsfr("../data/utest/ut-save_file-f.mrw");
+  std::istream_iterator<char> bfg(ifsfg), efg;
+  std::istream_iterator<char> bfr(ifsfr), efr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bfg, efg, bfr, efr);
+
+  // I checked this file qby hand on 2022-08-28. sha256: 24c15670cd4776abbad82f9ad3fa6c83c90dca367c6931bb9dce6b7565108a97
+  // hexDump.rb -t 0 -c -w 16 -b 1 -p 100 ut-save_file-g.mrw | less -RS
+  std::ifstream ifsgg("ut-save_file-g.mrw");
+  std::ifstream ifsgr("../data/utest/ut-save_file-g.mrw");
+  std::istream_iterator<char> bgg(ifsgg), egg;
+  std::istream_iterator<char> bgr(ifsgr), egr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bgg, egg, bgr, egr);
+
+  // I checked this file qby hand on 2022-08-28. sha256: a2daf01cd91b48e850b4db7424dc06d689fe557bc777b20f7dda6954c9bd0618
+  // hexDump.rb -t 0 -c -w 16 -b 2 -p 100 ut-save_file-h.mrw | less -RS
+  std::ifstream ifshg("ut-save_file-h.mrw");
+  std::ifstream ifshr("../data/utest/ut-save_file-h.mrw");
+  std::istream_iterator<char> bhg(ifshg), ehg;
+  std::istream_iterator<char> bhr(ifshr), ehr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bhg, ehg, bhr, ehr);
+
+  // I checked this file qby hand on 2022-08-28. sha256: e54e75ae84fe412648121cf55ba39a0c05405474a0a1cd19ac6dfc92ac839be0 *ut-save_file-i.mrw
+  // hexDump.rb -t 0 -c -w 16 -b 4 -p 100 ut-save_file-i.mrw | less -RS
+  std::ifstream ifsig("ut-save_file-i.mrw");
+  std::ifstream ifsir("../data/utest/ut-save_file-i.mrw");
+  std::istream_iterator<char> big(ifsig), eig;
+  std::istream_iterator<char> bir(ifsir), eir;
+  BOOST_CHECK_EQUAL_COLLECTIONS(big, eig, bir, eir);
+
+  // I checked this file qby hand on 2022-08-28. sha256: 3144a77040b5a25c9c089d7cf32d6ee0f832a23b71de1f2d1b3fafab4b82408c
+  // hexDump.rb -t 0 -c -w 16 -b 8 -p 100 ut-save_file-j.mrw | less -RS
+  std::ifstream ifsjg("ut-save_file-j.mrw");
+  std::ifstream ifsjr("../data/utest/ut-save_file-j.mrw");
+  std::istream_iterator<char> bjg(ifsjg), ejg;
+  std::istream_iterator<char> bjr(ifsjr), ejr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bjg, ejg, bjr, ejr);
+
+  // I checked this file qby hand on 2022-08-28. sha256: 25ce4b85baca2aa4ea8f4635e82abb4e1aa92e55ec6a9caf9b5558a1d0574a66
+  // hexDump.rb -t 0 -c -w 16 -b 4 -p 100 ut-save_file-k.mrw | less -RS
+  std::ifstream ifskg("ut-save_file-k.mrw");
+  std::ifstream ifskr("../data/utest/ut-save_file-k.mrw");
+  std::istream_iterator<char> bkg(ifskg), ekg;
+  std::istream_iterator<char> bkr(ifskr), ekr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(bkg, ekg, bkr, ekr);
+
+  // I checked this file qby hand on 2022-08-28. sha256: 007879b182639b37a54358067f742c86bccb1ec0cb85a67a9f648ebf56c44294
+  // I did the conversion by hand, so I should double check it...
+  // hexDump.rb -t -1 -c -w 16 -b 8 -p 100 ut-save_file-l.mrw | less -RS
+  std::ifstream ifslg("ut-save_file-l.mrw");
+  std::ifstream ifslr("../data/utest/ut-save_file-l.mrw");
+  std::istream_iterator<char> blg(ifslg), elg;
+  std::istream_iterator<char> blr(ifslr), elr;
+  BOOST_CHECK_EQUAL_COLLECTIONS(blg, elg, blr, elr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1794,10 +1885,9 @@ BOOST_AUTO_TEST_CASE(strings) {
 
 
 // TODO:
-//  - Add unit tests to replace the following test code:
-//    - test_draw_fonts.cpp
+//  - Convert test_draw_fonts.cpp to a demo
+//  - Add unit tests for fonts
 //  - Test TIFF files in save_file test case -- ex: tiffinfo to at least check for correct tags.
-//  - Test MRG files in  save_file test case -- hand verify each MRG file, then copy it into ../data/utest, then add file comparison checks to save_file
 //  - Geometric transforms
 //  - Homogeneous transforms
 //  - Convolution
