@@ -81,7 +81,7 @@ int main() {
           std::cout << "." << std::flush;
       }
       std::complex<double> f = c5/(c4-z)-c1;
-      int rn = rEng()%3;
+      std::minstd_rand0::result_type rn = rEng()%3;
       switch (rn) {
       case 0:
         zNxt = f;    break;

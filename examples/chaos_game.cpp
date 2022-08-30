@@ -133,7 +133,7 @@ int main() {
     int lastPoint = -1;
     double maxMag = 0;
     for(int n=0;n<theIFS.itrMax;n++) {
-      int rn = rEng();
+      std::minstd_rand0::result_type rn = rEng();
       int rpi = rn%theIFS.numPts;
       while(((lastPoint !=-1) && (theIFS.lastAvoidLast    !=-1) && rpi==lastPoint) ||
             ((lastPoint !=-1) && (theIFS.lastAvoidBackward!=-1) && (rpi==(lastPoint+theIFS.lastAvoidBackward)%theIFS.numPts)) ||

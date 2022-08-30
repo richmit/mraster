@@ -47,7 +47,7 @@
 #include <string>                                                        /* C++ strings             C++11    */
 #include <type_traits>                                                   /* C++ metaprogramming     C++11    */
 #include <utility>                                                       /* STL Misc Utilities      C++11    */
-#include <vector>                                                        /* STL vector              C++11    */
+#include <vector>                                                        /* STL vector              C++11    */ 
 
 #include "color.hpp"
 #include "hersheyFont.hpp"

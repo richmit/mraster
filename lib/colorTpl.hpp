@@ -37,7 +37,7 @@
 #include <array>                                                         /* array template          C++11    */
 #include <climits>                                                       /* std:: C limits.h        C++11    */
 #include <cmath>                                                         /* std:: C math.h          C++11    */
-#include <complex>
+#include <complex>                                                       /* Complex Numbers         C++11    */
 #include <cstring>                                                       /* std:: C string.h        C++11    */
 #include <iomanip>                                                       /* C++ stream formatting   C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
@@ -46,7 +46,7 @@
 #include <string>                                                        /* C++ strings             C++11    */
 #include <tuple>                                                         /* STL tuples              C++11    */
 #include <type_traits>                                                   /* C++ metaprogramming     C++11    */
-#include <vector>                                                        /* STL vector              C++11    */
+#include <vector>                                                        /* STL vector              C++11    */ 
 #include <concepts>                                                      /* Concepts library        C++20    */
 #include <utility>                                                       /* STL Misc Utilities      C++11    */
 #include <bit>                                                           /* STL bit manipulation    C++20    */
@@ -1789,6 +1789,7 @@ namespace mjr {
             setChanNC(i, getChanNC(i) | aCol.getChanNC(i));
         return *this;
       }
+#if !(MISSING_P0476R2)
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmOr(colorArgType aCol) requires (std::floating_point<clrChanT>) {
@@ -1800,6 +1801,7 @@ namespace mjr {
             setChanNC(i, std::bit_cast<clrChanT>(std::bit_cast<channelArithLogType>(getChanNC(i)) | std::bit_cast<channelArithLogType>(aCol.getChanNC(i))));
         return *this;
       }
+#endif
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Performs a logical NOR with the current object and the given object and places the value in the current object.
           @param aCol The color to use in the computation.
@@ -1812,6 +1814,7 @@ namespace mjr {
             setChanNC(i, ~(getChanNC(i) | aCol.getChanNC(i)));
         return *this;
       }
+#if !(MISSING_P0476R2)
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmNor(colorArgType aCol) requires (std::floating_point<clrChanT>) {
@@ -1822,6 +1825,7 @@ namespace mjr {
             setChanNC(i, std::bit_cast<clrChanT>(~(std::bit_cast<channelArithLogType>(getChanNC(i)) | std::bit_cast<channelArithLogType>(aCol.getChanNC(i)))));
         return *this;
       }
+#endif
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Performs a logical AND with the current object and the given object and places the value in the current object.
           @param aCol The color to use in the computation.
@@ -1834,6 +1838,7 @@ namespace mjr {
             setChanNC(i, getChanNC(i) & aCol.getChanNC(i));
         return *this;
       }
+#if !(MISSING_P0476R2)
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmAnd(colorArgType aCol) requires (std::floating_point<clrChanT>) {
@@ -1844,6 +1849,7 @@ namespace mjr {
             setChanNC(i, std::bit_cast<clrChanT>(std::bit_cast<channelArithLogType>(getChanNC(i)) & std::bit_cast<channelArithLogType>(aCol.getChanNC(i))));
         return *this;
       }
+#endif
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Performs a logical NAND with the current object and the given object and places the value in the current object.
           @param aCol The color to use in the computation.
@@ -1856,6 +1862,7 @@ namespace mjr {
             setChanNC(i, ~(getChanNC(i) & aCol.getChanNC(i)));
         return *this;
       }
+#if !(MISSING_P0476R2)
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmNand(colorArgType aCol) requires (std::floating_point<clrChanT>) {
@@ -1866,6 +1873,7 @@ namespace mjr {
             setChanNC(i, std::bit_cast<clrChanT>(~(std::bit_cast<channelArithLogType>(getChanNC(i)) & std::bit_cast<channelArithLogType>(aCol.getChanNC(i)))));
         return *this;
       }
+#endif
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Performs a logical EXCLUSIVE OR (XOR) with the current object and the given object and places the value in the current object.
           @param aCol The color to use in the computation.
@@ -1878,6 +1886,7 @@ namespace mjr {
             setChanNC(i, getChanNC(i) ^ aCol.getChanNC(i));
         return *this;
       }
+#if !(MISSING_P0476R2)
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmXor(colorArgType aCol) requires (std::floating_point<clrChanT>) {
@@ -1888,6 +1897,7 @@ namespace mjr {
             setChanNC(i, std::bit_cast<clrChanT>(std::bit_cast<channelArithLogType>(getChanNC(i)) ^ std::bit_cast<channelArithLogType>(aCol.getChanNC(i))));
         return *this;
       }
+#endif
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Performs a logical NOT EXCLUSIVE OR (NXOR) with the current object and the given object and places the value in the current object.
           @param aCol The color to use in the computation.
@@ -1900,6 +1910,7 @@ namespace mjr {
             setChanNC(i, ~(getChanNC(i) ^ aCol.getChanNC(i)));
         return *this;
       }
+#if !(MISSING_P0476R2)
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmNxor(colorArgType aCol) requires (std::floating_point<clrChanT>) {
@@ -1910,6 +1921,7 @@ namespace mjr {
             setChanNC(i, std::bit_cast<clrChanT>(~(std::bit_cast<channelArithLogType>(getChanNC(i)) ^ std::bit_cast<channelArithLogType>(aCol.getChanNC(i)))));
         return *this;
       }
+#endif
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Performs logical (bit-wise) negation of current object.
           @return Returns a reference to the current color object.*/
@@ -1921,6 +1933,7 @@ namespace mjr {
             setChanNC(i, ~(getChanNC(i)));
         return *this;
       }
+#if !(MISSING_P0476R2)
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmNot(void) requires (std::floating_point<clrChanT>) {
@@ -1931,6 +1944,7 @@ namespace mjr {
             setChanNC(i, std::bit_cast<clrChanT>(~(std::bit_cast<channelArithLogType>(getChanNC(i)))));
         return *this;
       }
+#endif
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2190,6 +2204,7 @@ namespace mjr {
           setChanNC(i, getChanNC(i) << aCol.getChanNC(i));
         return *this;
       }
+#if !(MISSING_P0476R2)
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmShiftL(colorArgType aCol) requires (std::floating_point<clrChanT>) {
@@ -2198,6 +2213,7 @@ namespace mjr {
           setChanNC(i, std::bit_cast<clrChanT>(std::bit_cast<channelArithLogType>(getChanNC(i)) << static_cast<uint64_t>(aCol.getChanNC(i))));
         return *this;
       }
+#endif
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** The Shift Right Transform modifies the current color.
           @param aCol How many bits to shift.
@@ -2207,6 +2223,7 @@ namespace mjr {
           setChanNC(i, getChanNC(i) >> aCol.getChanNC(i));
         return *this;
       }
+#if !(MISSING_P0476R2)
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmShiftR(colorArgType aCol) requires (std::floating_point<clrChanT>) {
@@ -2214,6 +2231,7 @@ namespace mjr {
           setChanNC(i, std::bit_cast<clrChanT>(std::bit_cast<channelArithLogType>(getChanNC(i)) >> static_cast<uint64_t>(aCol.getChanNC(i))));
         return *this;
       }
+#endif
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** The Saw Transform modifies the current color: C_i = ifelse(ra<=C_i<=rb, C_i, 0)
           @param lowCol lower cutoff value

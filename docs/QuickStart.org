@@ -76,9 +76,9 @@ Now you can run it, and take a look at the file it created ("=hello.tiff="):
 
 That's it!  How easy was that?
 
-*Questions*
+** FAQ for people not using =cmake=
 
-*Q1:* How do I get advanced TIFF reader support without =cmake=?
+*** Q: How do I get advanced TIFF reader support without =cmake=?
 
 #+BEGIN_QUOTE
 *A:* If you have =libtiff= installed in a standard location, then you can probably just add "=-DTIFF_FOUND" to the compile command like this:
@@ -90,7 +90,7 @@ g++ -DTIFF_FOUND -m64 --std=gcc++20 hello.cpp -o hello
 Please note that advanced TIFF reader is only required to *read* TIFF files.  *=MRaster=* can save TIFF, TGA, and MRAW files without any external library support.
 #+END_QUOTE
 
-*Q2:* What's up with "=-std=gcc++20=" instead of "=-std=c++20="?  Is *=MRaster=* C++20 complient?
+*** Q2: What's up with "=-std=gcc++20=" instead of "=-std=c++20="?
 
 #+BEGIN_QUOTE
 *A:* *=MRaster=* works just fine with standard C++20 compilers.  The "=-std=gcc++20=" option enables specific features of GCC that make *=MRaster=* better.  In
@@ -101,6 +101,25 @@ you want to turn off 128-bit integers, and use pure C++20 instead with GCC, then
 g++ -DMJR_LOOK_FOR_128_BIT_TYPES=0 -m64 --std=c++20 hello.cpp -o hello
 #+end_src
 #+END_QUOTE
+
+*** Q3: I got some weird errors about =bit_cast=.  What's up?
+
+Probably your compiler is too old to support that part of the C++ standard.  One of the advantages of using =cmake= is that it tries to detect this issue.  Without =cmake=, you need to add the following
+to your compile command (or get a better compiler):
+
+#+begin_src sh :exports source :eval never
+-DMISSING_P0476R2=1
+#+end_src
+
+*** Q4: I got some weird errors about complex numbers and =std::pow=? What's up?
+
+Probably your compiler is too old to support that part of the C++ standard.  One of the advantages of using =cmake= is that it tries to detect this issue.  Without =cmake=, you need to add the following
+to your compile command (or get a better compiler):
+
+#+begin_src sh :exports source :eval never
+-DMISSING_P1907R1=1
+#+end_src
+
 
 * Playing With *=MRaster=*'s Example Programs
 
@@ -171,12 +190,162 @@ cmake -G 'MSYS Makefiles' ..
 make your_program
 #+end_src
 
+* Platform Notes
 
-* Meta
-:PROPERTIES:
-:CUSTOM_ID: meta
-:END:
+I write these notes on 2022-08-28 as a guide for making the most of *=MRaster=* on various platforms given the rather uneven nature of C++20 support in the
+wild.  I expect these notes will be out of date by the time I hit the publish button. ;)
 
-Publication Site: https://www.mitchr.me/FIXME/
+** Windows 11 with MSYS2 GCC 12.1.0
 
-Publication URL: https://www.mitchr.me/FIXME/FIXME.html
+Everything works with the following cmake:
+
+#+begin_src sh :eval never :tangle no :exports code
+cmake -G 'MSYS Makefiles' -DCMAKE_CXX_COMPILER=g++ ..
+#+end_src
+
+** Windows 11 with MSYS2 clang 14.0.6
+
+Everything works with the following cmake:
+
+#+begin_src sh :eval never :tangle no :exports code
+cmake -G 'MSYS Makefiles' -DCMAKE_CXX_COMPILER=clang++ ..
+#+end_src
+
+** Windows 11 with MSYS2 cmake and Visual Studio 2022 Community Edition
+
+This method works, but you won't get any external dependencies like =GLUT=, =SDL2=, =libTIFF=, =boost=, etc...  But, you will get enough to run many of the examples.
+
+From the MSYS2 shell, we can run cmake like this:
+
+#+begin_src sh :eval never :tangle no :exports code
+cmake -G 'Visual Studio 17 2022' ..
+#+end_src
+
+Then open up the directory with explorer, and double click on one of the project files.  That will open up VS, and you can work the project.
+
+** Windows 11 with Visual Studio 2022 Community Edition
+
+Everything works, but it's harder to get set up.  Simply fire up VS, and open the folder with the =CMakeLists.txt= file in it.  VS will detect a =cmake=
+project.  Next use [[https://vcpkg.io/en/index.html][vcpkg]] to install =GLUT=, =SDL2=, =libTIFF=, & =boost=.  Update =CMakeLists.txt= as described
+[[https://vcpkg.io/en/docs/users/buildsystems/cmake-integration.html][here]]. Refresh the =cmake=, and you should be able to build.
+
+** Mac OS X Monterey 12.5.1 with Homebrew GCC 12.1.0
+
+I had trouble getting =boost= to work, but everything else seems OK.  Note the =-DGLUT_glut_LIBRARY= option -- this is required to direct =cmake= to use the
+Apple provided =GLUT= instead of =freeglut= from homebrew.
+
+Here is what I installed via Homebrew:
+
+#+begin_src sh :eval never :tangle no :exports code
+brew install gcc
+brew install cmake
+brew install sdl2
+brew install doxygen
+brew install libtiff
+brew install boost
+#+end_src
+
+And I used the following cmake:
+
+#+begin_src sh :eval never :tangle no :exports code
+cmake -DCMAKE_CXX_COMPILER=g++-12 -DGLUT_glut_LIBRARY=/System/Library/Frameworks/GLUT.framework ..
+#+end_src
+
+** Mac OS X Monterey 12.5.1 with Apple clang 13.1.6
+
+Right now =clang= doesn't have support for floating point template parameters, and thus the templates =csPLY_tpl= & =csCubeHelix_tpl= are not available.
+This also means that examples using these features are not built: 
+ - =color_lut_poly.cpp=
+ - =color_lut_docs.cpp=
+ - =color_lut_cubehelix.cpp=
+ - =heart2022.cpp=
+
+In addition, the Apple version of =clang= is missing the C++20 feature =bit_cast=.  Right now *=MRaster=* has conditional compilation sections removing those
+features when using this compiler.  Hopefully Apple will have better C++20 support soon.
+
+Lastly, note the =-DGLUT_glut_LIBRARY= option -- this is required to direct =cmake= to use the Apple provided =GLUT= instead of =freeglut= from homebrew.
+
+#+begin_src sh :eval never :tangle no :exports code
+cmake -DCMAKE_CXX_COMPILER=clang++ -DGLUT_glut_LIBRARY=/System/Library/Frameworks/GLUT.framework ..
+#+end_src
+
+** Debian bullseye 11.4
+
+For reference, some of my config files:
+
+Here is my =/etc/apt/sources.list= file:
+
+#+begin_src text
+deb http://deb.debian.org/debian bullseye main
+deb http://deb.debian.org/debian bullseye-updates main
+deb http://security.debian.org/debian-security bullseye-security main
+deb http://ftp.debian.org/debian bullseye-backports main
+
+deb http://mirrors.xmission.com/debian/ testing main non-free contrib
+deb http://http.us.debian.org/debian testing main contrib non-free
+deb http://ftp.us.debian.org/debian testing main non-free contrib
+#+end_src
+
+Here is my =/etc/apt/preferences= file:
+
+#+begin_src text
+Package: *
+Pin: release a=testing
+Pin-Priority: 490
+#+end_src
+
+*** Debian bullseye 11.4 with GCC 10.2.1
+
+This is the stock compiler that comes with bullseye.  It's a bit old, and is missing support for both floating point template arguments and =bit_cast=.  
+
+You can install everything you might want for *=MRaster=* like so:
+
+#+begin_src sh :eval never :tangle no :exports code
+sudo apt update
+sudo apt upgrade
+sudo apt-get install build-essential libsdl2-dev libtiff-dev freeglut3-dev doxygen libboost-all-dev 
+sudo apt-get install povray ffmpeg imagemagick
+sudo apt install cmake/bullseye-backports
+#+end_src
+
+Now you can use the following =cmake= command:
+
+#+begin_src sh :eval never :tangle no :exports code
+cmake ..
+#+end_src
+
+*** Debian bullseye 11.4 with GCC 11.3
+
+With this newer compiler all *=MRaster=* features are supported.
+
+This is the compiler currently in the bullseye =testing= channel.  You will need the stuff installed in the previous section as well as this compiler.  You
+can install it all with the following:
+
+#+begin_src sh :eval never :tangle no :exports code
+sudo apt update
+sudo apt upgrade
+sudo apt-get install build-essential libsdl2-dev libtiff-dev freeglut3-dev doxygen libboost-all-dev 
+sudo apt-get install povray ffmpeg imagemagick
+sudo apt install cmake/bullseye-backports
+sudo apt install -t testing g++-11 gcc-11
+#+end_src
+
+Now you can use the following =cmake= command:
+
+#+begin_src sh :eval never :tangle no :exports code
+cmake -DCMAKE_CXX_COMPILER=g++-11 ..
+#+end_src
+
+
+* Performance                                                      :noexport:
+
+| System                                                  | Software                   | Result (sec) |
+|---------------------------------------------------------+----------------------------+--------------|
+| 2015 ventage 2.20GHz Dual-Core Intel i7 5650U Broadwell | Homebrew GCC 12.1.0        |      84.4048 |
+| 2015 ventage 2.20GHz Dual-Core Intel i7 5650U Broadwell | Apple clang 13.1.6         |     108.0520 |
+| 2022 ventage 3.30GHz Quad-Core Intel i7 11370H 11th Gen | MSYS2 GCC 12.1.0           |      62.1350 |
+| 2022 ventage 3.30GHz Quad-Core Intel i7 11370H 11th Gen | MSYS2 clang 14.0.6         |      78.1136 |
+| 2022 ventage 3.30GHz Quad-Core Intel i7 11370H 11th Gen | MSVC 2022                  |     110.0680 |
+| 2022 ventage 3.30GHz Quad-Core Intel i7 11370H 11th Gen | WSL Debian 11.4 GCC 10.2.1 |      66.7385 |
+| 2022 ventage 3.30GHz Quad-Core Intel i7 11370H 11th Gen | WSL Debian 11.4 GCC 11.3.0 |      66.2258 |
+

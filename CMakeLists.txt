@@ -1,6 +1,7 @@
 ######################################################################################################################################################
 ######################################################################################################################################################
-cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.20.0 FATAL_ERROR)
+set(OpenGL_GL_PREFERENCE "GLVND") # Alternative
 
 ######################################################################################################################################################
 # Proejct meta data
@@ -115,14 +116,39 @@ endif()
 list(REMOVE_DUPLICATES EXAMPLE_TARGETS)
 
 if((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "Intel"))
+    message("Warning:")
     message("Warning: Clang & Intel ICC compilers currently have incomplete implimentations of P1907R1.")
     message("Warning: csPLY_tpl & csCubeHelix_tpl require P1907R1 (floating point template arguments).")
     message("Warning: Examples that can't be built: color_lut_poly.cpp, color_lut_docs.cpp, color_lut_cubehelix.cpp, heart2022.cpp")
+    message("Warning:")
     list(REMOVE_ITEM EXAMPLE_TARGETS "color_lut_poly" "color_lut_docs" "color_lut_cubehelix" "heart2022")                            # missing floating point template parameters
 endif()
 
+if(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang") 
+    message("Warning:")
+    message("Warning: The Apple Clang compiler has an incomplete implimentation of p0476r2 (bit_cast).")
+    message("Warning: Logical member functions tfrmOr, tfrmNor, tfrmAnd, tfrmNand, tfrmXor, tfrmNxor, ")
+    message("Warning: tfrmNot, tfrmShiftL, & tfrmShiftR will not have floating point channel support! ")
+    message("Warning:")
+endif()
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU") 
+  if(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS "11.0.0")
+    message("Warning:")
+    message("Warning: Older GCC verions don't support P0476R2 or P1907R1.")
+    message("Warning: csPLY_tpl & csCubeHelix_tpl require P1907R1 (floating point template arguments).")
+    message("Warning: Examples that can't be built: color_lut_poly.cpp, color_lut_docs.cpp, color_lut_cubehelix.cpp, heart2022.cpp")
+    message("Warning: Logical member functions tfrmOr, tfrmNor, tfrmAnd, tfrmNand, tfrmXor, tfrmNxor, ")
+    message("Warning: tfrmNot, tfrmShiftL, & tfrmShiftR will not have floating point channel support! ")
+    message("Warning:")
+  endif()
+endif()
+
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-  message("Warning: MSVC support is currently experimental")
+  message("Warning:")
+  message("Warning: MSVC support is currently experimental.")
+  message("Warning: clrChanT of double is the same as float!")
+  message("Warning:")
 endif()
 
 # Add a target for each example we can build
@@ -137,12 +163,19 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
     target_compile_options(${CURTGT} PUBLIC -ffast-math)
     target_compile_options(${CURTGT} PUBLIC -Wall -Wconversion -Wno-unknown-pragmas -Wextra -Wno-deprecated-copy)
     target_compile_options(${CURTGT} PUBLIC -Ofast)
+    if(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS "11.0.0")
+      target_compile_options(${CURTGT} PUBLIC -DMISSING_P0476R2=1)                                                     # missing bit_cast template parameters
+      target_compile_options(${CURTGT} PUBLIC -DMISSING_P1907R1=1)                                                       # missing floating point template parameters
+    endif()
   elseif((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang"))
     target_compile_options(${CURTGT} PUBLIC -Wstrict-overflow=0)
     target_compile_options(${CURTGT} PUBLIC -ffast-math)
     target_compile_options(${CURTGT} PUBLIC -Wall -Wconversion -Wno-unknown-pragmas -Wextra -Wno-sign-conversion)
     target_compile_options(${CURTGT} PUBLIC -O3)
     target_compile_options(${CURTGT} PUBLIC -DMISSING_P1907R1=1)                                                       # missing floating point template parameters
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+      target_compile_options(${CURTGT} PUBLIC -DMISSING_P0476R2=1)                                                     # missing bit_cast template parameters
+    endif()
   elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
     target_compile_options(${CURTGT} PUBLIC -Wall)
     target_compile_options(${CURTGT} PUBLIC -O3)
@@ -166,7 +199,7 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
     endif()
     target_include_directories(${CURTGT} PRIVATE ${OPENGL_INCLUDE_DIRS}  ${GLUT_INCLUDE_DIR} )
     target_link_libraries(${CURTGT} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
-  endif()
+  endif() 
 
   # Add builtd requirements for examples using OpenMP
   list (FIND TARGETS_REQ_OPENMP ${CURTGT} TMPR)

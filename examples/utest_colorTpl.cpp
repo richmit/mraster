@@ -4846,11 +4846,11 @@ BOOST_AUTO_TEST_CASE(dist_flt) {
   aColor.setToWhite();
   bColor.setToBlack();
 
-  BOOST_TEST_CHECK(aColor.distHypot( bColor) == std::sqrt(mjr::colorRGBA32F::maxChanVal*mjr::colorRGBA32F::maxChanVal*4));
+  BOOST_TEST_CHECK(aColor.distHypot( bColor) == std::sqrt(mjr::colorRGBA32F::maxChanVal*mjr::colorRGBA32F::maxChanVal*4), boost::test_tools::tolerance(0.00001));
   BOOST_TEST_CHECK(aColor.distSumAbs(bColor) == mjr::colorRGBA32F::maxChanVal*4);
   BOOST_TEST_CHECK(aColor.distMaxAbs(bColor) == mjr::colorRGBA32F::maxChanVal);
 
-  BOOST_TEST_CHECK(bColor.distHypot( aColor) == std::sqrt(mjr::colorRGBA32F::maxChanVal*mjr::colorRGBA32F::maxChanVal*4));
+  BOOST_TEST_CHECK(bColor.distHypot( aColor) == std::sqrt(mjr::colorRGBA32F::maxChanVal*mjr::colorRGBA32F::maxChanVal*4), boost::test_tools::tolerance(0.00001));
   BOOST_TEST_CHECK(bColor.distSumAbs(aColor) == mjr::colorRGBA32F::maxChanVal*4);
   BOOST_TEST_CHECK(bColor.distMaxAbs(aColor) == mjr::colorRGBA32F::maxChanVal);
 
@@ -4882,11 +4882,11 @@ BOOST_AUTO_TEST_CASE(dist_flt) {
   aColor.setChansRGBA(0.5, 0.5, 0.5, 0.5);
   bColor.setToBlack();
 
-  BOOST_TEST_CHECK(aColor.distHypot( bColor) == std::sqrt(0.5*0.5*4));
+  BOOST_TEST_CHECK(aColor.distHypot( bColor) == std::sqrt(0.5*0.5*4), boost::test_tools::tolerance(0.00001));
   BOOST_TEST_CHECK(aColor.distSumAbs(bColor) == 0.5*4);
   BOOST_TEST_CHECK(aColor.distMaxAbs(bColor) == 0.5);
 
-  BOOST_TEST_CHECK(bColor.distHypot( aColor) == std::sqrt(0.5*0.5*4));
+  BOOST_TEST_CHECK(bColor.distHypot( aColor) == std::sqrt(0.5*0.5*4), boost::test_tools::tolerance(0.00001));
   BOOST_TEST_CHECK(bColor.distSumAbs(aColor) == 0.5*4);
   BOOST_TEST_CHECK(bColor.distMaxAbs(aColor) == 0.5);
 }

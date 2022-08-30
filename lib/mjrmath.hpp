@@ -36,6 +36,7 @@
 #include <cmath>                                                         /* std:: C math.h          C++11    */
 #include <cmath>                                                         /* std:: C math.h          C++11    */
 #include <numbers>                                                       /* C++ math constants      C++20    */
+#include <algorithm>                                                     /* STL algorithm           C++11    */
 
 // Put everything in the mjr namespace
 namespace mjr {
