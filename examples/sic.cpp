@@ -76,20 +76,6 @@ typename mjr::ramCanvas1c16b::coordFltType params[NPR][12] = {
 };
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-/** @cond exj */
-class g2rgb8 {
-  private:
-    int factor;
-  public:
-    g2rgb8(uint64_t newFactor) { factor = static_cast<int>(newFactor); }
-    mjr::colorRGB8b operator() (mjr::ramCanvas1c16b::colorType c) {
-      mjr::colorRGB8b retColor;
-      return retColor.cmpRGBcornerDGradiant(static_cast<mjr::ramCanvas3c8b::csIntType>(c.getC0() * 1275 / factor), "0RYBCW");
-    }
-};
-/** @endcond */
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int BSIZ = 7680;
@@ -153,9 +139,12 @@ int main(void) {
     std::cout << "ITER(" << j <<  "): " << "TIFF" << std::endl;
     /* Dump the 16-bit grayscale TIFF */
     theRamCanvas.writeTIFFfile("sicM_" + std::to_string(j) + ".tiff");
-    /* Now we would like a false color one (24-bit RFB).  We could create a 24-bit ramCanvas object from the greyscale one, but we have a better option -- one
-       that requires no extra RAM.  We give the writeTIFFfile member a functor telling it how to convert each pixel as it is required. */
-    theRamCanvas.writeTIFFfile("sicC_" + std::to_string(j) + ".tiff", g2rgb8(maxII));
+    /* Now we would like a false color one (24-bit RGB). */
+    mjr::ramCanvas3c8b cRamCanvas(theRamCanvas.getNumPixX(), theRamCanvas.getNumPixY());
+    for(mjr::ramCanvas1c16b::coordIntType y=0;y<theRamCanvas.getNumPixY();y++)
+      for(mjr::ramCanvas1c16b::coordIntType x=0;x<theRamCanvas.getNumPixX();x++)
+        cRamCanvas.getPxColorRefNC(x, y).cmpRGBcornerDGradiant(static_cast<mjr::ramCanvas3c8b::csIntType>(theRamCanvas.getPxColorRefNC(x, y).getC0() * 1275 / maxII), "0RYBCW");
+    cRamCanvas.writeTIFFfile("sicC_" + std::to_string(j) + ".tiff");
   }
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;

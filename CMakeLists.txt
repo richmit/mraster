@@ -84,7 +84,7 @@ set(TARGETS_REQ_NONE   "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "
                        "tippets" "types" "color_lut_ramp_cubeC")
 set(TARGETS_REQ_OPENGL "glut_image")
 set(TARGETS_REQ_TIFF   "brownianDiffusion" "dlaBrownian" "dlaDrift" "img_process" "test_interp_scale" "geomTfrm_LensDistortion" "geomTfrm_Arb" 
-                       "geomTfrm_Rotate" "displayImageSDL2")
+                       "geomTfrm_Rotate" "displayImageSDL2" "convertRawToTIFF")
 set(TARGETS_REQ_OPENMP "mandelbrot_bm_cplx_openmp")
 set(TARGETS_REQ_BTEST  "utest_colorTpl_ia64nGCC" "utest_colorTpl" "utest_ramCanvasTpl")
 set(TARGETS_REQ_SDL2   "displayImageSDL2")

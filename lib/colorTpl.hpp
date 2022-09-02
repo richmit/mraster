@@ -234,7 +234,7 @@ namespace mjr {
       /** @name Public types for std::tuple & std::vector containing clrChanT values */
       //@{
       /** Tuple for RGBA & 4 chan */
-      typedef uint32_t            packed4Cint;             //!< Used for passing & returning integers with packed 8-bit channels
+      typedef uint32_t            packed4Cint;          //!< Used for passing & returning integers with packed 8-bit channels
       typedef colorTpl<double, 3> colSpaceDbl3;         //!< Color for space computations
       //@}
 

@@ -56,8 +56,8 @@ BOOST_AUTO_TEST_CASE(draw_primatives_int) {
 
   const int BSIZE = 60;
 
-  mjr::ramCanvasRGB8b aRamCanvas(BSIZE, BSIZE, 0, BSIZE-1, 0, BSIZE-1);
-  mjr::colorRGB8b aColor(mjr::colorRGB8b::cornerColorEnum::RED);
+  mjr::ramCanvasRGB8b aRamCanvas(BSIZE, BSIZE, 0, BSIZE-1, 0, BSIZE-1); mjr::ramCanvasRGB8b RaRamCanvas(BSIZE, BSIZE, 0, BSIZE-1, 0, BSIZE-1);
+  mjr::colorRGB8b aColor(mjr::colorRGB8b::cornerColorEnum::RED);   
   mjr::colorRGB8b bColor(mjr::colorRGB8b::cornerColorEnum::GREEN);
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -317,18 +317,13 @@ BOOST_AUTO_TEST_CASE(draw_primatives_int) {
   aRamCanvas.drawPLCurve(3, ptl20);                                                        // drawPLCurve(int numPoints, fPnt *thePoints);
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
-  aRamCanvas.writeRAWfile("ut-draw_primatives_int.mrw");
-  aRamCanvas.scaleUpProximal(5);
-  aRamCanvas.writeTIFFfile("ut-draw_primatives_int.tiff");
+  aRamCanvas.writeRAWfile("ut-draw_primatives_int.mrw");  
+  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-draw_primatives_int.mrw") == 0);
+  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
-  std::ifstream ifs1("ut-draw_primatives_int.mrw");
-  std::ifstream ifs2("../data/utest/ut-draw_primatives_int.mrw");
-
-  std::istream_iterator<char> b1(ifs1), e1;
-  std::istream_iterator<char> b2(ifs2), e2;
-
-  BOOST_CHECK_EQUAL_COLLECTIONS(b1, e1, b2, e2);
+  aRamCanvas.scaleUpProximal(5);
+  aRamCanvas.writeTIFFfile("ut-draw_primatives_int.tiff");
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -338,7 +333,7 @@ BOOST_AUTO_TEST_CASE(draw_primatives_flt) {
 
   const int BSIZE = 60;
 
-  mjr::ramCanvasRGB32F aRamCanvas(BSIZE, BSIZE, 0, BSIZE-1, 0, BSIZE-1);
+  mjr::ramCanvasRGB32F aRamCanvas(BSIZE, BSIZE, 0, BSIZE-1, 0, BSIZE-1); mjr::ramCanvasRGB32F RaRamCanvas(BSIZE, BSIZE, 0, BSIZE-1, 0, BSIZE-1);
   mjr::colorRGB32F aColor(mjr::colorRGB32F::cornerColorEnum::RED);
   mjr::colorRGB32F bColor(mjr::colorRGB32F::cornerColorEnum::GREEN);
 
@@ -600,17 +595,12 @@ BOOST_AUTO_TEST_CASE(draw_primatives_flt) {
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   aRamCanvas.writeRAWfile("ut-draw_primatives_flt.mrw");
-  aRamCanvas.scaleUpProximal(5);
-  aRamCanvas.writeTIFFfile("ut-draw_primatives_flt.tiff");
+  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-draw_primatives_flt.mrw") == 0);
+  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
-  std::ifstream ifs1("ut-draw_primatives_flt.mrw");
-  std::ifstream ifs2("../data/utest/ut-draw_primatives_flt.mrw");
-
-  std::istream_iterator<char> b1(ifs1), e1;
-  std::istream_iterator<char> b2(ifs2), e2;
-
-  BOOST_CHECK_EQUAL_COLLECTIONS(b1, e1, b2, e2);
+  aRamCanvas.scaleUpProximal(5);
+  aRamCanvas.writeTIFFfile("ut-draw_primatives_flt.tiff");
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -619,18 +609,18 @@ BOOST_AUTO_TEST_CASE(save_file) {
   const int WIDE = 16;
   const int TALL = 8;
 
-  mjr::ramCanvasRGB8b  aRamCanvas(WIDE, TALL);   mjr::ramCanvasRGB8b::colorType  aColor; typedef mjr::ramCanvasRGB8b::colorChanType  aCt;
-  mjr::ramCanvasRGB16b bRamCanvas(WIDE, TALL);   mjr::ramCanvasRGB16b::colorType bColor; typedef mjr::ramCanvasRGB16b::colorChanType bCt;
-  mjr::ramCanvasRGB32b cRamCanvas(WIDE, TALL);   mjr::ramCanvasRGB32b::colorType cColor; typedef mjr::ramCanvasRGB32b::colorChanType cCt;
-  mjr::ramCanvasRGB64b dRamCanvas(WIDE, TALL);   mjr::ramCanvasRGB64b::colorType dColor; typedef mjr::ramCanvasRGB64b::colorChanType dCt;
-  mjr::ramCanvasRGB32F eRamCanvas(WIDE, TALL);   mjr::ramCanvasRGB32F::colorType eColor; typedef mjr::ramCanvasRGB32F::colorChanType eCt;
-  mjr::ramCanvasRGB64F fRamCanvas(WIDE, TALL);   mjr::ramCanvasRGB64F::colorType fColor; typedef mjr::ramCanvasRGB64F::colorChanType fCt;
-  mjr::ramCanvas1c8b   gRamCanvas(WIDE, TALL);   mjr::ramCanvas1c8b::colorType   gColor; typedef mjr::ramCanvas1c8b::colorChanType   gCt;
-  mjr::ramCanvas1c16b  hRamCanvas(WIDE, TALL);   mjr::ramCanvas1c16b::colorType  hColor; typedef mjr::ramCanvas1c16b::colorChanType  hCt;
-  mjr::ramCanvas1c32b  iRamCanvas(WIDE, TALL);   mjr::ramCanvas1c32b::colorType  iColor; typedef mjr::ramCanvas1c32b::colorChanType  iCt;
-  mjr::ramCanvas1c64b  jRamCanvas(WIDE, TALL);   mjr::ramCanvas1c64b::colorType  jColor; typedef mjr::ramCanvas1c64b::colorChanType  jCt;
-  mjr::ramCanvas1c32F  kRamCanvas(WIDE, TALL);   mjr::ramCanvas1c32F::colorType  kColor; typedef mjr::ramCanvas1c32F::colorChanType  kCt;
-  mjr::ramCanvas1c64F  lRamCanvas(WIDE, TALL);   mjr::ramCanvas1c64F::colorType  lColor; typedef mjr::ramCanvas1c64F::colorChanType  lCt;
+  mjr::ramCanvasRGB8b  aRamCanvas(WIDE, TALL);   mjr::ramCanvasRGB8b::colorType  aColor; typedef mjr::ramCanvasRGB8b::colorChanType  aCt; mjr::ramCanvasRGB8b  RaRamCanvas(WIDE, TALL);
+  mjr::ramCanvasRGB16b bRamCanvas(WIDE, TALL);   mjr::ramCanvasRGB16b::colorType bColor; typedef mjr::ramCanvasRGB16b::colorChanType bCt; mjr::ramCanvasRGB16b RbRamCanvas(WIDE, TALL);
+  mjr::ramCanvasRGB32b cRamCanvas(WIDE, TALL);   mjr::ramCanvasRGB32b::colorType cColor; typedef mjr::ramCanvasRGB32b::colorChanType cCt; mjr::ramCanvasRGB32b RcRamCanvas(WIDE, TALL);
+  mjr::ramCanvasRGB64b dRamCanvas(WIDE, TALL);   mjr::ramCanvasRGB64b::colorType dColor; typedef mjr::ramCanvasRGB64b::colorChanType dCt; mjr::ramCanvasRGB64b RdRamCanvas(WIDE, TALL);
+  mjr::ramCanvasRGB32F eRamCanvas(WIDE, TALL);   mjr::ramCanvasRGB32F::colorType eColor; typedef mjr::ramCanvasRGB32F::colorChanType eCt; mjr::ramCanvasRGB32F ReRamCanvas(WIDE, TALL);
+  mjr::ramCanvasRGB64F fRamCanvas(WIDE, TALL);   mjr::ramCanvasRGB64F::colorType fColor; typedef mjr::ramCanvasRGB64F::colorChanType fCt; mjr::ramCanvasRGB64F RfRamCanvas(WIDE, TALL);
+  mjr::ramCanvas1c8b   gRamCanvas(WIDE, TALL);   mjr::ramCanvas1c8b::colorType   gColor; typedef mjr::ramCanvas1c8b::colorChanType   gCt; mjr::ramCanvas1c8b   RgRamCanvas(WIDE, TALL);
+  mjr::ramCanvas1c16b  hRamCanvas(WIDE, TALL);   mjr::ramCanvas1c16b::colorType  hColor; typedef mjr::ramCanvas1c16b::colorChanType  hCt; mjr::ramCanvas1c16b  RhRamCanvas(WIDE, TALL);
+  mjr::ramCanvas1c32b  iRamCanvas(WIDE, TALL);   mjr::ramCanvas1c32b::colorType  iColor; typedef mjr::ramCanvas1c32b::colorChanType  iCt; mjr::ramCanvas1c32b  RiRamCanvas(WIDE, TALL);
+  mjr::ramCanvas1c64b  jRamCanvas(WIDE, TALL);   mjr::ramCanvas1c64b::colorType  jColor; typedef mjr::ramCanvas1c64b::colorChanType  jCt; mjr::ramCanvas1c64b  RjRamCanvas(WIDE, TALL);
+  mjr::ramCanvas1c32F  kRamCanvas(WIDE, TALL);   mjr::ramCanvas1c32F::colorType  kColor; typedef mjr::ramCanvas1c32F::colorChanType  kCt; mjr::ramCanvas1c32F  RkRamCanvas(WIDE, TALL);
+  mjr::ramCanvas1c64F  lRamCanvas(WIDE, TALL);   mjr::ramCanvas1c64F::colorType  lColor; typedef mjr::ramCanvas1c64F::colorChanType  lCt; mjr::ramCanvas1c64F  RlRamCanvas(WIDE, TALL);
 
   for(int x=0;x<aRamCanvas.getNumPixX();x++)
     for(int y=0;y<aRamCanvas.getNumPixY();y++) {
@@ -649,7 +639,7 @@ BOOST_AUTO_TEST_CASE(save_file) {
     }
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
-  // Write TIFF files.  These need to be checked outside of this source.  tiffinfo for starters.
+  // Write TIFF files
   aRamCanvas.writeTIFFfile("ut-save_file-a.tiff");
   bRamCanvas.writeTIFFfile("ut-save_file-b.tiff");
   cRamCanvas.writeTIFFfile("ut-save_file-c.tiff");
@@ -664,7 +654,7 @@ BOOST_AUTO_TEST_CASE(save_file) {
   lRamCanvas.writeTIFFfile("ut-save_file-l.tiff");
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
-  // Make sure headers are correct for MRW files
+  // Write TIFF files
 
   aRamCanvas.writeRAWfile("ut-save_file-a.mrw");
   bRamCanvas.writeRAWfile("ut-save_file-b.mrw");
@@ -679,131 +669,71 @@ BOOST_AUTO_TEST_CASE(save_file) {
   kRamCanvas.writeRAWfile("ut-save_file-k.mrw");
   lRamCanvas.writeRAWfile("ut-save_file-l.mrw");
 
-  char aRawHeader[101] = "MJRRAW\0120000000000000000016x0000000000000000008y000000000000000000000000003c00000000008bUNSsINTtLTLi\012";
-  char bRawHeader[101] = "MJRRAW\0120000000000000000016x0000000000000000008y000000000000000000000000003c00000000016bUNSsINTtLTLi\012";
-  char cRawHeader[101] = "MJRRAW\0120000000000000000016x0000000000000000008y000000000000000000000000003c00000000032bUNSsINTtLTLi\012";
-  char dRawHeader[101] = "MJRRAW\0120000000000000000016x0000000000000000008y000000000000000000000000003c00000000064bUNSsINTtLTLi\012";
-  char eRawHeader[101] = "MJRRAW\0120000000000000000016x0000000000000000008y000000000000000000000000003c00000000032bSGNsFLTtLTLi\012";
-  char fRawHeader[101] = "MJRRAW\0120000000000000000016x0000000000000000008y000000000000000000000000003c00000000064bSGNsFLTtLTLi\012";
-  char gRawHeader[101] = "MJRRAW\0120000000000000000016x0000000000000000008y000000000000000000000000001c00000000008bUNSsINTtLTLi\012";
-  char hRawHeader[101] = "MJRRAW\0120000000000000000016x0000000000000000008y000000000000000000000000001c00000000016bUNSsINTtLTLi\012";
-  char iRawHeader[101] = "MJRRAW\0120000000000000000016x0000000000000000008y000000000000000000000000001c00000000032bUNSsINTtLTLi\012";
-  char jRawHeader[101] = "MJRRAW\0120000000000000000016x0000000000000000008y000000000000000000000000001c00000000064bUNSsINTtLTLi\012";
-  char kRawHeader[101] = "MJRRAW\0120000000000000000016x0000000000000000008y000000000000000000000000001c00000000032bSGNsFLTtLTLi\012";
-  char lRawHeader[101] = "MJRRAW\0120000000000000000016x0000000000000000008y000000000000000000000000001c00000000064bSGNsFLTtLTLi\012";
 
-  char strBuf[256];
-
-  std::ifstream ifsHa("ut-save_file-a.mrw"); ifsHa.get(strBuf, 101, '\0'); ifsHa.close(); BOOST_CHECK_EQUAL_COLLECTIONS(aRawHeader, aRawHeader+100, strBuf, strBuf+100);
-  std::ifstream ifsHb("ut-save_file-b.mrw"); ifsHb.get(strBuf, 101, '\0'); ifsHb.close(); BOOST_CHECK_EQUAL_COLLECTIONS(bRawHeader, bRawHeader+100, strBuf, strBuf+100);
-  std::ifstream ifsHc("ut-save_file-c.mrw"); ifsHc.get(strBuf, 101, '\0'); ifsHc.close(); BOOST_CHECK_EQUAL_COLLECTIONS(cRawHeader, cRawHeader+100, strBuf, strBuf+100);
-  std::ifstream ifsHd("ut-save_file-d.mrw"); ifsHd.get(strBuf, 101, '\0'); ifsHd.close(); BOOST_CHECK_EQUAL_COLLECTIONS(dRawHeader, dRawHeader+100, strBuf, strBuf+100);
-  std::ifstream ifsHe("ut-save_file-e.mrw"); ifsHe.get(strBuf, 101, '\0'); ifsHe.close(); BOOST_CHECK_EQUAL_COLLECTIONS(eRawHeader, eRawHeader+100, strBuf, strBuf+100);
-  std::ifstream ifsHf("ut-save_file-f.mrw"); ifsHf.get(strBuf, 101, '\0'); ifsHf.close(); BOOST_CHECK_EQUAL_COLLECTIONS(fRawHeader, fRawHeader+100, strBuf, strBuf+100);
-  std::ifstream ifsHg("ut-save_file-g.mrw"); ifsHg.get(strBuf, 101, '\0'); ifsHg.close(); BOOST_CHECK_EQUAL_COLLECTIONS(gRawHeader, gRawHeader+100, strBuf, strBuf+100);
-  std::ifstream ifsHh("ut-save_file-h.mrw"); ifsHh.get(strBuf, 101, '\0'); ifsHh.close(); BOOST_CHECK_EQUAL_COLLECTIONS(hRawHeader, hRawHeader+100, strBuf, strBuf+100);
-  std::ifstream ifsHi("ut-save_file-i.mrw"); ifsHi.get(strBuf, 101, '\0'); ifsHi.close(); BOOST_CHECK_EQUAL_COLLECTIONS(iRawHeader, iRawHeader+100, strBuf, strBuf+100);
-  std::ifstream ifsHj("ut-save_file-j.mrw"); ifsHj.get(strBuf, 101, '\0'); ifsHj.close(); BOOST_CHECK_EQUAL_COLLECTIONS(jRawHeader, jRawHeader+100, strBuf, strBuf+100);
-  std::ifstream ifsHk("ut-save_file-k.mrw"); ifsHk.get(strBuf, 101, '\0'); ifsHk.close(); BOOST_CHECK_EQUAL_COLLECTIONS(kRawHeader, kRawHeader+100, strBuf, strBuf+100);
-  std::ifstream ifsHl("ut-save_file-l.mrw"); ifsHl.get(strBuf, 101, '\0'); ifsHl.close(); BOOST_CHECK_EQUAL_COLLECTIONS(lRawHeader, lRawHeader+100, strBuf, strBuf+100);
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  // Compare reference images with images just created
 
   // I checked this file by hand on 2022-08-28. sha256: 94c07f28db463165acc539a88c8a31c13646890204c7548d72ec3b3bda851c9c
   // hexDump.rb -t 0 -c -w 16 -b 3 -p 100 ut-save_file-a.mrw | less -SR
-  std::ifstream ifsag("ut-save_file-a.mrw");
-  std::ifstream ifsar("../data/utest/ut-save_file-a.mrw");
-  std::istream_iterator<char> bag(ifsag), eag;
-  std::istream_iterator<char> bar(ifsar), ear;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bag, eag, bar, ear);
+  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-save_file-a.mrw") == 0);
+  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
 
   // I checked this file by hand on 2022-08-28. sha256: daeac55ba6fdf084ece356ce86fba5f0b501ba375b0765d3b1e0aed91bde78b5
   // hexDump.rb -t 0 -c -w 16 -b 6 -p 100 ut-save_file-b.mrw | less -RS
-  std::ifstream ifsbg("ut-save_file-b.mrw");
-  std::ifstream ifsbr("../data/utest/ut-save_file-b.mrw");
-  std::istream_iterator<char> bbg(ifsbg), ebg;
-  std::istream_iterator<char> bbr(ifsbr), ebr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bbg, ebg, bbr, ebr);
+  BOOST_TEST_CHECK(RbRamCanvas.readRAWfile("../data/utest/ut-save_file-b.mrw") == 0);
+  BOOST_TEST_CHECK(RbRamCanvas.isEqual(bRamCanvas) == true);
 
   // I checked this file qby hand on 2022-08-28. sha256: d29aa9add19842ba1f2cd98e48a5987b645e8357180984b9b88186733ee4b99f
   // hexDump.rb -t 0 -c -w 16 -b 12 -p 100 ut-save_file-c.mrw | less -RS
-  std::ifstream ifscg("ut-save_file-c.mrw");
-  std::ifstream ifscr("../data/utest/ut-save_file-c.mrw");
-  std::istream_iterator<char> bcg(ifscg), ecg;
-  std::istream_iterator<char> bcr(ifscr), ecr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bcg, ecg, bcr, ecr);
+  BOOST_TEST_CHECK(RcRamCanvas.readRAWfile("../data/utest/ut-save_file-c.mrw") == 0);
+  BOOST_TEST_CHECK(RcRamCanvas.isEqual(cRamCanvas) == true);
 
   // I checked this file qby hand on 2022-08-28. sha256: bf987ec465ba232f3339b87bb9a90b52ec282d31f91378821965c06d72cc1720
   // hexDump.rb -t -1 -c -w 16 -b 24 -p 100 ut-save_file-d.mrw | less -RS
-  std::ifstream ifsdg("ut-save_file-d.mrw");
-  std::ifstream ifsdr("../data/utest/ut-save_file-d.mrw");
-  std::istream_iterator<char> bdg(ifsdg), edg;
-  std::istream_iterator<char> bdr(ifsdr), edr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bdg, edg, bdr, edr);
+  BOOST_TEST_CHECK(RdRamCanvas.readRAWfile("../data/utest/ut-save_file-d.mrw") == 0);
+  BOOST_TEST_CHECK(RdRamCanvas.isEqual(dRamCanvas) == true);
 
   // I checked this file qby hand on 2022-08-28. sha256: eb74e602fc69f5755a276c0bcc3c7acc473def2fb7288e324b6463f45d7f8816
   // hexDump.rb -t 0 -c -w 16 -b 12 -p 100 ut-save_file-e.mrw | less -RS
-  std::ifstream ifseg("ut-save_file-e.mrw");
-  std::ifstream ifser("../data/utest/ut-save_file-e.mrw");
-  std::istream_iterator<char> beg(ifseg), eeg;
-  std::istream_iterator<char> ber(ifser), eer;
-  BOOST_CHECK_EQUAL_COLLECTIONS(beg, eeg, ber, eer);
+  BOOST_TEST_CHECK(ReRamCanvas.readRAWfile("../data/utest/ut-save_file-e.mrw") == 0);
+  BOOST_TEST_CHECK(ReRamCanvas.isEqual(eRamCanvas) == true);
 
   // I checked this file qby hand on 2022-08-28. sha256: 060b545e73ce68ea60f9413ba8611cea1ddf30c986c6ad9384d137939927465d
   // I did the conversion by hand, so I should double check it...
   // hexDump.rb -t -1 -c -w 16 -b 24 -p 100 ut-save_file-f.mrw | less -RS
-  std::ifstream ifsfg("ut-save_file-f.mrw");
-  std::ifstream ifsfr("../data/utest/ut-save_file-f.mrw");
-  std::istream_iterator<char> bfg(ifsfg), efg;
-  std::istream_iterator<char> bfr(ifsfr), efr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bfg, efg, bfr, efr);
+  BOOST_TEST_CHECK(RfRamCanvas.readRAWfile("../data/utest/ut-save_file-f.mrw") == 0);
+  BOOST_TEST_CHECK(RfRamCanvas.isEqual(fRamCanvas) == true);
 
   // I checked this file qby hand on 2022-08-28. sha256: 24c15670cd4776abbad82f9ad3fa6c83c90dca367c6931bb9dce6b7565108a97
   // hexDump.rb -t 0 -c -w 16 -b 1 -p 100 ut-save_file-g.mrw | less -RS
-  std::ifstream ifsgg("ut-save_file-g.mrw");
-  std::ifstream ifsgr("../data/utest/ut-save_file-g.mrw");
-  std::istream_iterator<char> bgg(ifsgg), egg;
-  std::istream_iterator<char> bgr(ifsgr), egr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bgg, egg, bgr, egr);
+  BOOST_TEST_CHECK(RgRamCanvas.readRAWfile("../data/utest/ut-save_file-g.mrw") == 0);
+  BOOST_TEST_CHECK(RgRamCanvas.isEqual(gRamCanvas) == true);
 
   // I checked this file qby hand on 2022-08-28. sha256: a2daf01cd91b48e850b4db7424dc06d689fe557bc777b20f7dda6954c9bd0618
   // hexDump.rb -t 0 -c -w 16 -b 2 -p 100 ut-save_file-h.mrw | less -RS
-  std::ifstream ifshg("ut-save_file-h.mrw");
-  std::ifstream ifshr("../data/utest/ut-save_file-h.mrw");
-  std::istream_iterator<char> bhg(ifshg), ehg;
-  std::istream_iterator<char> bhr(ifshr), ehr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bhg, ehg, bhr, ehr);
+  BOOST_TEST_CHECK(RhRamCanvas.readRAWfile("../data/utest/ut-save_file-h.mrw") == 0);
+  BOOST_TEST_CHECK(RhRamCanvas.isEqual(hRamCanvas) == true);
 
   // I checked this file qby hand on 2022-08-28. sha256: e54e75ae84fe412648121cf55ba39a0c05405474a0a1cd19ac6dfc92ac839be0 *ut-save_file-i.mrw
   // hexDump.rb -t 0 -c -w 16 -b 4 -p 100 ut-save_file-i.mrw | less -RS
-  std::ifstream ifsig("ut-save_file-i.mrw");
-  std::ifstream ifsir("../data/utest/ut-save_file-i.mrw");
-  std::istream_iterator<char> big(ifsig), eig;
-  std::istream_iterator<char> bir(ifsir), eir;
-  BOOST_CHECK_EQUAL_COLLECTIONS(big, eig, bir, eir);
+  BOOST_TEST_CHECK(RiRamCanvas.readRAWfile("../data/utest/ut-save_file-i.mrw") == 0);
+  BOOST_TEST_CHECK(RiRamCanvas.isEqual(iRamCanvas) == true);
 
   // I checked this file qby hand on 2022-08-28. sha256: 3144a77040b5a25c9c089d7cf32d6ee0f832a23b71de1f2d1b3fafab4b82408c
   // hexDump.rb -t 0 -c -w 16 -b 8 -p 100 ut-save_file-j.mrw | less -RS
-  std::ifstream ifsjg("ut-save_file-j.mrw");
-  std::ifstream ifsjr("../data/utest/ut-save_file-j.mrw");
-  std::istream_iterator<char> bjg(ifsjg), ejg;
-  std::istream_iterator<char> bjr(ifsjr), ejr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bjg, ejg, bjr, ejr);
+  BOOST_TEST_CHECK(RjRamCanvas.readRAWfile("../data/utest/ut-save_file-j.mrw") == 0);
+  BOOST_TEST_CHECK(RjRamCanvas.isEqual(jRamCanvas) == true);
 
   // I checked this file qby hand on 2022-08-28. sha256: 25ce4b85baca2aa4ea8f4635e82abb4e1aa92e55ec6a9caf9b5558a1d0574a66
   // hexDump.rb -t 0 -c -w 16 -b 4 -p 100 ut-save_file-k.mrw | less -RS
-  std::ifstream ifskg("ut-save_file-k.mrw");
-  std::ifstream ifskr("../data/utest/ut-save_file-k.mrw");
-  std::istream_iterator<char> bkg(ifskg), ekg;
-  std::istream_iterator<char> bkr(ifskr), ekr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bkg, ekg, bkr, ekr);
+  BOOST_TEST_CHECK(RkRamCanvas.readRAWfile("../data/utest/ut-save_file-k.mrw") == 0);
+  BOOST_TEST_CHECK(RkRamCanvas.isEqual(kRamCanvas) == true);
 
   // I checked this file qby hand on 2022-08-28. sha256: 007879b182639b37a54358067f742c86bccb1ec0cb85a67a9f648ebf56c44294
   // I did the conversion by hand, so I should double check it...
   // hexDump.rb -t -1 -c -w 16 -b 8 -p 100 ut-save_file-l.mrw | less -RS
-  std::ifstream ifslg("ut-save_file-l.mrw");
-  std::ifstream ifslr("../data/utest/ut-save_file-l.mrw");
-  std::istream_iterator<char> blg(ifslg), elg;
-  std::istream_iterator<char> blr(ifslr), elr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(blg, elg, blr, elr);
+  BOOST_TEST_CHECK(RlRamCanvas.readRAWfile("../data/utest/ut-save_file-l.mrw") == 0);
+  BOOST_TEST_CHECK(RlRamCanvas.isEqual(lRamCanvas) == true);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -814,7 +744,7 @@ BOOST_AUTO_TEST_CASE(lines_no_clip) {
   const int WIDE = 16+16+16+1;
   const int TALL = 18;
 
-  mjr::ramCanvas1c8b aRamCanvas(WIDE, TALL);
+  mjr::ramCanvas1c8b aRamCanvas(WIDE, TALL); mjr::ramCanvas1c8b RaRamCanvas(WIDE, TALL);
   mjr::ramCanvas1c8b::colorType aColor;
 
   std::vector<std::vector<int>> lns {{ 1,  1,  1, 11},
@@ -832,18 +762,16 @@ BOOST_AUTO_TEST_CASE(lines_no_clip) {
     aRamCanvas.drawLine(24+pts[0], pts[1], 24+pts[2], pts[3], aColor);
   }
 
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  // Compare reference with test
+  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-lines_no_clip.mrw") == 0);
+  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  // Save diagnostic images
   aRamCanvas.writeRAWfile("ut-lines_no_clip.mrw");
   aRamCanvas.scaleUpProximal(10);
   aRamCanvas.writeTIFFfile("ut-lines_no_clip.tiff");
-
-  //------------------------------------------------------------------------------------------------------------------------------------------------------------
-  std::ifstream ifs1("ut-lines_no_clip.mrw");
-  std::ifstream ifs2("../data/utest/ut-lines_no_clip.mrw");
-
-  std::istream_iterator<char> b1(ifs1), e1;
-  std::istream_iterator<char> b2(ifs2), e2;
-
-  BOOST_CHECK_EQUAL_COLLECTIONS(b1, e1, b2, e2);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -865,14 +793,21 @@ BOOST_AUTO_TEST_CASE(lines_clip) {
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   // no-clip
-  mjr::ramCanvas1c8b bRamCanvas(40, 40);
-  mjr::ramCanvas1c8b cRamCanvas(40, 40);
+  mjr::ramCanvas1c8b bRamCanvas(40, 40); mjr::ramCanvas1c8b RbRamCanvas(40, 40);
+  mjr::ramCanvas1c8b cRamCanvas(40, 40); 
 
   for(auto pts : lns) {
     bRamCanvas.drawLine(19+pts[0], 19+pts[1], 19+pts[2], 19+pts[3], aColor);
     cRamCanvas.drawLine(19+pts[2], 19+pts[3], 19+pts[0], 19+pts[1], aColor);
   }
 
+  BOOST_CHECK_EQUAL_COLLECTIONS(bRamCanvas.begin(), bRamCanvas.end(), cRamCanvas.begin(), cRamCanvas.end());
+
+  // Compare reference with test
+  BOOST_TEST_CHECK(RbRamCanvas.readRAWfile("../data/utest/ut-lines_clip-b.mrw") == 0);
+  BOOST_TEST_CHECK(RbRamCanvas.isEqual(bRamCanvas) == true);
+
+  // Save diagnostic images
   bRamCanvas.writeRAWfile("ut-lines_clip-b.mrw");
   bRamCanvas.scaleUpProximal(10);
   bRamCanvas.writeTIFFfile("ut-lines_clip-b.tiff");
@@ -881,19 +816,9 @@ BOOST_AUTO_TEST_CASE(lines_clip) {
   cRamCanvas.scaleUpProximal(10);
   cRamCanvas.writeTIFFfile("ut-lines_clip-c.tiff");
 
-  BOOST_CHECK_EQUAL_COLLECTIONS(bRamCanvas.begin(), bRamCanvas.end(), cRamCanvas.begin(), cRamCanvas.end());
-
-  std::ifstream ifsbg("ut-lines_clip-b.mrw");
-  std::ifstream ifsbr("../data/utest/ut-lines_clip-b.mrw");
-
-  std::istream_iterator<char> bbg(ifsbg), ebg;
-  std::istream_iterator<char> bbr(ifsbr), ebr;
-
-  BOOST_CHECK_EQUAL_COLLECTIONS(bbg, ebg, bbr, ebr);
-
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   // bot/left-clip
-  mjr::ramCanvas1c8b dRamCanvas(25, 25);
+  mjr::ramCanvas1c8b dRamCanvas(25, 25); mjr::ramCanvas1c8b RdRamCanvas(25, 25);
   mjr::ramCanvas1c8b eRamCanvas(25, 25);
 
   for(auto pts : lns) {
@@ -901,6 +826,13 @@ BOOST_AUTO_TEST_CASE(lines_clip) {
     eRamCanvas.drawLine(7+pts[2], 7+pts[3], 7+pts[0], 7+pts[1], aColor);
   }
 
+  BOOST_CHECK_EQUAL_COLLECTIONS(dRamCanvas.begin(), dRamCanvas.end(), eRamCanvas.begin(), eRamCanvas.end());
+
+  // Compare reference with test
+  BOOST_TEST_CHECK(RdRamCanvas.readRAWfile("../data/utest/ut-lines_clip-d.mrw") == 0);
+  BOOST_TEST_CHECK(RdRamCanvas.isEqual(dRamCanvas) == true);
+
+  // Save diagnostic images
   dRamCanvas.writeRAWfile("ut-lines_clip-d.mrw");
   dRamCanvas.scaleUpProximal(10);
   dRamCanvas.writeTIFFfile("ut-lines_clip-d.tiff");
@@ -909,19 +841,9 @@ BOOST_AUTO_TEST_CASE(lines_clip) {
   eRamCanvas.scaleUpProximal(10);
   eRamCanvas.writeTIFFfile("ut-lines_clip-e.tiff");
 
-  BOOST_CHECK_EQUAL_COLLECTIONS(dRamCanvas.begin(), dRamCanvas.end(), eRamCanvas.begin(), eRamCanvas.end());
-
-  std::ifstream ifsdg("ut-lines_clip-d.mrw");
-  std::ifstream ifsdr("../data/utest/ut-lines_clip-d.mrw");
-
-  std::istream_iterator<char> bdg(ifsdg), edg;
-  std::istream_iterator<char> bdr(ifsdr), edr;
-
-  BOOST_CHECK_EQUAL_COLLECTIONS(bdg, edg, bdr, edr);
-
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   // top/right-clip
-  mjr::ramCanvas1c8b fRamCanvas(25, 25);
+  mjr::ramCanvas1c8b fRamCanvas(25, 25); mjr::ramCanvas1c8b RfRamCanvas(25, 25);
   mjr::ramCanvas1c8b gRamCanvas(25, 25);
 
   for(auto pts : lns) {
@@ -929,6 +851,13 @@ BOOST_AUTO_TEST_CASE(lines_clip) {
     gRamCanvas.drawLine(17+pts[2], 17+pts[3], 17+pts[0], 17+pts[1], aColor);
   }
 
+  BOOST_CHECK_EQUAL_COLLECTIONS(fRamCanvas.begin(), fRamCanvas.end(), gRamCanvas.begin(), gRamCanvas.end());
+
+  // Compare reference with test
+  BOOST_TEST_CHECK(RfRamCanvas.readRAWfile("../data/utest/ut-lines_clip-f.mrw") == 0);
+  BOOST_TEST_CHECK(RfRamCanvas.isEqual(fRamCanvas) == true);
+
+  // Save diagnostic images
   fRamCanvas.writeRAWfile("ut-lines_clip-f.mrw");
   fRamCanvas.scaleUpProximal(10);
   fRamCanvas.writeTIFFfile("ut-lines_clip-f.tiff");
@@ -937,26 +866,23 @@ BOOST_AUTO_TEST_CASE(lines_clip) {
   gRamCanvas.scaleUpProximal(10);
   gRamCanvas.writeTIFFfile("ut-lines_clip-g.tiff");
 
-  BOOST_CHECK_EQUAL_COLLECTIONS(fRamCanvas.begin(), fRamCanvas.end(), gRamCanvas.begin(), gRamCanvas.end());
-
-  std::ifstream ifsfg("ut-lines_clip-f.mrw");
-  std::ifstream ifsfr("../data/utest/ut-lines_clip-f.mrw");
-
-  std::istream_iterator<char> bfg(ifsfg), efg;
-  std::istream_iterator<char> bfr(ifsfr), efr;
-
-  BOOST_CHECK_EQUAL_COLLECTIONS(bfg, efg, bfr, efr);
-
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   // all-clip
-  mjr::ramCanvas1c8b hRamCanvas(15, 15);
-  mjr::ramCanvas1c8b iRamCanvas(15, 15);
+  mjr::ramCanvas1c8b hRamCanvas(15, 15); mjr::ramCanvas1c8b RhRamCanvas(15, 15);
+  mjr::ramCanvas1c8b iRamCanvas(15, 15); 
 
   for(auto pts : lns) {
     hRamCanvas.drawLine(7+pts[0], 7+pts[1], 7+pts[2], 7+pts[3], aColor);
     iRamCanvas.drawLine(7+pts[2], 7+pts[3], 7+pts[0], 7+pts[1], aColor);
   }
 
+  BOOST_CHECK_EQUAL_COLLECTIONS(hRamCanvas.begin(), hRamCanvas.end(), iRamCanvas.begin(), iRamCanvas.end());
+
+  // Compare reference with test
+  BOOST_TEST_CHECK(RhRamCanvas.readRAWfile("../data/utest/ut-lines_clip-h.mrw") == 0);
+  BOOST_TEST_CHECK(RhRamCanvas.isEqual(hRamCanvas) == true);
+
+  // Save diagnostic images
   hRamCanvas.writeRAWfile("ut-lines_clip-h.mrw");
   hRamCanvas.scaleUpProximal(10);
   hRamCanvas.writeTIFFfile("ut-lines_clip-h.tiff");
@@ -964,16 +890,6 @@ BOOST_AUTO_TEST_CASE(lines_clip) {
   iRamCanvas.writeRAWfile("ut-lines_clip-i.mrw");
   iRamCanvas.scaleUpProximal(10);
   iRamCanvas.writeTIFFfile("ut-lines_clip-i.tiff");
-
-  BOOST_CHECK_EQUAL_COLLECTIONS(hRamCanvas.begin(), hRamCanvas.end(), iRamCanvas.begin(), iRamCanvas.end());
-
-  std::ifstream ifshg("ut-lines_clip-h.mrw");
-  std::ifstream ifshr("../data/utest/ut-lines_clip-h.mrw");
-
-  std::istream_iterator<char> bhg(ifshg), ehg;
-  std::istream_iterator<char> bhr(ifshr), ehr;
-
-  BOOST_CHECK_EQUAL_COLLECTIONS(bhg, ehg, bhr, ehr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1075,21 +991,21 @@ BOOST_AUTO_TEST_CASE(triangles) {
   mjr::ramCanvas3c8b::colorType cColor(mjr::ramCanvas3c8b::colorType::cornerColorEnum::GREEN);
   mjr::ramCanvas3c8b::colorType dColor(mjr::ramCanvas3c8b::colorType::cornerColorEnum::RED);
 
-  mjr::ramCanvas1c8b aRamCanvas(163, 163);
+  mjr::ramCanvas1c8b aRamCanvas(163, 163);  mjr::ramCanvas1c8b RaRamCanvas(163, 163);
   mjr::ramCanvas1c8b bRamCanvas(163, 163);
   mjr::ramCanvas1c8b cRamCanvas(163, 163);
   mjr::ramCanvas1c8b dRamCanvas(163, 163);
   mjr::ramCanvas1c8b eRamCanvas(163, 163);
   mjr::ramCanvas1c8b fRamCanvas(163, 163);
 
-  mjr::ramCanvas1c8b gRamCanvas(163, 163);
+  mjr::ramCanvas1c8b gRamCanvas(163, 163);  mjr::ramCanvas1c8b RgRamCanvas(163, 163);
   mjr::ramCanvas1c8b hRamCanvas(163, 163);
   mjr::ramCanvas1c8b iRamCanvas(163, 163);
   mjr::ramCanvas1c8b jRamCanvas(163, 163);
   mjr::ramCanvas1c8b kRamCanvas(163, 163);
   mjr::ramCanvas1c8b lRamCanvas(163, 163);
 
-  mjr::ramCanvas3c8b mRamCanvas(163, 163);
+  mjr::ramCanvas3c8b mRamCanvas(163, 163);  mjr::ramCanvas3c8b RmRamCanvas(163, 163);
   mjr::ramCanvas3c8b nRamCanvas(163, 163);
   mjr::ramCanvas3c8b oRamCanvas(163, 163);
   mjr::ramCanvas3c8b pRamCanvas(163, 163);
@@ -1128,7 +1044,33 @@ BOOST_AUTO_TEST_CASE(triangles) {
     }
   }
 
-  ////////////////////////////////////////////////////////////////////////////////
+  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), cRamCanvas.begin(), cRamCanvas.end());
+  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), dRamCanvas.begin(), dRamCanvas.end());
+  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), eRamCanvas.begin(), eRamCanvas.end());
+  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), fRamCanvas.begin(), fRamCanvas.end());
+
+  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-triangles-a.mrw") == 0);
+  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
+
+  BOOST_CHECK_EQUAL_COLLECTIONS(gRamCanvas.begin(), gRamCanvas.end(), hRamCanvas.begin(), hRamCanvas.end());
+  BOOST_CHECK_EQUAL_COLLECTIONS(gRamCanvas.begin(), gRamCanvas.end(), iRamCanvas.begin(), iRamCanvas.end());
+  BOOST_CHECK_EQUAL_COLLECTIONS(gRamCanvas.begin(), gRamCanvas.end(), jRamCanvas.begin(), jRamCanvas.end());
+  BOOST_CHECK_EQUAL_COLLECTIONS(gRamCanvas.begin(), gRamCanvas.end(), kRamCanvas.begin(), kRamCanvas.end());
+  BOOST_CHECK_EQUAL_COLLECTIONS(gRamCanvas.begin(), gRamCanvas.end(), lRamCanvas.begin(), lRamCanvas.end());
+
+  BOOST_TEST_CHECK(RgRamCanvas.readRAWfile("../data/utest/ut-triangles-g.mrw") == 0);
+  BOOST_TEST_CHECK(RgRamCanvas.isEqual(gRamCanvas) == true);
+
+  BOOST_CHECK_EQUAL_COLLECTIONS(mRamCanvas.begin(), mRamCanvas.end(), nRamCanvas.begin(), nRamCanvas.end());
+  BOOST_CHECK_EQUAL_COLLECTIONS(mRamCanvas.begin(), mRamCanvas.end(), oRamCanvas.begin(), oRamCanvas.end());
+  BOOST_CHECK_EQUAL_COLLECTIONS(mRamCanvas.begin(), mRamCanvas.end(), pRamCanvas.begin(), pRamCanvas.end());
+  BOOST_CHECK_EQUAL_COLLECTIONS(mRamCanvas.begin(), mRamCanvas.end(), qRamCanvas.begin(), qRamCanvas.end());
+  BOOST_CHECK_EQUAL_COLLECTIONS(mRamCanvas.begin(), mRamCanvas.end(), rRamCanvas.begin(), rRamCanvas.end());
+
+  BOOST_TEST_CHECK(RmRamCanvas.readRAWfile("../data/utest/ut-triangles-m.mrw") == 0);
+  BOOST_TEST_CHECK(RmRamCanvas.isEqual(mRamCanvas) == true);
+
   aRamCanvas.writeRAWfile("ut-triangles-a.mrw");
   bRamCanvas.writeRAWfile("ut-triangles-b.mrw");
   cRamCanvas.writeRAWfile("ut-triangles-c.mrw");
@@ -1150,21 +1092,6 @@ BOOST_AUTO_TEST_CASE(triangles) {
   eRamCanvas.writeTIFFfile("ut-triangles-e.tiff");
   fRamCanvas.writeTIFFfile("ut-triangles-f.tiff");
 
-  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), cRamCanvas.begin(), cRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), dRamCanvas.begin(), dRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), eRamCanvas.begin(), eRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), fRamCanvas.begin(), fRamCanvas.end());
-
-  std::ifstream ifsag("ut-triangles-a.mrw");
-  std::ifstream ifsar("../data/utest/ut-triangles-a.mrw");
-
-  std::istream_iterator<char> bag(ifsag), eag;
-  std::istream_iterator<char> bar(ifsar), ear;
-
-  BOOST_CHECK_EQUAL_COLLECTIONS(bag, eag, bar, ear);
-
-  ////////////////////////////////////////////////////////////////////////////////
   gRamCanvas.writeRAWfile("ut-triangles-g.mrw");
   hRamCanvas.writeRAWfile("ut-triangles-h.mrw");
   iRamCanvas.writeRAWfile("ut-triangles-i.mrw");
@@ -1186,21 +1113,6 @@ BOOST_AUTO_TEST_CASE(triangles) {
   kRamCanvas.writeTIFFfile("ut-triangles-k.tiff");
   lRamCanvas.writeTIFFfile("ut-triangles-l.tiff");
 
-  BOOST_CHECK_EQUAL_COLLECTIONS(gRamCanvas.begin(), gRamCanvas.end(), hRamCanvas.begin(), hRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(gRamCanvas.begin(), gRamCanvas.end(), iRamCanvas.begin(), iRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(gRamCanvas.begin(), gRamCanvas.end(), jRamCanvas.begin(), jRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(gRamCanvas.begin(), gRamCanvas.end(), kRamCanvas.begin(), kRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(gRamCanvas.begin(), gRamCanvas.end(), lRamCanvas.begin(), lRamCanvas.end());
-
-  std::ifstream ifsgg("ut-triangles-g.mrw");
-  std::ifstream ifsgr("../data/utest/ut-triangles-g.mrw");
-
-  std::istream_iterator<char> bgg(ifsgg), egg;
-  std::istream_iterator<char> bgr(ifsgr), egr;
-
-  BOOST_CHECK_EQUAL_COLLECTIONS(bgg, egg, bgr, egr);
-
-  ////////////////////////////////////////////////////////////////////////////////
   mRamCanvas.writeRAWfile("ut-triangles-m.mrw");
   nRamCanvas.writeRAWfile("ut-triangles-n.mrw");
   oRamCanvas.writeRAWfile("ut-triangles-o.mrw");
@@ -1221,111 +1133,72 @@ BOOST_AUTO_TEST_CASE(triangles) {
   pRamCanvas.writeTIFFfile("ut-triangles-p.tiff");
   qRamCanvas.writeTIFFfile("ut-triangles-q.tiff");
   rRamCanvas.writeTIFFfile("ut-triangles-r.tiff");
-
-  BOOST_CHECK_EQUAL_COLLECTIONS(mRamCanvas.begin(), mRamCanvas.end(), nRamCanvas.begin(), nRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(mRamCanvas.begin(), mRamCanvas.end(), oRamCanvas.begin(), oRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(mRamCanvas.begin(), mRamCanvas.end(), pRamCanvas.begin(), pRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(mRamCanvas.begin(), mRamCanvas.end(), qRamCanvas.begin(), qRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(mRamCanvas.begin(), mRamCanvas.end(), rRamCanvas.begin(), rRamCanvas.end());
-
-  std::ifstream ifsmg("ut-triangles-m.mrw");
-  std::ifstream ifsmr("../data/utest/ut-triangles-m.mrw");
-
-  std::istream_iterator<char> bmg(ifsmg), emg;
-  std::istream_iterator<char> bmr(ifsmr), emr;
-
-  BOOST_CHECK_EQUAL_COLLECTIONS(bmg, emg, bmr, emr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(circles) {
 
-  mjr::ramCanvas1c8b aRamCanvas(63, 63);
-  mjr::ramCanvas1c8b bRamCanvas(63, 63);
   mjr::color1c8b aColor(mjr::color1c8b::cornerColorEnum::WHITE);
   mjr::color1c8b bColor(mjr::color1c8b::cornerColorEnum::BLACK);
 
+  mjr::ramCanvas1c8b aRamCanvas(63, 63);  mjr::ramCanvas1c8b RaRamCanvas(63, 63);
   for(int i=2; i<32; i+=2)
     aRamCanvas.drawCircle(31, 31, i, aColor);
+  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-circles-a.mrw") == 0);
+  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
 
+  mjr::ramCanvas1c8b bRamCanvas(63, 63);  mjr::ramCanvas1c8b RbRamCanvas(63, 63);
   bRamCanvas.drawFillCircle(31, 31, 30, aColor);
+  BOOST_TEST_CHECK(RbRamCanvas.readRAWfile("../data/utest/ut-circles-b.mrw") == 0);
+  BOOST_TEST_CHECK(RbRamCanvas.isEqual(bRamCanvas) == true);
 
-  aRamCanvas.writeRAWfile("ut-circles-a.mrw");
-  bRamCanvas.writeRAWfile("ut-circles-b.mrw");
-
-  aRamCanvas.scaleUpProximal(8);
-  bRamCanvas.scaleUpProximal(8);
-
-  aRamCanvas.writeTIFFfile("ut-circles-a.tiff");
-  bRamCanvas.writeTIFFfile("ut-circles-b.tiff");
-
-  std::ifstream ifsag("ut-circles-a.mrw");
-  std::ifstream ifsar("../data/utest/ut-circles-a.mrw");
-  std::istream_iterator<char> bag(ifsag), eag;
-  std::istream_iterator<char> bar(ifsar), ear;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bag, eag, bar, ear);
-
-  std::ifstream ifsbg("ut-circles-b.mrw");
-  std::ifstream ifsbr("../data/utest/ut-circles-b.mrw");
-  std::istream_iterator<char> bbg(ifsbg), ebg;
-  std::istream_iterator<char> bbr(ifsbr), ebr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bbg, ebg, bbr, ebr);
-
-  mjr::ramCanvas1c8b cRamCanvas(32, 32);
+  mjr::ramCanvas1c8b cRamCanvas(32, 32);  mjr::ramCanvas1c8b RcRamCanvas(32, 32);
   cRamCanvas.drawCircle(31, 31, 16, aColor);
   cRamCanvas.drawCircle(16, -5, 15, aColor);
   cRamCanvas.drawCircle(5,  20, 8, aColor);
+  BOOST_TEST_CHECK(RcRamCanvas.readRAWfile("../data/utest/ut-circles-c.mrw") == 0);
+  BOOST_TEST_CHECK(RcRamCanvas.isEqual(cRamCanvas) == true);
+
+  mjr::ramCanvas1c8b dRamCanvas(32, 32);  mjr::ramCanvas1c8b RdRamCanvas(32, 32);
+  dRamCanvas.drawFillCircle(31, 31, 16, aColor);
+  dRamCanvas.drawFillCircle(16, -5, 15, aColor);
+  dRamCanvas.drawFillCircle(5,  20, 8, aColor);
+  BOOST_TEST_CHECK(RdRamCanvas.readRAWfile("../data/utest/ut-circles-d.mrw") == 0);
+  BOOST_TEST_CHECK(RdRamCanvas.isEqual(dRamCanvas) == true);
+
+  mjr::ramCanvas1c8b eRamCanvas(32, 32);  mjr::ramCanvas1c8b ReRamCanvas(32, 32);
+  eRamCanvas.drawFillCircle(16, 16, 17, aColor);
+  BOOST_TEST_CHECK(ReRamCanvas.readRAWfile("../data/utest/ut-circles-e.mrw") == 0);
+  BOOST_TEST_CHECK(ReRamCanvas.isEqual(eRamCanvas) == true);
+
+  mjr::ramCanvas1c8b fRamCanvas(32, 32);  mjr::ramCanvas1c8b RfRamCanvas(32, 32);
+  fRamCanvas.drawFillCircle(16, 16, 50, aColor);
+  BOOST_TEST_CHECK(RfRamCanvas.readRAWfile("../data/utest/ut-circles-f.mrw") == 0);
+  BOOST_TEST_CHECK(RfRamCanvas.isEqual(fRamCanvas) == true);
+
+  aRamCanvas.writeRAWfile("ut-circles-a.mrw");
+  aRamCanvas.scaleUpProximal(8);
+  aRamCanvas.writeTIFFfile("ut-circles-a.tiff");
+
+  bRamCanvas.writeRAWfile("ut-circles-b.mrw");
+  bRamCanvas.scaleUpProximal(8);
+  bRamCanvas.writeTIFFfile("ut-circles-b.tiff");
 
   cRamCanvas.writeRAWfile("ut-circles-c.mrw");
   cRamCanvas.scaleUpProximal(20);
   cRamCanvas.writeTIFFfile("ut-circles-c.tiff");
 
-  std::ifstream ifscg("ut-circles-c.mrw");
-  std::ifstream ifscr("../data/utest/ut-circles-c.mrw");
-  std::istream_iterator<char> bcg(ifscg), ecg;
-  std::istream_iterator<char> bcr(ifscr), ecr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bcg, ecg, bcr, ecr);
-
-  mjr::ramCanvas1c8b dRamCanvas(32, 32);
-  dRamCanvas.drawFillCircle(31, 31, 16, aColor);
-  dRamCanvas.drawFillCircle(16, -5, 15, aColor);
-  dRamCanvas.drawFillCircle(5,  20, 8, aColor);
-
   dRamCanvas.writeRAWfile("ut-circles-d.mrw");
   dRamCanvas.scaleUpProximal(20);
   dRamCanvas.writeTIFFfile("ut-circles-d.tiff");
-
-  std::ifstream ifsdg("ut-circles-d.mrw");
-  std::ifstream ifsdr("../data/utest/ut-circles-d.mrw");
-  std::istream_iterator<char> bdg(ifsdg), edg;
-  std::istream_iterator<char> bdr(ifsdr), edr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bdg, edg, bdr, edr);
-
-  mjr::ramCanvas1c8b eRamCanvas(32, 32);
-  eRamCanvas.drawFillCircle(16, 16, 17, aColor);
 
   eRamCanvas.writeRAWfile("ut-circles-e.mrw");
   eRamCanvas.scaleUpProximal(20);
   eRamCanvas.writeTIFFfile("ut-circles-e.tiff");
 
-  std::ifstream ifseg("ut-circles-e.mrw");
-  std::ifstream ifser("../data/utest/ut-circles-e.mrw");
-  std::istream_iterator<char> beg(ifseg), eeg;
-  std::istream_iterator<char> ber(ifser), eer;
-  BOOST_CHECK_EQUAL_COLLECTIONS(beg, eeg, ber, eer);
-
-  mjr::ramCanvas1c8b fRamCanvas(32, 32);
-  fRamCanvas.drawFillCircle(16, 16, 50, aColor);
-
   fRamCanvas.writeRAWfile("ut-circles-f.mrw");
   fRamCanvas.scaleUpProximal(20);
   fRamCanvas.writeTIFFfile("ut-circles-f.tiff");
-
-  std::ifstream ifsfg("ut-circles-f.mrw");
-  std::ifstream ifsfr("../data/utest/ut-circles-f.mrw");
-  std::istream_iterator<char> bfg(ifsfg), efg;
-  std::istream_iterator<char> bfr(ifsfr), efr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bfg, efg, bfr, efr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1336,133 +1209,105 @@ BOOST_AUTO_TEST_CASE(rectanglesO) {
   mjr::ramCanvas1c8b::colorType aColor(mjr::ramCanvas1c8b::colorType::cornerColorEnum::WHITE);
 
   // open: The args are used not points (x1, y1) & (x2, y2), but rather as x and y ranges.
-  mjr::ramCanvas1c8b aRamCanvas(9, 9);
-  mjr::ramCanvas1c8b bRamCanvas(9, 9);
-
+  mjr::ramCanvas1c8b aRamCanvas(9, 9);  mjr::ramCanvas1c8b RaRamCanvas(9, 9);
   aRamCanvas.drawRectangle(1, 1, 7, 7, aColor);
+  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-rectanglesO-a.mrw") == 0);
+  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
 
+  mjr::ramCanvas1c8b bRamCanvas(9, 9);
   bRamCanvas.clrCanvasToBlack();
   bRamCanvas.drawRectangle(1, 1, 7, 7, aColor);
-  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+  BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
 
   bRamCanvas.clrCanvasToBlack();
   bRamCanvas.drawRectangle(7, 1, 1, 7, aColor);
-  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+  BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
 
   bRamCanvas.clrCanvasToBlack();
   bRamCanvas.drawRectangle(1, 7, 7, 1, aColor);
-  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+  BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
 
   bRamCanvas.clrCanvasToBlack();
   bRamCanvas.drawRectangle(7, 7, 1, 1, aColor);
-  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
-
-  aRamCanvas.writeRAWfile("ut-rectanglesO-a.mrw");
-  aRamCanvas.scaleUpProximal(20);
-  aRamCanvas.writeTIFFfile("ut-rectanglesO-a.tiff");
+  BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
 
   // open: clip ALL corner (canvas inside rectangle)
-  mjr::ramCanvas1c8b cRamCanvas(9, 9);
-
+  mjr::ramCanvas1c8b cRamCanvas(9, 9);  mjr::ramCanvas1c8b RcRamCanvas(9, 9);
   cRamCanvas.drawRectangle(-4, -2, 25,  12, aColor);
-
-  cRamCanvas.writeRAWfile("ut-rectanglesO-c.mrw");
-  cRamCanvas.scaleUpProximal(20);
-  cRamCanvas.writeTIFFfile("ut-rectanglesO-c.tiff");
-
-  std::ifstream ifscg("ut-rectanglesO-c.mrw");
-  std::ifstream ifscr("../data/utest/ut-rectanglesO-c.mrw");
-  std::istream_iterator<char> bcg(ifscg), ecg;
-  std::istream_iterator<char> bcr(ifscr), ecr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bcg, ecg, bcr, ecr);
+  BOOST_TEST_CHECK(RcRamCanvas.readRAWfile("../data/utest/ut-rectanglesO-c.mrw") == 0);
+  BOOST_TEST_CHECK(RcRamCanvas.isEqual(cRamCanvas) == true);
 
   // open: clip ALL corner (canvas inside rectangle)
-  mjr::ramCanvas1c8b dRamCanvas(9, 9);
-
+  mjr::ramCanvas1c8b dRamCanvas(9, 9);  mjr::ramCanvas1c8b RdRamCanvas(9, 9);
   dRamCanvas.drawRectangle(-9,  2, -4,   7, aColor); // to left
   dRamCanvas.drawRectangle(16,  2, 24,   7, aColor); // to right
   dRamCanvas.drawRectangle( 2,  12, 7,  17, aColor); // to top
   dRamCanvas.drawRectangle( 2, -17, 7, -10, aColor); // to bot
   dRamCanvas.drawRectangle(-9, -15, -4, -7, aColor); // to left below
   dRamCanvas.drawRectangle(10,  15, 14, 17, aColor); // to right up
+  BOOST_TEST_CHECK(RdRamCanvas.readRAWfile("../data/utest/ut-rectanglesO-d.mrw") == 0);
+  BOOST_TEST_CHECK(RdRamCanvas.isEqual(dRamCanvas) == true);
+
+  // open: clip one corner
+  mjr::ramCanvas1c8b eRamCanvas(9, 9);  mjr::ramCanvas1c8b ReRamCanvas(9, 9);
+  eRamCanvas.drawRectangle( 6,  6, 12,  12, aColor);
+  eRamCanvas.drawRectangle( 6,  2, 12, -12, aColor);
+  eRamCanvas.drawRectangle(-6,  6,  2,  16, aColor);
+  eRamCanvas.drawRectangle(-6, -6,  2,   2, aColor);
+  BOOST_TEST_CHECK(ReRamCanvas.readRAWfile("../data/utest/ut-rectanglesO-e.mrw") == 0);
+  BOOST_TEST_CHECK(ReRamCanvas.isEqual(eRamCanvas) == true);
+
+  // open: clip one side
+  mjr::ramCanvas1c8b fRamCanvas(9, 9);  mjr::ramCanvas1c8b RfRamCanvas(9, 9);
+  fRamCanvas.drawRectangle( 2,   7,  6, 12, aColor); // top
+  fRamCanvas.drawRectangle( 7,   2, 20,  6, aColor); // right
+  fRamCanvas.drawRectangle(-6,   2,  1,  6, aColor);  // left
+  fRamCanvas.drawRectangle( 2, -27,  6,  1, aColor); // bot
+  BOOST_TEST_CHECK(RfRamCanvas.readRAWfile("../data/utest/ut-rectanglesO-f.mrw") == 0);
+  BOOST_TEST_CHECK(RfRamCanvas.isEqual(fRamCanvas) == true);
+
+  // open: clip one side (T/B)
+  mjr::ramCanvas1c8b gRamCanvas(9, 9);  mjr::ramCanvas1c8b RgRamCanvas(9, 9);
+  gRamCanvas.drawRectangle(-3,   7, 26, 12, aColor); // top
+  gRamCanvas.drawRectangle(-4, -27, 30,  1, aColor); // bot
+  BOOST_TEST_CHECK(RgRamCanvas.readRAWfile("../data/utest/ut-rectanglesO-g.mrw") == 0);
+  BOOST_TEST_CHECK(RgRamCanvas.isEqual(gRamCanvas) == true);
+
+  // open: clip one side (L/R)
+  mjr::ramCanvas1c8b hRamCanvas(9, 9);  mjr::ramCanvas1c8b RhRamCanvas(9, 9);
+  hRamCanvas.drawRectangle( 7,  -2, 20, 36, aColor); // right
+  hRamCanvas.drawRectangle(-6,  -5,  1, 16, aColor);  // left
+  BOOST_TEST_CHECK(RhRamCanvas.readRAWfile("../data/utest/ut-rectanglesO-h.mrw") == 0);
+  BOOST_TEST_CHECK(RhRamCanvas.isEqual(hRamCanvas) == true);
+
+  aRamCanvas.writeRAWfile("ut-rectanglesO-a.mrw");
+  aRamCanvas.scaleUpProximal(20);
+  aRamCanvas.writeTIFFfile("ut-rectanglesO-a.tiff");
+
+  cRamCanvas.writeRAWfile("ut-rectanglesO-c.mrw");
+  cRamCanvas.scaleUpProximal(20);
+  cRamCanvas.writeTIFFfile("ut-rectanglesO-c.tiff");
 
   dRamCanvas.writeRAWfile("ut-rectanglesO-d.mrw");
   dRamCanvas.scaleUpProximal(20);
   dRamCanvas.writeTIFFfile("ut-rectanglesO-d.tiff");
 
-  std::ifstream ifsdg("ut-rectanglesO-d.mrw");
-  std::ifstream ifsdr("../data/utest/ut-rectanglesO-d.mrw");
-  std::istream_iterator<char> bdg(ifsdg), edg;
-  std::istream_iterator<char> bdr(ifsdr), edr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bdg, edg, bdr, edr);
-
-  // open: clip one corner
-  mjr::ramCanvas1c8b eRamCanvas(9, 9);
-
-  eRamCanvas.drawRectangle( 6,  6, 12,  12, aColor);
-  eRamCanvas.drawRectangle( 6,  2, 12, -12, aColor);
-  eRamCanvas.drawRectangle(-6,  6,  2,  16, aColor);
-  eRamCanvas.drawRectangle(-6, -6,  2,   2, aColor);
-
   eRamCanvas.writeRAWfile("ut-rectanglesO-e.mrw");
   eRamCanvas.scaleUpProximal(20);
   eRamCanvas.writeTIFFfile("ut-rectanglesO-e.tiff");
-
-  std::ifstream ifseg("ut-rectanglesO-e.mrw");
-  std::ifstream ifser("../data/utest/ut-rectanglesO-e.mrw");
-  std::istream_iterator<char> beg(ifseg), eeg;
-  std::istream_iterator<char> ber(ifser), eer;
-  BOOST_CHECK_EQUAL_COLLECTIONS(beg, eeg, ber, eer);
-
-  // open: clip one side
-  mjr::ramCanvas1c8b fRamCanvas(9, 9);
-
-  fRamCanvas.drawRectangle( 2,   7,  6, 12, aColor); // top
-  fRamCanvas.drawRectangle( 7,   2, 20,  6, aColor); // right
-  fRamCanvas.drawRectangle(-6,   2,  1,  6, aColor);  // left
-  fRamCanvas.drawRectangle( 2, -27,  6,  1, aColor); // bot
 
   fRamCanvas.writeRAWfile("ut-rectanglesO-f.mrw");
   fRamCanvas.scaleUpProximal(20);
   fRamCanvas.writeTIFFfile("ut-rectanglesO-f.tiff");
 
-  std::ifstream ifsfg("ut-rectanglesO-f.mrw");
-  std::ifstream ifsfr("../data/utest/ut-rectanglesO-f.mrw");
-  std::istream_iterator<char> bfg(ifsfg), efg;
-  std::istream_iterator<char> bfr(ifsfr), efr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bfg, efg, bfr, efr);
-
-  // open: clip one side (T/B)
-  mjr::ramCanvas1c8b gRamCanvas(9, 9);
-
-  gRamCanvas.drawRectangle(-3,   7, 26, 12, aColor); // top
-  gRamCanvas.drawRectangle(-4, -27, 30,  1, aColor); // bot
-
   gRamCanvas.writeRAWfile("ut-rectanglesO-g.mrw");
   gRamCanvas.scaleUpProximal(20);
   gRamCanvas.writeTIFFfile("ut-rectanglesO-g.tiff");
-
-  std::ifstream ifsgg("ut-rectanglesO-g.mrw");
-  std::ifstream ifsgr("../data/utest/ut-rectanglesO-g.mrw");
-  std::istream_iterator<char> bgg(ifsgg), egg;
-  std::istream_iterator<char> bgr(ifsgr), egr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bgg, egg, bgr, egr);
-
-  // open: clip one side (L/R)
-  mjr::ramCanvas1c8b hRamCanvas(9, 9);
-
-  hRamCanvas.drawRectangle( 7,  -2, 20, 36, aColor); // right
-  hRamCanvas.drawRectangle(-6,  -5,  1, 16, aColor);  // left
 
   hRamCanvas.writeRAWfile("ut-rectanglesO-h.mrw");
   hRamCanvas.scaleUpProximal(20);
   hRamCanvas.writeTIFFfile("ut-rectanglesO-h.tiff");
 
-  std::ifstream ifshg("ut-rectanglesO-h.mrw");
-  std::ifstream ifshr("../data/utest/ut-rectanglesO-h.mrw");
-  std::istream_iterator<char> bhg(ifshg), ehg;
-  std::istream_iterator<char> bhr(ifshr), ehr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bhg, ehg, bhr, ehr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1473,139 +1318,110 @@ BOOST_AUTO_TEST_CASE(rectanglesF) {
   mjr::ramCanvas1c8b::colorType aColor(mjr::ramCanvas1c8b::colorType::cornerColorEnum::WHITE);
 
   // open: The args are used not points (x1, y1) & (x2, y2), but rather as x and y ranges.
-  mjr::ramCanvas1c8b aRamCanvas(9, 9);
-  mjr::ramCanvas1c8b bRamCanvas(9, 9);
-
+  mjr::ramCanvas1c8b aRamCanvas(9, 9);  mjr::ramCanvas1c8b RaRamCanvas(9, 9);
   aRamCanvas.drawFillRectangle(1, 1, 7, 7, aColor);
+  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-rectanglesF-a.mrw") == 0);
+  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
 
+  mjr::ramCanvas1c8b bRamCanvas(9, 9);
   bRamCanvas.clrCanvasToBlack();
   bRamCanvas.drawFillRectangle(1, 1, 7, 7, aColor);
-  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+  BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
 
   bRamCanvas.clrCanvasToBlack();
   bRamCanvas.drawFillRectangle(7, 1, 1, 7, aColor);
-  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+  BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
 
   bRamCanvas.clrCanvasToBlack();
   bRamCanvas.drawFillRectangle(1, 7, 7, 1, aColor);
-  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+  BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
 
   bRamCanvas.clrCanvasToBlack();
   bRamCanvas.drawFillRectangle(7, 7, 1, 1, aColor);
-  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
-
-  aRamCanvas.writeRAWfile("ut-rectanglesF-a.mrw");
-  aRamCanvas.scaleUpProximal(20);
-  aRamCanvas.writeTIFFfile("ut-rectanglesF-a.tiff");
+  BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
 
   // open: clip ALL corner (canvas inside rectangle)
-  mjr::ramCanvas1c8b cRamCanvas(9, 9);
-
+  mjr::ramCanvas1c8b cRamCanvas(9, 9);  mjr::ramCanvas1c8b RcRamCanvas(9, 9);
   cRamCanvas.drawFillRectangle(-4, -2, 25,  12, aColor);
-
-  cRamCanvas.writeRAWfile("ut-rectanglesF-c.mrw");
-  cRamCanvas.scaleUpProximal(20);
-  cRamCanvas.writeTIFFfile("ut-rectanglesF-c.tiff");
-
-  std::ifstream ifscg("ut-rectanglesF-c.mrw");
-  std::ifstream ifscr("../data/utest/ut-rectanglesF-c.mrw");
-  std::istream_iterator<char> bcg(ifscg), ecg;
-  std::istream_iterator<char> bcr(ifscr), ecr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bcg, ecg, bcr, ecr);
+  BOOST_TEST_CHECK(RcRamCanvas.readRAWfile("../data/utest/ut-rectanglesF-c.mrw") == 0);
+  BOOST_TEST_CHECK(RcRamCanvas.isEqual(cRamCanvas) == true);
 
   // open: clip ALL corner (canvas inside rectangle)
-  mjr::ramCanvas1c8b dRamCanvas(9, 9);
-
+  mjr::ramCanvas1c8b dRamCanvas(9, 9);  mjr::ramCanvas1c8b RdRamCanvas(9, 9);
   dRamCanvas.drawFillRectangle(-9,  2, -4,   7, aColor); // to left
   dRamCanvas.drawFillRectangle(16,  2, 24,   7, aColor); // to right
   dRamCanvas.drawFillRectangle( 2,  12, 7,  17, aColor); // to top
   dRamCanvas.drawFillRectangle( 2, -17, 7, -10, aColor); // to bot
   dRamCanvas.drawFillRectangle(-9, -15, -4, -7, aColor); // to left below
   dRamCanvas.drawFillRectangle(10,  15, 14, 17, aColor); // to right up
+  BOOST_TEST_CHECK(RdRamCanvas.readRAWfile("../data/utest/ut-rectanglesF-d.mrw") == 0);
+  BOOST_TEST_CHECK(RdRamCanvas.isEqual(dRamCanvas) == true);
+
+  // open: clip one corner
+  mjr::ramCanvas1c8b eRamCanvas(9, 9);  mjr::ramCanvas1c8b ReRamCanvas(9, 9);
+  eRamCanvas.drawFillRectangle( 6,  6, 12,  12, aColor);
+  eRamCanvas.drawFillRectangle( 6,  2, 12, -12, aColor);
+  eRamCanvas.drawFillRectangle(-6,  6,  2,  16, aColor);
+  eRamCanvas.drawFillRectangle(-6, -6,  2,   2, aColor);
+  BOOST_TEST_CHECK(ReRamCanvas.readRAWfile("../data/utest/ut-rectanglesF-e.mrw") == 0);
+  BOOST_TEST_CHECK(ReRamCanvas.isEqual(eRamCanvas) == true);
+
+  // open: clip one side
+  mjr::ramCanvas1c8b fRamCanvas(9, 9);  mjr::ramCanvas1c8b RfRamCanvas(9, 9);
+  fRamCanvas.drawFillRectangle( 2,   7,  6, 12, aColor); // top
+  fRamCanvas.drawFillRectangle( 7,   2, 20,  6, aColor); // right
+  fRamCanvas.drawFillRectangle(-6,   2,  1,  6, aColor);  // left
+  fRamCanvas.drawFillRectangle( 2, -27,  6,  1, aColor); // bot
+  BOOST_TEST_CHECK(RfRamCanvas.readRAWfile("../data/utest/ut-rectanglesF-f.mrw") == 0);
+  BOOST_TEST_CHECK(RfRamCanvas.isEqual(fRamCanvas) == true);
+
+  // open: clip one side (T/B)
+  mjr::ramCanvas1c8b gRamCanvas(9, 9);  mjr::ramCanvas1c8b RgRamCanvas(9, 9);
+  gRamCanvas.drawFillRectangle(-3,   7, 26, 12, aColor); // top
+  gRamCanvas.drawFillRectangle(-4, -27, 30,  1, aColor); // bot
+  BOOST_TEST_CHECK(RgRamCanvas.readRAWfile("../data/utest/ut-rectanglesF-g.mrw") == 0);
+  BOOST_TEST_CHECK(RgRamCanvas.isEqual(gRamCanvas) == true);
+
+  // open: clip one side (L/R)
+  mjr::ramCanvas1c8b hRamCanvas(9, 9);  mjr::ramCanvas1c8b RhRamCanvas(9, 9);
+  hRamCanvas.drawFillRectangle( 7,  -2, 20, 36, aColor); // right
+  hRamCanvas.drawFillRectangle(-6,  -5,  1, 16, aColor);  // left
+  BOOST_TEST_CHECK(RhRamCanvas.readRAWfile("../data/utest/ut-rectanglesF-h.mrw") == 0);
+  BOOST_TEST_CHECK(RhRamCanvas.isEqual(hRamCanvas) == true);
+
+  aRamCanvas.writeRAWfile("ut-rectanglesF-a.mrw");
+  aRamCanvas.scaleUpProximal(20);
+  aRamCanvas.writeTIFFfile("ut-rectanglesF-a.tiff");
+
+  cRamCanvas.writeRAWfile("ut-rectanglesF-c.mrw");
+  cRamCanvas.scaleUpProximal(20);
+  cRamCanvas.writeTIFFfile("ut-rectanglesF-c.tiff");
 
   dRamCanvas.writeRAWfile("ut-rectanglesF-d.mrw");
   dRamCanvas.scaleUpProximal(20);
   dRamCanvas.writeTIFFfile("ut-rectanglesF-d.tiff");
 
-  std::ifstream ifsdg("ut-rectanglesF-d.mrw");
-  std::ifstream ifsdr("../data/utest/ut-rectanglesF-d.mrw");
-  std::istream_iterator<char> bdg(ifsdg), edg;
-  std::istream_iterator<char> bdr(ifsdr), edr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bdg, edg, bdr, edr);
-
-  // open: clip one corner
-  mjr::ramCanvas1c8b eRamCanvas(9, 9);
-
-  eRamCanvas.drawFillRectangle( 6,  6, 12,  12, aColor);
-  eRamCanvas.drawFillRectangle( 6,  2, 12, -12, aColor);
-  eRamCanvas.drawFillRectangle(-6,  6,  2,  16, aColor);
-  eRamCanvas.drawFillRectangle(-6, -6,  2,   2, aColor);
-
   eRamCanvas.writeRAWfile("ut-rectanglesF-e.mrw");
   eRamCanvas.scaleUpProximal(20);
   eRamCanvas.writeTIFFfile("ut-rectanglesF-e.tiff");
-
-  std::ifstream ifseg("ut-rectanglesF-e.mrw");
-  std::ifstream ifser("../data/utest/ut-rectanglesF-e.mrw");
-  std::istream_iterator<char> beg(ifseg), eeg;
-  std::istream_iterator<char> ber(ifser), eer;
-  BOOST_CHECK_EQUAL_COLLECTIONS(beg, eeg, ber, eer);
-
-  // open: clip one side
-  mjr::ramCanvas1c8b fRamCanvas(9, 9);
-
-  fRamCanvas.drawFillRectangle( 2,   7,  6, 12, aColor); // top
-  fRamCanvas.drawFillRectangle( 7,   2, 20,  6, aColor); // right
-  fRamCanvas.drawFillRectangle(-6,   2,  1,  6, aColor);  // left
-  fRamCanvas.drawFillRectangle( 2, -27,  6,  1, aColor); // bot
 
   fRamCanvas.writeRAWfile("ut-rectanglesF-f.mrw");
   fRamCanvas.scaleUpProximal(20);
   fRamCanvas.writeTIFFfile("ut-rectanglesF-f.tiff");
 
-  std::ifstream ifsfg("ut-rectanglesF-f.mrw");
-  std::ifstream ifsfr("../data/utest/ut-rectanglesF-f.mrw");
-  std::istream_iterator<char> bfg(ifsfg), efg;
-  std::istream_iterator<char> bfr(ifsfr), efr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bfg, efg, bfr, efr);
-
-  // open: clip one side (T/B)
-  mjr::ramCanvas1c8b gRamCanvas(9, 9);
-
-  gRamCanvas.drawFillRectangle(-3,   7, 26, 12, aColor); // top
-  gRamCanvas.drawFillRectangle(-4, -27, 30,  1, aColor); // bot
-
   gRamCanvas.writeRAWfile("ut-rectanglesF-g.mrw");
   gRamCanvas.scaleUpProximal(20);
   gRamCanvas.writeTIFFfile("ut-rectanglesF-g.tiff");
 
-  std::ifstream ifsgg("ut-rectanglesF-g.mrw");
-  std::ifstream ifsgr("../data/utest/ut-rectanglesF-g.mrw");
-  std::istream_iterator<char> bgg(ifsgg), egg;
-  std::istream_iterator<char> bgr(ifsgr), egr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bgg, egg, bgr, egr);
-
-  // open: clip one side (L/R)
-  mjr::ramCanvas1c8b hRamCanvas(9, 9);
-
-  hRamCanvas.drawFillRectangle( 7,  -2, 20, 36, aColor); // right
-  hRamCanvas.drawFillRectangle(-6,  -5,  1, 16, aColor);  // left
-
   hRamCanvas.writeRAWfile("ut-rectanglesF-h.mrw");
   hRamCanvas.scaleUpProximal(20);
   hRamCanvas.writeTIFFfile("ut-rectanglesF-h.tiff");
-
-  std::ifstream ifshg("ut-rectanglesF-h.mrw");
-  std::ifstream ifshr("../data/utest/ut-rectanglesF-h.mrw");
-  std::istream_iterator<char> bhg(ifshg), ehg;
-  std::istream_iterator<char> bhr(ifshr), ehr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bhg, ehg, bhr, ehr);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(draw_point) {
 
-  mjr::ramCanvasRGB8b aRamCanvas(20, 20, 0.0, 19.0, 0.0, 19.0);
+  mjr::ramCanvasRGB8b aRamCanvas(20, 20, 0.0, 19.0, 0.0, 19.0);  mjr::ramCanvasRGB8b RaRamCanvas(20, 20, 0.0, 19.0, 0.0, 19.0);
   aRamCanvas.setRealAxOrientationY(mjr::ramCanvasRGB8b::realAxisOrientation::INVERTED);
   mjr::colorRGB8b aColor(mjr::colorRGB8b::cornerColorEnum::RED);
   mjr::colorRGB8b bColor(mjr::colorRGB8b::cornerColorEnum::BLUE);
@@ -1646,15 +1462,13 @@ BOOST_AUTO_TEST_CASE(draw_point) {
   aRamCanvas.drawPoint(std::vector<double>({6, 4}),      dColor);                                // vector<double>
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-points-a.mrw") == 0);
+  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
   aRamCanvas.writeRAWfile("ut-points-a.mrw");
   aRamCanvas.scaleUpProximal(20);
   aRamCanvas.writeTIFFfile("ut-points-a.tiff");
-  
-  std::ifstream ifsag("ut-points-a.mrw");
-  std::ifstream ifsar("../data/utest/ut-points-a.mrw");
-  std::istream_iterator<char> bag(ifsag), eag;
-  std::istream_iterator<char> bar(ifsar), ear;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bag, eag, bar, ear);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1676,7 +1490,7 @@ BOOST_AUTO_TEST_CASE(lines_ep_swap) {
     aRamCanvas.drawLine(x1, y1, x2, y2, aColor);
     bRamCanvas.clrCanvasToBlack();
     bRamCanvas.drawLine(x2, y2, x1, y1, aColor);
-    BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+    BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
     y1 = 0;
     x1 = i;
     y2 = 15;
@@ -1685,7 +1499,7 @@ BOOST_AUTO_TEST_CASE(lines_ep_swap) {
     aRamCanvas.drawLine(x1, y1, x2, y2, aColor);
     bRamCanvas.clrCanvasToBlack();
     bRamCanvas.drawLine(x2, y2, x1, y1, aColor);
-    BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+    BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
     // Clip on right
     y1 = i;
     x1 = 0;
@@ -1695,7 +1509,7 @@ BOOST_AUTO_TEST_CASE(lines_ep_swap) {
     aRamCanvas.drawLine(x1, y1, x2, y2, aColor);
     bRamCanvas.clrCanvasToBlack();
     bRamCanvas.drawLine(x2, y2, x1, y1, aColor);
-    BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+    BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
     // Clip on top
     y1 = 0;
     x1 = i;
@@ -1705,7 +1519,7 @@ BOOST_AUTO_TEST_CASE(lines_ep_swap) {
     aRamCanvas.drawLine(x1, y1, x2, y2, aColor);
     bRamCanvas.clrCanvasToBlack();
     bRamCanvas.drawLine(x2, y2, x1, y1, aColor);
-    BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+    BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
     // Clip on left
     y1 = i;
     x1 = -5;
@@ -1715,7 +1529,7 @@ BOOST_AUTO_TEST_CASE(lines_ep_swap) {
     aRamCanvas.drawLine(x1, y1, x2, y2, aColor);
     bRamCanvas.clrCanvasToBlack();
     bRamCanvas.drawLine(x2, y2, x1, y1, aColor);
-    BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+    BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
     // Clip on bot
     y1 = -10;
     x1 = i;
@@ -1725,14 +1539,14 @@ BOOST_AUTO_TEST_CASE(lines_ep_swap) {
     aRamCanvas.drawLine(x1, y1, x2, y2, aColor);
     bRamCanvas.clrCanvasToBlack();
     bRamCanvas.drawLine(x2, y2, x1, y1, aColor);
-    BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
+    BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(btriangle) {
 
-  mjr::ramCanvas3c8b aRamCanvas(153, 83);
+  mjr::ramCanvas3c8b aRamCanvas(153, 83);  mjr::ramCanvas3c8b RaRamCanvas(153, 83);
 
   aRamCanvas.drawFillTriangle(81, 31, 1, 9, 51, 81, "green", "red",   "blue");
   aRamCanvas.drawTriangle    (81, 31, 1, 9, 51, 81, "white");
@@ -1740,15 +1554,12 @@ BOOST_AUTO_TEST_CASE(btriangle) {
   aRamCanvas.drawFillTriangle(71, 1, 151, 31, 121, 81, "red",   "green", "blue");
   aRamCanvas.drawTriangle    (71, 1, 151, 31, 121, 81, "white");
 
+  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-btriangle-a.mrw") == 0);
+  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
+  
   aRamCanvas.writeRAWfile("ut-btriangle-a.mrw");
   aRamCanvas.scaleUpProximal(20);
   aRamCanvas.writeTIFFfile("ut-btriangle-a.tiff");
-  
-  std::ifstream ifsag("ut-btriangle-a.mrw");
-  std::ifstream ifsar("../data/utest/ut-btriangle-a.mrw");
-  std::istream_iterator<char> bag(ifsag), eag;
-  std::istream_iterator<char> bar(ifsar), ear;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bag, eag, bar, ear);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1764,7 +1575,6 @@ BOOST_AUTO_TEST_CASE(glyph_axis) {
   aRamCanvas.drawHersheyGlyph(505, 63, 63,  1,  1, "red");
   aRamCanvas.drawHersheyGlyph(505, 63, 63,  2,  2, "red");
   aRamCanvas.drawHersheyGlyph(505, 63, 63,  4,  4, "red");
-
 
   aRamCanvas.writeRAWfile("ut-glyph_axis-a.mrw");
   aRamCanvas.scaleUpProximal(4);
@@ -1837,9 +1647,10 @@ BOOST_AUTO_TEST_CASE(glyph_axis) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(strings) {
 
-  mjr::ramCanvas3c8b aRamCanvas(450, 100);
+  mjr::ramCanvas3c8b aRamCanvas(450, 100);  mjr::ramCanvas3c8b RaRamCanvas(450, 100);
   int y;
   aRamCanvas.setIntAxOrientationY(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
+  RaRamCanvas.setIntAxOrientationY(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
   aRamCanvas.drawLine(50, 0,  50, 512, "blue");
   y = 18;
   aRamCanvas.drawLine(0, y,   1024, y, "blue");
@@ -1848,18 +1659,12 @@ BOOST_AUTO_TEST_CASE(strings) {
   aRamCanvas.drawLine(0, y,   1024, y, "blue");
   aRamCanvas.drawString("Hello, World!", mjr::hershey::font::ROMAN_SL_SANSERIF, 50, y, "red",  2, 15);
 
-  aRamCanvas.writeRAWfile("ut-strings-a.mrw");
-  aRamCanvas.scaleUpProximal(4);
-  aRamCanvas.writeTIFFfile("ut-strings-a.tiff");
+  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-strings-a.mrw") == 0);
+  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
 
-  std::ifstream ifsag("ut-strings-a.mrw");
-  std::ifstream ifsar("../data/utest/ut-strings-a.mrw");
-  std::istream_iterator<char> bag(ifsag), eag;
-  std::istream_iterator<char> bar(ifsar), ear;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bag, eag, bar, ear);
-
-  mjr::ramCanvas3c8b bRamCanvas(450, 100);
+  mjr::ramCanvas3c8b bRamCanvas(450, 100);  mjr::ramCanvas3c8b RbRamCanvas(450, 100);
   bRamCanvas.setIntAxOrientationY(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
+  RbRamCanvas.setIntAxOrientationY(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
   y =18;
   bRamCanvas.drawStringBox("Hello, World!", mjr::hershey::font::ROMAN_SL_SANSERIF, 50, y, "red", "green",  1, 16);
   bRamCanvas.drawLine(0, y,   1024, y, "blue");
@@ -1867,19 +1672,22 @@ BOOST_AUTO_TEST_CASE(strings) {
   bRamCanvas.drawStringBox("Hello, World!", mjr::hershey::font::ROMAN_SL_SANSERIF, 50, y, "red", "green",  2, 15);
   bRamCanvas.drawLine(0, y,   1024, y, "blue");
   bRamCanvas.drawLine(50, 0,  50, 512, "blue");
+  
+  BOOST_TEST_CHECK(RbRamCanvas.readRAWfile("../data/utest/ut-strings-b.mrw") == 0);
+  BOOST_TEST_CHECK(RbRamCanvas.isEqual(bRamCanvas) == true);
+
+  aRamCanvas.writeRAWfile("ut-strings-a.mrw");
+  aRamCanvas.scaleUpProximal(4);
+  aRamCanvas.writeTIFFfile("ut-strings-a.tiff");
 
   bRamCanvas.writeRAWfile("ut-strings-b.mrw");
   bRamCanvas.scaleUpProximal(4);
   bRamCanvas.writeTIFFfile("ut-strings-b.tiff");
-  
-  std::ifstream ifsbg("ut-strings-b.mrw");
-  std::ifstream ifsbr("../data/utest/ut-strings-b.mrw");
-  std::istream_iterator<char> bbg(ifsbg), ebg;
-  std::istream_iterator<char> bbr(ifsbr), ebr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bbg, ebg, bbr, ebr);
 }
-
 #endif
+
+
+
 
 //  MJR TODO NOTE utest_ramCanvasTpl.cpp: Instead of compareing files, load files and compare images -- using an endianness aware MRW reader.
 //  MJR TODO NOTE utest_ramCanvasTpl.cpp: Test TIFF files in save_file test case -- by reading them in along with a refrence MRW, and compareing the images in RAM.
