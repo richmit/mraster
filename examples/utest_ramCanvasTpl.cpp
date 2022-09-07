@@ -47,7 +47,7 @@
 #include <fstream>
 #include <iterator>
 
-#if 1
+#if 0
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(draw_primatives_int) {
@@ -1686,6 +1686,158 @@ BOOST_AUTO_TEST_CASE(strings) {
 }
 #endif
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(geom_tfrm) {
+
+  mjr::ramCanvas1c8b aRamCanvas(8, 8); mjr::ramCanvas1c8b RaRamCanvas(8, 8);
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  aRamCanvas.drawLine(0, 0, 3, 0, "white");
+  aRamCanvas.drawLine(3, 7, 7, 7, "white");
+  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-a.mrw") == 0);
+  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  mjr::ramCanvas1c8b bRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RbRamCanvas(8, 8);
+  bRamCanvas.flipHorz();
+  BOOST_TEST_CHECK(RbRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-b.mrw") == 0);
+  BOOST_TEST_CHECK(RbRamCanvas.isEqual(bRamCanvas) == true);
+  RbRamCanvas.flipHorz();
+  BOOST_TEST_CHECK(RbRamCanvas.isEqual(aRamCanvas) == true);
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  mjr::ramCanvas1c8b cRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RcRamCanvas(8, 8);
+  cRamCanvas.flipVert();
+  BOOST_TEST_CHECK(RcRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-c.mrw") == 0);
+  BOOST_TEST_CHECK(RcRamCanvas.isEqual(cRamCanvas) == true);
+  RcRamCanvas.flipVert();
+  BOOST_TEST_CHECK(RcRamCanvas.isEqual(aRamCanvas) == true);
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  mjr::ramCanvas1c8b dRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RdRamCanvas(8, 8);
+  dRamCanvas.flipTranspose();
+  BOOST_TEST_CHECK(RdRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-d.mrw") == 0);
+  BOOST_TEST_CHECK(RdRamCanvas.isEqual(dRamCanvas) == true);
+  RdRamCanvas.flipTranspose();
+  BOOST_TEST_CHECK(RdRamCanvas.isEqual(aRamCanvas) == true);
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  mjr::ramCanvas1c8b eRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b ReRamCanvas(8, 8);
+  eRamCanvas.rotate90CW();
+  BOOST_TEST_CHECK(ReRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-e.mrw") == 0);
+  BOOST_TEST_CHECK(ReRamCanvas.isEqual(eRamCanvas) == true);
+  ReRamCanvas.rotate90CCW();
+  BOOST_TEST_CHECK(ReRamCanvas.isEqual(aRamCanvas) == true);
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  mjr::ramCanvas1c8b fRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RfRamCanvas(8, 8);
+  fRamCanvas.rotate90CCW();
+  BOOST_TEST_CHECK(RfRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-f.mrw") == 0);
+  BOOST_TEST_CHECK(RfRamCanvas.isEqual(fRamCanvas) == true);
+  RfRamCanvas.rotate90CW();
+  BOOST_TEST_CHECK(RfRamCanvas.isEqual(aRamCanvas) == true);
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  mjr::ramCanvas1c8b gRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RgRamCanvas(8, 8);
+  gRamCanvas.rotate180();
+  BOOST_TEST_CHECK(RgRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-g.mrw") == 0);
+  BOOST_TEST_CHECK(RgRamCanvas.isEqual(gRamCanvas) == true);
+  RgRamCanvas.rotate180();
+  BOOST_TEST_CHECK(RgRamCanvas.isEqual(aRamCanvas) == true);
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  aRamCanvas.writeRAWfile("ut-geom_tfrm-a.mrw");
+  aRamCanvas.scaleUpProximal(16);
+  aRamCanvas.writeTIFFfile("ut-geom_tfrm-a.tiff");
+
+  bRamCanvas.writeRAWfile("ut-geom_tfrm-b.mrw");
+  bRamCanvas.scaleUpProximal(16);
+  bRamCanvas.writeTIFFfile("ut-geom_tfrm-b.tiff");
+
+  cRamCanvas.writeRAWfile("ut-geom_tfrm-c.mrw");
+  cRamCanvas.scaleUpProximal(16);
+  cRamCanvas.writeTIFFfile("ut-geom_tfrm-c.tiff");
+
+  dRamCanvas.writeRAWfile("ut-geom_tfrm-d.mrw");
+  dRamCanvas.scaleUpProximal(16);
+  dRamCanvas.writeTIFFfile("ut-geom_tfrm-d.tiff");
+
+  eRamCanvas.writeRAWfile("ut-geom_tfrm-e.mrw");
+  eRamCanvas.scaleUpProximal(16);
+  eRamCanvas.writeTIFFfile("ut-geom_tfrm-e.tiff");
+
+  fRamCanvas.writeRAWfile("ut-geom_tfrm-f.mrw");
+  fRamCanvas.scaleUpProximal(16);
+  fRamCanvas.writeTIFFfile("ut-geom_tfrm-f.tiff");
+
+  gRamCanvas.writeRAWfile("ut-geom_tfrm-g.mrw");
+  gRamCanvas.scaleUpProximal(16);
+  gRamCanvas.writeTIFFfile("ut-geom_tfrm-g.tiff");
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(p_scale) {
+
+  mjr::ramCanvas1c8b aRamCanvas(4, 4); mjr::ramCanvas1c8b RaRamCanvas(8, 8);
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  aRamCanvas.drawLine(0, 0, 4, 0, "white");
+  aRamCanvas.drawLine(0, 1, 4, 1, "black");
+
+  aRamCanvas.drawLine(2, 0, 2, 4, "black");
+  aRamCanvas.drawLine(3, 4, 3, 4, "white");
+
+  aRamCanvas.drawLine(0, 2, 4, 2, "black");
+  aRamCanvas.drawLine(0, 3, 4, 4, "white");
+
+  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-p_scale-a.mrw") == 0);
+  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  mjr::ramCanvas1c8b bRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RbRamCanvas(8, 8);
+  bRamCanvas.scaleDown1pt(2);
+  BOOST_TEST_CHECK(RbRamCanvas.readRAWfile("../data/utest/ut-p_scale-b.mrw") == 0);
+  BOOST_TEST_CHECK(RbRamCanvas.isEqual(bRamCanvas) == true);
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  mjr::ramCanvas1c8b cRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RcRamCanvas(8, 8);
+  cRamCanvas.scaleDownMax(2);
+  BOOST_TEST_CHECK(RcRamCanvas.readRAWfile("../data/utest/ut-p_scale-c.mrw") == 0);
+  BOOST_TEST_CHECK(RcRamCanvas.isEqual(cRamCanvas) == true);
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  mjr::ramCanvas1c8b dRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RdRamCanvas(8, 8);
+  dRamCanvas.scaleDownMean(2);
+  BOOST_TEST_CHECK(RdRamCanvas.readRAWfile("../data/utest/ut-p_scale-d.mrw") == 0);
+  BOOST_TEST_CHECK(RdRamCanvas.isEqual(dRamCanvas) == true);
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  mjr::ramCanvas1c8b eRamCanvas(dRamCanvas);  mjr::ramCanvas1c8b ReRamCanvas(8, 8);
+  eRamCanvas.scaleUpProximal(2);
+  BOOST_TEST_CHECK(ReRamCanvas.readRAWfile("../data/utest/ut-p_scale-e.mrw") == 0);
+  BOOST_TEST_CHECK(ReRamCanvas.isEqual(eRamCanvas) == true);
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  aRamCanvas.writeRAWfile("ut-p_scale-a.mrw");
+  aRamCanvas.scaleUpProximal(32);
+  aRamCanvas.writeTIFFfile("ut-p_scale-a.tiff");
+
+  bRamCanvas.writeRAWfile("ut-p_scale-b.mrw");
+  bRamCanvas.scaleUpProximal(64);
+  bRamCanvas.writeTIFFfile("ut-p_scale-b.tiff");
+
+  cRamCanvas.writeRAWfile("ut-p_scale-c.mrw");
+  cRamCanvas.scaleUpProximal(64);
+  cRamCanvas.writeTIFFfile("ut-p_scale-c.tiff");
+
+  dRamCanvas.writeRAWfile("ut-p_scale-d.mrw");
+  dRamCanvas.scaleUpProximal(64);
+  dRamCanvas.writeTIFFfile("ut-p_scale-d.tiff");
+
+  eRamCanvas.writeRAWfile("ut-p_scale-e.mrw");
+  eRamCanvas.scaleUpProximal(32);
+  eRamCanvas.writeTIFFfile("ut-p_scale-e.tiff");
+}
 
 
 
