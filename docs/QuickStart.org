@@ -349,3 +349,13 @@ cmake -DCMAKE_CXX_COMPILER=g++-11 ..
 | 2022 ventage 3.30GHz Quad-Core Intel i7 11370H 11th Gen | WSL Debian 11.4 GCC 10.2.1 |      66.7385 |
 | 2022 ventage 3.30GHz Quad-Core Intel i7 11370H 11th Gen | WSL Debian 11.4 GCC 11.3.0 |      66.2258 |
 
+* Doxygen Links                                                    :noexport:
+
+#+begin_src sh :exports results :results verbatum raw
+export MSYS2_ARG_CONV_EXCL='*'
+echo file:../build/doc-lib/autodocs/html/$(xmlstarlet.exe sel -t -v "/tagfile/compound[name='mjr::colorTpl']/filename" ../build/doc-lib/DTAGS)"#details"
+#+end_src
+
+#+RESULTS:
+file:../build/doc-lib/autodocs/html/classmjr_1_1colorTpl.html#details
+

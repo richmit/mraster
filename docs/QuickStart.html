@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-08-30 Tue 16:33 -->
+<!-- 2022-09-06 Tue 12:34 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster Quick Start</title>
@@ -234,32 +234,32 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org2bf3070">1. Quick Start (The Absolute Minimum)</a>
+<li><a href="#org9a526fd">1. Quick Start (The Absolute Minimum)</a>
 <ul>
-<li><a href="#org41f7541">1.1. FAQ for people not using <code>cmake</code></a>
+<li><a href="#org7b8e650">1.1. FAQ for people not using <code>cmake</code></a>
 <ul>
-<li><a href="#org9fd35ee">1.1.1. Q: How do I get advanced TIFF reader support without <code>cmake</code>?</a></li>
-<li><a href="#orge6ef085">1.1.2. Q2: What's up with "<code>-std=gcc++20</code>" instead of "<code>-std=c++20</code>"?</a></li>
-<li><a href="#org3b7f9ca">1.1.3. Q3: I got some weird errors about <code>bit_cast</code>.  What's up?</a></li>
-<li><a href="#org89275ca">1.1.4. Q4: I got some weird errors about complex numbers and <code>std::pow</code>? What's up?</a></li>
+<li><a href="#org36301d1">1.1.1. Q: How do I get advanced TIFF reader support without <code>cmake</code>?</a></li>
+<li><a href="#org543f246">1.1.2. Q2: What's up with "<code>-std=gcc++20</code>" instead of "<code>-std=c++20</code>"?</a></li>
+<li><a href="#orge248d80">1.1.3. Q3: I got some weird errors about <code>bit_cast</code>.  What's up?</a></li>
+<li><a href="#org0962ad9">1.1.4. Q4: I got some weird errors about complex numbers and <code>std::pow</code>? What's up?</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgcf23767">2. Playing With <b><code>MRaster</code></b>'s Example Programs</a></li>
-<li><a href="#orge5c1ff9">3. Using <b><code>MRaster</code></b>'s <code>cmake</code> Configuration</a></li>
-<li><a href="#org0cc3cee">4. Platform Notes</a>
+<li><a href="#org8521280">2. Playing With <b><code>MRaster</code></b>'s Example Programs</a></li>
+<li><a href="#org6a06296">3. Using <b><code>MRaster</code></b>'s <code>cmake</code> Configuration</a></li>
+<li><a href="#org04724d4">4. Platform Notes</a>
 <ul>
-<li><a href="#org6dc73a8">4.1. Windows 11 with MSYS2 GCC 12.1.0</a></li>
-<li><a href="#org6a4f59d">4.2. Windows 11 with MSYS2 clang 14.0.6</a></li>
-<li><a href="#org3c77c5b">4.3. Windows 11 with MSYS2 cmake and Visual Studio 2022 Community Edition</a></li>
-<li><a href="#org37a5131">4.4. Windows 11 with Visual Studio 2022 Community Edition</a></li>
-<li><a href="#orgdfa0c64">4.5. Mac OS X Monterey 12.5.1 with Homebrew GCC 12.1.0</a></li>
-<li><a href="#orgb32fab6">4.6. Mac OS X Monterey 12.5.1 with Apple clang 13.1.6</a></li>
-<li><a href="#org5ad2308">4.7. Debian bullseye 11.4</a>
+<li><a href="#org6caef49">4.1. Windows 11 with MSYS2 GCC 12.1.0</a></li>
+<li><a href="#org44b5907">4.2. Windows 11 with MSYS2 clang 14.0.6</a></li>
+<li><a href="#orgcc6a2c6">4.3. Windows 11 with MSYS2 cmake and Visual Studio 2022 Community Edition</a></li>
+<li><a href="#org709e487">4.4. Windows 11 with Visual Studio 2022 Community Edition</a></li>
+<li><a href="#org8751508">4.5. Mac OS X Monterey 12.5.1 with Homebrew GCC 12.1.0</a></li>
+<li><a href="#org6e03881">4.6. Mac OS X Monterey 12.5.1 with Apple clang 13.1.6</a></li>
+<li><a href="#orge8a4e2d">4.7. Debian bullseye 11.4</a>
 <ul>
-<li><a href="#org236d36f">4.7.1. Debian bullseye 11.4 with GCC 10.2.1</a></li>
-<li><a href="#org970c79a">4.7.2. Debian bullseye 11.4 with GCC 11.3</a></li>
+<li><a href="#orgf908201">4.7.1. Debian bullseye 11.4 with GCC 10.2.1</a></li>
+<li><a href="#orga3a897b">4.7.2. Debian bullseye 11.4 with GCC 11.3</a></li>
 </ul>
 </li>
 </ul>
@@ -268,8 +268,8 @@
 </div>
 </div>
 
-<div id="outline-container-org2bf3070" class="outline-2">
-<h2 id="org2bf3070"><span class="section-number-2">1.</span> Quick Start (The Absolute Minimum)</h2>
+<div id="outline-container-org9a526fd" class="outline-2">
+<h2 id="org9a526fd"><span class="section-number-2">1.</span> Quick Start (The Absolute Minimum)</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 If you are interested playing around with <b><code>MRaster</code></b> as quickly as possible, then this section is for you.
@@ -280,7 +280,7 @@ The first step is to download <b><code>MRaster</code></b>.  You can grab the <a 
 clone the repository with GIT like this:
 </p>
 
-<pre class="example" id="org439e53e">
+<pre class="example" id="orgf75a4db">
 git clone 'https://github.com/richmit/mraster.git'
 </pre>
 
@@ -316,7 +316,7 @@ Now you can run it, and take a look at the file it created ("<code>hello.tiff</c
 </p>
 
 
-<div id="orgfc86abe" class="figure">
+<div id="org7732d84" class="figure">
 <p><img src="./pics/quick/hello.png" alt="hello.png" width="800" align="center" />
 </p>
 </div>
@@ -326,12 +326,12 @@ That's it!  How easy was that?
 </p>
 </div>
 
-<div id="outline-container-org41f7541" class="outline-3">
-<h3 id="org41f7541"><span class="section-number-3">1.1.</span> FAQ for people not using <code>cmake</code></h3>
+<div id="outline-container-org7b8e650" class="outline-3">
+<h3 id="org7b8e650"><span class="section-number-3">1.1.</span> FAQ for people not using <code>cmake</code></h3>
 <div class="outline-text-3" id="text-1-1">
 </div>
-<div id="outline-container-org9fd35ee" class="outline-4">
-<h4 id="org9fd35ee"><span class="section-number-4">1.1.1.</span> Q: How do I get advanced TIFF reader support without <code>cmake</code>?</h4>
+<div id="outline-container-org36301d1" class="outline-4">
+<h4 id="org36301d1"><span class="section-number-4">1.1.1.</span> Q: How do I get advanced TIFF reader support without <code>cmake</code>?</h4>
 <div class="outline-text-4" id="text-1-1-1">
 <blockquote>
 <p>
@@ -350,8 +350,8 @@ Please note that advanced TIFF reader is only required to <b>read</b> TIFF files
 </div>
 </div>
 
-<div id="outline-container-orge6ef085" class="outline-4">
-<h4 id="orge6ef085"><span class="section-number-4">1.1.2.</span> Q2: What's up with "<code>-std=gcc++20</code>" instead of "<code>-std=c++20</code>"?</h4>
+<div id="outline-container-org543f246" class="outline-4">
+<h4 id="org543f246"><span class="section-number-4">1.1.2.</span> Q2: What's up with "<code>-std=gcc++20</code>" instead of "<code>-std=c++20</code>"?</h4>
 <div class="outline-text-4" id="text-1-1-2">
 <blockquote>
 <p>
@@ -368,8 +368,8 @@ you want to turn off 128-bit integers, and use pure C++20 instead with GCC, then
 </div>
 </div>
 
-<div id="outline-container-org3b7f9ca" class="outline-4">
-<h4 id="org3b7f9ca"><span class="section-number-4">1.1.3.</span> Q3: I got some weird errors about <code>bit_cast</code>.  What's up?</h4>
+<div id="outline-container-orge248d80" class="outline-4">
+<h4 id="orge248d80"><span class="section-number-4">1.1.3.</span> Q3: I got some weird errors about <code>bit_cast</code>.  What's up?</h4>
 <div class="outline-text-4" id="text-1-1-3">
 <p>
 Probably your compiler is too old to support that part of the C++ standard.  One of the advantages of using <code>cmake</code> is that it tries to detect this issue.  Without <code>cmake</code>, you need to add the following
@@ -383,8 +383,8 @@ to your compile command (or get a better compiler):
 </div>
 </div>
 
-<div id="outline-container-org89275ca" class="outline-4">
-<h4 id="org89275ca"><span class="section-number-4">1.1.4.</span> Q4: I got some weird errors about complex numbers and <code>std::pow</code>? What's up?</h4>
+<div id="outline-container-org0962ad9" class="outline-4">
+<h4 id="org0962ad9"><span class="section-number-4">1.1.4.</span> Q4: I got some weird errors about complex numbers and <code>std::pow</code>? What's up?</h4>
 <div class="outline-text-4" id="text-1-1-4">
 <p>
 Probably your compiler is too old to support that part of the C++ standard.  One of the advantages of using <code>cmake</code> is that it tries to detect this issue.  Without <code>cmake</code>, you need to add the following
@@ -401,8 +401,8 @@ to your compile command (or get a better compiler):
 </div>
 
 
-<div id="outline-container-orgcf23767" class="outline-2">
-<h2 id="orgcf23767"><span class="section-number-2">2.</span> Playing With <b><code>MRaster</code></b>'s Example Programs</h2>
+<div id="outline-container-org8521280" class="outline-2">
+<h2 id="org8521280"><span class="section-number-2">2.</span> Playing With <b><code>MRaster</code></b>'s Example Programs</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 The source code for the example programs is located in the "<code>examples</code>" directory.  <b><code>MRaster</code></b> ships with a <code>cmake</code> build system that should be able to
@@ -438,8 +438,8 @@ at the "<code>configure.sh</code>" script in the root directory of the git repos
 </div>
 </div>
 
-<div id="outline-container-orge5c1ff9" class="outline-2">
-<h2 id="orge5c1ff9"><span class="section-number-2">3.</span> Using <b><code>MRaster</code></b>'s <code>cmake</code> Configuration</h2>
+<div id="outline-container-org6a06296" class="outline-2">
+<h2 id="org6a06296"><span class="section-number-2">3.</span> Using <b><code>MRaster</code></b>'s <code>cmake</code> Configuration</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 For many <b><code>MRaster</code></b> users, <code>cmake</code> is an unfamiliar tool.  Some of them decide to directly use <b><code>MRaster</code></b>'s <code>cmake</code> infrastructure, using the "<code>examples</code>"
@@ -492,8 +492,8 @@ make your_program
 </div>
 </div>
 
-<div id="outline-container-org0cc3cee" class="outline-2">
-<h2 id="org0cc3cee"><span class="section-number-2">4.</span> Platform Notes</h2>
+<div id="outline-container-org04724d4" class="outline-2">
+<h2 id="org04724d4"><span class="section-number-2">4.</span> Platform Notes</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 I write these notes on 2022-08-28 as a guide for making the most of <b><code>MRaster</code></b> on various platforms given the rather uneven nature of C++20 support in the
@@ -501,8 +501,8 @@ wild.  I expect these notes will be out of date by the time I hit the publish bu
 </p>
 </div>
 
-<div id="outline-container-org6dc73a8" class="outline-3">
-<h3 id="org6dc73a8"><span class="section-number-3">4.1.</span> Windows 11 with MSYS2 GCC 12.1.0</h3>
+<div id="outline-container-org6caef49" class="outline-3">
+<h3 id="org6caef49"><span class="section-number-3">4.1.</span> Windows 11 with MSYS2 GCC 12.1.0</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 Everything works with the following cmake:
@@ -515,8 +515,8 @@ Everything works with the following cmake:
 </div>
 </div>
 
-<div id="outline-container-org6a4f59d" class="outline-3">
-<h3 id="org6a4f59d"><span class="section-number-3">4.2.</span> Windows 11 with MSYS2 clang 14.0.6</h3>
+<div id="outline-container-org44b5907" class="outline-3">
+<h3 id="org44b5907"><span class="section-number-3">4.2.</span> Windows 11 with MSYS2 clang 14.0.6</h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 Everything works with the following cmake:
@@ -529,8 +529,8 @@ Everything works with the following cmake:
 </div>
 </div>
 
-<div id="outline-container-org3c77c5b" class="outline-3">
-<h3 id="org3c77c5b"><span class="section-number-3">4.3.</span> Windows 11 with MSYS2 cmake and Visual Studio 2022 Community Edition</h3>
+<div id="outline-container-orgcc6a2c6" class="outline-3">
+<h3 id="orgcc6a2c6"><span class="section-number-3">4.3.</span> Windows 11 with MSYS2 cmake and Visual Studio 2022 Community Edition</h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 This method works, but you won't get any external dependencies like <code>GLUT</code>, <code>SDL2</code>, <code>libTIFF</code>, <code>boost</code>, etc&#x2026;  But, you will get enough to run many of the examples.
@@ -551,8 +551,8 @@ Then open up the directory with explorer, and double click on one of the project
 </div>
 </div>
 
-<div id="outline-container-org37a5131" class="outline-3">
-<h3 id="org37a5131"><span class="section-number-3">4.4.</span> Windows 11 with Visual Studio 2022 Community Edition</h3>
+<div id="outline-container-org709e487" class="outline-3">
+<h3 id="org709e487"><span class="section-number-3">4.4.</span> Windows 11 with Visual Studio 2022 Community Edition</h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 Everything works, but it's harder to get set up.  Simply fire up VS, and open the folder with the <code>CMakeLists.txt</code> file in it.  VS will detect a <code>cmake</code>
@@ -562,8 +562,8 @@ project.  Next use <a href="https://vcpkg.io/en/index.html">vcpkg</a> to install
 </div>
 </div>
 
-<div id="outline-container-orgdfa0c64" class="outline-3">
-<h3 id="orgdfa0c64"><span class="section-number-3">4.5.</span> Mac OS X Monterey 12.5.1 with Homebrew GCC 12.1.0</h3>
+<div id="outline-container-org8751508" class="outline-3">
+<h3 id="org8751508"><span class="section-number-3">4.5.</span> Mac OS X Monterey 12.5.1 with Homebrew GCC 12.1.0</h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 I had trouble getting <code>boost</code> to work, but everything else seems OK.  Note the <code>-DGLUT_glut_LIBRARY</code> option &#x2013; this is required to direct <code>cmake</code> to use the
@@ -595,8 +595,8 @@ And I used the following cmake:
 </div>
 </div>
 
-<div id="outline-container-orgb32fab6" class="outline-3">
-<h3 id="orgb32fab6"><span class="section-number-3">4.6.</span> Mac OS X Monterey 12.5.1 with Apple clang 13.1.6</h3>
+<div id="outline-container-org6e03881" class="outline-3">
+<h3 id="org6e03881"><span class="section-number-3">4.6.</span> Mac OS X Monterey 12.5.1 with Apple clang 13.1.6</h3>
 <div class="outline-text-3" id="text-4-6">
 <p>
 Right now <code>clang</code> doesn't have support for floating point template parameters, and thus the templates <code>csPLY_tpl</code> &amp; <code>csCubeHelix_tpl</code> are not available.
@@ -625,8 +625,8 @@ Lastly, note the <code>-DGLUT_glut_LIBRARY</code> option &#x2013; this is requir
 </div>
 </div>
 
-<div id="outline-container-org5ad2308" class="outline-3">
-<h3 id="org5ad2308"><span class="section-number-3">4.7.</span> Debian bullseye 11.4</h3>
+<div id="outline-container-orge8a4e2d" class="outline-3">
+<h3 id="orge8a4e2d"><span class="section-number-3">4.7.</span> Debian bullseye 11.4</h3>
 <div class="outline-text-3" id="text-4-7">
 <p>
 For reference, some of my config files:
@@ -660,8 +660,8 @@ Pin-Priority: 490
 </div>
 </div>
 
-<div id="outline-container-org236d36f" class="outline-4">
-<h4 id="org236d36f"><span class="section-number-4">4.7.1.</span> Debian bullseye 11.4 with GCC 10.2.1</h4>
+<div id="outline-container-orgf908201" class="outline-4">
+<h4 id="orgf908201"><span class="section-number-4">4.7.1.</span> Debian bullseye 11.4 with GCC 10.2.1</h4>
 <div class="outline-text-4" id="text-4-7-1">
 <p>
 This is the stock compiler that comes with bullseye.  It's a bit old, and is missing support for both floating point template arguments and <code>bit_cast</code>.  
@@ -691,8 +691,8 @@ Now you can use the following <code>cmake</code> command:
 </div>
 </div>
 
-<div id="outline-container-org970c79a" class="outline-4">
-<h4 id="org970c79a"><span class="section-number-4">4.7.2.</span> Debian bullseye 11.4 with GCC 11.3</h4>
+<div id="outline-container-orga3a897b" class="outline-4">
+<h4 id="orga3a897b"><span class="section-number-4">4.7.2.</span> Debian bullseye 11.4 with GCC 11.3</h4>
 <div class="outline-text-4" id="text-4-7-2">
 <p>
 With this newer compiler all <b><code>MRaster</code></b> features are supported.
