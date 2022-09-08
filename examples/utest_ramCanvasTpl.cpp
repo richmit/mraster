@@ -47,7 +47,7 @@
 #include <fstream>
 #include <iterator>
 
-#if 0
+#if 1
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(draw_primatives_int) {
@@ -1684,7 +1684,6 @@ BOOST_AUTO_TEST_CASE(strings) {
   bRamCanvas.scaleUpProximal(4);
   bRamCanvas.writeTIFFfile("ut-strings-b.tiff");
 }
-#endif
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(geom_tfrm) {
@@ -1839,7 +1838,7 @@ BOOST_AUTO_TEST_CASE(p_scale) {
   eRamCanvas.writeTIFFfile("ut-p_scale-e.tiff");
 }
 
-
+#endif
 
 //  MJR TODO NOTE utest_ramCanvasTpl.cpp: Instead of compareing files, load files and compare images -- using an endianness aware MRW reader.
 //  MJR TODO NOTE utest_ramCanvasTpl.cpp: Test TIFF files in save_file test case -- by reading them in along with a refrence MRW, and compareing the images in RAM.
@@ -1848,7 +1847,7 @@ BOOST_AUTO_TEST_CASE(p_scale) {
 //  MJR TODO NOTE utest_ramCanvasTpl.cpp: Add unit tests for Geometric transforms
 //  MJR TODO NOTE utest_ramCanvasTpl.cpp: Add unit tests for Homogeneous transforms
 //  MJR TODO NOTE utest_ramCanvasTpl.cpp: Add unit tests for Convolution
-
+//  MJR TODO NOTE utest_ramCanvasTpl.cpp: Add unit tests for image write with filters
 
   // XRamCanvas.writeRAWfile("ut-strings-X.mrw");
   // XRamCanvas.scaleUpProximal(20);

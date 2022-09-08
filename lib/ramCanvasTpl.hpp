@@ -56,7 +56,6 @@
 
 // Put everything in the mjr namespace
 namespace mjr {
-
   /** @brief Class providing off-screen drawing functionality.@EOL
 
       This class essentially manages a 2D array of pixels (represented as colorTpl objects).  Both integer and floating point coordinates are supported.
@@ -127,8 +126,59 @@ namespace mjr {
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
   class ramCanvasTpl {
-
     public:
+
+      /** @name Handy ramCanvasTpl converter classes. */
+      //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** This class is an incomplete rcConverter (no getPxColorNC method) that provides a nice base for homogenious rcConverters. */
+      template<class inRamCanvasT>
+      class rcConverterHomoBase {
+        public:
+          inRamCanvasT& attachedRC;
+          rcConverterHomoBase(inRamCanvasT& aRC) : attachedRC(aRC) {  }
+          inline bool isIntAxOrientationNaturalX() { return attachedRC.isIntAxOrientationNaturalX(); }
+          inline bool isIntAxOrientationNaturalY() { return attachedRC.isIntAxOrientationNaturalY(); }
+          inline inRamCanvasT::coordIntType getNumPixX() { return attachedRC.getNumPixX(); }
+          inline inRamCanvasT::coordIntType getNumPixY() { return attachedRC.getNumPixY(); }
+      };
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      template<class inRamCanvasT>
+      class rcConverterIdentity : public rcConverterHomoBase<inRamCanvasT>  {
+        public:
+          typedef inRamCanvasT::colorType colorType;
+          inline colorType getPxColorNC(inRamCanvasT::coordIntType x, inRamCanvasT::coordIntType y) { return rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y); }
+      };
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      template<class inRamCanvasT>
+      class rcConverterRGBbyte : public rcConverterHomoBase<inRamCanvasT>  {
+        public:
+          typedef inRamCanvasT::colorType::colConRGBbyte colorType;
+          inline colorType getPxColorNC(inRamCanvasT::coordIntType x, inRamCanvasT::coordIntType y) { return rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).getColConRGB_byte(); }
+      };
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      template<class inRamCanvasT>
+      class rcConverterRGBAbyte {
+        public:
+          typedef inRamCanvasT::colorType::colConRGBAbyte colorType;
+          inline colorType getPxColorNC(inRamCanvasT::coordIntType x, inRamCanvasT::coordIntType y) { return rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).getColConRGBA_byte(); }
+      };
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      template<class inRamCanvasT>
+      class rcConverterRGBdbl {
+        public:
+          typedef inRamCanvasT::colorType::colConRGBdbl colorType;
+          inline colorType getPxColorNC(inRamCanvasT::coordIntType x, inRamCanvasT::coordIntType y) { return rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).getColConRGB_dbl(); }
+      };
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      template<class inRamCanvasT>
+      class rcConverterRGBAdbl {
+        public:
+          typedef inRamCanvasT::colorType::colConRGBAdbl colorType;
+          inline colorType getPxColorNC(inRamCanvasT::coordIntType x, inRamCanvasT::coordIntType y) { return rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).getColConRGBA_dbl(); }
+      };
+      //@}
+
 
       /** @name Typedefs related to template parameters */
       //@{
@@ -198,13 +248,6 @@ namespace mjr {
                                      AVERAGE4, //!< Average of four sourounding pixels
                                      AVERAGE9  //!< Average of 9 sourounding pixels
                                    };
-
-      /** Used in write to stream methods to write truecolor images instead of native color channel types. */
-      enum class pixelFormatEnum { NATIVE,  //!< Write clrChanT data to file
-                                   RGBbyte, //!< Write 8-bit truecolor image without alpha
-                                   RGBAbyte //!< Write 8-bit truecolor image with alpha
-                                 };
-                              
       //@}
 
       /** @name Logical Maximum for intCrdT values */
@@ -224,10 +267,9 @@ namespace mjr {
       };
 
       /** Image File Types. */
-      enum class imgFileType { TGA,      //!< 24-bit (8-bit/chan) truecolor.      See: writeTGAstream()
-                               TIFF,     //!< TIFF file                           See: writeTIFFstream()
-                               BINARY,   //!< The data part of a MJR RAW file.    See: writeBINstream()
-                               RAW,      //!< MJR RAW file.                       See: writeRAWstream()
+      enum class imgFileType { TGA,      //!< 24-bit (8-bit/chan) truecolor.      
+                               TIFF,     //!< TIFF file                           
+                               RAW,      //!< MJR RAW file.                       
       };
       //@}
 
@@ -310,115 +352,6 @@ namespace mjr {
       void writeUIntToStream(std::ostream& oStream, endianType endianness, int numBytes, uint64_t data);
       /** Determine the platform's endianness. */
       endianType platformEndianness();
-      /** Write a TIFF image to the given ostream
-
-          Why TIFF? TIFF is both broadly supported and flexible enough to represent almost every ramCanvas image type perfectly.
-
-          Use Cases (In order of priority)
-              - Write a bit perfect TIFF representation of ramCanvas images
-              - Simultaneously convert any ramCanvas into 24-bit truecolor RGB and write the resulting TIFF
-              - Do all the above while simultaneously applying a homogeneous image filter
-
-          Limitations
-              - Channels must be no more than 64-bits wide
-              - No more than 2^16-1 channels
-              - Image width no more than 2^32-1 (normally intCrdT limits this to 2^31-1)
-              - Image height no more than 2^32-1 (normally intCrdT limits this to 2^31-1)
-              - Image row data size (numPixX * colorT::bitsPerChan * colorT::channelCount / 8) must be less than 2^32-1 bytes
-              - Image data must be less than 2^32-1 bytes
-
-          Limitations for bit perfect (toTRU is NULL) files:
-              - Channels must be uint8_t, uint16_t, uint32_t, uint64_t, float (32-bit), or double (64-bit)
-
-          @param oStream     The ostream object to which to write
-          @param pixelFormat Specify the type of data to write (native, RGB, RGBA)
-          @return Status of I/O
-          @retval  0 Everything seems to have worked
-          @retval  2 Image channels are too shallow for TIFF format
-          @retval  3 Image channels are too deep for TIFF format
-          @retval  4 Image has too few channels for TIFF format
-          @retval  5 Image has too many channels for TIFF format
-          @retval  6 Image has too few columns for TIFF format
-          @retval  7 Image has too many columns for TIFF format
-          @retval  8 Image has too few rows for TIFF format
-          @retval  9 Image has too few rows for TIFF format
-          @retval 10 Image rows are too large (too much data) for TIFF format
-          @retval 11 Image is too large (too much data)  for TIFF format */
-      int writeTIFFstream(std::ostream& oStream, pixelFormatEnum pixelFormat = pixelFormatEnum::NATIVE);
-      /** Write the a truecolor TGA image to the given ostream.
-
-          Why TGA? TGA files are not well supported by modern software.  When supported, it is normally only 8-bit RGBA.  With these limitations one might ask
-          why this function exists.  I am a POV-Ray fan, and it uses a specialized TGA format for height maps.  That's really it...  One could use this
-          function to dump out regular RGB images, but I suggest writeTIFFfile() for that.
-
-          Note TGA files are 8-bit files, and *_byte functions are used to convert channel values to 8-bit before being written.  This is why writeTGAstream()
-          has no pixelFormat argument.
-
-          @param oStream      The ostream object to which to write
-          @return Status of I/O
-          @retval  0 Everything seems to have worked
-          @retval  6 Image of zero width
-          @retval  7 Image too wide for TGA format (> 2^16-1)
-          @retval  8 Image of zero height
-          @retval  9 Image too tall for TGA format (> 2^16-1) */
-      int writeTGAstream(std::ostream& oStream);
-      /** Write the an MJR RAW format image to the given ostream
-
-          Why? This simple file format is designed to house the more exotic images this library supports, and be easily consumed by many image processing and
-          data visualization tools -- usually via a feature referred to as a raw importer.  ImageMagick, VisIT, ParaView, and ImageJ all can read this type of
-          data. The header is exactly 100 bytes, ASCII, and contains two newlines.  The idea being that one can do a 'head -n 2 FILENAME' on the image file,
-          and get a human readable output of basic image info that also happens to be easy to parse.  The first line of the header is the text "MJRRAW".  The
-          second line of the header consists of a sequence of values& value labels and followed by enough zero characters to pad to get to the 100 byte mark.
-          That's 100 bytes for the two lines including the two newline characters.  The values consist of uppercase letters and numbers, and each label is a
-          single lower case letter.  If a value is a number, then it is expressed as a decimal number in ASCII using -- it may be zero padded.  While the code
-          in ramCanvasTpl doesn't make assumptions about the order of the header values, some of the example scripts require them to be in the following
-          order: x, y, c, b, s, t, & i.  The header is followed by the binary image.
-
-          Labels:
-            - x: Number of pixels on X (horizontal axis) expressed as a zero padded, decimal integer
-            - y: Number of pixels on Y (vertical axis) expressed as a zero padded, decimal integer
-            - c: Number of channels expressed as a zero padded, decimal integer
-            - b: Number of bits per channel expressed as a zero padded, decimal integer
-            - s: Channel signdness (ignored for floating point channels)
-              - UNS: Unsigned data.  DEFAULT VALUE.
-              - SGN: Signed data
-            - t: Channel type
-              - INT: Integral channels.  DEFAULT VALUE.
-              - FLT: Floating point channels
-            - i: endianness
-              - BIG: Big endian 
-              - LTL: Little endian
-              - UNK: Unknown.  DEFAULT VALUE.  For read we assume file matches system running the code.  
-            - Currently reserved, but unused labels
-              - p: Pixel format
-                - MXL: Each pixel of the image is written in sequence.  DEFAULT VALUE.
-                - PLN: Each channel of the *image* is written in sequence.
-                - BIT: For bit-masks with 8 bits packed in a byte.  
-              - z: Compression
-                - 000: No compression.  DEFAULT VALUE.
-                - ZLB: Zlib.
-                - GZP: Gzip.
-
-          Two headers that both specify a 256x128 image with 3 unsigned 8-bit integer channels encoded little endian:
-
-                      MJRRAW
-                      256x128y3c8bUNSsINTtLTLi00000000000000000000000000000000000000000000000000000000000000000000
-
-                      MJRRAW
-                      0000000000000000256x0000000000000000128y000000000000000000000000003c00000000008bSGNsINTtLTLi
-
-          @param oStream  The ostream object to which to write
-          @param pixelFormat Specify the type of data to write (native, RGB, RGBA) */
-      int writeRAWstream(std::ostream& oStream, pixelFormatEnum pixelFormat = pixelFormatEnum::NATIVE);
-      /** Write the binary data for the image to the given ostream
-          @param oStream  The ostream object to which to write
-          @param pixelFormat Specify the type of data to write (native, RGB, RGBA) */
-      int writeBINstream(std::ostream& oStream, pixelFormatEnum pixelFormat = pixelFormatEnum::NATIVE);
-      /** Write an image file with the given format and filters.  This is the work horse driver behind all the public write*file functions.
-          @param fileName   The file name to write data to
-          @param fileType   The type of file to write.
-          @param pixelFormat Specify the type of data to write (native, RGB, RGBA) */
-      int writeFile(std::string fileName, imgFileType fileType, pixelFormatEnum pixelFormat = pixelFormatEnum::NATIVE);
       //@}
 
       /** @name Coordinate System Manipulation (i) */
@@ -1168,16 +1101,59 @@ namespace mjr {
       int readTIFFfile(std::string fileName);
       /** Write a TIFF format image file.  Respects integer coordinate system orientation.
 
-          \see writeTIFFstream()
+          Why TIFF? TIFF is both broadly supported and flexible enough to represent almost every ramCanvas image type perfectly.
+
+          Use Cases (In order of priority)
+              - Write a bit perfect TIFF representation of ramCanvas images
+              - Simultaneously convert any ramCanvas into 24-bit truecolor RGB and write the resulting TIFF
+              - Do all the above while simultaneously applying a homogeneous image filter
+
+          Limitations
+              - Channels must be no more than 64-bits wide
+              - No more than 2^16-1 channels
+              - Image width no more than 2^32-1 (normally intCrdT limits this to 2^31-1)
+              - Image height no more than 2^32-1 (normally intCrdT limits this to 2^31-1)
+              - Image row data size (numPixX * colorT::bitsPerChan * colorT::channelCount / 8) must be less than 2^32-1 bytes
+              - Image data must be less than 2^32-1 bytes
+
+          Limitations for bit perfect (toTRU is NULL) files:
+              - Channels must be uint8_t, uint16_t, uint32_t, uint64_t, float (32-bit), or double (64-bit)
 
           @param fileName The file name to write data to
-          @param pixelFormat Specify the type of data to write (native, RGB, RGBA) */
-      int writeTIFFfile(std::string fileName, pixelFormatEnum pixelFormat = pixelFormatEnum::NATIVE);
+          @param rcConverter An rcConverter object instance
+          @param markAlpha   If an alpha channel is present, then mark it as such in the TIFF file.
+          @return Status of I/O
+          @retval  0 Everything seems to have worked
+          @retval  2 Image channels are too shallow for TIFF format
+          @retval  3 Image channels are too deep for TIFF format
+          @retval  4 Image has too few channels for TIFF format
+          @retval  5 Image has too many channels for TIFF format
+          @retval  6 Image has too few columns for TIFF format
+          @retval  7 Image has too many columns for TIFF format
+          @retval  8 Image has too few rows for TIFF format
+          @retval  9 Image has too few rows for TIFF format
+          @retval 10 Image rows are too large (too much data) for TIFF format
+          @retval 11 Image is too large (too much data)  for TIFF format */
+      template <class rcConT> int writeTIFFfile(std::string fileName, rcConT rcConverter, bool markAlpha);
+      /** Simplified overload for writeTIFFfile() that only requires the filename. */
+      int writeTIFFfile(std::string fileName, bool markAlpha = true);
+
       /** Write a 24-bit (8-bit per channel) RGB, TGA format graphics file.  Respects integer coordinate system orientation.
 
-          \see writeTGAstream()
+          Why TGA? TGA files are not well supported by modern software.  When supported, it is normally only 8-bit RGBA.  With these limitations one might ask
+          why this function exists.  I am a POV-Ray fan, and it uses a specialized TGA format for height maps.  That's really it...  One could use this
+          function to dump out regular RGB images, but I suggest writeTIFFfile() for that.
 
-          @param fileName The file name name to write data to */
+          Note TGA files are 8-bit files, and *_byte functions are used to convert channel values to 8-bit before being written.  
+
+          @param fileName The file name name to write data to
+          @return Status of I/O
+          @retval  0 Everything seems to have worked
+          @retval  1 File open failure
+          @retval  6 Image of zero width
+          @retval  7 Image too wide for TGA format (> 2^16-1)
+          @retval  8 Image of zero height
+          @retval  9 Image too tall for TGA format (> 2^16-1) */
       int writeTGAfile(std::string fileName);
       /** Read RAW file
 
@@ -1223,13 +1199,56 @@ namespace mjr {
     int readRAWfile(std::string fileName);
       /** Write a MJRRAW file. Respects integer coordinate system orientation.
 
-          \see writeRAWstream()
+          Why? This simple file format is designed to house the more exotic images this library supports, and be easily consumed by many image processing and
+          data visualization tools -- usually via a feature referred to as a raw importer.  ImageMagick, VisIT, ParaView, and ImageJ all can read this type of
+          data. The header is exactly 100 bytes, ASCII, and contains two newlines.  The idea being that one can do a 'head -n 2 FILENAME' on the image file,
+          and get a human readable output of basic image info that also happens to be easy to parse.  The first line of the header is the text "MJRRAW".  The
+          second line of the header consists of a sequence of values& value labels and followed by enough zero characters to pad to get to the 100 byte mark.
+          That's 100 bytes for the two lines including the two newline characters.  The values consist of uppercase letters and numbers, and each label is a
+          single lower case letter.  If a value is a number, then it is expressed as a decimal number in ASCII using -- it may be zero padded.  While the code
+          in ramCanvasTpl doesn't make assumptions about the order of the header values, some of the example scripts require them to be in the following
+          order: x, y, c, b, s, t, & i.  The header is followed by the binary image.
 
-          @param fileName The file name name to write data to
-          @param pixelFormat Specify the type of data to write (native, RGB, RGBA)
+          Labels:
+            - x: Number of pixels on X (horizontal axis) expressed as a zero padded, decimal integer
+            - y: Number of pixels on Y (vertical axis) expressed as a zero padded, decimal integer
+            - c: Number of channels expressed as a zero padded, decimal integer
+            - b: Number of bits per channel expressed as a zero padded, decimal integer
+            - s: Channel signdness (ignored for floating point channels)
+              - UNS: Unsigned data.  DEFAULT VALUE.
+              - SGN: Signed data
+            - t: Channel type
+              - INT: Integral channels.  DEFAULT VALUE.
+              - FLT: Floating point channels
+            - i: endianness
+              - BIG: Big endian 
+              - LTL: Little endian
+              - UNK: Unknown.  DEFAULT VALUE.  For read we assume file matches system running the code.  
+            - Currently reserved, but unused labels
+              - p: Pixel format
+                - MXL: Each pixel of the image is written in sequence.  DEFAULT VALUE.
+                - PLN: Each channel of the *image* is written in sequence.
+                - BIT: For bit-masks with 8 bits packed in a byte.  
+              - z: Compression
+                - 000: No compression.  DEFAULT VALUE.
+                - ZLB: Zlib.
+                - GZP: Gzip.
+
+          Two headers that both specify a 256x128 image with 3 unsigned 8-bit integer channels encoded little endian:
+
+                      MJRRAW
+                      256x128y3c8bUNSsINTtLTLi00000000000000000000000000000000000000000000000000000000000000000000
+
+                      MJRRAW
+                      0000000000000000256x0000000000000000128y000000000000000000000000003c00000000008bSGNsINTtLTLi
+
+          @param fileName    The file name name to write data to
+          @param rcConverter An rcConverter object instance
           @retval 0 The write was successful.
           @retval 1 Could not open file. */
-      int writeRAWfile(std::string fileName, pixelFormatEnum pixelFormat = pixelFormatEnum::NATIVE);
+      template <class rcConT> int writeRAWfile(std::string fileName, rcConT rcConverter);
+      /** Simplified overload for writeRAWfile() that only requires the filename. */
+      int writeRAWfile(std::string fileName);
       //@}
 
       /** @name Boolean Clip Test Methods */
@@ -1324,10 +1343,16 @@ namespace mjr {
       /** Get the integer X axis orientation
           @return NATURAL means increasing to the right. */
       inline intAxisOrientation getIntAxOrientationX() { return intAxOrientationX; }
+      /** Is the integer X axis NATURAL?
+          @return true means increasing to the right. */
+      inline bool isIntAxOrientationNaturalX() { return (intAxOrientationX == intAxisOrientation::NATURAL); }
       /** Set the integer X axis orientation
           @param orientation The orientation (INVERTED or NATURAL) */
       inline void setIntAxOrientationX(intAxisOrientation orientation) { intAxOrientationX = orientation; }
       /** Get the integer Y axis orientation
+          @return NATURAL means increasing in the upward direction. */
+      inline bool isIntAxOrientationNaturalY() { return (intAxOrientationY == intAxisOrientation::NATURAL); }
+      /** Is the integer Y axis orientation NATURAL?
           @return NATURAL means increasing in the upward direction. */
       inline intAxisOrientation getIntAxOrientationY() { return intAxOrientationY; }
       /** Set the integer Y axis orientation
@@ -2358,151 +2383,6 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-    int
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeTIFFstream(std::ostream& oStream, pixelFormatEnum pixelFormat) {
-    if( pixelFormat == pixelFormatEnum::NATIVE) {
-      if(colorT::bitsPerChan < 8)                                                          // channels too thin
-        return 2;
-      if(colorT::bitsPerChan > 0xffff)                                                     // channels too fat
-        return 3;
-      if(colorT::channelCount < 1)                                                         // too few channels
-        return 4;
-      if(colorT::channelCount > 0xffff)                                                    // too many channels
-        return 5;
-    }
-    if(numPixX < 1)                                                                        // too skinny
-      return 6;
-    if(numPixX > 0x7fffffff)                                                               // too wide
-      return 7;
-    if(numPixY < 1)                                                                        // too short
-      return 8;
-    if(numPixY > 0x7fffffff)                                                               // too tall
-      return 9;
-    if(numPixX * colorT::bitsPerChan / 8ul * colorT::channelCount > 0xffffffff)            // rows too big
-      return 10;
-    if(numPixX * numPixY * colorT::channelCount * colorT::bitsPerChan / 8ul > 0xfffffffff) // image too big
-      return 11;
-
-    endianType fe        = platformEndianness();                                                     // Endian Type
-    uint16_t endianNum   = (fe == endianType::LITTLE ? 0x4949 : 0x4d4d);                             // Endianness Magic Number
-    uint32_t tifWidth    = (uint32_t)numPixX;                                                        // ImageWidth
-    uint32_t tifLength   = (uint32_t)numPixY;                                                        // ImageLength & RowsPerStrip
-    uint32_t tifSPP;                                                                                 // SamplesPerPixel
-    if (pixelFormat == pixelFormatEnum::RGBbyte)
-      tifSPP = 3;
-    else if (pixelFormat == pixelFormatEnum::RGBAbyte)
-      tifSPP = 4;
-    else
-      tifSPP  = (uint32_t)colorT::channelCount;
-    uint16_t tifBPS      = (uint16_t)(pixelFormat != pixelFormatEnum::NATIVE ? 8 : colorT::bitsPerChan); // BitsPerSample
-    uint32_t bytePerSmp  = tifBPS / 8;                                                               // Bytes per sample
-    uint32_t tifSBC      = tifLength * tifWidth * bytePerSmp * tifSPP;                               // StripByteCounts
-    bool     haveRGB     = tifSPP>=3;                                                                // TRUE if this image has RGB data (at least 3 channels)
-    uint16_t numImgSmp   = (haveRGB ? 3 : 1);                                                        // Number of samples used for image data (3 for RGB, 1 otherwise)
-    uint16_t tifPMI      = (haveRGB ? 2 : 1);                                                        // PhotometricInterp
-    bool     haveXS      = !((tifSPP==1) || (tifSPP==3));                                            // TRUE if this image has ExtraSamples data
-    bool     haveManyXS  = tifSPP>4;                                                                 // TRUE if this image has MORE THAN ONE ExtraSamples data
-    uint16_t numTags     = 1+14 + (haveXS ? 1 : 0);                                                  // Number fo tags in this image
-    bool     haveManyBPS = tifSPP>1;                                                                 // TRUE if this image has MORE THAN ONE BitsPerSample data
-    uint32_t numXS       = tifSPP - numImgSmp;                                                       // Number of extra samples
-    uint32_t xResOff     = 14 + 12 * numTags;                                                        // XResolution offset
-    uint32_t yResOff     = xResOff + 8;                                                              // YResolution offset
-    uint32_t bpsOff      = yResOff + 8;                                                              // BitsPerSample offset
-    uint32_t xsOff       = bpsOff  + (haveManyBPS ? 2 * tifSPP : 0);                                 // ExtraSamples offset
-    uint32_t imgOff      = xsOff + (haveManyXS  ? 2 * numXS : 0);                                    // Image Data offset
-    uint16_t sampFmt     = (colorT::chanIsInt ? 1 : 3);                                              // SampleFormat (1=unsigned, 3=IEEE)
-
-    writeUIntToStream(oStream, fe, 2, endianNum);                                                                             // Write: little endian magic number
-    writeUIntToStream(oStream, fe, 2, 42);                                                                                    // Write: TIFF magic number
-    writeUIntToStream(oStream, fe, 4, 8);                                                                                     // Write: IDF offset
-    writeUIntToStream(oStream, fe, 2, numTags);                                                                               // Tag Count
-    writeUIntToStream(oStream, fe, 2, 0x100); writeUIntToStream(oStream, fe, 2, 4);
-    writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, tifWidth);                                        // ImageWidth
-    writeUIntToStream(oStream, fe, 2, 0x101); writeUIntToStream(oStream, fe, 2, 4);
-    writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, tifLength);                                       // ImageLength
-    writeUIntToStream(oStream, fe, 2, 0x102); writeUIntToStream(oStream, fe, 2, 3);
-    writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 2, tifBPS);    writeUIntToStream(oStream, fe, 2, 0); // BitsPerSample
-    writeUIntToStream(oStream, fe, 2, 0x103); writeUIntToStream(oStream, fe, 2, 3);
-    writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 2, 1);         writeUIntToStream(oStream, fe, 2, 0); // Compression
-    writeUIntToStream(oStream, fe, 2, 0x106); writeUIntToStream(oStream, fe, 2, 3);
-    writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 2, tifPMI);    writeUIntToStream(oStream, fe, 2, 0); // PhotometricIn
-    writeUIntToStream(oStream, fe, 2, 0x111); writeUIntToStream(oStream, fe, 2, 4);
-    writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, imgOff);                                          // StripOffsets
-    writeUIntToStream(oStream, fe, 2, 0x112); writeUIntToStream(oStream, fe, 2, 3);
-    writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 2, 1);         writeUIntToStream(oStream, fe, 2, 0); // Orientation
-    writeUIntToStream(oStream, fe, 2, 0x115); writeUIntToStream(oStream, fe, 2, 3);
-    writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 2, tifSPP);    writeUIntToStream(oStream, fe, 2, 0); // SamplesPerPixel
-    writeUIntToStream(oStream, fe, 2, 0x116); writeUIntToStream(oStream, fe, 2, 4);
-    writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, tifLength);                                       // RowsPerStrip
-    writeUIntToStream(oStream, fe, 2, 0x117); writeUIntToStream(oStream, fe, 2, 4);
-    writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, tifSBC);                                          // StripByteCounts
-    writeUIntToStream(oStream, fe, 2, 0x11A); writeUIntToStream(oStream, fe, 2, 5);
-    writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, xResOff);                                         // XResolution
-    writeUIntToStream(oStream, fe, 2, 0x11B); writeUIntToStream(oStream, fe, 2, 5);
-    writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, yResOff);                                         // YResolution
-    writeUIntToStream(oStream, fe, 2, 0x11C); writeUIntToStream(oStream, fe, 2, 3);
-    writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 2, 1);         writeUIntToStream(oStream, fe, 2, 0); // PlanarConf
-    writeUIntToStream(oStream, fe, 2, 0x128); writeUIntToStream(oStream, fe, 2, 3);
-    writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 2, 1);         writeUIntToStream(oStream, fe, 2, 0); // ResolutionUnit
-    if(haveXS) {                                                                                                              // ExtraSamples
-      if(haveManyXS) {
-        writeUIntToStream(oStream, fe, 2, 0x152); writeUIntToStream(oStream, fe, 2, 3);
-        writeUIntToStream(oStream, fe, 4, numXS); writeUIntToStream(oStream, fe, 4, xsOff);
-      } else {
-        if(pixelFormat == pixelFormatEnum::RGBAbyte) {
-          writeUIntToStream(oStream, fe, 2, 0x152); writeUIntToStream(oStream, fe, 2, 3);
-          writeUIntToStream(oStream, fe, 4, 1);     writeUIntToStream(oStream, fe, 4, 1);
-        } else {
-          writeUIntToStream(oStream, fe, 2, 0x152); writeUIntToStream(oStream, fe, 2, 3);
-          writeUIntToStream(oStream, fe, 4, 1);     writeUIntToStream(oStream, fe, 4, 0);
-        }
-      }
-    }
-
-    writeUIntToStream(oStream, fe, 2, 0x153);
-    writeUIntToStream(oStream, fe, 2, 3);     writeUIntToStream(oStream, fe, 4, 1);
-    writeUIntToStream(oStream, fe, 2, sampFmt); writeUIntToStream(oStream, fe, 2, 0);                                         // SampleFormat
-
-    writeUIntToStream(oStream, fe, 4, 0);                                                                                     // IFD END
-    writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, 1);                                               // XResolutionData
-    writeUIntToStream(oStream, fe, 4, 1); writeUIntToStream(oStream, fe, 4, 1);                                               // YResolutionData
-    if(haveManyBPS) {                                                                                                         // YResolutionData
-      for(unsigned int i=0; i<tifSPP; i++)
-        writeUIntToStream(oStream, fe, 2, tifBPS);
-    }
-    if(haveManyXS)                                                                                                            // ExtraSamplesData (can't be RGBA is on xtra, not many)
-      for(unsigned int i=0; i<numXS; i++)
-        writeUIntToStream(oStream, fe, 4, 0);
-    // Image data
-    intCrdT x, y;
-    bool yNat = !(intAxOrientationY==intAxisOrientation::NATURAL);
-    bool xNat = intAxOrientationX==intAxisOrientation::NATURAL;
-    for((yNat?y=0:y=(numPixY-1)); (yNat?y<numPixY:y>=0); (yNat?y++:y--)) {
-      for((xNat?x=0:x=(numPixX-1)); (xNat?x<numPixX:x>=0); (xNat?x++:x--)) {
-        colorT aColor = getPxColorRefNC(x, y);
-        if(pixelFormat == pixelFormatEnum::NATIVE) {
-          for(int c=0; c<aColor.channelCount; c++) {
-            colorChanType aChanValue = aColor.getChan(c);
-            if (colorT::chanIsInt)
-              writeUIntToStream(oStream, fe, bytePerSmp, aChanValue);                                                         // Sample Data
-            else
-              oStream.write((const char *)&aChanValue, bytePerSmp);                                                               // Sample Data
-          }
-        } else {
-          writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((colorT::redChan   < 0 ? 0 : colorT::redChan)));
-          writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((colorT::greenChan < 0 ? 0 : colorT::greenChan)));
-          writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((colorT::blueChan  < 0 ? 0 : colorT::blueChan)));
-        if(pixelFormat == pixelFormatEnum::RGBAbyte) 
-          writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((colorT::alphaChan < 0 ? 0 : colorT::alphaChan)));
-        }
-      }
-    }
-    return 0;
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
-  requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
     void
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::colorizeFltCanvas(std::function<colorT (fltCrdT, fltCrdT)> cFun) {
     for(intCrdT yi=0;yi<numPixY;yi++) {
@@ -2559,8 +2439,15 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-    int
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeTGAstream(std::ostream& oStream) {
+    inline int
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeTGAfile(std::string fileName) {
+
+    std::ofstream outStream;
+    outStream.open(fileName, std::ios::out | std::ios::binary | std::ios::trunc);
+    if (outStream.is_open())
+      outStream.imbue(std::locale::classic());
+    else 
+      return 1;
 
     if(numPixX < 1)      // too skinny
       return 6;
@@ -2572,31 +2459,31 @@ namespace mjr {
       return 9;
 
     /* Write header */
-    writeUIntToStream(oStream, endianType::LITTLE, 1, 0);       // id length
-    writeUIntToStream(oStream, endianType::LITTLE, 1, 0);       // colourmaptype
-    writeUIntToStream(oStream, endianType::LITTLE, 1, 2);       // datatypecode: 2 == Truecolor RGB 8-bit, 3 == Monochrome
-    writeUIntToStream(oStream, endianType::LITTLE, 2, 0);       // 16-bit colourmaporigin
-    writeUIntToStream(oStream, endianType::LITTLE, 2, 0);       // colurmaplength
-    writeUIntToStream(oStream, endianType::LITTLE, 1, 0);       // colormapdepth
-    writeUIntToStream(oStream, endianType::LITTLE, 2, 0);       // 16-bit x_origin
-    writeUIntToStream(oStream, endianType::LITTLE, 2, 0);       // 16-bit y_origon
-    writeUIntToStream(oStream, endianType::LITTLE, 2, numPixX); // Width
-    writeUIntToStream(oStream, endianType::LITTLE, 2, numPixY); // Height
-    writeUIntToStream(oStream, endianType::LITTLE, 1, 24);      // bits per pixel
-    writeUIntToStream(oStream, endianType::LITTLE, 1, 0);       // imagedescriptor
+    writeUIntToStream(outStream, endianType::LITTLE, 1, 0);       // id length
+    writeUIntToStream(outStream, endianType::LITTLE, 1, 0);       // colourmaptype
+    writeUIntToStream(outStream, endianType::LITTLE, 1, 2);       // datatypecode: 2 == Truecolor RGB 8-bit, 3 == Monochrome
+    writeUIntToStream(outStream, endianType::LITTLE, 2, 0);       // 16-bit colourmaporigin
+    writeUIntToStream(outStream, endianType::LITTLE, 2, 0);       // colurmaplength
+    writeUIntToStream(outStream, endianType::LITTLE, 1, 0);       // colormapdepth
+    writeUIntToStream(outStream, endianType::LITTLE, 2, 0);       // 16-bit x_origin
+    writeUIntToStream(outStream, endianType::LITTLE, 2, 0);       // 16-bit y_origon
+    writeUIntToStream(outStream, endianType::LITTLE, 2, numPixX); // Width
+    writeUIntToStream(outStream, endianType::LITTLE, 2, numPixY); // Height
+    writeUIntToStream(outStream, endianType::LITTLE, 1, 24);      // bits per pixel
+    writeUIntToStream(outStream, endianType::LITTLE, 1, 0);       // imagedescriptor
 
     /* Write data */
     intCrdT x, y;
     /* Normally I would not resort to such trickery; however, this is an exception.  The following for loop is equivalent to switching between the two forms
        "for(y=(numPixY-1); y>=0; y--)" and "for(y=0; y<numPixY; y++)". */
-    bool yNat = intAxOrientationY==intAxisOrientation::NATURAL;
-    bool xNat = intAxOrientationX==intAxisOrientation::NATURAL;
+    bool yNat = isIntAxOrientationNaturalY();
+    bool xNat = isIntAxOrientationNaturalX();
     for((yNat?y=0:y=(numPixY-1)); (yNat?y<numPixY:y>=0); (yNat?y++:y--)) {
       for((xNat?x=0:x=(numPixX-1)); (xNat?x<numPixX:x>=0); (xNat?x++:x--)) {
         colorT aColor = getPxColorRefNC(x, y);
-        writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((colorT::blueChan  < 0 ? 0 : colorT::blueChan)));
-        writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((colorT::greenChan < 0 ? 0 : colorT::greenChan)));
-        writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((colorT::redChan   < 0 ? 0 : colorT::redChan)));
+        writeUIntToStream(outStream, endianType::LITTLE, 1, aColor.getChan_byte(aColor.bestBlueChan()));
+        writeUIntToStream(outStream, endianType::LITTLE, 1, aColor.getChan_byte(aColor.bestGreenChan()));
+        writeUIntToStream(outStream, endianType::LITTLE, 1, aColor.getChan_byte(aColor.bestRedChan()));
       }
     }
     return 0;
@@ -2605,27 +2492,47 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-    int
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeBINstream(std::ostream& oStream, pixelFormatEnum pixelFormat) {
+    inline int
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeRAWfile(std::string fileName) {
+    auto tmp = rcConverterIdentity<ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>>(*this);
+    return writeRAWfile(fileName, tmp);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
+  requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
+    template <class rcConT>
+    inline int
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeRAWfile(std::string fileName, rcConT rcConverter) {
+
+    std::ofstream outStream;
+    outStream.open(fileName, std::ios::out | std::ios::binary | std::ios::trunc);
+    if (outStream.is_open()) 
+      outStream.imbue(std::locale::classic());
+    else 
+      return 1;
+
+    outStream << "MJRRAW\n";                                                                    //  7   7
+    outStream << std::setw(19) << std::setfill('0') << rcConverter.getNumPixX()         << "x"; // 20  27
+    outStream << std::setw(19) << std::setfill('0') << rcConverter.getNumPixY()         << "y"; // 20  47
+    outStream << std::setw(27) << std::setfill('0') << rcConT::colorType::channelCount  << "c"; // 28  75
+    outStream << std::setw(11) << std::setfill('0') << rcConT::colorType::bitsPerChan   << "b"; // 12  87
+    outStream << (rcConT::colorType::chanIsUnsigned ? "UNS" : "SGN")                    << "s"; //  4  91
+    outStream << (rcConT::colorType::chanIsInt ? "INT" : "FLT")                         << "t"; //  4  95
+    outStream << (platformEndianness() == endianType::LITTLE ? "LTL" : "BIG")           << "i"; //  4  99
+    outStream << "\n";                                                                          //  1 100
+
     intCrdT x, y;
     /* Normally I would not resort to such trickery; however, this is an exception.  The following for loop is equivalent to switching between the two forms
-       "for(y=(numPixY-1); y>=0; y--)" and "for(y=0; y<numPixY; y++)". */
-    bool yNat = !(intAxOrientationY==intAxisOrientation::NATURAL);
-    bool xNat = intAxOrientationX==intAxisOrientation::NATURAL;
-    for((yNat?y=0:y=(numPixY-1)); (yNat?y<numPixY:y>=0); (yNat?y++:y--)) {
-      for((xNat?x=0:x=(numPixX-1)); (xNat?x<numPixX:x>=0); (xNat?x++:x--)) {
-        colorT aColor = getPxColorRefNC(x, y);
-        if(pixelFormat == pixelFormatEnum::NATIVE) {
-          for(int c=0; c<aColor.channelCount; c++) {
-            colorChanType aChanValue = aColor.getChan(c);
-            oStream.write((const char *)&aChanValue, sizeof(colorChanType));
-          }
-        } else {
-          writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((colorT::redChan   < 0 ? 0 : colorT::redChan)));
-          writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((colorT::greenChan < 0 ? 0 : colorT::greenChan)));
-          writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((colorT::blueChan  < 0 ? 0 : colorT::blueChan)));
-          if(pixelFormat == pixelFormatEnum::RGBAbyte) 
-            writeUIntToStream(oStream, endianType::LITTLE, 1, aColor.getChan_byte((colorT::alphaChan < 0 ? 0 : colorT::alphaChan)));
+       "for(y=(rcConverter.getNumPixY()-1); y>=0; y--)" and "for(y=0; y<rcConverter.getNumPixY(); y++)". */
+    bool yNat = !(rcConverter.isIntAxOrientationNaturalY());
+    bool xNat = rcConverter.isIntAxOrientationNaturalX();
+    for((yNat?y=0:y=(rcConverter.getNumPixY()-1)); (yNat?y<rcConverter.getNumPixY():y>=0); (yNat?y++:y--)) {
+      for((xNat?x=0:x=(rcConverter.getNumPixX()-1)); (xNat?x<rcConverter.getNumPixX():x>=0); (xNat?x++:x--)) {
+        typename rcConT::colorType aColor = rcConverter.getPxColorNC(x, y);
+        for(int c=0; c<aColor.channelCount; c++) {
+          typename rcConT::colorType::channelType aChanValue = aColor.getChan(c);
+          outStream.write((const char *)&aChanValue, sizeof(colorChanType));
         }
       }
     }
@@ -2635,89 +2542,149 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-    int
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeRAWstream(std::ostream& oStream, pixelFormatEnum pixelFormat) {
-    std::ostringstream outStringStream;
-    outStringStream << "MJRRAW\n";                                                                      //  7   7
-    outStringStream << std::setw(19) << std::setfill('0') << numPixX                    << "x";         // 20  27
-    outStringStream << std::setw(19) << std::setfill('0') << numPixY                    << "y";         // 20  47
-    if(pixelFormat == pixelFormatEnum::NATIVE) {
-      outStringStream << std::setw(27) << std::setfill('0') << colorT::channelCount     << "c";         // 28  75
-      outStringStream << std::setw(11) << std::setfill('0') << colorT::bitsPerChan      << "b";         // 12  87
-      outStringStream << (colorT::chanIsUnsigned ? "UNS" : "SGN")                       << "s";         //  4  91
-      outStringStream << (colorT::chanIsInt ? "INT" : "FLT")                            << "t";         //  4  95
-    } else {
-      if (pixelFormat == pixelFormatEnum::RGBbyte)
-        outStringStream << std::setw(27) << std::setfill('0') << 3                      << "c";         // 28  75
-      else 
-        outStringStream << std::setw(27) << std::setfill('0') << 4                      << "c";         // 28  75
-      outStringStream << std::setw(11) << std::setfill('0') << 8                        << "b";         // 12  87
-      outStringStream << "UNS"                                                          << "s";         //  4  91
-      outStringStream << "INT"                                                          << "t";         //  4  95
-    }
-    outStringStream << (platformEndianness() == endianType::LITTLE ? "LTL" : "BIG")     << "i";         //  4  99
-    outStringStream                                                                     << "\n";        //  1 100
-    oStream << outStringStream.str();
-    writeBINstream(oStream, pixelFormat);
-    return 0;
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
-  requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
     inline int
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeRAWfile(std::string fileName, pixelFormatEnum pixelFormat) {
-    return writeFile(fileName, imgFileType::RAW, pixelFormat);
-  }
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeTIFFfile(std::string fileName, bool markAlpha) {
+    auto tmp = rcConverterIdentity<ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>>(*this);
+    return writeTIFFfile(fileName, tmp, markAlpha);
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
+    template <class rcConT> 
     inline int
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeTGAfile(std::string fileName) {
-    return writeFile(fileName, imgFileType::TGA);
-  }
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeTIFFfile(std::string fileName, rcConT rcConverter, bool markAlpha) {
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
-  requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-    inline int
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeTIFFfile(std::string fileName, pixelFormatEnum pixelFormat) {
-    return writeFile(fileName, imgFileType::TIFF, pixelFormat);
-  }
+    std::ofstream outStream;
+    outStream.open(fileName, std::ios::out | std::ios::binary | std::ios::trunc);
+    if (outStream.is_open()) 
+      outStream.imbue(std::locale::classic());
+    else 
+      return 1;
+    
+    if(rcConT::colorType::bitsPerChan < 8)                   // channels too thin
+      return 2;
+    if(rcConT::colorType::bitsPerChan > 0xffff)              // channels too fat
+      return 3;
+    if(rcConT::colorType::channelCount < 1)                  // too few channels
+      return 4;
+    if(rcConT::colorType::channelCount > 0xffff)             // too many channels
+      return 5;
+    if(rcConverter.getNumPixX() < 1)                         // too skinny
+      return 6;
+    if(rcConverter.getNumPixX() > 0x7fffffff)                // too wide
+      return 7;
+    if(rcConverter.getNumPixY() < 1)                         // too short
+      return 8;
+    if(rcConverter.getNumPixY() > 0x7fffffff)                // too tall
+      return 9;
+    unsigned long bytesPerRow = rcConverter.getNumPixX() * rcConT::colorType::bitsPerChan / 8ul * rcConT::colorType::channelCount;
+    if(bytesPerRow > 0xffffffff)                             // rows too big
+      return 10;
+    if(bytesPerRow * rcConverter.getNumPixY() > 0xfffffffff) // image too big
+      return 11;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
-  requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-    int
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeFile(std::string fileName, imgFileType fileType, pixelFormatEnum pixelFormat) {
-    bool useCout = ((fileName.length() == 1) && (fileName[0] == '-'));
-    std::ostream* oStream;
-    std::ofstream oFileStream;
-    if(useCout) {
-      oStream = &std::cout;
-    } else {
-      oFileStream.open(fileName, std::ios::out | std::ios::binary | std::ios::trunc);
-      if (oFileStream.is_open()) {
-        oFileStream.imbue(std::locale::classic());
-        oStream = &oFileStream;
+    endianType fe        = platformEndianness();                         // Endian Type
+    uint16_t endianNum   = (fe == endianType::LITTLE ? 0x4949 : 0x4d4d); // Endianness Magic Number
+    uint32_t tifWidth    = (uint32_t)rcConverter.getNumPixX();           // ImageWidth
+    uint32_t tifLength   = (uint32_t)rcConverter.getNumPixY();           // ImageLength & RowsPerStrip
+    uint32_t tifSPP      = (uint32_t)rcConT::colorType::channelCount;    // SamplesPerPixel
+    uint16_t tifBPS      = (uint16_t)(rcConT::colorType::bitsPerChan);   // BitsPerSample
+    uint32_t bytePerSmp  = tifBPS / 8;                                   // Bytes per sample
+    uint32_t tifSBC      = tifLength * tifWidth * bytePerSmp * tifSPP;   // StripByteCounts
+    bool     haveRGB     = tifSPP>=3;                                    // TRUE if this image has RGB data (at least 3 channels)
+    uint16_t numImgSmp   = (haveRGB ? 3 : 1);                            // Number of samples used for image data (3 for RGB, 1 otherwise)
+    uint16_t tifPMI      = (haveRGB ? 2 : 1);                            // PhotometricInterp
+    bool     haveXS      = !((tifSPP==1) || (tifSPP==3));                // TRUE if this image has ExtraSamples data
+    bool     haveManyXS  = tifSPP>4;                                     // TRUE if this image has MORE THAN ONE ExtraSamples data
+    uint16_t numTags     = 1+14 + (haveXS ? 1 : 0);                      // Number fo tags in this image
+    bool     haveManyBPS = tifSPP>1;                                     // TRUE if this image has MORE THAN ONE BitsPerSample data
+    uint32_t numXS       = tifSPP - numImgSmp;                           // Number of extra samples
+    uint32_t xResOff     = 14 + 12 * numTags;                            // XResolution offset
+    uint32_t yResOff     = xResOff + 8;                                  // YResolution offset
+    uint32_t bpsOff      = yResOff + 8;                                  // BitsPerSample offset
+    uint32_t xsOff       = bpsOff  + (haveManyBPS ? 2 * tifSPP : 0);     // ExtraSamples offset
+    uint32_t imgOff      = xsOff + (haveManyXS  ? 2 * numXS : 0);        // Image Data offset
+    uint16_t sampFmt     = (rcConT::colorType::chanIsInt ? 1 : 3);       // SampleFormat (1=unsigned, 3=IEEE)
+
+    writeUIntToStream(outStream, fe, 2, endianNum);                                                                                 // Write: little endian magic number
+    writeUIntToStream(outStream, fe, 2, 42);                                                                                        // Write: TIFF magic number
+    writeUIntToStream(outStream, fe, 4, 8);                                                                                         // Write: IDF offset
+    writeUIntToStream(outStream, fe, 2, numTags);                                                                                   // Tag Count
+    writeUIntToStream(outStream, fe, 2, 0x100); writeUIntToStream(outStream, fe, 2, 4);
+    writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 4, tifWidth);                                          // ImageWidth
+    writeUIntToStream(outStream, fe, 2, 0x101); writeUIntToStream(outStream, fe, 2, 4);
+    writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 4, tifLength);                                         // ImageLength
+    writeUIntToStream(outStream, fe, 2, 0x102); writeUIntToStream(outStream, fe, 2, 3);
+    writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 2, tifBPS);    writeUIntToStream(outStream, fe, 2, 0); // BitsPerSample
+    writeUIntToStream(outStream, fe, 2, 0x103); writeUIntToStream(outStream, fe, 2, 3);
+    writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 2, 1);         writeUIntToStream(outStream, fe, 2, 0); // Compression
+    writeUIntToStream(outStream, fe, 2, 0x106); writeUIntToStream(outStream, fe, 2, 3);
+    writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 2, tifPMI);    writeUIntToStream(outStream, fe, 2, 0); // PhotometricIn
+    writeUIntToStream(outStream, fe, 2, 0x111); writeUIntToStream(outStream, fe, 2, 4);
+    writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 4, imgOff);                                            // StripOffsets
+    writeUIntToStream(outStream, fe, 2, 0x112); writeUIntToStream(outStream, fe, 2, 3);
+    writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 2, 1);         writeUIntToStream(outStream, fe, 2, 0); // Orientation
+    writeUIntToStream(outStream, fe, 2, 0x115); writeUIntToStream(outStream, fe, 2, 3);
+    writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 2, tifSPP);    writeUIntToStream(outStream, fe, 2, 0); // SamplesPerPixel
+    writeUIntToStream(outStream, fe, 2, 0x116); writeUIntToStream(outStream, fe, 2, 4);
+    writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 4, tifLength);                                         // RowsPerStrip
+    writeUIntToStream(outStream, fe, 2, 0x117); writeUIntToStream(outStream, fe, 2, 4);
+    writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 4, tifSBC);                                            // StripByteCounts
+    writeUIntToStream(outStream, fe, 2, 0x11A); writeUIntToStream(outStream, fe, 2, 5);
+    writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 4, xResOff);                                           // XResolution
+    writeUIntToStream(outStream, fe, 2, 0x11B); writeUIntToStream(outStream, fe, 2, 5);
+    writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 4, yResOff);                                           // YResolution
+    writeUIntToStream(outStream, fe, 2, 0x11C); writeUIntToStream(outStream, fe, 2, 3);
+    writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 2, 1);         writeUIntToStream(outStream, fe, 2, 0); // PlanarConf
+    writeUIntToStream(outStream, fe, 2, 0x128); writeUIntToStream(outStream, fe, 2, 3);
+    writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 2, 1);         writeUIntToStream(outStream, fe, 2, 0); // ResolutionUnit
+    if(haveXS) {                                                                                                                    // ExtraSamples
+      if(haveManyXS) {
+        writeUIntToStream(outStream, fe, 2, 0x152); writeUIntToStream(outStream, fe, 2, 3);
+        writeUIntToStream(outStream, fe, 4, numXS); writeUIntToStream(outStream, fe, 4, xsOff);
       } else {
-        return 1;
+        if(markAlpha) {                                                                                                             // is chan4alpha
+          writeUIntToStream(outStream, fe, 2, 0x152); writeUIntToStream(outStream, fe, 2, 3);
+          writeUIntToStream(outStream, fe, 4, 1);     writeUIntToStream(outStream, fe, 4, 1);
+        } else {
+          writeUIntToStream(outStream, fe, 2, 0x152); writeUIntToStream(outStream, fe, 2, 3);
+          writeUIntToStream(outStream, fe, 4, 1);     writeUIntToStream(outStream, fe, 4, 0);
+        }
       }
     }
 
-    int ret = 100;
-    switch(fileType) {
-      case imgFileType::TGA    : ret = writeTGAstream( *oStream             ); break;
-      case imgFileType::TIFF   : ret = writeTIFFstream(*oStream, pixelFormat); break;
-      case imgFileType::RAW    : ret = writeRAWstream( *oStream, pixelFormat); break;
-      case imgFileType::BINARY : ret = writeBINstream( *oStream, pixelFormat); break;
+    writeUIntToStream(outStream, fe, 2, 0x153);
+    writeUIntToStream(outStream, fe, 2, 3);     writeUIntToStream(outStream, fe, 4, 1);
+    writeUIntToStream(outStream, fe, 2, sampFmt); writeUIntToStream(outStream, fe, 2, 0);                                           // SampleFormat
+
+    writeUIntToStream(outStream, fe, 4, 0);                                                                                         // IFD END
+    writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 4, 1);                                                 // XResolutionData
+    writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 4, 1);                                                 // YResolutionData
+    if(haveManyBPS) {                                                                                                               // YResolutionData
+      for(unsigned int i=0; i<tifSPP; i++)
+        writeUIntToStream(outStream, fe, 2, tifBPS);
     }
-
-    if(!useCout)
-      oFileStream.close();
-
-    return ret;
+    if(haveManyXS)                                                                                                                  // ExtraSamplesData (can't be RGBA is on xtra, not many)
+      for(unsigned int i=0; i<numXS; i++)
+        writeUIntToStream(outStream, fe, 4, 0);
+                                                                                                                                    // Image data
+    intCrdT x, y;
+    bool yNat = !(rcConverter.isIntAxOrientationNaturalY());
+    bool xNat = rcConverter.isIntAxOrientationNaturalX();
+    for((yNat?y=0:y=(rcConverter.getNumPixY()-1)); (yNat?y<rcConverter.getNumPixY():y>=0); (yNat?y++:y--)) {
+      for((xNat?x=0:x=(rcConverter.getNumPixX()-1)); (xNat?x<rcConverter.getNumPixX():x>=0); (xNat?x++:x--)) {
+        typename rcConT::colorType aColor = rcConverter.getPxColorNC(x, y);
+        for(int c=0; c<aColor.channelCount; c++) {
+          typename rcConT::colorType::channelType aChanValue = aColor.getChan(c);
+          if (rcConT::colorType::chanIsInt)
+            writeUIntToStream(outStream, fe, bytePerSmp, aChanValue);                                                               // Sample Data
+          else
+            outStream.write((const char *)&aChanValue, bytePerSmp);                                                                 // Sample Data
+        }
+      }
+    }
+    return 0;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2752,10 +2719,10 @@ namespace mjr {
     for(intCrdT y=y1; y<=y2; y++) {
       for(intCrdT x=x1; x<=x2; x++) {
         colorT aColor = getPxColorNC(x, y);
-        if(redChan   >= 0) curPixComp[redChan]   = aColor.getChan_byte(0);
-        if(greenChan >= 0) curPixComp[greenChan] = aColor.getChan_byte(1);
-        if(blueChan  >= 0) curPixComp[blueChan]  = aColor.getChan_byte(2);
-        if(alphaChan >= 0) curPixComp[alphaChan] = aColor.getChan_byte(3);
+        if(redChan   >= 0) curPixComp[redChan]   = aColor.getChan_byte(aColor.bestRedChan());
+        if(greenChan >= 0) curPixComp[greenChan] = aColor.getChan_byte(aColor.bestGreenChan());
+        if(blueChan  >= 0) curPixComp[blueChan]  = aColor.getChan_byte(aColor.bestBlueChan());
+        if(alphaChan >= 0) curPixComp[alphaChan] = aColor.getChan_byte(aColor.bestAlphaChan());
         curPixComp += bytesPerPix;
       } /* end for x */
     } /* end for y */
@@ -3602,6 +3569,7 @@ namespace mjr {
       drawPoint(-y+centerX, x+centerY, color);
       drawPoint(-y+centerX,-x+centerY, color);
     }
+
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3910,12 +3878,12 @@ namespace mjr {
       if((mjr::hershey::chars[glyphNum]).components[2*i] == ' ') {
         actionIsMoveTo = 1;
       } else {
-        if(intAxOrientationX == intAxisOrientation::INVERTED)
-          x1 = static_cast<intCrdT>(magX * ('R'  -  (mjr::hershey::chars[glyphNum]).components[2*i]));
-        else
+        if(isIntAxOrientationNaturalX())
           x1 = static_cast<intCrdT>(magX * ((mjr::hershey::chars[glyphNum]).components[2*i]  -  'R'));
+        else
+          x1 = static_cast<intCrdT>(magX * ('R'  -  (mjr::hershey::chars[glyphNum]).components[2*i]));
 
-        if(intAxOrientationY == intAxisOrientation::NATURAL)
+        if(isIntAxOrientationNaturalY())
           y1 = static_cast<intCrdT>(magY * ('R' - (mjr::hershey::chars[glyphNum]).components[2*i+1]));
         else
           y1 = static_cast<intCrdT>(magY * ((mjr::hershey::chars[glyphNum]).components[2*i+1] - 'R'));
@@ -4089,8 +4057,8 @@ namespace mjr {
                         (!(fileIsLTL) && (platformEndianness() == endianType::LITTLE)));
 
     intCrdT x, y;
-    bool yNat = !(intAxOrientationY==intAxisOrientation::NATURAL);
-    bool xNat = intAxOrientationX==intAxisOrientation::NATURAL;
+    bool yNat = !(isIntAxOrientationNaturalY());
+    bool xNat = isIntAxOrientationNaturalX();
     for((yNat?y=0:y=(numPixY-1)); (yNat?y<numPixY:y>=0); (yNat?y++:y--)) {
       for((xNat?x=0:x=(numPixX-1)); (xNat?x<numPixX:x>=0); (xNat?x++:x--)) {
         for(int ci=0; ci<fileChans; ci++) {
@@ -4215,9 +4183,8 @@ namespace mjr {
         (!(colorType::chanIsInt) && (SAMPLEFORMAT_IEEEFP != 3)))
       return 21;
 
-    bool yNat  = !(getIntAxOrientationY()==intAxisOrientation::NATURAL);
-    bool xNat  = getIntAxOrientationX()==intAxisOrientation::NATURAL;
-
+    bool yNat  = !(isIntAxOrientationNaturalY());
+    bool xNat  = isIntAxOrientationNaturalX();
     tsize_t scanlinesize = TIFFScanlineSize(tif);
     tdata_t scanLineBuffer = _TIFFmalloc(scanlinesize);
 

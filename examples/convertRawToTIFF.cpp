@@ -3,7 +3,7 @@
 /**
  @file      convertRawToTIFF.cpp
  @author    Mitch Richling http://www.mitchr.me/
- @brief     Demonstrate how load a RAW file and save it as a TIFF.@EOL
+ @brief     Demonstrate how load a floating point RAW file and save it as an integer TIFF.@EOL
  @keywords  MRaster
  @std       C++20
  @copyright 
@@ -40,24 +40,34 @@
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(int argc, char *argv[]) {
-  mjr::ramCanvas3c8b theRamCanvas;
-  //mjr::ramCanvas3c32F theRamCanvas;
-  //mjr::ramCanvas3c64F theRamCanvas;
+  mjr::ramCanvas3c32F theRamCanvas;
+  std::string fileName;
 
-  if (argc < 2) {
-    std::cout << "ERROR argument required!" << std::endl;
-    return 1;
-  }
+  if (argc < 2)
+    fileName = "../data/utest/ut-draw_primatives_flt.mrw";  // This file is used for unit tests -- a handy 32-bit raw image. ;)
+  else
+    fileName = argv[1];
 
   int ret;
 
-  ret = theRamCanvas.readRAWfile(argv[1]);
+  ret = theRamCanvas.readRAWfile(fileName);
   if (ret != 0) {
     std::cout << "ERROR(readRAWfile): " << ret << std::endl;
     return ret;
   }
 
-  ret = theRamCanvas.writeTIFFfile("foo.tiff", mjr::ramCanvas3c8b::pixelFormatEnum::RGBbyte);
+  // We create a converter object for the *two* file write methods below.  This converter will transform the 32-bit floating point channels into 8-bit
+  // unsigned integer channels.
+  mjr::ramCanvas3c32F::rcConverterRGBbyte<mjr::ramCanvas3c32F> rcConv(theRamCanvas);
+
+  ret = theRamCanvas.writeRAWfile("foo.mrw", rcConv);
+  if (ret != 0) {
+    std::cout << "ERROR(writeRAWfile): " << ret << std::endl;
+    return ret;
+  }
+
+  // Note: For the more complex writeTIFFfile() method, the markAlpha argument is not optional.
+  ret = theRamCanvas.writeTIFFfile("foo.tiff", rcConv, false);
   if (ret != 0) {
     std::cout << "ERROR(writeTIFFfile): " << ret << std::endl;
     return ret;

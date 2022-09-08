@@ -76,9 +76,29 @@ typename mjr::ramCanvas1c16b::coordFltType params[NPR][12] = {
 };
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+// We could have made this a subclass of ramCanvasTpl::rcConverterHomoBase, but I think it is more instructive to implement the whole thing from scratch.
+class g2rgb8 {
+  private:
+    mjr::ramCanvas1c16b& attachedRC;
+    int factor;
+  public:
+    g2rgb8(mjr::ramCanvas1c16b& aRC, uint64_t newFactor) : attachedRC(aRC), factor(static_cast<int>(newFactor)) {  }
+    inline bool isIntAxOrientationNaturalX() { return attachedRC.isIntAxOrientationNaturalX(); }
+    inline bool isIntAxOrientationNaturalY() { return attachedRC.isIntAxOrientationNaturalY(); }
+    inline mjr::ramCanvas1c16b::coordIntType getNumPixX() { return attachedRC.getNumPixX(); }
+    inline mjr::ramCanvas1c16b::coordIntType getNumPixY() { return attachedRC.getNumPixY(); }
+    typedef mjr::colorRGB8b colorType;
+    inline colorType getPxColorNC(mjr::ramCanvas3c8b::coordIntType x, mjr::ramCanvas3c8b::coordIntType y) { 
+      colorType retColor;
+      mjr::ramCanvas3c8b::csIntType tmp = static_cast<mjr::ramCanvas3c8b::csIntType>(attachedRC.getPxColorNC(x, y).getC0() * 1275 / factor);
+      return retColor.cmpRGBcornerDGradiant(tmp, "0RYBCW");
+    }
+};
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const int BSIZ = 7680;
+  const int BSIZ = 7680/4;
   mjr::ramCanvas1c16b::colorType aColor;
   aColor.setChans(1);
   //for(int j=0; j<NPR; j++) {
@@ -139,12 +159,16 @@ int main(void) {
     std::cout << "ITER(" << j <<  "): " << "TIFF" << std::endl;
     /* Dump the 16-bit grayscale TIFF */
     theRamCanvas.writeTIFFfile("sicM_" + std::to_string(j) + ".tiff");
-    /* Now we would like a false color one (24-bit RGB). */
-    mjr::ramCanvas3c8b cRamCanvas(theRamCanvas.getNumPixX(), theRamCanvas.getNumPixY());
-    for(mjr::ramCanvas1c16b::coordIntType y=0;y<theRamCanvas.getNumPixY();y++)
-      for(mjr::ramCanvas1c16b::coordIntType x=0;x<theRamCanvas.getNumPixX();x++)
-        cRamCanvas.getPxColorRefNC(x, y).cmpRGBcornerDGradiant(static_cast<mjr::ramCanvas3c8b::csIntType>(theRamCanvas.getPxColorRefNC(x, y).getC0() * 1275 / maxII), "0RYBCW");
-    cRamCanvas.writeTIFFfile("sicC_" + std::to_string(j) + ".tiff");
+    /* Now we would like a false color version (24-bit RGB).   We could create a new canvas like this:
+               mjr::ramCanvas3c8b cRamCanvas(theRamCanvas.getNumPixX(), theRamCanvas.getNumPixY());
+               for(mjr::ramCanvas1c16b::coordIntType y=0;y<theRamCanvas.getNumPixY();y++)
+                 for(mjr::ramCanvas1c16b::coordIntType x=0;x<theRamCanvas.getNumPixX();x++)
+                   cRamCanvas.getPxColorRefNC(x, y).cmpRGBcornerDGradiant(static_cast<mjr::ramCanvas3c8b::csIntType>(theRamCanvas.getPxColorRefNC(x, y).getC0() * 1275 / maxII), "0RYBCW");
+               cRamCanvas.writeTIFFfile("sicC_" + std::to_string(j) + ".tiff");
+       We have a better way.  One that dosen't require the RAM to create a brand new canvas.  We can use
+       the filter option of writeTIFFfile! */
+    g2rgb8 rcFilt(theRamCanvas, maxII);
+    theRamCanvas.writeTIFFfile("sicCC_" + std::to_string(j) + ".tiff", rcFilt, false);
   }
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;

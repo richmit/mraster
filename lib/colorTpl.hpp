@@ -229,13 +229,23 @@ namespace mjr {
       typedef std::vector<clrChanT>                              clrChanVec;
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Public types for for packed integers. */
+      //@{
+      typedef uint32_t            packed4Cint;          //!< Used for passing & returning integers with packed 8-bit channels
+      //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** @name Public types for std::tuple & std::vector containing clrChanT values */
+      /** @name Public color types related to colorT.
+       These types are used for things like color space computations and sources for setting channels, etc...*/
       //@{
-      /** Tuple for RGBA & 4 chan */
-      typedef uint32_t            packed4Cint;          //!< Used for passing & returning integers with packed 8-bit channels
-      typedef colorTpl<double, 3> colSpaceDbl3;         //!< Color for space computations
+      typedef colorTpl<double,  3>       colConDbl3;     //!< Used for color space computations.  Type identical to colConRGBdbl, but might not be RGB.
+      typedef colorTpl<double,  3>       colConRGBdbl;   //!< RGB with double channels.  
+      typedef colorTpl<double,  4>       colConRGBAdbl;  //!< RGBA with double channels.
+      typedef colorTpl<uint8_t, 3>       colConRGBbyte;  //!< RGB with uint8_t channels.
+      typedef colorTpl<uint8_t, 4>       colConRGBAbyte; //!< RGBA with uint8_t channels.
+      typedef colorTpl<double,  numChan> colConALLdbl;   //!< Color with the same number of challens as colorT, but with double channels
+      typedef colorTpl<uint8_t, numChan> colConALLbyte;  //!< Color with the same number of challens as colorT, but with uint8_t channels
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -483,22 +493,6 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the mask value */
       inline void setMaskNC(maskType aMask) { theColor.theInt = aMask; }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Sets the specified color channel value with no index check. */
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      inline colorTpl& setChanNC(int chan, clrChanT cVal) { theColor.thePartsA[chan] = cVal; return *this; }
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Provides access to an specified color channel value with no index check. */
-      inline clrChanT getChanNC(int chan) const {
-#if defined(__GNUC__) && !defined(__llvm__) && !defined(__INTEL_COMPILER)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-#endif
-        return theColor.thePartsA[chan];
-#if defined(__GNUC__) && !defined(__llvm__) && !defined(__INTEL_COMPILER)
-#pragma GCC diagnostic pop
-#endif
-      }
       //@}
 
       public:
@@ -624,8 +618,8 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** The no arg constructor is a noop so we don't needlessly initialize millions of pixels -- compiler warnings are expected. */
       colorTpl() { }
-      /** Copy constructor (heavily used for assignment in the ramCanvas library). */
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Copy constructor (heavily used for assignment in the ramCanvas library). */
       colorTpl(const colorType& aColor) {
         /* Saftey: Yep.  Sometimes the compiler might not be able to tell if we have initalized the color object -- some of the color set code is too complex.
            Sometimes we might even want to copy an unitilzied color -- sometimes it makes the code easier to write.*/
@@ -633,6 +627,19 @@ namespace mjr {
           setMaskNC(aColor.getMaskNC());
         else
           std::copy_n(aColor.theColor.thePartsA, numChan, theColor.thePartsA);
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Initializer list.  Unspecified channels are set ot minChanVal, and extra channel values are ignored. */
+      colorTpl(std::initializer_list<clrChanT> cVals) { 
+        int numChanGiven = static_cast<int>(cVals.size());
+        auto p = cVals.begin();
+        for(int i=0; i<std::min(numChanGiven, numChan); i++) {
+          setChanNC(i, *p);
+          ++p;
+        }
+        if (numChanGiven < numChan)
+          for(int i=numChanGiven; i<numChan; i++)
+            setChanToMin(i);
       }
       //@}
 
@@ -650,31 +657,21 @@ namespace mjr {
           setChansToMin();
         setChansRGB(r, g, b);
       }
+      //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** @name Constructors: RGBSet channels
-          These all use setChans internally; however, these constructors will set any unspecified channels to min. */
+      /** @name Constructors: Conversions
+          These are all guarnteed to set all channels of the object. */
       //@{
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Uses setChans() to set all channels to the given value
           @param cVal The value to set the channels to */
       colorTpl(clrChanT cVal) { setChans(cVal); }
-      //@}
-
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** @name Constructors: Corner Colors */
-      //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Uses the setToCorner() method to set the initialize the object.
        Note that no constructor exists taking a character to provide to setToCorner().  Why?  Because character literals are integers in C++, and they might
        be the same as clrChanT -- rendering ambiguous overload cases.*/
       colorTpl(cornerColorEnum cornerColor) { setToCorner(cornerColor); }
-      //@}
-
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** @name Constructors: Magic String Constructor
-          These constructors work hard to interpret the given string, and set the color. */
-      //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Uses the setColorFromString() method to set the initialize the object. */
       colorTpl(std::string colorString) { setColorFromString(colorString); }
@@ -830,6 +827,70 @@ namespace mjr {
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Canonical Color Types.
+       Provide conversions to/from canonical color types. */
+      //@{
+      inline colorTpl& setChans_dbl(colConALLdbl dblColor)         { for(int i=0; i<numChan; i++) setChanNC(i, convertDoubleToChan(dblColor.getChanNC(i))); return *this; }
+      inline colorTpl& setChans_byte(colConALLbyte byteColor)      { for(int i=0; i<numChan; i++) setChanNC(i, convertByteToChan(byteColor.getChanNC(i)));  return *this; }
+      inline colorTpl& setChansRGBA_dbl(colConRGBAdbl dblColor)    { return setChansRGBA(convertDoubleToChan(dblColor.getRed()), convertDoubleToChan(dblColor.getGreen()), convertDoubleToChan(dblColor.getBlue()), convertDoubleToChan(dblColor.getAlpha())); }
+      inline colorTpl& setChansRGB_dbl(colConRGBdbl dblColor)      { return setChansRGB( convertDoubleToChan(dblColor.getRed()), convertDoubleToChan(dblColor.getGreen()), convertDoubleToChan(dblColor.getBlue()));                                           }
+      inline colorTpl& setChansRGBA_byte(colConRGBAbyte byteColor) { return setChansRGBA(convertByteToChan(byteColor.getRed()), convertByteToChan(byteColor.getGreen()), convertByteToChan(byteColor.getBlue()), convertByteToChan(byteColor.getAlpha())); }
+      inline colorTpl& setChansRGB_byte(colConRGBbyte byteColor)   { return setChansRGB( convertByteToChan(byteColor.getRed()), convertByteToChan(byteColor.getGreen()), convertByteToChan(byteColor.getBlue()));                                          }
+
+      inline colConALLdbl   getColCon_dbl()      { colConALLdbl   rCol; for(int i=0; i<numChan; i++) rCol.setChanNC(i, convertChanToDouble(getChanNC(i))); return rCol; }
+      inline colConALLbyte  getColCon_byte()     { colConALLbyte  rCol; for(int i=0; i<numChan; i++) rCol.setChanNC(i, convertChanToByte(  getChanNC(i))); return rCol; }
+      inline colConRGBAdbl  getColConRGBA_dbl()  { return colConRGBAdbl( getChan_dbl(bestRedChan()), getChan_dbl(bestGreenChan()), getChan_dbl(bestBlueChan()), getChan_dbl(bestAlphaChan()));     }
+      inline colConRGBdbl   getColConRGB_dbl()   { return colConRGBdbl(  getChan_dbl(bestRedChan()), getChan_dbl(bestGreenChan()), getChan_dbl(bestBlueChan()));                                   }
+      inline colConRGBAbyte getColConRGBA_byte() { return colConRGBAbyte(getChan_byte(bestRedChan()), getChan_byte(bestGreenChan()), getChan_byte(bestBlueChan()), getChan_byte(bestAlphaChan())); }
+      inline colConRGBbyte  getColConRGB_byte()  { return colConRGBbyte( getChan_byte(bestRedChan()), getChan_byte(bestGreenChan()), getChan_byte(bestBlueChan()));                                }
+      //@}
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Best guess for named channel index.
+          These are used when we wish to get the named channel index, but the current color might not have specified an approprate value. */
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /* Returns redChan if non-negative and 0 otherwise */
+      inline int bestRedChan() {                       
+        if (redChan >= 0)
+          return redChan;      // If we have an identical red, then return it.
+        else
+          return 0;            // Otherwise return 0 -- we are guarnteed at least one channel.
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /* Returns blueChan if it is non-negative.  If we only have one channel, then returns 0. If we have more than one channel, then returns 1. */
+      inline int bestGreenChan() {                       
+        if (greenChan >= 0)
+          return greenChan;    // If we have an identified green, then return it.
+        else if (numChan == 1) 
+          return 0;            // for greyscale, return chan 0
+        else
+          return 1;            // If we have more than 1 channel, then return 1
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /* Returns blueChan if it is non-negative.  If we only have one channel, then returns 0.  If we have two channels, then returns -1.  Otherwise returns 2. */
+      inline int bestBlueChan() {                       
+        if (blueChan >= 0)
+          return blueChan;     // If we have an identified blue, then return it.
+        else if (numChan == 1) 
+          return 0;            // for greyscale, return chan 0
+        else if (numChan == 2) 
+          return -1;           // No sensible value for blue channel with 2 channel images
+        else
+          return 2;            // If we have at least three channels, then return chan 2
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /* Returns alphaChan if it is non-negative.  If we only have four or more channels, then returns 3.  Otherwise returns -1. */
+      inline int bestAlphaChan() {                       
+        if (alphaChan >= 0)
+          return alphaChan;    // If we have an identified alpha, then return it.
+        else if (numChan >= 4) 
+          return 3;            // If we have at least four channels, then return chan 3
+        else
+          return -1;           // No sensible value for alpha channel 
+      }
+      //@}
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Setting a single Channel by Index
           Provides access to an indexed color channel value with run time index check.
           The channels are 0 indexed.
@@ -863,6 +924,27 @@ namespace mjr {
         /* Performance: We expect chan to be in range most of the time.  If it is not, we waste time here computing the channel value.. */
         /* Performance: When chanIsByte, convertByteToChan is a NOOP.  As it's inline, this leads to zero overhead for the chanIsByte case. */
         return setChan(chan, convertByteToChan(cVal));
+      }
+      //@}
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Set/Get Single Channel values with no index checks.
+          @warning These functions are fast, but have no error checking.  Use them wrong, and get a segfault! */
+      //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Sets the specified color channel value with no index check. */
+      inline colorTpl& setChanNC(int chan, clrChanT cVal) { theColor.thePartsA[chan] = cVal; return *this; }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Provides access to an specified color channel value with no index check. */
+      inline clrChanT getChanNC(int chan) const {
+#if defined(__GNUC__) && !defined(__llvm__) && !defined(__INTEL_COMPILER)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
+        return theColor.thePartsA[chan];
+#if defined(__GNUC__) && !defined(__llvm__) && !defined(__INTEL_COMPILER)
+#pragma GCC diagnostic pop
+#endif
       }
       //@}
 
@@ -907,7 +989,9 @@ namespace mjr {
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** This function sets color channels from the data in a std::vector.
-          @param chanValues A std::vector containing the color channels.  It must have at least #channelCount elements!  This is *not* checked!
+          @warning input vector must have at least #channelCount elements!  This is *not* checked!
+
+          @param chanValues A std::vector containing the color channels.  
           @return Returns a reference to the current color object.*/
       inline colorTpl& setChans(clrChanVec& chanValues) {
         for(int i=0; i<numChan; i++)
@@ -1285,9 +1369,9 @@ namespace mjr {
 
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @overload */
-      inline colorTpl& setRGBfromColorSpace(colorSpaceEnum space, colSpaceDbl3 inColor) {
+      inline colorTpl& setRGBfromColorSpace(colorSpaceEnum space, colConDbl3 inColor) {
         /* Requires: Inherits numChan>2 from getC2. */
-        /* This use of getC0/getC1/getC2 for RGB is OK -- that is how colSpaceDbl3 objects work */
+        /* This use of getC0/getC1/getC2 for RGB is OK -- that is how colConDbl3 objects work */
         return setRGBfromColorSpace(space, inColor.getC0(), inColor.getC1(), inColor.getC2());
       }
       //@}
@@ -1654,11 +1738,11 @@ namespace mjr {
           @return Returns a reference to the current color object.*/
       inline colorTpl& interplColorSpace(colorSpaceEnum space, double aDouble, colorArgType col1, colorArgType col2) {
         /* Requires: Inherits numChan>2 from getC2. */
-        /* This use of getC0/getC1/getC2 for RGB is OK -- that is how colSpaceDbl3 objects work */
+        /* This use of getC0/getC1/getC2 for RGB is OK -- that is how colConDbl3 objects work */
         if( (aDouble >= 0.0) && (aDouble <= 1.0) ) {
           // Convert our given colors into HSL
-          colSpaceDbl3 acol1 = col1.rgb2colorSpace(space);
-          colSpaceDbl3 acol2 = col2.rgb2colorSpace(space);
+          colConDbl3 acol1 = col1.rgb2colorSpace(space);
+          colConDbl3 acol2 = col2.rgb2colorSpace(space);
 
           // Interpolate values
           double out1, out2, out3;
@@ -2347,7 +2431,7 @@ namespace mjr {
           Note RGB returns float RGB normalized to 1.0.
           @param space The color space to convert to
           @return An RGB color with double channels. */
-      inline colSpaceDbl3 rgb2colorSpace(colorSpaceEnum space) {
+      inline colConDbl3 rgb2colorSpace(colorSpaceEnum space) {
         /* Requires: Inherits numChan>2 from getBlue. */
 
         double redF   = getRed_dbl();
@@ -2355,7 +2439,7 @@ namespace mjr {
         double blueF  = getBlue_dbl();
 
         if (space == colorSpaceEnum::RGB)
-          return colSpaceDbl3(redF, greenF, blueF);
+          return colConDbl3(redF, greenF, blueF);
 
         if ((space == colorSpaceEnum::HSL) || (space == colorSpaceEnum::HSV)) {
           clrChanT rgbMaxI = getMaxRGB();
@@ -2399,9 +2483,9 @@ namespace mjr {
             H = realWrap(H * 60.0, 360.0);
           }
           if (space == colorSpaceEnum::HSL)
-            return colSpaceDbl3(H, S, L);
+            return colConDbl3(H, S, L);
           else
-            return colSpaceDbl3(H, S, V);
+            return colConDbl3(H, S, V);
         } else {
           redF   = 100.0 * ((redF   > 0.04045) ? std::pow((redF   + 0.055) / 1.055, 2.4) : redF   / 12.92);
           greenF = 100.0 * ((greenF > 0.04045) ? std::pow((greenF + 0.055) / 1.055, 2.4) : greenF / 12.92);
@@ -2412,7 +2496,7 @@ namespace mjr {
           double Z = (0.0193 * redF + 0.1192 * greenF + 0.9505 * blueF);
 
           if (space == colorSpaceEnum::XYZ)
-            return colSpaceDbl3(X, Y, Z);
+            return colConDbl3(X, Y, Z);
 
           X /= 95.0429;
           Y /= 100.0;
@@ -2427,7 +2511,7 @@ namespace mjr {
           double B = 200.0 * (Y - Z);
 
           if (space == colorSpaceEnum::LAB)
-            return colSpaceDbl3(L, A, B);
+            return colConDbl3(L, A, B);
 
           double C = std::hypot(A, B);
 
@@ -2436,10 +2520,10 @@ namespace mjr {
             H = realWrap(atan2(B,A) * 180.0 / std::numbers::pi, 360.0);
 
           if (space == colorSpaceEnum::LCH)
-            return colSpaceDbl3(L, C, H);
+            return colConDbl3(L, C, H);
         }
 
-        return colSpaceDbl3(0.0, 0.0, 0.0);
+        return colConDbl3(0.0, 0.0, 0.0);
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute channels for given color space coordinates for the current color.

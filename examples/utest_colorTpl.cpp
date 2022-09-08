@@ -97,6 +97,24 @@
 // | DIRECT   | setChans_dbl(double c1, double c2);                                                                          |
 // | DIRECT   | setChans_dbl(double cVal);                                                                                   |
 // |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | bestRedChan()                                                                                                |
+// | DIRECT   | bestGreenChan()                                                                                              |
+// | DIRECT   | bestBlueChan()                                                                                               |
+// | DIRECT   | bestAlphaChan()                                                                                              |
+// |----------+--------------------------------------------------------------------------------------------------------------|
+// | DIRECT   | setChans_dbl(colConALLdbl dblColor)                                                                          |
+// | DIRECT   | setChans_byte(colConALLbyte byteColor)                                                                       |
+// | DIRECT   | setChansRGBA_dbl(colConRGBAdbl dblColor)                                                                     |
+// | DIRECT   | setChansRGB_dbl(colConRGBdbl dblColor)                                                                       |
+// | DIRECT   | setChansRGBA_byte(colConRGBAbyte byteColor)                                                                  |
+// | DIRECT   | setChansRGB_byte(colConRGBbyte byteColor)                                                                    |
+// | DIRECT   | getColCon_dbl()                                                                                              |
+// | DIRECT   | getColCon_byte()                                                                                             |
+// | DIRECT   | getColConRGBA_dbl()                                                                                          |
+// | DIRECT   | getColConRGB_dbl()                                                                                           |
+// | DIRECT   | getColConRGBA_byte()                                                                                         |
+// | DIRECT   | getColConRGB_byte()                                                                                          |
+// |----------+--------------------------------------------------------------------------------------------------------------|
 // | DIRECT   | getC0_byte() const;                                                                                          |
 // | DIRECT   | getC1_byte() const;                                                                                          |
 // | DIRECT   | getC2_byte() const;                                                                                          |
@@ -2171,12 +2189,27 @@ BOOST_AUTO_TEST_CASE(constr_64F) {
   BOOST_TEST_CHECK(jColor.getC2() == 0.0);
   BOOST_TEST_CHECK(jColor.getC3() == 0.0);
 
+  // magic string -- hex color string
+
   mjr::color4c64F kColor("#aaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbccccccccccccccccdddddddddddddddd");
   BOOST_TEST_CHECK(kColor.getC0() == 0.66666666666, boost::test_tools::tolerance(0.00001));
   BOOST_TEST_CHECK(kColor.getC1() == 0.73333333333, boost::test_tools::tolerance(0.00001));
   BOOST_TEST_CHECK(kColor.getC2() == 0.80000000000, boost::test_tools::tolerance(0.00001));
   BOOST_TEST_CHECK(kColor.getC3() == 0.86666666666, boost::test_tools::tolerance(0.00001));
 
+  // Init List
+
+  mjr::color4c64F oColor({1, 2, 3, 4});
+  BOOST_TEST_CHECK(oColor.getChan(0) == 1);
+  BOOST_TEST_CHECK(oColor.getChan(1) == 2);
+  BOOST_TEST_CHECK(oColor.getChan(2) == 3);
+  BOOST_TEST_CHECK(oColor.getChan(3) == 4);
+
+  mjr::color4c64F pColor({1, 2, 3});              // size mismatch -> all chans to zero
+  BOOST_TEST_CHECK(pColor.getChan(0) == 1);
+  BOOST_TEST_CHECK(pColor.getChan(1) == 2);
+  BOOST_TEST_CHECK(pColor.getChan(2) == 3);
+  BOOST_TEST_CHECK(pColor.getChan(3) == 0);
  }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2357,6 +2390,8 @@ BOOST_AUTO_TEST_CASE(constr_8b) {
   BOOST_TEST_CHECK(jColor.getC2()    == 0);
   BOOST_TEST_CHECK(jColor.getC3()    == 0);
 
+  // magic string -- hex color strings
+
   mjr::color4c8b kColor("#aabbccdd");
   BOOST_TEST_CHECK(kColor.getC0()    == 0xAA);
   BOOST_TEST_CHECK(kColor.getC1()    == 0xBB);
@@ -2381,6 +2416,31 @@ BOOST_AUTO_TEST_CASE(constr_8b) {
   BOOST_TEST_CHECK(nColor.getC2()    == 0x0);
   BOOST_TEST_CHECK(nColor.getC3()    == 0x0);
 
+  // Init List
+
+  mjr::color4c8b oColor({1, 2, 3, 4});
+  BOOST_TEST_CHECK(oColor.getChan(0) == 1);
+  BOOST_TEST_CHECK(oColor.getChan(1) == 2);
+  BOOST_TEST_CHECK(oColor.getChan(2) == 3);
+  BOOST_TEST_CHECK(oColor.getChan(3) == 4);
+
+  mjr::color4c8b pColor({1, 2, 3});
+  BOOST_TEST_CHECK(pColor.getChan(0) == 1);
+  BOOST_TEST_CHECK(pColor.getChan(1) == 2);
+  BOOST_TEST_CHECK(pColor.getChan(2) == 3);
+  BOOST_TEST_CHECK(pColor.getChan(3) == 0); // unsp -> zero
+
+  mjr::color4c8b qColor({1});
+  BOOST_TEST_CHECK(qColor.getChan(0) == 1);
+  BOOST_TEST_CHECK(qColor.getChan(1) == 0); // unsp -> zero
+  BOOST_TEST_CHECK(qColor.getChan(2) == 0); // unsp -> zero
+  BOOST_TEST_CHECK(qColor.getChan(3) == 0); // unsp -> zero
+
+  mjr::color4c8b rColor({1, 2, 3, 4, 5, 6});
+  BOOST_TEST_CHECK(rColor.getChan(0) == 1);
+  BOOST_TEST_CHECK(rColor.getChan(1) == 2);
+  BOOST_TEST_CHECK(rColor.getChan(2) == 3);
+  BOOST_TEST_CHECK(rColor.getChan(3) == 4);
  }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2561,6 +2621,8 @@ BOOST_AUTO_TEST_CASE(constr_16b) {
   BOOST_TEST_CHECK(jColor.getC2()    == 0);
   BOOST_TEST_CHECK(jColor.getC3()    == 0);
 
+  // magic string -- hex color string
+
   mjr::color4c16b kColor("#aaaabbbbccccdddd");
   BOOST_TEST_CHECK(kColor.getC0()    == 0xAAAA);
   BOOST_TEST_CHECK(kColor.getC1()    == 0xBBBB);
@@ -2585,7 +2647,21 @@ BOOST_AUTO_TEST_CASE(constr_16b) {
   BOOST_TEST_CHECK(nColor.getC2()    == 0x0);
   BOOST_TEST_CHECK(nColor.getC3()    == 0x0);
 
+  // Init List
+
+  mjr::color4c16b oColor({1, 2, 3, 4});
+  BOOST_TEST_CHECK(oColor.getChan(0) == 1);
+  BOOST_TEST_CHECK(oColor.getChan(1) == 2);
+  BOOST_TEST_CHECK(oColor.getChan(2) == 3);
+  BOOST_TEST_CHECK(oColor.getChan(3) == 4);
+
+  mjr::color4c16b pColor({1, 2, 3});              // size mismatch -> all chans to zero
+  BOOST_TEST_CHECK(pColor.getChan(0) == 1);
+  BOOST_TEST_CHECK(pColor.getChan(1) == 2);
+  BOOST_TEST_CHECK(pColor.getChan(2) == 3);
+  BOOST_TEST_CHECK(pColor.getChan(3) == 0);
  }
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(set_chans_hex_8b) {
@@ -2641,7 +2717,6 @@ BOOST_AUTO_TEST_CASE(set_chans_hex_8b) {
   BOOST_TEST_CHECK(aColor.getC1() == 0x0000);
   BOOST_TEST_CHECK(aColor.getC2() == 0x0000);
   BOOST_TEST_CHECK(aColor.getC3() == 0x0000);
-
  }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2698,7 +2773,6 @@ BOOST_AUTO_TEST_CASE(set_chans_hex_16b) {
   BOOST_TEST_CHECK(aColor.getC1() == 0x0000);
   BOOST_TEST_CHECK(aColor.getC2() == 0x0000);
   BOOST_TEST_CHECK(aColor.getC3() == 0x0000);
-
  }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3649,7 +3723,6 @@ BOOST_AUTO_TEST_CASE(set8_fromLogPackIntABRG) {
   BOOST_TEST_CHECK(dColor.getC1()    == 0xBB);
   BOOST_TEST_CHECK(dColor.getC0()    == 0xAA); // From before
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(set8_fromLogPackIntBGRA) {
@@ -4791,7 +4864,6 @@ BOOST_AUTO_TEST_CASE(isEqual_and_isEqualRGB_and_isNotEqual) {
   BOOST_TEST_CHECK(bLcolor.isEqualRGB(bRcolor)  == true);
   BOOST_TEST_CHECK(fLcolor.isEqualRGB(fRcolor)  == true);
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(dist_int) {
@@ -6513,7 +6585,7 @@ BOOST_AUTO_TEST_CASE(isClose_and_isCloseRGB) {
   BOOST_TEST_CHECK(cLcolor.isClose(cRcolor, 1.0F)  == true);  // Edge case is ill-defined for FP arithmetic, but OK here as we used numbers that are exactly representable -- might fail on other hardware.
   BOOST_TEST_CHECK(cRcolor.isClose(cLcolor, 1.0F)  == true);
 
-  BOOST_TEST_CHECK(cLcolor.isClose(cRcolor, 1.0001F)  == true); 
+  BOOST_TEST_CHECK(cLcolor.isClose(cRcolor, 1.0001F)  == true);
   BOOST_TEST_CHECK(cRcolor.isClose(cLcolor, 1.0001F)  == true);
 
   BOOST_TEST_CHECK(cLcolor.isClose(cRcolor, 2.0F)  == true);
@@ -6547,16 +6619,16 @@ BOOST_AUTO_TEST_CASE(setRGBfromColorSpace) {
 
   cColor.setToWhite();
   cColor.setRGBfromColorSpace(mjr::colorRGBA8b::colorSpaceEnum::RGB, 0, 0.5, 1);
-  BOOST_TEST_CHECK(cColor.getRed()   == mjr::colorRGBA8b::minChanVal); 
+  BOOST_TEST_CHECK(cColor.getRed()   == mjr::colorRGBA8b::minChanVal);
   BOOST_TEST_CHECK(cColor.getGreen() == mjr::colorRGBA8b::meanChanVal);
-  BOOST_TEST_CHECK(cColor.getBlue()  == mjr::colorRGBA8b::maxChanVal); 
+  BOOST_TEST_CHECK(cColor.getBlue()  == mjr::colorRGBA8b::maxChanVal);
   BOOST_TEST_CHECK(cColor.getAlpha() == 0xFF); // Not set
 
   cColor.setToBlack();
   cColor.setRGBfromColorSpace(mjr::colorRGBA8b::colorSpaceEnum::RGB, 0, 0.5, 1);
-  BOOST_TEST_CHECK(cColor.getRed()   == mjr::colorRGBA8b::minChanVal); 
+  BOOST_TEST_CHECK(cColor.getRed()   == mjr::colorRGBA8b::minChanVal);
   BOOST_TEST_CHECK(cColor.getGreen() == mjr::colorRGBA8b::meanChanVal);
-  BOOST_TEST_CHECK(cColor.getBlue()  == mjr::colorRGBA8b::maxChanVal); 
+  BOOST_TEST_CHECK(cColor.getBlue()  == mjr::colorRGBA8b::maxChanVal);
   BOOST_TEST_CHECK(cColor.getAlpha() == 0x00); // Not set
 
   for(double r=0; r<1.0; r=r+0.1)
@@ -6565,9 +6637,9 @@ BOOST_AUTO_TEST_CASE(setRGBfromColorSpace) {
         BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::RGB, r, g, b).isEqualRGB(bColor.setChansRGB_dbl(r, g, b)) == true);
 
   ////////////////////////////////////////////////////////////////////////////////
-  
+
   // HSL & HSV are pretty well tested elseware.
-  
+
   ////////////////////////////////////////////////////////////////////////////////
   //   0-100 reals   reals
   //   0.0,    0.0,    0.0               0.00000000000000,   0.00000000000000,   0.00000000000000
@@ -6821,13 +6893,13 @@ BOOST_AUTO_TEST_CASE(csFPcircular12_flt) {
 BOOST_AUTO_TEST_CASE(rgb2colorSpace) {
 
   mjr::colorRGB8b                aColor;
-  mjr::colorRGB8b::colSpaceDbl3  bColor;
+  mjr::colorRGB8b::colConDbl3  bColor;
   mjr::colorRGB32F               cColor;
-  mjr::colorRGB32F::colSpaceDbl3 dColor;
+  mjr::colorRGB32F::colConDbl3 dColor;
   mjr::colorRGB16b               eColor;
-  mjr::colorRGB16b::colSpaceDbl3 fColor;
+  mjr::colorRGB16b::colConDbl3 fColor;
   mjr::colorRGB32b               gColor;
-  mjr::colorRGB32b::colSpaceDbl3 hColor;
+  mjr::colorRGB32b::colConDbl3 hColor;
 
   ////////////////////////////////////////////////////////////////////////////////
 
@@ -6851,7 +6923,7 @@ BOOST_AUTO_TEST_CASE(rgb2colorSpace) {
 
   ////////////////////////////////////////////////////////////////////////////////
 
-  //   0.00000000000000   0.5000000000000000   1.00000000000000000 RGB 
+  //   0.00000000000000   0.5000000000000000   1.00000000000000000 RGB
   // 210.11764705181122   1.0000000000000000   0.50000000000000000 HSL
   // 210.11764705181122   1.0000000000000000   1.00000000000000000 HSV
   //  54.58302990500775  19.1017817806751750 -71.14430025970830000 LAB
@@ -6910,7 +6982,7 @@ BOOST_AUTO_TEST_CASE(rgb2colorSpace) {
   BOOST_TEST_CHECK(dColor.getC0() == 209.999996870756100, boost::test_tools::tolerance(0.00001));
   BOOST_TEST_CHECK(dColor.getC1() ==  0.4999999962747098, boost::test_tools::tolerance(0.00001));
   BOOST_TEST_CHECK(dColor.getC2() ==   0.600000002980232, boost::test_tools::tolerance(0.00001));
-                                                     
+
   dColor = cColor.rgb2colorSpace(mjr::colorRGB32F::colorSpaceEnum::HSV);
   BOOST_TEST_CHECK(dColor.getC0() == 209.999996870756100, boost::test_tools::tolerance(0.00001));
   BOOST_TEST_CHECK(dColor.getC1() ==  0.5000000000000000, boost::test_tools::tolerance(0.00001));
@@ -7740,7 +7812,7 @@ BOOST_AUTO_TEST_CASE(csPLY) {
   BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYquad::c(0.0).getGreen() == mjr::colorRGB8b::minChanVal);
   BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYquad::c(0.0).getBlue()  == mjr::colorRGB8b::minChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYquad::c(0.5).getRed()   == 0x3F); // 255 * 0.5 * 0.5 = 63.75 
+  BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYquad::c(0.5).getRed()   == 0x3F); // 255 * 0.5 * 0.5 = 63.75
   BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYquad::c(0.5).getGreen() == 0x3F);
   BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYquad::c(0.5).getBlue()  == 0x3F);
 
@@ -7894,7 +7966,96 @@ BOOST_AUTO_TEST_CASE(csCColdeRainbow_int) {
   BOOST_TEST_CHECK(bColor.getBlue()  == 0,               boost::test_tools::tolerance(0.00001));
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(conCol) {
+  // The simplicity of these functions doesn't warrant complex testing.  If the constructors & set/get work on a simple test case, then they probably work.
+
+  mjr::color8c16b aColor {mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal};
+  mjr::color8c16b bColor {mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal};
+
+  BOOST_TEST_CHECK(aColor.getColConRGB_byte().isEqual( mjr::color8c16b::colConRGBbyte {   0, 255,   0                          }) == true);
+  BOOST_TEST_CHECK(bColor.getColConRGB_byte().isEqual( mjr::color8c16b::colConRGBbyte { 255,   0, 255                          }) == true);
+  BOOST_TEST_CHECK(aColor.getColConRGBA_byte().isEqual(mjr::color8c16b::colConRGBAbyte{   0, 255,   0, 255                     }) == true);
+  BOOST_TEST_CHECK(bColor.getColConRGBA_byte().isEqual(mjr::color8c16b::colConRGBAbyte{ 255,   0, 255,   0                     }) == true);
+  BOOST_TEST_CHECK(aColor.getColConRGB_dbl().isEqual(  mjr::color8c16b::colConRGBdbl  { 0.0, 1.0, 0.0                          }) == true);
+  BOOST_TEST_CHECK(bColor.getColConRGB_dbl().isEqual(  mjr::color8c16b::colConRGBdbl  { 1.0, 0.0, 1.0                          }) == true);
+  BOOST_TEST_CHECK(aColor.getColConRGBA_dbl().isEqual( mjr::color8c16b::colConRGBAdbl { 0.0, 1.0, 0.0, 1.0                     }) == true);
+  BOOST_TEST_CHECK(bColor.getColConRGBA_dbl().isEqual( mjr::color8c16b::colConRGBAdbl { 1.0, 0.0, 1.0, 0.0                     }) == true);
+  BOOST_TEST_CHECK(aColor.getColCon_byte().isEqual(    mjr::color8c16b::colConALLbyte {   0, 255,   0, 255,   0, 255,   0, 255 }) == true);
+  BOOST_TEST_CHECK(bColor.getColCon_byte().isEqual(    mjr::color8c16b::colConALLbyte { 255,   0, 255,   0, 255,   0, 255,   0 }) == true);
+  BOOST_TEST_CHECK(aColor.getColCon_dbl().isEqual(     mjr::color8c16b::colConALLdbl  { 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0 }) == true);
+  BOOST_TEST_CHECK(bColor.getColCon_dbl().isEqual(     mjr::color8c16b::colConALLdbl  { 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0 }) == true);
+
+  mjr::color8c16b cColor;
+  mjr::color8c16b dColor;
+
+  mjr::color8c16b a3nColor {mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::minChanVal};
+  mjr::color8c16b b3xColor {mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::maxChanVal};
+  mjr::color8c16b a4nColor {mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::minChanVal};
+  mjr::color8c16b b4xColor {mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::maxChanVal};
+
+  cColor.setToCorner(mjr::color8c16b::cornerColorEnum::BLACK);
+  BOOST_TEST_CHECK(a3nColor.isEqual(cColor.setChansRGB_byte( mjr::color8c16b::colConRGBbyte {   0, 255,   0                          })) == true);
+  dColor.setToCorner(mjr::color8c16b::cornerColorEnum::WHITE);
+  BOOST_TEST_CHECK(b3xColor.isEqual(dColor.setChansRGB_byte( mjr::color8c16b::colConRGBbyte { 255,   0, 255                          })) == true);
+  cColor.setToCorner(mjr::color8c16b::cornerColorEnum::BLACK);
+  BOOST_TEST_CHECK(a4nColor.isEqual(cColor.setChansRGBA_byte(mjr::color8c16b::colConRGBAbyte{   0, 255,   0, 255                     })) == true);
+  dColor.setToCorner(mjr::color8c16b::cornerColorEnum::WHITE);
+  BOOST_TEST_CHECK(b4xColor.isEqual(dColor.setChansRGBA_byte(mjr::color8c16b::colConRGBAbyte{ 255,   0, 255,   0                     })) == true);
+  cColor.setToCorner(mjr::color8c16b::cornerColorEnum::BLACK);
+  BOOST_TEST_CHECK(a3nColor.isEqual(cColor.setChansRGB_dbl(  mjr::color8c16b::colConRGBdbl  { 0.0, 1.0, 0.0                          })) == true);
+  dColor.setToCorner(mjr::color8c16b::cornerColorEnum::WHITE);
+  BOOST_TEST_CHECK(b3xColor.isEqual(dColor.setChansRGB_dbl(  mjr::color8c16b::colConRGBdbl  { 1.0, 0.0, 1.0                          })) == true);
+  cColor.setToCorner(mjr::color8c16b::cornerColorEnum::BLACK);
+  BOOST_TEST_CHECK(a4nColor.isEqual(cColor.setChansRGBA_dbl( mjr::color8c16b::colConRGBAdbl { 0.0, 1.0, 0.0, 1.0                     })) == true);
+  dColor.setToCorner(mjr::color8c16b::cornerColorEnum::WHITE);
+  BOOST_TEST_CHECK(b4xColor.isEqual(dColor.setChansRGBA_dbl( mjr::color8c16b::colConRGBAdbl { 1.0, 0.0, 1.0, 0.0                     })) == true);
+  cColor.setToCorner(mjr::color8c16b::cornerColorEnum::BLACK);
+  BOOST_TEST_CHECK(aColor.isEqual(cColor.setChans_byte(      mjr::color8c16b::colConALLbyte {   0, 255,   0, 255,   0, 255,   0, 255 })) == true);
+  dColor.setToCorner(mjr::color8c16b::cornerColorEnum::WHITE);
+  BOOST_TEST_CHECK(bColor.isEqual(dColor.setChans_byte(      mjr::color8c16b::colConALLbyte { 255,   0, 255,   0, 255,   0, 255,   0 })) == true);
+  cColor.setToCorner(mjr::color8c16b::cornerColorEnum::BLACK);
+  BOOST_TEST_CHECK(aColor.isEqual(cColor.setChans_dbl(       mjr::color8c16b::colConALLdbl  { 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0 })) == true);
+  dColor.setToCorner(mjr::color8c16b::cornerColorEnum::WHITE);
+  BOOST_TEST_CHECK(bColor.isEqual(dColor.setChans_dbl(       mjr::color8c16b::colConALLdbl  { 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0 })) == true);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(bestNamedChan) {
+  mjr::color1c8b aColor;
+  mjr::color2c8b bColor;
+  mjr::color3c8b cColor;
+  mjr::color4c8b dColor;
+  mjr::color8c8b eColor;
+
+  BOOST_TEST_CHECK(aColor.bestRedChan()   ==  0);
+  BOOST_TEST_CHECK(bColor.bestRedChan()   ==  0);
+  BOOST_TEST_CHECK(cColor.bestRedChan()   ==  0);
+  BOOST_TEST_CHECK(dColor.bestRedChan()   ==  0);
+  BOOST_TEST_CHECK(eColor.bestRedChan()   ==  0);
+
+  BOOST_TEST_CHECK(aColor.bestGreenChan() ==  0);
+  BOOST_TEST_CHECK(bColor.bestGreenChan() ==  1);
+  BOOST_TEST_CHECK(cColor.bestGreenChan() ==  1);
+  BOOST_TEST_CHECK(dColor.bestGreenChan() ==  1);
+  BOOST_TEST_CHECK(eColor.bestGreenChan() ==  1);
+
+  BOOST_TEST_CHECK(aColor.bestBlueChan()  ==  0);
+  BOOST_TEST_CHECK(bColor.bestBlueChan()  == -1);
+  BOOST_TEST_CHECK(cColor.bestBlueChan()  ==  2);
+  BOOST_TEST_CHECK(dColor.bestBlueChan()  ==  2);
+  BOOST_TEST_CHECK(eColor.bestBlueChan()  ==  2);
+
+  BOOST_TEST_CHECK(aColor.bestAlphaChan() == -1);
+  BOOST_TEST_CHECK(bColor.bestAlphaChan() == -1);
+  BOOST_TEST_CHECK(cColor.bestAlphaChan() == -1);
+  BOOST_TEST_CHECK(dColor.bestAlphaChan() ==  3);
+  BOOST_TEST_CHECK(eColor.bestAlphaChan() ==  3);
+}
+
 #endif
+
+
 
 
 /** @endcond */
