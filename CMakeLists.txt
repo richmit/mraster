@@ -8,8 +8,8 @@ set(OpenGL_GL_PREFERENCE "GLVND") # Alternative
 
 project(MRaster CXX)
 
-set(PROJECT_VERSION_DATE  2022-09-03)
-set(PROJECT_VERSION_ID    v20.9.0rc2)
+set(PROJECT_VERSION_DATE  2022-09-08)
+set(PROJECT_VERSION_ID    v20.10.0rc3)
 mark_as_advanced(PROJECT_VERSION_DATE PROJECT_VERSION_ID)
 
 ######################################################################################################################################################
