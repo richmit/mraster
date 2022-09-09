@@ -128,6 +128,7 @@ namespace mjr {
   class ramCanvasTpl {
     public:
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Handy ramCanvasTpl converter classes. */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -179,7 +180,7 @@ namespace mjr {
       };
       //@}
 
-
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Typedefs related to template parameters */
       //@{
       typedef point2d<fltCrdT> pointFltType;            //!< Real coordinate pair type
@@ -189,6 +190,7 @@ namespace mjr {
       typedef colorT           colorType;               //!< Color type for pixels
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Typedefs related to colorT */
       //@{
       typedef typename colorT::channelType          colorChanType;           //!< colorT: Channel type
@@ -210,12 +212,14 @@ namespace mjr {
       typedef typename colorT::cmfInterpolationEnum cmfInterpolationEnum;    //!< colorT: Interpolation for color match functions
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Iterator Typedefs */
       //@{
       typedef colorT* pixelIterator; //!< pixel store iterators
       typedef colorT* iterator;      //!< pixel store iterators
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Enumerations */
       //@{
       /** Enum for real axis orientation */
@@ -250,6 +254,7 @@ namespace mjr {
                                    };
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Logical Maximum for intCrdT values */
       //@{
       const static intCrdT intCrdMax = (1ul << ((sizeof(intCrdT)*CHAR_BIT-1)/2)) - 3;        //!< maximum ro numPixX, numPixY, & numPix.
@@ -257,6 +262,7 @@ namespace mjr {
 
     private:
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Private Enumerations */
       //@{
       /** Endianness Identifiers. */
@@ -265,44 +271,43 @@ namespace mjr {
         LITTLE,  //!< Intel
         AUTO     //!< Whatever the platform uses
       };
-
-      /** Image File Types. */
-      enum class imgFileType { TGA,      //!< 24-bit (8-bit/chan) truecolor.      
-                               TIFF,     //!< TIFF file                           
-                               RAW,      //!< MJR RAW file.                       
-      };
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name intCrd Guard Valus */
       //@{
       const static intCrdT intCrdGrdMax = intCrdMax+1; //!< Large sentinel value (always off canvas)
       const static intCrdT intCrdGrdMin = -1;          //!< Small sentinel value (always off canvas)
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Canvas integer coordinates */
       //@{
-      intCrdT numPixX;     //!< Number of x pixels
-      intCrdT numPixY;     //!< Number of y pixels
-      intCrdT numPix;      //!< Number of pixels
+      intCrdT numPixX;  //!< Number of x pixels
+      intCrdT numPixY;  //!< Number of y pixels
+      intCrdT numPix;   //!< Number of pixels
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Canvas real coordinates */
       //@{
-      fltCrdT minRealX;    //!< x coord of min (real coord)
-      fltCrdT maxRealX;    //!< x coord of max (real coord)
-      fltCrdT minRealY;    //!< y coord of min (real coord)
-      fltCrdT maxRealY;    //!< y coord of max (real coord)
+      fltCrdT minRealX; //!< x coord of min (real coord)
+      fltCrdT maxRealX; //!< x coord of max (real coord)
+      fltCrdT minRealY; //!< y coord of min (real coord)
+      fltCrdT maxRealY; //!< y coord of max (real coord)
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Canvas real/integer coordinates conversion */
       //@{
-      fltCrdT pixWidX; //!< Width of a pixel (real coord)
-      fltCrdT pixWidY; //!< Height of a pixel (real coord)
+      fltCrdT pixWidX;    //!< Width of a pixel (real coord)
+      fltCrdT pixWidY;    //!< Height of a pixel (real coord)
 
       fltCrdT canvasWidX; //!< Width of the canvas (real coord)
       fltCrdT canvasWidY; //!< height of the canvas (real coord)
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Axis orientation */
       //@{
       realAxisOrientation realAxOrientationX; //!< Orientation of x axis
@@ -311,12 +316,14 @@ namespace mjr {
       intAxisOrientation  intAxOrientationY;  //!< Flip vertically
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Canvas pixel store pointers */
       //@{
-      colorT *pixels;     //!< Array to hold the color values.
-      colorT *pixelsE;    //!< Point one beyond end of pixels array.
+      colorT *pixels;  //!< Array to hold the color values.
+      colorT *pixelsE; //!< Point one beyond end of pixels array.
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Drawing defaults */
       //@{
       colorT       dfltColor; //!< Default color.
@@ -325,8 +332,10 @@ namespace mjr {
       intCrdT      dfltY;     //!< y coordinate used by default.
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Filled Triangle Utility Functions */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Utliity function behind the drawFillTriangle() functions.
           @bug Not thread safe
           @param x1 The x coordinate of the first point
@@ -342,24 +351,30 @@ namespace mjr {
       void drawFillTriangleUtl(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3, colorT c1, colorT c2, colorT c3, bool solid);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name File Writing Utility Methods */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Write an unsigned integer to a stream with given length and endianness.
           @param oStream    The ostream object to which to write
           @param endianness The endianness to use for the integer.
           @param numBytes   The number of bytes of the data parameter to use (logically the least significant bits)
           @param data       The integer to write */
       void writeUIntToStream(std::ostream& oStream, endianType endianness, int numBytes, uint64_t data);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Determine the platform's endianness. */
       endianType platformEndianness();
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Coordinate System Manipulation (i) */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Several internal parameters are maintained within this class that make conversion between real coordinates and integer coordinate very fast.  This
           function will update the internal parameters if the real coordinate sizes or the integer coordinate sizes have changed.  This function is intended for
           internal use. An example of when to use this function is right after the integer coordinate axes have changed via a call to newIntCoordsNC(). */
       void updRealCoords();
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Change the logical coordinate sizes.
           It is important that the specified coordinate sizes describe an image with FEWER pixels than the previous sizes.  This function will NOT allocate a
           new pixel array, so the previous array contents will be interpreted as valid data -- just at different coordinates.  This function causes no memory
@@ -370,30 +385,38 @@ namespace mjr {
       void newIntCoordsNC(intCrdT numPixX_p, intCrdT numPixY_p);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Plane Manipulation Methods */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Destroy the current pixel memory and reallocate a new pixel space of the given size.
           This will not clear the canvas.  IT will not reallocate the canvas unless the new size is different from the current size.  It will not allocate a
           new canvas if either argument is zero or less.  Updates coordinates.
           @param numPixX_p The width of the new canvas
           @param numPixY_p The height of the new canvas */
       void reallocCanvas(intCrdT numPixX_p, intCrdT numPixY_p);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Free the pixel memory (i) */
       void freeCanvas();
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Points the pixels pointer at a new pixel store, and updates coordinates.  Pixels pointer not changed if new_pixels is NULL */
       void rePointPixels(colorT *new_pixels, intCrdT new_numPixX, intCrdT new_numPixY);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Various helper functions */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Used to find the left and right edges of a triangle. */
       void triangleEdger(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT* pts, bool findMin);
       //@}
 
     public:
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Raster Data Import And Export. */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Extract raster data from the image, and pack it into a typical form used by imaging applications.
 
           Each pixel is packed into a 1, 2, 3, or 4 byte memory block with the location of each channel given by redChan, blueChan, greenChan, and alphaChan.
@@ -422,12 +445,16 @@ namespace mjr {
       int exportRasterData(void* &rasterData, intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, int redChan, int greenChan, int blueChan, int alphaChan);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Constructors & Assignment Operators */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** No arg constructor.  Sets numPixX and numPixY to -1, and pixels to NULL. */
       ramCanvasTpl();
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Copy constructor */
       ramCanvasTpl(const ramCanvasTpl &theCanvas);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Most commonly used constructor.
           The real coordinates have default values with -1 as the min values and 1 used as the max values.
           @param numPixX_p   Number of pixels in the X direction
@@ -437,26 +464,31 @@ namespace mjr {
           @param minRealY_p  Minimum real y coordinate value
           @param maxRealY_p  Maximum real y coordinate value */
       ramCanvasTpl(intCrdT numPixX_p, intCrdT numPixY_p, fltCrdT minRealX_p=-1, fltCrdT maxRealX_p=1, fltCrdT minRealY_p=-1, fltCrdT maxRealY_p=1);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Move constructor */
       ramCanvasTpl(ramCanvasTpl&& theCanvas);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Move assignment operator */
       ramCanvasTpl& operator=(ramCanvasTpl&& theCanvas);
-
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Destructor */
       //@{
       /** Destructor deallocates memory for the canvas. */
       ~ramCanvasTpl();
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Canvas resize and crop */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Resize the canvas to the  given size.
           Contents of new canvas may be random data.  Not guarnteed to reallocate the canvas.
           @param new_numPixX_p The width of the new canvas
           @param new_numPixY_p The height of the new canvas */
       void resizeCanvas(intCrdT new_numPixX_p, intCrdT new_numPixY_p);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Expand the current canvas.
           The current image will appear within the new canvas at the specified location.  All pixels not set by the previous image
           will be set to the given color.
@@ -466,6 +498,7 @@ namespace mjr {
           @param y1            Coord at which the top of the old image will appear in the new image
           @param color         Color to use for the background of the new image. */
       void expandCanvas(intCrdT new_numPixX_p, intCrdT new_numPixY_p, intCrdT x1 = 0, intCrdT y1 = 0, colorArgType color = colorT(0,0,0));
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** This function will crop the canvas to the given rectangular region.
           @param x1 Left, or right, edge of region to keep.
           @param x2 Right, or left, edge of region to keep.
@@ -474,6 +507,7 @@ namespace mjr {
       void cropCanvas(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Coordinate System Manipulation */
       //@{
       /** Change the real coordinate system associated with a canvas.
@@ -485,22 +519,27 @@ namespace mjr {
       void newRealCoords(fltCrdT minRealX_p, fltCrdT maxRealX_p, fltCrdT minRealY_p, fltCrdT maxRealY_p);
       //@}
 
-
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Canvas comparison */
       //@{
-
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Return true if given canvas and current canvas are the same size. */
       inline bool isSameSize(ramCanvasTpl const & inRC) const { 
         if ((numPixY == inRC.getNumPixY()) && (numPixX == inRC.getNumPixX())) 
           return true;
         else 
           return false;
       }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Return true if given canvas and current canvas are *NOT* the same size. */
       inline bool isNotSameSize(ramCanvasTpl const & inRC) const { 
         if ((numPixY == inRC.getNumPixY()) && (numPixX == inRC.getNumPixX())) 
           return false;
         else 
           return true;
       }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Return true if corresponding pixels in each canvas are "close" as defined by colorTpl::isClose(). */
       inline bool isClose(ramCanvasTpl const & inRC, colorChanType epsilon) const { 
         if (isNotSameSize(inRC))
           return false;
@@ -510,6 +549,8 @@ namespace mjr {
               return false;
         return true;
       }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Return true if corresponding pixels in each canvas are "equal" as defined by colorTpl::isEqual(). */
       inline bool isEqual(ramCanvasTpl const & inRC) const { 
         if (isNotSameSize(inRC))
           return false;
@@ -521,50 +562,60 @@ namespace mjr {
       }
       //@}
 
-
-
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Canvas Rotation and Reflection. */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Loss-less 90 degree clockwise rotation of the canvas about the center.
           The top row of pixels will be on the right side after the rotation.  The canvas will be resized as required.  The transformation is not done
           "in place", so enough memory is required to duplicate the canvas.  */
       void rotate90CW();
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Loss-less 90 degree counter clockwise rotation of the canvas about the center.
           The top row of pixels will be on the left side after the rotation.  The canvas will be resized as required.  The transformation is not done "in
           place", so enough memory is required to duplicate the canvas. */
       void rotate90CCW();
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Loss-less 180 degree rotation of the canvas about the center.
           The top row of pixels will be on the bottom side after the rotation.  The transformation is not done "in place", so enough memory is required to
           duplicate the canvas.  */
       void rotate180();
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Loss-less, horizontal flip of the canvas about the center.
           The top row of pixels will be on the bottom side after the flip.  The transformation is done "in place" so no extra RAM is required. */
       void flipHorz();
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Loss-less, vertical flip of the canvas about the center.
           The left row of pixels will be on the right side after the flip.  The transformation is done "in place" so no extra RAM is required. */
       void flipVert();
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Loss-less, vertical flip of the canvas about the center.
           The top row of pixels will be on the left side after the flip, and pixel (x,y) will be in position (y,x).  The canvas will be resized as required.
           The transformation is not done "in place", so enough memory is required to duplicate the canvas.  */
       void flipTranspose();
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Canvas Scaling. */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Scale up the image using proximal interpolation.
           For each source pixel we create an xfactor*xfactor box filled with the color of the original pixel.  The resulting images are block, but the
           histograms stay accurate.  The algorithm is very fast as it is very simple.
           @param xfactor The factor to scale up to -- must be a positive integer. */
       void scaleUpProximal(int xfactor);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Scale down using only the upper left pixel from each block.
           This will tend to highlight horizontal and vertical detail and generally sharpen up the image.  Much data is lost with this sort of scaling
           operation.
           @param xfactor The factor to scale up to -- must be a positive integer. */
       void scaleDown1pt(int xfactor);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Scale down using only the pixel with maximum luminosity in each block.
           Much like scaleDown1pt(), this will sharpen up a scaled image, but it will also tend to brighten up the image as well.
           @param xfactor The factor to scale up to -- must be a positive integer. */
       void scaleDownMax(int xfactor);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Scale down using the mean pixel value from each block.
           This creates each pixel value by averaging all of the pixels that contribute -- i.e. a mean on the xfactor*xfactor pixel corresponding to each new
           pixel.  This algorithm tends to "fuzz-up" the result -- frequently used for super-sampling.
@@ -572,9 +623,11 @@ namespace mjr {
       void scaleDownMean(int xfactor);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Geometric transformations (Reverse Mapping)
           @warning These functions are under development, and the API may change */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Geometric Transform via Radial Polynomial implemented with Reverse Mapping.
           @warning These functions are under development, and the API may change
 
@@ -588,6 +641,7 @@ namespace mjr {
                                     double Yo = 0.0,
                                     colorArgType errorColor = colorCornerEnum::GREEN,
                                     interpolationType interpMethod = interpolationType::BILINEAR);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Geometric Transform via provided mapping function implemented with Reverse Mapping.
           @warning These functions are under development, and the API may change
 
@@ -597,6 +651,7 @@ namespace mjr {
       ramCanvasTpl geomTfrmRevArb(mjr::point2d<double> (*f)(double, double),
                                   colorArgType errorColor = colorCornerEnum::GREEN,
                                   interpolationType interpMethod = interpolationType::BILINEAR);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Homogenious Affine Geometric Transform implemented with Reverse Mapping.
           @warning These functions are under development, and the API may change
 
@@ -613,8 +668,10 @@ namespace mjr {
                                   interpolationType interpMethod = interpolationType::BILINEAR);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Apply Convolution */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Apply a convolution filter.
           The implementation for this method is quite naive and super slow!  Frankly, this kind of functionality is beyond the scope of this library; however,
           sometimes you just need a convolution filter and you don't want to go to the extra effort of using yet another external library.  Pixels outside the
@@ -628,27 +685,33 @@ namespace mjr {
       void convolution(double *kernel, int kSize);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Compute Convolution Kernels */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute a Gaussian convolution kernel (use with divisor==1.0).
           @param kernel  Pointer to space for the convolution kernel.   Must have at least space for kSize*kSize doubles
           @param kSize   The width and height of the kernel.  Must be odd.
           @param sd      The standard deviation. */
       void computeConvolutionMatrixGausian(double *kernel, int kSize, double sd);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute a box blur convolution kernel (use with divisor==1.0).
           @param kernel  Pointer to space for the convolution kernel.   Must have at least space for kSize*kSize doubles
           @param kSize   The width and height of the kernel.  Must be odd. */
       void computeConvolutionMatrixBox(double *kernel, int kSize);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Iterators */
       //@{
       colorT *begin() { return pixels;  }
       colorT *end()   { return pixelsE; }
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Functional Homogeneous Pixel Transformations (point operators) */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Apply a homogeneous pixel transformation.
           Homogeneous pixel transformations don't vary based upon the coordinates of the pixel in question, but depend only upon the value of the pixel.
           Thus, a homogeneous pixel transformation can be considered as a pixel function applied to each pixel in an image.  Many standard pixel functions are
@@ -672,20 +735,25 @@ namespace mjr {
       void applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT, colorT, colorT, colorT),  colorT, colorT, colorT, colorT);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Predefined Homogeneous Pixel Transformations (point operators) */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Computes a linear grey level scale homogeneous pixel transformation.
           f(c)=(c-cmin)*maxChanVal/(cmax-cmin) where cmin is the lowest integer value assumed by any pixel color component and cmax is the largest integer value
           assumed by any pixel color component.  This function is sometimes called "auto contrast adjust" or "linear auto contrast adjust". */
       void autoHistStrech();
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Computes a, possibly different, linear grey level scale homogeneous pixel transformation on each channel of the image.
           Channel n is transformed such that f_n(c)=(c-cmin_n)*maxChanVal/(cmax_n-cmin_n) where cmin_n and cmax_n are the minimum and maximum values in channel n.
           i.e. this is the same as applying autoHistStrech independently to each channel.*/
       void autoMaxHistStrech();
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Canvas Combination Functions */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** This function takes a ramCanvasTpl and combines it with the current ramCanvasTpl using the provided binary operator.
           @param HPT Pointer to a binary operator.
           @param theCanvas This is the ramCanvasTpl to combine with.
@@ -702,32 +770,43 @@ namespace mjr {
                                  intCrdT srcX =  0, intCrdT srcY =  0);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Statistical Canvas Combination Functions (useful for CCD imaging) */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Take a list of ramCanvasTpl objects and combine them with the current ramCanvasTpl using mean.
           @param theCanvasList This is the array of ramCanvasTpl's to combine with.
           @param N The number of canvas objects. */
       void combineRamCanvasMean(ramCanvasTpl *theCanvasList, const int N);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Canvas Clearing Methods */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Clear the canvas to black.  Faster than clrCanvas().  */
       void clrCanvasToBlack();
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Clear the canvas to black.  Faster than clrCanvas().  */
       void clrCanvasToWhite();
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the given channel to the minimum value. */
       void clrCanvasChannelToMin(int chan);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the given channel to the maximum value. */
       void clrCanvasChannelToMax(int chan);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Clear the canvas.   */
       void clrCanvas();
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @overload */
       void clrCanvas(colorArgType color);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Default Point Methods */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the current default point to the given coordinates.
           @param x The x coordinate of the point to move to.
           @param y The y coordinate of the point to move to. */
@@ -737,8 +816,10 @@ namespace mjr {
       inline void moveTo(pointFltType thePoint) { moveTo(real2intX(thePoint.x), real2intY(thePoint.y)); }
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Default Color Methods */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the default color */
       inline void setDfltColor(colorArgType color)                                { dfltColor = color; }
       inline void setDfltColor(std::string cornerColor)                           { dfltColor.setToCorner(cornerColor); }
@@ -746,8 +827,10 @@ namespace mjr {
       inline void setDfltColor(colorChanType r, colorChanType g, colorChanType b) { dfltColor.setChansRGB(r, g, b); }
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Point drawing functions */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Draw a point at the specified coordinates with the specified color.
           Overloaded versions exist with various arguments.
           @param x The x coordinate of the point
@@ -768,8 +851,10 @@ namespace mjr {
       inline void drawPoint(pointFltType thePoint, colorArgType color) { drawPoint(real2intX(thePoint.x), real2intY(thePoint.y), color); }
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Line Drawing Methods */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Draw a line.
           This function is optimized for speed, and has special code for handling lines of slope 0, 1, -1, and infinity.  Line is clipped to the
           current canvas.
@@ -815,8 +900,10 @@ namespace mjr {
       inline void drawLine(fltCrdT x1, fltCrdT y1, fltCrdT x2, fltCrdT y2, colorArgType color) { drawLine( real2intX(x1), real2intY(y1), real2intX(x2), real2intY(y2), color); }
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Unfilled Triangle Drawing Methods */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Draw an un-filled triangle
           @bug Some pixels may be drawn more than once.
           @param x1 The x coordinate of the first point
@@ -848,8 +935,10 @@ namespace mjr {
       inline void drawTriangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3)                     { drawTriangle(x1, y1, x2, y2, x3, y3, dfltColor); }
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Filled Triangle Drawing Methods */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Draw a triangle filled with a solid color using a nicely optimized, horizontal scan conversion algorithm.
           @bug Triangles not entirely on the canvas are not rendered.
           @bug Not thread safe.
@@ -884,8 +973,10 @@ namespace mjr {
       inline void drawFillTriangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3)                     { drawFillTriangle(x1, y1, x2, y2, x3, y3, dfltColor); }
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Shaded Triangle Drawing Methods */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Draw a filled triangle using barycentric color interpolation.
           @bug Triangles not entirely on the canvas are not rendered.
           @bug Degenerate trainagles are not rendered
@@ -902,8 +993,10 @@ namespace mjr {
       void drawFillTriangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2, intCrdT x3, intCrdT y3, colorArgType color1, colorArgType color2, colorArgType color3);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Unfilled Rectangle Drawing Functions */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Draw an unfilled rectangle with diagonal corners located at (x1, y1) and and (x2, y2).
           Best performance will be achieved if (x1, y1) is the upper left corner, and (x2,y2) is the lower left corner and both (x1,y1) and (x2,y2) are within
           the bounds of the canvas using the specified color.
@@ -926,8 +1019,10 @@ namespace mjr {
       inline void drawRectangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2)                     { drawRectangle(x1, y1, x2, y2, dfltColor); }
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Filled Rectangle Drawing Methods */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Draw a filled rectangle with diagonal corners located at (x1, y1) and and (x2, y2).
           Best performance will be achieved if (x1, y1) is the upper left corner, and (x2,y2) is the lower left corner and both (x1,y1) and (x2,y2) are within
           the bounds of the canvas using the specified color.
@@ -950,8 +1045,10 @@ namespace mjr {
       inline void drawFillRectangle(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2)                     { drawFillRectangle(x1, y1, x2, y2, dfltColor); }
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Unfilled Circle Drawing Methods */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Draw an un-filled circle.
           The algorithm used is based upon the one presented in "A Linear Algorithm for Incremental Digital Display of Circular Arcs" published in the
           Communications of the AMC in Feb 1977 and written by J.E. Bresenham.  Bresenham's algorithm has been significantly improved by using only integer
@@ -977,8 +1074,10 @@ namespace mjr {
       inline void drawCircle(intCrdT centerX, intCrdT centerY, intCrdT radiusX)                     { drawCircle(centerX, centerY, radiusX, dfltColor); }
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Filled Circle Drawing Methods */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Draw an un-filled circle.
           The algorithm used to compute circle edge points is the same as that used in drawCircle; however, the algorithm used to fill the circle is of my own
           design.  I doubt that it is new, but I have never come across it in my readings -- not that I have looked too hard. The algorithm has the advantage
@@ -1002,8 +1101,10 @@ namespace mjr {
       inline void drawFillCircle(intCrdT centerX, intCrdT centerY, intCrdT radiusX)                     { drawFillCircle(centerX, centerY, radiusX, dfltColor); }
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Piece-Wise Linear Curve Drawing Methods */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Draw Piece-Wise Linear Curves
           @bug Some pixels may be drawn more than once.
       */
@@ -1017,8 +1118,10 @@ namespace mjr {
       void drawPLCurve(int numPoints, pointFltType *thePoints);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Hershey Glyph Rendering Utility Functions */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Render a glyph from the Hershey character set.
           The glyph is rendered with its origin at the given coordinates.  This function is intended to provide only the most basic glyph rendering.  For
           example, glyphs are rendered with the line drawing functions, and therefore are not anti-aliased.
@@ -1031,9 +1134,11 @@ namespace mjr {
       void drawHersheyGlyph(int glyphNum, intCrdT x, intCrdT y, double magX, double magY, colorArgType aColor);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name ASCII Character Rendering.
           What are font rendering functions doing in a raster graphics library? Sometimes I like to put a label on image.*/
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Render a string using Hershey ASCII Fonts.
           While the string is rendered with fixed font spacing, the Hershey fonts are not fixed width fonts.
           @param aString The string
@@ -1044,6 +1149,7 @@ namespace mjr {
           @param cex     A factor by which to expand the size of each glyph -- 1 is a good value (the name comes from R).
           @param spc     Space to jump for each charcter -- 20 for SL fonts, 23 for DL fonts, and 25 for TL fonts.  Scaled with cex. */
       void drawString(std::string aString, mjr::hershey::font aFont, intCrdT x, intCrdT y, colorArgType aColor, double cex, intCrdT spc);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Renders a filled, bounding box for the given string as rendered via drawString.
           @param aString     A string to render
           @param aFont       The font to set the default with
@@ -1056,11 +1162,14 @@ namespace mjr {
       void drawStringBox(std::string aString, mjr::hershey::font aFont, intCrdT x, intCrdT y, colorArgType stringColor, colorArgType boxColor, double cex, intCrdT spc);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name File Reading and Writing Methods */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Is libTIFF supported -- that is: will the readTIFFfile() method do anything? 
           Note that readTIFFfile() is the only method that needs libTIFF.  In particular, writeTIFFfile() works without libTIFF. */
       bool supportLibTIFF();
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** If the libTIFF library was found at build time, this function will read a TIFF file into current ramCanvas object.
 
           If libTIFF is not supported, then this function returns 32.  You can test if this method works via the supportLibTIFF() method.
@@ -1099,6 +1208,7 @@ namespace mjr {
           @retval 22 Planar configuration is invalid (not 1 or 2)
           @retval 32 TIFF read support not provided in this compile */
       int readTIFFfile(std::string fileName);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Write a TIFF format image file.  Respects integer coordinate system orientation.
 
           Why TIFF? TIFF is both broadly supported and flexible enough to represent almost every ramCanvas image type perfectly.
@@ -1135,9 +1245,10 @@ namespace mjr {
           @retval 10 Image rows are too large (too much data) for TIFF format
           @retval 11 Image is too large (too much data)  for TIFF format */
       template <class rcConT> int writeTIFFfile(std::string fileName, rcConT rcConverter, bool markAlpha);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Simplified overload for writeTIFFfile() that only requires the filename. */
       int writeTIFFfile(std::string fileName, bool markAlpha = true);
-
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Write a 24-bit (8-bit per channel) RGB, TGA format graphics file.  Respects integer coordinate system orientation.
 
           Why TGA? TGA files are not well supported by modern software.  When supported, it is normally only 8-bit RGBA.  With these limitations one might ask
@@ -1155,6 +1266,7 @@ namespace mjr {
           @retval  8 Image of zero height
           @retval  9 Image too tall for TGA format (> 2^16-1) */
       int writeTGAfile(std::string fileName);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Read RAW file
 
           @warning This function is experimental!
@@ -1196,7 +1308,8 @@ namespace mjr {
           @retval 34 Image height missing from header
           @retval 35 Image channel count missing from header
           @retval 36 Image channel depth missing from header */
-    int readRAWfile(std::string fileName);
+      int readRAWfile(std::string fileName);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Write a MJRRAW file. Respects integer coordinate system orientation.
 
           Why? This simple file format is designed to house the more exotic images this library supports, and be easily consumed by many image processing and
@@ -1247,18 +1360,22 @@ namespace mjr {
           @retval 0 The write was successful.
           @retval 1 Could not open file. */
       template <class rcConT> int writeRAWfile(std::string fileName, rcConT rcConverter);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Simplified overload for writeRAWfile() that only requires the filename. */
       int writeRAWfile(std::string fileName);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Boolean Clip Test Methods */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Determine if the given point is within the bounds of the ramCanvasTpl.
           @param x The x coordinate of the point to test
           @param y The y coordinate of the point to test
           @return Returns true if the point would be clipped. */
       inline int isCliped(fltCrdT x, fltCrdT y) const { return isCliped(real2intX(x), real2intY(y)); }
       inline int isCliped(intCrdT x, intCrdT y) const { return ((x < 0) || (y < 0) || (x >= numPixX) || (y >= numPixY)); }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Determine if the given point is within the bounds of the ramCanvasTpl.
           @param x The x coordinate of the point to test
           @param y The y coordinate of the point to test
@@ -1267,119 +1384,154 @@ namespace mjr {
       inline int isOnCanvas(intCrdT x, intCrdT y) const { return ((x >= 0) && (y >= 0) && (x < numPixX) && (y < numPixY)); }
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Coordinate Conversions. */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Convert real x coordinate to integral x coordinate
           @param x The real x coordinate value to be converted.
           @return The integer x coordinate corresponding to the given x coordinate */
       intCrdT real2intX(fltCrdT x) const;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Convert real y coordinate to integral y coordinate
           @param y The real y coordinate value to be converted.
           @return The integer y coordinate corresponding to the given y coordinate */
       intCrdT real2intY(fltCrdT y) const;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Convert integral x coordinate to real x coordinate
           @param x The integer x coordinate value to be converted.
           @return The real x coordinate corresponding to the given x coordinate */
       fltCrdT int2realX(intCrdT x);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Convert integral y coordinate to real y coordinate
           @param y The integer y coordinate value to be converted.
           @return The real y coordinate corresponding to the given y coordinate */
       fltCrdT int2realY(intCrdT y);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Coordinate Delta Conversions. */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Convert real distance on the x coordinate axis to an integral distance
           @param x The real delta x to be converted
           @return integer delta x */
       inline intCrdT realDelta2intX(fltCrdT x) const { return static_cast<intCrdT>(static_cast<fltCrdT>(x)/pixWidX); }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Convert real distance on the y coordinate axis to an integral distance
           @param y The real delta y to be converted
           @return integer delta y */
       inline intCrdT realDelta2intY(fltCrdT y) const { return static_cast<intCrdT>(static_cast<fltCrdT>(y)/pixWidY); }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Convert integral distance on the x coordinate to a real distance
           @param x The real x coordinate value to be converted.
           @return The integer x coordinate corresponding to the given x coordinate */
       inline fltCrdT intDelta2realX(intCrdT x) const { return static_cast<fltCrdT>(x)*pixWidX; }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Convert integral distance on the y coordinate to a real distance
           @param y real y coordinate value to be converted.
           @return The integer y coordinate corresponding to the given y coordinate */
       inline fltCrdT intDelta2realY(intCrdT y) const { return static_cast<fltCrdT>(y)*pixWidY; }
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Orientation of Real Coordinate Systems */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Get the real X axis orientation
           @return INVERTED means inverted with respect to the integer axis, and NATURAL otherwise.    */
       inline realAxisOrientation getRealAxOrientationX() { return realAxOrientationX; }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the real X axis orientation
           @param orientation The orientation (INVERTED or NATURAL)*/
        inline void setRealAxOrientationX(realAxisOrientation orientation) { realAxOrientationX = orientation; }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Get the real Y axis orientation
           @return INVERTED means inverted with respect to the integer axis, and NATURAL otherwise.    */
       inline realAxisOrientation getRealAxOrientationY() { return realAxOrientationX; }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the real Y axis orientation
           @param orientation The orientation (INVERTED or NATURAL) */
       inline void setRealAxOrientationY(realAxisOrientation orientation) { realAxOrientationY = orientation; }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the real axis orientation to default (NATURAL for both X and Y axes) */
       inline void setRealAxisDefaultOrientation() { setRealAxOrientationX(realAxisOrientation::NATURAL); setRealAxOrientationY(realAxisOrientation::NATURAL); }
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Drawing Mode */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Get the current drawing mode.
        @return The drawing mode */
       inline drawModeType getDrawMode()                         { return drawMode; }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the current drawing mode
           NOOP if enableDrawModes is false.
           @param newDrawMode The drawing mode */
       inline void         setDrawMode(drawModeType newDrawMode) { if (enableDrawModes) drawMode = newDrawMode; }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the default draw mode */
       inline void         setDefaultDrawMode()                  { setDrawMode(drawModeType::SET); }
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Orientation of Integer Coordinate Systems */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Get the integer X axis orientation
           @return NATURAL means increasing to the right. */
       inline intAxisOrientation getIntAxOrientationX() { return intAxOrientationX; }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Is the integer X axis NATURAL?
           @return true means increasing to the right. */
       inline bool isIntAxOrientationNaturalX() { return (intAxOrientationX == intAxisOrientation::NATURAL); }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the integer X axis orientation
           @param orientation The orientation (INVERTED or NATURAL) */
       inline void setIntAxOrientationX(intAxisOrientation orientation) { intAxOrientationX = orientation; }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Get the integer Y axis orientation
           @return NATURAL means increasing in the upward direction. */
       inline bool isIntAxOrientationNaturalY() { return (intAxOrientationY == intAxisOrientation::NATURAL); }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Is the integer Y axis orientation NATURAL?
           @return NATURAL means increasing in the upward direction. */
       inline intAxisOrientation getIntAxOrientationY() { return intAxOrientationY; }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the integer Y axis orientation
           @param orientation The orientation (INVERTED or NATURAL) */
       inline void setIntAxOrientationY(intAxisOrientation orientation) { intAxOrientationY = orientation; }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the integer axis orientation to default (NATURAL for both X and Y axes) */
       inline void setIntAxisDefaultOrientation() { setIntAxOrientationX(intAxisOrientation::NATURAL); setIntAxOrientationY(intAxisOrientation::NATURAL); }
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Accessor Methods */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @return The number of pixels in the x direction. */
       inline intCrdT getNumPixX() const { return numPixX; }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @return The number of pixels in the y direction. */
       inline intCrdT getNumPixY() const { return numPixY; }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns a pointer to the raw pixel store.
           This generally violates the ramCanvasTpl object interface; however, this may be required for performance.
           @return The number a pointer to the raw pixel store. */
       colorT *getPixels() { return pixels; }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Return a clone (a copy) of the raw pixel store.
           This function copies the internal pixel store and returns a pointer to this copy.
           @return Pointer to a copy of the raw pixel store. */
       colorT *clonePixels();
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Real Coordinate Accessor Methods */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       fltCrdT getMinRealX()   { return minRealX;    } //!< x coord of min (real coord)
       fltCrdT getMaxRealX()   { return maxRealX;    } //!< x coord of max (real coord)
       fltCrdT getMinRealY()   { return minRealY;    } //!< y coord of min (real coord)
@@ -1390,8 +1542,10 @@ namespace mjr {
       fltCrdT getCanvasWidY() { return canvasWidY;  } //!< height of the display(real coord)
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Pixel Value Accessor Methods */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns a copy of the color at the given coordinates */
       colorT getPxColor(intCrdT x, intCrdT y) const;
       inline colorT getPxColor(fltCrdT x, fltCrdT y)  const { return getPxColor(real2intX(x), real2intY(y)); }
@@ -1399,50 +1553,41 @@ namespace mjr {
       inline colorT getPxColor(pointFltType thePoint) const { return getPxColor(thePoint.x, thePoint.y); }
       //@}
 
-      /** Extract a sub-canvas.
-          The new ramCanvasTpl object is \a width pixels wide and \a height pixels tall.  The pixel values in the new canvas will be the same as the selected
-          pixels from the current ramCanvasTpl.  The returned ramCanvasTpl will have the default color and points of the current ramCanvasTpl.  If the current
-          ramCanvasTpl has a default point is outside of the selected ample, the returned ramCanvasTpl will have it's default point set to (0,0).  Clipping
-          will be performed if required. If width is zero, then the width of the returned ramCanvasTpl will be from the given x coordinate to the far right
-          edge.  If the height is zero, then the height of the returned ramCanvasTpl will be from the given y coordinate to lower edge of the current
-          ramCanvasTpl.  An argument list of all zeros will return a copy of the current ramCanvasTpl in it's entirety.
-          @param x The x coordinate of the upper left pixel to query
-          @param y The y coordinate of the upper left pixel to query
-          @param width The number of x pixels to query
-          @param height The number of y pixels to query
-          @return A ramCanvasTpl pointer
-          @retval NULL If no pixels are sampled.  This will happen, for example, if the x and y coordinates given are beyond the ramCanvasTpl. */
-      ramCanvasTpl *getSubCanvas(intCrdT x, intCrdT y, intCrdT width, intCrdT height);
-      //@}
-
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Pixel Value Accessor with Interpolation Methods */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns the interpolated color value at the the given coordinates using the given interpolation method.
           @param x The x coordinate (the type is double, but the coordinate is in the integer coordinate space.  i.e. x=1.5 is between x=1 and x=2)
           @param y The y coordinate
           @param interpMethod The interpolation method (default: interpolationType::BILINEAR)
           @return Interpolated color value */
       colorT getPxColorInterpolate(double x, double y, interpolationType interpMethod = interpolationType::BILINEAR);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns the bilinear interpolated color value at the the given coordinates.
           @param x The x coordinate (the type is double, but the coordinate is in the integer coordinate space.  i.e. x=1.5 is between x=1 and x=2)
           @param y The y coordinate
           @return Interpolated color value */
       colorT getPxColorInterpBLin(double x, double y);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns the truncated interpolated color value at the the given coordinates.
           @param x The x coordinate (the type is double, but the coordinate is in the integer coordinate space.  i.e. x=1.5 is between x=1 and x=2)
           @param y The y coordinate
           @return Interpolated color value */
       colorT getPxColorInterpTrunc(double x, double y);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns the nearest neighbor  interpolated color value at the the given coordinates.
           @param x The x coordinate (the type is double, but the coordinate is in the integer coordinate space.  i.e. x=1.5 is between x=1 and x=2)
           @param y The y coordinate
           @return Interpolated color value */
       colorT getPxColorInterpNear(double x, double y);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns the average 4 interpolated color value at the the given coordinates.
           @param x The x coordinate (the type is double, but the coordinate is in the integer coordinate space.  i.e. x=1.5 is between x=1 and x=2)
           @param y The y coordinate
           @return Interpolated color value */
       colorT getPxColorInterpAvg4(double x, double y);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns the average 9 interpolated color value at the the given coordinates.
           @param x The x coordinate (the type is double, but the coordinate is in the integer coordinate space.  i.e. x=1.5 is between x=1 and x=2)
           @param y The y coordinate
@@ -1450,31 +1595,37 @@ namespace mjr {
       colorT getPxColorInterpAvg9(double x, double y);
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name NC stands for No Checks and No Clipping */
       /** The functions here work in a similar way to the non-NC functions, but with no clipping or bounds checking.  Thus, if an argument would cause
           something to be drawn beyond the bounds of the ramCanvasTpl, a core dump will most certainly result.  The intent is to provide less overhead for
           very careful code that handles clipping and error checking by itself -- a good line drawing algorithm for example. */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Draw a point with no clipping or bounds checking.
           @param x The x coordinate of the point to be drawn
           @param y The y coordinate of the point to be drawn
           @param color The color to draw the point. */
       void drawPointNC(intCrdT x, intCrdT y, colorArgType color);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Get the default point to the specified coordinates with no clipping or bounds checking.
           @param x The x coordinate of the point
           @param y The y coordinate of the point */
       inline colorT  getPxColorNC(intCrdT x, intCrdT y) const { return pixels[numPixX * y + x]; }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns a reference to the color object for the given pixel with no clipping or bounds checking.
           @param x The x coordinate of the point
           @param y The y coordinate of the point
           @return Reference to the color object associated with the specified point */
       inline colorT& getPxColorRefNC(intCrdT x, intCrdT y) const { return pixels[numPixX * y + x]; }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Draw a horizontal line with no clipping or bounds checking.
           @param xMin The MINIMUM x coordinate of the line to be drawn
           @param xMax The MAXIMUM x coordinate of the line to be drawn
           @param yConst The y coordinate at which the line is to be drawn
           @param color The color to draw the line */
       inline void drawHorzLineNC(intCrdT xMin, intCrdT xMax, intCrdT yConst, colorArgType color) { for(intCrdT x=xMin;x<=xMax;x++) drawPointNC(x, yConst, color); }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Draw a vertical line with no clipping or bounds checking.
           @param yMin The MINIMUM y coordinate of the line to be drawn
           @param yMax The MAXIMUM y coordinate of the line to be drawn
@@ -1483,8 +1634,10 @@ namespace mjr {
       inline void drawVertLineNC(intCrdT yMin, intCrdT yMax, intCrdT xConst, colorArgType color) { for(intCrdT y=yMin;y<=yMax;y++) drawPointNC(xConst, y, color); }
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name S stands for Simple */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Draw a point without any special drawing options.
           It simply sets the pixel to the given color.  In addition, no clipping or bounds checking is performed.  Thus, if an argument would cause something
           to be drawn beyond the bounds of the ramCanvasTpl, a segfault will most certainly result.  The intent is to provide a less overhead for very
@@ -1496,15 +1649,18 @@ namespace mjr {
       inline void drawPointS(intCrdT x, intCrdT y, colorArgType color) { pixels[numPixX * y + x] = color; }
       //@}
 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Canvas Level Colorization.
-       These are tools designed to make things like escape time fractals very easy to create.*/
+       These are tools designed to make things like escape time fractals very easy to create.
+
+       @warning Experimental!! These functions will likely change! */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       void colorizeFltCanvas(std::function<colorT (fltCrdT, fltCrdT)> cFun);
       void colorizeFltCanvas(std::function<colorT (pointFltType)> cFun);
 
       void colorizeIntCanvas(std::function<colorT (intCrdT, intCrdT)> cFun);
       void colorizeIntCanvas(std::function<colorT (pointIntType)> cFun);
-
       //@}
 
   };
@@ -2794,29 +2950,6 @@ namespace mjr {
       return pixels[numPixX * y + x];
     else
       return colorT().setToBlack();
-  }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
-  requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>*
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::getSubCanvas(intCrdT x, intCrdT y, intCrdT width, intCrdT height) {
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes> *subRamCanvas =
-      new ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>(width, height);
-
-    intCrdT xMax = width+x;
-    if(xMax>numPixX)
-      xMax = numPixX;
-
-    intCrdT yMax = height+y;
-    if(yMax>numPixY)
-      yMax = numPixY;
-
-    for(intCrdT yi=y; yi<yMax; yi++)
-      for(intCrdT xi=x; xi<xMax; xi++)
-        subRamCanvas->drawPointNC(xi-x, yi-y, getPxColor(xi, yi));
-
-    return subRamCanvas;
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
