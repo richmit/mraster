@@ -35,22 +35,22 @@
 
 #include <algorithm>                                                     /* STL algorithm           C++11    */
 #include <array>                                                         /* array template          C++11    */
+#include <bit>                                                           /* STL bit manipulation    C++20    */
 #include <climits>                                                       /* std:: C limits.h        C++11    */
 #include <cmath>                                                         /* std:: C math.h          C++11    */
 #include <complex>                                                       /* Complex Numbers         C++11    */
+#include <concepts>                                                      /* Concepts library        C++20    */
 #include <cstring>                                                       /* std:: C string.h        C++11    */
 #include <iomanip>                                                       /* C++ stream formatting   C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
 #include <limits>                                                        /* C++ Numeric limits      C++11    */
+#include <span>                                                          /* STL spans               C++20    */
 #include <sstream>                                                       /* C++ string stream       C++      */
 #include <string>                                                        /* C++ strings             C++11    */
 #include <tuple>                                                         /* STL tuples              C++11    */
 #include <type_traits>                                                   /* C++ metaprogramming     C++11    */
-#include <vector>                                                        /* STL vector              C++11    */ 
-#include <concepts>                                                      /* Concepts library        C++20    */
 #include <utility>                                                       /* STL Misc Utilities      C++11    */
-#include <bit>                                                           /* STL bit manipulation    C++20    */
-#include <span>
+#include <vector>                                                        /* STL vector              C++11    */ 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /** Set to 1 to look for 128-bit integer types, and 0 to not look for them.

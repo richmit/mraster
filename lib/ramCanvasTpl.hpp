@@ -44,11 +44,11 @@
 #include <iomanip>                                                       /* C++ stream formatting   C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
 #include <sstream>                                                       /* C++ string stream       C++      */
+#include <stdexcept>                                                     /* Exceptions              C++11    */
 #include <string>                                                        /* C++ strings             C++11    */
 #include <type_traits>                                                   /* C++ metaprogramming     C++11    */
 #include <utility>                                                       /* STL Misc Utilities      C++11    */
-#include <vector>                                                        /* STL vector              C++11    */
-#include <stdexcept>
+#include <vector>                                                        /* STL vector              C++11    */ 
 
 #include "color.hpp"
 #include "hersheyFont.hpp"
@@ -675,11 +675,11 @@ namespace mjr {
       /** @name Predefined Homogeneous Pixel Transformations (point operators) */
       //@{
       /** Computes a linear grey level scale homogeneous pixel transformation.
-          f(c)=(c-cmin)*255/(cmax-cmin) where cmin is the lowest integer value assumed by any pixel color component and cmax is the largest integer value
+          f(c)=(c-cmin)*maxChanVal/(cmax-cmin) where cmin is the lowest integer value assumed by any pixel color component and cmax is the largest integer value
           assumed by any pixel color component.  This function is sometimes called "auto contrast adjust" or "linear auto contrast adjust". */
       void autoHistStrech();
       /** Computes a, possibly different, linear grey level scale homogeneous pixel transformation on each channel of the image.
-          Channel n is transformed such that f_n(c)=(c-cmin_n)*255/(cmax_n-cmin_n) where cmin_n and cmax_n are the minimum and maximum values in channel n.
+          Channel n is transformed such that f_n(c)=(c-cmin_n)*maxChanVal/(cmax_n-cmin_n) where cmin_n and cmax_n are the minimum and maximum values in channel n.
           i.e. this is the same as applying autoHistStrech independently to each channel.*/
       void autoMaxHistStrech();
       //@}

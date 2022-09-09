@@ -4,7 +4,7 @@
  @file      BurningShip.cpp
  @author    Mitch Richling http://www.mitchr.me/
  @date      2022-09-08
- @brief     Burning Ship Fractal@EOL
+ @brief     Burning Ship Fractal.@EOL
  @std       C++20
  @see       https://en.wikipedia.org/wiki/Burning_Ship_fractal
  @copyright 
@@ -39,7 +39,6 @@
 #include <chrono>                                                        /* time                    C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
 
-
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 typedef mjr::color3c8b::csCC_tpl<mjr::color3c8b::cornerColorEnum::BLUE, 
                                  mjr::color3c8b::cornerColorEnum::RED, 
@@ -50,29 +49,32 @@ typedef mjr::color3c8b::csCC_tpl<mjr::color3c8b::cornerColorEnum::BLUE,
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int NUMITR = 1024; 
-  //mjr::ramCanvas3c8b theRamCanvas(7680/4, 7680/4, -1.5, 2.7, -1.25, 2.49);
-  //mjr::ramCanvas3c8b theRamCanvas(7680/4, 7680/4, 1.6, 1.9, -0.089, 0.2);
-  mjr::ramCanvas3c8b theRamCanvas(7680/4, 7680/4, 1.715, 1.795, -0.022, 0.086);
-  //mjr::ramCanvas3c8b theRamCanvas(7680/4, 7680/4, 1.802, 1.80287, -0.002, 0.002);
-  //mjr::ramCanvas3c8b theRamCanvas(7680/4, 7680/4, -0.3743, -0.3735, -0.0876, -0.0866);
+  const int MAXMAG = 15; 
+  const int IMGSIZ = 7680/4;
+  //mjr::ramCanvas3c8b escRamCanvas(IMGSIZ, IMGSIZ, -1.5, 2.7, -1.25, 2.49);                 // Entire fractal
+  //mjr::ramCanvas3c8b escRamCanvas(IMGSIZ, IMGSIZ, 1.6, 1.9, -0.089, 0.2);                  // The horizon zoom
+  mjr::ramCanvas3c8b escRamCanvas(IMGSIZ, IMGSIZ, 1.715, 1.795, -0.022, 0.086);              // The classic zoom
+  //mjr::ramCanvas3c8b escRamCanvas(IMGSIZ, IMGSIZ, 1.802, 1.80287, -0.002, 0.002);          // Columns to heaven
+  //mjr::ramCanvas3c8b escRamCanvas(IMGSIZ, IMGSIZ, -0.3743, -0.3735, -0.0876, -0.0866);     // Deep zoom.  BATS!
 
-  for(int y=0;y<theRamCanvas.getNumPixY();y++) {
-    for(int x=0;x<theRamCanvas.getNumPixX();x++) {
-      double cx = theRamCanvas.int2realX(x), cy = theRamCanvas.int2realY(y);
+  for(int y=0;y<escRamCanvas.getNumPixY();y++) {
+    for(int x=0;x<escRamCanvas.getNumPixX();x++) {
+      double cx = escRamCanvas.int2realX(x), cy = escRamCanvas.int2realY(y);
       double zx = 0.0, zy = 0.0;
       double t;
       int count = 0;
-      while(((zx*zx+zy*zy)<14) && (count<=NUMITR)) {
+      while(((zx*zx+zy*zy)<MAXMAG) && (count<=NUMITR)) {
         count++;
-        t = zx*zx - zy*zy - cx;
+        t  = zx*zx - zy*zy     - cx;
         zy = std::abs(2*zx*zy) - cy;
         zx = t;
       }
-      if(count < NUMITR)
-        theRamCanvas.drawPoint(x, y, csCCbs::c(mjr::numberWrap(static_cast<mjr::ramCanvas3c8b::csIntType>(count*10), 621)));
+      if(count < NUMITR) 
+        escRamCanvas.drawPoint(x, y, csCCbs::c(static_cast<std::decltype(escRamCanvas)::csIntType>(count*10)));
     }
   }
-  theRamCanvas.writeTIFFfile("BurningShip.tiff");
+  // Escape Time Coloring
+  escRamCanvas.writeTIFFfile("BurningShip.tiff");
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
