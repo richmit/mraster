@@ -7,11 +7,12 @@ requires no external dependencies, and is quite fast.
 
 Some examples of what can be done with *MRaster*:
 
-  -  [[http://www.mitchr.me/SS/mandelbrot/index.html][Mandelbrot Mountains]]
-  -  [[http://www.mitchr.me/SS/newton/index.html][Newton Fractal]]
-  -  [[http://www.mitchr.me/SS/swirl/index.html][Peter de Jong Fractal]]
-  -  [[http://www.mitchr.me/SS/sic/index.html][Symmetric Fractals]]
-  -  [[http://www.mitchr.me/SS/ChaosGame/index.html][Chaos Game]]
+  -  [[https://www.mitchr.me/SS/mandelbrot/index.html][Mandelbrot Mountains]]
+  -  [[https://www.mitchr.me/SS/newton/index.html][Newton Fractal]]
+  -  [[https://www.mitchr.me/SS/BurningShip/index.html][Burning Ship]]
+  -  [[https://www.mitchr.me/SS/swirl/index.html][Peter de Jong Fractal]]
+  -  [[https://www.mitchr.me/SS/sic/index.html][Symmetric Fractals]]
+  -  [[https://www.mitchr.me/SS/ChaosGame/index.html][Chaos Game]]
   -  [[https://www.mitchr.me/SS/AGasket/index.html][Apollonian Gasket]]
   -  [[https://www.mitchr.me/SS/circles2/index.html][Circle Art]]
   -  [[https://www.mitchr.me/SS/desktops/index.html][Some desktop backgrounds]]
