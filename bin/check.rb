@@ -14,6 +14,7 @@ deps = { "#{mrsrc}/examples/BurningShip.cpp"              => "#{homed}/world/WWW
          "#{mrsrc}/examples/newton_max_mod.cpp"           => "#{homed}/world/WWW/site/SS/newton/index.org",
          "#{mrsrc}/examples/multibrotMovie.cpp"           => "#{homed}/world/WWW/site/SS/multibrot/index.org",
          "#{mrsrc}/examples/multibrotSnaps.cpp"           => "#{homed}/world/WWW/site/SS/multibrot/index.org",
+         "#{mrsrc}/examples/tricorn.cpp"                  => "#{homed}/world/WWW/site/SS/tricorn/index.org",
          "#{mrsrc}/README.org"                            => "#{mrsrc}/docs/index.org",
          "#{mrsrc}/lib/hello.cpp"                         => "#{mrsrc}/docs/QuickStart.org"
        };
