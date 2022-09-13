@@ -33,11 +33,6 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-#include <complex>                                                       /* Complex Numbers         C++11    */
-#include <chrono>                                                        /* time                    C++11    */
-#include <iostream>                                                      /* C++ iostream            C++11    */
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   mjr::ramCanvas1c16b theRamCanvas(7680, 7680, 2.5, 4, -0.1, 1.1);

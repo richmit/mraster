@@ -33,10 +33,6 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-#include <chrono>                                                        /* time                    C++11    */
-#include <iostream>                                                      /* C++ iostream            C++11    */
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   int numRamps = 7, rampGap = 10, rampWidth = 150, maxColors = 1536, textWide = 600;

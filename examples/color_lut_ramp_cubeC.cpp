@@ -33,17 +33,16 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-#include <chrono>                                                        /* time                    C++11    */
-#include <iostream>                                                      /* C++ iostream            C++11    */
-
 #define BMP i++; y1 = rampWidth + i * rampWidth; y2 = rampWidth + i * rampWidth + rampWidth - rampGap; yt = (y1+y2)/2;
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 typedef mjr::color3c8b              ct;
 typedef mjr::color3c8b::csIntType   csIt;
 typedef mjr::color3c8b::csNatType   csNt;
 typedef mjr::color3c8b::csFltType   csFt;
 typedef mjr::hershey::font          hft;
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   int numRamps = 30, rampGap = 5, rampWidth = 50, textWide = 600, maxColors = 1600;

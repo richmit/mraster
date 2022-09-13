@@ -37,12 +37,6 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-#include <chrono>                                                        /* time                    C++11    */
-#include <complex>                                                       /* Complex Numbers         C++11    */
-#include <iostream>                                                      /* C++ iostream            C++11    */
-#include <vector>                                                        /* STL vector              C++11    */
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 /** Enum identifying why iteration stopped */
 enum class whyStopNH { DIVZERO,   //!< Divide by zero (zeroTol)
                        TOOBIG,    //!< Iterate got too big (> escapeMod)
@@ -56,7 +50,7 @@ int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const double escapeMod  = -32.0;
   const int    MaxCount   = 64;
-  const double  zeroTol    = 0.0001;
+  const double zeroTol    = 0.0001;
   const int    numToKeep  = 5;
   whyStopNH    why;
   //mjr::ramCanvas3c8b theRamCanvas(3840/1, 2160/1, 4.0, 8.0, -2.0, 2.0);

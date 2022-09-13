@@ -33,16 +33,15 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-#include <chrono>                                                        /* time                    C++11    */
-#include <iostream>                                                      /* C++ iostream            C++11    */
-
 #define BMP i++; y1 = rampWidth + i * rampWidth; y2 = rampWidth + i * rampWidth + rampWidth - rampGap; yt = (y1+y2)/2;
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 typedef mjr::color3c8b              ct;
 typedef mjr::color3c8b::csIntType   csIt;
 typedef mjr::color3c8b::csNatType   csNt;
 typedef mjr::hershey::font          hft;
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   int numRamps = 30, rampGap = 5, rampWidth = 50, textWide = 600, maxColors = 1536;
@@ -50,9 +49,9 @@ int main(void) {
   mjr::ramCanvas3c8b theRC(maxColors+2*rampGap+textWide, (2+numRamps)*rampWidth+rampGap);
   mjr::ramCanvas3c8b::colorType aColor(255, 255, 255);
 
-   for(int x=0; x<maxColors+rampGap;x=x+256)
-     theRC.drawLine(x, 0, x, theRC.getNumPixY()-1, aColor);
-   i=-1;
+  for(int x=0; x<maxColors+rampGap;x=x+256)
+    theRC.drawLine(x, 0, x, theRC.getNumPixY()-1, aColor);
+  i=-1;
 
   BMP; for(csIt x=0;x<ct::csCCdiag01::numC;             x++) theRC.drawLine(x, y1, x, y2, ct::csCCdiag01::c(x));              theRC.drawString("  csCCdiag01",              hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
   BMP; for(csIt x=0;x<ct::csPGrey3x::numC;              x++) theRC.drawLine(x, y1, x, y2, ct::csPGrey3x::c(x));               theRC.drawString("  csPGrey3x",               hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 

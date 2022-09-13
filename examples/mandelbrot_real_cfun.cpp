@@ -33,10 +33,6 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-#include <chrono>                                                        /* time                    C++11    */
-#include <iostream>                                                      /* C++ iostream            C++11    */
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 mjr::ramCanvas3c8b::colorType mandelbrot_esc_fun(mjr::ramCanvas3c8b::coordFltType x, mjr::ramCanvas3c8b::coordFltType y) {
   int count;
   const int NUMITR = 256;

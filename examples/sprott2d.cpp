@@ -36,11 +36,6 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-#include <chrono>                                                        /* time                    C++11    */
-#include <complex>                                                       /* Complex Numbers         C++11    */
-#include <iostream>                                                      /* C++ iostream            C++11    */
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int BSIZ = 7680/8;

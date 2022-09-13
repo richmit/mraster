@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-09-06 Tue 12:34 -->
+<!-- 2022-09-12 Mon 11:00 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster Quick Start</title>
@@ -234,43 +234,49 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org9a526fd">1. Quick Start (The Absolute Minimum)</a>
+<li><a href="#qs-min">1. Quick Start (The Absolute Minimum)</a>
 <ul>
-<li><a href="#org7b8e650">1.1. FAQ for people not using <code>cmake</code></a>
+<li><a href="#qs-faq">1.1. FAQ for people not using <code>cmake</code></a>
 <ul>
-<li><a href="#org36301d1">1.1.1. Q: How do I get advanced TIFF reader support without <code>cmake</code>?</a></li>
-<li><a href="#org543f246">1.1.2. Q2: What's up with "<code>-std=gcc++20</code>" instead of "<code>-std=c++20</code>"?</a></li>
-<li><a href="#orge248d80">1.1.3. Q3: I got some weird errors about <code>bit_cast</code>.  What's up?</a></li>
-<li><a href="#org0962ad9">1.1.4. Q4: I got some weird errors about complex numbers and <code>std::pow</code>? What's up?</a></li>
+<li><a href="#qs-faq-q1">1.1.1. Q1: How do I get advanced TIFF reader support without <code>cmake</code>?</a></li>
+<li><a href="#qs-faq-q2">1.1.2. Q2: What's up with "<code>-std=gcc++20</code>" instead of "<code>-std=c++20</code>"?</a></li>
+<li><a href="#qs-faq-q3">1.1.3. Q3: I got some weird errors about <code>bit_cast</code>.  What's up?</a></li>
+<li><a href="#qs-faq-q4">1.1.4. Q4: I got some weird errors about complex numbers and <code>std::pow</code>? What's up?</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org8521280">2. Playing With <b><code>MRaster</code></b>'s Example Programs</a></li>
-<li><a href="#org6a06296">3. Using <b><code>MRaster</code></b>'s <code>cmake</code> Configuration</a></li>
-<li><a href="#org04724d4">4. Platform Notes</a>
+<li><a href="#examples">2. Playing With <b><code>MRaster</code></b>'s Example Programs</a></li>
+<li><a href="#cmake-coopt">3. Using <b><code>MRaster</code></b>'s <code>cmake</code> Configuration</a></li>
+<li><a href="#platform-notes">4. Platform Notes</a>
 <ul>
-<li><a href="#org6caef49">4.1. Windows 11 with MSYS2 GCC 12.1.0</a></li>
-<li><a href="#org44b5907">4.2. Windows 11 with MSYS2 clang 14.0.6</a></li>
-<li><a href="#orgcc6a2c6">4.3. Windows 11 with MSYS2 cmake and Visual Studio 2022 Community Edition</a></li>
-<li><a href="#org709e487">4.4. Windows 11 with Visual Studio 2022 Community Edition</a></li>
-<li><a href="#org8751508">4.5. Mac OS X Monterey 12.5.1 with Homebrew GCC 12.1.0</a></li>
-<li><a href="#org6e03881">4.6. Mac OS X Monterey 12.5.1 with Apple clang 13.1.6</a></li>
-<li><a href="#orge8a4e2d">4.7. Debian bullseye 11.4</a>
+<li><a href="#platform-notes-m2w11gcc12">4.1. Windows 11 with MSYS2 GCC 12.1.0</a></li>
+<li><a href="#platform-notes-m2w11clang14">4.2. Windows 11 with MSYS2 clang 14.0.6</a></li>
+<li><a href="#platform-notes-m2w11vs2022">4.3. Windows 11 with MSYS2 cmake and Visual Studio 2022 Community Edition</a></li>
+<li><a href="#platform-notes-w11vs2022">4.4. Windows 11 with Visual Studio 2022 Community Edition</a></li>
+<li><a href="#platform-notes-osx1151hbGCC12">4.5. Mac OS X Monterey 12.5.1 with Homebrew GCC 12.1.0</a></li>
+<li><a href="#platform-notes-osx1151aclang1316">4.6. Mac OS X Monterey 12.5.1 with Apple clang 13.1.6</a></li>
+<li><a href="#platform-notes-lindeb114">4.7. Debian bullseye 11.4</a>
 <ul>
-<li><a href="#orgf908201">4.7.1. Debian bullseye 11.4 with GCC 10.2.1</a></li>
-<li><a href="#orga3a897b">4.7.2. Debian bullseye 11.4 with GCC 11.3</a></li>
+<li><a href="#platform-notes-lindeb114gcc1021">4.7.1. Debian bullseye 11.4 with GCC 10.2.1</a></li>
+<li><a href="#platform-notes-lindeb114gcc113">4.7.2. Debian bullseye 11.4 with GCC 11.3</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li><a href="#gbl-faq">5. FAQ</a>
+<ul>
+<li><a href="#gbl-faq-q1">5.1. Q1: What's up with "<code>-std=gcc++20</code>" instead of "<code>-std=c++20</code>"?</a></li>
+<li><a href="#gbl-faq-q2">5.2. Q2: The examples seem to be missing standard/system include files</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org9a526fd" class="outline-2">
-<h2 id="org9a526fd"><span class="section-number-2">1.</span> Quick Start (The Absolute Minimum)</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-qs-min" class="outline-2">
+<h2 id="qs-min"><span class="section-number-2">1.</span> Quick Start (The Absolute Minimum)</h2>
+<div class="outline-text-2" id="text-qs-min">
 <p>
 If you are interested playing around with <b><code>MRaster</code></b> as quickly as possible, then this section is for you.
 </p>
@@ -280,7 +286,7 @@ The first step is to download <b><code>MRaster</code></b>.  You can grab the <a 
 clone the repository with GIT like this:
 </p>
 
-<pre class="example" id="orgf75a4db">
+<pre class="example" id="orgcfc6234">
 git clone 'https://github.com/richmit/mraster.git'
 </pre>
 
@@ -316,7 +322,7 @@ Now you can run it, and take a look at the file it created ("<code>hello.tiff</c
 </p>
 
 
-<div id="org7732d84" class="figure">
+<div id="org158e217" class="figure">
 <p><img src="./pics/quick/hello.png" alt="hello.png" width="800" align="center" />
 </p>
 </div>
@@ -326,13 +332,14 @@ That's it!  How easy was that?
 </p>
 </div>
 
-<div id="outline-container-org7b8e650" class="outline-3">
-<h3 id="org7b8e650"><span class="section-number-3">1.1.</span> FAQ for people not using <code>cmake</code></h3>
-<div class="outline-text-3" id="text-1-1">
+<div id="outline-container-qs-faq" class="outline-3">
+<h3 id="qs-faq"><span class="section-number-3">1.1.</span> FAQ for people not using <code>cmake</code></h3>
+<div class="outline-text-3" id="text-qs-faq">
 </div>
-<div id="outline-container-org36301d1" class="outline-4">
-<h4 id="org36301d1"><span class="section-number-4">1.1.1.</span> Q: How do I get advanced TIFF reader support without <code>cmake</code>?</h4>
-<div class="outline-text-4" id="text-1-1-1">
+
+<div id="outline-container-qs-faq-q1" class="outline-4">
+<h4 id="qs-faq-q1"><span class="section-number-4">1.1.1.</span> Q1: How do I get advanced TIFF reader support without <code>cmake</code>?</h4>
+<div class="outline-text-4" id="text-qs-faq-q1">
 <blockquote>
 <p>
 <b>A:</b> If you have <code>libtiff</code> installed in a standard location, then you can probably just add "=-DTIFF_FOUND" to the compile command like this:
@@ -350,9 +357,9 @@ Please note that advanced TIFF reader is only required to <b>read</b> TIFF files
 </div>
 </div>
 
-<div id="outline-container-org543f246" class="outline-4">
-<h4 id="org543f246"><span class="section-number-4">1.1.2.</span> Q2: What's up with "<code>-std=gcc++20</code>" instead of "<code>-std=c++20</code>"?</h4>
-<div class="outline-text-4" id="text-1-1-2">
+<div id="outline-container-qs-faq-q2" class="outline-4">
+<h4 id="qs-faq-q2"><span class="section-number-4">1.1.2.</span> Q2: What's up with "<code>-std=gcc++20</code>" instead of "<code>-std=c++20</code>"?</h4>
+<div class="outline-text-4" id="text-qs-faq-q2">
 <blockquote>
 <p>
 <b>A:</b> <b><code>MRaster</code></b> works just fine with standard C++20 compilers.  The "<code>-std=gcc++20</code>" option enables specific features of GCC that make <b><code>MRaster</code></b> better.  In
@@ -368,9 +375,9 @@ you want to turn off 128-bit integers, and use pure C++20 instead with GCC, then
 </div>
 </div>
 
-<div id="outline-container-orge248d80" class="outline-4">
-<h4 id="orge248d80"><span class="section-number-4">1.1.3.</span> Q3: I got some weird errors about <code>bit_cast</code>.  What's up?</h4>
-<div class="outline-text-4" id="text-1-1-3">
+<div id="outline-container-qs-faq-q3" class="outline-4">
+<h4 id="qs-faq-q3"><span class="section-number-4">1.1.3.</span> Q3: I got some weird errors about <code>bit_cast</code>.  What's up?</h4>
+<div class="outline-text-4" id="text-qs-faq-q3">
 <p>
 Probably your compiler is too old to support that part of the C++ standard.  One of the advantages of using <code>cmake</code> is that it tries to detect this issue.  Without <code>cmake</code>, you need to add the following
 to your compile command (or get a better compiler):
@@ -383,9 +390,9 @@ to your compile command (or get a better compiler):
 </div>
 </div>
 
-<div id="outline-container-org0962ad9" class="outline-4">
-<h4 id="org0962ad9"><span class="section-number-4">1.1.4.</span> Q4: I got some weird errors about complex numbers and <code>std::pow</code>? What's up?</h4>
-<div class="outline-text-4" id="text-1-1-4">
+<div id="outline-container-qs-faq-q4" class="outline-4">
+<h4 id="qs-faq-q4"><span class="section-number-4">1.1.4.</span> Q4: I got some weird errors about complex numbers and <code>std::pow</code>? What's up?</h4>
+<div class="outline-text-4" id="text-qs-faq-q4">
 <p>
 Probably your compiler is too old to support that part of the C++ standard.  One of the advantages of using <code>cmake</code> is that it tries to detect this issue.  Without <code>cmake</code>, you need to add the following
 to your compile command (or get a better compiler):
@@ -400,10 +407,9 @@ to your compile command (or get a better compiler):
 </div>
 </div>
 
-
-<div id="outline-container-org8521280" class="outline-2">
-<h2 id="org8521280"><span class="section-number-2">2.</span> Playing With <b><code>MRaster</code></b>'s Example Programs</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-examples" class="outline-2">
+<h2 id="examples"><span class="section-number-2">2.</span> Playing With <b><code>MRaster</code></b>'s Example Programs</h2>
+<div class="outline-text-2" id="text-examples">
 <p>
 The source code for the example programs is located in the "<code>examples</code>" directory.  <b><code>MRaster</code></b> ships with a <code>cmake</code> build system that should be able to
 interrogate your environment, and produce make files for your OS.  To build the example programs:
@@ -438,9 +444,9 @@ at the "<code>configure.sh</code>" script in the root directory of the git repos
 </div>
 </div>
 
-<div id="outline-container-org6a06296" class="outline-2">
-<h2 id="org6a06296"><span class="section-number-2">3.</span> Using <b><code>MRaster</code></b>'s <code>cmake</code> Configuration</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-cmake-coopt" class="outline-2">
+<h2 id="cmake-coopt"><span class="section-number-2">3.</span> Using <b><code>MRaster</code></b>'s <code>cmake</code> Configuration</h2>
+<div class="outline-text-2" id="text-cmake-coopt">
 <p>
 For many <b><code>MRaster</code></b> users, <code>cmake</code> is an unfamiliar tool.  Some of them decide to directly use <b><code>MRaster</code></b>'s <code>cmake</code> infrastructure, using the "<code>examples</code>"
 directory as a template for the code they produce.  This can be a nice way for people new to <code>cmake</code> to get an idea of how it works; however, I have to warn
@@ -492,18 +498,18 @@ make your_program
 </div>
 </div>
 
-<div id="outline-container-org04724d4" class="outline-2">
-<h2 id="org04724d4"><span class="section-number-2">4.</span> Platform Notes</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-platform-notes" class="outline-2">
+<h2 id="platform-notes"><span class="section-number-2">4.</span> Platform Notes</h2>
+<div class="outline-text-2" id="text-platform-notes">
 <p>
 I write these notes on 2022-08-28 as a guide for making the most of <b><code>MRaster</code></b> on various platforms given the rather uneven nature of C++20 support in the
 wild.  I expect these notes will be out of date by the time I hit the publish button. ;)
 </p>
 </div>
 
-<div id="outline-container-org6caef49" class="outline-3">
-<h3 id="org6caef49"><span class="section-number-3">4.1.</span> Windows 11 with MSYS2 GCC 12.1.0</h3>
-<div class="outline-text-3" id="text-4-1">
+<div id="outline-container-platform-notes-m2w11gcc12" class="outline-3">
+<h3 id="platform-notes-m2w11gcc12"><span class="section-number-3">4.1.</span> Windows 11 with MSYS2 GCC 12.1.0</h3>
+<div class="outline-text-3" id="text-platform-notes-m2w11gcc12">
 <p>
 Everything works with the following cmake:
 </p>
@@ -515,9 +521,9 @@ Everything works with the following cmake:
 </div>
 </div>
 
-<div id="outline-container-org44b5907" class="outline-3">
-<h3 id="org44b5907"><span class="section-number-3">4.2.</span> Windows 11 with MSYS2 clang 14.0.6</h3>
-<div class="outline-text-3" id="text-4-2">
+<div id="outline-container-platform-notes-m2w11clang14" class="outline-3">
+<h3 id="platform-notes-m2w11clang14"><span class="section-number-3">4.2.</span> Windows 11 with MSYS2 clang 14.0.6</h3>
+<div class="outline-text-3" id="text-platform-notes-m2w11clang14">
 <p>
 Everything works with the following cmake:
 </p>
@@ -529,9 +535,9 @@ Everything works with the following cmake:
 </div>
 </div>
 
-<div id="outline-container-orgcc6a2c6" class="outline-3">
-<h3 id="orgcc6a2c6"><span class="section-number-3">4.3.</span> Windows 11 with MSYS2 cmake and Visual Studio 2022 Community Edition</h3>
-<div class="outline-text-3" id="text-4-3">
+<div id="outline-container-platform-notes-m2w11vs2022" class="outline-3">
+<h3 id="platform-notes-m2w11vs2022"><span class="section-number-3">4.3.</span> Windows 11 with MSYS2 cmake and Visual Studio 2022 Community Edition</h3>
+<div class="outline-text-3" id="text-platform-notes-m2w11vs2022">
 <p>
 This method works, but you won't get any external dependencies like <code>GLUT</code>, <code>SDL2</code>, <code>libTIFF</code>, <code>boost</code>, etc&#x2026;  But, you will get enough to run many of the examples.
 </p>
@@ -551,9 +557,9 @@ Then open up the directory with explorer, and double click on one of the project
 </div>
 </div>
 
-<div id="outline-container-org709e487" class="outline-3">
-<h3 id="org709e487"><span class="section-number-3">4.4.</span> Windows 11 with Visual Studio 2022 Community Edition</h3>
-<div class="outline-text-3" id="text-4-4">
+<div id="outline-container-platform-notes-w11vs2022" class="outline-3">
+<h3 id="platform-notes-w11vs2022"><span class="section-number-3">4.4.</span> Windows 11 with Visual Studio 2022 Community Edition</h3>
+<div class="outline-text-3" id="text-platform-notes-w11vs2022">
 <p>
 Everything works, but it's harder to get set up.  Simply fire up VS, and open the folder with the <code>CMakeLists.txt</code> file in it.  VS will detect a <code>cmake</code>
 project.  Next use <a href="https://vcpkg.io/en/index.html">vcpkg</a> to install <code>GLUT</code>, <code>SDL2</code>, <code>libTIFF</code>, &amp; <code>boost</code>.  Update <code>CMakeLists.txt</code> as described
@@ -562,9 +568,9 @@ project.  Next use <a href="https://vcpkg.io/en/index.html">vcpkg</a> to install
 </div>
 </div>
 
-<div id="outline-container-org8751508" class="outline-3">
-<h3 id="org8751508"><span class="section-number-3">4.5.</span> Mac OS X Monterey 12.5.1 with Homebrew GCC 12.1.0</h3>
-<div class="outline-text-3" id="text-4-5">
+<div id="outline-container-platform-notes-osx1151hbGCC12" class="outline-3">
+<h3 id="platform-notes-osx1151hbGCC12"><span class="section-number-3">4.5.</span> Mac OS X Monterey 12.5.1 with Homebrew GCC 12.1.0</h3>
+<div class="outline-text-3" id="text-platform-notes-osx1151hbGCC12">
 <p>
 I had trouble getting <code>boost</code> to work, but everything else seems OK.  Note the <code>-DGLUT_glut_LIBRARY</code> option &#x2013; this is required to direct <code>cmake</code> to use the
 Apple provided <code>GLUT</code> instead of <code>freeglut</code> from homebrew.
@@ -595,9 +601,9 @@ And I used the following cmake:
 </div>
 </div>
 
-<div id="outline-container-org6e03881" class="outline-3">
-<h3 id="org6e03881"><span class="section-number-3">4.6.</span> Mac OS X Monterey 12.5.1 with Apple clang 13.1.6</h3>
-<div class="outline-text-3" id="text-4-6">
+<div id="outline-container-platform-notes-osx1151aclang1316" class="outline-3">
+<h3 id="platform-notes-osx1151aclang1316"><span class="section-number-3">4.6.</span> Mac OS X Monterey 12.5.1 with Apple clang 13.1.6</h3>
+<div class="outline-text-3" id="text-platform-notes-osx1151aclang1316">
 <p>
 Right now <code>clang</code> doesn't have support for floating point template parameters, and thus the templates <code>csPLY_tpl</code> &amp; <code>csCubeHelix_tpl</code> are not available.
 This also means that examples using these features are not built: 
@@ -625,9 +631,9 @@ Lastly, note the <code>-DGLUT_glut_LIBRARY</code> option &#x2013; this is requir
 </div>
 </div>
 
-<div id="outline-container-orge8a4e2d" class="outline-3">
-<h3 id="orge8a4e2d"><span class="section-number-3">4.7.</span> Debian bullseye 11.4</h3>
-<div class="outline-text-3" id="text-4-7">
+<div id="outline-container-platform-notes-lindeb114" class="outline-3">
+<h3 id="platform-notes-lindeb114"><span class="section-number-3">4.7.</span> Debian bullseye 11.4</h3>
+<div class="outline-text-3" id="text-platform-notes-lindeb114">
 <p>
 For reference, some of my config files:
 </p>
@@ -660,9 +666,9 @@ Pin-Priority: 490
 </div>
 </div>
 
-<div id="outline-container-orgf908201" class="outline-4">
-<h4 id="orgf908201"><span class="section-number-4">4.7.1.</span> Debian bullseye 11.4 with GCC 10.2.1</h4>
-<div class="outline-text-4" id="text-4-7-1">
+<div id="outline-container-platform-notes-lindeb114gcc1021" class="outline-4">
+<h4 id="platform-notes-lindeb114gcc1021"><span class="section-number-4">4.7.1.</span> Debian bullseye 11.4 with GCC 10.2.1</h4>
+<div class="outline-text-4" id="text-platform-notes-lindeb114gcc1021">
 <p>
 This is the stock compiler that comes with bullseye.  It's a bit old, and is missing support for both floating point template arguments and <code>bit_cast</code>.  
 </p>
@@ -691,9 +697,9 @@ Now you can use the following <code>cmake</code> command:
 </div>
 </div>
 
-<div id="outline-container-orga3a897b" class="outline-4">
-<h4 id="orga3a897b"><span class="section-number-4">4.7.2.</span> Debian bullseye 11.4 with GCC 11.3</h4>
-<div class="outline-text-4" id="text-4-7-2">
+<div id="outline-container-platform-notes-lindeb114gcc113" class="outline-4">
+<h4 id="platform-notes-lindeb114gcc113"><span class="section-number-4">4.7.2.</span> Debian bullseye 11.4 with GCC 11.3</h4>
+<div class="outline-text-4" id="text-platform-notes-lindeb114gcc113">
 <p>
 With this newer compiler all <b><code>MRaster</code></b> features are supported.
 </p>
@@ -722,6 +728,43 @@ Now you can use the following <code>cmake</code> command:
 </pre>
 </div>
 </div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-gbl-faq" class="outline-2">
+<h2 id="gbl-faq"><span class="section-number-2">5.</span> FAQ</h2>
+<div class="outline-text-2" id="text-gbl-faq">
+</div>
+
+<div id="outline-container-gbl-faq-q1" class="outline-3">
+<h3 id="gbl-faq-q1"><span class="section-number-3">5.1.</span> Q1: What's up with "<code>-std=gcc++20</code>" instead of "<code>-std=c++20</code>"?</h3>
+<div class="outline-text-3" id="text-gbl-faq-q1">
+<blockquote>
+<p>
+<b>A:</b> <b><code>MRaster</code></b> works just fine with standard C++20 compilers.  The "<code>-std=gcc++20</code>" option enables specific features of GCC that make <b><code>MRaster</code></b> better.  In
+particular, it enables 128-bit integers on platforms that support it &#x2013; allowing, for example, a very high performance floating point RGBA image format.  If
+you want to turn off 128-bit integers, and use pure C++20 instead with GCC, then you can use a command line like this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">g++ -DMJR_LOOK_FOR_128_BIT_TYPES=0 -m64 --std=c++20 hello.cpp -o hello
+</pre>
+</div>
+</blockquote>
+</div>
+</div>
+
+<div id="outline-container-gbl-faq-q2" class="outline-3">
+<h3 id="gbl-faq-q2"><span class="section-number-3">5.2.</span> Q2: The examples seem to be missing standard/system include files</h3>
+<div class="outline-text-3" id="text-gbl-faq-q2">
+<blockquote>
+<p>
+<b>A:</b> It is good form to place necessary includes in each file that needs them; however, I have violated this sound practice in the examples shipped with
+<b><code>MRaster</code></b>.  In particular, because the <code>ramCanvasTpl.hpp</code> and <code>colorTpl.hpp</code> files include just about everything the examples need I have tended to shorten
+up the examples and depend on the includes from <b><code>MRaster</code></b>.
+</p>
+</blockquote>
 </div>
 </div>
 </div>

@@ -37,12 +37,20 @@
 #include <tiffio.h>                                                      /* libTIFF                 libTIFF  */
 #endif
 
+#include <algorithm>                                                     /* STL algorithm           C++11    */
+#include <chrono>                                                        /* time                    C++11    */
 #include <cmath>                                                         /* std:: C math.h          C++11    */
+#include <complex>                                                       /* Complex Numbers         C++11    */
 #include <cstdint>                                                       /* std:: C stdint.h        C++11    */
 #include <fstream>                                                       /* C++ fstream             C++98    */
 #include <functional>                                                    /* STL funcs               C++98    */
 #include <iomanip>                                                       /* C++ stream formatting   C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
+#include <iterator>                                                      /* STL Iterators           C++11    */
+#include <list>                                                          /* STL list                C++11    */
+#include <map>                                                           /* STL map                 C++11    */
+#include <numbers>                                                       /* C++ math constants      C++20    */
+#include <random>                                                        /* C++ random numbers      C++11    */
 #include <sstream>                                                       /* C++ string stream       C++      */
 #include <stdexcept>                                                     /* Exceptions              C++11    */
 #include <string>                                                        /* C++ strings             C++11    */

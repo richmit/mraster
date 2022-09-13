@@ -33,6 +33,9 @@
 #+TOC: headlines 5
 
 * Quick Start (The Absolute Minimum)
+:PROPERTIES:
+:CUSTOM_ID: qs-min
+:END:
 
 If you are interested playing around with *=MRaster=* as quickly as possible, then this section is for you.
 
@@ -77,8 +80,14 @@ Now you can run it, and take a look at the file it created ("=hello.tiff="):
 That's it!  How easy was that?
 
 ** FAQ for people not using =cmake=
+:PROPERTIES:
+:CUSTOM_ID: qs-faq
+:END:
 
-*** Q: How do I get advanced TIFF reader support without =cmake=?
+*** Q1: How do I get advanced TIFF reader support without =cmake=?
+:PROPERTIES:
+:CUSTOM_ID: qs-faq-q1
+:END:
 
 #+BEGIN_QUOTE
 *A:* If you have =libtiff= installed in a standard location, then you can probably just add "=-DTIFF_FOUND" to the compile command like this:
@@ -91,6 +100,9 @@ Please note that advanced TIFF reader is only required to *read* TIFF files.  *=
 #+END_QUOTE
 
 *** Q2: What's up with "=-std=gcc++20=" instead of "=-std=c++20="?
+:PROPERTIES:
+:CUSTOM_ID: qs-faq-q2
+:END:
 
 #+BEGIN_QUOTE
 *A:* *=MRaster=* works just fine with standard C++20 compilers.  The "=-std=gcc++20=" option enables specific features of GCC that make *=MRaster=* better.  In
@@ -103,6 +115,9 @@ g++ -DMJR_LOOK_FOR_128_BIT_TYPES=0 -m64 --std=c++20 hello.cpp -o hello
 #+END_QUOTE
 
 *** Q3: I got some weird errors about =bit_cast=.  What's up?
+:PROPERTIES:
+:CUSTOM_ID: qs-faq-q3
+:END:
 
 Probably your compiler is too old to support that part of the C++ standard.  One of the advantages of using =cmake= is that it tries to detect this issue.  Without =cmake=, you need to add the following
 to your compile command (or get a better compiler):
@@ -112,6 +127,9 @@ to your compile command (or get a better compiler):
 #+end_src
 
 *** Q4: I got some weird errors about complex numbers and =std::pow=? What's up?
+:PROPERTIES:
+:CUSTOM_ID: qs-faq-q4
+:END:
 
 Probably your compiler is too old to support that part of the C++ standard.  One of the advantages of using =cmake= is that it tries to detect this issue.  Without =cmake=, you need to add the following
 to your compile command (or get a better compiler):
@@ -120,8 +138,10 @@ to your compile command (or get a better compiler):
 -DMISSING_P1907R1=1
 #+end_src
 
-
 * Playing With *=MRaster=*'s Example Programs
+:PROPERTIES:
+:CUSTOM_ID: examples
+:END:
 
 The source code for the example programs is located in the "=examples=" directory.  *=MRaster=* ships with a =cmake= build system that should be able to
 interrogate your environment, and produce make files for your OS.  To build the example programs:
@@ -147,6 +167,9 @@ Note =cmake= can take several options like the "=-G=" option mentioned in the ex
 at the "=configure.sh=" script in the root directory of the git repository.
 
 * Using *=MRaster=*'s =cmake= Configuration
+:PROPERTIES:
+:CUSTOM_ID: cmake-coopt
+:END:
 
 For many *=MRaster=* users, =cmake= is an unfamiliar tool.  Some of them decide to directly use *=MRaster=*'s =cmake= infrastructure, using the "=examples="
 directory as a template for the code they produce.  This can be a nice way for people new to =cmake= to get an idea of how it works; however, I have to warn
@@ -191,11 +214,17 @@ make your_program
 #+end_src
 
 * Platform Notes
+:PROPERTIES:
+:CUSTOM_ID: platform-notes
+:END:
 
 I write these notes on 2022-08-28 as a guide for making the most of *=MRaster=* on various platforms given the rather uneven nature of C++20 support in the
 wild.  I expect these notes will be out of date by the time I hit the publish button. ;)
 
 ** Windows 11 with MSYS2 GCC 12.1.0
+:PROPERTIES:
+:CUSTOM_ID: platform-notes-m2w11gcc12
+:END:
 
 Everything works with the following cmake:
 
@@ -204,6 +233,9 @@ cmake -G 'MSYS Makefiles' -DCMAKE_CXX_COMPILER=g++ ..
 #+end_src
 
 ** Windows 11 with MSYS2 clang 14.0.6
+:PROPERTIES:
+:CUSTOM_ID: platform-notes-m2w11clang14
+:END:
 
 Everything works with the following cmake:
 
@@ -212,6 +244,9 @@ cmake -G 'MSYS Makefiles' -DCMAKE_CXX_COMPILER=clang++ ..
 #+end_src
 
 ** Windows 11 with MSYS2 cmake and Visual Studio 2022 Community Edition
+:PROPERTIES:
+:CUSTOM_ID: platform-notes-m2w11vs2022
+:END:
 
 This method works, but you won't get any external dependencies like =GLUT=, =SDL2=, =libTIFF=, =boost=, etc...  But, you will get enough to run many of the examples.
 
@@ -224,12 +259,18 @@ cmake -G 'Visual Studio 17 2022' ..
 Then open up the directory with explorer, and double click on one of the project files.  That will open up VS, and you can work the project.
 
 ** Windows 11 with Visual Studio 2022 Community Edition
+:PROPERTIES:
+:CUSTOM_ID: platform-notes-w11vs2022
+:END:
 
 Everything works, but it's harder to get set up.  Simply fire up VS, and open the folder with the =CMakeLists.txt= file in it.  VS will detect a =cmake=
 project.  Next use [[https://vcpkg.io/en/index.html][vcpkg]] to install =GLUT=, =SDL2=, =libTIFF=, & =boost=.  Update =CMakeLists.txt= as described
 [[https://vcpkg.io/en/docs/users/buildsystems/cmake-integration.html][here]]. Refresh the =cmake=, and you should be able to build.
 
 ** Mac OS X Monterey 12.5.1 with Homebrew GCC 12.1.0
+:PROPERTIES:
+:CUSTOM_ID: platform-notes-osx1151hbGCC12
+:END:
 
 I had trouble getting =boost= to work, but everything else seems OK.  Note the =-DGLUT_glut_LIBRARY= option -- this is required to direct =cmake= to use the
 Apple provided =GLUT= instead of =freeglut= from homebrew.
@@ -252,6 +293,9 @@ cmake -DCMAKE_CXX_COMPILER=g++-12 -DGLUT_glut_LIBRARY=/System/Library/Frameworks
 #+end_src
 
 ** Mac OS X Monterey 12.5.1 with Apple clang 13.1.6
+:PROPERTIES:
+:CUSTOM_ID: platform-notes-osx1151aclang1316
+:END:
 
 Right now =clang= doesn't have support for floating point template parameters, and thus the templates =csPLY_tpl= & =csCubeHelix_tpl= are not available.
 This also means that examples using these features are not built: 
@@ -270,6 +314,9 @@ cmake -DCMAKE_CXX_COMPILER=clang++ -DGLUT_glut_LIBRARY=/System/Library/Framework
 #+end_src
 
 ** Debian bullseye 11.4
+:PROPERTIES:
+:CUSTOM_ID: platform-notes-lindeb114
+:END:
 
 For reference, some of my config files:
 
@@ -295,6 +342,9 @@ Pin-Priority: 490
 #+end_src
 
 *** Debian bullseye 11.4 with GCC 10.2.1
+:PROPERTIES:
+:CUSTOM_ID: platform-notes-lindeb114gcc1021
+:END:
 
 This is the stock compiler that comes with bullseye.  It's a bit old, and is missing support for both floating point template arguments and =bit_cast=.  
 
@@ -315,6 +365,9 @@ cmake ..
 #+end_src
 
 *** Debian bullseye 11.4 with GCC 11.3
+:PROPERTIES:
+:CUSTOM_ID: platform-notes-lindeb114gcc113
+:END:
 
 With this newer compiler all *=MRaster=* features are supported.
 
@@ -336,7 +389,6 @@ Now you can use the following =cmake= command:
 cmake -DCMAKE_CXX_COMPILER=g++-11 ..
 #+end_src
 
-
 * Performance                                                      :noexport:
 
 | System                                                  | Software                   | Result (sec) |
@@ -348,6 +400,37 @@ cmake -DCMAKE_CXX_COMPILER=g++-11 ..
 | 2022 ventage 3.30GHz Quad-Core Intel i7 11370H 11th Gen | MSVC 2022                  |     110.0680 |
 | 2022 ventage 3.30GHz Quad-Core Intel i7 11370H 11th Gen | WSL Debian 11.4 GCC 10.2.1 |      66.7385 |
 | 2022 ventage 3.30GHz Quad-Core Intel i7 11370H 11th Gen | WSL Debian 11.4 GCC 11.3.0 |      66.2258 |
+
+* FAQ
+:PROPERTIES:
+:CUSTOM_ID: gbl-faq
+:END:
+
+** Q1: What's up with "=-std=gcc++20=" instead of "=-std=c++20="?
+:PROPERTIES:
+:CUSTOM_ID: gbl-faq-q1
+:END:
+
+#+BEGIN_QUOTE
+*A:* *=MRaster=* works just fine with standard C++20 compilers.  The "=-std=gcc++20=" option enables specific features of GCC that make *=MRaster=* better.  In
+particular, it enables 128-bit integers on platforms that support it -- allowing, for example, a very high performance floating point RGBA image format.  If
+you want to turn off 128-bit integers, and use pure C++20 instead with GCC, then you can use a command line like this:
+
+#+begin_src sh :exports source :eval never
+g++ -DMJR_LOOK_FOR_128_BIT_TYPES=0 -m64 --std=c++20 hello.cpp -o hello
+#+end_src
+#+END_QUOTE
+
+** Q2: The examples seem to be missing standard/system include files
+:PROPERTIES:
+:CUSTOM_ID: gbl-faq-q2
+:END:
+
+#+BEGIN_QUOTE
+*A:* It is good form to place necessary includes in each file that needs them; however, I have violated this sound practice in the examples shipped with
+*=MRaster=*.  In particular, because the =ramCanvasTpl.hpp= and =colorTpl.hpp= files include just about everything the examples need I have tended to shorten
+up the examples and depend on the includes from these headers.
+#+END_QUOTE
 
 * Doxygen Links                                                    :noexport:
 

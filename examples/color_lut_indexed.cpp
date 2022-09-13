@@ -33,10 +33,6 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-#include <chrono>                                                        /* time                    C++11    */
-#include <iostream>                                                      /* C++ iostream            C++11    */
-#include <string>                                                        /* C++ strings             C++11    */
-
 typedef mjr::color3c8b              ct;
 typedef mjr::color3c8b::csIntType   cit;
 typedef mjr::color3c8b::channelType cct;

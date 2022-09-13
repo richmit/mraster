@@ -32,11 +32,6 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-#include <chrono>                                                        /* time                    C++11    */
-#include <iostream>                                                      /* C++ iostream            C++11    */
-#include <random>                                                        /* C++ random numbers      C++11    */
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(int argc, char *argv[]) {
   int numHits = 1, numHitsRel = 0, numClipRel = 0, numCloseRel = 0, linesPrinted = 0;
   std::random_device rd;

@@ -33,18 +33,14 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-#include <chrono>                                                        /* time                    C++11    */
-#include <iostream>                                                      /* C++ iostream            C++11    */
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main() {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   mjr::ramCanvas3c8b theRamCanvas(7680/8, 4320/8, -2.2, 2.2, -2.2, 2.2);
 
   theRamCanvas.clrCanvas(mjr::ramCanvas3c8b::colorType(255, 0, 0));
-  theRamCanvas.drawLine(                            2,                            2, theRamCanvas.getNumPixX()-3,                            2, mjr::ramCanvas3c8b::colorType(0, 0, 255));
+  theRamCanvas.drawLine(                            2,                           2, theRamCanvas.getNumPixX()-3,                           2, mjr::ramCanvas3c8b::colorType(0, 0, 255));
   theRamCanvas.drawLine(                            2, theRamCanvas.getNumPixY()-3, theRamCanvas.getNumPixX()-3, theRamCanvas.getNumPixY()-3, mjr::ramCanvas3c8b::colorType(0, 0, 255));
-  theRamCanvas.drawLine(                            2,                            2,                            2, theRamCanvas.getNumPixY()-3, mjr::ramCanvas3c8b::colorType(0, 0, 255));
+  theRamCanvas.drawLine(                            2,                           2,                           2, theRamCanvas.getNumPixY()-3, mjr::ramCanvas3c8b::colorType(0, 0, 255));
   theRamCanvas.drawLine( theRamCanvas.getNumPixX()-3,                            2, theRamCanvas.getNumPixX()-3, theRamCanvas.getNumPixY()-3, mjr::ramCanvas3c8b::colorType(0, 0, 255));
   theRamCanvas.writeTIFFfile("dlaSeed_border.tiff");
 

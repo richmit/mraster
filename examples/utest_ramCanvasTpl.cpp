@@ -43,9 +43,6 @@
 #include <boost/test/unit_test.hpp>
 
 #include "ramCanvas.hpp"
-#include <iostream>                                                      /* C++ iostream            C++11    */
-#include <fstream>
-#include <iterator>
 
 #if 1
 

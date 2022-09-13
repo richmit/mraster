@@ -32,9 +32,6 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-#include <chrono>                                                        /* time                    C++11    */
-#include <iostream>                                                      /* C++ iostream            C++11    */
-
 mjr::point2d<double> funny(double x, double y) {
   double d = 0.3*std::sin(std::hypot(x, y) / 100);
   return mjr::point2d<double>(std::cos(d)*x+std::sin(d)*y, -std::sin(d)*x+std::cos(d)*y);

@@ -32,10 +32,6 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-#include <chrono>                                                        /* time                    C++11    */
-#include <iostream>                                                      /* C++ iostream            C++11    */
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(int argc, char *argv[]) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   mjr::ramCanvas3c8b dRamCanvas;
