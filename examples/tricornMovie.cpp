@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Render movie frames for a smooth tricorn evolution from k=2 to k=10.@EOL
  @std       C++20
- @see       https://www.mitchr.me/SS/mandelbrot/index.html
+ @see       https://www.mitchr.me/SS/tricorn/index.html
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.

@@ -103,9 +103,9 @@ int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const double escapeMod = -32.0;
   const int    MaxCount  = 64;
-  const double  Tol       = 0.0001;
+  const double Tol       = 0.0001;
   const int    numToKeep = 1;
-  whyStopNV why;
+  whyStopNV    why;
   mjr::ramCanvas3c8b theRamCanvas(3840, 2160, -1.5, 1.5, -1.5, 1.5);
   std::vector<solMethNV> methodsToDo({solMethNV::NEWTON, solMethNV::HALLEY, solMethNV::LAGUERRE});
 
