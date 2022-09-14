@@ -33,6 +33,9 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+typedef mjr::ramCanvas3c8b::colorType ct;
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int NUMITR = 1024;
@@ -53,7 +56,7 @@ int main(void) {
           count++;
         }
         if(count < NUMITR)          
-          theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType::csCColdeFireRamp::c(static_cast<mjr::ramCanvas3c8b::csIntType>(count*15)));
+          theRamCanvas.drawPoint(x, y, ct::csCColdeFireRamp::c(static_cast<ct::csIntType>(count*15)));
       }
     }
   }

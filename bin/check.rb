@@ -16,6 +16,8 @@ deps = { "#{mrsrc}/examples/BurningShip.cpp"              => "#{homed}/world/WWW
          "#{mrsrc}/examples/multibrotSnaps.cpp"           => "#{homed}/world/WWW/site/SS/multibrot/index.org",
          "#{mrsrc}/examples/tricorn.cpp"                  => "#{homed}/world/WWW/site/SS/tricorn/index.org",
          "#{mrsrc}/examples/collatz.cpp"                  => "#{homed}/world/WWW/site/SS/collatz/index.org",
+         "#{mrsrc}/examples/tippets.cpp"                  => "#{homed}/world/WWW/site/SS/tippets/index.org",
+         "#{mrsrc}/examples/mandelbrot_biomorph.cpp"      => "#{homed}/world/WWW/site/SS/mandelbrotBiomorph/index.org",
          "#{mrsrc}/README.org"                            => "#{mrsrc}/docs/index.org",
          "#{mrsrc}/lib/hello.cpp"                         => "#{mrsrc}/docs/QuickStart.org"
        };

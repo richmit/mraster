@@ -7,7 +7,7 @@
  @std       C++20
  @copyright
   @parblock
-  Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
+  Copyright (c) 1988-2022, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -30,9 +30,6 @@
 /** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-#define __USE_MINGW_ANSI_STUDIO 0
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -43,7 +40,9 @@ double ranges[6][4] = { {  -2.700,  2.100, -2.100,  2.100 },
                         {   0.250,  0.600,  0.700,  1.000 },
                         {  -0.720, -0.695,  0.385,  0.410 } };
 
-typedef mjr::ramCanvas3c8b::csIntType cit;
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+typedef mjr::ramCanvas3c8b::colorType ct;
+typedef ct::csIntType                 cit;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
@@ -65,7 +64,7 @@ int main(void) {
             (zx*zx+zy*zy<100000)&&(count<=NUMITR);
             count++,zx=zx*zx-zy*zy+a,zy=2*zx*zy+b) ;
         if(count < NUMITR)
-          theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType::csCColdeFireRamp::c(mjr::numberWrap(static_cast<cit>(count*20), 767)));
+          theRamCanvas.drawPoint(x, y, ct::csCColdeFireRamp::c(mjr::numberWrap(static_cast<cit>(count*20), 767)));
       }
     }
     theRamCanvas.writeTIFFfile("tippets" + std::to_string(i) + ".tiff");
