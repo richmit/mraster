@@ -146,5 +146,16 @@ Most of these things can be better achieved via other libraries:
 [[http://www.mitchr.me/SS/swirl/index.html][file:./pics/gallery/peterdejong_1c.png]] \\
 [[http://www.mitchr.me/SS/sic/index.html][file:./pics/gallery/sic_13_274.jpg]]
 [[http://www.mitchr.me/SS/sic/index.html][file:./pics/gallery/sic_23_274.jpg]]
-[[http://www.mitchr.me/SS/sic/index.html][file:./pics/gallery/sic_26_274.jpg]]
+[[http://www.mitchr.me/SS/sic/index.html][file:./pics/gallery/sic_26_274.jpg]] \\
+[[http://www.mitchr.me/SS/mandelbrotInv/index.html][file:./pics/gallery/invertedMandelbrot_10.jpg]]
+[[http://www.mitchr.me/SS/tricorn/index.html][file:./pics/gallery/tricorn_02_20.jpg]]
+[[http://www.mitchr.me/SS/collatz/index.html][file:./pics/gallery/collatz_03_20.jpg]]
+[[http://www.mitchr.me/SS/tippets/index.html][file:./pics/gallery/tippets2_20.jpg]] \\
+[[http://www.mitchr.me/SS/mandelbrotBiomorph/index.html][file:./pics/gallery/mandelbrot_biomorphM_10.jpg]]
+[[http://www.mitchr.me/SS/mandelbrotBiomorph/index.html][file:./pics/gallery/mandelbrot_biomorphA_10.jpg]]  \\
+[[http://www.mitchr.me/SS/BurningShip/index.html][file:./pics/gallery/BurningShip_03_50.jpg]]
 #+END_CENTER
+
+
+
+
