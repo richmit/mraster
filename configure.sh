@@ -2,19 +2,22 @@
 
 
 #
-# MSYS instructions
-#
-# From the msys2 shell use something like this:
+# On most platforms, you do something like this:
 #
 #   mkdir build; cd build
 #
-# Then do this
+# On MSYS2, you can then do this:Then do this (for CLANG):
 #
-#   echo "RUN CMAKE"; cmake -G "MSYS Makefiles" -DCMAKE_CXX_COMPILER=clang++ -DO_TIFF=YES ..
+#   cmake -G "MSYS Makefiles" -DCMAKE_CXX_COMPILER=clang++ ..
 #
-# or this
+# or this (for GCC):
 #
-#   echo "RUN CMAKE"; cmake -G "MSYS Makefiles" -DCMAKE_CXX_COMPILER=g++.exe -DO_TIFF=YES ..
+#   cmake -G "MSYS Makefiles" -DCMAKE_CXX_COMPILER=g++.exe ..
+#
+# or this (for MSVC):
+#
+#   cmake -G "Visual Studio 17 2022" ..
+# And then run Visual Studio and open one of the proejct files.
 #
 # Other "O" options include: O_DOXYGEN, O_TIFF, O_OPENGL, O_OPENMP, O_PNG, O_IM, & O_STATIC
 #

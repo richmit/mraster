@@ -37,9 +37,6 @@
 typedef mjr::ramCanvas3c8b::colorType ct;
 typedef ct::csIntType cit;
 
-typedef ct::csCC_tpl<ct::cornerColorEnum::YELLOW,  ct::cornerColorEnum::RED>  csYR;
-typedef ct::csCC_tpl<ct::cornerColorEnum::YELLOW,  ct::cornerColorEnum::BLUE> csYB;
-
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
@@ -83,9 +80,9 @@ int main(void) {
           theRamCanvasL.drawPoint(x, y, ct::csCCu0B::c(mjr::intClamp(static_cast<cit>(std::abs(std::imag(z))*15), ct::csCCu0B::numC-1)));
         // M
         if(std::abs(std::real(zL)) < LIM)
-          theRamCanvasM.drawPoint(x, y, csYB::c(std::abs(std::real(zL))/LIM));
+          theRamCanvasM.drawPoint(x, y, ct::csCCfractalYB::c(std::abs(std::real(zL))/LIM));
         else if(std::abs(std::imag(zL)) < LIM)
-          theRamCanvasM.drawPoint(x, y, csYR::c(std::abs(std::imag(zL))/LIM));
+          theRamCanvasM.drawPoint(x, y, ct::csCCfractalYR::c(std::abs(std::imag(zL))/LIM));
         else
           theRamCanvasM.drawPoint(x, y, "white");
         // N

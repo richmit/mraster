@@ -3,10 +3,10 @@
 /**
  @file      pickoverPopcorn.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Draw fractals inspired by the book Symmetry in Chaos.@EOL
+ @brief     Draw Pickover Popcorn Fractals.@EOL
  @std       C++20
- @see       sic_search.cpp
- @see       https://www.mitchr.me/SS/sic/index.html
+ @see       
+ @see       https://www.mitchr.me/SS/PickoverPopcorn/index.html
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -30,7 +30,7 @@
   @endparblock
  @filedetails
 
-  Fractals inspired by the book "Symmetry in Chaos" by Michael Field and Martin Golubitsky.
+  Fractals inspired by the book "Computers, Pattern, Chaos and Beauty" by Clifford A. Pickover
 
 ********************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
@@ -39,23 +39,8 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// We could have made this a subclass of ramCanvasTpl::rcConverterHomoBase, but I think it is more instructive to implement the whole thing from scratch.
-class g2rgb8 {
-  private:
-    mjr::ramCanvas1c16b& attachedRC;
-  public:
-    g2rgb8(mjr::ramCanvas1c16b& aRC) : attachedRC(aRC) {  }
-    inline bool isIntAxOrientationNaturalX() { return attachedRC.isIntAxOrientationNaturalX(); }
-    inline bool isIntAxOrientationNaturalY() { return attachedRC.isIntAxOrientationNaturalY(); }
-    inline mjr::ramCanvas1c16b::coordIntType getNumPixX() { return attachedRC.getNumPixX(); }
-    inline mjr::ramCanvas1c16b::coordIntType getNumPixY() { return attachedRC.getNumPixY(); }
-    typedef mjr::colorRGB8b colorType;
-    inline colorType getPxColorNC(mjr::ramCanvas3c8b::coordIntType x, mjr::ramCanvas3c8b::coordIntType y) { 
-      colorType retColor;
-      mjr::ramCanvas3c8b::csIntType tmp = static_cast<mjr::ramCanvas3c8b::csIntType>(mjr::intClamp(10*attachedRC.getPxColorNC(x, y).getC0(), 5*255));
-      return retColor.cmpRGBcornerDGradiant(tmp, "0RYBCW");
-    }
-};
+// This is *identical* to what we did in sic.cpp -- just way shorter.
+typedef mjr::ramCanvas1c16b::rcConverterColorScheme<mjr::ramCanvas1c16b, mjr::color3c8b, mjr::color3c8b::csCCfractal0RYBCW, true, 10, 0> g2rgb8;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {

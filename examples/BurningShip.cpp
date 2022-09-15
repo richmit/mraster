@@ -65,7 +65,7 @@ int main(void) {
         zx = t;
       }
       if(count < NUMITR) 
-        escRamCanvas.drawPoint(x, y, csCCbs::c(static_cast<std::decltype(escRamCanvas)::csIntType>(count*10)));
+        escRamCanvas.drawPoint(x, y, csCCbs::c(static_cast<mjr::ramCanvas3c8b::csIntType>(count*10)));
     }
   }
   // Escape Time Coloring

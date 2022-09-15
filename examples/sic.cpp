@@ -72,7 +72,9 @@ typename mjr::ramCanvas1c16b::coordFltType params[NPR][12] = {
 };
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// We could have made this a subclass of ramCanvasTpl::rcConverterHomoBase, but I think it is more instructive to implement the whole thing from scratch.
+// This is *identical* to what we did in pickoverPopcorn.cpp -- just way shorter.  It is longer still because we don't make this a subclass of
+// ramCanvasTpl::rcConverterHomoBase in order to illustrate how to implement a RC converter from scratch.  Also note we didn't need to DIY the color gradient
+// with cmpRGBcornerDGradiant() as this gradient (0RYBCW) is available as a pre-built color scheme: csCCfractal0RYBCW.
 class g2rgb8 {
   private:
     mjr::ramCanvas1c16b& attachedRC;
