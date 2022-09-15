@@ -1,7 +1,7 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      mandelbrot_bm_cplx.cpp
+ @file      mandelbrot_simple.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Simplified code for for web page examples.@EOL
  @std       C++20

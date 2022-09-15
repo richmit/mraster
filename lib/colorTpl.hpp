@@ -3386,6 +3386,29 @@ namespace mjr {
       //@}
 
       //========================================================================================================================================================
+      /** @name Color Schemes: Classic Fractal RGB Gradients.
+          Gradients frequently used to color fractal images.  */
+      //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csCCfractal0RYBCW
+          @ingroup cs
+          @extends csCC_tpl
+             Provides (5 * mjr::colorTpl::chanStepMax + 1) colors. */
+      typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::RED, cornerColorEnum::YELLOW, 
+                       cornerColorEnum::BLUE, cornerColorEnum::CYAN, cornerColorEnum::WHITE>            csCCfractal0RYBCW;
+      /** @class csCCfractalYR
+          @ingroup cs
+          @extends csCC_tpl
+             Provides (mjr::colorTpl::chanStepMax + 1) colors. */
+      typedef csCC_tpl<cornerColorEnum::YELLOW,  cornerColorEnum::RED>                                  csCCfractalYR;
+      /** @class csCCfractalYB
+          @ingroup cs
+          @extends csCC_tpl
+             Provides (mjr::colorTpl::chanStepMax + 1) colors. */
+      typedef csCC_tpl<cornerColorEnum::YELLOW,  cornerColorEnum::BLUE>                                 csCCfractalYB;
+      //@}
+
+      //========================================================================================================================================================
       /** @name Color Schemes: RGB Sum Ramps */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-09-14 Wed 19:37 -->
+<!-- 2022-09-15 Thu 18:42 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster Color Schemes</title>
@@ -267,40 +267,50 @@
 <li><a href="#cc-max-ed-circ">2.2. Maximal circuits in the cube edge/diagonal graph</a></li>
 <li><a href="#cc-corners">2.3. Hitting all the corners</a></li>
 <li><a href="#cc-big-trees">2.4. Large Trees</a></li>
-<li><a href="#cc-bw-trees">2.5. Black to White Trees</a>
+<li><a href="#cc-bw-trees">2.5. Black to White in Three Trees</a>
 <ul>
 <li><a href="#csCCsum">2.5.1. Predefined Schemes</a></li>
 </ul>
 </li>
-<li><a href="#lum">2.6. Luminance based color schemes</a></li>
-<li><a href="#cc-h-t-c">2.7. Hot Too Cold</a>
+<li><a href="#cc-bc1-trees">2.6. Black to Corner in One Trees</a>
 <ul>
-<li><a href="#csCColde">2.7.1. Predefined Schemes</a></li>
+<li><a href="#csCCu">2.6.1. Predefined Schemes</a></li>
 </ul>
 </li>
-<li><a href="#cc-cons">2.8. Constant Intensity Cycles</a>
+<li><a href="#lum">2.7. Luminance based color schemes</a></li>
+<li><a href="#cc-h-t-c">2.8. Hot Too Cold</a>
 <ul>
-<li><a href="#csCCcons">2.8.1. Predefined Schemes</a></li>
+<li><a href="#csCColde">2.8.1. Predefined Schemes</a></li>
 </ul>
 </li>
-<li><a href="#cc-div-1">2.9. One Segment Diverging Maps</a>
+<li><a href="#cc-fractal-trees">2.9. Common Fractal Color Graphs</a>
 <ul>
-<li><a href="#csCCud">2.9.1. Predefined Schemes</a></li>
+<li><a href="#csCCfractal">2.9.1. Predefined Schemes</a></li>
 </ul>
 </li>
-<li><a href="#cc-div-3">2.10. Three Segment Diverging Maps</a>
+<li><a href="#cc-cons">2.10. Constant Intensity Cycles</a>
 <ul>
-<li><a href="#csCCdiv">2.10.1. Predefined Schemes</a></li>
+<li><a href="#csCCcons">2.10.1. Predefined Schemes</a></li>
 </ul>
 </li>
-<li><a href="#cc-h-rmp">2.11. Center point ramps (HSL schemes)</a>
+<li><a href="#cc-div-1">2.11. One Segment Diverging Maps</a>
 <ul>
-<li><a href="#csHSLh">2.11.1. Predefined Schemes</a></li>
+<li><a href="#csCCud">2.11.1. Predefined Schemes</a></li>
 </ul>
 </li>
-<li><a href="#cc-stack-hsl">2.12. Stacked HSL Schemes</a>
+<li><a href="#cc-div-3">2.12. Three Segment Diverging Maps</a>
 <ul>
-<li><a href="#csCCdiag">2.12.1. Predefined Schemes</a></li>
+<li><a href="#csCCdiv">2.12.1. Predefined Schemes</a></li>
+</ul>
+</li>
+<li><a href="#cc-h-rmp">2.13. Center point ramps (HSL schemes)</a>
+<ul>
+<li><a href="#csHSLh">2.13.1. Predefined Schemes</a></li>
+</ul>
+</li>
+<li><a href="#cc-stack-hsl">2.14. Stacked HSL Schemes</a>
+<ul>
+<li><a href="#csCCdiag">2.14.1. Predefined Schemes</a></li>
 </ul>
 </li>
 </ul>
@@ -344,6 +354,8 @@ inner classes follow a regular naming convention:
 <li><a href="#csCCud"><code>csCCud ........</code></a> RGB color cube: Two color up-down ramps (template: <code>csCC_tpl</code>)</li>
 <li><a href="#csCCdiv"><code>csCCdiv .......</code></a> RGB color cube: Three Segment Diverging Maps (template: <code>csCC_tpl</code>)</li>
 <li><a href="#csCCsum"><code>csCCSum .......</code></a> RGB color cube: Sum ramp (template: <code>csCC_tpl</code>)</li>
+<li><a href="#csCCu"><code>csCCu .........</code></a> RGB color cube: Gradients from black to another corner (template: <code>csCC_tpl</code>)</li>
+<li><a href="#csCCfractal"><code>csCCfractal ...</code></a> RGB color cube: Common gradient schemes used for fractals (template: <code>csCC_tpl</code>)</li>
 <li><a href="#csHSLh"><code>csHSLh ........</code></a> RGB color cube: Gradients from the cube center to a corner (template: <code>csHSLh_tpl</code>)</li>
 <li><a href="#csBin"><code>csBin .........</code></a> RGB Binary Schemes (template: <code>csCC_tpl</code>)</li>
 <li><a href="#csPGrey"><code>csPGrey .......</code></a> RGB Pseudo-greyscale</li>
@@ -395,7 +407,7 @@ aColor.csSet&lt;<span style="color: #8470ff; font-weight: bold;">mjr</span>::<sp
 Not all color scheme classes have the same interface; however, the interfaces are uniformly designed:
 </p>
 <ul class="org-ul">
-<li><b><code>numC</code>:</b> The number of colors available in the scheme 
+<li><b><code>numC</code>:</b> The number of colors available in the scheme
 <ul class="org-ul">
 <li>Color schemes with a fixed number of colors at compile time have member <code>numC</code></li>
 <li>Color schemes with the number of colors set at run time, will have a <code>numC</code> argument for the <code>c</code> methods.
@@ -467,7 +479,7 @@ The RGB color cube:
 .                                              | | |/_/_______________| |  /
 .                                              | |____________________| | /
 .                                         blue |________________________|/ magenta
-.                           
+.
 .                                       Vertexes and Center of the RGB Color Cube:
 .                                       Name     R     G     B     Abriv
 .                                       black    0.0   0.0   0.0   0
@@ -635,7 +647,7 @@ Another common request is for trees (so no color is used twice) starting at blac
 </div>
 
 <div id="outline-container-cc-bw-trees" class="outline-3">
-<h3 id="cc-bw-trees"><span class="section-number-3">2.5.</span> Black to White Trees</h3>
+<h3 id="cc-bw-trees"><span class="section-number-3">2.5.</span> Black to White in Three Trees</h3>
 <div class="outline-text-3" id="text-cc-bw-trees">
 <p>
 The three segment trees from black to white are useful in that the intensity (sum of the components) is a monotone increasing function from zero up to
@@ -673,8 +685,51 @@ three.  One of them (<code>0RYW</code>) is often called the "fire ramp" as it ra
 </div>
 </div>
 
+
+<div id="outline-container-cc-bc1-trees" class="outline-3">
+<h3 id="cc-bc1-trees"><span class="section-number-3">2.6.</span> Black to Corner in One Trees</h3>
+<div class="outline-text-3" id="text-cc-bc1-trees">
+<p>
+These minimal trees go from black to a corner of the cube &#x2013; not much of a tree!!  Still, they are exceedingly common in applications, and thus have
+predefined color schemes.
+</p>
+
+<ul class="org-ul">
+<li><code>0W</code> &#x2013; <code>csCCu0W</code></li>
+<li><code>0R</code> &#x2013; <code>csCCu0R</code></li>
+<li><code>0B</code> &#x2013; <code>csCCu0B</code></li>
+<li><code>0G</code> &#x2013; <code>csCCu0G</code></li>
+<li><code>0C</code> &#x2013; <code>csCCu0C</code></li>
+<li><code>0M</code> &#x2013; <code>csCCu0M</code></li>
+<li><code>0Y</code> &#x2013; <code>csCCu0Y</code></li>
+</ul>
+</div>
+
+<div id="outline-container-csCCu" class="outline-4">
+<h4 id="csCCu"><span class="section-number-4">2.6.1.</span> Predefined Schemes</h4>
+<div class="outline-text-4" id="text-csCCu">
+<dl class="org-dl">
+<dt><code>csCCu0W</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCu0W_50.png" alt="color_lut_docs_csCCu0W_50.png" /></dd>
+<dt><code>csCCu0R</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCu0R_50.png" alt="color_lut_docs_csCCu0R_50.png" /></dd>
+<dt><code>csCCu0B</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCu0B_50.png" alt="color_lut_docs_csCCu0B_50.png" /></dd>
+<dt><code>csCCu0G</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCu0G_50.png" alt="color_lut_docs_csCCu0G_50.png" /></dd>
+<dt><code>csCCu0C</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCu0C_50.png" alt="color_lut_docs_csCCu0C_50.png" /></dd>
+<dt><code>csCCu0M</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCu0M_50.png" alt="color_lut_docs_csCCu0M_50.png" /></dd>
+<dt><code>csCCu0Y</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCu0Y_50.png" alt="color_lut_docs_csCCu0Y_50.png" /></dd>
+</dl>
+</div>
+</div>
+</div>
+
 <div id="outline-container-lum" class="outline-3">
-<h3 id="lum"><span class="section-number-3">2.6.</span> Luminance based color schemes</h3>
+<h3 id="lum"><span class="section-number-3">2.7.</span> Luminance based color schemes</h3>
 <div class="outline-text-3" id="text-lum">
 <p>
 Luminance based color schemes defined as color gradients from the center of the in the HSL color space to an extreem vertex are quite popular.  Many of the
@@ -694,7 +749,7 @@ from black to white in the RGB edge/diagonal graph &#x2013; they are the same as
 </div>
 
 <div id="outline-container-cc-h-t-c" class="outline-3">
-<h3 id="cc-h-t-c"><span class="section-number-3">2.7.</span> Hot Too Cold</h3>
+<h3 id="cc-h-t-c"><span class="section-number-3">2.8.</span> Hot Too Cold</h3>
 <div class="outline-text-3" id="text-cc-h-t-c">
 <p>
 A very common color map used to map data with ranges from cold up to hot is known as the "cold too hot ramp".  This ramp provides colors from blue, up
@@ -717,7 +772,7 @@ however, it is more attractive.  This one moves from white (ice), up to water (b
 </div>
 
 <div id="outline-container-csCColde" class="outline-4">
-<h4 id="csCColde"><span class="section-number-4">2.7.1.</span> Predefined Schemes</h4>
+<h4 id="csCColde"><span class="section-number-4">2.8.1.</span> Predefined Schemes</h4>
 <div class="outline-text-4" id="text-csCColde">
 <dl class="org-dl">
 <dt><code>csCColdeColdToHot</code></dt><dd><br />
@@ -729,8 +784,39 @@ however, it is more attractive.  This one moves from white (ice), up to water (b
 </div>
 </div>
 
+
+<div id="outline-container-cc-fractal-trees" class="outline-3">
+<h3 id="cc-fractal-trees"><span class="section-number-3">2.9.</span> Common Fractal Color Graphs</h3>
+<div class="outline-text-3" id="text-cc-fractal-trees">
+<p>
+These color schemes have no special cycle/tree/graph structure at all, but they are commonly used to color fractals.  Common enough that I have included
+predefined schemes for them.
+</p>
+
+<ul class="org-ul">
+<li><code>0RYBCW</code> &#x2013; <code>csCCfractal0RYBCW</code></li>
+<li><code>YR</code>     &#x2013; <code>csCCfractalYR</code></li>
+<li><code>YB</code>     &#x2013; <code>csCCfractalYB</code></li>
+</ul>
+</div>
+
+<div id="outline-container-csCCfractal" class="outline-4">
+<h4 id="csCCfractal"><span class="section-number-4">2.9.1.</span> Predefined Schemes</h4>
+<div class="outline-text-4" id="text-csCCfractal">
+<dl class="org-dl">
+<dt><code>csCCfractal0RYBCW</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCfractal0RYBCW_50.png" alt="color_lut_docs_csCCfractal0RYBCW_50.png" /></dd>
+<dt><code>csCCfractalYR</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCfractalYR_50.png" alt="color_lut_docs_csCCfractalYR_50.png" /></dd>
+<dt><code>csCCfractalYB</code></dt><dd><br />
+<img src="./pics/cs/color_lut_docs_csCCfractalYB_50.png" alt="color_lut_docs_csCCfractalYB_50.png" /></dd>
+</dl>
+</div>
+</div>
+</div>
+
 <div id="outline-container-cc-cons" class="outline-3">
-<h3 id="cc-cons"><span class="section-number-3">2.8.</span> Constant Intensity Cycles</h3>
+<h3 id="cc-cons"><span class="section-number-3">2.10.</span> Constant Intensity Cycles</h3>
 <div class="outline-text-3" id="text-cc-cons">
 <p>
 Two cycles, with three edges each, exhibiting constant intensity for every color in the color scheme are genuinely useful.  They have the advantage that they
@@ -744,7 +830,7 @@ always render a "bright" color.  The lower intensity version is best for project
 </div>
 
 <div id="outline-container-csCCcons" class="outline-4">
-<h4 id="csCCcons"><span class="section-number-4">2.8.1.</span> Predefined Schemes</h4>
+<h4 id="csCCcons"><span class="section-number-4">2.10.1.</span> Predefined Schemes</h4>
 <div class="outline-text-4" id="text-csCCcons">
 <dl class="org-dl">
 <dt><code>csCCconsTwo</code></dt><dd><br />
@@ -757,7 +843,7 @@ always render a "bright" color.  The lower intensity version is best for project
 </div>
 
 <div id="outline-container-cc-div-1" class="outline-3">
-<h3 id="cc-div-1"><span class="section-number-3">2.9.</span> One Segment Diverging Maps</h3>
+<h3 id="cc-div-1"><span class="section-number-3">2.11.</span> One Segment Diverging Maps</h3>
 <div class="outline-text-3" id="text-cc-div-1">
 <p>
 One edge trees in the face diagonal graph with a nearly constant intensity of 2 along the entire edge are useful for "diverging" or "bipolar" color
@@ -784,7 +870,7 @@ used to compute the scheme: Blue up, red down, green constant (maxChanVal).
 </div>
 
 <div id="outline-container-csCCud" class="outline-4">
-<h4 id="csCCud"><span class="section-number-4">2.9.1.</span> Predefined Schemes</h4>
+<h4 id="csCCud"><span class="section-number-4">2.11.1.</span> Predefined Schemes</h4>
 <div class="outline-text-4" id="text-csCCud">
 <dl class="org-dl">
 <dt><code>csCCudBr</code></dt><dd><br />
@@ -805,7 +891,7 @@ used to compute the scheme: Blue up, red down, green constant (maxChanVal).
 </div>
 
 <div id="outline-container-cc-div-3" class="outline-3">
-<h3 id="cc-div-3"><span class="section-number-3">2.10.</span> Three Segment Diverging Maps</h3>
+<h3 id="cc-div-3"><span class="section-number-3">2.12.</span> Three Segment Diverging Maps</h3>
 <div class="outline-text-3" id="text-cc-div-3">
 <p>
 Some three edge trees utilizing very different colors for starting and terminal points can form very nice "divergent" color maps.  Such maps can
@@ -820,7 +906,7 @@ supported via named methods (selected for attractiveness):
 </div>
 
 <div id="outline-container-csCCdiv" class="outline-4">
-<h4 id="csCCdiv"><span class="section-number-4">2.10.1.</span> Predefined Schemes</h4>
+<h4 id="csCCdiv"><span class="section-number-4">2.12.1.</span> Predefined Schemes</h4>
 <div class="outline-text-4" id="text-csCCdiv">
 <dl class="org-dl">
 <dt><code>csCCdivBWR</code></dt><dd><br />
@@ -833,7 +919,7 @@ supported via named methods (selected for attractiveness):
 </div>
 
 <div id="outline-container-cc-h-rmp" class="outline-3">
-<h3 id="cc-h-rmp"><span class="section-number-3">2.11.</span> Center point ramps (HSL schemes)</h3>
+<h3 id="cc-h-rmp"><span class="section-number-3">2.13.</span> Center point ramps (HSL schemes)</h3>
 <div class="outline-text-3" id="text-cc-h-rmp">
 <p>
 Color schemes defined as gradients from the center of the HSL color space to an extreme edge are mostly perceptually linear.  These are also one segment
@@ -852,7 +938,7 @@ this new vertex, we have the following saturation based color schemes:
 </div>
 
 <div id="outline-container-csHSLh" class="outline-4">
-<h4 id="csHSLh"><span class="section-number-4">2.11.1.</span> Predefined Schemes</h4>
+<h4 id="csHSLh"><span class="section-number-4">2.13.1.</span> Predefined Schemes</h4>
 <div class="outline-text-4" id="text-csHSLh">
 <dl class="org-dl">
 <dt><code>csHSLhR</code></dt><dd><br />
@@ -873,11 +959,11 @@ this new vertex, we have the following saturation based color schemes:
 </div>
 
 <div id="outline-container-cc-stack-hsl" class="outline-3">
-<h3 id="cc-stack-hsl"><span class="section-number-3">2.12.</span> Stacked HSL Schemes</h3>
+<h3 id="cc-stack-hsl"><span class="section-number-3">2.14.</span> Stacked HSL Schemes</h3>
 <div class="outline-text-3" id="text-cc-stack-hsl">
 <p>
 The diagonal traversals (diagonal meaning through the center of the cube) are essentially two of the HSL saturation based schemes placed back to back.  Aside
-from the black-white one, these can form effective divergent color schemes.  
+from the black-white one, these can form effective divergent color schemes.
 </p>
 
 <ul class="org-ul">
@@ -889,7 +975,7 @@ from the black-white one, these can form effective divergent color schemes.
 </div>
 
 <div id="outline-container-csCCdiag" class="outline-4">
-<h4 id="csCCdiag"><span class="section-number-4">2.12.1.</span> Predefined Schemes</h4>
+<h4 id="csCCdiag"><span class="section-number-4">2.14.1.</span> Predefined Schemes</h4>
 <div class="outline-text-4" id="text-csCCdiag">
 <dl class="org-dl">
 <dt><code>csCCdiagCR</code></dt><dd><br />

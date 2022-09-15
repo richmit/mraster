@@ -148,43 +148,62 @@ namespace mjr {
           rcConverterHomoBase(inRamCanvasT& aRC) : attachedRC(aRC) {  }
           inline bool isIntAxOrientationNaturalX() { return attachedRC.isIntAxOrientationNaturalX(); }
           inline bool isIntAxOrientationNaturalY() { return attachedRC.isIntAxOrientationNaturalY(); }
-          inline inRamCanvasT::coordIntType getNumPixX() { return attachedRC.getNumPixX(); }
-          inline inRamCanvasT::coordIntType getNumPixY() { return attachedRC.getNumPixY(); }
+          inline typename inRamCanvasT::coordIntType getNumPixX() { return attachedRC.getNumPixX(); }
+          inline typename inRamCanvasT::coordIntType getNumPixY() { return attachedRC.getNumPixY(); }
       };
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       template<class inRamCanvasT>
       class rcConverterIdentity : public rcConverterHomoBase<inRamCanvasT>  {
         public:
-          typedef inRamCanvasT::colorType colorType;
-          inline colorType getPxColorNC(inRamCanvasT::coordIntType x, inRamCanvasT::coordIntType y) { return rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y); }
+          rcConverterIdentity(inRamCanvasT& aRC) : rcConverterHomoBase<inRamCanvasT>(aRC) {  }
+          typedef typename inRamCanvasT::colorType colorType;
+          inline colorType getPxColorNC(typename inRamCanvasT::coordIntType x, typename inRamCanvasT::coordIntType y) { return rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y); }
       };
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       template<class inRamCanvasT>
       class rcConverterRGBbyte : public rcConverterHomoBase<inRamCanvasT>  {
         public:
-          typedef inRamCanvasT::colorType::colConRGBbyte colorType;
-          inline colorType getPxColorNC(inRamCanvasT::coordIntType x, inRamCanvasT::coordIntType y) { return rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).getColConRGB_byte(); }
+          rcConverterRGBbyte(inRamCanvasT& aRC) : rcConverterHomoBase<inRamCanvasT>(aRC) {  }
+          typedef typename inRamCanvasT::colorType::colConRGBbyte colorType;
+          inline colorType getPxColorNC(typename inRamCanvasT::coordIntType x, typename inRamCanvasT::coordIntType y) { return rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).getColConRGB_byte(); }
       };
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       template<class inRamCanvasT>
       class rcConverterRGBAbyte {
         public:
-          typedef inRamCanvasT::colorType::colConRGBAbyte colorType;
-          inline colorType getPxColorNC(inRamCanvasT::coordIntType x, inRamCanvasT::coordIntType y) { return rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).getColConRGBA_byte(); }
+          rcConverterRGBAbyte(inRamCanvasT& aRC) : rcConverterHomoBase<inRamCanvasT>(aRC) {  }
+          typedef typename inRamCanvasT::colorType::colConRGBAbyte colorType;
+          inline colorType getPxColorNC(typename inRamCanvasT::coordIntType x, typename inRamCanvasT::coordIntType y) { return rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).getColConRGBA_byte(); }
       };
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       template<class inRamCanvasT>
       class rcConverterRGBdbl {
         public:
-          typedef inRamCanvasT::colorType::colConRGBdbl colorType;
-          inline colorType getPxColorNC(inRamCanvasT::coordIntType x, inRamCanvasT::coordIntType y) { return rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).getColConRGB_dbl(); }
+          rcConverterRGBdbl(inRamCanvasT& aRC) : rcConverterHomoBase<inRamCanvasT>(aRC) {  }
+          typedef typename inRamCanvasT::colorType::colConRGBdbl colorType;
+          inline colorType getPxColorNC(typename inRamCanvasT::coordIntType x, typename inRamCanvasT::coordIntType y) { return rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).getColConRGB_dbl(); }
       };
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       template<class inRamCanvasT>
       class rcConverterRGBAdbl {
         public:
-          typedef inRamCanvasT::colorType::colConRGBAdbl colorType;
-          inline colorType getPxColorNC(inRamCanvasT::coordIntType x, inRamCanvasT::coordIntType y) { return rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).getColConRGBA_dbl(); }
+          rcConverterRGBAdbl(inRamCanvasT& aRC) : rcConverterHomoBase<inRamCanvasT>(aRC) {  }
+          typedef typename inRamCanvasT::colorType::colConRGBAdbl colorType;
+          inline colorType getPxColorNC(typename inRamCanvasT::coordIntType x, typename inRamCanvasT::coordIntType y) { return rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).getColConRGBA_dbl(); }
+      };
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Colorize a ramCanvasTpl with integer channels using a color scheme. */
+      template<class inRamCanvasT, class outColorT, class colorScheme, bool clamp, int factor, int chan>
+      class rcConverterColorScheme : public rcConverterHomoBase<inRamCanvasT>  {
+        public:
+          rcConverterColorScheme(inRamCanvasT& aRC) : rcConverterHomoBase<inRamCanvasT>(aRC) {  }
+          typedef outColorT colorType;
+          inline colorType getPxColorNC(typename inRamCanvasT::coordIntType x, typename inRamCanvasT::coordIntType y) { 
+            typename outColorT::csIntType csi = static_cast<typename outColorT::csIntType>(rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).getChan(chan) * factor);
+            if (clamp)
+              csi = mjr::intClamp(csi, colorScheme::numC-1);
+            return colorScheme::c(csi); 
+          }
       };
       //@}
 
@@ -2708,7 +2727,7 @@ namespace mjr {
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
     inline int
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeTIFFfile(std::string fileName, bool markAlpha) {
-    auto tmp = rcConverterIdentity<ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>>(*this);
+    rcConverterIdentity<ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>> tmp(*this);
     return writeTIFFfile(fileName, tmp, markAlpha);
 }
 
@@ -4206,8 +4225,7 @@ namespace mjr {
           /* performance: An if inside a triple nexted for loop!  Ouch.  But chanIsInt is a compile time constant, so this should be reduced to just the
              branch of the if that is true.  Same wit the if statement inside the else clause of this if.*/
           if (colorT::chanIsInt) {
-            int shft  = (reverseBits ? colorT::bitsPerChan-8 : 0);
-            int shftD = (reverseBits ? -8 : 8);
+            colorChanArithLogType shft  = (reverseBits ? colorT::bitsPerChan-8 : 0);
             /* Note that colorChanArithLogType is always an unsigned integer type, and thus we avoid compiler errors when trying to use | on a float.
                When chanIsInt, colorChanArithLogType is the same as colorChanType when chanIsInt -- so a NOOP because this part of the if only gets
                run when chanIsInt. */
@@ -4218,10 +4236,15 @@ namespace mjr {
                 return 25;
               if (iStream.gcount() != 1)
                 return 25;
-              pv = pv | (uch << shft);
-              shft += shftD;
+              pv = pv | static_cast<colorChanArithLogType>(uch << shft);
+
+              if (reverseBits)
+                shft -= 8;
+              else
+                shft += 8;
+
             }
-            getPxColorRefNC(x, y).setChan(ci, pv);
+            getPxColorRefNC(x, y).setChan(ci, static_cast<colorChanType>(pv));
           } else {
             iStream.read(strBuf, fileBytePerChan);
             getPxColorRefNC(x, y).setChan(ci, *((colorChanType*)strBuf));

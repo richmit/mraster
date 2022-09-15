@@ -8,7 +8,7 @@
 #+DESCRIPTION: DESCRIPTION FIXME
 #+KEYWORDS:    KEYWORDS FIXME
 #+LANGUAGE:    en
-#+OPTIONS:     num:t toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t skip:nil d:nil todo:t pri:nil H:5 p:t author:t html-scripts:nil 
+#+OPTIONS:     num:t toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t skip:nil d:nil todo:t pri:nil H:5 p:t author:t html-scripts:nil
 #+SEQ_TODO:    TODO:NEW(t)                         TODO:WORK(w)    TODO:HOLD(h)    | TODO:FUTURE(f)   TODO:DONE(d)    TODO:CANCELED(c)
 #+PROPERTY: header-args :eval never-export
 #+HTML_HEAD: <style>body { width: 95%; margin: 2% auto; font-size: 18px; line-height: 1.4em; font-family: Georgia, serif; color: black; background-color: white; }</style>
@@ -61,6 +61,8 @@ inner classes follow a regular naming convention:
   - [[#csCCud][=csCCud ........=]] RGB color cube: Two color up-down ramps (template: =csCC_tpl=)
   - [[#csCCdiv][=csCCdiv .......=]] RGB color cube: Three Segment Diverging Maps (template: =csCC_tpl=)
   - [[#csCCsum][=csCCSum .......=]] RGB color cube: Sum ramp (template: =csCC_tpl=)
+  - [[#csCCu][=csCCu .........=]] RGB color cube: Gradients from black to another corner (template: =csCC_tpl=)
+  - [[#csCCfractal][=csCCfractal ...=]] RGB color cube: Common gradient schemes used for fractals (template: =csCC_tpl=)
   - [[#csHSLh][=csHSLh ........=]] RGB color cube: Gradients from the cube center to a corner (template: =csHSLh_tpl=)
   - [[#csBin][=csBin .........=]] RGB Binary Schemes (template: =csCC_tpl=)
   - [[#csPGrey][=csPGrey .......=]] RGB Pseudo-greyscale
@@ -98,7 +100,7 @@ aColor.csSet<mjr::color3c8b::webSafeNormalVision>(25);
 :END:
 
 Not all color scheme classes have the same interface; however, the interfaces are uniformly designed:
-  - *=numC=:* The number of colors available in the scheme 
+  - *=numC=:* The number of colors available in the scheme
     - Color schemes with a fixed number of colors at compile time have member =numC=
     - Color schemes with the number of colors set at run time, will have a =numC= argument for the =c= methods.
       - These schemes have two members specifying the range for =numC=: =minNumC= & =maxNumC=.
@@ -113,7 +115,7 @@ Not all color scheme classes have the same interface; however, the interfaces ar
           - *=typename  csG=:*   A generic color selector used in a template
         - The remaining arguments are generally used to specify some characterstic of the scheme itself.  Examples:
           - A =numC= argument specifying the number of elements in a discrete scheme (like Colorbrewer schemes)
-          - The color match function based rainbow color schemes take an argument =interpMethod= specifiying an interpolation method. is 
+          - The color match function based rainbow color schemes take an argument =interpMethod= specifiying an interpolation method. is
       - A method that takes a =colorTpl= as it's first argument, with the remaining arguments as in the factory method form of =c=.
     - It is entirely possilbe that a color scheme object may have more than two =c= methods.  For example, =csCC*= color schemes have a pair of =c= methods
       taking integer color selectors and another pair taking a floating point color selectors.
@@ -150,7 +152,7 @@ Many color schemes provide a number of colors that is a function of =chanStepMax
 .                                              | | |/_/_______________| |  /
 .                                              | |____________________| | /
 .                                         blue |________________________|/ magenta
-.                           
+.
 .                                       Vertexes and Center of the RGB Color Cube:
 .                                       Name     R     G     B     Abriv
 .                                       black    0.0   0.0   0.0   0
@@ -279,7 +281,7 @@ channels, the discreet gradients have $2^{31}$ steps between corner colors.
    - =0RMBCW=
    - =0RYGCW=
 
-** Black to White Trees
+** Black to White in Three Trees
 :PROPERTIES:
 :CUSTOM_ID: cc-bw-trees
 :END:
@@ -287,11 +289,11 @@ channels, the discreet gradients have $2^{31}$ steps between corner colors.
   The three segment trees from black to white are useful in that the intensity (sum of the components) is a monotone increasing function from zero up to
   three.  One of them (=0RYW=) is often called the "fire ramp" as it ranges from black (flame base), up to yellow, then red, and finally to white hot.
 
-   - =0BCW= -- =csCCsumBGR=                     
-   - =0BMW= -- =csCCsumBRG=                     
-   - =0GCW= -- =csCCsumGBR=                     
-   - =0GYW= -- =csCCsumGRB=                     
-   - =0RMW= -- =csCCsumRBG=                     
+   - =0BCW= -- =csCCsumBGR=
+   - =0BMW= -- =csCCsumBRG=
+   - =0GCW= -- =csCCsumGBR=
+   - =0GYW= -- =csCCsumGRB=
+   - =0RMW= -- =csCCsumRBG=
    - =0RYW= -- =csCCsumRGB= & =csCColdeFireRamp=
 
 *** Predefined Schemes
@@ -311,6 +313,43 @@ channels, the discreet gradients have $2^{31}$ steps between corner colors.
   [[./pics/cs/color_lut_docs_csCCsumRBG_50.png]]
  - =csCCsumRGB= & =csCColdeFireRamp= :: \\
   [[./pics/cs/color_lut_docs_csCCsumRGB_50.png]]
+
+
+** Black to Corner in One Trees
+:PROPERTIES:
+:CUSTOM_ID: cc-bc1-trees
+:END:
+
+  These minimal trees go from black to a corner of the cube -- not much of a tree!!  Still, they are exceedingly common in applications, and thus have
+  predefined color schemes.
+
+   - =0W= -- =csCCu0W=
+   - =0R= -- =csCCu0R=
+   - =0B= -- =csCCu0B=
+   - =0G= -- =csCCu0G=
+   - =0C= -- =csCCu0C=
+   - =0M= -- =csCCu0M=
+   - =0Y= -- =csCCu0Y=
+
+*** Predefined Schemes
+:PROPERTIES:
+:CUSTOM_ID: csCCu
+:END:
+
+ - =csCCu0W= :: \\
+  [[./pics/cs/color_lut_docs_csCCu0W_50.png]]
+ - =csCCu0R= :: \\
+  [[./pics/cs/color_lut_docs_csCCu0R_50.png]]
+ - =csCCu0B= :: \\
+  [[./pics/cs/color_lut_docs_csCCu0B_50.png]]
+ - =csCCu0G= :: \\
+  [[./pics/cs/color_lut_docs_csCCu0G_50.png]]
+ - =csCCu0C= :: \\
+  [[./pics/cs/color_lut_docs_csCCu0C_50.png]]
+ - =csCCu0M= :: \\
+  [[./pics/cs/color_lut_docs_csCCu0M_50.png]]
+ - =csCCu0Y= :: \\
+  [[./pics/cs/color_lut_docs_csCCu0Y_50.png]]
 
 ** Luminance based color schemes
 :PROPERTIES:
@@ -353,6 +392,31 @@ channels, the discreet gradients have $2^{31}$ steps between corner colors.
   [[./pics/cs/color_lut_docs_csCColdeColdToHot_50.png]]
  - =csCColdeIceToWaterToHot= :: \\
   [[./pics/cs/color_lut_docs_csCColdeIceToWaterToHot_50.png]]
+
+
+** Common Fractal Color Graphs
+:PROPERTIES:
+:CUSTOM_ID: cc-fractal-trees
+:END:
+
+  These color schemes have no special cycle/tree/graph structure at all, but they are commonly used to color fractals.  Common enough that I have included
+  predefined schemes for them.
+
+   - =0RYBCW= -- =csCCfractal0RYBCW=
+   - =YR=     -- =csCCfractalYR=
+   - =YB=     -- =csCCfractalYB=
+
+*** Predefined Schemes
+:PROPERTIES:
+:CUSTOM_ID: csCCfractal
+:END:
+
+ - =csCCfractal0RYBCW= :: \\
+  [[./pics/cs/color_lut_docs_csCCfractal0RYBCW_50.png]]
+ - =csCCfractalYR= :: \\
+  [[./pics/cs/color_lut_docs_csCCfractalYR_50.png]]
+ - =csCCfractalYB= :: \\
+  [[./pics/cs/color_lut_docs_csCCfractalYB_50.png]]
 
 ** Constant Intensity Cycles
 :PROPERTIES:
@@ -475,7 +539,7 @@ channels, the discreet gradients have $2^{31}$ steps between corner colors.
 :END:
 
  The diagonal traversals (diagonal meaning through the center of the cube) are essentially two of the HSL saturation based schemes placed back to back.  Aside
- from the black-white one, these can form effective divergent color schemes.  
+ from the black-white one, these can form effective divergent color schemes.
 
   - =CR= -- =csCCdiagCR=
   - =MG= -- =csCCdiagMG=
@@ -541,7 +605,7 @@ The =csCubeHelix_tpl= templte can geneate any of the cubehelix schemes, but =col
  - =csCHvio= :: \\
   [[./pics/cs/color_lut_docs_csCHvio_50.png]]
 
-* Pseudo-Greyscale   
+* Pseudo-Greyscale
 :PROPERTIES:
 :CUSTOM_ID: csPGrey
 :END:
@@ -591,7 +655,7 @@ a continuous gradient version of each color scheme -- which is kinda weird, but 
   [[./pics/cs/color_lut_docs_csCBAccentC_50.png]]
  - =csCBBlues= :: \\
   [[./pics/cs/color_lut_docs_csCBBlues_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBBluesC_50.png]] 
+  [[./pics/cs/color_lut_docs_csCBBluesC_50.png]]
  - =csCBBrBG= :: \\
   [[./pics/cs/color_lut_docs_csCBBrBG_50.png]] \\
   [[./pics/cs/color_lut_docs_csCBBrBGC_50.png]]
@@ -922,14 +986,14 @@ Note =csPLY_tpl= can be used to make circular color schemes -- any closed parame
  - =csCBSet3= :: \\
   [[./pics/cs/color_lut_docs_csCBSet3_50.png]]
 
-** Sequential 
+** Sequential
 :PROPERTIES:
 :CUSTOM_ID: xRefSeq
 :END:
 
  - =csCBBlues= :: \\
   [[./pics/cs/color_lut_docs_csCBBlues_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBBluesC_50.png]] 
+  [[./pics/cs/color_lut_docs_csCBBluesC_50.png]]
 
  - =csCBBuGn= :: \\
   [[./pics/cs/color_lut_docs_csCBBuGn_50.png]] \\
@@ -1040,7 +1104,7 @@ Note =csPLY_tpl= can be used to make circular color schemes -- any closed parame
 In the build directory, we run the =color_lut_docs= example to generate all the TIFF files.
 
 #+begin_src sh
-make color_lut_docs && ./color_lut_docs.exe 
+make color_lut_docs && ./color_lut_docs.exe
 #+end_src
 
 In this directory, we run the following to create PNGs:
@@ -1048,4 +1112,10 @@ In this directory, we run the following to create PNGs:
 #+begin_src zsh
 for f in ../build/color_lut_docs_*.tiff(:r); do echo $f; nf=pics/cs/`basename $f`.png; convert $f.tiff $nf; done
 for f in ../build/color_lut_docs_*.tiff(:r); do echo $f; nf=pics/cs/`basename $f`_50.png; convert -resize 50% $f.tiff $nf; done
+
+
+for f in ../build/color_lut_docs_csCCfractal*.tiff(:r); do echo $f; nf=pics/cs/`basename $f`.png; convert $f.tiff $nf; done
+for f in ../build/color_lut_docs_csCCfractal*.tiff(:r); do echo $f; nf=pics/cs/`basename $f`_50.png; convert -resize 50% $f.tiff $nf; done
+
+
 #+end_src
