@@ -33,7 +33,8 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-typedef mjr::ramCanvas3c8b::colorType::csIntType cit;
+typedef mjr::ramCanvas3c8b::colorType ct;
+typedef ct::csIntType cit;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
@@ -66,61 +67,61 @@ int main(void) {
           count++,z=static_cast<std::complex<double>>(std::pow(z, 5))+oneone) ;
       if(count < NUMITR) {
         // A
-        theRamCanvasA.drawPoint(x, y, mjr::ramCanvas3c8b::colorType::csCColdeRainbow::c(static_cast<cit>(mjr::numberWrap(count*500, 255*6+1))));
+        theRamCanvasA.drawPoint(x, y, ct::csCColdeRainbow::c(static_cast<cit>(count*500)));
         // B
-        theRamCanvasB.drawPoint(x, y, mjr::ramCanvas3c8b::colorType::csCColdeRainbow::c(static_cast<cit>(mjr::numberWrap(static_cast<int>(std::norm(z)/1000), 255*6+1))));
+        theRamCanvasB.drawPoint(x, y, ct::csCColdeRainbow::c(static_cast<cit>(std::norm(z)/1000)));
         // C
-        theRamCanvasC.drawPoint(x, y, mjr::ramCanvas3c8b::colorType::csCColdeRainbow::c(static_cast<cit>(mjr::numberWrap(static_cast<int>(std::abs(std::imag(z))), 255*6+1))));
+        theRamCanvasC.drawPoint(x, y, ct::csCColdeRainbow::c(static_cast<cit>(std::abs(std::imag(z)))));
         // D
-        theRamCanvasD.drawPoint(x, y, mjr::ramCanvas3c8b::colorType::csCColdeRainbow::c(static_cast<cit>(mjr::numberWrap(static_cast<int>(std::abs(std::real(z))), 255*6+1))));
+        theRamCanvasD.drawPoint(x, y, ct::csCColdeRainbow::c(static_cast<cit>(std::abs(std::real(z)))));
         // E
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
-          theRamCanvasE.drawPoint(x, y, mjr::ramCanvas3c8b::colorType("red"));
+          theRamCanvasE.drawPoint(x, y, "red");
         else
-          theRamCanvasE.drawPoint(x, y, mjr::ramCanvas3c8b::colorType("blue"));
+          theRamCanvasE.drawPoint(x, y, "blue");
         // F
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
-         theRamCanvasF.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))), 255*1-1), "0R"));
+         theRamCanvasF.drawPoint(x, y, ct::csCCu0R::c(static_cast<cit>(std::abs(std::real(z)))));
         else
-          theRamCanvasF.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::imag(z))), 255*1-1), "0B"));
+          theRamCanvasF.drawPoint(x, y, ct::csCCu0B::c(static_cast<cit>(std::abs(std::imag(z)))));
         // G
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
-          theRamCanvasG.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::norm(z)/1000), 255*1-1), "0R"));
+          theRamCanvasG.drawPoint(x, y, ct::csCCu0R::c(static_cast<cit>(std::norm(z)/1000)));
         else
-          theRamCanvasG.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::norm(z)/1000), 255*1-1), "0B"));
+          theRamCanvasG.drawPoint(x, y, ct::csCCu0B::c(static_cast<cit>(std::norm(z)/1000)));
         // H
         if(std::real(z) < 0) {
           if(std::imag(z) < 0) {
-            theRamCanvasH.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))), 255*1-1), "0R"));
+            theRamCanvasH.drawPoint(x, y, ct::csCCu0R::c(static_cast<cit>(std::abs(std::real(z)))));
           } else {
-            theRamCanvasH.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))), 255*1-1), "0B"));
+            theRamCanvasH.drawPoint(x, y, ct::csCCu0B::c(static_cast<cit>(std::abs(std::real(z)))));
           }
         } else {
           if(std::imag(z) < 0) {
-            theRamCanvasH.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))), 255*1-1), "0M"));
+            theRamCanvasH.drawPoint(x, y, ct::csCCu0M::c(static_cast<cit>(std::abs(std::real(z)))));
           } else {
-            theRamCanvasH.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))), 255*1-1), "0C"));
+            theRamCanvasH.drawPoint(x, y, ct::csCCu0C::c(static_cast<cit>(std::abs(std::real(z)))));
           }
         }
         // I
         if(std::real(z) < 0) {
           if(std::imag(z) < 0) {
             if(std::imag(z) < std::real(z) ) {
-              theRamCanvasI.drawPoint(x, y, mjr::ramCanvas3c8b::colorType("red"));
+              theRamCanvasI.drawPoint(x, y, "red");
             } else {
-              theRamCanvasI.drawPoint(x, y, mjr::ramCanvas3c8b::colorType("yellow"));
+              theRamCanvasI.drawPoint(x, y, "yellow");
             }
           } else {
-            theRamCanvasI.drawPoint(x, y, mjr::ramCanvas3c8b::colorType("blue"));
+            theRamCanvasI.drawPoint(x, y, "blue");
           }
         } else {
           if(std::imag(z) < 0) {
-            theRamCanvasI.drawPoint(x, y, mjr::ramCanvas3c8b::colorType("magenta"));
+            theRamCanvasI.drawPoint(x, y, "magenta");
           } else {
             if(std::imag(z) < std::real(z) ) {
-              theRamCanvasI.drawPoint(x, y, mjr::ramCanvas3c8b::colorType("cyan"));
+              theRamCanvasI.drawPoint(x, y, "cyan");
             } else {
-              theRamCanvasI.drawPoint(x, y, mjr::ramCanvas3c8b::colorType("green"));
+              theRamCanvasI.drawPoint(x, y, "green");
             }
           }
         }
@@ -128,31 +129,31 @@ int main(void) {
         if(std::real(z) < 0) {
           if(std::imag(z) < 0) {
             if(std::imag(z) < std::real(z) ) {
-              theRamCanvasJ.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))),  255*1-1), "0R"));
+              theRamCanvasJ.drawPoint(x, y, ct::csCCu0R::c(static_cast<cit>(std::abs(std::real(z)))));
             } else {
-              theRamCanvasJ.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))),  255*1-1), "0Y"));
+              theRamCanvasJ.drawPoint(x, y, ct::csCCu0Y::c(static_cast<cit>(std::abs(std::real(z)))));
             }
           } else {
-            theRamCanvasJ.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))),    255*1-1), "0B"));
+            theRamCanvasJ.drawPoint(x, y, ct::csCCu0B::c(static_cast<cit>(std::abs(std::real(z)))));
           }
         } else {
           if(std::imag(z) < 0) {
-            theRamCanvasJ.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))),    255*1-1), "0M"));
+            theRamCanvasJ.drawPoint(x, y, ct::csCCu0M::c(static_cast<cit>(std::abs(std::real(z)))));
           } else {
             if(std::imag(z) < std::real(z) ) {
-              theRamCanvasJ.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))),  255*1-1), "0C"));
+              theRamCanvasJ.drawPoint(x, y, ct::csCCu0C::c(static_cast<cit>(std::abs(std::real(z)))));
             } else {
-              theRamCanvasJ.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::numberWrap(static_cast<cit>(std::abs(std::real(z))),  255*1-1), "0G"));
+              theRamCanvasJ.drawPoint(x, y, ct::csCCu0G::c(static_cast<cit>(std::abs(std::real(z)))));
             }
           }
         }
         // K
-        theRamCanvasK.drawPoint(x, y, mjr::ramCanvas3c8b::colorType::csCColdeRainbow::c(mjr::numberWrap(static_cast<cit>((std::arg(z)+3.14)*255), 255*6+1)));
+        theRamCanvasK.drawPoint(x, y, ct::csCColdeRainbow::c(static_cast<cit>((std::arg(z)+3.14)*255)));
         // L
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
-          theRamCanvasL.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::intClamp(static_cast<cit>(std::abs(std::real(z)/100)), 255*1-1), "0R"));
+          theRamCanvasL.drawPoint(x, y, ct::csCCu0R::c(mjr::intClamp(static_cast<cit>(std::abs(std::real(z))/100), 255)));
         else
-          theRamCanvasL.drawPoint(x, y, mjr::ramCanvas3c8b::colorType().cmpRGBcornerDGradiant(mjr::intClamp(static_cast<cit>(std::abs(std::imag(z))/100), 255*1-1), "0B"));
+          theRamCanvasL.drawPoint(x, y, ct::csCCu0B::c(mjr::intClamp(static_cast<cit>(std::abs(std::imag(z))/100), 255)));
       }
     }
   }

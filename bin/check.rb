@@ -7,7 +7,7 @@ mrsrc = '/Users/richmit/world/my_prog/mraster'
 deps = { "#{mrsrc}/examples/BurningShip.cpp"              => "#{homed}/world/WWW/site/SS/BurningShip/index.org",
          "#{mrsrc}/examples/apollony.cpp"                 => "#{homed}/world/WWW/site/SS/AGasket/index.org",
          "#{mrsrc}/examples/BurningShip.cpp"              => "#{homed}/world/WWW/site/SS/BurningShip/index.org",
-         "#{mrsrc}/examples/mandelbrot_bm_cplx.cpp"       => "#{homed}/world/WWW/site/SS/mandelbrot/index.org",
+         "#{mrsrc}/examples/mandelbrot_simple.cpp"        => "#{homed}/world/WWW/site/SS/mandelbrot/index.org",
          "#{mrsrc}/examples/mandelbrot_potential.cpp"     => "#{homed}/world/WWW/site/SS/mandelbrot/index.org",
          "#{mrsrc}/examples/mandelbrot_potential_b_0.pov" => "#{homed}/world/WWW/site/SS/mandelbrot/index.org",
          "#{mrsrc}/examples/newton_bm_cplx.cpp"           => "#{homed}/world/WWW/site/SS/newton/index.org",

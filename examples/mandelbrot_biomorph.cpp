@@ -37,14 +37,8 @@
 typedef mjr::ramCanvas3c8b::colorType ct;
 typedef ct::csIntType cit;
 
-typedef ct::csCC_tpl<ct::cornerColorEnum::BLACK,  ct::cornerColorEnum::RED>  cs0R;
-typedef ct::csCC_tpl<ct::cornerColorEnum::BLACK,  ct::cornerColorEnum::BLUE> cs0B;
-
 typedef ct::csCC_tpl<ct::cornerColorEnum::YELLOW,  ct::cornerColorEnum::RED>  csYR;
 typedef ct::csCC_tpl<ct::cornerColorEnum::YELLOW,  ct::cornerColorEnum::BLUE> csYB;
-
-typedef ct::csCC_tpl<ct::cornerColorEnum::BLACK,  ct::cornerColorEnum::WHITE> cs01;
-typedef ct::csCC_tpl<ct::cornerColorEnum::WHITE,  ct::cornerColorEnum::BLACK> cs10;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
@@ -84,9 +78,9 @@ int main(void) {
         theRamCanvasK.drawPoint(x, y, ct::csCColdeRainbow::c(static_cast<cit>((std::arg(z)+3.14)*255)));
         // L
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
-          theRamCanvasL.drawPoint(x, y, cs0R::c(mjr::intClamp(static_cast<cit>(std::abs(std::real(z))*15), cs0R::numC-1)));
+          theRamCanvasL.drawPoint(x, y, ct::csCCu0R::c(mjr::intClamp(static_cast<cit>(std::abs(std::real(z))*15), ct::csCCu0R::numC-1)));
         else
-          theRamCanvasL.drawPoint(x, y, cs0B::c(mjr::intClamp(static_cast<cit>(std::abs(std::imag(z))*15), cs0B::numC-1)));
+          theRamCanvasL.drawPoint(x, y, ct::csCCu0B::c(mjr::intClamp(static_cast<cit>(std::abs(std::imag(z))*15), ct::csCCu0B::numC-1)));
         // M
         if(std::abs(std::real(zL)) < LIM)
           theRamCanvasM.drawPoint(x, y, csYB::c(std::abs(std::real(zL))/LIM));
@@ -96,9 +90,9 @@ int main(void) {
           theRamCanvasM.drawPoint(x, y, "white");
         // N
         if(std::abs(std::real(zL)) < LIM)
-          theRamCanvasN.drawPoint(x, y, cs01::c(std::abs(std::real(zL))/LIM));
+          theRamCanvasN.drawPoint(x, y, ct::csCCdiag01::c(std::abs(std::real(zL))/LIM));
         else if(std::abs(std::imag(zL)) < LIM)
-          theRamCanvasN.drawPoint(x, y, cs10::c(std::abs(std::imag(zL))/LIM));
+          theRamCanvasN.drawPoint(x, y, ct::csCCdiag10::c(std::abs(std::imag(zL))/LIM));
         else
           theRamCanvasN.drawPoint(x, y, "white");
       }

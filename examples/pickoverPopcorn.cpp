@@ -1,10 +1,12 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      biomorph2.cpp
+ @file      pickoverPopcorn.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Draw a corner centered biomorph fractal nice for a desktop background image.@EOL
+ @brief     Draw fractals inspired by the book Symmetry in Chaos.@EOL
  @std       C++20
+ @see       sic_search.cpp
+ @see       https://www.mitchr.me/SS/sic/index.html
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -26,6 +28,10 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
+ @filedetails
+
+  Fractals inspired by the book "Symmetry in Chaos" by Michael Field and Martin Golubitsky.
+
 ********************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
 
@@ -33,55 +39,61 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-typedef mjr::ramCanvas3c8b::colorType ct;
-typedef ct::csIntType cit;
+// We could have made this a subclass of ramCanvasTpl::rcConverterHomoBase, but I think it is more instructive to implement the whole thing from scratch.
+class g2rgb8 {
+  private:
+    mjr::ramCanvas1c16b& attachedRC;
+  public:
+    g2rgb8(mjr::ramCanvas1c16b& aRC) : attachedRC(aRC) {  }
+    inline bool isIntAxOrientationNaturalX() { return attachedRC.isIntAxOrientationNaturalX(); }
+    inline bool isIntAxOrientationNaturalY() { return attachedRC.isIntAxOrientationNaturalY(); }
+    inline mjr::ramCanvas1c16b::coordIntType getNumPixX() { return attachedRC.getNumPixX(); }
+    inline mjr::ramCanvas1c16b::coordIntType getNumPixY() { return attachedRC.getNumPixY(); }
+    typedef mjr::colorRGB8b colorType;
+    inline colorType getPxColorNC(mjr::ramCanvas3c8b::coordIntType x, mjr::ramCanvas3c8b::coordIntType y) { 
+      colorType retColor;
+      mjr::ramCanvas3c8b::csIntType tmp = static_cast<mjr::ramCanvas3c8b::csIntType>(mjr::intClamp(10*attachedRC.getPxColorNC(x, y).getC0(), 5*255));
+      return retColor.cmpRGBcornerDGradiant(tmp, "0RYBCW");
+    }
+};
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const int NUMITR = 100;
-  const int CSIZE  = 7680;
-  const int LIM    = 4;
 
-  mjr::ramCanvas3c8b theRamCanvasA(CSIZE, CSIZE, -1.0, 1.4, -1.0, 1.4);
-  mjr::ramCanvas3c8b theRamCanvasE(CSIZE, CSIZE, -1.0, 1.4, -1.0, 1.4);
-  mjr::ramCanvas3c8b theRamCanvasK(CSIZE, CSIZE, -1.0, 1.4, -1.0, 1.4);
-  mjr::ramCanvas3c8b theRamCanvasL(CSIZE, CSIZE, -1.0, 1.4, -1.0, 1.4);
-  mjr::ramCanvas3c8b theRamCanvasN(CSIZE, CSIZE, -1.0, 1.4, -1.0, 1.4);
-
-  for(int y=0;y<theRamCanvasA.getNumPixY();y++) {
-    if((y%(CSIZE/10))==0)
-      std::cout << " LINE: " << y << "/" << CSIZE << std::endl;
-    for(int x=0;x<theRamCanvasA.getNumPixX();x++) {
-      std::complex<double> z(theRamCanvasA.int2realX(x), theRamCanvasA.int2realY(y));
-      int count = 0; 
-      while( ((std::abs(std::real(z))<LIM) || (std::abs(std::imag(z))<LIM)) && (count<NUMITR) ) {
-        z=std::sin(z)+std::complex<double>(1.0, 1.0);
-        count++;
-      }
-      if(count < NUMITR) {
-        // A
-        theRamCanvasA.drawPoint(x, y, ct::csCColdeRainbow::c(static_cast<cit>(count*500)));
-        // E
-        if(std::abs(std::real(z))<std::abs(std::imag(z)))
-          theRamCanvasE.drawPoint(x, y, ct("red"));
-        else
-          theRamCanvasE.drawPoint(x, y, ct("blue"));
-        // K
-        theRamCanvasK.drawPoint(x, y, ct::csCColdeRainbow::c(static_cast<cit>((std::arg(z)+3.14)*255)));
-        // L
-        if(std::abs(std::real(z))<std::abs(std::imag(z)))
-          theRamCanvasL.drawPoint(x, y, ct::csCCu0R::c(mjr::intClamp(static_cast<cit>(std::abs(std::real(z))*15), ct::csCCu0R::numC-1)));
-        else
-          theRamCanvasL.drawPoint(x, y, ct::csCCu0B::c(mjr::intClamp(static_cast<cit>(std::abs(std::imag(z))*15), ct::csCCu0B::numC-1)));
+  const int    IMGSIZ = 7680/4;
+  const int    NUMITR = 100;
+  const int    spanx  = 1;
+  const int    spany  = 1;
+  const double h      = 0.05;
+  const double a      = 4.0;
+  const double b      = 2.0;
+  mjr::ramCanvas1c16b hstRamCanvas(IMGSIZ, IMGSIZ, -4.0, 4.0, -4.0, 4.0);
+  
+  for(int y=0;y<hstRamCanvas.getNumPixY();y+=spany) {
+    if ((y%100)==0)
+      std::cout << y << std::endl;
+    for(int x=0;x<hstRamCanvas.getNumPixX();x+=spanx) {
+      double zx = hstRamCanvas.int2realX(x);
+      double zy = hstRamCanvas.int2realY(y);
+      for(int i=0; i<NUMITR; i++) {
+        double tmpx = zx - h * std::sin(zy + std::cos(a * zy));
+        double tmpy = zy - h * std::sin(zx + std::cos(b * zx));
+        zx = tmpx;
+        zy = tmpy;
+        int ix = hstRamCanvas.real2intX(zx);
+        int iy = hstRamCanvas.real2intY(zy);
+        if (hstRamCanvas.isOnCanvas(ix, iy))
+          hstRamCanvas.getPxColorRefNC(ix, iy).tfrmAdd(1);
       }
     }
   }
-  theRamCanvasA.writeTIFFfile("biomorph2A.tiff");
-  theRamCanvasE.writeTIFFfile("biomorph2E.tiff");
-  theRamCanvasK.writeTIFFfile("biomorph2K.tiff");
-  theRamCanvasL.writeTIFFfile("biomorph2L.tiff");
+        
+  hstRamCanvas.writeTIFFfile("pickoverPopcornCNT.tiff");
+  g2rgb8 rcFilt(hstRamCanvas);
+  hstRamCanvas.writeTIFFfile("pickoverPopcornCOL.tiff", rcFilt, false);
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
+  return 0;
 }
 /** @endcond */

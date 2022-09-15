@@ -1,10 +1,11 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      biomorph2.cpp
+ @file      mandelbrot_bm_cplx.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Draw a corner centered biomorph fractal nice for a desktop background image.@EOL
+ @brief     Simplified code for for web page examples.@EOL
  @std       C++20
+ @see       https://www.mitchr.me/SS/mandelbrot/index.html
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -34,53 +35,29 @@
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 typedef mjr::ramCanvas3c8b::colorType ct;
-typedef ct::csIntType cit;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const int NUMITR = 100;
-  const int CSIZE  = 7680;
-  const int LIM    = 4;
+  const int    IMGSIZ = 7680/4;
+  const int    NUMITR = 1024;
+  const double MAXZ   = 4.0;
+  mjr::ramCanvas3c8b theRamCanvas(IMGSIZ, IMGSIZ, -2.2, 0.8, -1.5, 1.5);
 
-  mjr::ramCanvas3c8b theRamCanvasA(CSIZE, CSIZE, -1.0, 1.4, -1.0, 1.4);
-  mjr::ramCanvas3c8b theRamCanvasE(CSIZE, CSIZE, -1.0, 1.4, -1.0, 1.4);
-  mjr::ramCanvas3c8b theRamCanvasK(CSIZE, CSIZE, -1.0, 1.4, -1.0, 1.4);
-  mjr::ramCanvas3c8b theRamCanvasL(CSIZE, CSIZE, -1.0, 1.4, -1.0, 1.4);
-  mjr::ramCanvas3c8b theRamCanvasN(CSIZE, CSIZE, -1.0, 1.4, -1.0, 1.4);
-
-  for(int y=0;y<theRamCanvasA.getNumPixY();y++) {
-    if((y%(CSIZE/10))==0)
-      std::cout << " LINE: " << y << "/" << CSIZE << std::endl;
-    for(int x=0;x<theRamCanvasA.getNumPixX();x++) {
-      std::complex<double> z(theRamCanvasA.int2realX(x), theRamCanvasA.int2realY(y));
+  for(int y=0;y<theRamCanvas.getNumPixY();y++) {
+    for(int x=0;x<theRamCanvas.getNumPixX();x++) {
+      std::complex<double> c(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
+      std::complex<double> z(0.0, 0.0);
       int count = 0; 
-      while( ((std::abs(std::real(z))<LIM) || (std::abs(std::imag(z))<LIM)) && (count<NUMITR) ) {
-        z=std::sin(z)+std::complex<double>(1.0, 1.0);
+      while((std::norm(z)<MAXZ) && (count<=NUMITR)) {
+        z=std::pow(z, 2) + c;
         count++;
       }
-      if(count < NUMITR) {
-        // A
-        theRamCanvasA.drawPoint(x, y, ct::csCColdeRainbow::c(static_cast<cit>(count*500)));
-        // E
-        if(std::abs(std::real(z))<std::abs(std::imag(z)))
-          theRamCanvasE.drawPoint(x, y, ct("red"));
-        else
-          theRamCanvasE.drawPoint(x, y, ct("blue"));
-        // K
-        theRamCanvasK.drawPoint(x, y, ct::csCColdeRainbow::c(static_cast<cit>((std::arg(z)+3.14)*255)));
-        // L
-        if(std::abs(std::real(z))<std::abs(std::imag(z)))
-          theRamCanvasL.drawPoint(x, y, ct::csCCu0R::c(mjr::intClamp(static_cast<cit>(std::abs(std::real(z))*15), ct::csCCu0R::numC-1)));
-        else
-          theRamCanvasL.drawPoint(x, y, ct::csCCu0B::c(mjr::intClamp(static_cast<cit>(std::abs(std::imag(z))*15), ct::csCCu0B::numC-1)));
-      }
+      if(count < NUMITR)
+        theRamCanvas.drawPoint(x, y, ct::csCColdeFireRamp::c(static_cast<ct::csIntType>(count*30)));
     }
   }
-  theRamCanvasA.writeTIFFfile("biomorph2A.tiff");
-  theRamCanvasE.writeTIFFfile("biomorph2E.tiff");
-  theRamCanvasK.writeTIFFfile("biomorph2K.tiff");
-  theRamCanvasL.writeTIFFfile("biomorph2L.tiff");
+  theRamCanvas.writeTIFFfile("mandelbrot_simple.tiff");
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

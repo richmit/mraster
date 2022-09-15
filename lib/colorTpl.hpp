@@ -3279,6 +3279,29 @@ namespace mjr {
       //@}
 
       //========================================================================================================================================================
+      /** @name Color Schemes: Start and end with a primary with the secondary mixed from the primaries in the middle.   */
+      //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csCCmixRYG
+          @ingroup cs
+          @extends csCC_tpl
+          Provides (mjr::colorTpl::chanStepMax*2+1) unique colors. */
+      typedef csCC_tpl<cornerColorEnum::RED, cornerColorEnum::YELLOW, cornerColorEnum::GREEN>  csCCmixRYG;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csCCmixRMB
+          @ingroup cs
+          @extends csCC_tpl
+          Provides (mjr::colorTpl::chanStepMax*2+1) unique colors. */
+      typedef csCC_tpl<cornerColorEnum::RED, cornerColorEnum::MAGENTA, cornerColorEnum::BLUE>  csCCmixRMB;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csCCmixGCB
+          @ingroup cs
+          @extends csCC_tpl
+          Provides (mjr::colorTpl::chanStepMax*2+1) unique colors. */
+      typedef csCC_tpl<cornerColorEnum::GREEN, cornerColorEnum::CYAN, cornerColorEnum::BLUE>  csCCmixGCB;
+      //@}
+
+      //========================================================================================================================================================
       /** @name Color Schemes: RGB Divergent Ramps */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3304,6 +3327,11 @@ namespace mjr {
           @extends csCC_tpl
           Gradient across the diagonal of the RGB color cube from black to white.  Provides about (mjr::colorTpl::chanStepMax + 1) unique colors. */
       typedef csCC_tpl<cornerColorEnum::BLACK,   cornerColorEnum::WHITE> csCCdiag01;
+      /** @class csCCdiag10
+          @ingroup cs
+          @extends csCC_tpl
+          Gradient across the diagonal of the RGB color cube from white to black.  Provides about (mjr::colorTpl::chanStepMax + 1) unique colors. */
+      typedef csCC_tpl<cornerColorEnum::WHITE,  cornerColorEnum::BLACK> csCCdiag10;
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @class csCCdiagCR
           @ingroup cs
@@ -3437,6 +3465,18 @@ namespace mjr {
           @extends csCC_tpl
           RGB Up-Down Ramp: Bg == Blue Up and Green Down == yellow -> magenta. Provides chanStepMax different colors. */
       typedef csCC_tpl<cornerColorEnum::YELLOW,  cornerColorEnum::MAGENTA> csCCudBg;
+      //@}
+
+      //========================================================================================================================================================
+      /** @name Color Schemes: Ramp from black to corner */
+      //@{
+      typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::WHITE>   csCCu0W; //!< Ramp from black to white
+      typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::RED>     csCCu0R; //!< Ramp from black to red
+      typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::BLUE>    csCCu0B; //!< Ramp from black to blue
+      typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::GREEN>   csCCu0G; //!< Ramp from black to green
+      typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::CYAN>    csCCu0C; //!< Ramp from black to cyan
+      typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::MAGENTA> csCCu0M; //!< Ramp from black to magenta
+      typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::YELLOW>  csCCu0Y; //!< Ramp from black to yellow
       //@}
 
       //========================================================================================================================================================
