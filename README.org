@@ -23,11 +23,11 @@ Some examples of what can be done with *MRaster*:
   -  [[https://www.mitchr.me/SS/circles2/index.html][Circle Art]]
   -  [[https://www.mitchr.me/SS/desktops/index.html][Some desktop backgrounds]]
 
-For a bit more detail about *MRaster*: [[http://richmit.github.io/mraster/index.html]]
+For a bit more detail about *MRaster*: [[https://richmit.github.io/mraster/index.html]]
 
-A quick start guide: [[http://richmit.github.io/mraster/QuickStart.html]]
+A quick start guide: [[https://richmit.github.io/mraster/QuickStart.html]]
 
-Color schemes included in *MRaster*: [[http://richmit.github.io/mraster/ColorSchemes.html]]
+Color schemes included in *MRaster*: [[https://richmit.github.io/mraster/ColorSchemes.html]]
 
 API Documentation: [[https://www.mitchr.me/SS/mraster/doc-lib/autodocs/html/index.html]]
 

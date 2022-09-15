@@ -3,7 +3,7 @@
 # FILE:        index.org
 #+TITLE:       MRaster
 #+AUTHOR:      Mitch Richling
-#+EMAIL:       http://www.mitchr.me/
+#+EMAIL:       https://www.mitchr.me/
 #+DATE:        2022-07-28
 #+DESCRIPTION: DESCRIPTION FIXME
 #+KEYWORDS:    KEYWORDS FIXME
@@ -135,27 +135,26 @@ Most of these things can be better achieved via other libraries:
 #+BEGIN_CENTER
 [[https://www.mitchr.me/SS/AGasket/index.html][file:./pics/gallery/apollonian_gasket_2D_01_250.jpg]]
 [[https://www.mitchr.me/SS/sierpinski/index.html][file:./pics/gallery/sierpinskiTriangle_thumb.jpg]] \\
-[[http://www.mitchr.me/SS/ChaosGame/index.html][file:./pics/gallery/chaosGame,5,-1,-1,1,2.3_270.jpg]]
-[[http://www.mitchr.me/SS/ChaosGame/index.html][file:./pics/gallery/chaosGame,6,2,2,-1,2_270.jpg]] \\
-[[http://www.mitchr.me/SS/mandelbrot/index.html][file:./pics/gallery/mandelbrot_c_thumb.jpg]]
-[[http://www.mitchr.me/SS/mandelbrot/index.html][file:./pics/gallery/potMandelbrot_a_0d_279.jpg]]
-[[http://www.mitchr.me/SS/mandelbrot/index.html][file:./pics/gallery/triangleMandelbrot_thumb.jpg]] \\
-[[http://www.mitchr.me/SS/newton/index.html][file:./pics/gallery/newton2_c_thumb.jpg]]
-[[http://www.mitchr.me/SS/newton/index.html][file:./pics/gallery/newton3_c_thumb.jpg]]
-[[http://www.mitchr.me/SS/newton/index.html][file:./pics/gallery/newton_thumb.jpg]] \\
-[[http://www.mitchr.me/SS/swirl/index.html][file:./pics/gallery/peterdejong_1c.png]] \\
-[[http://www.mitchr.me/SS/sic/index.html][file:./pics/gallery/sic_13_274.jpg]]
-[[http://www.mitchr.me/SS/sic/index.html][file:./pics/gallery/sic_23_274.jpg]]
-[[http://www.mitchr.me/SS/sic/index.html][file:./pics/gallery/sic_26_274.jpg]] \\
-[[http://www.mitchr.me/SS/mandelbrotInv/index.html][file:./pics/gallery/invertedMandelbrot_10.jpg]]
-[[http://www.mitchr.me/SS/tricorn/index.html][file:./pics/gallery/tricorn_02_20.jpg]]
-[[http://www.mitchr.me/SS/collatz/index.html][file:./pics/gallery/collatz_03_20.jpg]]
-[[http://www.mitchr.me/SS/tippets/index.html][file:./pics/gallery/tippets2_20.jpg]] \\
-[[http://www.mitchr.me/SS/mandelbrotBiomorph/index.html][file:./pics/gallery/mandelbrot_biomorphM_10.jpg]]
-[[http://www.mitchr.me/SS/mandelbrotBiomorph/index.html][file:./pics/gallery/mandelbrot_biomorphA_10.jpg]]  \\
-[[http://www.mitchr.me/SS/BurningShip/index.html][file:./pics/gallery/BurningShip_03_50.jpg]]
+[[https://www.mitchr.me/SS/ChaosGame/index.html][file:./pics/gallery/chaosGame,5,-1,-1,1,2.3_270.jpg]]
+[[https://www.mitchr.me/SS/ChaosGame/index.html][file:./pics/gallery/chaosGame,6,2,2,-1,2_270.jpg]] \\
+[[https://www.mitchr.me/SS/mandelbrot/index.html][file:./pics/gallery/mandelbrot_c_thumb.jpg]]
+[[https://www.mitchr.me/SS/mandelbrot/index.html][file:./pics/gallery/potMandelbrot_a_0d_279.jpg]]
+[[https://www.mitchr.me/SS/mandelbrot/index.html][file:./pics/gallery/triangleMandelbrot_thumb.jpg]] \\
+[[https://www.mitchr.me/SS/newton/index.html][file:./pics/gallery/newton2_c_thumb.jpg]]
+[[https://www.mitchr.me/SS/newton/index.html][file:./pics/gallery/newton3_c_thumb.jpg]]
+[[https://www.mitchr.me/SS/newton/index.html][file:./pics/gallery/newton_thumb.jpg]] \\
+[[https://www.mitchr.me/SS/swirl/index.html][file:./pics/gallery/peterdejong_1c.png]] \\
+[[https://www.mitchr.me/SS/sic/index.html][file:./pics/gallery/sic_13_274.jpg]]
+[[https://www.mitchr.me/SS/sic/index.html][file:./pics/gallery/sic_23_274.jpg]]
+[[https://www.mitchr.me/SS/sic/index.html][file:./pics/gallery/sic_26_274.jpg]] \\
+[[https://www.mitchr.me/SS/multibrot/index.html][file:./pics/gallery/multibrotSnaps_3.png]]
+[[https://www.mitchr.me/SS/multibrot/index.html][file:./pics/gallery/multibrotSnaps_4.png]]
+[[https://www.mitchr.me/SS/multibrot/index.html][file:./pics/gallery/multibrotSnaps_5.png]] \\
+[[https://www.mitchr.me/SS/mandelbrotInv/index.html][file:./pics/gallery/invertedMandelbrot_10.jpg]] 
+[[https://www.mitchr.me/SS/collatz/index.html][file:./pics/gallery/collatz_03_20.jpg]] \\
+[[https://www.mitchr.me/SS/tricorn/index.html][file:./pics/gallery/tricorn_02_20.jpg]]
+[[https://www.mitchr.me/SS/tippets/index.html][file:./pics/gallery/tippets2_20.jpg]] \\
+[[https://www.mitchr.me/SS/mandelbrotBiomorph/index.html][file:./pics/gallery/mandelbrot_biomorphM_10.jpg]]
+[[https://www.mitchr.me/SS/mandelbrotBiomorph/index.html][file:./pics/gallery/mandelbrot_biomorphA_10.jpg]]  \\
+[[https://www.mitchr.me/SS/BurningShip/index.html][file:./pics/gallery/BurningShip_03_50.jpg]] \\
 #+END_CENTER
-
-
-
-
