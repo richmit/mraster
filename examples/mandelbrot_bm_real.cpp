@@ -3,7 +3,7 @@
 /**
  @file      mandelbrot_bm_real.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Benchmark drawing a mandelbrot set using doubleing point types and arithmetic only.@EOL
+ @brief     Benchmark drawing a mandelbrot set using floating point types and arithmetic only.@EOL
  @std       C++20
  @copyright
   @parblock
