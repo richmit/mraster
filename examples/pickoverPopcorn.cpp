@@ -60,16 +60,16 @@ class g2rgb8 {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-
-  const int    IMGSIZ = 7680/4;
+  const int    IMXSIZ = 7680/2;
+  const int    IMYSIZ = 4320/2;
   const int    NUMITR = 100;
   const int    spanx  = 1;
   const int    spany  = 1;
   const double h      = 0.05;
-  const double a      = 4.0;
-  const double b      = 2.0;
-  mjr::ramCanvas1c16b hstRamCanvas(IMGSIZ, IMGSIZ, -4.0, 4.0, -4.0, 4.0);
-  
+  const double a      = 3.0;
+  const double b      = 3.0;
+  mjr::ramCanvas1c16b hstRamCanvas(IMXSIZ, IMYSIZ, -4.0, 4.0, -2.25, 2.25);
+
   for(int y=0;y<hstRamCanvas.getNumPixY();y+=spany) {
     if ((y%100)==0)
       std::cout << y << std::endl;
@@ -77,8 +77,8 @@ int main(void) {
       double zx = hstRamCanvas.int2realX(x);
       double zy = hstRamCanvas.int2realY(y);
       for(int i=0; i<NUMITR; i++) {
-        double tmpx = zx - h * std::sin(zy + std::cos(a * zy));
-        double tmpy = zy - h * std::sin(zx + std::cos(b * zx));
+        double tmpx = zx - h * std::sin(zy + std::tan(a * zy));
+        double tmpy = zy - h * std::sin(zx + std::tan(b * zx));
         zx = tmpx;
         zy = tmpy;
         int ix = hstRamCanvas.real2intX(zx);
@@ -88,7 +88,6 @@ int main(void) {
       }
     }
   }
-        
   hstRamCanvas.writeTIFFfile("pickoverPopcornCNT.tiff");
   g2rgb8 rcFilt(hstRamCanvas);
   hstRamCanvas.writeTIFFfile("pickoverPopcornCOL.tiff", rcFilt, false);
