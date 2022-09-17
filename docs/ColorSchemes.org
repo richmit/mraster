@@ -889,6 +889,8 @@ Note =csCubeHelix_tpl= with very small amplitude produces greys similar to =csPG
   [[./pics/cs/color_lut_docs_csPLYquad_50.png]]
  - =csCCdiag01= :: \\
   [[./pics/cs/color_lut_docs_csCCdiag01_50.png]]
+ - =csCCu0W= :: \\
+  [[./pics/cs/color_lut_docs_csCCu0W_50.png]]
 
 
 ** Circular
@@ -1095,7 +1097,6 @@ Note =csPLY_tpl= can be used to make circular color schemes -- any closed parame
   [[./pics/cs/color_lut_docs_csCHvio_50.png]]
 
 
-
 * Converting and processing previews                               :noexport:
 :PROPERTIES:
 :CUSTOM_ID: meta
@@ -1112,10 +1113,4 @@ In this directory, we run the following to create PNGs:
 #+begin_src zsh
 for f in ../build/color_lut_docs_*.tiff(:r); do echo $f; nf=pics/cs/`basename $f`.png; convert $f.tiff $nf; done
 for f in ../build/color_lut_docs_*.tiff(:r); do echo $f; nf=pics/cs/`basename $f`_50.png; convert -resize 50% $f.tiff $nf; done
-
-
-for f in ../build/color_lut_docs_csCCfractal*.tiff(:r); do echo $f; nf=pics/cs/`basename $f`.png; convert $f.tiff $nf; done
-for f in ../build/color_lut_docs_csCCfractal*.tiff(:r); do echo $f; nf=pics/cs/`basename $f`_50.png; convert -resize 50% $f.tiff $nf; done
-
-
 #+end_src

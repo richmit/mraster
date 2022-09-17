@@ -1,13 +1,14 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      mandelbrot_cycles.cpp
+ @file      biomorphMorph.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Benchmark drawing a mandelbrot set using the C++ complex type and excluding hypocycloids.@EOL
+ @brief     Draw the classic biomorphMorph fractal.@EOL
  @std       C++20
+ @see       https://www.mitchr.me/SS/biomorphMorph/index.html
  @copyright
   @parblock
-  Copyright (c) 1988-2015,2021 Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
+  Copyright (c) 1988-2022, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -26,10 +27,6 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails
-
-  Color points based on qualitative sequence behavior: Tends to infinity (reds), cyclic (blues), or converges (greens).  The method for detecting cycles and
-  fixed points is not perfect, but makes a nice picture.  The color intensity is the length of time it took to make the behavior determination.
 ********************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
 
@@ -37,47 +34,51 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+typedef mjr::ramCanvas3c8b::colorType ct;
+typedef ct::csIntType cit;
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  mjr::ramCanvas3c8b::colorType aColor;
+  const int    NUMITR = 7;
+  const int    NUMFRM = 24*4;
+  const int    IMXSIZ = 7680/4;
+  const int    IMYSIZ = 7680/4;
+  const int    LIM    = 10;
 
-  const int NUMITR   = 16*16*4*4;
-  const int CSIZE    = 7680/2;
-  const int LASTSIZE = 16*16*4;
-  mjr::ramCanvas3c8b theRamCanvas(CSIZE, CSIZE, -1.45, 0.5, -1.05, 1.05);
-
-  for(int y=0;y<theRamCanvas.getNumPixY();y++) {
-    for(int x=0;x<theRamCanvas.getNumPixX();x++) {
-      int count, lastIdx=0;
-      double cr = theRamCanvas.int2realX(x);
-      double ci = theRamCanvas.int2realY(y);
-      std::complex<double> c(cr, ci), z(cr, ci);
-      std::vector<std::complex<double>> lastZs(LASTSIZE, std::complex<double>(cr, ci));
-      for(count=0; ; count++) {
-        z = z * z + c;
-        if(count>=NUMITR) {                                                                                            // Ran too long
-          theRamCanvas.drawPoint(x, y, "white");
-          break;
+  mjr::ramCanvas3c8b theRamCanvas(IMXSIZ, IMYSIZ, -2.75, 2.75, -2.75, 2.75);
+  for(int frame=0; frame<NUMFRM; frame++) {
+    std::cout << "Frame: " << frame << std::endl;
+    double angle = frame*std::numbers::pi*2/NUMFRM;    
+    theRamCanvas.clrCanvasToBlack();
+    for(int y=0;y<theRamCanvas.getNumPixY();y++) {
+      for(int x=0;x<theRamCanvas.getNumPixX();x++) {
+        std::complex<double> c(std::cos(angle), std::sin(angle));
+        std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
+        std::complex<double> zL(0.0, 0.0);
+        int count = 0; 
+        while( ((std::abs(std::real(z))<LIM) || (std::abs(std::imag(z))<LIM)) && (count<NUMITR) ) {
+          zL = z;
+          z=std::sin(z) + std::pow(z, 2) + c;
+          count++;
         }
-        if(std::norm(z)>2.0) {                                                                                         // Got too big
-          theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(static_cast<mjr::ramCanvas3c8b::colorChanType>((2*count+20>255 ? 255 : count+20)), 0, 0));
-          break;
+        if(count < NUMITR) {
+          if(std::abs(std::real(zL)) < LIM)
+            theRamCanvas.drawPoint(x, y, ct::csCCu0W::c(std::abs(std::real(zL))/LIM));
+          else if(std::abs(std::imag(zL)) < LIM)
+            theRamCanvas.drawPoint(x, y, ct::csCCu0W::c(1.0-std::abs(std::imag(zL))/LIM));
+        } else {
+          if(std::abs(std::real(zL)) < LIM)
+            theRamCanvas.drawPoint(x, y, ct::csCCu0Y::c(std::abs(std::real(zL))/LIM));
+          else if(std::abs(std::imag(zL)) < LIM)
+            theRamCanvas.drawPoint(x, y, ct::csCCu0Y::c(1.0-std::abs(std::imag(zL))/LIM));
         }
-        if(std::abs(z-lastZs[lastIdx])<0.01) {                                                                         // Converged
-          theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0, static_cast<mjr::ramCanvas3c8b::colorChanType>((count+20>255 ? 255 : count+20)), 0));
-          break;
-        }
-        if(std::any_of(lastZs.begin(), lastZs.end(), [&z](std::complex<double> zl){return std::abs(zl-z)<0.0001;}) ) { // Cycle
-          theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0, 0, static_cast<mjr::ramCanvas3c8b::colorChanType>((count+50>255 ? 255 : count+50))));
-          break;
-        }
-        lastIdx = (lastIdx+1)%LASTSIZE;
-        lastZs[lastIdx] = z;
       }
     }
-    std::cout << CSIZE << "/" << y << std::endl;
+    std::ostringstream stringStream;
+    stringStream << "biomorphMorph_" << std::setfill('0') << std::setw(3) << frame << ".tiff";
+    theRamCanvas.writeTIFFfile(stringStream.str());
   }
-  theRamCanvas.writeTIFFfile("mandelbrot_cycles.tiff");
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

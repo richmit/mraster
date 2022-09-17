@@ -76,34 +76,33 @@ set(TARGETS_REQ_NONE   "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "
                        "color_interp_hsl_vs_rgb" "color_lut_cubehelix" "color_lut_docs" "color_lut_indexed" "color_lut_indexedC" "color_lut_poly"
                        "color_lut_rainbows" "color_lut_ramp_cube" "color_lut_ramp_misc" "color_web_rectangle" "color_web_triangle" "cplxColor"
                        "dlaSeed" "heart2022" "level_curves" "lorenz_fuz" "lorenz_multi" "mandelbrot_binary" "mandelbrot_bm_cplx"
-                       "mandelbrot_bm_cplx_hyper" "mandelbrot_bm_real" "mandelbrot_real_cfun" "mandelbrot_bm_real_eqop" "mandelbrot_cycles"
+                       "mandelbrot_bm_cplx_hyper" "mandelbrot_bm_real" "mandelbrot_real_cfun" "mandelbrot_bm_real_eqop" "mandelbrot_1n2cycles"
                        "mandelbrot_distance" "mandelbrot_distance_old" "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits"
                        "mandelbrot_potential" "mandelbrot_triangle" "newton_bm_cplx" "newton_bm_real" "newton_half" "newton_max_mod" "newton_vs"
                        "newton_z6" "peterdejong" "peterdejongM" "sic" "sic_search" "sierpinski_triangle" "sprott2d" 
                        "test_draw_fonts" "BurningShip" "multibrotSnaps" "multibrotMovie" "tricornMovie" "tricorn" "collatz" "invertedMandelbrot"
-                       "mandelbrot_biomorph" "mandelbrot_simple" "pickoverPopcorn" "convertRawToTIFF"
+                       "mandelbrot_biomorph" "mandelbrot_simple" "pickoverPopcorn" "convertRawToTIFF" "biomorphMorph"
                        "tippets" "types" "color_lut_ramp_cubeC")
 set(TARGETS_REQ_OPENGL "glut_image")
 set(TARGETS_REQ_TIFF   "brownianDiffusion" "dlaBrownian" "dlaDrift" "img_process" "test_interp_scale" "geomTfrm_LensDistortion" "geomTfrm_Arb" 
                        "geomTfrm_Rotate" "displayImageSDL2" )
-set(TARGETS_REQ_OPENMP "mandelbrot_bm_cplx_openmp")
+set(TARGETS_USE_OPENMP "mandelbrot_bm_cplx_openmp" "mandelbrot_period")
 set(TARGETS_REQ_BTEST  "utest_colorTpl_ia64nGCC" "utest_colorTpl" "utest_ramCanvasTpl")
 set(TARGETS_REQ_SDL2   "displayImageSDL2")
 
 # Construct list of targets we can build
-set(EXAMPLE_TARGETS ${TARGETS_REQ_NONE} ${TARGETS_REQ_TIFF} ${TARGETS_REQ_OPENMP} ${TARGETS_REQ_BTEST} ${TARGETS_REQ_OPENGL} ${TARGETS_REQ_SDL2})
+set(EXAMPLE_TARGETS ${TARGETS_REQ_NONE} ${TARGETS_REQ_TIFF} ${TARGETS_USE_OPENMP} ${TARGETS_REQ_BTEST} ${TARGETS_REQ_OPENGL} ${TARGETS_REQ_SDL2})
 
 if(((NOT OpenGL_FOUND) OR (NOT GLUT_FOUND)) AND TARGETS_REQ_OPENGL)
   list(REMOVE_ITEM EXAMPLE_TARGETS ${TARGETS_REQ_OPENGL})
-  message(WARNING "OpenGL/GLUT example programs will NOT be built!.")
+  message(WARNING "Example programs requiring OpenGL/GLUT will NOT be built!")
 endif()
-if((NOT OpenMP_FOUND) AND TARGETS_REQ_OPENMP)
-  list(REMOVE_ITEM EXAMPLE_TARGETS ${TARGETS_REQ_OPENMP})
-  message(WARNING "OpenMP example programs will NOT be built!")
+if((NOT OpenMP_FOUND) AND TARGETS_USE_OPENMP)
+  message(WARNING "Example programs that can use OpenMP, but don't require it, will generally have longer runtimes!")
 endif()
 if((NOT TIFF_FOUND) AND TARGETS_REQ_TIFF)
   list(REMOVE_ITEM EXAMPLE_TARGETS ${TARGETS_REQ_TIFF})
-  message(WARNING "TIFF example programs will NOT be built!")
+  message(WARNING "Example programs requiring TIFF will NOT be built!")
 endif()
 if((NOT Boost_FOUND) AND TARGETS_REQ_BTEST)
   list(REMOVE_ITEM EXAMPLE_TARGETS ${TARGETS_REQ_BTEST})
@@ -111,7 +110,7 @@ if((NOT Boost_FOUND) AND TARGETS_REQ_BTEST)
 endif()
 if((NOT SDL2_FOUND) AND TARGETS_REQ_SDL2)
   list(REMOVE_ITEM EXAMPLE_TARGETS ${TARGETS_REQ_SDL2})
-  message(WARNING "SDL2 example programs will NOT be built!")
+  message(WARNING "Example programs requiring SDL2 will NOT be built!")
 endif()
 
 list(REMOVE_DUPLICATES EXAMPLE_TARGETS)
@@ -203,7 +202,7 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
   endif() 
 
   # Add builtd requirements for examples using OpenMP
-  list (FIND TARGETS_REQ_OPENMP ${CURTGT} TMPR)
+  list (FIND TARGETS_USE_OPENMP ${CURTGT} TMPR)
   if (OPENMP_FOUND AND (${TMPR} GREATER -1))
     target_compile_options(${CURTGT} PUBLIC ${OpenMP_CXX_FLAGS})
     target_include_directories(${CURTGT} PRIVATE ${OpenMP_INCLUDE_PATH})

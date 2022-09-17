@@ -14,6 +14,7 @@ Some examples of what can be done with *MRaster*:
   -  [[https://www.mitchr.me/SS/tricorn/index.html][Tricorn Fractal]]
   -  [[https://www.mitchr.me/SS/collatz/index.html][Collatz Fractal]]
   -  [[https://www.mitchr.me/SS/tippets/index.html][Tippets Fractal]]
+  -  [[https://www.mitchr.me/SS/biomorphMorph/index.html][Dancing Biomorphs]]
   -  [[https://www.mitchr.me/SS/PickoverPopcorn/index.html][Pickover Popcorn]]
   -  [[https://www.mitchr.me/SS/mandelbrotBiomorph/index.html][Mandelbrot Biomorph]]
   -  [[https://www.mitchr.me/SS/mandelbrotInv/index.html][Inverted Mandelbrot]]
