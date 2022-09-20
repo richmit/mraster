@@ -48,7 +48,7 @@ int main(void) {
   rc8::colorType aColor;
 
   const rc16::colorChanType  NUMITR   = 4096;
-  const int                  CSIZE    = 7680/2/8;
+  const int                  CSIZE    = 7680/2;
   const double               MAXZSQ   = 4.0;
   rc8  theRamCanvas(CSIZE, CSIZE, -2.1, 0.75, -1.4, 1.4);
   rc16 perRamCanvas(CSIZE, CSIZE, -2.1, 0.75, -1.4, 1.4);  // Period -- 0 => not a periodic point
