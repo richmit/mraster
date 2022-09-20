@@ -1366,7 +1366,6 @@ namespace mjr {
                     static_cast<clrChanT>(maxChanVal * outB));
         return *this;
       }
-
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @overload */
       inline colorTpl& setRGBfromColorSpace(colorSpaceEnum space, colConDbl3 inColor) {
@@ -2431,7 +2430,7 @@ namespace mjr {
           Note RGB returns float RGB normalized to 1.0.
           @param space The color space to convert to
           @return An RGB color with double channels. */
-      inline colConDbl3 rgb2colorSpace(colorSpaceEnum space) {
+      inline colConDbl3 rgb2colorSpace(colorSpaceEnum space) const {
         /* Requires: Inherits numChan>2 from getBlue. */
 
         double redF   = getRed_dbl();
@@ -2767,6 +2766,49 @@ namespace mjr {
             daDist = tmp;
         }
         return daDist;
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** LAB Delta E* distance between current color and given one.
+          Note: The Delta E* 1976 distance measurement is inherently an RGB measurement in that the colors are converted to LAB* as part of the computation.
+          @param aColor the given color
+          @return Returns Distance -- note return is a double not a channelArithFltType. */
+      inline double distDeltaE1976(colorArgType aColor) const {
+        colConDbl3 acol1 = rgb2colorSpace(colorSpaceEnum::LAB);
+        colConDbl3 acol2 = aColor.rgb2colorSpace(colorSpaceEnum::LAB);
+        double daDist = 0;
+        for (int c=0; c<3; c++)
+          daDist += std::pow(acol1.getChanNC(c) - acol2.getChanNC(c), 2);
+        daDist = std::sqrt(daDist);
+        return daDist;
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** LAB Delta E* 1994 (graphic arts) distance between current color and given one.
+          Note: The Delta E* 1994 distance measurement is inherently an RGB measurement in that the colors are converted to LAB* as part of the computation.
+          Note: The Delta E* 1994 distance measurement is NOT symetric -- the 1976 one is!
+          @param aColor the given color
+          @return Returns Distance -- note return is a double not a channelArithFltType. */
+      inline double distDeltaE1994(colorArgType aColor) const {
+        colConDbl3 acol1 = rgb2colorSpace(colorSpaceEnum::LAB);
+        colConDbl3 acol2 = aColor.rgb2colorSpace(colorSpaceEnum::LAB);
+        double k1 = 0.045;
+        double k2 = 0.015;
+        double kL = 1.000;
+        double kC = 1.000;
+        double kH = 1.000;
+        double sL = 1.000;
+        double dL = acol1.getC0() - acol2.getC0();
+        double da = acol1.getC1() - acol2.getC1();
+        double db = acol1.getC2() - acol2.getC2();
+        double c1 = std::sqrt(std::pow(acol1.getC1(), 2) + std::pow(acol1.getC2(), 2));
+        double c2 = std::sqrt(std::pow(acol2.getC1(), 2) + std::pow(acol2.getC2(), 2));
+        double sH = 1.000 + k2 * c1;
+        double sC = 1.000 + k1 * c1;
+        double dC = c2 - c2;
+        double dH2 = std::pow(da, 2) + std::pow(db, 2) - std::pow(dC, 2);
+        if (dH2 < 0.0)
+          dH2 = 0.000;
+        double dE = std::sqrt(std::pow(dL/kL/sL, 2) + std::pow(dC/kC/sC, 2) + dH2/std::pow(kH*sH, 2));
+        return dE;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns non-zero if the current color is close to aColor (the maximum delta between any two channels is less than or equal to epsilon).

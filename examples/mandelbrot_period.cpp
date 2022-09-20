@@ -48,8 +48,8 @@ int main(void) {
   rc8::colorType aColor;
 
   const rc16::colorChanType  NUMITR   = 4096;
-  const int                  CSIZE    = 7680/2;
-  const double               MAXZ     = 4.0;
+  const int                  CSIZE    = 7680/2/8;
+  const double               MAXZSQ   = 4.0;
   rc8  theRamCanvas(CSIZE, CSIZE, -2.1, 0.75, -1.4, 1.4);
   rc16 perRamCanvas(CSIZE, CSIZE, -2.1, 0.75, -1.4, 1.4);  // Period -- 0 => not a periodic point
   rc16 stbRamCanvas(CSIZE, CSIZE, -2.1, 0.75, -1.4, 1.4);  // Number of iterations period structure was stable
@@ -62,8 +62,7 @@ int main(void) {
       std::complex<double> z(0.0, 0.0);
       std::vector<std::complex<double>> lastZs(NUMITR);
       rc16::colorChanType count = 0;
-      //int count = 0; 
-      while((std::norm(z)<MAXZ) && (count<NUMITR)) {
+      while((std::norm(z)<MAXZSQ) && (count<NUMITR)) {
         z=std::pow(z, 2) + c;
         lastZs[count] = z;
         count++;
@@ -89,7 +88,7 @@ int main(void) {
   }
 
   perRamCanvas.writeTIFFfile("mandelbrot_periodCYC.tiff");
-  perRamCanvas.writeTIFFfile("mandelbrot_periodSTB.tiff");
+  stbRamCanvas.writeTIFFfile("mandelbrot_periodSTB.tiff");
   escRamCanvas.writeTIFFfile("mandelbrot_periodOUT.tiff");
 
   for(int y=0;y<theRamCanvas.getNumPixY();y++) {
