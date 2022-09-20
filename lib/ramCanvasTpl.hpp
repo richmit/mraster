@@ -1159,6 +1159,7 @@ namespace mjr {
           @param magY     The magnification of the glyph in the y direction
           @param aColor   The color with which to render the glyph */
       void drawHersheyGlyph(int glyphNum, intCrdT x, intCrdT y, double magX, double magY, colorArgType aColor);
+      void drawHersheyGlyph(int glyphNum, intCrdT x, intCrdT y, double magX, double magY, colorArgType aColor) { drawHersheyGlyph(glyphNum, real2intX(x), real2intY(y), magX, magY, aColor); }
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1176,6 +1177,9 @@ namespace mjr {
           @param cex     A factor by which to expand the size of each glyph -- 1 is a good value (the name comes from R).
           @param spc     Space to jump for each charcter -- 20 for SL fonts, 23 for DL fonts, and 25 for TL fonts.  Scaled with cex. */
       void drawString(std::string aString, mjr::hershey::font aFont, intCrdT x, intCrdT y, colorArgType aColor, double cex, intCrdT spc);
+      void drawString(std::string aString, mjr::hershey::font aFont, fltCrdT x, fltCrdT y, colorArgType aColor, double cex, intCrdT spc) {
+        drawString(aString, aFont, real2intX(x), real2intY(y), aColor, cex, spc);
+      }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Renders a filled, bounding box for the given string as rendered via drawString.
           @param aString     A string to render
@@ -1187,6 +1191,9 @@ namespace mjr {
           @param cex         A factor by which to expand the size of each glyph -- 1 is a good value (the name comes from R).
           @param spc         Space to jump for each charcter -- 20 for SL fonts, 23 for DL fonts, and 25 for TL fonts.  Scaled with cex. */
       void drawStringBox(std::string aString, mjr::hershey::font aFont, intCrdT x, intCrdT y, colorArgType stringColor, colorArgType boxColor, double cex, intCrdT spc);
+      void drawStringBox(std::string aString, mjr::hershey::font aFont, fltCrdT x, fltCrdT y, colorArgType stringColor, colorArgType boxColor, double cex, intCrdT spc) {
+        drawStringBox(aString, aFont, real2intX(x), real2intY(y), stringColor, boxColor, cex, spc);
+      }
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
