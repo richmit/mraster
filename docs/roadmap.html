@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-09-19 Mon 23:31 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=1024, initial-scale=1" />
+<title>MRaster Roadmap</title>
+<meta name="author" content="Mitch Richling" />
+<meta name="description" content="DESCRIPTION FIXME" />
+<meta name="keywords" content="KEYWORDS FIXME" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+</style>
+<style>body { width: 95%; margin: 2% auto; font-size: 18px; line-height: 1.4em; font-family: Georgia, serif; color: black; background-color: white; }</style>
+<style>body { min-width: 500px; max-width: 1024px; }</style>
+<style>h1,h2,h3,h4,h5,h6 { color: #A5573E; line-height: 1em; font-family: Helvetica, sans-serif; }</style>
+<style>h1,h2,h3 { line-height: 1.4em; }</style>
+<style>h1.title { font-size: 3em; }</style>
+<style>.subtitle { font-size: 0.6em; }</style>
+<style>h4,h5,h6 { font-size: 1em; }</style>
+<style>.org-src-container { border: 1px solid #ccc; box-shadow: 3px 3px 3px #eee; font-family: Lucida Console, monospace; font-size: 80%; margin: 0px; padding: 0px 0px; position: relative; }</style>
+<style>.org-src-container>pre { line-height: 1.2em; padding-top: 1.5em; margin: 0.5em; background-color: #404040; color: white; overflow: auto; }</style>
+<style>.org-src-container>pre:before { display: block; position: absolute; background-color: #b3b3b3; top: 0; right: 0; padding: 0 0.2em 0 0.4em; border-bottom-left-radius: 8px; border: 0; color: white; font-size: 100%; font-family: Helvetica, sans-serif;}</style>
+<style>pre.example { white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; font-family: Lucida Console, monospace; font-size: 80%; background: #404040; color: white; display: block; padding: 0em; border: 2px solid black; }</style>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="https://richmit.github.io/mraster/index.html"> UP </a>
+ |
+ <a accesskey="H" href="https://www.mitchr.me/"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">MRaster Roadmap
+<br />
+<span class="subtitle">Ideas for future development</span>
+</h1>
+<table border="2 solid #ccc" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" align="center">
+
+
+<colgroup>
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">Copyright &copy; 2022 Mitch Richling. All rights reserved.</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+This document is a collection of ideas for future development.  Don't
+think of it as a roadmap of what will be done, but rather as a rough
+guide of what I'm thinking about&#x2026;
+</p>
+
+<p>
+If you have something you really want, drop me a line.  It must might
+end up on this list.
+</p>
+
+<p>
+In no particular order:
+</p>
+
+<ul class="org-ul">
+<li>Add \(IC_tC_p\) or ITP color space support
+<ul class="org-ul">
+<li>REF: <a href="https://en.wikipedia.org/wiki/ICtCp">https://en.wikipedia.org/wiki/ICtCp</a></li>
+</ul></li>
+<li>Color difference:
+<ul class="org-ul">
+<li>Add colorTpl::distDeltaE2000</li>
+<li>Add Rec. ITU-R BT.2124 or &Delta; EITP <a href="https://en.wikipedia.org/wiki/Color_difference">https://en.wikipedia.org/wiki/Color_difference</a></li>
+</ul></li>
+<li>Add an example showing how to read a FITS file using FITSIO</li>
+<li>Set channels
+<ul class="org-ul">
+<li>From an array (the object)</li>
+<li>An iterator</li>
+<li>An initializer list</li>
+</ul></li>
+<li>Add cubic spline interpolation
+<ul class="org-ul">
+<li>Add: getPxColorInterpBCubS(double x, double y) &#x2013; bicubic spline</li>
+<li>Add support to PxColorInterpolate</li>
+<li>Add an entry to interpolationType &#x2013; CUBICSPLINE</li>
+<li>Note I'm not talking about bicubic implemented with a smoothing kernel.</li>
+</ul></li>
+<li>Save Greyscale ascii
+<ul class="org-ul">
+<li><p>
+A good sequences:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">"$@B%8&amp;WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~&lt;&gt;i!lI;:,"^`'. "
+" .:-=+*#%@"
+</pre>
+</div></li>
+</ul></li>
+<li>Make ramCanvas work like a standard container
+<ul class="org-ul">
+<li>Pixel store iterators</li>
+<li>Work with standard algorithms</li>
+<li>etc..</li>
+</ul></li>
+<li>Interactive canvas observer
+<ul class="org-ul">
+<li>Fire off a thread that monitors a canvas and displays it.</li>
+<li>Use an SDL2 or GLUT window.</li>
+<li>Rate of update should be tuenable.</li>
+<li>An occasional display artifact due to thread data collision is acceptable.</li>
+</ul></li>
+<li>Encode real coordinate information in saved images and use that data in ImageJ for measurements and mouse location</li>
+<li>OpenMP
+<ul class="org-ul">
+<li>Spread OpenMP use across examples.</li>
+<li>Include parallelism in ramCanvas</li>
+</ul></li>
+<li>Draw Pixel functionality
+<ul class="org-ul">
+<li>Functional approach to pixel drawing methods
+<ul class="org-ul">
+<li>Have a functor called by drawPixel instead of a switch statement</li>
+<li>Option to have a color tfrm* method argument to drawPixel</li>
+</ul></li>
+<li>A drawPixel-like method that increments a specified channel of the specified pixel by a given quantity  "addToPixel"</li>
+<li>More generic than above.  Take a colorTpl tfrm* style function to modify the specified pixel.</li>
+</ul></li>
+<li>ramCanvas Converters
+<ul class="org-ul">
+<li>Add C++20 concepts for converters &amp; apply them to the methods that use converters</li>
+<li>Add converter support to ramCanvas copy operation &#x2013; i.e. so we can "copy" data between canvases of a dissimilar types</li>
+<li>Converters
+<ul class="org-ul">
+<li>Crop canvas</li>
+<li>ramCanvasTpl: Add methods to copy/convert/filter data from another ramCanvas.</li>
+</ul></li>
+</ul></li>
+<li>Method that returns a packed integer from a color value.  It should use a standard converter to do the job if one is not provided.</li>
+<li>ramCanvasTpl: Add operators: != &amp; ==.</li>
+<li>unit tests
+<ul class="org-ul">
+<li>colorTpl
+<ul class="org-ul">
+<li>Add tests to make sure constants are correct for ALL types (minChanVal, maxChanVal, meanChanVal, etc&#x2026;.)</li>
+<li>Add GCC with 128-bit support tests</li>
+</ul></li>
+<li>ramCanvasTpl
+<ul class="org-ul">
+<li>Instead of comparing files, load files and compare images &#x2013; using an endianness aware MRW reader.</li>
+<li>Test TIFF files in save_file test case &#x2013; by reading them in along with a reference MRW, and comparing the images in RAM.</li>
+<li>Convert test_draw_fonts.cpp to a demo</li>
+<li>Add unit tests for fonts</li>
+<li>Add unit tests for Geometric transforms</li>
+<li>Add unit tests for Homogeneous transforms</li>
+<li>Add unit tests for Convolution</li>
+<li>Add unit tests for image write with filters</li>
+</ul></li>
+</ul></li>
+<li>Geometric Transformations:
+<ul class="org-ul">
+<li>Support both forward and reverse transformations.</li>
+<li>Notation
+<ul class="org-ul">
+<li>Target Canvas: T &#x2013; coordinates (u, v)</li>
+<li>Source Canvas: S &#x2013; coordinates (x, y)</li>
+<li>Target color: C_T(u, v) = color of pixel at (u, v)</li>
+<li>Source color: C_S(x, y) = color of pixel at (x, y)</li>
+<li>Geometric mappings: 
+<ul class="org-ul">
+<li>forward: f(x, y) -&gt; (u, v)   (from T -&gt; S)
+<ul class="org-ul">
+<li>C_T(f(x, y)) &lt;= C_S(x, y)</li>
+<li>u &amp; v might not be integers!</li>
+<li>Some pixels in S might not be hit</li>
+<li>Some pixels in S might be hit twice!</li>
+</ul></li>
+<li>reverse: r(u, v) -&gt; (x, y)   (from S -&gt; T)
+<ul class="org-ul">
+<li>C_T(u, v) &lt;= C_S(r(u, v)) &#x2013; but r(u, v) might not be integral, so image interpolation must be considered</li>
+<li>Some pixels of T might not be mapped to colors in S, but we can tell which ones &#x2013; and color them green</li>
+<li>The color of a pixel in T is formed from ONE set of coordinates mapped by r.</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>Algorithms
+<ul class="org-ul">
+<li>Forward Mapping
+<ul class="org-ul">
+<li>Iterate over pixels in source:  for each (x, y) in S, compute (u, v)=f(x, y).  Set C_T(u, v) = C_S(x, y)
+<ul class="org-ul">
+<li>Note: we round/truncate (u, v) here to integers</li>
+</ul></li>
+<li>Some pixels in the target image may not be "hit" by a source pixel while others might get hit more than once</li>
+<li>Should be useful for geometric measurement applications where geometric accuracy is more important than visual appearance</li>
+<li>Interesting diagnostic colorations:
+<ul class="org-ul">
+<li>Number of times a pixel is "hit"</li>
+<li>Number of times a mapped pixel hits within epsilon of pixel center</li>
+</ul></li>
+</ul></li>
+<li>Reverse Mapping
+<ul class="org-ul">
+<li>Iterate over target canvas pixels (u, v).  Compute (x, y)=r(u, v).  Set C_T(u, v) = C_S(x, y).
+<ul class="org-ul">
+<li>Note: we use some sort of interpolation as (x, y) won't necessarily be integers.</li>
+</ul></li>
+<li>Some target pixels might map to pixels outside of S!</li>
+<li>Interesting diagnostic colorations:
+<ul class="org-ul">
+<li>Color based on distance of (x, y) to the nearest pixel center &#x2013; sort of a "how much interpolation was needed to color this pixel" measure</li>
+<li>Color based on if (x, y) is in the image C (i.e. a boolean color scheme)</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>Methods
+<ul class="org-ul">
+<li>bivariate polynomial in x &amp; y</li>
+<li>bivariate polynomial in r &amp; angle</li>
+<li>univariate polynomial in r (REVERSE IS DONE)</li>
+<li>C++ functor (REVERSE IS DONE)</li>
+<li>Affine matrix (3x3) transform (REVERSE IS DONE)</li>
+</ul></li>
+<li>Make a univariate radial transformation that is compatible with Imagemagick's barrel distortion transformation
+<ul class="org-ul">
+<li>(X, Y) is the image center for both T &amp; S</li>
+<li>A, B, C, &amp; D are constants</li>
+<li>A+B+C+D=1 &#x2013; if you don't provide D it will be computed</li>
+<li>r is the target radius: r=sqrt((u-X)^2+(v-Y)^2)</li>
+<li>R is the source radius: R=sqrt((x-X)^2+(y-Y)^2)</li>
+<li>Command line option looks like this: <code>-distort Barrel "A B C D X Y"</code></li>
+<li>The polynomial looks like this: R = r * ( A*r^3 + B*r^2 + C*r + D )</li>
+<li><p>
+Algorithm:
+</p>
+<div class="org-src-container">
+<pre class="src src-text">for each (u,v) 
+ r=sqrt((u-X)^2+(v-Y)^2)
+ R = r * ( A*r^3 + B*r^2 + C*r + D )
+ x = u * r / R + X
+ y = v * r / R + Y
+</pre>
+</div></li>
+</ul></li>
+<li>Bivariate Polynomials
+<ul class="org-ul">
+<li>Single list of coefficients</li>
+<li>Order is lexicographic \[\sum_{i=0..2} \sum_{j=0..2} a_{(i, j)}x^iy^j\]
+<ul class="org-ul">
+<li>2nd: 00 01 02 10 11 12 20 21 22 -&gt; a00*x^0*y^0 + a01*x^0*y^1 + &#x2026; + a21*x^2*y^1 + a22*x^2*y^2</li>
+<li>3rd: 00 01 02 03 10 11 12 13 20 21 22 23 30 31 32 33</li>
+</ul></li>
+<li><p>
+Psudocode
+</p>
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #00ffff;">const</span> <span style="color: #63b8ff;">maxPower</span> = 2;
+<span style="color: #63b8ff;">vector</span>&lt;<span style="color: #63b8ff;">double</span>&gt; <span style="color: #00fa9a; font-weight: bold;">xpowers</span>(maxPower+1);
+xpowers[0] = 1;
+<span style="color: #63b8ff;">vector</span>&lt;<span style="color: #63b8ff;">double</span>&gt; <span style="color: #00fa9a; font-weight: bold;">ypowers</span>(maxPower+1);
+ypowers[0] = 1;
+<span style="color: #00ffff;">for</span>(i=1; i&lt;=maxPower; i++) {
+  xpowers[i] = x * xpowers[i-1];
+  ypowers[i] = y * ypowers[i-1];
+}
+pvalue = 0;
+k=0;
+<span style="color: #00ffff;">for</span>(i=0; i&lt;=maxPower; i++) {
+  <span style="color: #00ffff;">for</span>(j=0; j&lt;=maxPower; j++) {
+    pvalue += poly[k] * xpowers[i] * ypowers[j];
+    k++;
+  }
+}
+</pre>
+</div></li>
+</ul></li>
+<li>Matrix
+<ul class="org-ul">
+<li>Just an array of 9 elements</li>
+</ul></li>
+</ul></li>
+<li><p>
+Make use of tuple assignment notation
+</p>
+<div class="org-src-container">
+<pre class="src src-c++"><span style="color: #8470ff; font-weight: bold;">std</span>::<span style="color: #63b8ff;">tuple</span>&lt;<span style="color: #63b8ff;">float</span>&amp;, <span style="color: #63b8ff;">char</span>&amp;&amp;, <span style="color: #63b8ff;">int</span>&gt; <span style="color: #00fa9a; font-weight: bold;">tpl</span>(x, <span style="color: #8470ff; font-weight: bold;">std</span>::<span style="color: #63b8ff;">move</span>(<span style="color: #7fffd4;">y</span>), z);
+<span style="color: #00ffff;">const</span> <span style="color: #00ffff;">auto</span>&amp; [<span style="color: #8470ff; font-weight: bold;">a</span>, <span style="color: #8470ff; font-weight: bold;">b</span>, <span style="color: #8470ff; font-weight: bold;">c</span>] = tpl;
+</pre>
+</div></li>
+</ul>
+</div>
+<div id="postamble" class="status">
+<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+</div>
+</body>
+</html>

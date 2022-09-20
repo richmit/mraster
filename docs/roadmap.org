@@ -1,0 +1,193 @@
+# -*- Mode:Org; Coding:utf-8; fill-column:158 -*-
+# ######################################################################################################################################################.H.S.##
+# FILE:        roadmap.org
+#+TITLE:       MRaster Roadmap
+#+SUBTITLE:    Ideas for future development
+#+AUTHOR:      Mitch Richling
+#+EMAIL:       http://www.mitchr.me/
+#+DESCRIPTION: DESCRIPTION FIXME
+#+KEYWORDS:    KEYWORDS FIXME
+#+LANGUAGE:    en
+#+OPTIONS:     num:t toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t skip:nil d:nil todo:t pri:nil H:5 p:t author:t html-scripts:nil 
+#+SEQ_TODO:    TODO:NEW(t)                         TODO:WORK(w)    TODO:HOLD(h)    | TODO:FUTURE(f)   TODO:DONE(d)    TODO:CANCELED(c)
+#+PROPERTY: header-args :eval never-export
+#+HTML_HEAD: <style>body { width: 95%; margin: 2% auto; font-size: 18px; line-height: 1.4em; font-family: Georgia, serif; color: black; background-color: white; }</style>
+#+HTML_HEAD: <style>body { min-width: 500px; max-width: 1024px; }</style>
+#+HTML_HEAD: <style>h1,h2,h3,h4,h5,h6 { color: #A5573E; line-height: 1em; font-family: Helvetica, sans-serif; }</style>
+#+HTML_HEAD: <style>h1,h2,h3 { line-height: 1.4em; }</style>
+#+HTML_HEAD: <style>h1.title { font-size: 3em; }</style>
+#+HTML_HEAD: <style>.subtitle { font-size: 0.6em; }</style>
+#+HTML_HEAD: <style>h4,h5,h6 { font-size: 1em; }</style>
+#+HTML_HEAD: <style>.org-src-container { border: 1px solid #ccc; box-shadow: 3px 3px 3px #eee; font-family: Lucida Console, monospace; font-size: 80%; margin: 0px; padding: 0px 0px; position: relative; }</style>
+#+HTML_HEAD: <style>.org-src-container>pre { line-height: 1.2em; padding-top: 1.5em; margin: 0.5em; background-color: #404040; color: white; overflow: auto; }</style>
+#+HTML_HEAD: <style>.org-src-container>pre:before { display: block; position: absolute; background-color: #b3b3b3; top: 0; right: 0; padding: 0 0.2em 0 0.4em; border-bottom-left-radius: 8px; border: 0; color: white; font-size: 100%; font-family: Helvetica, sans-serif;}</style>
+#+HTML_HEAD: <style>pre.example { white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; font-family: Lucida Console, monospace; font-size: 80%; background: #404040; color: white; display: block; padding: 0em; border: 2px solid black; }</style>
+#+HTML_LINK_HOME: https://www.mitchr.me/
+#+HTML_LINK_UP: https://richmit.github.io/mraster/index.html
+# ######################################################################################################################################################.H.E.##
+
+#+ATTR_HTML: :border 2 solid #ccc :frame hsides :align center
+| Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved. |
+
+#+TOC: headlines 5
+
+This document is a collection of ideas for future development.  Don't
+think of it as a roadmap of what will be done, but rather as a rough
+guide of what I'm thinking about...
+
+If you have something you really want, drop me a line.  It must might
+end up on this list.
+
+In no particular order:
+
+ - Add $IC_tC_p$ or ITP color space support
+   - REF: https://en.wikipedia.org/wiki/ICtCp
+ - Color difference:
+   - Add colorTpl::distDeltaE2000
+   - Add Rec. ITU-R BT.2124 or \Delta EITP https://en.wikipedia.org/wiki/Color_difference
+ - Add an example showing how to read a FITS file using FITSIO
+ - Set channels
+   - From an array (the object)
+   - An iterator
+   - An initializer list
+ - Add cubic spline interpolation
+   - Add: getPxColorInterpBCubS(double x, double y) -- bicubic spline
+   - Add support to PxColorInterpolate
+   - Add an entry to interpolationType -- CUBICSPLINE
+   - Note I'm not talking about bicubic implemented with a smoothing kernel.
+ - Save Greyscale ascii
+   - A good sequences:
+     #+begin_src text
+     "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\|()1{}[]?-_+~<>i!lI;:,"^`'. "
+     " .:-=+*#%@"
+     #+end_src
+ - Make ramCanvas work like a standard container
+   - Pixel store iterators
+   - Work with standard algorithms
+   - etc..
+ - Interactive canvas observer
+   - Fire off a thread that monitors a canvas and displays it.
+   - Use an SDL2 or GLUT window.
+   - Rate of update should be tuenable.
+   - An occasional display artifact due to thread data collision is acceptable.
+ - Encode real coordinate information in saved images and use that data in ImageJ for measurements and mouse location
+ - OpenMP
+   - Spread OpenMP use across examples.
+   - Include parallelism in ramCanvas
+ - Draw Pixel functionality
+   - Functional approach to pixel drawing methods
+     - Have a functor called by drawPixel instead of a switch statement
+     - Option to have a color tfrm* method argument to drawPixel
+   - A drawPixel-like method that increments a specified channel of the specified pixel by a given quantity  "addToPixel"
+   - More generic than above.  Take a colorTpl tfrm* style function to modify the specified pixel.
+ - ramCanvas Converters
+   - Add C++20 concepts for converters & apply them to the methods that use converters
+   - Add converter support to ramCanvas copy operation -- i.e. so we can "copy" data between canvases of a dissimilar types
+   - Converters
+     - Crop canvas
+     - ramCanvasTpl: Add methods to copy/convert/filter data from another ramCanvas.
+ - Method that returns a packed integer from a color value.  It should use a standard converter to do the job if one is not provided.
+ - ramCanvasTpl: Add operators: != & ==.
+ - unit tests
+   - colorTpl
+     - Add tests to make sure constants are correct for ALL types (minChanVal, maxChanVal, meanChanVal, etc....)
+     - Add GCC with 128-bit support tests
+   - ramCanvasTpl
+     - Instead of comparing files, load files and compare images -- using an endianness aware MRW reader.
+     - Test TIFF files in save_file test case -- by reading them in along with a reference MRW, and comparing the images in RAM.
+     - Convert test_draw_fonts.cpp to a demo
+     - Add unit tests for fonts
+     - Add unit tests for Geometric transforms
+     - Add unit tests for Homogeneous transforms
+     - Add unit tests for Convolution
+     - Add unit tests for image write with filters
+ - Geometric Transformations:
+   - Support both forward and reverse transformations.
+   - Notation
+     - Target Canvas: T -- coordinates (u, v)
+     - Source Canvas: S -- coordinates (x, y)
+     - Target color: C_T(u, v) = color of pixel at (u, v)
+     - Source color: C_S(x, y) = color of pixel at (x, y)
+     - Geometric mappings: 
+       - forward: f(x, y) -> (u, v)   (from T -> S)
+         - C_T(f(x, y)) <= C_S(x, y)
+         - u & v might not be integers!
+         - Some pixels in S might not be hit
+         - Some pixels in S might be hit twice!
+       - reverse: r(u, v) -> (x, y)   (from S -> T)
+         - C_T(u, v) <= C_S(r(u, v)) -- but r(u, v) might not be integral, so image interpolation must be considered
+         - Some pixels of T might not be mapped to colors in S, but we can tell which ones -- and color them green
+         - The color of a pixel in T is formed from ONE set of coordinates mapped by r.
+   - Algorithms
+     - Forward Mapping
+       - Iterate over pixels in source:  for each (x, y) in S, compute (u, v)=f(x, y).  Set C_T(u, v) = C_S(x, y)
+         - Note: we round/truncate (u, v) here to integers
+       - Some pixels in the target image may not be "hit" by a source pixel while others might get hit more than once
+       - Should be useful for geometric measurement applications where geometric accuracy is more important than visual appearance
+       - Interesting diagnostic colorations:
+         - Number of times a pixel is "hit"
+         - Number of times a mapped pixel hits within epsilon of pixel center
+     - Reverse Mapping
+       - Iterate over target canvas pixels (u, v).  Compute (x, y)=r(u, v).  Set C_T(u, v) = C_S(x, y).
+         - Note: we use some sort of interpolation as (x, y) won't necessarily be integers.
+       - Some target pixels might map to pixels outside of S!
+       - Interesting diagnostic colorations:
+         - Color based on distance of (x, y) to the nearest pixel center -- sort of a "how much interpolation was needed to color this pixel" measure
+         - Color based on if (x, y) is in the image C (i.e. a boolean color scheme)
+   - Methods
+     - bivariate polynomial in x & y
+     - bivariate polynomial in r & angle
+     - univariate polynomial in r (REVERSE IS DONE)
+     - C++ functor (REVERSE IS DONE)
+     - Affine matrix (3x3) transform (REVERSE IS DONE)
+   - Make a univariate radial transformation that is compatible with Imagemagick's barrel distortion transformation
+     - (X, Y) is the image center for both T & S
+     - A, B, C, & D are constants
+     - A+B+C+D=1 -- if you don't provide D it will be computed
+     - r is the target radius: r=sqrt((u-X)^2+(v-Y)^2)
+     - R is the source radius: R=sqrt((x-X)^2+(y-Y)^2)
+     - Command line option looks like this: =-distort Barrel "A B C D X Y"=
+     - The polynomial looks like this: R = r * ( A*r^3 + B*r^2 + C*r + D )
+     - Algorithm:
+       #+begin_src text
+       for each (u,v) 
+        r=sqrt((u-X)^2+(v-Y)^2)
+        R = r * ( A*r^3 + B*r^2 + C*r + D )
+        x = u * r / R + X
+        y = v * r / R + Y
+       #+end_src
+   - Bivariate Polynomials
+     - Single list of coefficients
+     - Order is lexicographic $$\sum_{i=0..2} \sum_{j=0..2} a_{(i, j)}x^iy^j$$
+       - 2nd: 00 01 02 10 11 12 20 21 22 -> a00*x^0*y^0 + a01*x^0*y^1 + ... + a21*x^2*y^1 + a22*x^2*y^2
+       - 3rd: 00 01 02 03 10 11 12 13 20 21 22 23 30 31 32 33
+     - Psudocode
+       #+begin_src c++
+       const maxPower = 2;
+       vector<double> xpowers(maxPower+1);
+       xpowers[0] = 1;
+       vector<double> ypowers(maxPower+1);
+       ypowers[0] = 1;
+       for(i=1; i<=maxPower; i++) {
+         xpowers[i] = x * xpowers[i-1];
+         ypowers[i] = y * ypowers[i-1];
+       }
+       pvalue = 0;
+       k=0;
+       for(i=0; i<=maxPower; i++) {
+         for(j=0; j<=maxPower; j++) {
+           pvalue += poly[k] * xpowers[i] * ypowers[j];
+           k++;
+         }
+       }
+       #+end_src
+   - Matrix
+     - Just an array of 9 elements
+ - Make use of tuple assignment notation
+     #+begin_src c++
+     std::tuple<float&, char&&, int> tpl(x, std::move(y), z);
+     const auto& [a, b, c] = tpl;
+     #+end_src
+
+
+

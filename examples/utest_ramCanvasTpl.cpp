@@ -1837,15 +1837,6 @@ BOOST_AUTO_TEST_CASE(p_scale) {
 
 #endif
 
-//  MJR TODO NOTE utest_ramCanvasTpl.cpp: Instead of compareing files, load files and compare images -- using an endianness aware MRW reader.
-//  MJR TODO NOTE utest_ramCanvasTpl.cpp: Test TIFF files in save_file test case -- by reading them in along with a refrence MRW, and compareing the images in RAM.
-//  MJR TODO NOTE utest_ramCanvasTpl.cpp: Convert test_draw_fonts.cpp to a demo
-//  MJR TODO NOTE utest_ramCanvasTpl.cpp: Add unit tests for fonts
-//  MJR TODO NOTE utest_ramCanvasTpl.cpp: Add unit tests for Geometric transforms
-//  MJR TODO NOTE utest_ramCanvasTpl.cpp: Add unit tests for Homogeneous transforms
-//  MJR TODO NOTE utest_ramCanvasTpl.cpp: Add unit tests for Convolution
-//  MJR TODO NOTE utest_ramCanvasTpl.cpp: Add unit tests for image write with filters
-
   // XRamCanvas.writeRAWfile("ut-strings-X.mrw");
   // XRamCanvas.scaleUpProximal(20);
   // XRamCanvas.writeTIFFfile("ut-strings-X.tiff");

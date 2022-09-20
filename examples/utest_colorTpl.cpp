@@ -43,7 +43,7 @@
 
 #include "ramCanvas.hpp"
 
-#if 1
+#if 0
 
 // |----------+--------------------------------------------------------------------------------------------------------------|
 // | Coverage | Method                                                                                                       |
@@ -253,7 +253,9 @@
 // | DIRECT   | dotProd(colorArgType aColor);                                                                                |
 // | DIRECT   | distHypot(colorArgType aColor);                                                                              |
 // | DIRECT   | distSumAbs(colorArgType aColor);                                                                             |
-// | DIRECT   | distMaxAbs                                                                                                   |
+// | DIRECT   | distMaxAbs(colorArgType aColor);                                                                             |
+// | DIRECT   | distDeltaE1976(colorArgType aColor);                                                                         |
+// | DIRECT   | distDeltaE1994(colorArgType aColor);                                                                         |
 // |----------+--------------------------------------------------------------------------------------------------------------|
 // | DIRECT   | isEqual(colorArgType aColor);                                                                                |
 // | DIRECT   | isEqualRGB(colorArgType aColor);                                                                             |
@@ -8053,17 +8055,47 @@ BOOST_AUTO_TEST_CASE(bestNamedChan) {
   BOOST_TEST_CHECK(eColor.bestAlphaChan() ==  3);
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(dist_deltaE, * boost::unit_test::tolerance(0.01)) {
+
+  mjr::colorRGBA8b   aColor;
+  mjr::colorRGBA8b   bColor;
+
+  ////////////////////////////////////////////////////////////////////////////////
+  aColor.setToWhite();
+  bColor.setToBlack();
+  BOOST_TEST_CHECK(aColor.distDeltaE1976(bColor) == 100.0);
+  BOOST_TEST_CHECK(aColor.distDeltaE1994(bColor) == 100.0);
+  aColor.setToWhite();
+  bColor.setToWhite();
+  BOOST_TEST_CHECK(aColor.distDeltaE1976(bColor) == 0.0);
+  BOOST_TEST_CHECK(aColor.distDeltaE1994(bColor) == 0.0);
+  aColor.setToBlack();
+  bColor.setChansRGB(128, 64, 192);
+  BOOST_TEST_CHECK(aColor.distDeltaE1976(bColor) == 87.0379);
+  BOOST_TEST_CHECK(aColor.distDeltaE1994(bColor) == 87.0382);
+  //BOOST_TEST_CHECK(aColor.distDeltaE2000(bColor) == 40.2871);
+  aColor.setToBlack();
+  bColor.setChansRGB(128, 128, 128);
+  BOOST_TEST_CHECK(aColor.distDeltaE1976(bColor) == 53.585);
+  BOOST_TEST_CHECK(aColor.distDeltaE1994(bColor) == 53.585);
+  //BOOST_TEST_CHECK(aColor.distDeltaE2000(bColor) == 39.9344);
+  aColor.setToBlack();
+  bColor.setChansRGB(32, 64, 128);
+  BOOST_TEST_CHECK(aColor.distDeltaE1976(bColor) == 50.1239);
+  BOOST_TEST_CHECK(aColor.distDeltaE1994(bColor) == 50.1239);
+  //BOOST_TEST_CHECK(aColor.distDeltaE2000(bColor) == 28.4580);
+  aColor.setToWhite();
+  bColor.setChansRGB(32, 64, 128);
+  BOOST_TEST_CHECK(aColor.distDeltaE1976(bColor) == 82.8934);
+  BOOST_TEST_CHECK(aColor.distDeltaE1994(bColor) == 82.8807);
+  //BOOST_TEST_CHECK(aColor.distDeltaE2000(bColor) == 63.5853);
+}
+
 #endif
-
-
-
 
 /** @endcond */
 
 
 // So far: 4239 hand written test cases
 // So far: 8627 generated test cases
-
-
-//  MJR TODO NOTE <2022-08-20T09:34:45-0500> utest_colorTpl.cpp: Add tests to make sure constants are correct for ALL types (minChanVal, maxChanVal, meanChanVal, etc....)
-//  MJR TODO NOTE <2022-08-20T09:35:21-0500> utest_colorTpl.cpp: Add GCC with 128-bit support tests in another file.
