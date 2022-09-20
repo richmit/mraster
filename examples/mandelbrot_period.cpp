@@ -94,10 +94,10 @@ int main(void) {
   for(int y=0;y<theRamCanvas.getNumPixY();y++) {
     for(int x=0;x<theRamCanvas.getNumPixX();x++) {
       if (perRamCanvas.getPxColorNC(x, y).getC0() > 0) {
-        if (perRamCanvas.getPxColorNC(x, y).getC0() > (rc8::colorType::csFPcircular24::numC-1)) {
+        if (perRamCanvas.getPxColorNC(x, y).getC0() > (rc8::colorType::csCBDark2::maxNumC-1)) {
           theRamCanvas.drawPoint(x, y, 255);
         } else {
-          theRamCanvas.drawPoint(x, y, rc8::colorType::csFPcircular24::c(perRamCanvas.getPxColorNC(x, y).getC0()));
+          theRamCanvas.drawPoint(x, y, rc8::colorType::csCBDark2::c(perRamCanvas.getPxColorNC(x, y).getC0()));
         }
       } else {
         rc8::csFltType c = static_cast<rc8::csFltType>(escRamCanvas.getPxColorNC(x, y).getC0()) / NUMITR;
@@ -105,8 +105,15 @@ int main(void) {
       }
     }
   }
-
+  theRamCanvas.drawString("1", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.15,  0.00, "black", 3, 20);
+  theRamCanvas.drawString("2", mjr::hershey::font::ROMAN_SL_SANSERIF, -1.00,  0.00, "black", 3, 20);
+  theRamCanvas.drawString("3", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.12,  0.74, "black", 3, 20);
+  theRamCanvas.drawString("3", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.12, -0.74, "black", 3, 20);
+  theRamCanvas.drawString("4", mjr::hershey::font::ROMAN_SL_SANSERIF, -1.31,  0.00, "black", 3, 20);
+  theRamCanvas.drawString("4", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.28,  0.53, "black", 3, 20);
+  theRamCanvas.drawString("4", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.28, -0.53, "black", 3, 20);
   theRamCanvas.writeTIFFfile("mandelbrot_period.tiff");
+
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
