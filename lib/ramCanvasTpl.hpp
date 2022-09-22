@@ -1159,7 +1159,7 @@ namespace mjr {
           @param magY     The magnification of the glyph in the y direction
           @param aColor   The color with which to render the glyph */
       void drawHersheyGlyph(int glyphNum, intCrdT x, intCrdT y, double magX, double magY, colorArgType aColor);
-      void drawHersheyGlyph(int glyphNum, intCrdT x, intCrdT y, double magX, double magY, colorArgType aColor) { drawHersheyGlyph(glyphNum, real2intX(x), real2intY(y), magX, magY, aColor); }
+      void drawHersheyGlyph(int glyphNum, fltCrdT x, fltCrdT y, double magX, double magY, colorArgType aColor) { drawHersheyGlyph(glyphNum, real2intX(x), real2intY(y), magX, magY, aColor); }
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
