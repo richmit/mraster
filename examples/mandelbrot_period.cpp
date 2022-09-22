@@ -29,31 +29,39 @@
  @filedetails
 
   Produce several images related to the period/cycle structure of the Mandelbrot set:
-    - mandelbrot_periodCYC.tiff: Period -- i.e. the length of the cycle of the orbit.
-    - mandelbrot_periodSTB.tiff: Number of iterations required for the cycle to be apparent.
-    - mandelbrot_periodESC.tiff: For divergent points, the number of iterations required for |z|>2.
-    - mandelbrot_period.tiff:    A composite, colorized image showing period and divergent points using a nice color scheme.
+
+   - mandelbrot_periodPER.tiff -- Period of the point.  0 means no period known.
+   - mandelbrot_periodSTB.tiff -- Stability of the period.  0 means stability unknown.
+   - mandelbrot_periods.tiff -- Number of iterations required to escape.  0 means it didn't escape.
+   - mandelbrot_periodNOE.tiff -- Points that didn't escape -- the mandelbrot set.  255
+   - mandelbrot_period.tiff    -- A composite of the above with a few notable period regions labeled.
+
+  On my 2022 vintage Intel i7, this takes about 30min to run.  The runtime is directly proportional to the NUMITR, so lower that number if you want it to go
+  faster.  Lowering NUMITR will have cause more non-escaping points to not have a known period -- the green points in
+
 ********************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
-typedef mjr::ramCanvas1c16b rc16;
-typedef mjr::ramCanvas3c8b  rc8;
+typedef mjr::ramCanvas1c16b rcM16;
+typedef mjr::ramCanvas1c8b rcM8;
+typedef mjr::ramCanvas3c8b  rcC8;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  rc8::colorType aColor;
+  rcC8::colorType aColor;
 
-  const rc16::colorChanType  NUMITR   = 4096;
-  const int                  CSIZE    = 7680/2;
-  const double               MAXZSQ   = 4.0;
-  rc8  theRamCanvas(CSIZE, CSIZE, -2.1, 0.75, -1.4, 1.4);
-  rc16 perRamCanvas(CSIZE, CSIZE, -2.1, 0.75, -1.4, 1.4);  // Period -- 0 => not a periodic point
-  rc16 stbRamCanvas(CSIZE, CSIZE, -2.1, 0.75, -1.4, 1.4);  // Number of iterations period structure was stable
-  rc16 escRamCanvas(CSIZE, CSIZE, -2.1, 0.75,  1.4, 1.4);  // Iteration count for cases where |z|>2
+  const rcM16::colorChanType NUMITR   = 65530;
+  const int                  CSIZE    = 7680;
+  const double               MAXZSQ   = 4.1;
+  rcC8  theRamCanvas(CSIZE, CSIZE, -2.1, 0.75, -1.4, 1.4);
+  rcM16 perRamCanvas(CSIZE, CSIZE, -2.1, 0.75, -1.4, 1.4);  // Period -- 0 => not a periodic point
+  rcM16 stbRamCanvas(CSIZE, CSIZE, -2.1, 0.75, -1.4, 1.4);  // Number of iterations period structure was stable
+  rcM8  noeRamCanvas(CSIZE, CSIZE, -2.1, 0.75, -1.4, 1.4);  // No escape: Exceeded iteration count
+  rcM16 escRamCanvas(CSIZE, CSIZE, -2.1, 0.75,  1.4, 1.4);  // Excaped: Iteration count for cases where |z|>2
 
 #pragma omp parallel for schedule(static,1)
   for(int y=0;y<perRamCanvas.getNumPixY();y++) {
@@ -61,23 +69,27 @@ int main(void) {
       std::complex<double> c(perRamCanvas.int2realX(x), perRamCanvas.int2realY(y));
       std::complex<double> z(0.0, 0.0);
       std::vector<std::complex<double>> lastZs(NUMITR);
-      rc16::colorChanType count = 0;
+      rcM16::colorChanType count = 1;
       while((std::norm(z)<MAXZSQ) && (count<NUMITR)) {
         z=std::pow(z, 2) + c;
         lastZs[count] = z;
         count++;
       }
       if (count == NUMITR) {  // Hit iteration limit
-        for(rc16::colorChanType period=1; period<(NUMITR-2); period++) {
-          if(std::abs(z-lastZs[NUMITR-1-period])<1e-4) {
-            perRamCanvas.drawPoint(x, y, period);
-            for(rc16::colorChanType stab=0; stab<(NUMITR-period); stab++) {
+        noeRamCanvas.drawPoint(x, y, "white");
+        for(rcM16::colorChanType period=1; period<(NUMITR-2); period++) {
+          if(std::abs(z-lastZs[NUMITR-1-period])<1e-4) { // Found an identical point 'period' away.
+            rcM16::colorChanType stab;
+            for(stab=0; stab<(NUMITR-period); stab++) {
               if(std::abs(lastZs[NUMITR-1-stab]-lastZs[NUMITR-1-period-stab])>1e-6) {   
-                stbRamCanvas.drawPoint(x, y, NUMITR-stab);
                 break;
               }
             }
-            break;
+            if (stab > period) { // Definatly found a cycle
+              stbRamCanvas.drawPoint(x, y, NUMITR-stab);
+              perRamCanvas.drawPoint(x, y, period);
+              break;
+            }
           }
         }
       } else {                // Divergence detected because |z|>2
@@ -87,32 +99,79 @@ int main(void) {
     std::cout << CSIZE << "/" << y << std::endl;
   }
 
-  perRamCanvas.writeTIFFfile("mandelbrot_periodCYC.tiff");
+  perRamCanvas.writeTIFFfile("mandelbrot_periodPER.tiff");
   stbRamCanvas.writeTIFFfile("mandelbrot_periodSTB.tiff");
-  escRamCanvas.writeTIFFfile("mandelbrot_periodOUT.tiff");
+  escRamCanvas.writeTIFFfile("mandelbrot_periodESC.tiff");
+  noeRamCanvas.writeTIFFfile("mandelbrot_periodNOE.tiff");
 
+  int numConNoCyc = 0;
+  int numCyc      = 0;
+  int numEsc      = 0;
+  int numPts      = 0;
+  int maxPer      = 0;
   for(int y=0;y<theRamCanvas.getNumPixY();y++) {
     for(int x=0;x<theRamCanvas.getNumPixX();x++) {
-      if (perRamCanvas.getPxColorNC(x, y).getC0() > 0) {
-        if (perRamCanvas.getPxColorNC(x, y).getC0() > (rc8::colorType::csCBDark2::maxNumC-1)) {
-          theRamCanvas.drawPoint(x, y, 255);
+      auto period = perRamCanvas.getPxColorNC(x, y).getC0();
+      if (period > maxPer)
+        maxPer = period;
+      if (period > 0) {
+        if (period > (rcC8::colorType::csCBDark2::maxNumC-1)) {
+          theRamCanvas.drawPoint(x, y, "red");
         } else {
-          theRamCanvas.drawPoint(x, y, rc8::colorType::csCBDark2::c(perRamCanvas.getPxColorNC(x, y).getC0()));
+          theRamCanvas.drawPoint(x, y, rcC8::colorType::csCBDark2::c(period));
         }
+        numCyc++;
       } else {
-        rc8::csFltType c = static_cast<rc8::csFltType>(escRamCanvas.getPxColorNC(x, y).getC0()) / NUMITR;
-        theRamCanvas.drawPoint(x, y, rc8::colorType::csCCdiag01::c(c*30));
+        if (noeRamCanvas.getPxColorNC(x, y).getC0() > 0) {
+          theRamCanvas.drawPoint(x, y, "green");
+          numConNoCyc++;
+        } else {
+          rcC8::csFltType c = static_cast<rcC8::csFltType>(escRamCanvas.getPxColorNC(x, y).getC0()) / NUMITR;
+          theRamCanvas.drawPoint(x, y, rcC8::colorType::csCCdiag01::c(c*30));
+          numEsc++;
+        }
       }
+      numPts++;
     }
   }
-  theRamCanvas.drawString("1", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.15,  0.00, "black", 3, 20);
-  theRamCanvas.drawString("2", mjr::hershey::font::ROMAN_SL_SANSERIF, -1.00,  0.00, "black", 3, 20);
-  theRamCanvas.drawString("3", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.12,  0.74, "black", 3, 20);
-  theRamCanvas.drawString("3", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.12, -0.74, "black", 3, 20);
-  theRamCanvas.drawString("4", mjr::hershey::font::ROMAN_SL_SANSERIF, -1.31,  0.00, "black", 3, 20);
-  theRamCanvas.drawString("4", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.28,  0.53, "black", 3, 20);
-  theRamCanvas.drawString("4", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.28, -0.53, "black", 3, 20);
+  theRamCanvas.drawString("1", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.1500,  0.0000, "black", 6.0, 20);
+  theRamCanvas.drawString("2", mjr::hershey::font::ROMAN_SL_SANSERIF, -1.0000,  0.0000, "black", 6.0, 20);
+
+  theRamCanvas.drawString("3", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.1200,  0.7400, "black", 6.0, 20);
+  theRamCanvas.drawString("3", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.1200, -0.7400, "black", 6.0, 20);
+  theRamCanvas.drawString("3", mjr::hershey::font::ROMAN_SL_SANSERIF, -1.758,   0.0000, "black", 1.0, 20);
+
+  theRamCanvas.drawString("4", mjr::hershey::font::ROMAN_SL_SANSERIF, -1.3100,  0.0000, "black", 6.0, 20);
+  theRamCanvas.drawString("4", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.2800,  0.5320, "black", 6.0, 20);
+  theRamCanvas.drawString("4", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.2800, -0.5320, "black", 6.0, 20);
+
+  theRamCanvas.drawString("5", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.5060, -0.5620, "black", 4.0, 20);
+  theRamCanvas.drawString("5", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.3780, -0.3370, "black", 4.0, 20);
+  theRamCanvas.drawString("5", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.5060,  0.5620, "black", 4.0, 20);
+  theRamCanvas.drawString("5", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.3780,  0.3370, "black", 4.0, 20);
+
+  theRamCanvas.drawString("6", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.3890, -0.2150, "black", 2.0, 20);
+  theRamCanvas.drawString("6", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.1140, -0.8620, "black", 4.0, 20);
+  theRamCanvas.drawString("6", mjr::hershey::font::ROMAN_SL_SANSERIF, -1.1370, -0.2390, "black", 4.0, 20);
+  theRamCanvas.drawString("6", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.3890,  0.2150, "black", 2.0, 20);
+  theRamCanvas.drawString("6", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.1140,  0.8620, "black", 4.0, 20);
+  theRamCanvas.drawString("6", mjr::hershey::font::ROMAN_SL_SANSERIF, -1.1370,  0.2390, "black", 4.0, 20);
+
+  theRamCanvas.drawString("7", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.6220, -0.4240, "black", 2.0, 20);
+  theRamCanvas.drawString("7", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.1210, -0.6100, "black", 2.0, 20);
+  theRamCanvas.drawString("7", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.3760, -0.1440, "black", 1.0, 20);
+  theRamCanvas.drawString("7", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.6220,  0.4240, "black", 2.0, 20);
+  theRamCanvas.drawString("7", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.1210,  0.6100, "black", 2.0, 20);
+  theRamCanvas.drawString("7", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.3760,  0.1440, "black", 1.0, 20);
+
   theRamCanvas.writeTIFFfile("mandelbrot_period.tiff");
+
+  std::cout << "numConNoCyc ... " << numConNoCyc        << std::endl;
+  std::cout << "numCyc ........ " << numCyc             << std::endl;
+  std::cout << "numInSet ...... " << numConNoCyc+numCyc << std::endl;
+  std::cout << "numEsc ........ " << numEsc             << std::endl;
+  std::cout << "numPts ........ " << numPts             << std::endl;
+  std::cout << "maxPer ........ " << maxPer             << std::endl;
 
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
