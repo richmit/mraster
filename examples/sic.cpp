@@ -5,7 +5,6 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw fractals inspired by the book Symmetry in Chaos.@EOL
  @std       C++20
- @see       sic_search.cpp
  @see       https://www.mitchr.me/SS/sic/index.html
  @copyright
   @parblock
@@ -37,6 +36,10 @@
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+typedef mjr::ramCanvas3c8b rct;
+typedef rct::colorType ct;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 const int NPR = 27;
@@ -72,9 +75,10 @@ typename mjr::ramCanvas1c16b::coordFltType params[NPR][12] = {
 };
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// This is *identical* to what we did in pickoverPopcorn.cpp -- just way shorter.  It is longer still because we don't make this a subclass of
-// ramCanvasTpl::rcConverterHomoBase in order to illustrate how to implement a RC converter from scratch.  Also note we didn't need to DIY the color gradient
-// with cmpRGBcornerDGradiant() as this gradient (0RYBCW) is available as a pre-built color scheme: csCCfractal0RYBCW.
+// This is *identical* to what we did in pickoverPopcorn.cpp -- just way shorter.  It is longer still because we don't make
+// this a subclass of ramCanvasTpl::rcConverterHomoBase in order to illustrate how to implement a RC converter from scratch.
+// Also note we didn't need to DIY the color gradient with cmpRGBcornerDGradiant() as this gradient (0RYBCW) is available as
+// a pre-built color scheme: csCCfractal0RYBCW.
 class g2rgb8 {
   private:
     mjr::ramCanvas1c16b& attachedRC;
@@ -86,9 +90,9 @@ class g2rgb8 {
     inline mjr::ramCanvas1c16b::coordIntType getNumPixX() { return attachedRC.getNumPixX(); }
     inline mjr::ramCanvas1c16b::coordIntType getNumPixY() { return attachedRC.getNumPixY(); }
     typedef mjr::colorRGB8b colorType;
-    inline colorType getPxColorNC(mjr::ramCanvas3c8b::coordIntType x, mjr::ramCanvas3c8b::coordIntType y) { 
+    inline colorType getPxColorNC(rct::coordIntType x, rct::coordIntType y) { 
       colorType retColor;
-      mjr::ramCanvas3c8b::csIntType tmp = static_cast<mjr::ramCanvas3c8b::csIntType>(attachedRC.getPxColorNC(x, y).getC0() * 1275 / factor);
+      rct::csIntType tmp = static_cast<rct::csIntType>(attachedRC.getPxColorNC(x, y).getC0() * 1275 / factor);
       return retColor.cmpRGBcornerDGradiant(tmp, "0RYBCW");
     }
 };
@@ -158,10 +162,12 @@ int main(void) {
     /* Dump the 16-bit grayscale TIFF */
     theRamCanvas.writeTIFFfile("sicM_" + std::to_string(j) + ".tiff");
     /* Now we would like a false color version (24-bit RGB).   We could create a new canvas like this:
-               mjr::ramCanvas3c8b cRamCanvas(theRamCanvas.getNumPixX(), theRamCanvas.getNumPixY());
+               rct cRamCanvas(theRamCanvas.getNumPixX(), theRamCanvas.getNumPixY());
                for(mjr::ramCanvas1c16b::coordIntType y=0;y<theRamCanvas.getNumPixY();y++)
-                 for(mjr::ramCanvas1c16b::coordIntType x=0;x<theRamCanvas.getNumPixX();x++)
-                   cRamCanvas.getPxColorRefNC(x, y).cmpRGBcornerDGradiant(static_cast<mjr::ramCanvas3c8b::csIntType>(theRamCanvas.getPxColorRefNC(x, y).getC0() * 1275 / maxII), "0RYBCW");
+                 for(mjr::ramCanvas1c16b::coordIntType x=0;x<theRamCanvas.getNumPixX();x++) {
+                   auto ci = static_cast<rct::csIntType>(theRamCanvas.getPxColorRefNC(x, y).getC0() * 1275 / maxII)
+                   cRamCanvas.getPxColorRefNC(x, y).cmpRGBcornerDGradiant(ci, "0RYBCW");
+                 }
                cRamCanvas.writeTIFFfile("sicC_" + std::to_string(j) + ".tiff");
        We have a better way.  One that dosen't require the RAM to create a brand new canvas.  We can use
        the filter option of writeTIFFfile! */

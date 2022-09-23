@@ -37,7 +37,6 @@
 //   return mjr::point2d<double>(x+100*std::sin(y/100), y);
 // }
 
-
 // mjr::point2d<double> funny(double x, double y) {
 //   double d = 25; //std::hypot(x, y) / 2056;
 //   return mjr::point2d<double>(std::cos(d)*x+std::sin(d)*y, -std::sin(d)*x+std::cos(d)*y);
@@ -74,14 +73,10 @@ int main(int argc, char *argv[]) {
   double Xo      =  0.0;
   double Yo      =  0.0;
   std::vector<double> poly {A, B, C, D};
-std::cout << poly[1] << std::endl;
 
   mjr::ramCanvas3c8b uRamCanvas = dRamCanvas.geomTfrmRevRPoly(poly, Xo, Yo);
 
-   // mjr::ramCanvas3c8b uRamCanvas = dRamCanvas.genGeomTfrmArb(funny);
-
-  // ramCanvasTpl<colorT, intCrdT, fltCrdT>::genGeomTfrmArb(pointFltType (*f)(double, double)) {
-  //   ramCanvasTpl<colorT, intCrdT, fltCrdT> newRamCanvas(numPixX, numPixY);
+  // mjr::ramCanvas3c8b uRamCanvas = dRamCanvas.genGeomTfrmArb(funny);
 
   uRamCanvas.writeTIFFfile("geomTfrm_LensDistortion.tiff");
 

@@ -6,7 +6,7 @@
  @date      2022-09-08
  @brief     Burning Ship Fractal.@EOL
  @std       C++20
- @see       https://en.wikipedia.org/wiki/Burning_Ship_fractal
+ @see       https://www.mitchr.me/SS/BurningShip/index.html
  @copyright 
   @parblock
   Copyright (c) 2022, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.

@@ -4,11 +4,8 @@
  @file      types.cpp
  @author    Mitch Richling http://www.mitchr.me/
  @date      2022-07-09
- @version   VERSION
  @brief     Template types and sizes.@EOL
- @keywords  
  @std       C++20
- @see       
  @copyright 
   @parblock
   Copyright (c) 2022, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.

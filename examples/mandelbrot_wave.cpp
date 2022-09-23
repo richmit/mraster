@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Animate a mandelbrot-like fractal with a variable coeficient.@EOL
  @std       C++20
- @see       TBD
+ @see       https://www.mitchr.me/SS/mandelbrotWave/index.html
  @copyright
   @parblock
   Copyright (c) 1988-2022, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.

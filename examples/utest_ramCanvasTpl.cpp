@@ -5,9 +5,7 @@
  @author    Mitch Richling http://www.mitchr.me/
  @date      2022-08-24
  @brief     unit tests for ramCanvasTpl on 64-bit little endian hardware -- like ia64/x86_64.@EOL
- @keywords
  @std       C++20
- @see
  @copyright
   @parblock
   Copyright (c) 2022, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.

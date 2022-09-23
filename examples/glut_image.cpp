@@ -6,9 +6,7 @@
  @date      2022-07-23
  @version   VERSION
  @brief     One way to get images from a ramCanvas into OpenGL@EOL
- @keywords  
  @std       C++20
- @see       
  @copyright 
   @parblock
   Copyright (c) 2022, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.

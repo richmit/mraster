@@ -6,7 +6,6 @@
  @brief     Find parameters for SIC fractals that light up lots of pixels.@EOL
  @keywords
  @std       C++20
- @see       sic.cpp
  @see       https://www.mitchr.me/SS/sic/index.html
  @copyright
   @parblock

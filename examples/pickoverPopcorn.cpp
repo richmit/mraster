@@ -5,7 +5,6 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw Pickover Popcorn Fractals.@EOL
  @std       C++20
- @see       
  @see       https://www.mitchr.me/SS/PickoverPopcorn/index.html
  @copyright
   @parblock
