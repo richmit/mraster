@@ -40,12 +40,21 @@ end up on this list.
 
 In no particular order:
 
+ - Add number formatting
+   - +Padded integers -- like we use in image file names & MRW headers+ DONE
+   - Floating point numbers
  - Add $IC_tC_p$ or ITP color space support
    - REF: https://en.wikipedia.org/wiki/ICtCp
  - Color difference:
+   - +Add colorTpl::distDeltaE1994+ DONE
+   - +Add colorTpl::distDeltaE1976+ DONE
    - Add colorTpl::distDeltaE2000
    - Add Rec. ITU-R BT.2124 or \Delta EITP https://en.wikipedia.org/wiki/Color_difference
- - Add an example showing how to read a FITS file using FITSIO
+ - FITS
+   - Add an example showing how to read a FITS file using FITSIO
+ - HDF5
+   - Add an example showing how to read/write a HDF5 file
+   - Integrate HDF5 support into ramCanvasTpl?
  - Set channels
    - From an array (the object)
    - An iterator
@@ -87,7 +96,12 @@ In no particular order:
      - Crop canvas
      - ramCanvasTpl: Add methods to copy/convert/filter data from another ramCanvas.
  - Method that returns a packed integer from a color value.  It should use a standard converter to do the job if one is not provided.
- - ramCanvasTpl: Add operators: != & ==.
+ - ramCanvasTpl: relations
+   - Add operators: != & ==.
+   - +Add isEqual+ DONE
+   - +Add isClose+ DONE
+   - +Add isSameSize+ DONE
+   - +Add isNotSameSize+ DONE
  - unit tests
    - colorTpl
      - Add tests to make sure constants are correct for ALL types (minChanVal, maxChanVal, meanChanVal, etc....)
@@ -104,42 +118,43 @@ In no particular order:
  - Geometric Transformations:
    - Support both forward and reverse transformations.
    - Notation
-     - Target Canvas: T -- coordinates (u, v)
-     - Source Canvas: S -- coordinates (x, y)
-     - Target color: C_T(u, v) = color of pixel at (u, v)
-     - Source color: C_S(x, y) = color of pixel at (x, y)
+     - Target Canvas: $T$ -- coordinates $(u, v)$
+     - Source Canvas: $S$ -- coordinates $(x, y)$
+     - Target color: $C_T(u, v)$ = color of pixel at $(u, v)$
+     - Source color: $C_S(x, y)$ = color of pixel at $(x, y)$
      - Geometric mappings: 
-       - forward: f(x, y) -> (u, v)   (from T -> S)
-         - C_T(f(x, y)) <= C_S(x, y)
-         - u & v might not be integers!
-         - Some pixels in S might not be hit
-         - Some pixels in S might be hit twice!
-       - reverse: r(u, v) -> (x, y)   (from S -> T)
-         - C_T(u, v) <= C_S(r(u, v)) -- but r(u, v) might not be integral, so image interpolation must be considered
-         - Some pixels of T might not be mapped to colors in S, but we can tell which ones -- and color them green
-         - The color of a pixel in T is formed from ONE set of coordinates mapped by r.
-   - Algorithms
-     - Forward Mapping
-       - Iterate over pixels in source:  for each (x, y) in S, compute (u, v)=f(x, y).  Set C_T(u, v) = C_S(x, y)
-         - Note: we round/truncate (u, v) here to integers
-       - Some pixels in the target image may not be "hit" by a source pixel while others might get hit more than once
-       - Should be useful for geometric measurement applications where geometric accuracy is more important than visual appearance
-       - Interesting diagnostic colorations:
-         - Number of times a pixel is "hit"
-         - Number of times a mapped pixel hits within epsilon of pixel center
-     - Reverse Mapping
-       - Iterate over target canvas pixels (u, v).  Compute (x, y)=r(u, v).  Set C_T(u, v) = C_S(x, y).
-         - Note: we use some sort of interpolation as (x, y) won't necessarily be integers.
-       - Some target pixels might map to pixels outside of S!
-       - Interesting diagnostic colorations:
-         - Color based on distance of (x, y) to the nearest pixel center -- sort of a "how much interpolation was needed to color this pixel" measure
-         - Color based on if (x, y) is in the image C (i.e. a boolean color scheme)
+       - forward: $f:S\rightarrow T$
+         - $f(x, y)$ -> $(u, v)$
+         - $C_T(\mathrm{round}(f(x, y)))$ \leftarrow $C_S(x, y)$
+         - $f(x, y)$ might not be integer coordinates.  
+           - So we just pick the closest.
+         - Some $(x, y)$ coordinates $S$ might not map to valid $(u, v)$ coordinates in $T$ -- i.e. they might be off canvas.
+         - Some pixels in $T$ might be hit by more than one set of $(x, y)$ coordinates.  
+           - A stratigy needs to be selcted for which hit to take.
+         - Algorithm
+           - for each $(x, y)$ in $S$
+             - Compute $(u, v)=\mathrm{round}(f(x, y))$.  
+             - If $(u,v)$ are valid, then set $C_T(u, v) = C_S(x, y)$ otherwise $C_T(u, v) = \mathrm{GREEN}$.
+       - reverse: $r:T\rightarrow S$
+         - $r(u, v) -> (x, y)$
+         - $C_T(u, v) \leftarrow C_S(r(u, v))$
+         - $r(u, v)$ might not be integral
+           - Image interpolation is the standard solution to this problem.
+         - Some $(u, v)$ coordinats in $T$ might not be mapped valid coordinates in $S$.
+           - We can identify these pixesl by coloring them with a guard color (like green)
+       - Algorithm
+         - for each $(u, v)$ in $T$
+           - Compute $(x, y)=r(u, v)$
+           - If ($x,y)$ is valid, then set $C_T(u, v) = \mathrm{interpolate}(C_S, x, y)$, else set $C_T(u, v) = \mathrm{GREEN}$.
    - Methods
      - bivariate polynomial in x & y
      - bivariate polynomial in r & angle
-     - univariate polynomial in r (REVERSE IS DONE)
-     - C++ functor (REVERSE IS DONE)
-     - Affine matrix (3x3) transform (REVERSE IS DONE)
+     - forward: univariate polynomial in r
+     - +reverse: univariate polynomial in r+ DONE.
+     - forward: functor
+     - +reverse: functor+ DONE.
+     - forward: Affine matrix (3x3) transform
+     - +reverse: Affine matrix (3x3) transform+ DONE.
    - Make a univariate radial transformation that is compatible with Imagemagick's barrel distortion transformation
      - (X, Y) is the image center for both T & S
      - A, B, C, & D are constants

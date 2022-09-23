@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-09-19 Mon 23:31 -->
+<!-- 2022-09-23 Fri 16:43 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster Roadmap</title>
@@ -267,16 +267,31 @@ In no particular order:
 </p>
 
 <ul class="org-ul">
+<li>Add number formatting
+<ul class="org-ul">
+<li><del>Padded integers &#x2013; like we use in image file names &amp; MRW headers</del> DONE</li>
+<li>Floating point numbers</li>
+</ul></li>
 <li>Add \(IC_tC_p\) or ITP color space support
 <ul class="org-ul">
 <li>REF: <a href="https://en.wikipedia.org/wiki/ICtCp">https://en.wikipedia.org/wiki/ICtCp</a></li>
 </ul></li>
 <li>Color difference:
 <ul class="org-ul">
+<li><del>Add colorTpl::distDeltaE1994</del> DONE</li>
+<li><del>Add colorTpl::distDeltaE1976</del> DONE</li>
 <li>Add colorTpl::distDeltaE2000</li>
 <li>Add Rec. ITU-R BT.2124 or &Delta; EITP <a href="https://en.wikipedia.org/wiki/Color_difference">https://en.wikipedia.org/wiki/Color_difference</a></li>
 </ul></li>
+<li>FITS
+<ul class="org-ul">
 <li>Add an example showing how to read a FITS file using FITSIO</li>
+</ul></li>
+<li>HDF5
+<ul class="org-ul">
+<li>Add an example showing how to read/write a HDF5 file</li>
+<li>Integrate HDF5 support into ramCanvasTpl?</li>
+</ul></li>
 <li>Set channels
 <ul class="org-ul">
 <li>From an array (the object)</li>
@@ -341,7 +356,14 @@ A good sequences:
 </ul></li>
 </ul></li>
 <li>Method that returns a packed integer from a color value.  It should use a standard converter to do the job if one is not provided.</li>
-<li>ramCanvasTpl: Add operators: != &amp; ==.</li>
+<li>ramCanvasTpl: relations
+<ul class="org-ul">
+<li>Add operators: != &amp; ==.</li>
+<li><del>Add isEqual</del> DONE</li>
+<li><del>Add isClose</del> DONE</li>
+<li><del>Add isSameSize</del> DONE</li>
+<li><del>Add isNotSameSize</del> DONE</li>
+</ul></li>
 <li>unit tests
 <ul class="org-ul">
 <li>colorTpl
@@ -366,54 +388,54 @@ A good sequences:
 <li>Support both forward and reverse transformations.</li>
 <li>Notation
 <ul class="org-ul">
-<li>Target Canvas: T &#x2013; coordinates (u, v)</li>
-<li>Source Canvas: S &#x2013; coordinates (x, y)</li>
-<li>Target color: C_T(u, v) = color of pixel at (u, v)</li>
-<li>Source color: C_S(x, y) = color of pixel at (x, y)</li>
+<li>Target Canvas: \(T\) &#x2013; coordinates \((u, v)\)</li>
+<li>Source Canvas: \(S\) &#x2013; coordinates \((x, y)\)</li>
+<li>Target color: \(C_T(u, v)\) = color of pixel at \((u, v)\)</li>
+<li>Source color: \(C_S(x, y)\) = color of pixel at \((x, y)\)</li>
 <li>Geometric mappings: 
 <ul class="org-ul">
-<li>forward: f(x, y) -&gt; (u, v)   (from T -&gt; S)
+<li>forward: \(f:S\rightarrow T\)
 <ul class="org-ul">
-<li>C_T(f(x, y)) &lt;= C_S(x, y)</li>
-<li>u &amp; v might not be integers!</li>
-<li>Some pixels in S might not be hit</li>
-<li>Some pixels in S might be hit twice!</li>
+<li>\(f(x, y)\) -&gt; \((u, v)\)</li>
+<li>\(C_T(\mathrm{round}(f(x, y)))\) &larr; \(C_S(x, y)\)</li>
+<li>\(f(x, y)\) might not be integer coordinates.  
+<ul class="org-ul">
+<li>So we just pick the closest.</li>
 </ul></li>
-<li>reverse: r(u, v) -&gt; (x, y)   (from S -&gt; T)
+<li>Some \((x, y)\) coordinates \(S\) might not map to valid \((u, v)\) coordinates in \(T\) &#x2013; i.e. they might be off canvas.</li>
+<li>Some pixels in \(T\) might be hit by more than one set of \((x, y)\) coordinates.  
 <ul class="org-ul">
-<li>C_T(u, v) &lt;= C_S(r(u, v)) &#x2013; but r(u, v) might not be integral, so image interpolation must be considered</li>
-<li>Some pixels of T might not be mapped to colors in S, but we can tell which ones &#x2013; and color them green</li>
-<li>The color of a pixel in T is formed from ONE set of coordinates mapped by r.</li>
+<li>A stratigy needs to be selcted for which hit to take.</li>
 </ul></li>
-</ul></li>
-</ul></li>
-<li>Algorithms
+<li>Algorithm
 <ul class="org-ul">
-<li>Forward Mapping
+<li>for each \((x, y)\) in \(S\)
 <ul class="org-ul">
-<li>Iterate over pixels in source:  for each (x, y) in S, compute (u, v)=f(x, y).  Set C_T(u, v) = C_S(x, y)
-<ul class="org-ul">
-<li>Note: we round/truncate (u, v) here to integers</li>
-</ul></li>
-<li>Some pixels in the target image may not be "hit" by a source pixel while others might get hit more than once</li>
-<li>Should be useful for geometric measurement applications where geometric accuracy is more important than visual appearance</li>
-<li>Interesting diagnostic colorations:
-<ul class="org-ul">
-<li>Number of times a pixel is "hit"</li>
-<li>Number of times a mapped pixel hits within epsilon of pixel center</li>
+<li>Compute \((u, v)=\mathrm{round}(f(x, y))\).</li>
+<li>If \((u,v)\) are valid, then set \(C_T(u, v) = C_S(x, y)\) otherwise \(C_T(u, v) = \mathrm{GREEN}\).</li>
 </ul></li>
 </ul></li>
-<li>Reverse Mapping
-<ul class="org-ul">
-<li>Iterate over target canvas pixels (u, v).  Compute (x, y)=r(u, v).  Set C_T(u, v) = C_S(x, y).
-<ul class="org-ul">
-<li>Note: we use some sort of interpolation as (x, y) won't necessarily be integers.</li>
 </ul></li>
-<li>Some target pixels might map to pixels outside of S!</li>
-<li>Interesting diagnostic colorations:
+<li>reverse: \(r:T\rightarrow S\)
 <ul class="org-ul">
-<li>Color based on distance of (x, y) to the nearest pixel center &#x2013; sort of a "how much interpolation was needed to color this pixel" measure</li>
-<li>Color based on if (x, y) is in the image C (i.e. a boolean color scheme)</li>
+<li>\(r(u, v) -> (x, y)\)</li>
+<li>\(C_T(u, v) \leftarrow C_S(r(u, v))\)</li>
+<li>\(r(u, v)\) might not be integral
+<ul class="org-ul">
+<li>Image interpolation is the standard solution to this problem.</li>
+</ul></li>
+<li>Some \((u, v)\) coordinats in \(T\) might not be mapped valid coordinates in \(S\).
+<ul class="org-ul">
+<li>We can identify these pixesl by coloring them with a guard color (like green)</li>
+</ul></li>
+</ul></li>
+<li>Algorithm
+<ul class="org-ul">
+<li>for each \((u, v)\) in \(T\)
+<ul class="org-ul">
+<li>Compute \((x, y)=r(u, v)\)</li>
+<li>If (\(x,y)\) is valid, then set \(C_T(u, v) = \mathrm{interpolate}(C_S, x, y)\), else set \(C_T(u, v) = \mathrm{GREEN}\).</li>
+</ul></li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -421,9 +443,12 @@ A good sequences:
 <ul class="org-ul">
 <li>bivariate polynomial in x &amp; y</li>
 <li>bivariate polynomial in r &amp; angle</li>
-<li>univariate polynomial in r (REVERSE IS DONE)</li>
-<li>C++ functor (REVERSE IS DONE)</li>
-<li>Affine matrix (3x3) transform (REVERSE IS DONE)</li>
+<li>forward: univariate polynomial in r</li>
+<li><del>reverse: univariate polynomial in r</del> DONE.</li>
+<li>forward: functor</li>
+<li><del>reverse: functor</del> DONE.</li>
+<li>forward: Affine matrix (3x3) transform</li>
+<li><del>reverse: Affine matrix (3x3) transform</del> DONE.</li>
 </ul></li>
 <li>Make a univariate radial transformation that is compatible with Imagemagick's barrel distortion transformation
 <ul class="org-ul">
