@@ -35,8 +35,11 @@
 #include <type_traits>                                                   /* C++ metaprogramming     C++11    */
 #include <cmath>                                                         /* std:: C math.h          C++11    */
 #include <cmath>                                                         /* std:: C math.h          C++11    */
+#include <string>                                                        /* C++ strings             C++11    */
 #include <numbers>                                                       /* C++ math constants      C++20    */
 #include <algorithm>                                                     /* STL algorithm           C++11    */
+#include <iostream>                                                      /* C++ iostream            C++11    */
+#include <iomanip>                                                       /* C++ stream formatting   C++11    */
 
 // Put everything in the mjr namespace
 namespace mjr {
@@ -237,6 +240,18 @@ namespace mjr {
   template <typename numType>
   inline numType min4(numType x1, numType x2, numType x3, numType x4) {
     return std::min(std::min(x1, x2), std::min(x3, x4));
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** Format an integer as a string
+    @param inInt The integer to format
+    @param width The width of the string
+    @param fill  Fill character
+    @return A formatted string. */
+  std::string fmtInt(int inInt, int width, char fill) {
+    std::ostringstream stringStream;
+    stringStream << std::setfill(fill) << std::setw(width) << inInt;
+    return stringStream.str();
   }
 
 } // end namespace mjr

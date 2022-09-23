@@ -61,11 +61,9 @@ int main(void) {
       }
     }
     //theRamCanvas.autoHistStrech();
-    std::ostringstream stringStream;
-    stringStream << "multibrotSnaps_" << std::setfill('0') << std::setw(1) << p << ".tiff";
-    theRamCanvas.writeTIFFfile(stringStream.str());
+    theRamCanvas.writeTIFFfile("multibrotSnaps_" + mjr::fmtInt(p, 3, '0') + ".tiff");
     std::chrono::duration<double> frameRunTime = std::chrono::system_clock::now() - frameStartTime;
-    std::cout << "Frame " << stringStream.str() << " Runtime " << frameRunTime.count() << " sec" << std::endl;
+    std::cout << "Frame " << p << " Runtime " << frameRunTime.count() << " sec" << std::endl;
   }
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;

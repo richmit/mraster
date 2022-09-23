@@ -60,10 +60,10 @@ typedef ct::csIntType cit;
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int    NUMITR = 255;
-  const int    NUMFRM = 24*16;      // Full circle animation
+  const int    NUMFRM = 24*16/24;      // Full circle animation
   //const int    NUMFRM = 24*4;     // Wave animation
-  const int    IMXSIZ = 7680;
-  const int    IMYSIZ = 7680;
+  const int    IMXSIZ = 7680/8;
+  const int    IMYSIZ = 7680/8;
   const int    MAXZSQ = 10;
   const double ANGMIN = 0.0;                 // Full circle animation
   const double ANGMAX = std::numbers::pi*2;  // Full circle animation
@@ -92,9 +92,7 @@ int main(void) {
       }
     }
     theRamCanvas.scaleDownMean(8);   // Another good choice: theRamCanvas.scaleDownMax(8); 
-    std::ostringstream stringStream;
-    stringStream << "mandelbrot_wave_" << std::setfill('0') << std::setw(3) << frame << ".tiff";
-    theRamCanvas.writeTIFFfile(stringStream.str());
+    theRamCanvas.writeTIFFfile("mandelbrot_wave_" + mjr::fmtInt(frame, 3, '0') + ".tiff");
   }
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;

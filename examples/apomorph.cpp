@@ -91,9 +91,8 @@ int main() {
     std::cout << "|" << std::endl;
     std::cout << "apomorph dump" << std::endl;
     theRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmStdPow, 1/5.0);
-    std::ostringstream stringStream;
-    stringStream << "apomorph" << std::setfill('0') << std::setw(3) << frame << ".tiff";
-    theRamCanvas.writeTIFFfile(stringStream.str());
+
+    theRamCanvas.writeTIFFfile("apomorph_" + mjr::fmtInt(frame, 3, '0') + ".tiff");
     std::cout << "apomorph finish" << std::endl;
   }
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;

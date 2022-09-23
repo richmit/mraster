@@ -110,10 +110,8 @@ int main(int argc, char *argv[]) {
       }
     }
 
-    std::ostringstream stringStream;
-    stringStream << argv[2] << std::setfill('0') << std::setw(3) << tgtLumPct << ".tiff";
-    theRamCanvas.writeTIFFfile(stringStream.str());
-    std::cout << "Write: " << stringStream.str() << std::endl;
+    theRamCanvas.writeTIFFfile(argv[2] + mjr::fmtInt(tgtLumPct, 3, '0') + ".tiff");
+    std::cout << "Write: " << tgtLumPct << std::endl;
   }
 
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;

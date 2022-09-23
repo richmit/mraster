@@ -4,7 +4,6 @@
  @file      sic_search.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Find parameters for SIC fractals that light up lots of pixels.@EOL
- @keywords
  @std       C++20
  @see       https://www.mitchr.me/SS/sic/index.html
  @copyright
@@ -54,7 +53,7 @@ int main(void) {
     double beta   = uniform_dist_double(rEng);
     double gamma  = uniform_dist_double(rEng);
     double w      = uniform_dist_double(rEng);
-    int n        = uniform_dist_int(rEng);
+    int    n      = uniform_dist_int(rEng);
     std::complex<double> z(0.01,0.01);
     for(uint64_t i=0;i<1000;i++) {
       z = (lambda + alpha*z*std::conj(z)+beta* std::pow(z, n).real() + w*std::complex<double>(0,1))*z+gamma*static_cast<std::complex<double>>(std::pow(std::conj(z), n-1));

@@ -75,9 +75,7 @@ int main(void) {
         }
       }
     }
-    std::ostringstream stringStream;
-    stringStream << "biomorphMorph_" << std::setfill('0') << std::setw(3) << frame << ".tiff";
-    theRamCanvas.writeTIFFfile(stringStream.str());
+    theRamCanvas.writeTIFFfile("biomorphMorph_" + mjr::fmtInt(frame, 3, '0') + ".tiff");
   }
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
