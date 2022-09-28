@@ -25,29 +25,62 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-********************************************************************************************************************************************************.H.E.**/
+ @filedetails   
+
+  The geomTfrmRevRPoly() method uses a radial polynomial transform.  This method may be used to reproduce the the behavior of Imagemagick's barrel distortion
+  transformation.  In Imagemagick the following terminology and constraints are used:
+
+   - (X, Y) is the image center for both T & S
+   - A, B, C, & D are constants
+   - A+B+C+D=1 -- if you don't provide D it will be computed
+
+  This is all put together on the command line something like this:
+  @verbatim
+       -distort Barrel "A B C D X Y"
+  @endverbatim
+
+  We can demonstrate the similar behavior between Imagemagick & this example program like this:
+
+   - Make test images
+     @verbatim
+     make test_images
+     ./test_images.exe
+     @endverbatim
+  
+   - Compute the new image with imagemagik
+     @verbatim
+     rm test_images_mcgrid_fimg.tiff
+     magick test_images_mcgrid.tiff -background Green -virtual-pixel Background -interpolate Bilinear -filter point -distort barrel "0.0 -0.0160 0.0" test_images_mcgrid_fimg.tiff
+     start test_images_mcgrid_fimg.tiff
+     @endverbatim
+  
+   - Compute the new image with MRaster
+     @verbatim
+     make geomTfrm_LensDistortion
+     ./geomTfrm_LensDistortion.exe test_images_mcgrid.tiff
+     mv geomTfrm_LensDistortion.tiff test_images_mcgrid_fmr.tiff
+     start test_images_mcgrid_fmr.tiff
+     @endverbatim
+  
+   - Use compare aginst the two imgages
+     @verbatim
+     magick compare -metric mae test_images_mcgrid_fmr.tiff test_images_mcgrid_fimg.tiff out.tiff
+     start out.tiff
+     @endverbatim
+  
+   - Subtract the two images
+     @verbatim
+     magick test_images_mcgrid_fmr.tiff test_images_mcgrid_fimg.tiff -compose Mathematics -define compose:args='0,1,-1,0' -composite out.tiff
+     start out.tiff
+     @endverbatim
+
+  Note the images are not identical, but they are very close.
+*/
+/*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-// mjr::point2d<double> funny(double x, double y) {
-//   return mjr::point2d<double>(x+100*std::sin(y/100), y);
-// }
-
-// mjr::point2d<double> funny(double x, double y) {
-//   double d = 25; //std::hypot(x, y) / 2056;
-//   return mjr::point2d<double>(std::cos(d)*x+std::sin(d)*y, -std::sin(d)*x+std::cos(d)*y);
-// }
-
-// mjr::point2d<double> funny(double x, double y) {
-// x = x - 2000;
-// y = y - 1500;
-//   double d = std::hypot(x, y) / 1056;
-//   return mjr::point2d<double>(std::cos(d)*x+std::sin(d)*y+2000, -std::sin(d)*x+std::cos(d)*y+1500);
-// }
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(int argc, char *argv[]) {
@@ -68,15 +101,16 @@ int main(int argc, char *argv[]) {
   double A       =  0.0000;
   double B       = -0.0160;
   double C       =  0.0000;
-  double D       = 1.0 - A - B - C;
+  double D       =  1.0000 - A - B - C;
 
-  double Xo      =  0.0;
-  double Yo      =  0.0;
+  double Xo      = dRamCanvas.getNumPixX() / 2.0;
+  double Yo      = dRamCanvas.getNumPixY() / 2.0;
+  double Sr      = std::min(dRamCanvas.getNumPixX(), dRamCanvas.getNumPixY()) / 2.0;
+  double Sout    = 0.9;
+
   std::vector<double> poly {A, B, C, D};
 
-  mjr::ramCanvas3c8b uRamCanvas = dRamCanvas.geomTfrmRevRPoly(poly, Xo, Yo);
-
-  // mjr::ramCanvas3c8b uRamCanvas = dRamCanvas.genGeomTfrmArb(funny);
+  mjr::ramCanvas3c8b uRamCanvas = dRamCanvas.geomTfrmRevRPoly(poly, Sr, Xo, Yo, Sout);
 
   uRamCanvas.writeTIFFfile("geomTfrm_LensDistortion.tiff");
 

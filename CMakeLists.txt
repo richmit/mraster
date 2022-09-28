@@ -81,13 +81,13 @@ set(TARGETS_REQ_NONE   "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "
                        "mandelbrot_potential" "mandelbrot_triangle" "newton_bm_cplx" "newton_bm_real" "newton_half" "newton_max_mod" "newton_vs"
                        "newton_z6" "peterdejong" "peterdejongM" "sic" "sic_search" "sierpinski_triangle" "sprott2d" 
                        "test_draw_fonts" "BurningShip" "multibrotSnaps" "multibrotMovie" "tricornMovie" "tricorn" "collatz" "invertedMandelbrot"
-                       "mandelbrot_biomorph" "mandelbrot_simple" "pickoverPopcorn" "convertRawToTIFF" "biomorphMorph" 
+                       "mandelbrot_biomorph" "mandelbrot_simple" "pickoverPopcorn" "convertRawToTIFF" "biomorphMorph" "test_images"
                        "tippets" "types" "color_lut_ramp_cubeC")
 set(TARGETS_REQ_OPENGL "glut_image")
 set(TARGETS_REQ_TIFF   "brownianDiffusion" "dlaBrownian" "dlaDrift" "img_process" "test_interp_scale" "geomTfrm_LensDistortion" "geomTfrm_Arb" 
                        "geomTfrm_Rotate" "displayImageSDL2" )
 set(TARGETS_USE_OPENMP "mandelbrot_bm_cplx_openmp" "mandelbrot_period" "mandelbrot_wave")
-set(TARGETS_REQ_BTEST  "utest_colorTpl_ia64nGCC" "utest_colorTpl" "utest_ramCanvasTpl")
+set(TARGETS_REQ_BTEST  "utest_colorTpl_ia64nGCC" "utest_colorTpl" "utest_ramCanvasTpl" "utest_mjrmath")
 set(TARGETS_REQ_SDL2   "displayImageSDL2")
 
 # Construct list of targets we can build

@@ -25,7 +25,8 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-********************************************************************************************************************************************************.H.E.**/
+*/
+/*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -47,29 +48,13 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
-  // Eigen::Matrix <float, 3, 3> transMatrix;
-  // Eigen::Matrix <float, 3, 3> rotMatrix;
-
-  // transMatrix << 
-  //   1,   0,  -dRamCanvas.getNumPixX()/2,  
-  //   0,   1,  -dRamCanvas.getNumPixY()/2,
-  //   0,   0,  0;
-
-  // rotMatrix << 
-  //    0.9238795325112867, 0.3826834323650898, 0.0, 
-  //   -0.3826834323650898, 0.9238795325112867, 0.0, 
-  //                   0.0,                0.0, 1.0;
-
-
-  // std::cout << (rotMatrix*transMatrix) << std::endl;
-
-  
-
-
-  // Rotate 45 degrees centered at teh lower left corner.  No translation.  No canvas resize.
+  // Rotate 45 degrees.
   std::vector<double> mat {0.9238795325112867, 0.3826834323650898, 0.0, -0.3826834323650898, 0.9238795325112867, 0.0, 0.0, 0.0, 1.0};
+  double              Xo  = dRamCanvas.getNumPixX() / 2.0;
+  double              Yo  = dRamCanvas.getNumPixY() / 2.0;
+  double              s   = 0.55;
 
-  mjr::ramCanvas3c8b uRamCanvas = dRamCanvas.geomTfrmRevAff(mat);
+  mjr::ramCanvas3c8b uRamCanvas = dRamCanvas.geomTfrmRevAff(mat, Xo, Yo, s);
 
   uRamCanvas.writeTIFFfile("geomTfrm_Rotate.tiff");
 

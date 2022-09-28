@@ -279,6 +279,7 @@ namespace mjr {
                                      AVERAGE4, //!< Average of four sourounding pixels
                                      AVERAGE9  //!< Average of 9 sourounding pixels
                                    };
+
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -658,26 +659,39 @@ namespace mjr {
       /** Geometric Transform via Radial Polynomial implemented with Reverse Mapping.
           @warning These functions are under development, and the API may change
 
-          @param errorColor The color to use for pixels with no valid mapping.
-          @param interpMethod Eventually this will be the interpolation method used.  Right now it is ignored.
-          @param RPoly Coefficients for Radial Polynomial with RPoly[0] being the coefficient on the highest power term -- note this direction!!!
-          @param Xo X coordinate for the offset from image center
-          @param Yo Y coordinate for the offset from image center */
+          @param RPoly        RPoly is a vector listing the coefficients of a univariate polynomial in lexicographical order -- 
+                              i.e. RPoly[0] is the coefficients on the highest power term.
+          @param rScale       Scale to apply before the transformation to the *radius*.
+          @param Xo           X coordinate for origin translation -- applied before RPoly and reversed after RPoly & scale.
+          @param Yo           Y coordinate for origin translation -- applied before RPoly and reversed after RPoly & scale.
+          @param oScale       Scale to apply after RPoly and before reverse translation.
+          @param errorColor   The color to use for pixels with no valid mapping.
+          @param interpMethod Eventually this will be the interpolation method used. */
       ramCanvasTpl geomTfrmRevRPoly(std::vector<double> const& RPoly,
-                                    double Xo = 0.0,
-                                    double Yo = 0.0,
+                                    double rScale,
+                                    double Xo,
+                                    double Yo,
+                                    double oScale,
                                     colorArgType errorColor = colorCornerEnum::GREEN,
                                     interpolationType interpMethod = interpolationType::BILINEAR);
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Geometric Transform via provided mapping function implemented with Reverse Mapping.
+      /** Geometric Transform via bivariate polynomial implemented with Reverse Mapping.
           @warning These functions are under development, and the API may change
 
-          @param errorColor The color to use for pixels with no valid mapping.
-          @param interpMethod Eventually this will be the interpolation method used.  Right now it is ignored.
-          @param f The coordinate transformation function */
-      ramCanvasTpl geomTfrmRevArb(mjr::point2d<double> (*f)(double, double),
-                                  colorArgType errorColor = colorCornerEnum::GREEN,
-                                  interpolationType interpMethod = interpolationType::BILINEAR);
+          @param BiPolyX      Coefficients for a bivariate polynomial in lexicographical order -- used to map x coordinates.
+          @param BiPolyY      Coefficients for a bivariate polynomial in lexicographical order -- used to map y coordinates.
+          @param Xo           X coordinate for origin translation -- applied before BiPoly*and reversed after BiPoly*& scale.
+          @param Yo           Y coordinate for origin translation -- applied before BiPoly*and reversed after BiPoly*& scale.
+          @param oScale       Scale to apply after BiPoly*and before reverse translation.
+          @param errorColor   The color to use for pixels with no valid mapping.
+          @param interpMethod Eventually this will be the interpolation method used. */
+      ramCanvasTpl geomTfrmRevBiPoly(std::vector<double> const& BiPolyX,
+                                     std::vector<double> const& BiPolyY,
+                                     double Xo,
+                                     double Yo,
+                                     double oScale,
+                                     colorArgType errorColor = colorCornerEnum::GREEN,
+                                     interpolationType interpMethod = interpolationType::BILINEAR);
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Homogenious Affine Geometric Transform implemented with Reverse Mapping.
           @warning These functions are under development, and the API may change
@@ -687,10 +701,32 @@ namespace mjr {
            [0 1 T_y]   [0   S_y 0]   [-SA cA 0]         T * [y_in] => [y_out]
            [0 0 1  ]   [0   0   1]   [0   0  1]             [1   ]    [1    ]
            @endverbatim
-          @param errorColor The color to use for pixels with no valid mapping.
-          @param interpMethod Eventually this will be the interpolation method used.  Right now it is ignored.
-          @param HAMatrix The homogenious affine transform matrix (3x3) */
+          @param HAMatrix     Homogeneous affine transform matrix -- 9 elements interpreted as a row major order 3x3 matrix.
+          @param Xo           X coordinate for origin translation -- applied before HAMatrixand reversed after HAMatrix& scale.
+          @param Yo           Y coordinate for origin translation -- applied before HAMatrixand reversed after HAMatrix& scale.
+          @param oScale       Scale to apply after HAMatrixand before reverse translation.
+          @param errorColor   The color to use for pixels with no valid mapping.
+          @param interpMethod Eventually this will be the interpolation method used. */
       ramCanvasTpl geomTfrmRevAff(std::vector<double> const& HAMatrix,
+                                  double Xo,
+                                  double Yo,
+                                  double oScale,
+                                  colorArgType errorColor = colorCornerEnum::GREEN,
+                                  interpolationType interpMethod = interpolationType::BILINEAR);
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Geometric Transform via provided mapping function implemented with Reverse Mapping.
+          @warning These functions are under development, and the API may change
+
+          @param f            The coordinate transformation function 
+          @param Xo           X coordinate for origin translation -- applied before f and reversed after f & scale.
+          @param Yo           Y coordinate for origin translation -- applied before f and reversed after f & scale.
+          @param oScale       Scale to apply after f and before reverse translation.
+          @param errorColor   The color to use for pixels with no valid mapping.
+          @param interpMethod Eventually this will be the interpolation method used. */
+      ramCanvasTpl geomTfrmRevArb(mjr::point2d<double> (*f)(double, double),
+                                  double Xo,
+                                  double Yo,
+                                  double oScale,
                                   colorArgType errorColor = colorCornerEnum::GREEN,
                                   interpolationType interpMethod = interpolationType::BILINEAR);
       //@}
@@ -4414,17 +4450,24 @@ namespace mjr {
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::geomTfrmRevArb(mjr::point2d<double> (*f)(double, double), colorArgType errorColor, interpolationType interpMethod) {
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::geomTfrmRevArb(mjr::point2d<double> (*f)(double, double), 
+                                                                            double Xo,
+                                                                            double Yo,
+                                                                            double oScale,
+                                                                            colorArgType errorColor, 
+                                                                            interpolationType interpMethod) {
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes> newRamCanvas(numPixX, numPixY);
     for(intCrdT y=0; y<numPixY; y++) {
       for(intCrdT x=0; x<numPixX; x++) {
-        mjr::point2d<double> fv = f(x, y);
-        double xD = fv.x;
-        double yD = fv.y;
-        if (isCliped(xD, yD)) {
+        double xT = (x-Xo);
+        double yT = (y-Yo);
+        mjr::point2d<double> fv = f(xT, yT);
+        double xS = fv.x / oScale + Xo;
+        double yS = fv.y / oScale + Yo;
+        if (isCliped(static_cast<intCrdT>(xS), static_cast<intCrdT>(yS))) {
           newRamCanvas.drawPointNC(x, y, errorColor);
         } else {
-          newRamCanvas.drawPointNC(x, y, getPxColorInterpolate(xD, yD, interpMethod));
+          newRamCanvas.drawPointNC(x, y, getPxColorInterpolate(xS, yS, interpMethod));
         }
       }
     }
@@ -4435,16 +4478,23 @@ namespace mjr {
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::geomTfrmRevAff(std::vector<double> const& HAMatrix, colorArgType errorColor, interpolationType interpMethod) {
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::geomTfrmRevAff(std::vector<double> const& HAMatrix, 
+                                                                            double Xo,
+                                                                            double Yo,
+                                                                            double oScale,
+                                                                            colorArgType errorColor, 
+                                                                            interpolationType interpMethod) {
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes> newRamCanvas(numPixX, numPixY);
     for(intCrdT y=0; y<numPixY; y++) {
       for(intCrdT x=0; x<numPixX; x++) {
-        double xD = HAMatrix[0] * x + HAMatrix[1] * y + HAMatrix[2];
-        double yD = HAMatrix[3] * x + HAMatrix[4] * y + HAMatrix[5];
-        if (isCliped(xD, yD)) {
+        double xT = x-Xo;
+        double yT = y-Yo;
+        double xS = (HAMatrix[0] * xT + HAMatrix[1] * yT + HAMatrix[2]) / oScale + Xo;
+        double yS = (HAMatrix[3] * xT + HAMatrix[4] * yT + HAMatrix[5]) / oScale + Yo;
+        if (isCliped(static_cast<intCrdT>(xS), static_cast<intCrdT>(yS))) {
           newRamCanvas.drawPointNC(x, y, errorColor);
         } else {
-          newRamCanvas.drawPointNC(x, y, getPxColorInterpolate(xD, yD, interpMethod));
+          newRamCanvas.drawPointNC(x, y, getPxColorInterpolate(xS, yS, interpMethod));
         }
       }
     }
@@ -4456,49 +4506,61 @@ namespace mjr {
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::geomTfrmRevRPoly(std::vector<double> const& RPoly,
+                                                                              double rScale,
                                                                               double Xo,
                                                                               double Yo,
+                                                                              double oScale,
                                                                               colorArgType errorColor,
                                                                               interpolationType interpMethod) {
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes> newRamCanvas(numPixX, numPixY);
-    double srcCtrX = numPixX / 2 + Xo;
-    double srcCtrY = numPixY / 2 + Yo;
-    double rScale  = std::min(numPixX, numPixY) / 2;
     for(intCrdT y=0; y<numPixY; y++) {
       for(intCrdT x=0; x<numPixX; x++) {
-        double xU = (x - srcCtrX);
-        double yU = (y - srcCtrY);
-        double rU = std::hypot(xU, yU) / rScale;
-        double rD = RPoly[0];
+        double xT = (x - Xo);
+        double yT = (y - Yo);
+        double rT = std::hypot(xT, yT) / rScale;
+        // TODO: Use mjr::evalUniPoly
+        double rS = RPoly[0];
         for (unsigned int i=1; i<RPoly.size(); i++)
-          rD = rD*rU + RPoly[i];
-        double xD = xU * rD + srcCtrX;
-        double yD = yU * rD + srcCtrY;
-        if (isCliped(xD, yD)) {
+          rS = rS*rT + RPoly[i];
+        double xS = xT * rS / oScale + Xo;
+        double yS = yT * rS / oScale + Yo;
+        if (isCliped(static_cast<intCrdT>(xS), static_cast<intCrdT>(yS))) {
           newRamCanvas.drawPointNC(x, y, errorColor);
         } else {
-          newRamCanvas.drawPointNC(x, y, getPxColorInterpolate(xD, yD, interpMethod));
+          newRamCanvas.drawPointNC(x, y, getPxColorInterpolate(xS, yS, interpMethod));
         }
       }
     }
     return newRamCanvas;
   }
 
-// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//   template<class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
-//   std::vector<double>
-//   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::homogeneousAffineMatrixMult(std::vector<double> const& HAMatrix1, std::vector<double> const& HAMatrix2) {
-//     std::vector<double> matrixProduct(9);
-//     for(int i=0;i<3;i++) { // row
-//       for(int j=0;j<3;j++) { // col
-//         matrixProduct[i*3+j] = 0.0;
-//         for(int k=0;k<3;k++) {
-//           matrixProduct[i*3+j] += =hamatrix1[i*3+k]*hamatrix2[k*3+j];
-//         }
-//       }
-//     }
-//     return matrixProduct;
-//   }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
+  requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::geomTfrmRevBiPoly(std::vector<double> const& BiPolyX,
+                                                                               std::vector<double> const& BiPolyY,
+                                                                               double Xo,
+                                                                               double Yo,
+                                                                               double oScale,
+                                                                               colorArgType errorColor,
+                                                                               interpolationType interpMethod) {
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes> newRamCanvas(numPixX, numPixY);
+    for(intCrdT y=0; y<numPixY; y++) {
+      for(intCrdT x=0; x<numPixX; x++) {
+        double xT = (x-Xo);
+        double yT = (y-Yo);
+        double xS = mjr::evalBiPoly(BiPolyX, xT, yT) / oScale + Xo;
+        double yS = mjr::evalBiPoly(BiPolyY, xT, yT) / oScale + Yo;
+        if (isCliped(static_cast<intCrdT>(xS), static_cast<intCrdT>(yS))) {
+          newRamCanvas.drawPointNC(x, y, errorColor);
+        } else {
+          newRamCanvas.drawPointNC(x, y, getPxColorInterpolate(xS, yS, interpMethod));
+        }
+      }
+    }
+    return newRamCanvas;
+  }
 
 } // end namespace mjr
 

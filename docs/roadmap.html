@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-09-23 Fri 16:43 -->
+<!-- 2022-09-27 Tue 21:58 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster Roadmap</title>
@@ -441,16 +441,19 @@ A good sequences:
 </ul></li>
 <li>Methods
 <ul class="org-ul">
-<li>bivariate polynomial in x &amp; y</li>
-<li>bivariate polynomial in r &amp; angle</li>
-<li>forward: univariate polynomial in r</li>
-<li><del>reverse: univariate polynomial in r</del> DONE.</li>
-<li>forward: functor</li>
-<li><del>reverse: functor</del> DONE.</li>
-<li>forward: Affine matrix (3x3) transform</li>
-<li><del>reverse: Affine matrix (3x3) transform</del> DONE.</li>
+<li><del>reverse: bivariate polynomial in x &amp; y</del> DONE.
+<ul class="org-ul">
+<li>Bivariate Polynomials
+<ul class="org-ul">
+<li>Single list of coefficients</li>
+<li>Order is lexicographic</li>
 </ul></li>
-<li>Make a univariate radial transformation that is compatible with Imagemagick's barrel distortion transformation
+</ul></li>
+<li>forward: bivariate polynomial in x &amp; y</li>
+<li>forward: univariate polynomial in r</li>
+<li><del>reverse: univariate polynomial in r</del> DONE.
+<ul class="org-ul">
+<li>Compatable with Imagemagick's barrel distortion transformation
 <ul class="org-ul">
 <li>(X, Y) is the image center for both T &amp; S</li>
 <li>A, B, C, &amp; D are constants</li>
@@ -471,41 +474,17 @@ Algorithm:
 </pre>
 </div></li>
 </ul></li>
-<li>Bivariate Polynomials
-<ul class="org-ul">
-<li>Single list of coefficients</li>
-<li>Order is lexicographic \[\sum_{i=0..2} \sum_{j=0..2} a_{(i, j)}x^iy^j\]
-<ul class="org-ul">
-<li>2nd: 00 01 02 10 11 12 20 21 22 -&gt; a00*x^0*y^0 + a01*x^0*y^1 + &#x2026; + a21*x^2*y^1 + a22*x^2*y^2</li>
-<li>3rd: 00 01 02 03 10 11 12 13 20 21 22 23 30 31 32 33</li>
 </ul></li>
-<li><p>
-Psudocode
-</p>
-<div class="org-src-container">
-<pre class="src src-c++"><span style="color: #00ffff;">const</span> <span style="color: #63b8ff;">maxPower</span> = 2;
-<span style="color: #63b8ff;">vector</span>&lt;<span style="color: #63b8ff;">double</span>&gt; <span style="color: #00fa9a; font-weight: bold;">xpowers</span>(maxPower+1);
-xpowers[0] = 1;
-<span style="color: #63b8ff;">vector</span>&lt;<span style="color: #63b8ff;">double</span>&gt; <span style="color: #00fa9a; font-weight: bold;">ypowers</span>(maxPower+1);
-ypowers[0] = 1;
-<span style="color: #00ffff;">for</span>(i=1; i&lt;=maxPower; i++) {
-  xpowers[i] = x * xpowers[i-1];
-  ypowers[i] = y * ypowers[i-1];
-}
-pvalue = 0;
-k=0;
-<span style="color: #00ffff;">for</span>(i=0; i&lt;=maxPower; i++) {
-  <span style="color: #00ffff;">for</span>(j=0; j&lt;=maxPower; j++) {
-    pvalue += poly[k] * xpowers[i] * ypowers[j];
-    k++;
-  }
-}
-</pre>
-</div></li>
-</ul></li>
+<li>forward: functor</li>
+<li><del>reverse: functor</del> DONE.</li>
+<li>forward: Affine matrix (3x3) transform</li>
+<li><del>reverse: Affine matrix (3x3) transform</del> DONE.
+<ul class="org-ul">
 <li>Matrix
 <ul class="org-ul">
 <li>Just an array of 9 elements</li>
+</ul></li>
+</ul></li>
 </ul></li>
 </ul></li>
 <li><p>

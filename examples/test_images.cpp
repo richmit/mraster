@@ -1,9 +1,9 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      geomTfrm_Arb.cpp
+ @file      test_images.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Read an image, transform it, and write out transformed image.@EOL
+ @brief     Generate some test images.@EOL
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -32,37 +32,60 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-mjr::point2d<double> funny(double x, double y) {
-  double d = 0.3*std::sin(std::hypot(x, y) / 100);
-  return mjr::point2d<double>(std::cos(d)*x+std::sin(d)*y, -std::sin(d)*x+std::cos(d)*y);
-}
+int main() {
+  const int wide = 4096/1;
+  const int tall = 2048/1;
+  const int gap  = 32;
+  mjr::ramCanvas3c8b cRamCanvas(wide, tall);
+  mjr::ramCanvas1c8b mRamCanvas(wide, tall);
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-int main(int argc, char *argv[]) {
-  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  mjr::ramCanvas3c8b dRamCanvas;
+  char const numc = 7;
+  char const *colors[numc] = { "white", "red", "green", "blue", "magenta", "cyan", "yellow" };
 
-  if (argc < 2) {
-    fprintf(stderr, "ERROR argument required!\n");
-    exit(1);
+  cRamCanvas.clrCanvasToBlack();
+  for(int i=1; i<wide/gap; i++)
+    cRamCanvas.drawLine(i*gap, 0, i*gap, (tall-1), colors[i%numc]);
+  for(int i=1; i<tall/gap; i++) 
+    cRamCanvas.drawLine(0,  i*gap, (wide-1),  i*gap, colors[i%numc]);
+  cRamCanvas.writeTIFFfile("test_images_ccgrid.tiff");
+
+  for(int j=1; j<tall/gap/2+1; j++) {
+    for(int i=(j-1)*4+1; i<wide/gap; i++) {
+      cRamCanvas.drawFillTriangle(i*gap, j*gap, 
+                                  (i+1)*gap, (j+1)*gap,
+                                  (i+1)*gap, j*gap,
+                                  colors[i%numc]);
+    }
   }
+  cRamCanvas.writeTIFFfile("test_images_ccgridt.tiff");
 
-  int rRet;
-  if((rRet=dRamCanvas.readTIFFfile(argv[1]))) {
-    fprintf(stderr, "ERROR(%d) reading file %s\n", rRet, argv[1]);
-    exit(1);
+  mRamCanvas.clrCanvasToBlack();
+  cRamCanvas.clrCanvasToBlack();
+  for(int i=1; i<wide/gap; i++) {
+    cRamCanvas.drawLine(i*gap, 0, i*gap, (tall-1), "white");
+    mRamCanvas.drawLine(i*gap, 0, i*gap, (tall-1), "white");
   }
+  for(int i=1; i<tall/gap; i++) {
+    cRamCanvas.drawLine(0,  i*gap, (wide-1),  i*gap, "white");
+    mRamCanvas.drawLine(0,  i*gap, (wide-1),  i*gap, "white");
+  }
+  cRamCanvas.writeTIFFfile("test_images_mcgrid.tiff");
+  mRamCanvas.writeTIFFfile("test_images_mmgrid.tiff");
 
-  double              Xo  = dRamCanvas.getNumPixX() / 2.0;
-  double              Yo  = dRamCanvas.getNumPixY() / 2.0;
-  double              s   = 0.65;
-
-  mjr::ramCanvas3c8b uRamCanvas = dRamCanvas.geomTfrmRevArb(funny, Xo, Yo, s);
-
-  uRamCanvas.writeTIFFfile("geomTfrm_Arb.tiff");
-
-  std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
-  std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
+  for(int j=1; j<tall/gap/2+1; j++) {
+    for(int i=(j-1)*4+1; i<wide/gap; i++) {
+      cRamCanvas.drawFillTriangle(i*gap, j*gap, 
+                                  (i+1)*gap, (j+1)*gap,
+                                  (i+1)*gap, j*gap,
+                                  "white");
+      mRamCanvas.drawFillTriangle(i*gap, j*gap, 
+                                  (i+1)*gap, (j+1)*gap,
+                                  (i+1)*gap, j*gap,
+                                  "white");
+    }
+  }
+  cRamCanvas.writeTIFFfile("test_images_mcgridt.tiff");
+  mRamCanvas.writeTIFFfile("test_images_mmgridt.tiff");
 
   return 0;
 }

@@ -40,6 +40,7 @@
 #include <algorithm>                                                     /* STL algorithm           C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
 #include <iomanip>                                                       /* C++ stream formatting   C++11    */
+#include <vector>
 
 // Put everything in the mjr namespace
 namespace mjr {
@@ -252,6 +253,74 @@ namespace mjr {
     std::ostringstream stringStream;
     stringStream << std::setfill(fill) << std::setw(width) << inInt;
     return stringStream.str();
+  }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** Return the maximum exponent possible for a bi-variate polynomial stored in a vector of n terms, or a negative value on error.
+    @param n Number of terms.
+    @return Maximum exponent, or a negative value on error.
+      @retval -1 n was too big (>10201)
+      @retval -2 n was too small (==0)
+      @retval -3 n was not the correct size for a dense bi-variate polynomial */
+  int maxExpBiPoly(std::vector<double>::size_type n) {
+    if (n>10201)
+      return -1;
+    if (n == 0)
+      return -2;
+    double nsqrt  = std::sqrt(n);
+    double nsqrtr = std::round(nsqrt);
+    if (std::abs(nsqrtr-nsqrt) > 0.00001)
+      return -3;
+    return static_cast<int>(nsqrtr)-1;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** Evaluate a bi-variate polynomial with double coefficients.
+
+    A polynomial is defined by it's coefficients.  In this function those coefficients are provided in a vector, and are in lexicographic order:
+     - 2nd: 00 01 02 10 11 12 20 21 22 -> a00*x^2*y^2 + a01*x^2*y^1 + ... + a21*x^0*y^1 + a22*x^0*y^0
+     - 3rd: 00 01 02 03 10 11 12 13 20 21 22 23 30 31 32 33
+    @param biPoly The polynomial
+    @param x      x value at which to evaluate the polynomial
+    @param y      x value at which to evaluate the polynomial
+    @return Value of polynomial evaluated at (x, y). */
+  double evalBiPoly(std::vector<double> const& biPoly, double x, double y) {
+    int maxPower = maxExpBiPoly(biPoly.size());
+    if (maxPower < 0)
+      return -1;  // This is an error.  Probably should throw.
+    std::vector<double> xpowers(maxPower+1);
+    xpowers[0] = 1;
+    std::vector<double> ypowers(maxPower+1);
+    ypowers[0] = 1;
+    for(int i=1; i<=maxPower; i++) {
+      xpowers[i] = x * xpowers[i-1];
+      ypowers[i] = y * ypowers[i-1];
+    }
+    double pvalue = 0;
+    std::vector<double>::size_type k=biPoly.size()-1;
+    for(int i=0; i<=maxPower; i++) {
+      for(int j=0; j<=maxPower; j++) {
+        pvalue += biPoly[k] * xpowers[i] * ypowers[j];
+        k--;
+      }
+    }
+    return pvalue;
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** Evaluate a uni-variate polynomial with double coefficients.
+
+    A polynomial is defined by it's coefficients.  In this function those coefficients are provided in a vector, and are in lexicographic order:
+      $$a_0+a_1x+a_2x^2+...+a_nx^n$$
+    @param uniPoly The polynomial
+    @param x       x value at which to evaluate the polynomial
+    @return Value of polynomial evaluated at x. */
+  inline double evalUniPoly(std::vector<double> const& uniPoly, double x) {
+    double pvalue = uniPoly[0];
+    for (std::vector<double>::size_type i=1; i<uniPoly.size(); i++)
+      pvalue = pvalue * x + uniPoly[i];
+    return pvalue;
   }
 
 } // end namespace mjr
