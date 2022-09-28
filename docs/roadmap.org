@@ -40,9 +40,26 @@ end up on this list.
 
 In no particular order:
 
+ - Precomputed Mandelbrot
+   - Add example that computes & saves convergence information in image files
+     - Escape points
+       - +Escape time+ DONE
+       - Last iteration value
+       - Iteration before last value
+     - Cyclic points
+       - +Period length+ DONE
+       - +Time to first period+ DONE
+       - Minimum modulus of points in cycle
+       - Maximum modulus of points in cycle
+   - Consider doing above, but with HDF5 file -- and store all the orbits & cycles...
+   - Add budabrot examples using pre-computed data
+     - Budabrot for period 2 bulb.
+     - Budabrot for period 1 bulb.
+     - Budabrot for period 1 & 2 bulbs with 1 red and 2 blue
+     - Budabrot with just the cyclic parts of the orbits for all orbits.  Odd period red, even blue.
  - Add number formatting
    - +Padded integers -- like we use in image file names & MRW headers+ DONE
-   - Floating point numbers
+   - +Floating point numbers+ CANCELED
  - Add $IC_tC_p$ or ITP color space support
    - REF: https://en.wikipedia.org/wiki/ICtCp
  - Color difference:
@@ -80,6 +97,7 @@ In no particular order:
    - Rate of update should be tuenable.
    - An occasional display artifact due to thread data collision is acceptable.
  - Encode real coordinate information in saved images and use that data in ImageJ for measurements and mouse location
+   - +Write ImageJ plugin/tool that prints out real coordinates when clicking on an image.+ DONE
  - OpenMP
    - Spread OpenMP use across examples.
    - Include parallelism in ramCanvas
