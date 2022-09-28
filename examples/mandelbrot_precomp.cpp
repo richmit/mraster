@@ -1,7 +1,7 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      mandelbrot_period.cpp
+ @file      mandelbrot_precomp.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Produce several images related to the period/cycle structure of the Mandelbrot set.@EOL
  @std       C++20
@@ -30,11 +30,11 @@
 
   Produce several images related to the period/cycle structure of the Mandelbrot set:
 
-   - mandelbrot_periodPER.tiff -- Period of the point.  0 means no period known.
-   - mandelbrot_periodSTB.tiff -- Stability of the period.  0 means stability unknown.
-   - mandelbrot_periods.tiff -- Number of iterations required to escape.  0 means it didn't escape.
-   - mandelbrot_periodNOE.tiff -- Points that didn't escape -- the mandelbrot set.  255
-   - mandelbrot_period.tiff    -- A composite of the above with a few notable period regions labeled.
+   - mandelbrot_precompPER.tiff -- Period of the point.  0 means no period known.
+   - mandelbrot_precompSTB.tiff -- Stability of the period.  0 means stability unknown.
+   - mandelbrot_precomps.tiff -- Number of iterations required to escape.  0 means it didn't escape.
+   - mandelbrot_precompNOE.tiff -- Points that didn't escape -- the mandelbrot set.  255
+   - mandelbrot_precomp.tiff    -- A composite of the above with a few notable period regions labeled.
 
   On my 2022 vintage Intel i7, this takes about 30min to run.  The runtime is directly proportional to the NUMITR, so lower that number if you want it to go
   faster.  Lowering NUMITR will have cause more non-escaping points to not have a known period -- the green points in
@@ -99,10 +99,10 @@ int main(void) {
     std::cout << CSIZE << "/" << y << std::endl;
   }
 
-  perRamCanvas.writeTIFFfile("mandelbrot_periodPER.tiff");
-  stbRamCanvas.writeTIFFfile("mandelbrot_periodSTB.tiff");
-  escRamCanvas.writeTIFFfile("mandelbrot_periodESC.tiff");
-  noeRamCanvas.writeTIFFfile("mandelbrot_periodNOE.tiff");
+  perRamCanvas.writeTIFFfile("mandelbrot_precompPER.tiff");
+  stbRamCanvas.writeTIFFfile("mandelbrot_precompSTB.tiff");
+  escRamCanvas.writeTIFFfile("mandelbrot_precompESC.tiff");
+  noeRamCanvas.writeTIFFfile("mandelbrot_precompNOE.tiff");
 
   int numConNoCyc = 0;
   int numCyc      = 0;
@@ -164,7 +164,7 @@ int main(void) {
   theRamCanvas.drawString("7", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.1210,  0.6100, "black", 2.0, 20);
   theRamCanvas.drawString("7", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.3760,  0.1440, "black", 1.0, 20);
 
-  theRamCanvas.writeTIFFfile("mandelbrot_period.tiff");
+  theRamCanvas.writeTIFFfile("mandelbrot_precomp.tiff");
 
   std::cout << "numConNoCyc ... " << numConNoCyc        << std::endl;
   std::cout << "numCyc ........ " << numCyc             << std::endl;
