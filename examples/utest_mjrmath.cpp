@@ -42,22 +42,31 @@
 
 #include "mjrmath.hpp"
 
-#if 1
+#if 0
 
-// |        | <typename inT, typename maxT>    inT         numberWrap                 (inT inNum, maxT maxOutValue)                           |
-// |        | <typename realType>              realType    realWrap                   (realType aReal, realType maxOutValue)                  |
-// |        | <typename inT, typename maxT>    inT         intClamp                   (inT inInt, maxT maxOutValue)                           |
-// |        | <typename realType>              realType    unitClamp                  (realType aReal)                                        |
-// |        |                                  double      interpolateLinear          (double v1, double v2, double w)                        |
-// |        |                                  double      interpolateLinearAnglesDeg (double v1, double v2, double w)                        |
-// |        |                                  int         intLinMap                  (int anInt, int maxOutValue, int maxInValue)            |
-// |        | <typename numTx, typename numTy> numTy       genLinMap                  (numTx x, numTx x1, numTx x2, numTy y1, numTy y2)       |
-// |        |                                  int         unitTooIntLinMap           (double aDouble, int maxOutValue)                       |
-// |        | <typename numType>               numType     max3                       (numType x1, numType x2, numType x3)                    |
-// |        | <typename numType>               numType     min4                       (numType x1, numType x2, numType x3, numType x4)        |
-// |        |                                  std::string fmtInt                     (int inInt, int width, char fill)                       |
-// | DIRECT |                                  double      evalBiPoly                 (std::vector<double> const& biPoly, double x, double y) |
-
+// |--------+----------------------------|
+// |        | numberWrap                 |
+// |        | realWrap                   |
+// |        | intClamp                   |
+// |        | unitClamp                  |
+// |--------+----------------------------|
+// |        | interpolateLinear          |
+// |        | interpolateLinearAnglesDeg |
+// |--------+----------------------------|
+// |        | intLinMap                  |
+// |        | genLinMap                  |
+// |        | unitTooIntLinMap           |
+// |--------+----------------------------|
+// |        | max3                       |
+// |        | min4                       |
+// |--------+----------------------------|
+// | DIRECT | fmtInt                     |
+// |        | fmtDbl                     |
+// |--------+----------------------------|
+// |        | evalUniPoly                |
+// | DIRECT | maxExpBiPoly               |
+// | DIRECT | evalBiPoly                 |
+// |--------+----------------------------|
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(maxExpBiPoly) {
@@ -76,7 +85,6 @@ BOOST_AUTO_TEST_CASE(maxExpBiPoly) {
   // too small to support
   BOOST_TEST_CHECK(mjr::maxExpBiPoly(0) == -2);
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(evalBiPoly, * boost::unit_test::tolerance(0.00001)) {
@@ -112,6 +120,92 @@ BOOST_AUTO_TEST_CASE(evalBiPoly, * boost::unit_test::tolerance(0.00001)) {
   BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly04, 1, 0) ==   28);
   BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly04, 1, 1) ==  136);
   BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly04, 2, 3) == 7570);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(fmtInt) {
+
+  // Check default args
+  BOOST_TEST_CHECK(mjr::fmtInt(10                  )  ==    "10");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 4               )  ==  "  10");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, ' '          )  ==  "  10");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, ' ', 10      )  ==  "  10");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, ' ', 10, true)  ==  "  10");
+
+  // dec
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, ' ', 10, true)  ==    "10");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, ' ', 10, true)  ==    "10");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, ' ', 10, true)  ==    "10");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, ' ', 10, true)  ==   " 10");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, ' ', 10, true)  ==  "  10");
+
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, 'X', 10, true)  ==    "10");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, 'X', 10, true)  ==    "10");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, 'X', 10, true)  ==    "10");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, 'X', 10, true)  ==   "X10");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, 'X', 10, true)  ==  "XX10");
+
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, ' ', 10, false) ==    "10");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, ' ', 10, false) ==    "10");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, ' ', 10, false) ==    "10");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, ' ', 10, false) ==   "10 ");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, ' ', 10, false) ==  "10  ");
+
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, 'X', 10, false) ==    "10");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, 'X', 10, false) ==    "10");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, 'X', 10, false) ==    "10");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, 'X', 10, false) ==   "10X");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, 'X', 10, false) ==  "10XX");
+
+  // hex
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, ' ', 16, true)  ==     "a");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, ' ', 16, true)  ==     "a");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, ' ', 16, true)  ==    " a");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, ' ', 16, true)  ==   "  a");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, ' ', 16, true)  ==  "   a");
+                                                  
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, 'X', 16, true)  ==     "a");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, 'X', 16, true)  ==     "a");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, 'X', 16, true)  ==    "Xa");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, 'X', 16, true)  ==   "XXa");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, 'X', 16, true)  ==  "XXXa");
+
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, ' ', 16, false) ==     "a");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, ' ', 16, false) ==     "a");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, ' ', 16, false) ==    "a ");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, ' ', 16, false) ==   "a  ");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, ' ', 16, false) ==  "a   ");
+                                                  
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, 'X', 16, false) ==     "a");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, 'X', 16, false) ==     "a");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, 'X', 16, false) ==    "aX");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, 'X', 16, false) ==   "aXX");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, 'X', 16, false) ==  "aXXX");
+
+  // oct
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, ' ', 8, true)   ==    "12");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, ' ', 8, true)   ==    "12");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, ' ', 8, true)   ==    "12");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, ' ', 8, true)   ==   " 12");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, ' ', 8, true)   ==  "  12");
+
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, 'X', 8, true)   ==    "12");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, 'X', 8, true)   ==    "12");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, 'X', 8, true)   ==    "12");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, 'X', 8, true)   ==   "X12");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, 'X', 8, true)   ==  "XX12");
+
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, ' ', 8, false)  ==    "12");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, ' ', 8, false)  ==    "12");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, ' ', 8, false)  ==    "12");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, ' ', 8, false)  ==   "12 ");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, ' ', 8, false)  ==  "12  ");
+
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, 'X', 8, false)  ==    "12");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, 'X', 8, false)  ==    "12");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, 'X', 8, false)  ==    "12");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, 'X', 8, false)  ==   "12X");
+  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, 'X', 8, false)  ==  "12XX");
 }
 
 #endif

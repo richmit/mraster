@@ -245,16 +245,30 @@ namespace mjr {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /** Format an integer as a string
-    @param inInt The integer to format
-    @param width The width of the string
-    @param fill  Fill character
+    @param inInt         The integer to format
+    @param width         The width of the string
+    @param fill          Fill character
+    @param base          An integer (valid values: 16, 10, 8)
+    @param rightJustify  If true, then right justify.  Otherwise, left.
     @return A formatted string. */
-  std::string fmtInt(int inInt, int width, char fill) {
+  std::string fmtInt(int inInt, int width = 0, char fill = ' ', int base = 10, bool rightJustify = true) {
     std::ostringstream stringStream;
-    stringStream << std::setfill(fill) << std::setw(width) << inInt;
+    if (width > 0)
+      stringStream << std::setfill(fill) << std::setw(width);
+    else
+      stringStream << std::setfill(fill) << std::setw(0);
+    if(rightJustify)
+      stringStream << std::right;
+    else
+      stringStream << std::left;
+    if (base == 16)
+      stringStream << std::hex << std::noshowbase;
+    if (base == 8)
+      stringStream << std::oct << std::noshowbase;
+    // TODO: Should throw if base is not 8, 10, or 16...
+    stringStream << inInt;
     return stringStream.str();
   }
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /** Return the maximum exponent possible for a bi-variate polynomial stored in a vector of n terms, or a negative value on error.
