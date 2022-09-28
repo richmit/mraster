@@ -653,11 +653,14 @@ namespace mjr {
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Geometric transformations (Reverse Mapping)
-          @warning These functions are under development, and the API may change */
+
+          @warning These functions are experimental!  Functionality and API are likely to change in the future.
+      */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Geometric Transform via Radial Polynomial implemented with Reverse Mapping.
-          @warning These functions are under development, and the API may change
+
+          @warning This function is experimental!  Functionality and API are likely to change in the future.
 
           @param RPoly        RPoly is a vector listing the coefficients of a univariate polynomial in lexicographical order -- 
                               i.e. RPoly[0] is the coefficients on the highest power term.
@@ -676,7 +679,8 @@ namespace mjr {
                                     interpolationType interpMethod = interpolationType::BILINEAR);
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Geometric Transform via bivariate polynomial implemented with Reverse Mapping.
-          @warning These functions are under development, and the API may change
+
+          @warning This function is experimental!  Functionality and API are likely to change in the future.
 
           @param BiPolyX      Coefficients for a bivariate polynomial in lexicographical order -- used to map x coordinates.
           @param BiPolyY      Coefficients for a bivariate polynomial in lexicographical order -- used to map y coordinates.
@@ -694,7 +698,8 @@ namespace mjr {
                                      interpolationType interpMethod = interpolationType::BILINEAR);
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Homogenious Affine Geometric Transform implemented with Reverse Mapping.
-          @warning These functions are under development, and the API may change
+
+          @warning This function is experimental!  Functionality and API are likely to change in the future.
 
            @verbatim
            [1 0 T_x]   [S_x 0   0]   [cA  sA 0]             [x_in]    [x_out]
@@ -715,7 +720,8 @@ namespace mjr {
                                   interpolationType interpMethod = interpolationType::BILINEAR);
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Geometric Transform via provided mapping function implemented with Reverse Mapping.
-          @warning These functions are under development, and the API may change
+
+          @warning This function is experimental!  Functionality and API are likely to change in the future.
 
           @param f            The coordinate transformation function 
           @param Xo           X coordinate for origin translation -- applied before f and reversed after f & scale.
@@ -1339,7 +1345,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Read RAW file
 
-          @warning This function is experimental!
+          @warning This function is experimental!  Functionality and API are likely to change in the future.
 
           @bug Floating point data is read directly from disk as-is without regard for endianness.  I have no plans to fix this because I'm not sure what a
                good fix looks like
@@ -1723,7 +1729,9 @@ namespace mjr {
       /** @name Canvas Level Colorization.
        These are tools designed to make things like escape time fractals very easy to create.
 
-       @warning Experimental!! These functions will likely change! */
+       @warning These functions are experimental!  Functionality and API are likely to change in the future.
+
+      */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       void colorizeFltCanvas(std::function<colorT (fltCrdT, fltCrdT)> cFun);
@@ -2781,13 +2789,6 @@ namespace mjr {
     inline int
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeTIFFfile(std::string fileName, rcConT rcConverter, bool markAlpha) {
 
-    std::ofstream outStream;
-    outStream.open(fileName, std::ios::out | std::ios::binary | std::ios::trunc);
-    if (outStream.is_open()) 
-      outStream.imbue(std::locale::classic());
-    else 
-      return 1;
-    
     if(rcConT::colorType::bitsPerChan < 8)                   // channels too thin
       return 2;
     if(rcConT::colorType::bitsPerChan > 0xffff)              // channels too fat
@@ -2810,29 +2811,68 @@ namespace mjr {
     if(bytesPerRow * rcConverter.getNumPixY() > 0xfffffffff) // image too big
       return 11;
 
-    endianType fe        = platformEndianness();                         // Endian Type
-    uint16_t endianNum   = (fe == endianType::LITTLE ? 0x4949 : 0x4d4d); // Endianness Magic Number
-    uint32_t tifWidth    = (uint32_t)rcConverter.getNumPixX();           // ImageWidth
-    uint32_t tifLength   = (uint32_t)rcConverter.getNumPixY();           // ImageLength & RowsPerStrip
-    uint32_t tifSPP      = (uint32_t)rcConT::colorType::channelCount;    // SamplesPerPixel
-    uint16_t tifBPS      = (uint16_t)(rcConT::colorType::bitsPerChan);   // BitsPerSample
-    uint32_t bytePerSmp  = tifBPS / 8;                                   // Bytes per sample
-    uint32_t tifSBC      = tifLength * tifWidth * bytePerSmp * tifSPP;   // StripByteCounts
-    bool     haveRGB     = tifSPP>=3;                                    // TRUE if this image has RGB data (at least 3 channels)
-    uint16_t numImgSmp   = (haveRGB ? 3 : 1);                            // Number of samples used for image data (3 for RGB, 1 otherwise)
-    uint16_t tifPMI      = (haveRGB ? 2 : 1);                            // PhotometricInterp
-    bool     haveXS      = !((tifSPP==1) || (tifSPP==3));                // TRUE if this image has ExtraSamples data
-    bool     haveManyXS  = tifSPP>4;                                     // TRUE if this image has MORE THAN ONE ExtraSamples data
-    uint16_t numTags     = 1+14 + (haveXS ? 1 : 0);                      // Number fo tags in this image
-    bool     haveManyBPS = tifSPP>1;                                     // TRUE if this image has MORE THAN ONE BitsPerSample data
-    uint32_t numXS       = tifSPP - numImgSmp;                           // Number of extra samples
-    uint32_t xResOff     = 14 + 12 * numTags;                            // XResolution offset
-    uint32_t yResOff     = xResOff + 8;                                  // YResolution offset
-    uint32_t bpsOff      = yResOff + 8;                                  // BitsPerSample offset
-    uint32_t xsOff       = bpsOff  + (haveManyBPS ? 2 * tifSPP : 0);     // ExtraSamples offset
-    uint32_t imgOff      = xsOff + (haveManyXS  ? 2 * numXS : 0);        // Image Data offset
-    uint16_t sampFmt     = (rcConT::colorType::chanIsInt ? 1 : 3);       // SampleFormat (1=unsigned, 3=IEEE)
+    // //grep -E '^#define[[:space:]]+(TIFF_BIGENDIAN|TIFF_LITTLEENDIAN|PHOTOMETRIC_RGB|PHOTOMETRIC_MINISBLACK|PLANARCONFIG_CONTIG|ORIENTATION_TOPLEFT|RESUNIT_NONE|SAMPLEFORMAT_UINT|SAMPLEFORMAT_IEEEFP)' /mingw64/include/tiff.h
+    const uint16_t tcTIFF_BIGENDIAN          = 0x4d4d;  /* Magic number for big endian */
+    const uint16_t tcTIFF_LITTLEENDIAN       = 0x4949;  /* Magic number for little endian */
+    const uint16_t tcPHOTOMETRIC_MINISBLACK  = 1;       /* min value is black */
+    const uint16_t tcPHOTOMETRIC_RGB         = 2;       /* RGB color model */
+    const uint16_t tcORIENTATION_TOPLEFT     = 1;       /* row 0 top, col 0 lhs */
+    const uint16_t tcPLANARCONFIG_CONTIG     = 1;       /* single image plane */
+    const uint16_t tcRESUNIT_NONE            = 1;       /* no meaningful units */
+    const uint16_t tcSAMPLEFORMAT_UINT       = 1;       /* !unsigned integer data */
+    const uint16_t tcSAMPLEFORMAT_IEEEFP     = 3;       /* !IEEE floating point data */
 
+    // //grep -E '^#define[[:space:]]+TIFFTAG_(IMAGEWIDTH|IMAGELENGTH|BITSPERSAMPLE|PHOTOMETRIC|ORIENTATION|SAMPLESPERPIXEL|PLANARCONFIG|RESOLUTIONUNIT|COMPRESSION|STRIPOFFSETS|ROWSPERSTRIP|STRIPBYTECOUNTS|XRESOLUTION|YRESOLUTION|EXTRASAMPLES|SAMPLEFORMAT)' /mingw64/include/tiff.h
+    // const uint16_t tcTIFFTAG_IMAGEWIDTH      =      256; /* image width in pixels */
+    // const uint16_t tcTIFFTAG_IMAGELENGTH     =      257; /* image height in pixels */
+    // const uint16_t tcTIFFTAG_BITSPERSAMPLE   =      258; /* bits per channel (sample) */
+    // const uint16_t tcTIFFTAG_COMPRESSION     =      259; /* data compression technique */
+    // const uint16_t tcTIFFTAG_PHOTOMETRIC     =      262; /* photometric interpretation */
+    // const uint16_t tcTIFFTAG_STRIPOFFSETS    =      273; /* offsets to data strips */
+    // const uint16_t tcTIFFTAG_ORIENTATION     =      274; /* +image orientation */
+    // const uint16_t tcTIFFTAG_SAMPLESPERPIXEL =      277; /* samples per pixel */
+    // const uint16_t tcTIFFTAG_ROWSPERSTRIP    =      278; /* rows per strip of data */
+    // const uint16_t tcTIFFTAG_STRIPBYTECOUNTS =      279; /* bytes counts for strips */
+    // const uint16_t tcTIFFTAG_XRESOLUTION     =      282; /* pixels/resolution in x */
+    // const uint16_t tcTIFFTAG_YRESOLUTION     =      283; /* pixels/resolution in y */
+    // const uint16_t tcTIFFTAG_PLANARCONFIG    =      284; /* storage organization */
+    // const uint16_t tcTIFFTAG_RESOLUTIONUNIT  =      296; /* units of resolutions */
+    // const uint16_t tcTIFFTAG_EXTRASAMPLES    =      338; /* !info about extra samples */
+    // const uint16_t tcTIFFTAG_SAMPLEFORMAT    =      339; /* !data sample format */
+
+    endianType fe          = platformEndianness();                                                         // Endian Type
+    uint16_t   endianNum   = (fe == endianType::LITTLE ? tcTIFF_LITTLEENDIAN : tcTIFF_BIGENDIAN);          // Endianness Magic Number
+    uint32_t   tifWidth    = (uint32_t)rcConverter.getNumPixX();                                           // ImageWidth
+    uint32_t   tifLength   = (uint32_t)rcConverter.getNumPixY();                                           // ImageLength & RowsPerStrip
+    uint32_t   tifSPP      = (uint32_t)rcConT::colorType::channelCount;                                    // SamplesPerPixel
+    uint16_t   tifBPS      = (uint16_t)(rcConT::colorType::bitsPerChan);                                   // BitsPerSample
+    uint32_t   bytePerSmp  = tifBPS / 8;                                                                   // Bytes per sample
+    uint32_t   tifSBC      = tifLength * tifWidth * bytePerSmp * tifSPP;                                   // StripByteCounts
+    bool       haveRGB     = tifSPP>=3;                                                                    // TRUE if this image has RGB data (at least 3 channels)
+    uint16_t   numImgSmp   = (haveRGB ? 3 : 1);                                                            // Number of samples used for image data (3 for RGB, 1 otherwise)
+    uint16_t   tifPMI      = (haveRGB ? tcPHOTOMETRIC_RGB : tcPHOTOMETRIC_MINISBLACK);                     // PhotometricInterp
+    uint16_t   tifPC       = tcPLANARCONFIG_CONTIG;                                                        // Planarconfig
+    uint16_t   tifOri      = tcORIENTATION_TOPLEFT;                                                        // Orientation
+    uint16_t   tifResU     = tcRESUNIT_NONE;                                                               // Resolution Unit
+    bool       haveXS      = !((tifSPP==1) || (tifSPP==3));                                                // TRUE if this image has ExtraSamples data
+    bool       haveManyXS  = tifSPP>4;                                                                     // TRUE if this image has MORE THAN ONE ExtraSamples data
+    uint16_t   numTags     = 1+14 + (haveXS ? 1 : 0);                                                      // Number fo tags in this image
+    bool       haveManyBPS = tifSPP>1;                                                                     // TRUE if this image has MORE THAN ONE BitsPerSample data
+    uint32_t   numXS       = tifSPP - numImgSmp;                                                           // Number of extra samples
+    uint32_t   xResOff     = 14 + 12 * numTags;                                                            // XResolution offset
+    uint32_t   yResOff     = xResOff + 8;                                                                  // YResolution offset
+    uint32_t   bpsOff      = yResOff + 8;                                                                  // BitsPerSample offset
+    uint32_t   xsOff       = bpsOff  + (haveManyBPS ? 2 * tifSPP : 0);                                     // ExtraSamples offset
+    uint32_t   imgOff      = xsOff + (haveManyXS  ? 2 * numXS : 0);                                        // Image Data offset
+    uint16_t   sampFmt     = (rcConT::colorType::chanIsInt ? tcSAMPLEFORMAT_UINT : tcSAMPLEFORMAT_IEEEFP); // SampleFormat (1=unsigned, 3=IEEE)
+
+    std::ofstream outStream;
+    outStream.open(fileName, std::ios::out | std::ios::binary | std::ios::trunc);
+    if (outStream.is_open()) 
+      outStream.imbue(std::locale::classic());
+    else 
+      return 1;
+    
     writeUIntToStream(outStream, fe, 2, endianNum);                                                                                 // Write: little endian magic number
     writeUIntToStream(outStream, fe, 2, 42);                                                                                        // Write: TIFF magic number
     writeUIntToStream(outStream, fe, 4, 8);                                                                                         // Write: IDF offset
@@ -2850,7 +2890,7 @@ namespace mjr {
     writeUIntToStream(outStream, fe, 2, 0x111); writeUIntToStream(outStream, fe, 2, 4);
     writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 4, imgOff);                                            // StripOffsets
     writeUIntToStream(outStream, fe, 2, 0x112); writeUIntToStream(outStream, fe, 2, 3);
-    writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 2, 1);         writeUIntToStream(outStream, fe, 2, 0); // Orientation
+    writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 2, tifOri);    writeUIntToStream(outStream, fe, 2, 0); // Orientation
     writeUIntToStream(outStream, fe, 2, 0x115); writeUIntToStream(outStream, fe, 2, 3);
     writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 2, tifSPP);    writeUIntToStream(outStream, fe, 2, 0); // SamplesPerPixel
     writeUIntToStream(outStream, fe, 2, 0x116); writeUIntToStream(outStream, fe, 2, 4);
@@ -2862,9 +2902,9 @@ namespace mjr {
     writeUIntToStream(outStream, fe, 2, 0x11B); writeUIntToStream(outStream, fe, 2, 5);
     writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 4, yResOff);                                           // YResolution
     writeUIntToStream(outStream, fe, 2, 0x11C); writeUIntToStream(outStream, fe, 2, 3);
-    writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 2, 1);         writeUIntToStream(outStream, fe, 2, 0); // PlanarConf
+    writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 2, tifPC);     writeUIntToStream(outStream, fe, 2, 0); // PlanarConf
     writeUIntToStream(outStream, fe, 2, 0x128); writeUIntToStream(outStream, fe, 2, 3);
-    writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 2, 1);         writeUIntToStream(outStream, fe, 2, 0); // ResolutionUnit
+    writeUIntToStream(outStream, fe, 4, 1); writeUIntToStream(outStream, fe, 2, tifResU);   writeUIntToStream(outStream, fe, 2, 0); // ResolutionUnit
     if(haveXS) {                                                                                                                    // ExtraSamples
       if(haveManyXS) {
         writeUIntToStream(outStream, fe, 2, 0x152); writeUIntToStream(outStream, fe, 2, 3);
@@ -2910,6 +2950,7 @@ namespace mjr {
         }
       }
     }
+
     return 0;
   }
 
