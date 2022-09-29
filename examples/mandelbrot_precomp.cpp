@@ -45,8 +45,8 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
-typedef mjr::ramCanvas1c16b rcM16;
-typedef mjr::ramCanvas1c8b rcM8;
+typedef mjr::ramCanvas1c16b rcCNT;  // for counts!
+typedef mjr::ramCanvas1c8b  rcM8;
 typedef mjr::ramCanvas3c8b  rcC8;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -54,49 +54,80 @@ int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   rcC8::colorType aColor;
 
-  const rcM16::colorChanType NUMITR   = 65530;
-  const int                  CSIZE    = 7680;
-  const double               MAXZSQ   = 4.1;
+  const rcCNT::colorChanType MAXITR   = rcCNT::colorType::maxChanVal/1 - 2;
+  const int                  MCSIZE   = 7680;
+  const int                  CSIZEF   = 1;
+  const int                  CSIZE    = MCSIZE/CSIZEF;
+  const double               MAXZSQ   = 4.0;
+  const double               MAXZSQU  = MAXZSQ + 0.1;
   rcC8  theRamCanvas(CSIZE, CSIZE, -2.1, 0.75, -1.4, 1.4);
-  rcM16 perRamCanvas(CSIZE, CSIZE, -2.1, 0.75, -1.4, 1.4);  // Period -- 0 => not a periodic point
-  rcM16 stbRamCanvas(CSIZE, CSIZE, -2.1, 0.75, -1.4, 1.4);  // Number of iterations period structure was stable
+  rcCNT perRamCanvas(CSIZE, CSIZE, -2.1, 0.75, -1.4, 1.4);  // Period -- 0 => not a periodic point
+  rcCNT stbRamCanvas(CSIZE, CSIZE, -2.1, 0.75, -1.4, 1.4);  // Number of iterations period structure was stable
   rcM8  noeRamCanvas(CSIZE, CSIZE, -2.1, 0.75, -1.4, 1.4);  // No escape: Exceeded iteration count
-  rcM16 escRamCanvas(CSIZE, CSIZE, -2.1, 0.75,  1.4, 1.4);  // Excaped: Iteration count for cases where |z|>2
+  rcCNT escRamCanvas(CSIZE, CSIZE, -2.1, 0.75,  1.4, 1.4);  // Excaped: Iteration count for cases where |z|>2
 
 #pragma omp parallel for schedule(static,1)
   for(int y=0;y<perRamCanvas.getNumPixY();y++) {
+    rcCNT::colorChanType maxCheckpointITR = 0;
+    double meanCheckpointITR = 0;
+    std::vector<std::complex<double>> lastZs(MAXITR);
+    std::chrono::time_point<std::chrono::system_clock> rowStartTime = std::chrono::system_clock::now();
+
     for(int x=0;x<perRamCanvas.getNumPixX();x++) {
       std::complex<double> c(perRamCanvas.int2realX(x), perRamCanvas.int2realY(y));
       std::complex<double> z(0.0, 0.0);
-      std::vector<std::complex<double>> lastZs(NUMITR);
-      rcM16::colorChanType count = 1;
-      while((std::norm(z)<MAXZSQ) && (count<NUMITR)) {
-        z=std::pow(z, 2) + c;
-        lastZs[count] = z;
-        count++;
-      }
-      if (count == NUMITR) {  // Hit iteration limit
-        noeRamCanvas.drawPoint(x, y, "white");
-        for(rcM16::colorChanType period=1; period<(NUMITR-2); period++) {
-          if(std::abs(z-lastZs[NUMITR-1-period])<1e-4) { // Found an identical point 'period' away.
-            rcM16::colorChanType stab;
-            for(stab=0; stab<(NUMITR-period); stab++) {
-              if(std::abs(lastZs[NUMITR-1-stab]-lastZs[NUMITR-1-period-stab])>1e-6) {   
+      rcCNT::colorChanType count = 1;
+      bool seekingUnderstanding = true;
+      rcCNT::colorChanType checkpointITR = 1024*8;
+
+      while(seekingUnderstanding) {
+        if ((MAXITR - checkpointITR) < checkpointITR)
+          checkpointITR = MAXITR;
+        else
+          checkpointITR *= 2;
+
+        if (maxCheckpointITR < checkpointITR)
+          maxCheckpointITR = checkpointITR;
+
+        while((std::norm(z)<MAXZSQU) && (count<checkpointITR)) {
+          z=std::pow(z, 2) + c;
+          lastZs[count] = z;
+          count++;
+        }
+
+        if (std::norm(z)>MAXZSQ) { // Escaped
+          escRamCanvas.drawPoint(x, y, count);
+          seekingUnderstanding = false;
+        } else { // no escape.  Perhaps a cycle?
+          for(rcCNT::colorChanType period=1; period<(checkpointITR-2); period++) {
+            if(std::abs(z-lastZs[checkpointITR-1-period])<1e-7) { // Found an identical point 'period' away.
+              rcCNT::colorChanType stab;
+              for(stab=0; stab<(checkpointITR-period); stab++) {
+                if(std::abs(lastZs[checkpointITR-1-stab]-lastZs[checkpointITR-1-period-stab])>1e-7) {   
+                  break;
+                }
+              }
+              if (stab > period) { // Definatly found a cycle
+                stbRamCanvas.drawPoint(x, y, checkpointITR-stab);
+                perRamCanvas.drawPoint(x, y, period);
+                noeRamCanvas.drawPoint(x, y, "white");
+                seekingUnderstanding = false;
                 break;
               }
             }
-            if (stab > period) { // Definatly found a cycle
-              stbRamCanvas.drawPoint(x, y, NUMITR-stab);
-              perRamCanvas.drawPoint(x, y, period);
-              break;
-            }
+          }
+          if (seekingUnderstanding && (checkpointITR == MAXITR)) { // Didn't escape.  No cycle.  No more time.
+            noeRamCanvas.drawPoint(x, y, "white");
+            seekingUnderstanding = false;
+            break;
           }
         }
-      } else {                // Divergence detected because |z|>2
-        escRamCanvas.drawPoint(x, y, count);
       }
+      meanCheckpointITR += checkpointITR / static_cast<double>(CSIZE);
+
     }
-    std::cout << CSIZE << "/" << y << std::endl;
+    std::chrono::duration<double> rowRunTime = std::chrono::system_clock::now() - rowStartTime;
+    std::cout << "my: " << CSIZE << " y: " << y << " max: " << maxCheckpointITR << " mean: " << meanCheckpointITR << " secs: " << rowRunTime.count() << std::endl;
   }
 
   perRamCanvas.writeTIFFfile("mandelbrot_precompPER.tiff");
@@ -126,7 +157,7 @@ int main(void) {
           theRamCanvas.drawPoint(x, y, "green");
           numConNoCyc++;
         } else {
-          rcC8::csFltType c = static_cast<rcC8::csFltType>(escRamCanvas.getPxColorNC(x, y).getC0()) / NUMITR;
+          rcC8::csFltType c = static_cast<rcC8::csFltType>(escRamCanvas.getPxColorNC(x, y).getC0()) / MAXITR;
           theRamCanvas.drawPoint(x, y, rcC8::colorType::csCCdiag01::c(c*30));
           numEsc++;
         }
@@ -134,35 +165,35 @@ int main(void) {
       numPts++;
     }
   }
-  theRamCanvas.drawString("1", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.1500,  0.0000, "black", 6.0, 20);
-  theRamCanvas.drawString("2", mjr::hershey::font::ROMAN_SL_SANSERIF, -1.0000,  0.0000, "black", 6.0, 20);
-
-  theRamCanvas.drawString("3", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.1200,  0.7400, "black", 6.0, 20);
-  theRamCanvas.drawString("3", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.1200, -0.7400, "black", 6.0, 20);
-  theRamCanvas.drawString("3", mjr::hershey::font::ROMAN_SL_SANSERIF, -1.758,   0.0000, "black", 1.0, 20);
-
-  theRamCanvas.drawString("4", mjr::hershey::font::ROMAN_SL_SANSERIF, -1.3100,  0.0000, "black", 6.0, 20);
-  theRamCanvas.drawString("4", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.2800,  0.5320, "black", 6.0, 20);
-  theRamCanvas.drawString("4", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.2800, -0.5320, "black", 6.0, 20);
-
-  theRamCanvas.drawString("5", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.5060, -0.5620, "black", 4.0, 20);
-  theRamCanvas.drawString("5", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.3780, -0.3370, "black", 4.0, 20);
-  theRamCanvas.drawString("5", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.5060,  0.5620, "black", 4.0, 20);
-  theRamCanvas.drawString("5", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.3780,  0.3370, "black", 4.0, 20);
-
-  theRamCanvas.drawString("6", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.3890, -0.2150, "black", 2.0, 20);
-  theRamCanvas.drawString("6", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.1140, -0.8620, "black", 4.0, 20);
-  theRamCanvas.drawString("6", mjr::hershey::font::ROMAN_SL_SANSERIF, -1.1370, -0.2390, "black", 4.0, 20);
-  theRamCanvas.drawString("6", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.3890,  0.2150, "black", 2.0, 20);
-  theRamCanvas.drawString("6", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.1140,  0.8620, "black", 4.0, 20);
-  theRamCanvas.drawString("6", mjr::hershey::font::ROMAN_SL_SANSERIF, -1.1370,  0.2390, "black", 4.0, 20);
-
-  theRamCanvas.drawString("7", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.6220, -0.4240, "black", 2.0, 20);
-  theRamCanvas.drawString("7", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.1210, -0.6100, "black", 2.0, 20);
-  theRamCanvas.drawString("7", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.3760, -0.1440, "black", 1.0, 20);
-  theRamCanvas.drawString("7", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.6220,  0.4240, "black", 2.0, 20);
-  theRamCanvas.drawString("7", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.1210,  0.6100, "black", 2.0, 20);
-  theRamCanvas.drawString("7", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.3760,  0.1440, "black", 1.0, 20);
+  theRamCanvas.drawString("1", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.1500,  0.0000, "black", 6.0/CSIZEF, 20);
+  theRamCanvas.drawString("2", mjr::hershey::font::ROMAN_SL_SANSERIF, -1.0000,  0.0000, "black", 6.0/CSIZEF, 20);
+                                                                                                    
+  theRamCanvas.drawString("3", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.1200,  0.7400, "black", 6.0/CSIZEF, 20);
+  theRamCanvas.drawString("3", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.1200, -0.7400, "black", 6.0/CSIZEF, 20);
+  theRamCanvas.drawString("3", mjr::hershey::font::ROMAN_SL_SANSERIF, -1.758,   0.0000, "black", 1.0/CSIZEF, 20);
+                                                                                                    
+  theRamCanvas.drawString("4", mjr::hershey::font::ROMAN_SL_SANSERIF, -1.3100,  0.0000, "black", 6.0/CSIZEF, 20);
+  theRamCanvas.drawString("4", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.2800,  0.5320, "black", 6.0/CSIZEF, 20);
+  theRamCanvas.drawString("4", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.2800, -0.5320, "black", 6.0/CSIZEF, 20);
+                                                                                                    
+  theRamCanvas.drawString("5", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.5060, -0.5620, "black", 4.0/CSIZEF, 20);
+  theRamCanvas.drawString("5", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.3780, -0.3370, "black", 4.0/CSIZEF, 20);
+  theRamCanvas.drawString("5", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.5060,  0.5620, "black", 4.0/CSIZEF, 20);
+  theRamCanvas.drawString("5", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.3780,  0.3370, "black", 4.0/CSIZEF, 20);
+                                                                                                    
+  theRamCanvas.drawString("6", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.3890, -0.2150, "black", 2.0/CSIZEF, 20);
+  theRamCanvas.drawString("6", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.1140, -0.8620, "black", 4.0/CSIZEF, 20);
+  theRamCanvas.drawString("6", mjr::hershey::font::ROMAN_SL_SANSERIF, -1.1370, -0.2390, "black", 4.0/CSIZEF, 20);
+  theRamCanvas.drawString("6", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.3890,  0.2150, "black", 2.0/CSIZEF, 20);
+  theRamCanvas.drawString("6", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.1140,  0.8620, "black", 4.0/CSIZEF, 20);
+  theRamCanvas.drawString("6", mjr::hershey::font::ROMAN_SL_SANSERIF, -1.1370,  0.2390, "black", 4.0/CSIZEF, 20);
+                                                                                                    
+  theRamCanvas.drawString("7", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.6220, -0.4240, "black", 2.0/CSIZEF, 20);
+  theRamCanvas.drawString("7", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.1210, -0.6100, "black", 2.0/CSIZEF, 20);
+  theRamCanvas.drawString("7", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.3760, -0.1440, "black", 1.0/CSIZEF, 20);
+  theRamCanvas.drawString("7", mjr::hershey::font::ROMAN_SL_SANSERIF, -0.6220,  0.4240, "black", 2.0/CSIZEF, 20);
+  theRamCanvas.drawString("7", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.1210,  0.6100, "black", 2.0/CSIZEF, 20);
+  theRamCanvas.drawString("7", mjr::hershey::font::ROMAN_SL_SANSERIF,  0.3760,  0.1440, "black", 1.0/CSIZEF, 20);
 
   theRamCanvas.writeTIFFfile("mandelbrot_precomp.tiff");
 
