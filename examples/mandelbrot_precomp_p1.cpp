@@ -26,19 +26,6 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails
-
-  Produce several images related to the period/cycle structure of the Mandelbrot set:
-
-   - mandelbrot_precompPER.tiff -- Period of the point.  0 means no period known.
-   - mandelbrot_precompSTB.tiff -- Stability of the period.  0 means stability unknown.
-   - mandelbrot_precomps.tiff -- Number of iterations required to escape.  0 means it didn't escape.
-   - mandelbrot_precompNOE.tiff -- Points that didn't escape -- the mandelbrot set.  255
-   - mandelbrot_precomp.tiff    -- A composite of the above with a few notable period regions labeled.
-
-  On my 2022 vintage Intel i7, this takes about 30min to run.  The runtime is directly proportional to the NUMITR, so lower that number if you want it to go
-  faster.  Lowering NUMITR will have cause more non-escaping points to not have a known period -- the green points in
-
 */
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
@@ -57,7 +44,7 @@ int main(void) {
   rcC8::colorType setColor("yellow");
 
   const int                  MCSIZE   = 7680;
-  const int                  CSIZEF   = 8;
+  const int                  CSIZEF   = 1;
   const int                  CSIZE    = MCSIZE/CSIZEF;
   rcC8  theRamCanvas(CSIZE, CSIZE, -2.1, 0.75, -1.4, 1.4);
   rcCNT perRamCanvas;
@@ -71,7 +58,6 @@ int main(void) {
       auto inten = theRamCanvas.getPxColorNC(x, y).intensity();
       auto period = perRamCanvas.getPxColorNC(x, y).getC0();
       if (period > 0) {
-std::cout << "hi" << std::endl;
         if (inten == 0)
           theRamCanvas.drawPoint(x, y, setColor);          
         auto itrreq = stbRamCanvas.getPxColorNC(x, y).getC0();
@@ -90,7 +76,7 @@ std::cout << "hi" << std::endl;
         }
       }
     }
-    //std::cout << y << std::endl;
+    std::cout << y << std::endl;
   }
 
 perRamCanvas.writeTIFFfile("tmp.tiff");
