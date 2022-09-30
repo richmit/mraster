@@ -116,4 +116,3 @@ int main(void) {
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
 /** @endcond */
-y

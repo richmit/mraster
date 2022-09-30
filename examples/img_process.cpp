@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
     listOcanv[0].drawFillRectangle(306, 0, 405, 512, "blue");
     listOcanv[0].drawFillRectangle(406, 0, 511, 512, "black");
     char const *colors[5] = { "white", "red", "green", "blue", "black" };
-y    for(int i=0; i<(512/32); i++)
+    for(int i=0; i<(512/32); i++)
       listOcanv[0].drawLine(0,  i*32, 512,  i*32, colors[i%5]);
     listOcanv[0].writeTIFFfile("testImage1.tiff");
     listOcanv[0].flipTranspose();

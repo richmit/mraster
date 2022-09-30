@@ -210,8 +210,6 @@ BOOST_AUTO_TEST_CASE(fmtInt) {
 }
 
 #endif
-
-y
 /** @endcond */
 
 

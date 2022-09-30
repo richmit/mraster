@@ -1,4 +1,4 @@
-y// -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
+// -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
  @file      geomTfrm_Arb.cpp
@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 
   double              Xo  = dRamCanvas.getNumPixX() / 2.0;
   double              Yo  = dRamCanvas.getNumPixY() / 2.0;
-  double              s   = 0.65y;
+  double              s   = 0.65;
 
   mjr::ramCanvas3c8b uRamCanvas = dRamCanvas.geomTfrmRevArb(funny, Xo, Yo, s);
 

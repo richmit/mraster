@@ -46,7 +46,7 @@ int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int    NUMITR = 1024;
   const double MAXZ   = 4.0;
-  const int    NUMFRM = 24*16y;
+  const int    NUMFRM = 24*16;
   const int    IMXSIZ = 7680/8;
   const int    IMYSIZ = 7680/8;
   const double ANGMIN = 0.0;  

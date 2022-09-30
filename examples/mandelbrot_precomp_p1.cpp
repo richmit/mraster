@@ -71,6 +71,7 @@ int main(void) {
       auto inten = theRamCanvas.getPxColorNC(x, y).intensity();
       auto period = perRamCanvas.getPxColorNC(x, y).getC0();
       if (period > 0) {
+std::cout << "hi" << std::endl;
         if (inten == 0)
           theRamCanvas.drawPoint(x, y, setColor);          
         auto itrreq = stbRamCanvas.getPxColorNC(x, y).getC0();
@@ -89,10 +90,14 @@ int main(void) {
         }
       }
     }
-    std::cout << y << std::endl;
+    //std::cout << y << std::endl;
   }
 
+perRamCanvas.writeTIFFfile("tmp.tiff");
+
+  theRamCanvas.writeTIFFfile("mandelbrot_precomp_p1_br.tiff");
   theRamCanvas.rotate90CCW();
+  theRamCanvas.writeTIFFfile("mandelbrot_precomp_p1_ar.tiff");
   theRamCanvas.scaleDownMean(4);
   theRamCanvas.writeTIFFfile("mandelbrot_precomp_p1.tiff");
 

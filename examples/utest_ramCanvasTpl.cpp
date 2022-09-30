@@ -1729,7 +1729,7 @@ BOOST_AUTO_TEST_CASE(geom_tfrm) {
   fRamCanvas.rotate90CCW();
   BOOST_TEST_CHECK(RfRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-f.mrw") == 0);
   BOOST_TEST_CHECK(RfRamCanvas.isEqual(fRamCanvas) == true);
-  RfRamCanvas.rotate90yCW();
+  RfRamCanvas.rotate90CW();
   BOOST_TEST_CHECK(RfRamCanvas.isEqual(aRamCanvas) == true);
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------

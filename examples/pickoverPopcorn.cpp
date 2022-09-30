@@ -68,7 +68,7 @@ int main(void) {
         zy = tmpy;
         int ix = hstRamCanvas.real2intX(zx);
         int iy = hstRamCanvas.real2intY(zy);
-        if (hstRamCanvas.yisOnCanvas(ix, iy))
+        if (hstRamCanvas.isOnCanvas(ix, iy))
           hstRamCanvas.getPxColorRefNC(ix, iy).tfrmAdd(1);
       }
     }
