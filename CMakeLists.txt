@@ -72,21 +72,20 @@ endif()
 
 ######################################################################################################################################################
 
-set(TARGETS_REQ_NONE   "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "biomorph2" "bmark" "chaos_game" "circles" "color_all"
-                       "color_interp_hsl_vs_rgb" "color_lut_cubehelix" "color_lut_docs" "color_lut_indexed" "color_lut_indexedC" "color_lut_poly"
-                       "color_lut_rainbows" "color_lut_ramp_cube" "color_lut_ramp_misc" "color_web_rectangle" "color_web_triangle" "cplxColor"
-                       "dlaSeed" "heart2022" "level_curves" "lorenz_fuz" "lorenz_multi" "mandelbrot_binary" "mandelbrot_bm_cplx"
-                       "mandelbrot_bm_cplx_hyper" "mandelbrot_bm_real" "mandelbrot_real_cfun" "mandelbrot_bm_real_eqop" "mandelbrot_1n2cycles"
-                       "mandelbrot_distance" "mandelbrot_distance_old" "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits"
-                       "mandelbrot_potential" "mandelbrot_triangle" "newton_bm_cplx" "newton_bm_real" "newton_half" "newton_max_mod" "newton_vs"
-                       "newton_z6" "peterdejong" "peterdejongM" "sic" "sic_search" "sierpinski_triangle" "sprott2d" 
-                       "test_draw_fonts" "BurningShip" "multibrotSnaps" "multibrotMovie" "tricornMovie" "tricorn" "collatz" "invertedMandelbrot"
-                       "mandelbrot_biomorph" "mandelbrot_simple" "pickoverPopcorn" "convertRawToTIFF" "biomorphMorph" "test_images" 
-                       "tippets" "types" "color_lut_ramp_cubeC")
+set(TARGETS_REQ_NONE "BurningShip" "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "biomorph2" "biomorphMorph" "bmark" "chaos_game" "circles"
+                       "collatz" "color_all" "color_interp_hsl_vs_rgb" "color_lut_cubehelix" "color_lut_docs" "color_lut_indexed"
+                       "color_lut_indexedC" "color_lut_poly" "color_lut_rainbows" "color_lut_ramp_cube" "color_lut_ramp_cubeC" "color_lut_ramp_misc"
+                       "color_web_rectangle" "color_web_triangle" "convertRawToTIFF" "cplxColor" "dlaSeed" "heart2022" "invertedMandelbrot"
+                       "level_curves" "lorenz_fuz" "lorenz_multi" "mandelbrot_1n2cycles" "mandelbrot_binary" "mandelbrot_biomorph"
+                       "mandelbrot_bm_cplx" "mandelbrot_bm_cplx_hyper" "mandelbrot_bm_real" "mandelbrot_bm_real_eqop" "mandelbrot_distance"
+                       "mandelbrot_distance_old" "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits" "mandelbrot_potential"
+                       "mandelbrot_real_cfun" "mandelbrot_simple" "mandelbrot_triangle" "multibrotMovie" "multibrotSnaps" "newton_bm_cplx"
+                       "newton_bm_real" "newton_half" "newton_max_mod" "newton_vs" "newton_z6" "peterdejong" "peterdejongM" "pickoverPopcorn" "sic"
+                       "sic_search" "sierpinski_triangle" "sprott2d" "test_draw_fonts" "test_images" "tippets" "tricorn" "tricornMovie" "types")
 set(TARGETS_REQ_OPENGL "glut_image")
-set(TARGETS_REQ_TIFF   "brownianDiffusion" "dlaBrownian" "dlaDrift" "img_process" "test_interp_scale" "geomTfrm_LensDistortion" "geomTfrm_Arb" 
-                       "geomTfrm_Rotate" "displayImageSDL2" "mandelbrot_precomp_p1")
-set(TARGETS_USE_OPENMP "mandelbrot_bm_cplx_openmp" "mandelbrot_precomp" "mandelbrot_wave" "mandelbrot_precomp_p1" "juliaM" "julia")
+set(TARGETS_REQ_TIFF   "brownianDiffusion" "displayImageSDL2" "dlaBrownian" "dlaDrift" "img_process" "test_interp_scale" "geomTfrm_LensDistortion"
+                       "geomTfrm_Arb"  "geomTfrm_Rotate" "mandelbrot_precomp_p1")
+set(TARGETS_USE_OPENMP "juliaM" "julia" "mandelbrot_bm_cplx_openmp" "mandelbrot_precomp" "mandelbrot_wave" "mandelbrot_precomp_p1")
 set(TARGETS_REQ_BTEST  "utest_colorTpl_ia64nGCC" "utest_colorTpl" "utest_ramCanvasTpl" "utest_mjrmath")
 set(TARGETS_REQ_SDL2   "displayImageSDL2")
 
@@ -124,7 +123,7 @@ if((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "
     list(REMOVE_ITEM EXAMPLE_TARGETS "color_lut_poly" "color_lut_docs" "color_lut_cubehelix" "heart2022")                            # missing floating point template parameters
 endif()
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang") 
+if(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
     message("Warning:")
     message("Warning: The Apple Clang compiler has an incomplete implimentation of p0476r2 (bit_cast).")
     message("Warning: Logical member functions tfrmOr, tfrmNor, tfrmAnd, tfrmNand, tfrmXor, tfrmNxor, ")
@@ -132,7 +131,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
     message("Warning:")
 endif()
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU") 
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   if(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS "11.0.0")
     message("Warning:")
     message("Warning: Older GCC verions don't support P0476R2 or P1907R1.")
@@ -199,7 +198,7 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
     endif()
     target_include_directories(${CURTGT} PRIVATE ${OPENGL_INCLUDE_DIRS}  ${GLUT_INCLUDE_DIR} )
     target_link_libraries(${CURTGT} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
-  endif() 
+  endif()
 
   # Add builtd requirements for examples using OpenMP
   list (FIND TARGETS_USE_OPENMP ${CURTGT} TMPR)
