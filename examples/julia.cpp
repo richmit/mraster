@@ -5,7 +5,6 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw a julia set.@EOL
  @std       C++20
- @see       https://www.mitchr.me/SS/mandelbrot/index.html
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.

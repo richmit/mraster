@@ -1,11 +1,10 @@
-y// -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
+// -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
  @file      mandelbrot_simple.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Simplified code for for web page examples.@EOL
+ @brief     Create a Julia set movie.@EOL
  @std       C++20
- @see       https://www.mitchr.me/SS/mandelbrot/index.html
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -27,6 +26,11 @@ y// -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
+ @filedetails   
+
+  Moves $c$ around a circle just a bit larger than the period 2 disk.  A GIF may be rendered from the frames like this:
+
+       time convert -delay 1 -loop 0 -dispose previous juliaM_???.tiff juliaM.gif
 */
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
