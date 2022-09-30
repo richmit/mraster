@@ -39,7 +39,8 @@
   On my 2022 vintage Intel i7, this takes about 30min to run.  The runtime is directly proportional to the NUMITR, so lower that number if you want it to go
   faster.  Lowering NUMITR will have cause more non-escaping points to not have a known period -- the green points in
 
-********************************************************************************************************************************************************.H.E.**/
+*/
+/*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -91,7 +92,7 @@ int main(void) {
     std::cout << y << std::endl;
   }
 
-  theRamCanvas.rotate90CCW();
+  theRamCanvas.rotate90CCyW();
   theRamCanvas.scaleDownMean(4);
   theRamCanvas.writeTIFFfile("mandelbrot_precomp_p1.tiff");
 

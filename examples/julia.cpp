@@ -27,7 +27,8 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-********************************************************************************************************************************************************.H.E.**/
+*/
+/*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -57,7 +58,7 @@ int main(void) {
         theRamCanvas.drawPoint(x, y, ct::csCColdeFireRamp::c(static_cast<ct::csIntType>(count*20)));
     }
   }
-  theRamCanvas.writeTIFFfile("julia.tiff");
+y  theRamCanvas.writeTIFFfile("julia.tiff");
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

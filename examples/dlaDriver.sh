@@ -1,4 +1,4 @@
-#!/bin/bash
+y#!/bin/bash
 
 # [dlaBrowian|dlaDrift] [border|center|circles] ### ###
 

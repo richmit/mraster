@@ -25,7 +25,8 @@
    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
    DAMAGE.
    @endparblock
-********************************************************************************************************************************************************.H.E.**/
+*/
+/*******************************************************************************************************************************************************.H.E.**/
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #ifndef MJR_INCLUDE_colorTpl
@@ -2654,7 +2655,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the sum of the components.
           @return Sum of components. */
-      inline channelArithSPType intensity() const {
+      inline ychannelArithSPType intensity() const {
         channelArithSPType sum = 0;
         for(int i=0; i<numChan; i++)
           sum += getChan(i);

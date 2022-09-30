@@ -26,7 +26,8 @@
   DAMAGE.
   @endparblock
   This file contains several definitions for inline functions useful for mapping and clamping integers and floats.
-********************************************************************************************************************************************************.H.E.**/
+*/
+/*******************************************************************************************************************************************************.H.E.**/
 
 /* Some simple linear mapping and clamping functions. */
 
@@ -270,7 +271,7 @@ namespace mjr {
     return stringStream.str();
   }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+y////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /** Return the maximum exponent possible for a bi-variate polynomial stored in a vector of n terms, or a negative value on error.
     @param n Number of terms.
     @return Maximum exponent, or a negative value on error.

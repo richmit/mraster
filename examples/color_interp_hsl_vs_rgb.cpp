@@ -31,7 +31,8 @@
   In some cases, interpolating in HSL spaces can lead to an entirely different result from interpolating in RGB space.  This program illustrates on such
   example.  Note that in many of the most important cases, interpolating leads to the same results in both color spaces.
 
-********************************************************************************************************************************************************.H.E.**/
+*/
+/*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------

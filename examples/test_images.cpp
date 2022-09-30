@@ -25,7 +25,8 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-********************************************************************************************************************************************************.H.E.**/
+*/
+/*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -71,7 +72,7 @@ int main() {
   }
   cRamCanvas.writeTIFFfile("test_images_mcgrid.tiff");
   mRamCanvas.writeTIFFfile("test_images_mmgrid.tiff");
-
+y
   for(int j=1; j<tall/gap/2+1; j++) {
     for(int i=(j-1)*4+1; i<wide/gap; i++) {
       cRamCanvas.drawFillTriangle(i*gap, j*gap, 

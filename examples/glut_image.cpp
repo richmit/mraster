@@ -34,7 +34,8 @@
   internal representation that is the same as that used by OpenGL --- so one can actually use the raw pixel store in the ramCanvas as OpenGL image data.  This
   program illustrates how one might get OpenGL image data if the ramCanvas for some reason was not internally compatible with OpenGL.  Note this same
   technique allows easy integration with other libraries requiring similar data formats.
-********************************************************************************************************************************************************.H.E.**/
+*/
+/*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------

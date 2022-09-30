@@ -1,4 +1,4 @@
-// -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
+y// -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
  @file      mandelbrot_simple.cpp
@@ -27,7 +27,8 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-********************************************************************************************************************************************************.H.E.**/
+*/
+/*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -41,7 +42,7 @@ int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int    NUMITR = 1024;
   const double MAXZ   = 4.0;
-  const int    NUMFRM = 24*16;
+  const int    NUMFRM = 24*16y;
   const int    IMXSIZ = 7680/8;
   const int    IMYSIZ = 7680/8;
   const double ANGMIN = 0.0;  

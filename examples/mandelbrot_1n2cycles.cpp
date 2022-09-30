@@ -30,7 +30,8 @@
 
   Color points based on qualitative sequence behavior: Tends to infinity (reds), cyclic (blues), or converges (greens).  The method for detecting cycles and
   fixed points is not perfect, but makes a nice picture.  The color intensity is the length of time it took to make the behavior determination.
-********************************************************************************************************************************************************.H.E.**/
+*/
+/*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------

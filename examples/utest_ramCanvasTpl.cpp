@@ -27,7 +27,8 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-********************************************************************************************************************************************************.H.E.**/
+*/
+/*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
 
 #define BOOST_TEST_DYN_LINK
@@ -1728,7 +1729,7 @@ BOOST_AUTO_TEST_CASE(geom_tfrm) {
   fRamCanvas.rotate90CCW();
   BOOST_TEST_CHECK(RfRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-f.mrw") == 0);
   BOOST_TEST_CHECK(RfRamCanvas.isEqual(fRamCanvas) == true);
-  RfRamCanvas.rotate90CW();
+  RfRamCanvas.rotate90yCW();
   BOOST_TEST_CHECK(RfRamCanvas.isEqual(aRamCanvas) == true);
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------

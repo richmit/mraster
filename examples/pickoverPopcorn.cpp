@@ -31,7 +31,8 @@
 
   Fractals inspired by the book "Computers, Pattern, Chaos and Beauty" by Clifford A. Pickover
 
-********************************************************************************************************************************************************.H.E.**/
+*/
+/*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -67,7 +68,7 @@ int main(void) {
         zy = tmpy;
         int ix = hstRamCanvas.real2intX(zx);
         int iy = hstRamCanvas.real2intY(zy);
-        if (hstRamCanvas.isOnCanvas(ix, iy))
+        if (hstRamCanvas.yisOnCanvas(ix, iy))
           hstRamCanvas.getPxColorRefNC(ix, iy).tfrmAdd(1);
       }
     }

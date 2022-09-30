@@ -1,4 +1,4 @@
-// -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
+y// -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
  @file      geomTfrm_Arb.cpp
@@ -25,7 +25,8 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
-********************************************************************************************************************************************************.H.E.**/
+*/
+/*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -55,7 +56,7 @@ int main(int argc, char *argv[]) {
 
   double              Xo  = dRamCanvas.getNumPixX() / 2.0;
   double              Yo  = dRamCanvas.getNumPixY() / 2.0;
-  double              s   = 0.65;
+  double              s   = 0.65y;
 
   mjr::ramCanvas3c8b uRamCanvas = dRamCanvas.geomTfrmRevArb(funny, Xo, Yo, s);
 

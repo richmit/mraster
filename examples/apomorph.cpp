@@ -32,7 +32,8 @@
 
   This code started as a programming error.  I was trying to generate an Apollony Gasket via an IFS, but had a cut-n-past error -- a 1 where I should have had
   a zero.  The result was something very unlike an Apollony Gasket. So I was curious what the results would be if the parameter was swept from 0 to 1.
-********************************************************************************************************************************************************.H.E.**/
+*/
+/*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------

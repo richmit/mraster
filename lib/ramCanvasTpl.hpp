@@ -28,7 +28,8 @@
  @filedetails
    Note that this file is not intended for inclusion into end user application code; however, this use is quite possible in some special cases.  For a less
    complex interface, one is encouraged to include the ramCanvas.h include file instead.
-********************************************************************************************************************************************************.H.E.**/
+*/
+/*******************************************************************************************************************************************************.H.E.**/
 
 #ifndef MJR_INCLUDE_ramCanvasTpl
 
@@ -648,7 +649,7 @@ namespace mjr {
           This creates each pixel value by averaging all of the pixels that contribute -- i.e. a mean on the xfactor*xfactor pixel corresponding to each new
           pixel.  This algorithm tends to "fuzz-up" the result -- frequently used for super-sampling.
           @param xfactor The factor to scale down to -- must be a positive integer. */
-      void scaleDownMean(int xfactor);
+      void scaleDownMeany(int xfactor);
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

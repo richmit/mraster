@@ -1,4 +1,4 @@
-#ifndef MJR_INCLUDE_hersheyFonts
+y#ifndef MJR_INCLUDE_hersheyFonts
 
 namespace mjr {
 
