@@ -649,7 +649,7 @@ namespace mjr {
           This creates each pixel value by averaging all of the pixels that contribute -- i.e. a mean on the xfactor*xfactor pixel corresponding to each new
           pixel.  This algorithm tends to "fuzz-up" the result -- frequently used for super-sampling.
           @param xfactor The factor to scale down to -- must be a positive integer. */
-      void scaleDownMeany(int xfactor);
+      void scaleDownMean(int xfactor);
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

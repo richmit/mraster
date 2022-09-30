@@ -57,7 +57,7 @@ int main(void) {
   rcC8::colorType setColor("yellow");
 
   const int                  MCSIZE   = 7680;
-  const int                  CSIZEF   = 1;
+  const int                  CSIZEF   = 8;
   const int                  CSIZE    = MCSIZE/CSIZEF;
   rcC8  theRamCanvas(CSIZE, CSIZE, -2.1, 0.75, -1.4, 1.4);
   rcCNT perRamCanvas;
@@ -92,7 +92,7 @@ int main(void) {
     std::cout << y << std::endl;
   }
 
-  theRamCanvas.rotate90CCyW();
+  theRamCanvas.rotate90CCW();
   theRamCanvas.scaleDownMean(4);
   theRamCanvas.writeTIFFfile("mandelbrot_precomp_p1.tiff");
 

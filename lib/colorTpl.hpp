@@ -2655,7 +2655,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the sum of the components.
           @return Sum of components. */
-      inline ychannelArithSPType intensity() const {
+      inline channelArithSPType intensity() const {
         channelArithSPType sum = 0;
         for(int i=0; i<numChan; i++)
           sum += getChan(i);
