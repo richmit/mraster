@@ -1,7 +1,7 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      mandelbrot_precomp.cpp
+ @file      mandelbrot_precomp_p1.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Produce several images related to the period/cycle structure of the Mandelbrot set.@EOL
  @std       C++20
