@@ -1721,24 +1721,34 @@ BOOST_AUTO_TEST_CASE(geom_tfrm) {
   eRamCanvas.rotate90CW();
   BOOST_TEST_CHECK(ReRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-e.mrw") == 0);
   BOOST_TEST_CHECK(ReRamCanvas.isEqual(eRamCanvas) == true);
-  ReRamCanvas.rotate90CCW();
-  BOOST_TEST_CHECK(ReRamCanvas.isEqual(aRamCanvas) == true);
+  eRamCanvas.rotate90CCW();
+  BOOST_TEST_CHECK(eRamCanvas.isEqual(aRamCanvas) == true);
+  eRamCanvas.rotate90CW();
+  eRamCanvas.rotate90CW();
+  eRamCanvas.rotate90CW();
+  eRamCanvas.rotate90CW();
+  BOOST_TEST_CHECK(eRamCanvas.isEqual(aRamCanvas) == true);
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   mjr::ramCanvas1c8b fRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RfRamCanvas(8, 8);
   fRamCanvas.rotate90CCW();
   BOOST_TEST_CHECK(RfRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-f.mrw") == 0);
   BOOST_TEST_CHECK(RfRamCanvas.isEqual(fRamCanvas) == true);
-  RfRamCanvas.rotate90CW();
-  BOOST_TEST_CHECK(RfRamCanvas.isEqual(aRamCanvas) == true);
+  fRamCanvas.rotate90CW();
+  BOOST_TEST_CHECK(fRamCanvas.isEqual(aRamCanvas) == true);
+  fRamCanvas.rotate90CCW();
+  fRamCanvas.rotate90CCW();
+  fRamCanvas.rotate90CCW();
+  fRamCanvas.rotate90CCW();
+  BOOST_TEST_CHECK(fRamCanvas.isEqual(aRamCanvas) == true);
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   mjr::ramCanvas1c8b gRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RgRamCanvas(8, 8);
   gRamCanvas.rotate180();
   BOOST_TEST_CHECK(RgRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-g.mrw") == 0);
   BOOST_TEST_CHECK(RgRamCanvas.isEqual(gRamCanvas) == true);
-  RgRamCanvas.rotate180();
-  BOOST_TEST_CHECK(RgRamCanvas.isEqual(aRamCanvas) == true);
+  gRamCanvas.rotate180();
+  BOOST_TEST_CHECK(gRamCanvas.isEqual(aRamCanvas) == true);
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   aRamCanvas.writeRAWfile("ut-geom_tfrm-a.mrw");

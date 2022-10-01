@@ -40,19 +40,18 @@ typedef mjr::ramCanvas3c8b  rcC8;
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   rcC8::colorType limitColor("red");
-  rcC8::colorType perColor("blue");
   rcC8::colorType setColor("yellow");
 
-  const int                  MCSIZE   = 7680;
-  const int                  CSIZEF   = 1;
-  const int                  CSIZE    = MCSIZE/CSIZEF;
+  const int MCSIZE = 7680;
+  const int CSIZEF = 1;
+  const int CSIZE  = MCSIZE/CSIZEF;
   rcC8  theRamCanvas(CSIZE, CSIZE, -2.1, 0.75, -1.4, 1.4);
   rcCNT perRamCanvas;
   rcCNT stbRamCanvas;
 
   perRamCanvas.readTIFFfile("../precomp/mandelbrot_precompPER.tiff");
   stbRamCanvas.readTIFFfile("../precomp/mandelbrot_precompSTB.tiff");
-#pragma omp parallel for schedule(static,1)
+# pragma omp parallel for schedule(static,1)
   for(int y=0;y<theRamCanvas.getNumPixY();y++) {
     for(int x=0;x<theRamCanvas.getNumPixX();x++) {
       auto inten = theRamCanvas.getPxColorNC(x, y).intensity();
@@ -61,7 +60,7 @@ int main(void) {
         if (inten == 0)
           theRamCanvas.drawPoint(x, y, setColor);          
         auto itrreq = stbRamCanvas.getPxColorNC(x, y).getC0();
-        std::complex<double> c(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
+        std::complex<double> c = theRamCanvas.int2real(x, y);
         std::complex<double> z(0.0, 0.0);
         rcCNT::colorChanType count = 1;
         while (count<itrreq) {
@@ -71,18 +70,17 @@ int main(void) {
         count = 0;
         while (count<period) {
           z=std::pow(z, 2) + c;
-          theRamCanvas.drawPoint(std::real(z), std::imag(z), limitColor);
+          theRamCanvas.drawPoint(z, limitColor);
           count++;
         }
       }
     }
-    std::cout << y << std::endl;
+    if ((y%10)==0)
+      std::cout << y << std::endl;
   }
 
-perRamCanvas.writeTIFFfile("tmp.tiff");
-
   theRamCanvas.writeTIFFfile("mandelbrot_precomp_p1_br.tiff");
-  theRamCanvas.rotate90CCW();
+  theRamCanvas.rotate90CW();
   theRamCanvas.writeTIFFfile("mandelbrot_precomp_p1_ar.tiff");
   theRamCanvas.scaleDownMean(4);
   theRamCanvas.writeTIFFfile("mandelbrot_precomp_p1.tiff");
@@ -91,3 +89,5 @@ perRamCanvas.writeTIFFfile("tmp.tiff");
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
 /** @endcond */
+
+16*(7680*4)^2/8/1024/1024/1024

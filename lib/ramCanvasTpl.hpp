@@ -1487,6 +1487,22 @@ namespace mjr {
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Coordinate Pari Conversions. */
+      //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Convert real x & y coordinates to integer x & y coordinates
+          @param x The integer x coordinate value to be converted.
+          @param y The integer y coordinate value to be converted.
+          @return The real x & y coordinates corresponding to the given integer x & y coordinates */
+      inline pointFltType int2real(intCrdT x, intCrdT y) { return point2d(int2realX(x), int2realY(y)); }
+      /** Convert integer x & y coordinates to real x & y coordinates
+          @param x The real x coordinate value to be converted.
+          @param y The real y coordinate value to be converted.
+          @return The integer x & y coordinates corresponding to the given real x & y coordinates */
+      inline pointIntType real2int(intCrdT x, intCrdT y) { return point2d(real2intX(x), real2intY(y)); }
+      //@}
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Coordinate Delta Conversions. */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2539,7 +2555,7 @@ namespace mjr {
     colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
-        new_pixels[new_numPixX_p * (x/*y-crd*/) + (numPixY-y-1/*x-crd*/)] = getPxColor(x, y);
+        new_pixels[new_numPixX_p * (numPixX-x-1/*y-crd*/) + (y/*x-crd*/)] = getPxColor(x, y);
     rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
   }
 
@@ -2553,7 +2569,7 @@ namespace mjr {
     colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
-        new_pixels[new_numPixX_p * (numPixX-x-1/*y-crd*/) + (y/*x-crd*/)] = getPxColor(x, y);
+        new_pixels[new_numPixX_p * (x/*y-crd*/) + (numPixY-y-1/*x-crd*/)] = getPxColor(x, y);
     rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
   }
 

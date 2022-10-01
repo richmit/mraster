@@ -40,6 +40,20 @@ end up on this list.
 
 In no particular order:
 
+ - pixel corner coordinates
+   - Given a pixel, spit out the real corner coordinates
+   - Given a pixel, get a single corner:
+     - int2cornerUL, int2cornerUR, int2cornerLL, int2cornerLR ??? or ??? int2corner<int>() ??? or int2corner(cornerEnum)
+   - Signed distance function evaluation on pixel corner -- return list of states.
+ - point2d cast operators
+   - +complex+ DONE.
+   - tuple
+   - vector
+ - coordinate conversion with point objects
+   - +int2real(intCrdT x, intCrdT y)+ DONE.
+   - +real2int(intCrdT x, intCrdT y)+ DONE.
+   - int2real(pointIntType thePoint)
+   - real2int(pointFltType thePoint)
  - Precomputed Mandelbrot
    - Add example that computes & saves convergence information in image files
      - Escape points

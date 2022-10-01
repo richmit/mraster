@@ -42,11 +42,8 @@
 namespace mjr {
   /** Handy class to hold a point in 2D (integer or real) */
   template <class coordT>
+  requires (std::is_arithmetic<coordT>::value)
   class point2d {
-
-      static_assert(std::is_arithmetic<coordT>::value,
-                    "ERROR: coordT parameter of point2d template must be a numeric type.");
-
     public:
       coordT x; //!< X coordinate
       coordT y; //!< Y coordinate
@@ -69,7 +66,11 @@ namespace mjr {
       point2d(std::vector<coordT> aVector)         { x=aVector[0];          y=aVector[1];           }
       /** Construct from a C-style array. */
       point2d(coordT* aPtr)                        { x=aPtr[0];             y=aPtr[1];              }
-//      point2d(coordT[2] aArray)                      { x=aArray[0];           y=aArray[1];            }
+
+      /** @name Conversion Operators */
+      //@{
+      /** COnvert to a complex number. */
+      operator std::complex<coordT>() { return std::complex<coordT>(x, y); }
       //@}
 
       ~point2d() = default;

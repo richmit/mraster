@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-09-28 Wed 18:21 -->
+<!-- 2022-10-01 Sat 16:36 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster Roadmap</title>
@@ -193,7 +193,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
+  .org-svg { }
 </style>
 <style>body { width: 95%; margin: 2% auto; font-size: 18px; line-height: 1.4em; font-family: Georgia, serif; color: black; background-color: white; }</style>
 <style>body { min-width: 500px; max-width: 1024px; }</style>
@@ -267,6 +267,28 @@ In no particular order:
 </p>
 
 <ul class="org-ul">
+<li>pixel corner coordinates
+<ul class="org-ul">
+<li>Given a pixel, spit out the real corner coordinates</li>
+<li>Given a pixel, get a single corner:
+<ul class="org-ul">
+<li>int2cornerUL, int2cornerUR, int2cornerLL, int2cornerLR ??? or ??? int2corner&lt;int&gt;() ??? or int2corner(cornerEnum)</li>
+</ul></li>
+<li>Signed distance function evaluation on pixel corner &#x2013; return list of states.</li>
+</ul></li>
+<li>point2d cast operators
+<ul class="org-ul">
+<li><del>complex</del> DONE.</li>
+<li>tuple</li>
+<li>vector</li>
+</ul></li>
+<li>coordinate conversion with point objects
+<ul class="org-ul">
+<li><del>int2real(intCrdT x, intCrdT y)</del> DONE.</li>
+<li><del>real2int(intCrdT x, intCrdT y)</del> DONE.</li>
+<li>int2real(pointIntType thePoint)</li>
+<li>real2int(pointFltType thePoint)</li>
+</ul></li>
 <li>Precomputed Mandelbrot
 <ul class="org-ul">
 <li>Add example that computes &amp; saves convergence information in image files
