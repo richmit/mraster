@@ -89,5 +89,3 @@ int main(void) {
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
 /** @endcond */
-
-16*(7680*4)^2/8/1024/1024/1024
