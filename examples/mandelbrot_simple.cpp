@@ -41,20 +41,20 @@ typedef mjr::ramCanvas3c8b::colorType ct;
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int    IMGSIZ = 7680/4;
-  const int    NUMITR = 1024;
-  const double MAXZ   = 4.0;
+  const int    MAXITR = 1024;
+  const double MAXZSQ = 4.0;
   mjr::ramCanvas3c8b theRamCanvas(IMGSIZ, IMGSIZ, -2.2, 0.8, -1.5, 1.5);
 
   for(int y=0;y<theRamCanvas.getNumPixY();y++) {
     for(int x=0;x<theRamCanvas.getNumPixX();x++) {
-      std::complex<double> c(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
+      std::complex<double> c = theRamCanvas.int2real(x, y);
       std::complex<double> z(0.0, 0.0);
       int count = 0; 
-      while((std::norm(z)<MAXZ) && (count<=NUMITR)) {
+      while((std::norm(z)<MAXZSQ) && (count<=MAXITR)) {
         z=std::pow(z, 2) + c;
         count++;
       }
-      if(count < NUMITR)
+      if(count < MAXITR)
         theRamCanvas.drawPoint(x, y, ct::csCColdeFireRamp::c(static_cast<ct::csIntType>(count*30)));
     }
   }
