@@ -1503,6 +1503,20 @@ namespace mjr {
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Coordinate Pari Conversions. */
+      //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Given integer x & y coordinates, produce real x & y coordinats for one of the pixel's corners.
+          @param x       The integer x coordinate value to be converted.
+          @param y       The integer y coordinate value to be converted.
+          @param cornerX The integer x coordinate of the corner -- should be 0 or 1.
+          @param cornerY The integer y coordinate of the corner -- should be 0 or 1.
+          @return The real x & y coordinates corresponding to the requested corner */
+      inline pointFltType int2corner(intCrdT x, intCrdT y, int cornerX, int cornerY)  { return point2d(int2realX(x+cornerX)-pixWidX/2.0, int2realY(y+cornerY)-pixWidY/2.0); }
+      inline pointFltType int2corner(intCrdT x, intCrdT y, int cornerIndex)           { return int2corner(x, y, (cornerIndex >> 1), (cornerIndex & 1));                     }
+      //@}
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Coordinate Delta Conversions. */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
