@@ -337,6 +337,19 @@ namespace mjr {
     return pvalue;
   }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** Signum (sgn, sign) function -- -1 if input is negative, +1 if it is positive, and 0 if it is zero.
+
+    @param x Value to test
+    @return The sign */
+  template <typename T> 
+  inline int 
+  sgn(T x) {
+    if (x > T(0)) return  1;
+    if (x < T(0)) return -1;
+    return 0;
+  }
+
 } // end namespace mjr
 
 #define MJR_INCLUDE_mjrmath
