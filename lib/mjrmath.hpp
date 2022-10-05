@@ -343,6 +343,7 @@ namespace mjr {
     @param x Value to test
     @return The sign */
   template <typename T> 
+  requires (std::integral<T> || std::floating_point<T>)
   inline int 
   sgn(T x) {
     if (x > T(0)) return  1;
