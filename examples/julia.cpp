@@ -5,6 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw a julia set.@EOL
  @std       C++20
+ @see       https://www.mitchr.me/SS/julia/index.html
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -39,7 +40,7 @@ typedef mjr::ramCanvas3c8b::colorType ct;
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const int    IMGSIZ = 7680/4;
+  const int    IMGSIZ = 7680;
   const int    NUMITR = 1024;
   const double MAXZ   = 4.0;
   mjr::ramCanvas3c8b theRamCanvas(IMGSIZ, IMGSIZ, -2.2, 2.2, -2.2, 2.2);
@@ -48,7 +49,7 @@ int main(void) {
   for(int y=0;y<theRamCanvas.getNumPixY();y++) {
     for(int x=0;x<theRamCanvas.getNumPixX();x++) {
       std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
-      int count = 0; 
+      int count = 0;
       while((std::norm(z)<MAXZ) && (count<=NUMITR)) {
         z=std::pow(z, 2) + c;
         count++;

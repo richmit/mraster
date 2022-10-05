@@ -1,4 +1,4 @@
-y#include "ramCanvas.hpp"                                                     // The main MRaster include
+#include "ramCanvas.hpp"                                                     // The main MRaster include
 
 int main(void) {
   mjr::ramCanvas3c8b theRamCanvas(1024, 1024);                               // Create a canvas object

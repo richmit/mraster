@@ -40,6 +40,9 @@ end up on this list.
 
 In no particular order:
 
+ - Canvas Compositing
+   - adjoinCanvas(const ramCanvasTpl &theCanvas, side);
+   - +insertCanvas(const ramCanvasTpl &theCanvas, intCrdT x1 = 0, intCrdT y1 = 0)+ DONE.
  - pixel corner coordinates
    - Given a pixel, spit out the real corner coordinates
    - +Given a pixel, get a single corner given by indexes cornerX & cornerY -- cornerX & Y are 0 or 1.+ DONE.

@@ -508,6 +508,73 @@ namespace mjr {
       ~ramCanvasTpl();
       //@}
 
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Canvas Compositing
+
+          @warning These functions are experimental!  Functionality and API are likely to change in the future.
+
+      */
+      //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Adjoin the canvas to the side of the current canvas.
+
+          @warning This function is experimental!  Functionality and API are likely to change in the future.
+
+          @param theCanvas The canvas to adjoin. */
+      void adjoinCanvasRight(const ramCanvasTpl &theCanvas) { 
+        intCrdT origNumPixX = getNumPixX(); 
+        expandCanvas(origNumPixX + theCanvas.getNumPixX(), std::max(getNumPixY(), theCanvas.getNumPixY())); 
+        insertCanvas(theCanvas, origNumPixX);
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Adjoin the canvas to the side of the current canvas.
+
+          @warning This function is experimental!  Functionality and API are likely to change in the future.
+
+          @param theCanvas The canvas to adjoin. */
+      void adjoinCanvasLeft(const ramCanvasTpl &theCanvas) {
+        intCrdT origNumPixX = getNumPixX();
+        expandCanvas(origNumPixX + theCanvas.getNumPixX(), std::max(getNumPixY(), theCanvas.getNumPixY()), origNumPixX);
+        insertCanvas(theCanvas);
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Adjoin the canvas to the side of the current canvas.
+
+          @warning This function is experimental!  Functionality and API are likely to change in the future.
+
+          @param theCanvas The canvas to adjoin. */
+      void adjoinCanvasBottom(const ramCanvasTpl &theCanvas) {
+        intCrdT origNumPixY = getNumPixY();
+        expandCanvas(std::max(getNumPixX(), theCanvas.getNumPixX()), origNumPixY + theCanvas.getNumPixY(), 0, origNumPixY);
+        insertCanvas(theCanvas, 0, 0);
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Adjoin the canvas to the side of the current canvas.
+
+          @warning This function is experimental!  Functionality and API are likely to change in the future.
+
+          @param theCanvas The canvas to adjoin. */
+      void adjoinCanvasTop(const ramCanvasTpl &theCanvas) {
+        intCrdT origNumPixY = getNumPixY();
+        expandCanvas(std::max(getNumPixX(), theCanvas.getNumPixX()), origNumPixY + theCanvas.getNumPixY());
+        insertCanvas(theCanvas, 0, origNumPixY);
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Draw the given canvas at the indicated point.
+
+          @warning This function is experimental!  Functionality and API are likely to change in the future.
+
+          @param theCanvas The canvas to draw on the current canvas.
+          @param x1        X coordinate at which to place the canvas.
+          @param y1        Y coordinate at which to place the canvas. */
+      void insertCanvas(const ramCanvasTpl &theCanvas, intCrdT x1 = 0, intCrdT y1 = 0) {
+        for(intCrdT y=0; y<theCanvas.getNumPixY(); y++)
+          for(intCrdT x=0; x<theCanvas.getNumPixX(); x++)
+            drawPoint(x1+x, y1+y, theCanvas.getPxColorRefNC(x, y));
+      }
+      //@}
+
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Canvas resize and crop */
       //@{
@@ -526,7 +593,7 @@ namespace mjr {
           @param x1            Coord at which the left of the old image will appear in the new image
           @param y1            Coord at which the top of the old image will appear in the new image
           @param color         Color to use for the background of the new image. */
-      void expandCanvas(intCrdT new_numPixX_p, intCrdT new_numPixY_p, intCrdT x1 = 0, intCrdT y1 = 0, colorArgType color = colorT(0,0,0));
+      void expandCanvas(intCrdT new_numPixX_p, intCrdT new_numPixY_p, intCrdT x1 = 0, intCrdT y1 = 0, colorArgType color = colorT(colorT::minChanVal));
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** This function will crop the canvas to the given rectangular region.
           @param x1 Left, or right, edge of region to keep.
@@ -2481,10 +2548,6 @@ namespace mjr {
     void
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::expandCanvas(intCrdT new_numPixX_p, intCrdT new_numPixY_p, intCrdT x1, intCrdT y1, colorArgType color) {
     if( (new_numPixX_p != numPixX) || (new_numPixY_p != numPixY) ) {
-      if(x1 >= new_numPixX_p)
-        x1=0;
-      if(y1 >= new_numPixY_p)
-        y1=0;
 
       colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
 
@@ -2493,18 +2556,14 @@ namespace mjr {
         for(intCrdT x=0;x<new_numPixX_p;x++)
           new_pixels[new_numPixX_p * (y) + (x)] = color;
 
-      intCrdT yMax = new_numPixY_p;
-      if(yMax > (new_numPixY_p-y1))
-        yMax = new_numPixY_p-y1;
-
-      intCrdT xMax = new_numPixX_p;
-      if(xMax > (new_numPixX_p-x1))
-        xMax = new_numPixX_p-x1;
+      intCrdT yMax = std::min(numPixY+y1, new_numPixY_p);
+      intCrdT xMax = std::min(numPixX+x1, new_numPixX_p);
 
       // Copy the old image to the new space.
-      for(intCrdT y=y1;y<yMax;y++)
-        for(intCrdT x=0;x<xMax;x++)
-          new_pixels[new_numPixX_p * (y) + (x)] = getPxColor(x-x1, y-y1);
+      if ((x1 < new_numPixX_p) && (y1 < new_numPixY_p))
+        for(intCrdT y=y1;y<yMax;y++)
+          for(intCrdT x=x1;x<xMax;x++)
+            new_pixels[new_numPixX_p * (y) + (x)] = getPxColor(x-x1, y-y1);
 
       rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
     }

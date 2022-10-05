@@ -1844,7 +1844,71 @@ BOOST_AUTO_TEST_CASE(p_scale) {
   eRamCanvas.writeTIFFfile("ut-p_scale-e.tiff");
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+BOOST_AUTO_TEST_CASE(adjoin) {
+
+  mjr::ramCanvas1c8b aRamCanvas(8, 8);
+  aRamCanvas.drawRectangle(0, 0, 7, 7, "white");
+  aRamCanvas.drawLine(0, 7, 7, 0, "white");
+
+  mjr::ramCanvas1c8b bRamCanvas(8, 8);
+  bRamCanvas.drawRectangle(0, 0, 7, 7, "white");
+  bRamCanvas.drawLine(0, 0, 7, 7, "white");
+
+  mjr::ramCanvas1c8b cRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RcRamCanvas(8, 8);
+  cRamCanvas.adjoinCanvasRight(bRamCanvas);
+  BOOST_TEST_CHECK(RcRamCanvas.readRAWfile("../data/utest/ut-adjoin-c.mrw") == 0);
+  BOOST_TEST_CHECK(RcRamCanvas.isEqual(cRamCanvas) == true);
+
+  mjr::ramCanvas1c8b dRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RdRamCanvas(8, 8);
+  dRamCanvas.adjoinCanvasLeft(bRamCanvas);
+  BOOST_TEST_CHECK(RdRamCanvas.readRAWfile("../data/utest/ut-adjoin-d.mrw") == 0);
+  BOOST_TEST_CHECK(RdRamCanvas.isEqual(dRamCanvas) == true);
+
+  mjr::ramCanvas1c8b eRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b ReRamCanvas(8, 8);
+  eRamCanvas.adjoinCanvasBottom(bRamCanvas);
+  BOOST_TEST_CHECK(ReRamCanvas.readRAWfile("../data/utest/ut-adjoin-e.mrw") == 0);
+  BOOST_TEST_CHECK(ReRamCanvas.isEqual(eRamCanvas) == true);
+
+  mjr::ramCanvas1c8b fRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RfRamCanvas(8, 8);
+  fRamCanvas.adjoinCanvasTop(bRamCanvas);
+  BOOST_TEST_CHECK(RfRamCanvas.readRAWfile("../data/utest/ut-adjoin-f.mrw") == 0);
+  BOOST_TEST_CHECK(RfRamCanvas.isEqual(fRamCanvas) == true);
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  aRamCanvas.writeRAWfile("ut-adjoin-a.mrw");
+  aRamCanvas.scaleUpProximal(32);
+  aRamCanvas.writeTIFFfile("ut-adjoin-a.tiff");
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  bRamCanvas.writeRAWfile("ut-adjoin-b.mrw");
+  bRamCanvas.scaleUpProximal(32);
+  bRamCanvas.writeTIFFfile("ut-adjoin-b.tiff");
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  cRamCanvas.writeRAWfile("ut-adjoin-c.mrw");  
+  cRamCanvas.scaleUpProximal(32);
+  cRamCanvas.writeTIFFfile("ut-adjoin-c.tiff");
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  dRamCanvas.writeRAWfile("ut-adjoin-d.mrw");  
+  dRamCanvas.scaleUpProximal(32);
+  dRamCanvas.writeTIFFfile("ut-adjoin-d.tiff");
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  eRamCanvas.writeRAWfile("ut-adjoin-e.mrw");  
+  eRamCanvas.scaleUpProximal(32);
+  eRamCanvas.writeTIFFfile("ut-adjoin-e.tiff");
+
+  //------------------------------------------------------------------------------------------------------------------------------------------------------------
+  fRamCanvas.writeRAWfile("ut-adjoin-f.mrw");
+  fRamCanvas.scaleUpProximal(32);
+  fRamCanvas.writeTIFFfile("ut-adjoin-f.tiff");
+}
+
 #endif
+
+
 
   // XRamCanvas.writeRAWfile("ut-strings-X.mrw");
   // XRamCanvas.scaleUpProximal(20);

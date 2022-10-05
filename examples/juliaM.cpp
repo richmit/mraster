@@ -5,6 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Create a Julia set movie.@EOL
  @std       C++20
+ @see       https://www.mitchr.me/SS/julia/index.html
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -26,7 +27,7 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails   
+ @filedetails
 
   Moves $c$ around a circle just a bit larger than the period 2 disk.  A GIF may be rendered from the frames like this:
 
@@ -49,18 +50,18 @@ int main(void) {
   const int    NUMFRM = 24*16;
   const int    IMXSIZ = 7680/8;
   const int    IMYSIZ = 7680/8;
-  const double ANGMIN = 0.0;  
+  const double ANGMIN = 0.0;
   const double ANGMAX = std::numbers::pi*2;
 
   for(int frame=0; frame<NUMFRM; frame++) {
     mjr::ramCanvas3c8b theRamCanvas(IMXSIZ, IMYSIZ, -2.2, 2.2, -2.2, 2.2);
     std::cout << "Frame: " << frame << std::endl;
-    double angle = frame*(ANGMAX-ANGMIN)/NUMFRM+ANGMIN;    
+    double angle = frame*(ANGMAX-ANGMIN)/NUMFRM+ANGMIN;
     std::complex<double> c = std::complex<double>(std::cos(angle), std::sin(angle)) * 0.35 - std::complex<double>(0.0, -1.0);
     for(int y=0;y<theRamCanvas.getNumPixY();y++) {
       for(int x=0;x<theRamCanvas.getNumPixX();x++) {
         std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
-        int count = 0; 
+        int count = 0;
         while((std::norm(z)<MAXZ) && (count<=NUMITR)) {
           z=std::pow(z, 2) + c;
           count++;

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-09-12 Mon 11:00 -->
+<!-- 2022-10-05 Wed 17:05 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster Quick Start</title>
@@ -193,7 +193,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
-  .org-svg { width: 90%; }
+  .org-svg { }
 </style>
 <style>body { width: 95%; margin: 2% auto; font-size: 18px; line-height: 1.4em; font-family: Georgia, serif; color: black; background-color: white; }</style>
 <style>body { min-width: 500px; max-width: 1024px; }</style>
@@ -286,7 +286,7 @@ The first step is to download <b><code>MRaster</code></b>.  You can grab the <a 
 clone the repository with GIT like this:
 </p>
 
-<pre class="example" id="orgcfc6234">
+<pre class="example" id="org83edca0">
 git clone 'https://github.com/richmit/mraster.git'
 </pre>
 
@@ -322,7 +322,7 @@ Now you can run it, and take a look at the file it created ("<code>hello.tiff</c
 </p>
 
 
-<div id="org158e217" class="figure">
+<div id="org6180551" class="figure">
 <p><img src="./pics/quick/hello.png" alt="hello.png" width="800" align="center" />
 </p>
 </div>
@@ -762,7 +762,7 @@ you want to turn off 128-bit integers, and use pure C++20 instead with GCC, then
 <p>
 <b>A:</b> It is good form to place necessary includes in each file that needs them; however, I have violated this sound practice in the examples shipped with
 <b><code>MRaster</code></b>.  In particular, because the <code>ramCanvasTpl.hpp</code> and <code>colorTpl.hpp</code> files include just about everything the examples need I have tended to shorten
-up the examples and depend on the includes from <b><code>MRaster</code></b>.
+up the examples and depend on the includes from these headers.
 </p>
 </blockquote>
 </div>

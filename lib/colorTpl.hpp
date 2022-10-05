@@ -355,7 +355,11 @@ namespace mjr {
       /** @name Private Object Data */
       //@{
       /** Holds the color channel data.
-          The union is used to overlay a mask integer leading to dramatic performance improvements for common color types. */
+          The union is used to overlay a mask integer leading to dramatic performance improvements for common color types.
+
+          Technically we are not allowed to use a union the way we do in colorTpl with modern C++; however, every compiler I use allows us to access
+          "non-active" union members the same way we did with good old C.  At some point C++ compilers will have bit_cast, and I can try doing this the
+          "correct" way with modern C++; however, I'll need to do quite a bit of performance testing first... */
       union {
           maskType theInt;
           clrChanT thePartsA[numChan];
