@@ -27,7 +27,7 @@
 # ######################################################################################################################################################.H.E.##
 
 #+ATTR_HTML: :border 2 solid #ccc :frame hsides :align center
-| Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved. |
+| Copyright \copy 2016-2022 Mitch Richling. All rights reserved. |
 
 #+TOC: headlines 5
 
@@ -42,8 +42,8 @@ In no particular order:
 
  - pixel corner coordinates
    - Given a pixel, spit out the real corner coordinates
-   - Given a pixel, get a single corner:
-     - int2cornerUL, int2cornerUR, int2cornerLL, int2cornerLR ??? or ??? int2corner<int>() ??? or int2corner(cornerEnum)
+   - +Given a pixel, get a single corner given by indexes cornerX & cornerY -- cornerX & Y are 0 or 1.+ DONE.
+   - +Given a pixel, get a single corner given by single index cornerIndex -- cornerIndex is 0, 1, 2, or 3.+ DONE.
    - Signed distance function evaluation on pixel corner -- return list of states.
  - point2d cast operators
    - +complex+ DONE.

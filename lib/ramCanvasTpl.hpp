@@ -1487,7 +1487,7 @@ namespace mjr {
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** @name Coordinate Pari Conversions. */
+      /** @name Coordinate Pair Conversions. */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Convert real x & y coordinates to integer x & y coordinates
@@ -1503,16 +1503,31 @@ namespace mjr {
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** @name Coordinate Pari Conversions. */
+      /** @name Pixel Corner Coordinates.
+
+       @warning These functions are experimental!  Functionality and API are likely to change in the future.
+
+      */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Given integer x & y coordinates, produce real x & y coordinats for one of the pixel's corners.
+      /** Given integer x & y coordinates, produce real x & y coordinates for one of the pixel's corners.
+
+          @warning This function is experimental!  Functionality and API are likely to change in the future.
+
           @param x       The integer x coordinate value to be converted.
           @param y       The integer y coordinate value to be converted.
           @param cornerX The integer x coordinate of the corner -- should be 0 or 1.
           @param cornerY The integer y coordinate of the corner -- should be 0 or 1.
           @return The real x & y coordinates corresponding to the requested corner */
       inline pointFltType int2corner(intCrdT x, intCrdT y, int cornerX, int cornerY)  { return point2d(int2realX(x+cornerX)-pixWidX/2.0, int2realY(y+cornerY)-pixWidY/2.0); }
+      /** Given integer x & y coordinates and a corner index, produce real x & y coordinates for one of the pixel's corners.
+
+          @warning This function is experimental!  Functionality and API are likely to change in the future.
+
+          @param x           The integer x coordinate value to be converted.
+          @param y           The integer y coordinate value to be converted.
+          @param cornerIndex Corner index. 0 => (0, 0); 1 => (0, 1); 2 => (1, 0); 3 => (1, 1); 
+          @return The real x & y coordinates corresponding to the requested corner */
       inline pointFltType int2corner(intCrdT x, intCrdT y, int cornerIndex)           { return int2corner(x, y, (cornerIndex >> 1), (cornerIndex & 1));                     }
       //@}
 

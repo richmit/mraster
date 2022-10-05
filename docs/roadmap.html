@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-10-01 Sat 16:36 -->
+<!-- 2022-10-04 Tue 10:42 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster Roadmap</title>
@@ -246,7 +246,7 @@
 </colgroup>
 <tbody>
 <tr>
-<td class="org-left">Copyright &copy; 2022 Mitch Richling. All rights reserved.</td>
+<td class="org-left">Copyright &copy; 2016-2022 Mitch Richling. All rights reserved.</td>
 </tr>
 </tbody>
 </table>
@@ -270,10 +270,8 @@ In no particular order:
 <li>pixel corner coordinates
 <ul class="org-ul">
 <li>Given a pixel, spit out the real corner coordinates</li>
-<li>Given a pixel, get a single corner:
-<ul class="org-ul">
-<li>int2cornerUL, int2cornerUR, int2cornerLL, int2cornerLR ??? or ??? int2corner&lt;int&gt;() ??? or int2corner(cornerEnum)</li>
-</ul></li>
+<li><del>Given a pixel, get a single corner given by indexes cornerX &amp; cornerY &#x2013; cornerX &amp; Y are 0 or 1.</del> DONE.</li>
+<li><del>Given a pixel, get a single corner given by single index cornerIndex &#x2013; cornerIndex is 0, 1, 2, or 3.</del> DONE.</li>
 <li>Signed distance function evaluation on pixel corner &#x2013; return list of states.</li>
 </ul></li>
 <li>point2d cast operators
