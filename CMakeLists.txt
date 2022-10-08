@@ -80,7 +80,7 @@ set(TARGETS_REQ_NONE "BurningShip" "apollony" "apomorph" "bifurcation_diagram" "
                        "mandelbrot_biomorph" "mandelbrot_bm_cplx" "mandelbrot_bm_cplx_hyper" "mandelbrot_bm_real"
                        "mandelbrot_distance" "mandelbrot_distance_old" "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits"
                        "mandelbrot_potential" "mandelbrot_real_cfun" "mandelbrot_simple" "mandelbrot_triangle" "multibrotMovie" "multibrotSnaps"
-                       "newton_bm_cplx" "newton_bm_real" "newton_half" "newton_max_mod" "newton_vs" "newton_z6" "peterdejong" 
+                       "newton_half" "newton_max_mod" "newton_vs" "newton_z6" "peterdejong" 
                        "pickoverPopcorn" "sic" "sic_search" "sierpinski_triangle" "sprott2d" "test_draw_fonts" "test_images" "tippets" "tricorn"
                        "tricornMovie" "types")
 set(TARGETS_REQ_OPENGL "glut_image")
