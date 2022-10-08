@@ -27,6 +27,11 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
+ @filedetails
+
+  Moves the parameters around a simple closed curve in $\mathbb{R}^8$.  Make a GIF like this:
+
+       time convert -delay 1 -loop 0 -dispose previous peterdejongM_???.tiff peterdejongM.gif
 */
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
@@ -41,7 +46,7 @@ int main(void) {
   const int               imageSize =  540; // 4320 2160 1080 540 270
   const unsigned long int maxIters  =  300000000ul;
   const unsigned long int itersTick =  10000000ul;
-  const int               numFrames =  128; // 512 128 32 16
+  const int               numFrames =  24*8; // 512 128 32 16
   const double            a         =  1.50503;
   const double            b         = -1.44118;
   const double            c         = -1.23281;
@@ -55,16 +60,24 @@ int main(void) {
   mjr::ramCanvas1c16b::colorType aColor;
   aColor.setChans(1);
 
+# pragma omp parallel for schedule(static,1)
   for(int frame=0; frame<numFrames; frame++) {
-
     mjr::ramCanvas1c16b theRamCanvas(imageSize, imageSize, -2, 2, -2, 2);
     /* Draw the atractor on a 16-bit, greyscale canvas -- the grey level will be an integer represeting the hit count for that pixel. */
-    double x       = 1.0;
-    double y       = 1.0;
+    double x = 1.0;
+    double y = 1.0;
     mjr::ramCanvas1c16b::colorChanArithSPType maxII = 0;
     for(mjr::ramCanvas1c16b::colorChanArithSPType i=0;i<maxIters;i++) {
-      double xNew = sin((a + 0.09 * sin(frame * 2 * std::numbers::pi / numFrames))*y + e) - cos(b*x + f);
-      double yNew = sin((c + 0.08 * cos(frame * 2 * std::numbers::pi / numFrames))*x + g) - cos(d*y + h);
+      double da = 0.07 * cos(frame * 2 * std::numbers::pi / numFrames);
+      double dc = 0.04 * sin(frame * 2 * std::numbers::pi / numFrames);
+      double db = 0.05 * cos(frame * 2 * std::numbers::pi / numFrames);
+      double dd = 0.13 * sin(frame * 2 * std::numbers::pi / numFrames);
+      double de = 0.18 * sin(frame * 2 * std::numbers::pi / numFrames);
+      double dg = 0.05 * cos(frame * 2 * std::numbers::pi / numFrames);
+      double df = 0.09 * sin(frame * 2 * std::numbers::pi / numFrames);
+      double dh = 0.12 * cos(frame * 2 * std::numbers::pi / numFrames);
+      double xNew = sin((a + da)*y + e + de) - cos((b+db)*x + f + df);
+      double yNew = sin((c + dc)*x + g + dg) - cos((d+dd)*y + h + dh);
       theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColor(x, y).tfrmAdd(aColor));
       if(theRamCanvas.getPxColor(x, y).getC0() > maxII) {
         maxII = theRamCanvas.getPxColor(x, y).getC0();
