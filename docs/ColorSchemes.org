@@ -62,6 +62,7 @@ inner classes follow a regular naming convention:
   - [[#csCCdiv][=csCCdiv .......=]] RGB color cube: Three Segment Diverging Maps (template: =csCC_tpl=)
   - [[#csCCsum][=csCCSum .......=]] RGB color cube: Sum ramp (template: =csCC_tpl=)
   - [[#csCCu][=csCCu .........=]] RGB color cube: Gradients from black to another corner (template: =csCC_tpl=)
+  - [[#csCCwic][=csCCwic ......=]] RGB color cube: White In Center Circular Gradients (template: =csCC_tpl=)
   - [[#csCCfractal][=csCCfractal ...=]] RGB color cube: Common gradient schemes used for fractals (template: =csCC_tpl=)
   - [[#csHSLh][=csHSLh ........=]] RGB color cube: Gradients from the cube center to a corner (template: =csHSLh_tpl=)
   - [[#csBin][=csBin .........=]] RGB Binary Schemes (template: =csCC_tpl=)
@@ -314,7 +315,6 @@ channels, the discreet gradients have $2^{31}$ steps between corner colors.
  - =csCCsumRGB= & =csCColdeFireRamp= :: \\
   [[./pics/cs/color_lut_docs_csCCsumRGB_50.png]]
 
-
 ** Black to Corner in One Trees
 :PROPERTIES:
 :CUSTOM_ID: cc-bc1-trees
@@ -350,6 +350,39 @@ channels, the discreet gradients have $2^{31}$ steps between corner colors.
   [[./pics/cs/color_lut_docs_csCCu0M_50.png]]
  - =csCCu0Y= :: \\
   [[./pics/cs/color_lut_docs_csCCu0Y_50.png]]
+
+** White In Center Circular Gradients
+:PROPERTIES:
+:CUSTOM_ID: cc-wic-cycles
+:END:
+
+  These three node cycles start and end with a primary or secondary color, and have white in the center.  They are usefull for highlighting one segment of a
+  circular data set -- for example highlighting a sector of angles on a circle.  As such they find application in complex number argument plots.
+  
+   - =RWR= -- =csCCwicR=
+   - =GWG= -- =csCCwicG=
+   - =BWB= -- =csCCwicB=
+   - =MWM= -- =csCCwicM=
+   - =YWY= -- =csCCwicY=
+   - =CWC= -- =csCCwicC=
+
+*** Predefined Schemes
+:PROPERTIES:
+:CUSTOM_ID: csCCwic
+:END:
+
+ - =csCCwicR= :: \\
+  [[./pics/cs/color_lut_docs_csCCwicR_50.png]]
+ - =csCCwicG= :: \\
+  [[./pics/cs/color_lut_docs_csCCwicG_50.png]]
+ - =csCCwicB= :: \\
+  [[./pics/cs/color_lut_docs_csCCwicB_50.png]]
+ - =csCCwicM= :: \\
+  [[./pics/cs/color_lut_docs_csCCwicM_50.png]]
+ - =csCCwicY= :: \\
+  [[./pics/cs/color_lut_docs_csCCwicY_50.png]]
+ - =csCCwicC= :: \\
+  [[./pics/cs/color_lut_docs_csCCwicC_50.png]]
 
 ** Luminance based color schemes
 :PROPERTIES:
@@ -892,7 +925,6 @@ Note =csCubeHelix_tpl= with very small amplitude produces greys similar to =csPG
  - =csCCu0W= :: \\
   [[./pics/cs/color_lut_docs_csCCu0W_50.png]]
 
-
 ** Circular
 :PROPERTIES:
 :CUSTOM_ID: xRefCirc
@@ -1112,5 +1144,25 @@ In this directory, we run the following to create PNGs:
 
 #+begin_src zsh
 for f in ../build/color_lut_docs_*.tiff(:r); do echo $f; nf=pics/cs/`basename $f`.png; convert $f.tiff $nf; done
+#+end_src
+
+#+RESULTS:
+| ../build/color_lut_docs_csCCwicB |
+| ../build/color_lut_docs_csCCwicC |
+| ../build/color_lut_docs_csCCwicG |
+| ../build/color_lut_docs_csCCwicM |
+| ../build/color_lut_docs_csCCwicR |
+| ../build/color_lut_docs_csCCwicY |
+
+
+#+begin_src zsh
 for f in ../build/color_lut_docs_*.tiff(:r); do echo $f; nf=pics/cs/`basename $f`_50.png; convert -resize 50% $f.tiff $nf; done
 #+end_src
+
+#+RESULTS:
+| ../build/color_lut_docs_csCCwicB |
+| ../build/color_lut_docs_csCCwicC |
+| ../build/color_lut_docs_csCCwicG |
+| ../build/color_lut_docs_csCCwicM |
+| ../build/color_lut_docs_csCCwicR |
+| ../build/color_lut_docs_csCCwicY |

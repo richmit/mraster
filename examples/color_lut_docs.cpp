@@ -71,7 +71,6 @@ int main(void) {
   theRC.resizeCanvas(ct::csPGrey3x::numC, tall); for(csIt x=0;x<ct::csPGrey3x::numC;x++) { theRC.drawLine(x, 0, x, tall, ct::csPGrey3x::c(x));      } theRC.writeTIFFfile("color_lut_docs_csPGrey3x.tiff");
   theRC.resizeCanvas(ct::csPGrey4x::numC, tall); for(csIt x=0;x<ct::csPGrey4x::numC;x++) { theRC.drawLine(x, 0, x, tall, ct::csPGrey4x::c(x));      } theRC.writeTIFFfile("color_lut_docs_csPGrey4x.tiff");
 
-
   theRC.resizeCanvas(2*tall+gap, tall); 
   theRC.clrCanvas("white");
   theRC.drawFillRectangle(0, 0, tall, tall, ct::csBin01::c(0)); theRC.drawFillRectangle(tall+gap, 0, 2*tall+gap, tall, ct::csBin01::c(1)); theRC.writeTIFFfile("color_lut_docs_csBin01.tiff");
@@ -134,6 +133,12 @@ int main(void) {
   theRC.resizeCanvas(ct::csCCfractalYR::numC,           tall); for(csNt x=0;x<ct::csCCfractalYR::numC;          x++) { theRC.drawLine(x, 0, x, tall, ct::csCCfractalYR::c(x));           } theRC.writeTIFFfile("color_lut_docs_csCCfractalYR.tiff");
   theRC.resizeCanvas(ct::csCCfractalYB::numC,           tall); for(csNt x=0;x<ct::csCCfractalYB::numC;          x++) { theRC.drawLine(x, 0, x, tall, ct::csCCfractalYB::c(x));           } theRC.writeTIFFfile("color_lut_docs_csCCfractalYB.tiff");
 
+  theRC.resizeCanvas(ct::csCCwicR::numC,                tall); for(csNt x=0;x<ct::csCCwicR::numC;               x++) { theRC.drawLine(x, 0, x, tall, ct::csCCwicR::c(x));                 } theRC.writeTIFFfile("color_lut_docs_csCCwicR.tiff");
+  theRC.resizeCanvas(ct::csCCwicG::numC,                tall); for(csNt x=0;x<ct::csCCwicG::numC;               x++) { theRC.drawLine(x, 0, x, tall, ct::csCCwicG::c(x));                 } theRC.writeTIFFfile("color_lut_docs_csCCwicG.tiff");
+  theRC.resizeCanvas(ct::csCCwicB::numC,                tall); for(csNt x=0;x<ct::csCCwicB::numC;               x++) { theRC.drawLine(x, 0, x, tall, ct::csCCwicB::c(x));                 } theRC.writeTIFFfile("color_lut_docs_csCCwicB.tiff");
+  theRC.resizeCanvas(ct::csCCwicC::numC,                tall); for(csNt x=0;x<ct::csCCwicC::numC;               x++) { theRC.drawLine(x, 0, x, tall, ct::csCCwicC::c(x));                 } theRC.writeTIFFfile("color_lut_docs_csCCwicC.tiff");
+  theRC.resizeCanvas(ct::csCCwicM::numC,                tall); for(csNt x=0;x<ct::csCCwicM::numC;               x++) { theRC.drawLine(x, 0, x, tall, ct::csCCwicM::c(x));                 } theRC.writeTIFFfile("color_lut_docs_csCCwicM.tiff");
+  theRC.resizeCanvas(ct::csCCwicY::numC,                tall); for(csNt x=0;x<ct::csCCwicY::numC;               x++) { theRC.drawLine(x, 0, x, tall, ct::csCCwicY::c(x));                 } theRC.writeTIFFfile("color_lut_docs_csCCwicY.tiff");
 
   int tg = tall+gap;
   theRC.resizeCanvas(ct::csCBAccent::maxNumC*tg,  tall); theRC.clrCanvas("white");for(csIt x=0;x<ct::csCBAccent::maxNumC;   x++) { theRC.drawFillRectangle(x*tg, 0, x*tg+tall, tall, ct::csCBAccent::c(x));   } theRC.writeTIFFfile("color_lut_docs_csCBAccent.tiff");

@@ -2207,10 +2207,25 @@ namespace mjr {
       /** Adds 1.0 and takes the natural logarithm of each channel.
           Floating point Numbers are used for intermediate values and the result cast to a colorChanType at the end.
           @return Returns a reference to the current color object.*/
-      inline colorTpl& tfrmLn() {
+      inline colorTpl& tfrmLn1() {
         /* Performance: Even if the compiler fails to unroll this loop, the runtime is dominated by the double computations. */
         for(int i=0; i<numChan; i++)
           setChanNC(i, static_cast<clrChanT>(std::log(1.0 + static_cast<double>(getChanNC(i)))));
+        return *this;
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Computes ln(c)*scale for each channel value c.  If c==0, then the value is left undisturbed.
+          For floating point images, large negative values will result for channel values <1.  For this reason, tfrmLn1() is normally more appropriate for
+          images with floating point channels.  Floating point Numbers are used for intermediate values and the result cast to a colorChanType at the end.
+          @param scale The scale value to multiply by the final result.
+          @return Returns a reference to the current color object.*/
+      inline colorTpl& tfrmLn(double scale) {
+        /* Performance: Even if the compiler fails to unroll this loop, the runtime is dominated by the double computations. */
+        for(int i=0; i<numChan; i++) {
+          clrChanT cVal = getChanNC(i);
+          if(cVal != 0)
+            setChanNC(i, static_cast<clrChanT>(std::log(static_cast<double>(cVal)) * scale));
+        }          
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3307,6 +3322,47 @@ namespace mjr {
       typedef csCubeHelix_tpl<0.5,  0.0, 1.0, 1.0> csCHvio;
       //@}
 #endif
+
+      //========================================================================================================================================================
+      /** @name Color Schemes: White In Center Circular Gradients */
+      //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csCCwicR
+          @ingroup cs
+          @extends csCC_tpl
+          Color cycle starting and ending with red with white in the center. Provides (mjr::colorTpl::chanStepMax*2+1) colors with duplicates. */
+      typedef csCC_tpl<cornerColorEnum::RED, cornerColorEnum::WHITE, cornerColorEnum::RED>  csCCwicR;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csCCwicG
+          @ingroup cs
+          @extends csCC_tpl
+          Color cycle starting and ending with green with white in the center. Provides (mjr::colorTpl::chanStepMax*2+1) colors with duplicates. */
+      typedef csCC_tpl<cornerColorEnum::GREEN, cornerColorEnum::WHITE, cornerColorEnum::GREEN>  csCCwicG;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csCCwicB
+          @ingroup cs
+          @extends csCC_tpl
+          Color cycle starting and ending with blue with white in the center. Provides (mjr::colorTpl::chanStepMax*2+1) colors with duplicates. */
+      typedef csCC_tpl<cornerColorEnum::BLUE, cornerColorEnum::WHITE, cornerColorEnum::BLUE>  csCCwicB;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csCCwicM
+          @ingroup cs
+          @extends csCC_tpl
+          Color cycle starting and ending with magenta with white in the center. Provides (mjr::colorTpl::chanStepMax*2+1) colors with duplicates. */
+      typedef csCC_tpl<cornerColorEnum::MAGENTA, cornerColorEnum::WHITE, cornerColorEnum::MAGENTA>  csCCwicM;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csCCwicY
+          @ingroup cs
+          @extends csCC_tpl
+          Color cycle starting and ending with yellow with white in the center. Provides (mjr::colorTpl::chanStepMax*2+1) colors with duplicates. */
+      typedef csCC_tpl<cornerColorEnum::YELLOW, cornerColorEnum::WHITE, cornerColorEnum::YELLOW>  csCCwicY;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @class csCCwicC
+          @ingroup cs
+          @extends csCC_tpl
+          Color cycle starting and ending with cyan with white in the center. Provides (mjr::colorTpl::chanStepMax*2+1) colors with duplicates. */
+      typedef csCC_tpl<cornerColorEnum::CYAN, cornerColorEnum::WHITE, cornerColorEnum::CYAN>  csCCwicC;
+      //@}
 
       //========================================================================================================================================================
       /** @name Color Schemes: RGB Constant Brightness Ramps */
