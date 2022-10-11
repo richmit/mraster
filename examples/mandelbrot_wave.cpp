@@ -61,10 +61,10 @@ typedef ct::csIntType cit;
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int    NUMITR = 255;
-  const int    NUMFRM = 24*16/24;      // Full circle animation
+  const int    NUMFRM = 24*16;      // Full circle animation
   //const int    NUMFRM = 24*4;     // Wave animation
-  const int    IMXSIZ = 7680/8;
-  const int    IMYSIZ = 7680/8;
+  const int    IMXSIZ = 7680/2;
+  const int    IMYSIZ = 7680/2;
   const int    MAXZSQ = 10;
   const double ANGMIN = 0.0;                 // Full circle animation
   const double ANGMAX = std::numbers::pi*2;  // Full circle animation
@@ -75,7 +75,7 @@ int main(void) {
     mjr::ramCanvas3c8b theRamCanvas(IMXSIZ, IMYSIZ, -1.5, 1.5, -1.5, 1.5);    // Full circle animation
     // mjr::ramCanvas3c8b theRamCanvas(IMXSIZ, IMYSIZ, -0.7, 0.1, -0.7, 0.1); // Wave animation
     theRamCanvas.clrCanvasToBlack();
-    std::cout << "Frame: " << frame << std::endl;
+    std::cout << "Frame: " << frame << " of " << NUMFRM << std::endl;
     double angle = frame*(ANGMAX-ANGMIN)/NUMFRM+ANGMIN;    
     std::complex<double> a(std::cos(angle), std::sin(angle));
 #   pragma omp parallel for schedule(static,1)

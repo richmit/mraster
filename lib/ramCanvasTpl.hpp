@@ -206,16 +206,29 @@ namespace mjr {
             return colorScheme::c(csi); 
           }
       };
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Convert a ramCanvasTpl to a greyscale image using colorT::intensity(). */
+      template<class inRamCanvasT, class outColorChanT>
+      class rcConverterMonoIntensity : public rcConverterHomoBase<inRamCanvasT>  {
+        public:
+          rcConverterMonoIntensity(inRamCanvasT& aRC) : rcConverterHomoBase<inRamCanvasT>(aRC) {  }
+          typedef colorTpl<outColorChanT, 1> colorType;
+          inline colorType getPxColorNC(typename inRamCanvasT::coordIntType x, typename inRamCanvasT::coordIntType y) { 
+            return static_cast<outColorChanT>(rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).intensity());
+          }
+      };
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Typedefs related to template parameters */
       //@{
-      typedef point2d<fltCrdT> pointFltType;            //!< Real coordinate pair type
-      typedef point2d<intCrdT> pointIntType;            //!< Integer coordinate pair type
-      typedef intCrdT          coordIntType;            //!< Integer type for coordinates
-      typedef fltCrdT          coordFltType;            //!< Real type for coordinates
-      typedef colorT           colorType;               //!< Color type for pixels
+      typedef point2d<fltCrdT>      pointFltType; //!< Real coordinate pair type
+      typedef point2d<intCrdT>      pointIntType; //!< Integer coordinate pair type
+      typedef std::complex<fltCrdT> cplxFltType;  //!< Real coordinate complex type (Provided for convince -- not used in ramCanvasTpl)
+      typedef std::complex<intCrdT> cplxIntType;  //!< Integer coordinate complex type (Provided for convince -- not used in ramCanvasTpl)
+      typedef intCrdT               coordIntType; //!< Integer type for coordinates
+      typedef fltCrdT               coordFltType; //!< Real type for coordinates
+      typedef colorT                colorType;    //!< Color type for pixels
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -884,7 +897,7 @@ namespace mjr {
       /** Computes a, possibly different, linear grey level scale homogeneous pixel transformation on each channel of the image.
           Channel n is transformed such that f_n(c)=(c-cmin_n)*maxChanVal/(cmax_n-cmin_n) where cmin_n and cmax_n are the minimum and maximum values in channel n.
           i.e. this is the same as applying autoHistStrech independently to each channel.*/
-      void autoMaxHistStrech();
+      void autoMaxHistStrechRGB();
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2091,7 +2104,7 @@ namespace mjr {
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
     void
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::autoMaxHistStrech() {
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::autoMaxHistStrechRGB() {
     colorT cmin; cmin.setChans(cmin.maxChanVal);
     colorT cmax; cmax.setChans(cmin.minChanVal);
     for(intCrdT y=0;y<numPixY;y++) {
@@ -2104,13 +2117,13 @@ namespace mjr {
     colorChanType absCompMin = cmin.getMinC();
     colorChanType absCompMax = cmax.getMaxC();
     if(absCompMax-absCompMin > 0) {
-      float rc = 1.0*(cmin.maxChanVal-cmin.minChanVal)/(cmax.getC0()-cmin.getC0());
-      float rb = cmin.maxChanVal - 1.0*rc*cmax.getC0();
-      float gc = 1.0*(cmin.maxChanVal-cmin.minChanVal)/(cmax.getC1()-cmin.getC1());
-      float gb = cmin.maxChanVal - 1.0*gc*cmax.getC1();
-      float bc = 1.0*(cmin.maxChanVal-cmin.minChanVal)/(cmax.getC2()-cmin.getC2());
-      float bb = cmin.maxChanVal - 1.0*bc*cmax.getC2();
-      applyHomoPixTfrm(&colorT::tfrmLinearGreyLevelScale, rc, rb, gc, gb, bc, bb);
+      double rc = 1.0*static_cast<double>(cmin.maxChanVal-cmin.minChanVal)/static_cast<double>(cmax.getRed()-cmin.getRed());
+      double rb = cmin.maxChanVal - 1.0*rc*cmax.getRed();
+      double gc = 1.0*static_cast<double>(cmin.maxChanVal-cmin.minChanVal)/static_cast<double>(cmax.getGreen()-cmin.getGreen());
+      double gb = cmin.maxChanVal - 1.0*gc*cmax.getGreen();
+      double bc = 1.0*static_cast<double>(cmin.maxChanVal-cmin.minChanVal)/static_cast<double>(cmax.getBlue()-cmin.getBlue());
+      double bb = cmin.maxChanVal - 1.0*bc*cmax.getBlue();
+      applyHomoPixTfrm(&colorT::tfrmLinearGreyLevelScaleRGB, rc, rb, gc, gb, bc, bb);
     }
   }
 

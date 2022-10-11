@@ -1,13 +1,14 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      newton_z6.cpp
+ @file      newton_simple.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Draw a Newton Fractical for \f$z^6\f$.@EOL
+ @brief     Simplified code for Newton's Fractical.@EOL
  @std       C++20
+ @see       https://www.mitchr.me/SS/newton/index.html
  @copyright
   @parblock
-  Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
+  Copyright (c) 1988-2022, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -44,22 +45,18 @@ rcT::colorChanType cCol(int count) {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  constexpr rcT::coordIntType IMGSIZ = 7680;
-  constexpr int               MAXITR = 155;
-  constexpr rcT::coordFltType ZROEPS = 1.0e-5;
-  constexpr rcT::cplxFltType  r1( 1.0,  0.0);
-  constexpr rcT::cplxFltType  r2(-0.5,  std::sin(2.0*std::numbers::pi/3.0));
-  constexpr rcT::cplxFltType  r3(-0.5, -std::sin(2.0*std::numbers::pi/3.0));
-  constexpr rcT::cplxFltType  r4(-1.0,  0.0);
-  constexpr rcT::cplxFltType  r5( 0.5,  std::sin(2.0*std::numbers::pi/3.0));
-  constexpr rcT::cplxFltType  r6( 0.5, -std::sin(2.0*std::numbers::pi/3.0));
-
-  rcT theRamCanvas(IMGSIZ, IMGSIZ, -1.20, 1.20, -1.20, 1.20);
+  int                  MAXITR = 255;
+  double               ZROEPS = .0001;
+  const int            IMGSIZ = 7680;
+  std::complex<double> r1( 1.0,                        0.0);
+  std::complex<double> r2(-0.5,  sin(2*std::numbers::pi/3));
+  std::complex<double> r3(-0.5, -sin(2*std::numbers::pi/3));
+  rcT                  theRamCanvas(IMGSIZ, IMGSIZ, -2.0, 2, -2, 2); // -0.9, -0.7, -0.1, 0.1
 
 # pragma omp parallel for schedule(static,1)
-  for(rcT::coordIntType y=0;y<theRamCanvas.getNumPixY();y++) {
-    for(rcT::coordIntType x=0;x<theRamCanvas.getNumPixX();x++) {
-      rcT::cplxFltType z = theRamCanvas.int2real(x, y);
+  for(int y=0;y<theRamCanvas.getNumPixY();y++) {
+    for(int x=0;x<theRamCanvas.getNumPixX();x++) {
+      std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
       for(int count=0; count<MAXITR; count++) {
         if(std::abs(z-r1) <= ZROEPS) {
           theRamCanvas.drawPoint(x, y, rcT::colorType(cCol(count),           0,           0)); break;
@@ -67,24 +64,14 @@ int main(void) {
           theRamCanvas.drawPoint(x, y, rcT::colorType(          0, cCol(count),           0)); break;
         } else if(std::abs(z-r3) <= ZROEPS) {                                          
           theRamCanvas.drawPoint(x, y, rcT::colorType(          0,           0, cCol(count))); break;
-        } else if(std::abs(z-r4) <= ZROEPS) {
-          theRamCanvas.drawPoint(x, y, rcT::colorType(cCol(count), cCol(count),           0)); break;
-        } else if(std::abs(z-r5) <= ZROEPS) {
-          theRamCanvas.drawPoint(x, y, rcT::colorType(          0, cCol(count), cCol(count))); break;
-        } else if(std::abs(z-r6) <= ZROEPS) {
-          theRamCanvas.drawPoint(x, y, rcT::colorType(cCol(count),           0, cCol(count))); break;
         } else if(std::abs(z) <= ZROEPS) {
           break;
         }
-        rcT::cplxFltType tmp = pow(z, 5);
-        z = z-(tmp*z-1.0)/(6.0*tmp);
+        z = z-(z*z*z-1.0)/(z*z*3.0);
       }
     }
   }
-  /* The biggest reason homogeneous transforms are in the library is to support color scale correction.  */
-  theRamCanvas.applyHomoPixTfrm(&rcT::colorType::tfrmLinearGreyLevelScale, 255.0 / 155, 0.0);
-  theRamCanvas.autoHistStrech();
-  theRamCanvas.writeTIFFfile("newton_z6.tiff");
+  theRamCanvas.writeTIFFfile("newton_simple.tiff");
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

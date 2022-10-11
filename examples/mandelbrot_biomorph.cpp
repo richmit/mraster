@@ -55,7 +55,7 @@ int main(void) {
 
   for(int y=0;y<theRamCanvasA.getNumPixY();y++) {
     for(int x=0;x<theRamCanvasA.getNumPixX();x++) {
-      std::complex<double> c(theRamCanvasA.int2realX(x), theRamCanvasA.int2realY(y));
+      std::complex<double> c = theRamCanvasA.int2real(x, y);
       std::complex<double> z(0.0, 0.0);
       std::complex<double> zL(0.0, 0.0);
       int count = 0; 

@@ -1,10 +1,11 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      newton_z6.cpp
+ @file      newton_orbits.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Draw a Newton Fractical for \f$z^6\f$.@EOL
+ @brief     Draw a Newton Fractical -- color by root and max modulus.@EOL
  @std       C++20
+ @see       https://www.mitchr.me/SS/newton/index.html
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -34,57 +35,56 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-typedef mjr::ramCanvas3c8b rcT;    // The Ram Canvas type we will use
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-rcT::colorChanType cCol(int count) {
-  return static_cast<rcT::colorChanType>(255-count*25);
-}
+typedef mjr::ramCanvas1c16b::rcConverterMonoIntensity<mjr::ramCanvas3c16b, mjr::colChanI16> g2mono;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  constexpr rcT::coordIntType IMGSIZ = 7680;
-  constexpr int               MAXITR = 155;
-  constexpr rcT::coordFltType ZROEPS = 1.0e-5;
-  constexpr rcT::cplxFltType  r1( 1.0,  0.0);
-  constexpr rcT::cplxFltType  r2(-0.5,  std::sin(2.0*std::numbers::pi/3.0));
-  constexpr rcT::cplxFltType  r3(-0.5, -std::sin(2.0*std::numbers::pi/3.0));
-  constexpr rcT::cplxFltType  r4(-1.0,  0.0);
-  constexpr rcT::cplxFltType  r5( 0.5,  std::sin(2.0*std::numbers::pi/3.0));
-  constexpr rcT::cplxFltType  r6( 0.5, -std::sin(2.0*std::numbers::pi/3.0));
+  int          MaxCount = 255;
+  double       Tol      = .0001;
+  const int    IMGSIZ   = 7680;
+  std::complex<double> r1( 1.0,                        0.0);
+  std::complex<double> r2(-0.5,  sin(2*std::numbers::pi/3));
+  std::complex<double> r3(-0.5, -sin(2*std::numbers::pi/3));
+  mjr::ramCanvas3c16b theRamCanvas(IMGSIZ, IMGSIZ, -2.15, 1.85, -2.0, 2.0);
+  std::complex<double> orbit [MaxCount];
 
-  rcT theRamCanvas(IMGSIZ, IMGSIZ, -1.20, 1.20, -1.20, 1.20);
+  for(int y=0;y<theRamCanvas.getNumPixY();y++) {
+    for(int x=0;x<theRamCanvas.getNumPixX();x++) {
+      std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
+      int  count = 0;
+      while((count < MaxCount) && (abs(z)>Tol) && (abs(z-r1) >= Tol) && (abs(z-r2) >= Tol) && (abs(z-r3) >= Tol)) {
+        z = z-(z*z*z-1.0)/(z*z*3.0);
+        orbit[count] = z;
+        count++;
+      }
 
-# pragma omp parallel for schedule(static,1)
-  for(rcT::coordIntType y=0;y<theRamCanvas.getNumPixY();y++) {
-    for(rcT::coordIntType x=0;x<theRamCanvas.getNumPixX();x++) {
-      rcT::cplxFltType z = theRamCanvas.int2real(x, y);
-      for(int count=0; count<MAXITR; count++) {
-        if(std::abs(z-r1) <= ZROEPS) {
-          theRamCanvas.drawPoint(x, y, rcT::colorType(cCol(count),           0,           0)); break;
-        } else if(std::abs(z-r2) <= ZROEPS) {                                                                    
-          theRamCanvas.drawPoint(x, y, rcT::colorType(          0, cCol(count),           0)); break;
-        } else if(std::abs(z-r3) <= ZROEPS) {                                          
-          theRamCanvas.drawPoint(x, y, rcT::colorType(          0,           0, cCol(count))); break;
-        } else if(std::abs(z-r4) <= ZROEPS) {
-          theRamCanvas.drawPoint(x, y, rcT::colorType(cCol(count), cCol(count),           0)); break;
-        } else if(std::abs(z-r5) <= ZROEPS) {
-          theRamCanvas.drawPoint(x, y, rcT::colorType(          0, cCol(count), cCol(count))); break;
-        } else if(std::abs(z-r6) <= ZROEPS) {
-          theRamCanvas.drawPoint(x, y, rcT::colorType(cCol(count),           0, cCol(count))); break;
-        } else if(std::abs(z) <= ZROEPS) {
-          break;
-        }
-        rcT::cplxFltType tmp = pow(z, 5);
-        z = z-(tmp*z-1.0)/(6.0*tmp);
+      mjr::ramCanvas3c16b::colorType cDelta;
+      if(abs(z-r1) <= Tol)
+        cDelta = mjr::ramCanvas3c16b::colorType(1, 0, 0);
+      else if(abs(z-r2) <= Tol)
+        cDelta = mjr::ramCanvas3c16b::colorType(0, 1, 0);
+      else if(abs(z-r3) <= Tol)
+        cDelta = mjr::ramCanvas3c16b::colorType(0, 0, 1);
+      else
+        cDelta = mjr::ramCanvas3c16b::colorType(0, 0, 0);
+
+      for(int i=0; i<count; i++) {
+        int zri = theRamCanvas.real2intX(std::real(orbit[i]));
+        int zii = theRamCanvas.real2intY(std::imag(orbit[i]));
+        if( !(theRamCanvas.isCliped(zri, zii)))
+            theRamCanvas.getPxColorRefNC(zri, zii).tfrmAdd(cDelta);
       }
     }
   }
-  /* The biggest reason homogeneous transforms are in the library is to support color scale correction.  */
-  theRamCanvas.applyHomoPixTfrm(&rcT::colorType::tfrmLinearGreyLevelScale, 255.0 / 155, 0.0);
-  theRamCanvas.autoHistStrech();
-  theRamCanvas.writeTIFFfile("newton_z6.tiff");
+  theRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas3c16b::colorType::tfrmLn, 11271.0);
+  theRamCanvas.autoMaxHistStrechRGB();
+  theRamCanvas.writeTIFFfile("newton_orbits_col.tiff");
+
+  theRamCanvas.rotate90CW();
+  g2mono rcFilt(theRamCanvas);
+  theRamCanvas.writeTIFFfile("newton_orbits_mon.tiff", rcFilt, false);
+
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

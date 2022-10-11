@@ -35,36 +35,43 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+typedef mjr::ramCanvas3c8b rcT;    // The Ram Canvas type we will use
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+rcT::colorChanType cCol(double m) {
+  return static_cast<rcT::colorChanType>(255-m*400);
+}
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  int          MaxCount = 255;
-  int          MultCol  = 400; // 1, 400, 3000
-  double        Tol      = .0001;
-  std::complex<double> r1(1,               0);
+  int                  MAXITR = 255;
+  double               ZROEPS = .0001;
+  const int            IMGSIZ = 7680;
+  std::complex<double> r1( 1.0,                        0.0);
   std::complex<double> r2(-0.5,  sin(2*std::numbers::pi/3));
   std::complex<double> r3(-0.5, -sin(2*std::numbers::pi/3));
-  mjr::ramCanvas3c8b theRamCanvas(4096, 4096, -2.15, 1.85, -2.0, 2.0);
+  rcT                  theRamCanvas(IMGSIZ, IMGSIZ, -2.15, 1.85, -2.0, 2.0);
 
+# pragma omp parallel for schedule(static,1)
   for(int y=0;y<theRamCanvas.getNumPixY();y++) {
     for(int x=0;x<theRamCanvas.getNumPixX();x++) {
       std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
-      int  count = 0;
       double maxMod = 0.0;
-      while((count < MaxCount) && (abs(z-r1) >= Tol) && (abs(z-r2) >= Tol) && (abs(z-r3) >= Tol)) {
-        if(abs(z) > 0)
-          z = z-(z*z*z-1.0)/(z*z*3.0);
+      for(int count=0; count<MAXITR; count++) {
+        if(std::abs(z-r1) <= ZROEPS) {
+          theRamCanvas.drawPoint(x, y, rcT::colorType(cCol(maxMod),            0,            0)); break;
+        } else if(std::abs(z-r2) <= ZROEPS) {                                                                    
+          theRamCanvas.drawPoint(x, y, rcT::colorType(           0, cCol(maxMod),            0)); break;
+        } else if(std::abs(z-r3) <= ZROEPS) {                                          
+          theRamCanvas.drawPoint(x, y, rcT::colorType(           0,            0, cCol(maxMod))); break;
+        } else if(std::abs(z) <= ZROEPS) {
+          break;
+        }
         if(abs(z)>maxMod)
           maxMod=abs(z);
-        count++;
+        z = z-(z*z*z-1.0)/(z*z*3.0);
       }
-      mjr::ramCanvas3c8b::colorChanType cCol = static_cast<mjr::ramCanvas3c8b::colorChanType>(255-maxMod*MultCol);
-
-      if(abs(z-r1) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(cCol, 0, 0));
-      else if(abs(z-r2) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0, cCol, 0));
-      else if(abs(z-r3) <= Tol)
-        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(0, 0, cCol));
     }
   }
   theRamCanvas.writeTIFFfile("newton_max_mod.tiff");

@@ -46,12 +46,13 @@
 const int    MAXITR = 1024*1;
 
 double ranges[3][4] = { { -2.0,        1.0,       -1.5,        1.5       },
-                        { -0.12,      -0.03,      -0.92, -0.81           },
+                        { -0.12,      -0.03,      -0.92,      -0.81
                         {  0.0353469,  0.5353469,  0.1153845,  0.6153845 }
                       };
 
 enum class whyStopMB {OUTSET, MAXCOUNT, INSET};
 
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 typedef mjr::ramCanvas3c8b rc;    // The Ram Canvas type we will use
 typedef rc::colorType      rcc;   // The color type in our Ram Canvas type
 
@@ -61,7 +62,6 @@ int main(void) {
   const int              CSIZE = 1024*1;
   const rc::coordFltType BALL  = 100;
   rc                     binRamCanvas(CSIZE, CSIZE), grayRamCanvas(CSIZE, CSIZE), quadRamCanvas(CSIZE, CSIZE);
-  rcc                    theColor;
   whyStopMB              why;
 
   for(int i=0; i<3; i++) {
