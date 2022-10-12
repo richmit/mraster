@@ -47,27 +47,33 @@ int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   int                  MAXITR = 255;
   double               ZROEPS = .0001;
-  const int            IMGSIZ = 7680/8;
+  const int            IMGSIZ = 7680;
   std::complex<double> r1( 1.0,                        0.0);
   std::complex<double> r2(-0.5,  sin(2*std::numbers::pi/3));
   std::complex<double> r3(-0.5, -sin(2*std::numbers::pi/3));
   rcT                  theRamCanvas(IMGSIZ, IMGSIZ, -1.3, 1.3, -1.3, 1.3); // -0.9, -0.7, -0.1, 0.1
-  std::complex<double> alpha(-0.1, .5);
+  // std::complex<double> alpha(1.0, 0.0);
+  // std::complex<double> alpha( 2.0,  0.0);
+  // std::complex<double> alpha(-0.5,  0.0);
+  // std::complex<double> alpha(-0.5,  2.0);
+  // std::complex<double> alpha(-0.1, -0.1);
+  // std::complex<double> alpha(-0.1,  0.0);
+  // std::complex<double> alpha(-0.1,  0.1);
+  // std::complex<double> alpha(-0.1,  0.2);
+  // std::complex<double> alpha(-0.1,  1.5);
+  std::complex<double> alpha(-0.1,  0.5);
 
 # pragma omp parallel for schedule(static,1)
   for(int y=0;y<theRamCanvas.getNumPixY();y++) {
-#   pragma omp critical
-    std::cout << "Line: " << y << " of " << theRamCanvas.getNumPixY() << std::endl;
+    if ((y%10)==0)
+#     pragma omp critical
+      std::cout << "Line: " << y << " of " << theRamCanvas.getNumPixY() << std::endl;
     for(int x=0;x<theRamCanvas.getNumPixX();x++) {
       std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
-      std::complex<double> zL = z;
       for(int count=0; count<MAXITR; count++) {
         if(std::abs(z) <= ZROEPS)
           break;
         z = z-alpha*(z*z*z-1.0)/(z*z*3.0);
-        if(std::abs(z-zL) <= ZROEPS)
-          theRamCanvas.drawPoint(x, y, rcT::colorType::csCColdeRainbow::c(std::arg(z)));
-        zL = z;
       }
       theRamCanvas.drawPoint(x, y, rcT::colorType::csCColdeRainbow::c(std::arg(z)));
     }

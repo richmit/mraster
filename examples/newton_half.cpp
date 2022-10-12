@@ -57,11 +57,11 @@ int main(void) {
   whyStopNH                   why;
   rcT::colorType              aColor(255, 255, 255);
   // rcT                       theRamCanvas(IMXSIZ, IMYSIZ, 4.0, 8.0, -2.0, 2.0);
-  rcT                       theRamCanvas(IMXSIZ, IMYSIZ, -0.16, 0.36, -0.22, 0.23);
+  // rcT                       theRamCanvas(IMXSIZ, IMYSIZ, -0.16, 0.36, -0.22, 0.23);
   // rcT                       theRamCanvas(IMXSIZ, IMYSIZ, -0.42, 0.42, -0.2, 0.2);
   // rcT                       theRamCanvas(IMXSIZ, IMYSIZ, -4.72, -0.5, -1.0, 1.0);
   // rcT                       theRamCanvas(IMXSIZ, IMYSIZ, -3.0, 3.0, -3.0, 3.0);
-  // rcT                         theRamCanvas(IMXSIZ, IMXSIZ, 0.6, 1.1, -0.4, 0.4); // this one is square!
+  rcT                         theRamCanvas(IMXSIZ, IMXSIZ, 0.6, 1.1, -0.4, 0.4); // this one is square!
 
 # pragma omp parallel for schedule(static,1)
   for(int y=0;y<theRamCanvas.getNumPixY();y++) {
@@ -79,21 +79,21 @@ int main(void) {
           break;
         }
         // std::complex<double> cz = ((-2.0*sin(2.0*z))-sin(z)+1.0);
-        std::complex<double> cz = (exp(z)-1.0);
+        // std::complex<double> cz = (exp(z)-1.0);
         // std::complex<double> cz = sin(z);
         // std::complex<double> cz = cos(z);
         // std::complex<double> cz = ((2.0*z*cos(z)-z*z*sin(z))*cos(z*z*cos(z)));
-        // std::complex<double> cz = ((cos(z)-z*sin(z))*cos(z*cos(z)));
+        std::complex<double> cz = ((cos(z)-z*sin(z))*cos(z*cos(z)));
         if(std::abs(cz) < ZROEPS) {
           why = whyStopNH::DIVZERO;
           break;
         }
         // z = z-(cos(2.0*z)+cos(z)+z)/cz;
-        z = z-(exp(z)-z)/cz;
+        // z = z-(exp(z)-z)/cz;
         // z = z+cos(z)/cz;
         // z = z-(sin(z)-0.9)/cz;
         // z=z-sin(z*z*cos(z))/cz;
-        // z=z-sin(z*cos(z))/cz;
+        z=z-sin(z*cos(z))/cz;
         double modz = std::abs(z);
         lastZs[count%numToKeep] = z;
         if(modz>maxMod) {
@@ -134,7 +134,7 @@ int main(void) {
       }
     }
   }
-  theRamCanvas.writeTIFFfile("newton_half_2.tiff");
+  theRamCanvas.writeTIFFfile("newton_half.tiff");
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
