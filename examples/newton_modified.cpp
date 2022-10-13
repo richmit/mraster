@@ -52,16 +52,19 @@ int main(void) {
   std::complex<double> r2(-0.5,  sin(2*std::numbers::pi/3));
   std::complex<double> r3(-0.5, -sin(2*std::numbers::pi/3));
   rcT                  theRamCanvas(IMGSIZ, IMGSIZ, -1.3, 1.3, -1.3, 1.3); // -0.9, -0.7, -0.1, 0.1
-  // std::complex<double> alpha(1.0, 0.0);
+  // std::complex<double> alpha( 1.0,  0.0);
   // std::complex<double> alpha( 2.0,  0.0);
+  // std::complex<double> alpha( 2.2,  0.0);
+  // std::complex<double> alpha( 2.5,  0.0);
+  // std::complex<double> alpha( 2.9,  0.0);
   // std::complex<double> alpha(-0.5,  0.0);
-  // std::complex<double> alpha(-0.5,  2.0);
   // std::complex<double> alpha(-0.1, -0.1);
   // std::complex<double> alpha(-0.1,  0.0);
   // std::complex<double> alpha(-0.1,  0.1);
   // std::complex<double> alpha(-0.1,  0.2);
   // std::complex<double> alpha(-0.1,  1.5);
-  std::complex<double> alpha(-0.1,  0.5);
+  // std::complex<double> alpha(0.4,  0.5);
+  std::complex<double> alpha( 1.1,  0.75);
 
 # pragma omp parallel for schedule(static,1)
   for(int y=0;y<theRamCanvas.getNumPixY();y++) {
@@ -75,10 +78,10 @@ int main(void) {
           break;
         z = z-alpha*(z*z*z-1.0)/(z*z*3.0);
       }
-      theRamCanvas.drawPoint(x, y, rcT::colorType::csCColdeRainbow::c(std::arg(z)));
+      theRamCanvas.drawPoint(x, y, rcT::colorType::csCColdeRainbow::c(1.0-std::arg(z)/std::numbers::pi));
     }
   }
-  theRamCanvas.writeTIFFfile("newton_modified.tiff");
+  theRamCanvas.writeTIFFfile("newton_modified_C.tiff");
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
