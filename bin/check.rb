@@ -18,6 +18,8 @@ deps = {
          "#{mrsrc}/examples/juliaM2.cpp"                  => "#{homed}/world/WWW/site/SS/julia/index.org",
          "#{mrsrc}/examples/mandelbrot_biomorph.cpp"      => "#{homed}/world/WWW/site/SS/mandelbrotBiomorph/index.org",
          "#{mrsrc}/examples/mandelbrot_bm_cplx.cpp"       => "#{homed}/world/WWW/site/SS/mandelbrot/index.org",
+         "#{mrsrc}/examples/mandelbrot_ltrap.cpp"         => "#{homed}/world/WWW/site/SS/mandelbrotLtrap/index.org",
+         "#{mrsrc}/examples/mandelbrot_pickover.cpp"      => "#{homed}/world/WWW/site/SS/mandelbrotLtrap/index.org",
          "#{mrsrc}/examples/mandelbrot_potential.cpp"     => "#{homed}/world/WWW/site/SS/mandelbrot/index.org",
          "#{mrsrc}/examples/mandelbrot_potential_b_0.pov" => "#{homed}/world/WWW/site/SS/mandelbrot/index.org",
          "#{mrsrc}/examples/mandelbrot_simple.cpp"        => "#{homed}/world/WWW/site/SS/mandelbrot/index.org",
@@ -39,8 +41,8 @@ deps = {
          "#{mrsrc}/examples/sic_search.cpp"               => "#{homed}/world/WWW/site/SS/sic/index.org",
          "#{mrsrc}/examples/tippets.cpp"                  => "#{homed}/world/WWW/site/SS/tippets/index.org",
          "#{mrsrc}/examples/tricorn.cpp"                  => "#{homed}/world/WWW/site/SS/tricorn/index.org",
-         "#{mrsrc}/examples/tricornMovie.cpp"             => "#{homed}/world/WWW/site/SS/tricorn/index.org"
-         "#{mrsrc}/lib/hello.cpp"                         => "#{mrsrc}/docs/QuickStart.org",
+         "#{mrsrc}/examples/tricornMovie.cpp"             => "#{homed}/world/WWW/site/SS/tricorn/index.org",
+         "#{mrsrc}/lib/hello.cpp"                         => "#{mrsrc}/docs/QuickStart.org"
        };
 
 deps.each do |aFile, bFile|
