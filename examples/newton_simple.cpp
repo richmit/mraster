@@ -56,7 +56,7 @@ int main(void) {
 # pragma omp parallel for schedule(static,1)
   for(int y=0;y<theRamCanvas.getNumPixY();y++) {
     for(int x=0;x<theRamCanvas.getNumPixX();x++) {
-      std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
+      std::complex<double> z = theRamCanvas.int2real(x, y);
       for(int count=0; count<MAXITR; count++) {
         if(std::abs(z-r1) <= ZROEPS) {
           theRamCanvas.drawPoint(x, y, rcT::colorType(cCol(count),           0,           0)); break;

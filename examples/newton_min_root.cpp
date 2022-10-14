@@ -59,7 +59,7 @@ int main(void) {
 # pragma omp parallel for schedule(static,1)
   for(int y=0;y<theRamCanvas.getNumPixY();y++) {
     for(int x=0;x<theRamCanvas.getNumPixX();x++) {
-      std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
+      std::complex<double> z = theRamCanvas.int2real(x, y);
       double minMod1 = std::abs(z-r1);
       double minMod2 = std::abs(z-r2);
       double minMod3 = std::abs(z-r3);

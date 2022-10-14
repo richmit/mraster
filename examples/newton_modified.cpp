@@ -72,7 +72,7 @@ int main(void) {
 #     pragma omp critical
       std::cout << "Line: " << y << " of " << theRamCanvas.getNumPixY() << std::endl;
     for(int x=0;x<theRamCanvas.getNumPixX();x++) {
-      std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
+      std::complex<double> z = theRamCanvas.int2real(x, y);
       for(int count=0; count<MAXITR; count++) {
         if(std::abs(z) <= ZROEPS)
           break;

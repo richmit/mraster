@@ -55,7 +55,7 @@ int main(void) {
     for(int y=0;y<theRamCanvas.getNumPixY();y++) {
       for(int x=0;x<theRamCanvas.getNumPixX();x++) {
         std::complex<double> c(std::cos(angle), std::sin(angle));
-        std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
+        std::complex<double> z = theRamCanvas.int2real(x, y);
         std::complex<double> zL(0.0, 0.0);
         int count = 0; 
         while( ((std::abs(std::real(z))<LIM) || (std::abs(std::imag(z))<LIM)) && (count<NUMITR) ) {

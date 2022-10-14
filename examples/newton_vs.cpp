@@ -117,7 +117,7 @@ int main(void) {
       if(y%512==0)
         std::cout << "Case: " << (int)method << " Line: " << y << std::endl;
       for(int x=0;x<theRamCanvas.getNumPixX();x++) {
-        std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
+        std::complex<double> z = theRamCanvas.int2real(x, y);
 
         std::vector<std::complex<double>> lastZs(numToKeep);
         mjr::ramCanvas3c8b::csIntType count = 0;

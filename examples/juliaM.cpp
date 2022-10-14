@@ -60,7 +60,7 @@ int main(void) {
     std::complex<double> c = std::complex<double>(std::cos(angle), std::sin(angle)) * 0.35 - std::complex<double>(0.0, -1.0);
     for(int y=0;y<theRamCanvas.getNumPixY();y++) {
       for(int x=0;x<theRamCanvas.getNumPixX();x++) {
-        std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
+        std::complex<double> z = theRamCanvas.int2real(x, y);
         int count = 0;
         while((std::norm(z)<MAXZ) && (count<=NUMITR)) {
           z=std::pow(z, 2) + c;

@@ -51,7 +51,7 @@ int main(void) {
 
   for(int y=0;y<theRamCanvas.getNumPixY();y++) {
     for(int x=0;x<theRamCanvas.getNumPixX();x++) {
-      std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
+      std::complex<double> z = theRamCanvas.int2real(x, y);
       int  count = 0;
       while((count < MaxCount) && (abs(z)>Tol) && (abs(z-r1) >= Tol) && (abs(z-r2) >= Tol) && (abs(z-r3) >= Tol)) {
         z = z-(z*z*z-1.0)/(z*z*3.0);

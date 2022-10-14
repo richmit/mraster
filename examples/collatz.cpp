@@ -47,7 +47,7 @@ int main(void) {
 
   for(int y=0;y<theRamCanvas.getNumPixY();y++) {
     for(int x=0;x<theRamCanvas.getNumPixX();x++) {
-      std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
+      std::complex<double> z = theRamCanvas.int2real(x, y);
       int count = 0; 
       while((std::norm(z)<1e10) && (count<=NUMITR)) {
         z = 0.25 * (2.0 + 7.0*z - (2.0 + 5.0 * z) * std::cos(z * std::numbers::pi));        
