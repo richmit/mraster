@@ -1734,14 +1734,15 @@ namespace mjr {
       /** @name Real Coordinate Accessor Methods */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      fltCrdT getMinRealX()   { return minRealX;    } //!< x coord of min (real coord)
-      fltCrdT getMaxRealX()   { return maxRealX;    } //!< x coord of max (real coord)
-      fltCrdT getMinRealY()   { return minRealY;    } //!< y coord of min (real coord)
-      fltCrdT getMaxRealY()   { return maxRealY;    } //!< y coord of max (real coord)
-      fltCrdT getPixWidX()    { return pixWidX;     } //!< Width of a pixel (real coord)
-      fltCrdT getPixWidY()    { return pixWidY;     } //!< Height of a pixel (real coord)
-      fltCrdT getCanvasWidX() { return canvasWidX;  } //!< Width of the display (real coord)
-      fltCrdT getCanvasWidY() { return canvasWidY;  } //!< height of the display(real coord)
+      fltCrdT getMinRealX()   { return minRealX;    }                        //!< x coord of min (real coord)
+      fltCrdT getMaxRealX()   { return maxRealX;    }                        //!< x coord of max (real coord)
+      fltCrdT getMinRealY()   { return minRealY;    }                        //!< y coord of min (real coord)
+      fltCrdT getMaxRealY()   { return maxRealY;    }                        //!< y coord of max (real coord)
+      fltCrdT getPixWidX()    { return pixWidX;     }                        //!< Width of a pixel (real coord)
+      fltCrdT getPixWidY()    { return pixWidY;     }                        //!< Height of a pixel (real coord)
+      fltCrdT getCanvasWidX() { return canvasWidX;  }                        //!< Width of the display (real coord)
+      fltCrdT getCanvasWidY() { return canvasWidY;  }                        //!< height of the display(real coord)
+      fltCrdT getCanvasWidD() { return std::hypot(canvasWidX, canvasWidY); } //!< Width of the display (real coord)
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
