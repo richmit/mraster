@@ -3,7 +3,7 @@
 /**
  @file      newton_min_root.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Draw a Newton Fractical -- color by root and max modulus.@EOL
+ @brief     Draw a Newton Fractical -- color by orbit distance from roots.@EOL
  @std       C++20
  @see       https://www.mitchr.me/SS/newton/index.html
  @copyright
@@ -41,12 +41,8 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-typedef mjr::ramCanvas3c8b rcT;    // The Ram Canvas type we will use
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-rcT::colorChanType cCol(double m) {
-  return static_cast<rcT::colorChanType>(255-m*400);
-}
+typedef mjr::ramCanvas3c8b rcT;      // The Ram Canvas type we will use
+typedef rcT::colorChanType rcccT;    // Color Channel Type
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
@@ -54,7 +50,7 @@ int main(void) {
   int                  MAXITR = 255;
   double               ZROEPS = .0001;
   double               MAXZ   = 10;
-  const int            IMGSIZ = 7680/4;
+  const int            IMGSIZ = 7680;
   std::complex<double> r1( 1.0,                        0.0);
   std::complex<double> r2(-0.5,  sin(2*std::numbers::pi/3));
   std::complex<double> r3(-0.5, -sin(2*std::numbers::pi/3));
@@ -64,27 +60,25 @@ int main(void) {
   for(int y=0;y<theRamCanvas.getNumPixY();y++) {
     for(int x=0;x<theRamCanvas.getNumPixX();x++) {
       std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
-      double minMod1 = MAXZ, minMod2 = MAXZ, minMod3 = MAXZ;
+      double minMod1 = std::abs(z-r1);
+      double minMod2 = std::abs(z-r2);
+      double minMod3 = std::abs(z-r3);
       for(int count=0; count<MAXITR; count++) {
         double modz = std::abs(z);
-        if (modz>MAXZ)
-          break;
-        double mod1 = std::abs(z-r1);
-        double mod2 = std::abs(z-r2);
-        double mod3 = std::abs(z-r3);
-        if(mod1<minMod1) minMod1 = mod1;
-        if(mod2<minMod2) minMod2 = mod2;
-        if(mod3<minMod3) minMod3 = mod3;
-        if ((modz<ZROEPS) || (mod1<ZROEPS) || (mod2<ZROEPS) || (mod3<ZROEPS))
+        if ((modz>MAXZ) || (modz<ZROEPS))
           break;
         z = z-(z*z*z-1.0)/(z*z*3.0);
+        if(std::abs(z-r1) < minMod1) minMod1 = std::abs(z-r1);
+        if(std::abs(z-r2) < minMod2) minMod2 = std::abs(z-r2);
+        if(std::abs(z-r3) < minMod3) minMod3 = std::abs(z-r3);
+        if ((modz<ZROEPS) || (minMod1<ZROEPS) || (minMod2<ZROEPS) || (minMod3<ZROEPS))
+          break;
       }
 
-      double r = (minMod1 < std::min(minMod2, minMod3) ? 100.0 : 720.0*std::log(4.73-minMod1));
-      double g = (minMod2 < std::min(minMod1, minMod3) ? 100.0 : 720.0*std::log(4.73-minMod2));
-      double b = (minMod3 < std::min(minMod1, minMod2) ? 100.0 : 720.0*std::log(4.73-minMod3));
-
-      theRamCanvas.drawPoint(x, y, rcT::colorType(static_cast<rcT::colorChanType>(r), static_cast<rcT::colorChanType>(g), static_cast<rcT::colorChanType>(b)));
+      rcccT r = static_cast<rcccT>((minMod1 < std::min(minMod2, minMod3) ? 100.0 : 720.0*std::log(4.73-minMod1)));
+      rcccT g = static_cast<rcccT>((minMod2 < std::min(minMod1, minMod3) ? 100.0 : 720.0*std::log(4.73-minMod2)));
+      rcccT b = static_cast<rcccT>((minMod3 < std::min(minMod1, minMod2) ? 100.0 : 720.0*std::log(4.73-minMod3)));
+      theRamCanvas.drawPoint(x, y, rcT::colorType(r, g, b));
     }
   }
 
