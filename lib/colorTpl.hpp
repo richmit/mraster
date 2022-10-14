@@ -2203,6 +2203,16 @@ namespace mjr {
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Named Operators */
       //@{
+
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Power: c=maxChanVal*(c/maxChanVal)^p.
+          Floating point Numbers are used for intermediate values and the result cast to a colorChanType at the end.
+          @return Returns a reference to the current color object.*/
+      inline colorTpl& tfrmPow(double p) {
+        for(int i=0; i<numChan; i++)
+          setChanNC(i, static_cast<clrChanT>(static_cast<double>(maxChanVal) * std::pow(static_cast<double>(getChanNC(i)) / static_cast<double>(maxChanVal), p)));
+        return *this;
+      }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Adds 1.0 and takes the natural logarithm of each channel.
           Floating point Numbers are used for intermediate values and the result cast to a colorChanType at the end.
