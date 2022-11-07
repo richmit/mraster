@@ -35,18 +35,16 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-typedef mjr::ramCanvas3c8b rcT;    // The Ram Canvas type we will use
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-rcT::colorChanType cCol(double m) {
-  return static_cast<rcT::colorChanType>(255-m*400);
-}
+typedef mjr::ramCanvas3c8b rcT;  // The Ram Canvas type we will use
+typedef rcT::colorType rccT;     // The Ram Canvas color type
+typedef rcT::csIntType rccsiT;   // The Ram Canvas color scheme index type
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  int                  MAXITR = 255;
-  double               ZROEPS = .0001;
+  const int            MAXITR = 255;
+  const int            COLMAG = 400;
+  const double         ZROEPS = .0001;
   const int            IMGSIZ = 7680;
   std::complex<double> r1( 1.0,                        0.0);
   std::complex<double> r2(-0.5,  sin(2*std::numbers::pi/3));
@@ -60,11 +58,11 @@ int main(void) {
       double maxMod = 0.0;
       for(int count=0; count<MAXITR; count++) {
         if(std::abs(z-r1) <= ZROEPS) {
-          theRamCanvas.drawPoint(x, y, rcT::colorType(cCol(maxMod),            0,            0)); break;
+          theRamCanvas.drawPoint(x, y, rccT::csCCu0R::c(static_cast<rccsiT>(255-maxMod*COLMAG))); break;
         } else if(std::abs(z-r2) <= ZROEPS) {                                                                    
-          theRamCanvas.drawPoint(x, y, rcT::colorType(           0, cCol(maxMod),            0)); break;
+          theRamCanvas.drawPoint(x, y, rccT::csCCu0G::c(static_cast<rccsiT>(255-maxMod*COLMAG))); break;
         } else if(std::abs(z-r3) <= ZROEPS) {                                          
-          theRamCanvas.drawPoint(x, y, rcT::colorType(           0,            0, cCol(maxMod))); break;
+          theRamCanvas.drawPoint(x, y, rccT::csCCu0B::c(static_cast<rccsiT>(255-maxMod*COLMAG))); break;
         } else if(std::abs(z) <= ZROEPS) {
           break;
         }
