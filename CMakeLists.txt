@@ -89,7 +89,7 @@ set(TARGETS_REQ_TIFF   "brownianDiffusion" "displayImageSDL2" "dlaBrownian" "dla
 set(TARGETS_USE_OPENMP "mandelbrot_bm_cplx_openmp" "mandelbrot_precomp" "mandelbrot_precomp_p1" 
                        "mandelbrot_distance" "mandelbrot_wave" "peterdejongM" "newton_orbits" "newton_simple" "newton_max_mod" "mandelbrot_pickover"
                        "mandelbrot_ltrap" "newton_max_back" "newton_min_angle"
-                       "newton_half" "newton_vs" "newton_z6" "newton_modified" "newton_min_root")
+                       "newton_half" "newton_vs" "newton_z6" "newton_modified" "newton_min_root" "newton_3updown")
 set(TARGETS_REQ_BTEST  "utest_colorTpl_ia64nGCC" "utest_colorTpl" "utest_ramCanvasTpl" "utest_mjrmath")
 set(TARGETS_REQ_SDL2   "displayImageSDL2")
 
