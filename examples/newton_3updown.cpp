@@ -32,6 +32,9 @@
   The standard Newton fractal is generated from \f$f=z^2-1\f$.  This function is continuous on the entire complex plain.  What do we get if we add poles
   in imaginary axis mirror locations of the roots?  i.e. for each root \f$x+iy\f$ of \f$f\f$, we add a pole at \f$-x+iy\f$?  The corresponding function is:
          \f[f=\frac{z^3-1}{z^3+1}\f]
+
+  The code has some commented out bits to add 6 poles on a circle of radius 0.5:
+         \f[f=\frac{z^3-1}{z^6+-\frac{1}{2}}\f]
 */
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
@@ -46,13 +49,14 @@ typedef mjr::ramCanvas3c8b rcT;    // The Ram Canvas type we will use
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int            MAXITR = 255;
-  const int            COLMAG = 300;
+  const int            CCLMAG = 15;
+  const int            DCLMAG = 120; //300;
   const double         ZMAGMX = 1e10;
-  const double         RELSIZ = 2.1;
-  const double         XCENTR = 0.35;
+  const double         RELSIZ = 1.4; //2.1;
+  const double         XCENTR = 0.15; //0.35;
   const double         YCENTR = 0.0;
   const double         ZROEPS = .0001;
-  const int            IMGSIZ = 7680;
+  const int            IMGSIZ = 7680/1;
   std::complex<double> r1( 1.0,                        0.0);
   std::complex<double> r2(-0.5,  sin(2*std::numbers::pi/3));
   std::complex<double> r3(-0.5, -sin(2*std::numbers::pi/3));
@@ -68,21 +72,22 @@ int main(void) {
       for(int count=0; count<MAXITR; count++) {
         if(std::abs(z) < 2) {
           if(std::abs(z-r1) <= ZROEPS) {
-            theRamCanvas.drawPoint(x, y, rcT::colorType::csCCu0R::c(count*COLMAG)); break;
+            theRamCanvas.drawPoint(x, y, rcT::colorType::csCCu0R::c(count*CCLMAG)); break;
           } else if(std::abs(z-r2) <= ZROEPS) {                                                                    
-            theRamCanvas.drawPoint(x, y, rcT::colorType::csCCu0G::c(count*COLMAG)); break;
+            theRamCanvas.drawPoint(x, y, rcT::colorType::csCCu0G::c(count*CCLMAG)); break;
           } else if(std::abs(z-r3) <= ZROEPS) {                                          
-            theRamCanvas.drawPoint(x, y, rcT::colorType::csCCu0B::c(count*COLMAG)); break;
+            theRamCanvas.drawPoint(x, y, rcT::colorType::csCCu0B::c(count*CCLMAG)); break;
           } else if(std::abs(z) <= ZROEPS) {
             break;
           }
         } else {
           if(std::abs(z) > ZMAGMX) {
-            theRamCanvas.drawPoint(x, y, rcT::colorType::csCCu0W::c(count*COLMAG)); break;
+            theRamCanvas.drawPoint(x, y, rcT::colorType::csCCu0W::c(count*DCLMAG)); break;
             break;
           }
         }
-        z = (-pow(z, 6.0) + 6.0 * pow(z, 3.0) + 1.0) / (pow(z, 2.0) * 6.0);
+        //z = (-pow(z, 6.0) + 6.0 * pow(z, 3.0) + 1.0) / pow(z, 2.0) / 6.0;
+        z = (16.0 * pow(z, 9.0) - 28.0 * pow(z, 6.0) + 2.0 * pow(z, 3.0) + 1.0) / (12.0 * pow(z, 8.0) - 24.0 * pow(z, 5.0) + 3.0 * z * z);
       }
     }
   }
