@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Simplified code for Newton's Fractical.@EOL
  @std       C++20
- @see       https://www.mitchr.me/SS/newton/index.html
+ @see       https://www.mitchr.me/SS/newton/index.html#threeupdown
  @copyright
   @parblock
   Copyright (c) 1988-2022, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -49,14 +49,15 @@ typedef mjr::ramCanvas3c8b rcT;    // The Ram Canvas type we will use
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int            MAXITR = 255;
-  const int            CCLMAG = 15;
-  const int            DCLMAG = 120; //300;
+  const int            COLMAG = 300;
+  const int            CCLMAG = 300;
   const double         ZMAGMX = 1e10;
-  const double         RELSIZ = 1.4; //2.1;
-  const double         XCENTR = 0.15; //0.35;
+  const double         RELSIZ = 2.1;
+  const double         XCENTR = 0.35;
   const double         YCENTR = 0.0;
   const double         ZROEPS = .0001;
   const int            IMGSIZ = 7680/1;
+  const  double        r      = 1.0;
   std::complex<double> r1( 1.0,                        0.0);
   std::complex<double> r2(-0.5,  sin(2*std::numbers::pi/3));
   std::complex<double> r3(-0.5, -sin(2*std::numbers::pi/3));
@@ -82,12 +83,11 @@ int main(void) {
           }
         } else {
           if(std::abs(z) > ZMAGMX) {
-            theRamCanvas.drawPoint(x, y, rcT::colorType::csCCu0W::c(count*DCLMAG)); break;
+            theRamCanvas.drawPoint(x, y, rcT::colorType::csCCu0W::c(count*COLMAG)); break;
             break;
           }
         }
-        //z = (-pow(z, 6.0) + 6.0 * pow(z, 3.0) + 1.0) / pow(z, 2.0) / 6.0;
-        z = (16.0 * pow(z, 9.0) - 28.0 * pow(z, 6.0) + 2.0 * pow(z, 3.0) + 1.0) / (12.0 * pow(z, 8.0) - 24.0 * pow(z, 5.0) + 3.0 * z * z);
+        z = (-pow(z, 0.6e1) + (0.2e1 * r + 0.4e1) * pow(z, 0.3e1) + r) * pow(z, -0.2e1) / (r + 0.1e1) / 0.3e1;
       }
     }
   }

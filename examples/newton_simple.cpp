@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Simplified code for Newton's Fractical.@EOL
  @std       C++20
- @see       https://www.mitchr.me/SS/newton/index.html
+ @see       https://www.mitchr.me/SS/newton/index.html#traditional
  @copyright
   @parblock
   Copyright (c) 1988-2022, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.

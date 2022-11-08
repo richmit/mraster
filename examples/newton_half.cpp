@@ -5,6 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw various Newton-like Fracticals.@EOL
  @std       C++20
+ @see       https://www.mitchr.me/SS/newton/index.html#nonpoly
  @copyright
   @parblock
   Copyright (c) 1988-2015, 2017, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.

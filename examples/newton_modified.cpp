@@ -5,7 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     A modified Newton's Method Fractical.@EOL
  @std       C++20
- @see       https://www.mitchr.me/SS/newton/index.html
+ @see       https://www.mitchr.me/SS/newton/index.html#modified
  @copyright
   @parblock
   Copyright (c) 2003-2022, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
