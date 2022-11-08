@@ -38,11 +38,6 @@
 typedef mjr::ramCanvas3c8b rcT;    // The Ram Canvas type we will use
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-rcT::colorChanType cCol(int count) {
-  return static_cast<rcT::colorChanType>(255-count*25);
-}
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   int                  MAXITR = 255;

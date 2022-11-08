@@ -37,13 +37,9 @@
 typedef mjr::ramCanvas3c8b rcT;    // The Ram Canvas type we will use
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-rcT::colorChanType cCol(int count) {
-  return static_cast<rcT::colorChanType>(255-count*25);
-}
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
+  constexpr  int              COLMAG = 25;
   constexpr rcT::coordIntType IMGSIZ = 7680;
   constexpr int               MAXITR = 155;
   constexpr rcT::coordFltType ZROEPS = 1.0e-5;
@@ -62,17 +58,17 @@ int main(void) {
       rcT::cplxFltType z = theRamCanvas.int2real(x, y);
       for(int count=0; count<MAXITR; count++) {
         if(std::abs(z-r1) <= ZROEPS) {
-          theRamCanvas.drawPoint(x, y, rcT::colorType(cCol(count),           0,           0)); break;
+          theRamCanvas.drawPoint(x, y, rcT::colorType::csCCu0R::c(255-count*COLMAG)); break;
         } else if(std::abs(z-r2) <= ZROEPS) {                                                                    
-          theRamCanvas.drawPoint(x, y, rcT::colorType(          0, cCol(count),           0)); break;
+          theRamCanvas.drawPoint(x, y, rcT::colorType::csCCu0G::c(255-count*COLMAG)); break;
         } else if(std::abs(z-r3) <= ZROEPS) {                                          
-          theRamCanvas.drawPoint(x, y, rcT::colorType(          0,           0, cCol(count))); break;
+          theRamCanvas.drawPoint(x, y, rcT::colorType::csCCu0B::c(255-count*COLMAG)); break;
         } else if(std::abs(z-r4) <= ZROEPS) {
-          theRamCanvas.drawPoint(x, y, rcT::colorType(cCol(count), cCol(count),           0)); break;
+          theRamCanvas.drawPoint(x, y, rcT::colorType::csCCu0M::c(255-count*COLMAG)); break;
         } else if(std::abs(z-r5) <= ZROEPS) {
-          theRamCanvas.drawPoint(x, y, rcT::colorType(          0, cCol(count), cCol(count))); break;
+          theRamCanvas.drawPoint(x, y, rcT::colorType::csCCu0C::c(255-count*COLMAG)); break;
         } else if(std::abs(z-r6) <= ZROEPS) {
-          theRamCanvas.drawPoint(x, y, rcT::colorType(cCol(count),           0, cCol(count))); break;
+          theRamCanvas.drawPoint(x, y, rcT::colorType::csCCu0Y::c(255-count*COLMAG)); break;
         } else if(std::abs(z) <= ZROEPS) {
           break;
         }
