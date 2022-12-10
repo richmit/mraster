@@ -26,7 +26,7 @@ deps = {
          "#{mrsrc}/examples/mandelbrot_wave.cpp"          => "#{homed}/Documents/WWW/site/SS/mandelbrotWave/index.org",
          "#{mrsrc}/examples/multibrotMovie.cpp"           => "#{homed}/Documents/WWW/site/SS/multibrot/index.org",
          "#{mrsrc}/examples/multibrotSnaps.cpp"           => "#{homed}/Documents/WWW/site/SS/multibrot/index.org",
-
+         "#{mrsrc}/examples/mandelbrot_count_movie.cpp"   => "#{homed}/Documents/WWW/site/SS/mandelbrotCount/index.org",
          "#{mrsrc}/examples/laguerre_3updown.cpp"         => "#{homed}/Documents/WWW/site/SS/newton/index.html",
          "#{mrsrc}/examples/newton_3updown.cpp"           => "#{homed}/Documents/WWW/site/SS/newton/index.html",
          "#{mrsrc}/examples/newton_half.cpp"              => "#{homed}/Documents/WWW/site/SS/newton/index.html",
@@ -39,7 +39,6 @@ deps = {
          "#{mrsrc}/examples/newton_roter.cpp"             => "#{homed}/Documents/WWW/site/SS/newton/index.html",
          "#{mrsrc}/examples/newton_simple.cpp"            => "#{homed}/Documents/WWW/site/SS/newton/index.html",
          "#{mrsrc}/examples/newton_z6.cpp"                => "#{homed}/Documents/WWW/site/SS/newton/index.html",
-
          "#{mrsrc}/examples/peterdejong.cpp"              => "#{homed}/Documents/WWW/site/SS/swirl/index.org",
          "#{mrsrc}/examples/peterdejongM.cpp"             => "#{homed}/Documents/WWW/site/SS/swirl/index.org",
          "#{mrsrc}/examples/pickoverPopcorn.cpp"          => "#{homed}/Documents/WWW/site/SS/PickoverPopcorn/index.org",
