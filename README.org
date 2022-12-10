@@ -11,6 +11,7 @@ Some examples of what can be done with *MRaster*:
   -  [[https://www.mitchr.me/SS/newton/index.html][Newton Fractal]]
   -  [[https://www.mitchr.me/SS/BurningShip/index.html][Burning Ship]]
   -  [[https://www.mitchr.me/SS/multibrot/index.html][Multibrot Fractals]]
+  -  [[https://www.mitchr.me/SS/mandelbrotCount/index.html][Mandelbrot Iteration Movie]]
   -  [[https://www.mitchr.me/SS/tricorn/index.html][Tricorn Fractal]]
   -  [[https://www.mitchr.me/SS/collatz/index.html][Collatz Fractal]]
   -  [[https://www.mitchr.me/SS/tippets/index.html][Tippets Fractal]]
