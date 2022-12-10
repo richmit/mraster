@@ -45,6 +45,7 @@ int main(void) {
   const double MAXZSQ = 4.0;
   mjr::ramCanvas3c8b theRamCanvas(IMGSIZ, IMGSIZ, -2.2, 0.8, -1.5, 1.5);
 
+#pragma omp parallel for schedule(static,1)
   for(int y=0;y<theRamCanvas.getNumPixY();y++) {
     for(int x=0;x<theRamCanvas.getNumPixX();x++) {
       std::complex<double> c = theRamCanvas.int2real(x, y);
