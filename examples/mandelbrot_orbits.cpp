@@ -57,7 +57,7 @@ int main(void) {
   mjr::ramCanvas1c16b inhRamCanvas (CSIZE*SCALE, CSIZE*SCALE,  -2.0, 1.0, -1.5, 1.5);
   mjr::ramCanvas1c16b incRamCanvas (CSIZE*SCALE, CSIZE*SCALE,  -2.0, 1.0, -1.5, 1.5);
   mjr::ramCanvas1c16b outhRamCanvas(CSIZE*SCALE, CSIZE*SCALE,  -2.0, 1.0, -1.5, 1.5);
-  mjr::ramCanvas1c8b  mRamCanvas  (CSIZE*SCALE, CSIZE*SCALE,  -2.0, 1.0, -1.5, 1.5);
+  mjr::ramCanvas1c8b  mRamCanvas   (CSIZE*SCALE, CSIZE*SCALE,  -2.0, 1.0, -1.5, 1.5);
   std::complex<double>* theOrbit = new std::complex<double>[MAXITR+1];
 
   for(int y=0;y<inhRamCanvas.getNumPixY();y++) {

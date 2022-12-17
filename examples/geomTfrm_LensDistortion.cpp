@@ -27,7 +27,7 @@
   @endparblock
  @filedetails   
 
-  The geomTfrmRevRPoly() method uses a radial polynomial transform.  This method may be used to reproduce the the behavior of Imagemagick's barrel distortion
+  The geomTfrmRevRPoly() method uses a radial polynomial transform.  This method may be used to reproduce the behavior of Imagemagick's barrel distortion
   transformation.  In Imagemagick the following terminology and constraints are used:
 
    - (X, Y) is the image center for both T & S

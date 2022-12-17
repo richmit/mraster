@@ -80,6 +80,7 @@ int main(void) {
     }
     theRamCanvas.writeTIFFfile("mandelbrot_count_movie_" + mjr::fmtInt(frame, 3, '0') + ".tiff");
     std::chrono::duration<double> frameRunTime = std::chrono::system_clock::now() - frameStartTime;
+#   pragma omp critical
     std::cout << "Frame " << frame << " Runtime " << frameRunTime.count() << " sec" << std::endl;
   }
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
