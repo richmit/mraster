@@ -52,18 +52,30 @@ typedef mjr::ramCanvas3c8b::colorType ct;
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const int    IMGSIZ = 7680/4;
-  const int    MXITRS = 157;
-  const int    MXITRE = 461;
   const double MAXZSQ =  4.0;
+  const int    IMGSIZ = 7680/4;
+
+  const int    MXITRS = 157;
   const double BALSIZ =  0.00019065;
   const double CNTRX  = -0.745258237857;
   const double CNTRY  =  0.130272017858;
+  const int    ITRSTP = 1;
+  const int    NUMFRM = 304;
+  const int    COLMAG = 1;
+
+  // const double BALSIZ =  6.25e-7;
+  // const double CNTRX  =  0.241810410968;
+  // const double CNTRY  = -0.510269600591;
+  // const int    MXITRS = 750;
+  // const int    MXITRE = 2000;
+  // const int    ITRSTP = 3;
+  // const int    NUMFRM = (MXITRE-MXITRS)/ITRSTP+1;
+  // const int    COLMAG = 10;
 
 # pragma omp parallel for schedule(static,1)
-  for(int frame=0;frame<(MXITRE-MXITRS);frame++) {
+  for(int frame=0; frame<NUMFRM; frame++) {
+    int curMaxItr = MXITRS + frame * ITRSTP;
     mjr::ramCanvas3c8b theRamCanvas(IMGSIZ, IMGSIZ, CNTRX-BALSIZ, CNTRX+BALSIZ, CNTRY-BALSIZ, CNTRY+BALSIZ);
-    int curMaxItr = MXITRS + frame;
     std::chrono::time_point<std::chrono::system_clock> frameStartTime = std::chrono::system_clock::now();
     for(int y=0;y<theRamCanvas.getNumPixY();y++) {
       for(int x=0;x<theRamCanvas.getNumPixX();x++) {
@@ -75,13 +87,13 @@ int main(void) {
           count++;
         }
         if(count < curMaxItr)
-          theRamCanvas.drawPoint(x, y, ct::csCColdeFireRamp::c(static_cast<ct::csFltType>(count)/curMaxItr));
+          theRamCanvas.drawPoint(x, y, ct::csCColdeFireRamp::c(static_cast<ct::csFltType>(COLMAG*count)/curMaxItr));
       }
     }
     theRamCanvas.writeTIFFfile("mandelbrot_count_movie_" + mjr::fmtInt(frame, 3, '0') + ".tiff");
     std::chrono::duration<double> frameRunTime = std::chrono::system_clock::now() - frameStartTime;
 #   pragma omp critical
-    std::cout << "Frame " << frame << " Runtime " << frameRunTime.count() << " sec" << std::endl;
+    std::cout << "Frame " << frame << " of " << NUMFRM << " Runtime " << frameRunTime.count() << " sec" << std::endl;
   }
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
