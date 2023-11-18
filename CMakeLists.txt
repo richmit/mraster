@@ -78,7 +78,7 @@ set(TARGETS_REQ_NONE "BurningShip" "apollony" "apomorph" "bifurcation_diagram" "
                        "color_web_rectangle" "color_web_triangle" "convertRawToTIFF" "cplxColor" "dlaSeed" "heart2022" "invertedMandelbrot"
                        "julia" "juliaM" "juliaM2" "level_curves" "lorenz_fuz" "lorenz_multi" "mandelbrot_binary" 
                        "mandelbrot_biomorph" "mandelbrot_bm_cplx" "mandelbrot_bm_cplx_hyper" "mandelbrot_bm_real"
-                       "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits" "attracting_torus_shadow"
+                       "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits" "attracting_torus_shadow" 
                        "mandelbrot_potential" "mandelbrot_real_cfun" "mandelbrot_triangle" "multibrotMovie" "multibrotSnaps"
                        "peterdejong" 
                        "pickoverPopcorn" "sic" "sic_search" "sierpinski_triangle" "sprott2d" "test_draw_fonts" "test_images" "tippets" "tricorn"
@@ -89,7 +89,7 @@ set(TARGETS_REQ_TIFF   "brownianDiffusion" "displayImageSDL2" "dlaBrownian" "dla
 set(TARGETS_USE_OPENMP "mandelbrot_bm_cplx_openmp" "mandelbrot_precomp" "mandelbrot_precomp_p1" "mandelbrot_count_movie"
                        "mandelbrot_distance" "mandelbrot_wave" "peterdejongM" "newton_orbits" "newton_simple" "newton_max_mod" "mandelbrot_pickover"
                        "mandelbrot_ltrap" "newton_max_back" "newton_min_angle" "mandelbrot_simple" 
-                       "newton_half" "newton_vs" "newton_z6" "newton_modified" "newton_min_root" "newton_3updown" "newton_roter" 
+                       "newton_half" "newton_vs" "newton_z6" "newton_modified" "newton_min_root" "newton_3updown" "newton_roter" "attracting_torus_shadowM"
                        "laguerre_3updown" "laguerre_simple")
 set(TARGETS_REQ_BTEST  "utest_colorTpl_ia64nGCC" "utest_colorTpl" "utest_ramCanvasTpl" "utest_mjrmath")
 set(TARGETS_REQ_SDL2   "displayImageSDL2")
