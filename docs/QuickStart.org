@@ -313,35 +313,7 @@ Lastly, note the =-DGLUT_glut_LIBRARY= option -- this is required to direct =cma
 cmake -DCMAKE_CXX_COMPILER=clang++ -DGLUT_glut_LIBRARY=/System/Library/Frameworks/GLUT.framework ..
 #+end_src
 
-** Debian bullseye 11.4
-:PROPERTIES:
-:CUSTOM_ID: platform-notes-lindeb114
-:END:
-
-For reference, some of my config files:
-
-Here is my =/etc/apt/sources.list= file:
-
-#+begin_src text
-deb http://deb.debian.org/debian bullseye main
-deb http://deb.debian.org/debian bullseye-updates main
-deb http://security.debian.org/debian-security bullseye-security main
-deb http://ftp.debian.org/debian bullseye-backports main
-
-deb http://mirrors.xmission.com/debian/ testing main non-free contrib
-deb http://http.us.debian.org/debian testing main contrib non-free
-deb http://ftp.us.debian.org/debian testing main non-free contrib
-#+end_src
-
-Here is my =/etc/apt/preferences= file:
-
-#+begin_src text
-Package: *
-Pin: release a=testing
-Pin-Priority: 490
-#+end_src
-
-*** Debian bullseye 11.4 with GCC 10.2.1
+** Debian bullseye 11.4 with GCC 10.2.1
 :PROPERTIES:
 :CUSTOM_ID: platform-notes-lindeb114gcc1021
 :END:
@@ -364,15 +336,37 @@ Now you can use the following =cmake= command:
 cmake ..
 #+end_src
 
-*** Debian bullseye 11.4 with GCC 11.3
+** Debian bullseye 11.4 with GCC 11.3
 :PROPERTIES:
 :CUSTOM_ID: platform-notes-lindeb114gcc113
 :END:
 
 With this newer compiler all *=MRaster=* features are supported.
 
-This is the compiler currently in the bullseye =testing= channel.  You will need the stuff installed in the previous section as well as this compiler.  You
-can install it all with the following:
+This is the compiler currently in the bullseye =testing= channel for 11.4
+
+Here is my =/etc/apt/sources.list= file:
+
+#+begin_src text
+deb http://deb.debian.org/debian bullseye main
+deb http://deb.debian.org/debian bullseye-updates main
+deb http://security.debian.org/debian-security bullseye-security main
+deb http://ftp.debian.org/debian bullseye-backports main
+
+deb http://mirrors.xmission.com/debian/ testing main non-free contrib
+deb http://http.us.debian.org/debian testing main contrib non-free
+deb http://ftp.us.debian.org/debian testing main non-free contrib
+#+end_src
+
+Here is my =/etc/apt/preferences= file:
+
+#+begin_src text
+Package: *
+Pin: release a=testing
+Pin-Priority: 490
+#+end_src
+
+You can install everything with the following:
 
 #+begin_src sh :eval never :tangle no :exports code
 sudo apt update
@@ -388,6 +382,58 @@ Now you can use the following =cmake= command:
 #+begin_src sh :eval never :tangle no :exports code
 cmake -DCMAKE_CXX_COMPILER=g++-11 ..
 #+end_src
+
+** Debian bullseye 11.6 with GCC 12.2
+:PROPERTIES:
+:CUSTOM_ID: platform-notes-lindeb116gcc122
+:END:
+
+With this newer compiler all *=MRaster=* features are supported.
+
+This is the compiler currently in the bullseye =testing= channel for 11.6
+
+Here is my =/etc/apt/sources.list= file:
+
+#+begin_src text
+[sudo] password for richmit:
+deb http://deb.debian.org/debian bullseye main
+deb-src http://deb.debian.org/debian bullseye main
+deb http://deb.debian.org/debian bullseye-updates main
+deb http://security.debian.org/debian-security bullseye-security main
+
+
+deb http://deb.debian.org/debian testing main
+deb-src http://deb.debian.org/debian testing main
+#+end_src
+
+Here is my =/etc/apt/preferences.d/prefs.pref= file:
+
+#+begin_src text
+Package: *
+Pin: release a=stable
+Pin-Priority: 900
+
+Package: *
+Pin: release a=testing
+Pin-Priority: 400
+#+end_src
+
+You can install everything with the following:
+
+#+begin_src sh :eval never :tangle no :exports code
+sudo apt update
+sudo apt upgrade
+sudo apt-get install build-essential libsdl2-dev libtiff-dev freeglut3-dev doxygen libboost-all-dev 
+sudo apt-get install povray ffmpeg imagemagick
+sudo apt install -t testing --install-suggests gcc-12 gfortran-12 cmake
+#+end_src
+
+Now you can use the following =cmake= command:
+
+#+begin_src sh :eval never :tangle no :exports code
+cmake -DCMAKE_CXX_COMPILER=g++-11 ..
+#+end_src
+
 
 * Performance                                                      :noexport:
 

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-10-05 Wed 17:05 -->
+<!-- 2023-02-15 Wed 16:19 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster Quick Start</title>
@@ -225,7 +225,7 @@
 </colgroup>
 <tbody>
 <tr>
-<td class="org-left">Copyright &copy; 2022 Mitch Richling. All rights reserved.</td>
+<td class="org-left">Copyright &copy; 2023 Mitch Richling. All rights reserved.</td>
 </tr>
 </tbody>
 </table>
@@ -256,12 +256,9 @@
 <li><a href="#platform-notes-w11vs2022">4.4. Windows 11 with Visual Studio 2022 Community Edition</a></li>
 <li><a href="#platform-notes-osx1151hbGCC12">4.5. Mac OS X Monterey 12.5.1 with Homebrew GCC 12.1.0</a></li>
 <li><a href="#platform-notes-osx1151aclang1316">4.6. Mac OS X Monterey 12.5.1 with Apple clang 13.1.6</a></li>
-<li><a href="#platform-notes-lindeb114">4.7. Debian bullseye 11.4</a>
-<ul>
-<li><a href="#platform-notes-lindeb114gcc1021">4.7.1. Debian bullseye 11.4 with GCC 10.2.1</a></li>
-<li><a href="#platform-notes-lindeb114gcc113">4.7.2. Debian bullseye 11.4 with GCC 11.3</a></li>
-</ul>
-</li>
+<li><a href="#platform-notes-lindeb114gcc1021">4.7. Debian bullseye 11.4 with GCC 10.2.1</a></li>
+<li><a href="#platform-notes-lindeb114gcc113">4.8. Debian bullseye 11.4 with GCC 11.3</a></li>
+<li><a href="#platform-notes-lindeb116gcc122">4.9. Debian bullseye 11.6 with GCC 12.2</a></li>
 </ul>
 </li>
 <li><a href="#gbl-faq">5. FAQ</a>
@@ -286,7 +283,7 @@ The first step is to download <b><code>MRaster</code></b>.  You can grab the <a 
 clone the repository with GIT like this:
 </p>
 
-<pre class="example" id="org83edca0">
+<pre class="example" id="org325bb36">
 git clone 'https://github.com/richmit/mraster.git'
 </pre>
 
@@ -322,7 +319,7 @@ Now you can run it, and take a look at the file it created ("<code>hello.tiff</c
 </p>
 
 
-<div id="org6180551" class="figure">
+<div id="org655c010" class="figure">
 <p><img src="./pics/quick/hello.png" alt="hello.png" width="800" align="center" />
 </p>
 </div>
@@ -631,44 +628,9 @@ Lastly, note the <code>-DGLUT_glut_LIBRARY</code> option &#x2013; this is requir
 </div>
 </div>
 
-<div id="outline-container-platform-notes-lindeb114" class="outline-3">
-<h3 id="platform-notes-lindeb114"><span class="section-number-3">4.7.</span> Debian bullseye 11.4</h3>
-<div class="outline-text-3" id="text-platform-notes-lindeb114">
-<p>
-For reference, some of my config files:
-</p>
-
-<p>
-Here is my <code>/etc/apt/sources.list</code> file:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-text">deb http://deb.debian.org/debian bullseye main
-deb http://deb.debian.org/debian bullseye-updates main
-deb http://security.debian.org/debian-security bullseye-security main
-deb http://ftp.debian.org/debian bullseye-backports main
-
-deb http://mirrors.xmission.com/debian/ testing main non-free contrib
-deb http://http.us.debian.org/debian testing main contrib non-free
-deb http://ftp.us.debian.org/debian testing main non-free contrib
-</pre>
-</div>
-
-<p>
-Here is my <code>/etc/apt/preferences</code> file:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-text">Package: *
-Pin: release a=testing
-Pin-Priority: 490
-</pre>
-</div>
-</div>
-
-<div id="outline-container-platform-notes-lindeb114gcc1021" class="outline-4">
-<h4 id="platform-notes-lindeb114gcc1021"><span class="section-number-4">4.7.1.</span> Debian bullseye 11.4 with GCC 10.2.1</h4>
-<div class="outline-text-4" id="text-platform-notes-lindeb114gcc1021">
+<div id="outline-container-platform-notes-lindeb114gcc1021" class="outline-3">
+<h3 id="platform-notes-lindeb114gcc1021"><span class="section-number-3">4.7.</span> Debian bullseye 11.4 with GCC 10.2.1</h3>
+<div class="outline-text-3" id="text-platform-notes-lindeb114gcc1021">
 <p>
 This is the stock compiler that comes with bullseye.  It's a bit old, and is missing support for both floating point template arguments and <code>bit_cast</code>.  
 </p>
@@ -697,16 +659,46 @@ Now you can use the following <code>cmake</code> command:
 </div>
 </div>
 
-<div id="outline-container-platform-notes-lindeb114gcc113" class="outline-4">
-<h4 id="platform-notes-lindeb114gcc113"><span class="section-number-4">4.7.2.</span> Debian bullseye 11.4 with GCC 11.3</h4>
-<div class="outline-text-4" id="text-platform-notes-lindeb114gcc113">
+<div id="outline-container-platform-notes-lindeb114gcc113" class="outline-3">
+<h3 id="platform-notes-lindeb114gcc113"><span class="section-number-3">4.8.</span> Debian bullseye 11.4 with GCC 11.3</h3>
+<div class="outline-text-3" id="text-platform-notes-lindeb114gcc113">
 <p>
 With this newer compiler all <b><code>MRaster</code></b> features are supported.
 </p>
 
 <p>
-This is the compiler currently in the bullseye <code>testing</code> channel.  You will need the stuff installed in the previous section as well as this compiler.  You
-can install it all with the following:
+This is the compiler currently in the bullseye <code>testing</code> channel for 11.4
+</p>
+
+<p>
+Here is my <code>/etc/apt/sources.list</code> file:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">deb http://deb.debian.org/debian bullseye main
+deb http://deb.debian.org/debian bullseye-updates main
+deb http://security.debian.org/debian-security bullseye-security main
+deb http://ftp.debian.org/debian bullseye-backports main
+
+deb http://mirrors.xmission.com/debian/ testing main non-free contrib
+deb http://http.us.debian.org/debian testing main contrib non-free
+deb http://ftp.us.debian.org/debian testing main non-free contrib
+</pre>
+</div>
+
+<p>
+Here is my <code>/etc/apt/preferences</code> file:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">Package: *
+Pin: release a=testing
+Pin-Priority: 490
+</pre>
+</div>
+
+<p>
+You can install everything with the following:
 </p>
 
 <div class="org-src-container">
@@ -729,8 +721,75 @@ Now you can use the following <code>cmake</code> command:
 </div>
 </div>
 </div>
+
+<div id="outline-container-platform-notes-lindeb116gcc122" class="outline-3">
+<h3 id="platform-notes-lindeb116gcc122"><span class="section-number-3">4.9.</span> Debian bullseye 11.6 with GCC 12.2</h3>
+<div class="outline-text-3" id="text-platform-notes-lindeb116gcc122">
+<p>
+With this newer compiler all <b><code>MRaster</code></b> features are supported.
+</p>
+
+<p>
+This is the compiler currently in the bullseye <code>testing</code> channel for 11.6
+</p>
+
+<p>
+Here is my <code>/etc/apt/sources.list</code> file:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">[sudo] password for richmit:
+deb http://deb.debian.org/debian bullseye main
+deb-src http://deb.debian.org/debian bullseye main
+deb http://deb.debian.org/debian bullseye-updates main
+deb http://security.debian.org/debian-security bullseye-security main
+
+
+deb http://deb.debian.org/debian testing main
+deb-src http://deb.debian.org/debian testing main
+</pre>
+</div>
+
+<p>
+Here is my <code>/etc/apt/preferences.d/prefs.pref</code> file:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-text">Package: *
+Pin: release a=stable
+Pin-Priority: 900
+
+Package: *
+Pin: release a=testing
+Pin-Priority: 400
+</pre>
+</div>
+
+<p>
+You can install everything with the following:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">sudo apt update
+sudo apt upgrade
+sudo apt-get install build-essential libsdl2-dev libtiff-dev freeglut3-dev doxygen libboost-all-dev 
+sudo apt-get install povray ffmpeg imagemagick
+sudo apt install -t testing --install-suggests gcc-12 gfortran-12 cmake
+</pre>
+</div>
+
+<p>
+Now you can use the following <code>cmake</code> command:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">cmake -DCMAKE_CXX_COMPILER=g++-11 ..
+</pre>
 </div>
 </div>
+</div>
+</div>
+
 
 <div id="outline-container-gbl-faq" class="outline-2">
 <h2 id="gbl-faq"><span class="section-number-2">5.</span> FAQ</h2>
