@@ -238,7 +238,7 @@ namespace mjr {
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Public color types related to colorT.
-       These types are used for things like color space computations and sources for setting channels, etc...*/
+          These types are used for things like color space computations and sources for setting channels, etc...*/
       //@{
       typedef colorTpl<double,  3>       colConDbl3;     //!< Used for color space computations.  Type identical to colConRGBdbl, but might not be RGB.
       typedef colorTpl<double,  3>       colConRGBdbl;   //!< RGB with double channels.  
@@ -1422,7 +1422,7 @@ namespace mjr {
                                         4.4420E-01,  3.2830E-01,  2.3940E-01,  1.7220E-01,  1.2210E-01,  8.5300E-02,  5.8600E-02,  4.0800E-02,  2.8400E-02,
                                         1.9700E-02,  1.3500E-02,  9.2400E-03,  6.3800E-03,  4.4100E-03,  3.0700E-03,  2.1400E-03,  1.4900E-03,  1.0500E-03,
                                         7.3900E-04,  5.2300E-04,  3.7200E-04,  2.6500E-04,  1.9000E-04,  1.3600E-04,  9.8400E-05,  7.1300E-05,  5.1800E-05,
-                                        3.7700E-05,  2.7600E-05,  2.0300E-05,  1.4900E-05,  1.1000E-05,  8.1800E-06,  6.0900E-06,  4.5500E-06};
+                                        3.7700E-05,  2.7600E-05,  2.0300E-05,  1.4900E-05,  1.1000E-05,  8.1800E-06,  6.0900E-06,  4.5500E-06 };
         const static double cmfG[] = { -4.0000E-04, -1.0000E-03, -2.5000E-03, -5.9000E-03, -1.1900E-02, -2.0100E-02, -2.8900E-02, -3.3800E-02, -3.4900E-02,
                                        -2.7600E-02, -1.6900E-02,  2.4000E-03,  2.8300E-02,  6.3600E-02,  1.0820E-01,  1.6170E-01,  2.2010E-01,  2.7960E-01,
                                         3.4280E-01,  4.0860E-01,  4.7160E-01,  5.4910E-01,  6.2600E-01,  7.0970E-01,  7.9350E-01,  8.7150E-01,  9.4770E-01,
