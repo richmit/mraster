@@ -15,13 +15,13 @@ mark_as_advanced(PROJECT_VERSION_DATE PROJECT_VERSION_ID)
 ######################################################################################################################################################
 # Here are the options we use to modify the build -- these options are passed to cmake like so: cmake -DO_OPENSSL=YES or -DO_OPENSSL=NO
 
-OPTION(O_DOXYGEN "Include support for doxygen"         ON  )
-OPTION(O_TIFF    "Include support for libTIFF"         ON  )
-OPTION(O_OPENGL  "Include support for OpenGL & GLUT"   ON  )
-OPTION(O_OPENMP  "Include support for OpenMP"          ON  )
-OPTION(O_MOVIE   "Include support making movies"       ON  )
-OPTION(O_RAY     "Include support ray-tracing"         ON  )
-OPTION(O_BTEST   "Include support for boost.test"      ON  )
+OPTION(O_DOXYGEN "Include support for doxygen"         ON )
+OPTION(O_TIFF    "Include support for libTIFF"         ON )
+OPTION(O_OPENGL  "Include support for OpenGL & GLUT"   ON )
+OPTION(O_OPENMP  "Include support for OpenMP"          ON )
+OPTION(O_MOVIE   "Include support making movies"       ON )
+OPTION(O_RAY     "Include support ray-tracing"         ON )
+OPTION(O_BTEST   "Include support for boost.test"      ON )
 OPTION(O_SDL2    "Include support for SDL2"            ON )
 
 set(POVRAY_HINT "c:/Program Files/POV-Ray/v3.7/bin/")
@@ -78,7 +78,7 @@ set(TARGETS_REQ_NONE "BurningShip" "apollony" "apomorph" "bifurcation_diagram" "
                        "color_web_rectangle" "color_web_triangle" "convertRawToTIFF" "cplxColor" "dlaSeed" "heart2022" "invertedMandelbrot"
                        "julia" "juliaM" "juliaM2" "level_curves" "lorenz_fuz" "lorenz_multi" "mandelbrot_binary" 
                        "mandelbrot_biomorph" "mandelbrot_bm_cplx" "mandelbrot_bm_cplx_hyper" "mandelbrot_bm_real"
-                       "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits"
+                       "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits" "attracting_torus_shadow"
                        "mandelbrot_potential" "mandelbrot_real_cfun" "mandelbrot_triangle" "multibrotMovie" "multibrotSnaps"
                        "peterdejong" 
                        "pickoverPopcorn" "sic" "sic_search" "sierpinski_triangle" "sprott2d" "test_draw_fonts" "test_images" "tippets" "tricorn"
