@@ -3,7 +3,7 @@
 /**
  @file      lorenz_multi.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Draw a sprott Attractor.@EOL
+ @brief     Draw lorenz attractors with different initial conditions.@EOL
  @std       C++20
  @copyright
   @parblock
@@ -26,9 +26,6 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails
-
-  Inspired by http://paulbourke.net/fractals/starjulia/
 */
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
