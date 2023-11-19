@@ -47,9 +47,6 @@
 
   Build and load images in eshell on Windows:
     rm -f attracting_torus_shadow*.tiff; make attracting_torus_shadowM && { ./attracting_torus_shadow.exe ; for f in attracting_torus_shadow*.tiff { start $f } }
-
-
-
 */
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
