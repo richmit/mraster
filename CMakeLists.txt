@@ -188,7 +188,7 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
     #message("Warning: MSVC support is currently experimental")
   endif()
 
-  # Add build requirements for examples using OpenGL
+  # Add build requirements for examples using Boost Test
   list (FIND TARGETS_REQ_BTEST ${CURTGT} TMPR)
   if((Boost_FOUND) AND (${TMPR} GREATER -1))
     target_link_libraries(${CURTGT} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})

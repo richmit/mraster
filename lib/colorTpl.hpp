@@ -4925,7 +4925,7 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  /** i/O stream output operator for colorTpl types. */
+  /** Inequality operator for colorTpl types. */
   template <class clrChanT, int numChan, int redChanIdx = -1, int blueChanIdx = -1, int greenChanIdx = -1, int alphaChanIdx = -1>
   requires ((numChan>0)                                                                    && // Must have at least 1 chan
             (std::is_unsigned<clrChanT>::value || std::is_floating_point<clrChanT>::value) && // unsigned integral or floating point
