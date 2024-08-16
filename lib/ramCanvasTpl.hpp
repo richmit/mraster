@@ -299,7 +299,7 @@ namespace mjr {
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Logical Maximum for intCrdT values */
       //@{
-      const static intCrdT intCrdMax = (1ul << ((sizeof(intCrdT)*CHAR_BIT-1)/2)) - 3;        //!< maximum ro numPixX, numPixY, & numPix.
+      const static intCrdT intCrdMax = (1ul << ((sizeof(intCrdT)*CHAR_BIT-1)/2)) - 3;        //!< maximum for numPixX, numPixY, & numPix.
       //@}
 
     private:
@@ -1876,6 +1876,7 @@ namespace mjr {
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::ramCanvasTpl() {
     newIntCoordsNC(-1, -1);
+    newRealCoords(0.0, 0.0, 0.0, 0.0);
     pixels = NULL;
     pixelsE = NULL;
     setRealAxisDefaultOrientation();
@@ -1968,11 +1969,15 @@ namespace mjr {
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
     inline void
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::newIntCoordsNC(intCrdT numPixX_p, intCrdT numPixY_p) {
-    if( (numPixX_p <= intCrdMax) && (numPixY_p <= intCrdMax) ) {
+    if(numPixX_p > intCrdMax) {
+      throw std::invalid_argument("newIntCoordsNC: numPixX_p argument too large.");
+    } else if (numPixY_p > intCrdMax) {
+      throw std::invalid_argument("newIntCoordsNC: numPixY_p argument too large.");
+    } else {
       numPix  = numPixX_p * numPixY_p;;
       numPixX = numPixX_p;
       numPixY = numPixY_p;
-    }
+    } 
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1980,7 +1985,11 @@ namespace mjr {
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
     inline void
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::newRealCoords(fltCrdT minRealX_p, fltCrdT maxRealX_p, fltCrdT minRealY_p, fltCrdT maxRealY_p) {
-    if( (minRealX_p <= maxRealX_p) && (minRealY_p <= maxRealY_p) ) {
+    if(minRealX_p > maxRealX_p) {
+      throw std::invalid_argument("newRealCoords: minRealX_p > maxRealX_p.");
+    } else if (minRealY_p > maxRealY_p) {
+      throw std::invalid_argument("newRealCoords: minRealY_p > maxRealY_p.");
+    } else {
       minRealX = minRealX_p;
       maxRealX = maxRealX_p;
       minRealY = minRealY_p;
@@ -1996,8 +2005,8 @@ namespace mjr {
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::updRealCoords() {
     canvasWidX = maxRealX - minRealX;
     canvasWidY = maxRealY - minRealY;
-    pixWidX = canvasWidX / numPixX;
-    pixWidY = canvasWidY / numPixY;
+    pixWidX = (numPixX == 0 ? 0 : canvasWidX / numPixX); // This will cause /0 later if anyone tries to use a coordinate conversion
+    pixWidY = (numPixY == 0 ? 0 : canvasWidY / numPixY); // This will cause /0 later if anyone tries to use a coordinate conversion
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

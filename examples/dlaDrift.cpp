@@ -60,14 +60,14 @@ int main(int argc, char *argv[]) {
   for(int numPt=1;numPt<MAXNUMPT;numPt++) {
     // Get a random point not near the tree
     mjr::ramCanvas3c8b::coordIntType x, y;
-    x = rEng() % theRamCanvas.getNumPixX();
-    y = rEng() % theRamCanvas.getNumPixY();
+    x = static_cast<int>(rEng() % theRamCanvas.getNumPixX());
+    y = static_cast<int>(rEng() % theRamCanvas.getNumPixY());
     if(theRamCanvas.getPxColor(x+0, y+0).getC2()) {
       numCloseRel++;
     } else {
       // move arround till we go out of range, or hit the tree
       for(int count=0;count<MAXCOUNT;count++) {
-        int rn = rEng() % 5;
+        int rn = static_cast<int>(rEng() % 5);
         switch (rn) {
           case 0:
             x++; break;

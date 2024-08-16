@@ -40,9 +40,9 @@ typedef mjr::ramCanvas1c16b::rcConverterMonoIntensity<mjr::ramCanvas3c16b, mjr::
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  int          MaxCount = 255;
-  double       Tol      = .0001;
-  const int    IMGSIZ   = 7680;
+  constexpr int MaxCount = 255;
+  constexpr double Tol = .0001;
+  constexpr int IMGSIZ = 7680;
   std::complex<double> r1( 1.0,                        0.0);
   std::complex<double> r2(-0.5,  sin(2*std::numbers::pi/3));
   std::complex<double> r3(-0.5, -sin(2*std::numbers::pi/3));

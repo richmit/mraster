@@ -125,12 +125,12 @@ int main() {
     double maxMag = 0;
     for(int n=0;n<theIFS.itrMax;n++) {
       std::minstd_rand0::result_type rn = rEng();
-      int rpi = rn%theIFS.numPts;
-      while(((lastPoint !=-1) && (theIFS.lastAvoidLast    !=-1) && rpi==lastPoint) ||
+      int rpi = static_cast<int>(rn % theIFS.numPts);
+      while(((lastPoint !=-1) && (theIFS.lastAvoidLast    !=-1) && (rpi==lastPoint)) ||
             ((lastPoint !=-1) && (theIFS.lastAvoidBackward!=-1) && (rpi==(lastPoint+theIFS.lastAvoidBackward)%theIFS.numPts)) ||
             ((lastPoint !=-1) && (theIFS.lastAvoidForward !=-1) && ((rpi+theIFS.lastAvoidForward)%theIFS.numPts==lastPoint))) {
         rn = rEng();
-        rpi = rn%theIFS.numPts;
+        rpi = static_cast<int>(rn % theIFS.numPts);
       }
       lastPoint = rpi;
       z = (z+points[rpi])/theIFS.factor;

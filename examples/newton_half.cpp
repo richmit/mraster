@@ -62,7 +62,7 @@ int main(void) {
   // rcT                       theRamCanvas(IMXSIZ, IMYSIZ, -0.42, 0.42, -0.2, 0.2);
   // rcT                       theRamCanvas(IMXSIZ, IMYSIZ, -4.72, -0.5, -1.0, 1.0);
   // rcT                       theRamCanvas(IMXSIZ, IMYSIZ, -3.0, 3.0, -3.0, 3.0);
-  rcT                         theRamCanvas(IMXSIZ, IMXSIZ, 0.6, 1.1, -0.4, 0.4); // this one is square!
+  rcT                         theRamCanvas(std::max(IMXSIZ, IMYSIZ), std::max(IMXSIZ, IMYSIZ), 0.6, 1.1, -0.4, 0.4); // this one is square!
 
 # pragma omp parallel for schedule(static,1)
   for(int y=0;y<theRamCanvas.getNumPixY();y++) {

@@ -60,7 +60,7 @@ int main(void) {
       theRamCanvas_iii.drawPoint(x, y, aColor);
       aColor.setRGBfromLogPackIntABGR(count);
       theRamCanvas_int.drawPoint(x, y, aColor);
-      aColor.setRGBfromLogPackIntABGR(igray(count));
+      aColor.setRGBfromLogPackIntABGR(static_cast<mjr::ramCanvas3c8b::colorType::packed4Cint>(igray(count)));
       theRamCanvas_gry.drawPoint(x, y, aColor);
       aColor.setChansRGB(red, green, blue);
       theRamCanvas_rgb.drawPoint(x, y, aColor);

@@ -62,8 +62,8 @@ int main(int argc, char *argv[]) {
 
     for(int numItr=1;numItr<MAXCOUNT;numItr++) {
       mjr::ramCanvas3c8b::coordIntType xC, yC;
-      xC = rEng() % theRamCanvas.getNumPixX();
-      yC = rEng() % theRamCanvas.getNumPixY();
+      xC = static_cast<int>(rEng() % theRamCanvas.getNumPixX());
+      yC = static_cast<int>(rEng() % theRamCanvas.getNumPixY());
 
       mjr::ramCanvas3c8b::colorType aColor = theRamCanvas.getPxColor(xC, yC);
       double lumC = aColor.luminanceRGB();

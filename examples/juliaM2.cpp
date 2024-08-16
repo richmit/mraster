@@ -59,12 +59,9 @@ int main(void) {
   std::ifstream iStream("../data/mandelbrot_curve_10.txt", std::ios_base::binary);
   if (!(iStream.good()))
     return 1;
-  int line=0;
   while(iStream.good()) {
-    line++;
     iStream.getline(strBuf, 100, '\n');
     std::string strBufS(strBuf);
-    //std::cout << line << ": " << strBufS << std::endl;
     if (strBufS.length() > 0) {
       std::string::size_type pos;
       std::string::size_type tagIdx = strBufS.find_first_of("\t ,");

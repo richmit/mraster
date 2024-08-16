@@ -63,7 +63,7 @@ int main(void) {
   double c = 8.0 / 3;
 
   double curMaxTdelta, curMinTdelta, tDelta, dist, Xdelta, Ydelta, Zdelta, movDelta;
-  int    numBisect, doneBisecting, numBalls;
+  int    numBisect, doneBisecting;
 
   for(int i=0; i<10; i++) {
     double x = 0.0;
@@ -73,11 +73,9 @@ int main(void) {
     std::cout << "y: " << y << std::endl;
 
     /*  Solve the equations..... */
-    numBalls = 0;
     tDelta = maxTdelta;
     dist = 0.0;
     while (dist < distToGo) {
-      numBalls++;
       /*  Take a big step up to minimize the number of balls. */
       tDelta = (maxTdelta + tDelta) / 2;
       if (tDelta > maxTdelta) {

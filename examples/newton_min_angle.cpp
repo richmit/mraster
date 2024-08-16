@@ -54,7 +54,7 @@ int main(void) {
   constexpr double     ang12  =  (ang1+ang2)/2.0;
   constexpr double     ang13  =  (ang1+ang3)/2.0;
   constexpr double     ang23  =  std::numbers::pi;
-  constexpr double     normer = std::log(2*std::numbers::pi/3);
+  const double         normer = std::log(2*std::numbers::pi/3);
   std::complex<double> r1( 1.0,  sin(ang1));
   std::complex<double> r2(-0.5,  sin(ang2));
   std::complex<double> r3(-0.5,  sin(ang3));
