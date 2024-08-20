@@ -146,7 +146,7 @@ to your compile command (or get a better compiler):
 The source code for the example programs is located in the "=examples=" directory.  *=MRaster=* ships with a =cmake= build system that should be able to
 interrogate your environment, and produce make files for your OS.  To build the example programs:
 
-   1) Change directory to the root of the git repository (you should see "=lib=" & "=examples=" directories.
+   1) Change directory to the root of the git repository (you should see "=lib=" & "=examples=" directories).
    2) Create a "=build=" directory -- cmake builds outside of the source trees.
    3) Change directory to the build directory
    4) Use =cmake= to generate make files for your system
