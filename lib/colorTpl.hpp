@@ -563,6 +563,8 @@ namespace mjr {
 
       /** A type used for continous color scheme indexes. */
       typedef double csFltType;
+      /** A type used for 2D continous color scheme indexes. */
+      typedef std::complex<csFltType> csCplxType;
       /** A clrChanT-similar type color scheme indexes. */
       typedef typename std::conditional<std::is_floating_point<clrChanT>::value, csFltType, csIntType>::type csNatType;
       //@}
@@ -2603,6 +2605,30 @@ namespace mjr {
         setBlue( static_cast<clrChanT>(bc * static_cast<double>(getBlue()) + bb));
         return *this;
       }
+     //--------------------------------------------------------------------------------------------------------------------------------------------------------
+     /** Perform a tfrmLinearGreyLevelScale based on a complex number.
+         @param z         The complex number
+         @param cutDepth  Range: @f$[1, ~30]@f$ Smaller means more contrast on cuts.
+         @param argCuts   Number of grey cuts for arg
+         @param absCuts   Number of grey cuts for abs 
+         @param logAbs    If true, then take the logorithm of abs for cuts. */
+      inline colorTpl& tfrmComplexCut(std::complex<double> z, double cutDepth = 10.0, double argCuts = 16.0, double absCuts = 2.0, bool logAbs = true) {
+        double tau   = std::numbers::pi * 2;                   // 2*Pi
+        double zArg  = std::arg(z);                            // Arg
+        double pzArg = (zArg < 0.0 ? tau + zArg : zArg) / tau; // Arg mapped to [0, 1]
+        if (argCuts > 0) 
+          tfrmLinearGreyLevelScale(1.0 - std::fabs(int(pzArg*argCuts) - pzArg*argCuts)/cutDepth, 0);
+        if (absCuts > 0) {
+          double zAbs  = std::abs(z); // Abs
+          if (logAbs) {
+            double lzAbs = std::log(zAbs);
+            tfrmLinearGreyLevelScale(1.0 - std::fabs(int(lzAbs*absCuts) - lzAbs*absCuts)/cutDepth, 0);
+          } else {
+            tfrmLinearGreyLevelScale(1.0 - std::fabs(int(zAbs*absCuts)  - zAbs*absCuts)/cutDepth,  0);
+          }
+        }
+        return *this;
+      }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** The Standard Power Transform modifies the current color such that: C_i = maxChanVal*(C_i / maxChanVal)**p.
           @return Returns a reference to the current color object.*/
@@ -3149,8 +3175,19 @@ namespace mjr {
         private:
           constexpr static uint32_t d[] = { colors... };
       };
-
-
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Wrapper for Color Brewer 2 variable sized pallet template to produce a simple fixed color scheme with a numC member.
+          @tparam varColorScheme A color brewer variable sized color scheme
+          @tparam numClr         The number of colors wanted in the fixed sized scheme.*/
+      template<class varColorScheme, csIntType numClr>
+      requires((varColorScheme::minNumC <= numClr) && (varColorScheme::maxNumC >= numClr))
+      class csVarToFixed_tpl {
+        public:
+          constexpr static csIntType numC = numClr;
+          template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG) requires (std::floating_point<saT>) { return varColorScheme::c(aColor, csG, numClr); }
+          template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG) requires (std::integral<saT>)       { return varColorScheme::c(aColor, csG, numClr); }
+          template<typename saT> static inline colorTpl c(saT csG)                       requires (std::integral<saT> || std::floating_point<saT>) { return varColorScheme::c(csG, numC); }
+      };
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Template for web safe 216 pallets. */
       template<uint32_t...colors>
@@ -3183,7 +3220,6 @@ namespace mjr {
         private:
           constexpr static uint32_t d[] = { colors... };
       };
-
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4885,7 +4921,137 @@ namespace mjr {
 
       /** @endcond  */
 
-      template <class csT, class csAT> colorTpl& csSet(csAT csArg) { return csT::c(*this, csArg); }
+      //========================================================================================================================================================
+      /** @name 2D Color Schemes */
+      //@{
+#if !(MISSING_P1907R1)
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Compute a color from Richardson's 2D complex number coloring scheme.  
+          See: Richardson (1991); Visualizing quantum scattering on the CM-2 supercomputer; Computer Physics Communications 63; pp 84-94"
+          This is a continuous, 2D color scheme! 
+          @tparam cutDepth See: tfrmComplexCut()
+          @tparam argCuts  See: tfrmComplexCut()
+          @tparam absCuts  See: tfrmComplexCut()
+          @tparam logAbs   See: tfrmComplexCut() */
+      template<double cutDepth, double argCuts, double absCuts, bool logAbs>
+      class csRichardson2D {
+        public:
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csX A value in @f$(-\infty, \infty)@f$ that, along with csY, identifies the color in the scheme.
+              @param csY A value that, along with csX, identifies the color in the scheme.
+              @return Returns a reference to \a aColor. */
+          static inline colorTpl& c(colorRefType aColor, csFltType csX, csFltType csY) {
+            csFltType c_abs2   = csX*csX+csY*csY;
+            csFltType c_abs    = std::sqrt(c_abs2);
+            csFltType c_abs2p1 = 1 + c_abs2;
+            csFltType x_scl    = csX / std::sqrt(30.0/5.0);
+            csFltType y_scl    = csY / std::sqrt(2.0);
+            csFltType ofs      = (c_abs<1 ? -1.0 : 1.0) * (0.5 - c_abs/c_abs2p1);
+            aColor.setChansRGB_dbl(std::clamp(ofs + (0.5 + (std::sqrt(2.0/3.0) * csX) / c_abs2p1), 0.0, 1.0),
+                                   std::clamp(ofs + (0.5 - (x_scl - y_scl)            / c_abs2p1), 0.0, 1.0),
+                                   std::clamp(ofs + (0.5 - (x_scl + y_scl)            / c_abs2p1), 0.0, 1.0));
+            return aColor.tfrmComplexCut(std::complex<double>(csX, csY), cutDepth, argCuts, absCuts, logAbs);
+          }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csX A value that, along with csY, identifies the color in the scheme.
+              @param csY A value that, along with csX, identifies the color in the scheme.
+              @return Returns a colorTpl value */
+          static inline colorTpl c(csFltType csX, csFltType csY) { colorTpl tmp; return c(tmp, csX, csY); }
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csZ A value that identifies the color in the scheme.
+              @return Returns a reference to \a aColor. */
+          static inline colorTpl& c(colorRefType aColor, csCplxType csZ) { return c(aColor, std::real(csZ), std::imag(csZ)); }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csZ A value that identifies the color in the scheme.
+              @return Returns a colorTpl value */
+          static inline colorTpl c(csCplxType csZ) { colorTpl tmp; return c(tmp, std::real(csZ), std::imag(csZ)); }
+      };
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Compute a color for a point in @f$\mathbb{R}^2@f$ using a discrete color scheme for the phase angle.
+          This is a continuous, 2D color scheme! 
+          @tparam colorScheme Integer indexed color scheme to use for the argument.  csCColdeRainbow is a traditional choice.
+          @tparam argWrap     Number of times to wrap around the color ramp for arg
+          @tparam cutDepth    See: tfrmComplexCut()
+          @tparam argCuts     See: tfrmComplexCut()
+          @tparam absCuts     See: tfrmComplexCut()
+          @tparam logAbs      See: tfrmComplexCut() */
+      template<typename colorScheme, int argWrap, double cutDepth, double argCuts, double absCuts, bool logAbs>
+      class csIdxPalArg2D {
+        public:
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csX A value in @f$(-\infty, \infty)@f$ that, along with csY, identifies the color in the scheme.
+              @param csY A value that, along with csX, identifies the color in the scheme.
+              @return Returns a reference to \a aColor. */
+          static inline colorTpl& c(colorRefType aColor, csFltType csX, csFltType csY) {
+            csIntType numC  = colorScheme::numC;
+            double tau   = std::numbers::pi * 2;                   // 2*Pi
+            double zArg  = std::atan2(csY, csX);                   // Arg
+            double pzArg = (zArg < 0.0 ? tau + zArg : zArg) / tau; // Arg mapped to [0, 1]
+            aColor.csSet<colorScheme>(static_cast<csIntType>(mjr::numberWrap(mjr::unitTooIntLinMap(mjr::unitClamp(pzArg), numC*argWrap), numC)));
+            return aColor.tfrmComplexCut(std::complex<double>(csX, csY), cutDepth, argCuts, absCuts, logAbs);
+          }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csX A value that, along with csY, identifies the color in the scheme.
+              @param csY A value that, along with csX, identifies the color in the scheme.
+              @return Returns a colorTpl value */
+          static inline colorTpl c(csFltType csX, csFltType csY) { colorTpl tmp; return c(tmp, csX, csY); }
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csZ A value that identifies the color in the scheme.
+              @return Returns a reference to \a aColor. */
+          static inline colorTpl& c(colorRefType aColor, csCplxType csZ) { return c(aColor, std::real(csZ), std::imag(csZ)); }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csZ A value that identifies the color in the scheme.
+              @return Returns a colorTpl value */
+          static inline colorTpl c(csCplxType csZ) { colorTpl tmp; return c(tmp, std::real(csZ), std::imag(csZ)); }
+      };
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Compute a color for a point in @f$\mathbb{R}^2@f$ using a continuous color scheme for the phase angle.
+          This is a continuous, 2D color scheme! 
+          @tparam colorScheme Integer indexed color scheme to use for the argument.  csCColdeRainbow is a traditional choice.
+          @tparam argWrap     Number of times to wrap around the color ramp for arg
+          @tparam cutDepth    See: tfrmComplexCut()
+          @tparam argCuts     See: tfrmComplexCut()
+          @tparam absCuts     See: tfrmComplexCut()
+          @tparam logAbs      See: tfrmComplexCut() */
+      template<typename colorScheme, int argWrap, double cutDepth, double argCuts, double absCuts, bool logAbs>
+      class csFltPalArg2D {
+        public:
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csX A value in @f$(-\infty, \infty)@f$ that, along with csY, identifies the color in the scheme.
+              @param csY A value that, along with csX, identifies the color in the scheme.
+              @return Returns a reference to \a aColor. */
+          static inline colorTpl& c(colorRefType aColor, csFltType csX, csFltType csY) {
+            double tau   = std::numbers::pi * 2;                   // 2*Pi
+            double zArg  = std::atan2(csY, csX);                   // Arg
+            double pzArg = (zArg < 0.0 ? tau + zArg : zArg) / tau; // Arg mapped to [0, 1]
+            aColor.csSet<colorScheme>(static_cast<csFltType>(mjr::numberWrap(mjr::unitClamp(pzArg)*argWrap, 1.0)));
+            return aColor.tfrmComplexCut(std::complex<double>(csX, csY), cutDepth, argCuts, absCuts, logAbs);
+          }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csX A value that, along with csY, identifies the color in the scheme.
+              @param csY A value that, along with csX, identifies the color in the scheme.
+              @return Returns a colorTpl value */
+          static inline colorTpl c(csFltType csX, csFltType csY) { colorTpl tmp; return c(tmp, csX, csY); }
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csZ A value that identifies the color in the scheme.
+              @return Returns a reference to \a aColor. */
+          static inline colorTpl& c(colorRefType aColor, csCplxType csZ) { return c(aColor, std::real(csZ), std::imag(csZ)); }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csZ A value that identifies the color in the scheme.
+              @return Returns a colorTpl value */
+          static inline colorTpl c(csCplxType csZ) { colorTpl tmp; return c(tmp, std::real(csZ), std::imag(csZ)); }
+      };
+#endif
+      //@}
+
+      template <class csT, class csAT> colorTpl& csSet(csAT csArg)               { return csT::c(*this, csArg); }
+      template <class csT, class csAT> colorTpl& csSet(csAT csArg1, csAT csArg2) { return csT::c(*this, csArg1, csArg2); }
 
   };
 

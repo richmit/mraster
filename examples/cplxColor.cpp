@@ -36,6 +36,7 @@
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 using cplx = std::complex<double>;
+using ct_t = mjr::ramCanvas3c8b::colorType;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 cplx f(cplx z);
@@ -46,44 +47,33 @@ int main(void) {
   const double ar       = 16/9.0; // Aspect ratio
   const int    hdLevel  = 4;      // 1=FHD/2 2=FHD, 4=4k, 8=8k
   mjr::ramCanvas3c8b theRamCanvas(960*hdLevel, 540*hdLevel, -2.2*ar, 2.2*ar, -2.2, 2.2);
-  mjr::ramCanvas3c8b::colorType aColor;
-
-  const double tau      = std::numbers::pi * 2;   // 2*Pi
-  const double cutDepth = 10.0;          // Range: $[1, ~30]$ Smaller means more contrast on cuts.
-  const double argCuts  = 16.0;          // Number of grey cuts for arg
-  const int    argWrap  = 3;             // Number of times to wrap around the color ramp for arg
-  const double absCuts  = 2.0;           // Number of grey cuts for abs
-  const int    numColor = 6*255;         // Number of colors in setRGBcmpClrCubeRainbow -1
+  ct_t aColor;
 
   for(int y=0;y<theRamCanvas.getNumPixY();y++)  {
-    //std::cout << "LINE: " << y << " of " << (1080*hdLevel) << std::endl;
+    if (0==(y % (hdLevel*20)))
+        std::cout << "LINE: " << y << " of " << (540*hdLevel) << std::endl;
     for(int x=0;x<theRamCanvas.getNumPixX();x++) {
-      cplx z { theRamCanvas.int2realX(x), theRamCanvas.int2realY(y) };
-      cplx fz      = f(z);
+      cplx fz = f(cplx(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y)));
 
-      double zArg  = std::arg(fz);                           // Arg
-      double pzArg = (zArg < 0.0 ? tau + zArg : zArg) / tau; // Arg mapped to [0, 1]
-      double zAbs  = std::abs(fz);                           // Abs
-      double lzAbs = std::log(zAbs);                         // log(Abs
-      // double xAbs  = std::abs(x);                            // abs(re
-      // double yAbs  = std::abs(y);                            // abs(img
-      // double xPz   = 1.0/(xAbs + 1.0);                       // Map real z to [0,1]  0->1, \inf->0
-      // double yPz   = 1.0/(yAbs + 1.0);                       // Map real z to [0,1]  0->1, \inf->0
-      // double zPz   = 1.0/(zAbs + 1.0);                       // Map abs(z) to [0,1]  0->1, \inf->0
-      // double atm   = 2*atan(zAbs)/pi;                        // Map Abs to [0,1]
-      // double a     = 2;                                      // param for sgpm
-      // double tmp   = std::pow(zAbs, a);                      // tmp for sgpm
-      // double sgpm  = tmp / (tmp + 1);                        // Map Abs to [0, 1] e stereographic projection onto the Riemann sphere.
-      // double patm  = 1 - std::pow(0.5, zAbs);                // Map Abs to [0,1] -- much like atm, but no trig
+      // We can use built in 2D color schemes in multiple diffrent ways.
+      //
+      // aColor = ct_t::csRichardson2D<10.0, 10.0, 2.0, 1>::c(std::real(fz), std::imag(fz));
+      // aColor = ct_t::csRichardson2D<10.0, 10.0, 2.0, 1>::c(fz);
+      //
+      // ct_t::csRichardson2D<10.0, 10.0, 2.0, 1>::c(aColor, fz);
+      // ct_t::csRichardson2D<10.0, 10.0, 2.0, 1>::c(aColor, std::real(fz), std::imag(fz));
+      //
+      // aColor.csSet<ct_t::csRichardson2D<10.0, 10.0, 2.0, 1>>(fz);
+      // aColor.csSet<ct_t::csRichardson2D<10.0, 10.0, 2.0, 1>>(std::real(fz), std::imag(fz));
 
-      // Primary color for fz
-      aColor.csSet<mjr::ramCanvas3c8b::colorType::csCColdeRainbow>(static_cast<mjr::ramCanvas3c8b::csIntType>(mjr::numberWrap(mjr::unitTooIntLinMap(mjr::unitClamp(pzArg), 
-                                                                                                                                                    numColor*argWrap),
-                                                                                                                              numColor))); // Make color
+      // A common choice for color scheme is ct_t::csCColdeRainbow:
+      aColor.csSet<ct_t::csIdxPalArg2D<ct_t::csCColdeRainbow, 3, 10.0, 10.0, 2.0, 1>>(fz); 
 
-      // Modify the color with "cuts" along argument & magnitede scales.
-      aColor.tfrmLinearGreyLevelScale(1.0 - std::fabs(int(pzArg*argCuts) - pzArg*argCuts)/cutDepth, 0);
-      aColor.tfrmLinearGreyLevelScale(1.0 - std::fabs(int(lzAbs*absCuts) - lzAbs*absCuts)/cutDepth, 0);
+      // If we use a variable sized pallet, then we must convert it to fixed first:
+      //aColor.csSet<ct_t::csIdxPalArg2D<ct_t::csVarToFixed_tpl<ct_t::csCBPiYG, 11>, 3, 10.0, 10.0, 2.0, 1>>(fz); 
+
+      // We can use csFltPalArg2D for continious color pallets
+      // aColor.csSet<ct_t::csFltPalArg2D<ct_t::csPLYviridis, 3, 10.0, 10.0, 2.0, 1>>(fz); 
 
       theRamCanvas.drawPoint(x, y, aColor);
     }
@@ -96,8 +86,8 @@ int main(void) {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 cplx f(cplx z) {
   try {
-    z=z*cplx(1.5);
-    return ((z-2.0)*(z-2.0)*(z+cplx(1,-2))*(z+cplx(2,2))/(z*z*z));
+    // z=z*cplx(1.5);
+    // return ((z-2.0)*(z-2.0)*(z+cplx(1,-2))*(z+cplx(2,2))/(z*z*z));
 
     // z=z/cplx(5.5);
     // return (std::sin(cplx(1)/z));
@@ -116,7 +106,7 @@ cplx f(cplx z) {
 
     // return (std::sin(std::exp(z)) - cplx(1))/(std::cos(z*z) - cplx(2.0)*z*z + z + cplx(1));
 
-    // return (z - cplx(1))/(z*z*z - cplx(0.5)*z*z + z + cplx(1));
+    return (z - cplx(1))/(z*z*z - cplx(0.5)*z*z + z + cplx(1));
 
     // return z;
 

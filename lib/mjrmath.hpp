@@ -187,6 +187,14 @@ namespace mjr {
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/** Map a non-negative double into the unit interval, the range [0,1] such that 0 mapps to 1 and @f$\infty@f$ maps to 0
+    @param aDouble The value to be mapped
+    @return The mapped value. */
+  inline double rightRayToInterval(double aDouble) {
+    return 1.0/(aDouble + 1.0);
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /** Map an double in the unit interval, the range [0,1], onto the integers in the range [0,maxOutValue] via a linear mapping function.  That is to say, 0.0
     maps to 0, and 1.0 maps to maxOutValue. Input values outside the allowed input range may be linearly mapped outside of the given output range.  To
     guarantee an output within [0,maxInValue], then clamp the input values to the unit interval.
