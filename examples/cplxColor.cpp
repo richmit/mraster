@@ -57,23 +57,34 @@ int main(void) {
 
       // We can use built in 2D color schemes in multiple diffrent ways.
       //
-      // aColor = ct_t::csRichardson2D<10.0, 10.0, 2.0, 1>::c(std::real(fz), std::imag(fz));
-      // aColor = ct_t::csRichardson2D<10.0, 10.0, 2.0, 1>::c(fz);
+      // aColor = ct_t::cs2dRichardson<10.0, 10.0, 2.0, 1>::c(std::real(fz), std::imag(fz));
+      // aColor = ct_t::cs2dRichardson<10.0, 10.0, 2.0, 1>::c(fz);
       //
-      // ct_t::csRichardson2D<10.0, 10.0, 2.0, 1>::c(aColor, fz);
-      // ct_t::csRichardson2D<10.0, 10.0, 2.0, 1>::c(aColor, std::real(fz), std::imag(fz));
+      // ct_t::cs2dRichardson<10.0, 10.0, 2.0, 1>::c(aColor, fz);
+      // ct_t::cs2dRichardson<10.0, 10.0, 2.0, 1>::c(aColor, std::real(fz), std::imag(fz));
       //
-      // aColor.csSet<ct_t::csRichardson2D<10.0, 10.0, 2.0, 1>>(fz);
-      // aColor.csSet<ct_t::csRichardson2D<10.0, 10.0, 2.0, 1>>(std::real(fz), std::imag(fz));
+      // aColor.csSet<ct_t::cs2dRichardson<10.0, 10.0, 2.0, 1>>(fz);
+      // aColor.csSet<ct_t::cs2dRichardson<10.0, 10.0, 2.0, 1>>(std::real(fz), std::imag(fz));
+
+      // // Schemes designed for coloring complex functions
+      // aColor.csSet<ct_t::cs2dRichardson< 10.0, 10.0, 10.0, 1>>(fz);
+      // aColor.csSet<ct_t::cs2dThallerHSL< 10.0, 10.0, 10.0, 1>>(fz);
+      // aColor.csSet<ct_t::cs2dThallerHSV< 10.0, 10.0, 10.0, 1>>(fz);
+      // aColor.csSet<ct_t::cs2dThallerHSVm<10.0, 10.0, 10.0, 1>>(fz);
 
       // A common choice for color scheme is ct_t::csCColdeRainbow:
-      aColor.csSet<ct_t::csIdxPalArg2D<ct_t::csCColdeRainbow, 3, 10.0, 10.0, 2.0, 1>>(fz); 
+      //aColor.csSet<ct_t::cs2dIdxPalArg<ct_t::csCColdeRainbow, 3, 10.0, 10.0, 2.0, 1>>(fz); 
 
-      // If we use a variable sized pallet, then we must convert it to fixed first:
-      //aColor.csSet<ct_t::csIdxPalArg2D<ct_t::csVarToFixed_tpl<ct_t::csCBPiYG, 11>, 3, 10.0, 10.0, 2.0, 1>>(fz); 
+      aColor.csSet<ct_t::cs2dIdxPalArg<ct_t::csCColdeRainbow, 3, 5.0, 20.0, 2.0, 1>>(fz); 
 
-      // We can use csFltPalArg2D for continious color pallets
-      // aColor.csSet<ct_t::csFltPalArg2D<ct_t::csPLYviridis, 3, 10.0, 10.0, 2.0, 1>>(fz); 
+      // Variable sized pallets can be used with an adapter
+      //aColor.csSet<ct_t::cs2dIdxPalArg<ct_t::csVarToFixed_tpl<ct_t::csCBPiYG, 11>, 3, 10.0, 10.0, 2.0, 1>>(fz); 
+
+      // Most variable sized pallets can be also be used directly as a continious pallet
+      //aColor.csSet<ct_t::cs2dFltPalArg<ct_t::csCBPiYG, 3, 10.0, 10.0, 2.0, 1>>(fz); 
+
+      // We can use cs2dFltPalArg for continious color pallets
+      // aColor.csSet<ct_t::cs2dFltPalArg<ct_t::csPLYviridis, 3, 10.0, 10.0, 2.0, 1>>(fz); 
 
       theRamCanvas.drawPoint(x, y, aColor);
     }
@@ -86,6 +97,9 @@ int main(void) {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 cplx f(cplx z) {
   try {
+
+    return 1.0/(z+1.0) + 1.0/(z-1.0);
+
     // z=z*cplx(1.5);
     // return ((z-2.0)*(z-2.0)*(z+cplx(1,-2))*(z+cplx(2,2))/(z*z*z));
 
@@ -102,11 +116,11 @@ cplx f(cplx z) {
     //   z = (std::sin(std::exp(z)) - cplx(1))/(std::cos(z*z) - cplx(2.0)*z*z + z + cplx(1));
     // return z;
 
-    // return (std::sin(z) - cplx(1))/(z*z*z - cplx(0.5)*z*z + z + cplx(1));
+    //return (std::sin(z) - cplx(1))/(z*z*z - cplx(0.5)*z*z + z + cplx(1));
 
     // return (std::sin(std::exp(z)) - cplx(1))/(std::cos(z*z) - cplx(2.0)*z*z + z + cplx(1));
 
-    return (z - cplx(1))/(z*z*z - cplx(0.5)*z*z + z + cplx(1));
+    // return (z - cplx(1))/(z*z*z - cplx(0.5)*z*z + z + cplx(1));
 
     // return z;
 

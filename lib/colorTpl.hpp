@@ -2612,7 +2612,7 @@ namespace mjr {
          @param argCuts   Number of grey cuts for arg
          @param absCuts   Number of grey cuts for abs 
          @param logAbs    If true, then take the logorithm of abs for cuts. */
-      inline colorTpl& tfrmComplexCut(std::complex<double> z, double cutDepth = 10.0, double argCuts = 16.0, double absCuts = 2.0, bool logAbs = true) {
+      inline colorTpl& tfrmComplexCut(std::complex<double> z, double cutDepth, double argCuts, double absCuts, bool logAbs = true) {
         double tau   = std::numbers::pi * 2;                   // 2*Pi
         double zArg  = std::arg(z);                            // Arg
         double pzArg = (zArg < 0.0 ? tau + zArg : zArg) / tau; // Arg mapped to [0, 1]
@@ -3219,6 +3219,44 @@ namespace mjr {
           static colorTpl c(colorRefType csCol) { colorTpl tmp; return c(tmp, csCol); }
         private:
           constexpr static uint32_t d[] = { colors... };
+      };
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Template for Thaller 2D color schemes. */
+      template<bool useHSL, bool maxV, double cutDepth, double argCuts, double absCuts, bool logAbs>
+      requires( !(useHSL && maxV))
+      class cs2dThaller_tpl {
+        public:
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csX A value in @f$(-\infty, \infty)@f$ that, along with csY, identifies the color in the scheme.
+              @param csY A value that, along with csX, identifies the color in the scheme.
+              @return Returns a reference to \a aColor. */
+          static inline colorTpl& c(colorRefType aColor, csFltType csX, csFltType csY) {
+            double tau   = std::numbers::pi * 2;                   // 2*Pi
+            double zAbs  = std::sqrt(csX*csX+csY*csY);             // Abs
+            double zArg  = std::atan2(csY, csX);                   // Arg
+            double pzArg = (zArg < 0.0 ? tau + zArg : zArg) / tau; // Arg mapped to [0, 1]
+            double val   = (maxV ? 1 : 4.0*std::atan(zAbs)/tau);    // V for HSV
+            if (useHSL)
+              aColor.setRGBfromUnitHSL(pzArg, 1.0, val);
+            else
+              aColor.setRGBfromUnitHSV(pzArg, 1.0, val);
+            return aColor.tfrmComplexCut(std::complex<double>(csX, csY), cutDepth, argCuts, absCuts, logAbs);
+          }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csX A value that, along with csY, identifies the color in the scheme.
+              @param csY A value that, along with csX, identifies the color in the scheme.
+              @return Returns a colorTpl value */
+          static inline colorTpl c(csFltType csX, csFltType csY) { colorTpl tmp; return c(tmp, csX, csY); }
+          /** Set given colorTpl instance to the selected color in the color scheme.
+              @param aColor color object to set.
+              @param csZ A value that identifies the color in the scheme.
+              @return Returns a reference to \a aColor. */
+          static inline colorTpl& c(colorRefType aColor, csCplxType csZ) { return c(aColor, std::real(csZ), std::imag(csZ)); }
+          /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
+              @param csZ A value that identifies the color in the scheme.
+              @return Returns a colorTpl value */
+          static inline colorTpl c(csCplxType csZ) { colorTpl tmp; return c(tmp, std::real(csZ), std::imag(csZ)); }
       };
       //@}
 
@@ -4934,7 +4972,7 @@ namespace mjr {
           @tparam absCuts  See: tfrmComplexCut()
           @tparam logAbs   See: tfrmComplexCut() */
       template<double cutDepth, double argCuts, double absCuts, bool logAbs>
-      class csRichardson2D {
+      class cs2dRichardson {
         public:
           /** Set given colorTpl instance to the selected color in the color scheme.
               @param aColor color object to set.
@@ -4978,7 +5016,7 @@ namespace mjr {
           @tparam absCuts     See: tfrmComplexCut()
           @tparam logAbs      See: tfrmComplexCut() */
       template<typename colorScheme, int argWrap, double cutDepth, double argCuts, double absCuts, bool logAbs>
-      class csIdxPalArg2D {
+      class cs2dIdxPalArg {
         public:
           /** Set given colorTpl instance to the selected color in the color scheme.
               @param aColor color object to set.
@@ -5018,7 +5056,7 @@ namespace mjr {
           @tparam absCuts     See: tfrmComplexCut()
           @tparam logAbs      See: tfrmComplexCut() */
       template<typename colorScheme, int argWrap, double cutDepth, double argCuts, double absCuts, bool logAbs>
-      class csFltPalArg2D {
+      class cs2dFltPalArg {
         public:
           /** Set given colorTpl instance to the selected color in the color scheme.
               @param aColor color object to set.
@@ -5047,6 +5085,36 @@ namespace mjr {
               @return Returns a colorTpl value */
           static inline colorTpl c(csCplxType csZ) { colorTpl tmp; return c(tmp, std::real(csZ), std::imag(csZ)); }
       };
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Compute a color from Bernd Thaller's 2D complex number coloring scheme with HSL.  
+          See: Bernd Thaller (2000); Visual Quantum Mechanics; pp 2-8
+          This is a continuous, 2D color scheme! 
+          @tparam cutDepth See: tfrmComplexCut()
+          @tparam argCuts  See: tfrmComplexCut()
+          @tparam absCuts  See: tfrmComplexCut()
+          @tparam logAbs   See: tfrmComplexCut() */
+      template<double cutDepth, double argCuts, double absCuts, bool logAbs>
+      using cs2dThallerHSL  = cs2dThaller_tpl<1, 0, cutDepth, argCuts, absCuts, logAbs>  ;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Compute a color from Bernd Thaller's 2D complex number coloring scheme with HSV and maximum value.  
+          See: Bernd Thaller (2000); Visual Quantum Mechanics; pp 2-8
+          This is a continuous, 2D color scheme! 
+          @tparam cutDepth See: tfrmComplexCut()
+          @tparam argCuts  See: tfrmComplexCut()
+          @tparam absCuts  See: tfrmComplexCut()
+          @tparam logAbs   See: tfrmComplexCut() */
+      template<double cutDepth, double argCuts, double absCuts, bool logAbs>
+      using cs2dThallerHSVm = cs2dThaller_tpl<0, 1, cutDepth, argCuts, absCuts, logAbs>  ;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Compute a color from Bernd Thaller's 2D complex number coloring scheme with HSV and dynamic value.  
+          See: Bernd Thaller (2000); Visual Quantum Mechanics; pp 2-8
+          This is a continuous, 2D color scheme! 
+          @tparam cutDepth See: tfrmComplexCut()
+          @tparam argCuts  See: tfrmComplexCut()
+          @tparam absCuts  See: tfrmComplexCut()
+          @tparam logAbs   See: tfrmComplexCut() */
+      template<double cutDepth, double argCuts, double absCuts, bool logAbs>
+      using cs2dThallerHSV  = cs2dThaller_tpl<0, 0, cutDepth, argCuts, absCuts, logAbs>  ;
 #endif
       //@}
 
