@@ -40,8 +40,6 @@ end up on this list.
 
 In no particular order:
 
- - Update doxygen config
-   -
  - Homo transforms
    - +Complex abs/arg greyscale transform+ DONE.
  - 2D plane Color Schemes
@@ -49,6 +47,7 @@ In no particular order:
    - thaller HSL
    - thaller HSV
    - +Around the cube arg+
+   - Add them all to the color schemes page!
  - Canvas Compositing
    - adjoinCanvas(const ramCanvasTpl &theCanvas, side);
    - +insertCanvas(const ramCanvasTpl &theCanvas, intCrdT x1 = 0, intCrdT y1 = 0)+ DONE.
