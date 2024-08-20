@@ -218,10 +218,7 @@ make your_program
 :CUSTOM_ID: platform-notes
 :END:
 
-I write these notes on 2022-08-28 as a guide for making the most of *=MRaster=* on various platforms given the rather uneven nature of C++20 support in the
-wild.  I expect these notes will be out of date by the time I hit the publish button. ;)
-
-** Windows 11 with MSYS2 GCC 12.1.0
+** Windows 11 with MSYS2 GCC 12.1.0 (and newer GCCs -- tested up to v14.1.0)
 :PROPERTIES:
 :CUSTOM_ID: platform-notes-m2w11gcc12
 :END:
@@ -232,7 +229,7 @@ Everything works with the following cmake:
 cmake -G 'MSYS Makefiles' -DCMAKE_CXX_COMPILER=g++ ..
 #+end_src
 
-** Windows 11 with MSYS2 clang 14.0.6
+** Windows 11 with MSYS2 clang 14.0.6-18 (and newer clangs -- tested up to v18.1.6)
 :PROPERTIES:
 :CUSTOM_ID: platform-notes-m2w11clang14
 :END:
@@ -256,7 +253,7 @@ From the MSYS2 shell, we can run cmake like this:
 cmake -G 'Visual Studio 17 2022' ..
 #+end_src
 
-Then open up the directory with explorer, and double click on one of the project files.  That will open up VS, and you can work the project.
+Then open up the directory with explorer, and double click on one of the project files.  That will open up VS, and load up the project.
 
 ** Windows 11 with Visual Studio 2022 Community Edition
 :PROPERTIES:
@@ -311,6 +308,28 @@ Lastly, note the =-DGLUT_glut_LIBRARY= option -- this is required to direct =cma
 
 #+begin_src sh :eval never :tangle no :exports code
 cmake -DCMAKE_CXX_COMPILER=clang++ -DGLUT_glut_LIBRARY=/System/Library/Frameworks/GLUT.framework ..
+#+end_src
+
+** Debian 12.6 bookworm with GCC 13.3.0 (or with the GCC-14 package -- tested with version 14.0.1)
+:PROPERTIES:
+:CUSTOM_ID: platform-notes-lindeb126gcc133
+:END:
+
+This is the stock compiler that comes with bookworm.  It's a bit old, but everything seems to work
+
+You can install everything you might want for *=MRaster=* like so:
+
+#+begin_src sh :eval never :tangle no :exports code
+sudo apt update
+sudo apt upgrade
+sudo apt-get install build-essential libsdl2-dev libtiff-dev freeglut3-dev doxygen libboost-all-dev 
+sudo apt-get install povray ffmpeg imagemagick
+#+end_src
+
+Now you can use the following =cmake= command:
+
+#+begin_src sh :eval never :tangle no :exports code
+cmake ..
 #+end_src
 
 ** Debian bullseye 11.4 with GCC 10.2.1
