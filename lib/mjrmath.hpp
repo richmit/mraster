@@ -201,8 +201,9 @@ namespace mjr {
     @param aDouble The value to be mapped
     @param maxOutValue The maximum output value (used to compute slope for linear map, not to clamp)
     @return The mapped value. */
-  inline int unitTooIntLinMap(double aDouble, int maxOutValue) {
-    return int(aDouble*double(maxOutValue));
+  template <typename intT>
+  inline intT unitTooIntLinMap(double aDouble, intT maxOutValue) {
+    return intT(aDouble*double(maxOutValue));
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
