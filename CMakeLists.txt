@@ -251,6 +251,7 @@ add_custom_target(clean-images
 
 if(EXISTS "c:/Users/richmit/Documents/WWW/site/SS/mraster/doc-lib/")
   add_custom_target(install-doc-lib
+    DEPENDS doc-lib
     COMMAND  rsync -rlt --log-format=%f --stats --delete --delete-excluded --modify-window=2 doc-lib/ /c/Users/richmit/Documents/WWW/site/SS/mraster/doc-lib
     COMMENT "Put doc-lib data in web site directory"
   )
@@ -258,6 +259,7 @@ endif()
 
 if(EXISTS "c:/Users/richmit/Documents/WWW/site/SS/mraster/doc-examples/")
   add_custom_target(install-doc-examples
+    DEPENDS doc-examples
     COMMAND  rsync -rlt --log-format=%f --stats --delete --delete-excluded --modify-window=2 doc-examples/ /c/Users/richmit/Documents/WWW/site/SS/mraster/doc-examples
     COMMENT "Put doc-examples data in web site directory"
   )
