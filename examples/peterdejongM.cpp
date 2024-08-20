@@ -29,7 +29,7 @@
   @endparblock
  @filedetails
 
-  Moves the parameters around a simple closed curve in $\mathbb{R}^8$.  Make a GIF like this:
+  Moves the parameters around a simple closed curve in @f$\mathbb{R}^8@f$.  Make a GIF like this:
 
        time convert -delay 1 -loop 0 -dispose previous peterdejongM_???.tiff peterdejongM.gif
 */

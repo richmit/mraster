@@ -29,8 +29,8 @@
   @endparblock
  @filedetails   
 
-  Iterate $f(x)=z^5+a\cdot z+c$ as one would $f(z)=z^2+c$ to render a Mandelbrot set.  Vary the parameter $a$ by moving it around the unit circle, and
-  drop out an image for each $a$.  The resulting images may be rendered into movies like this:
+  Iterate @f$f(x)=z^5+a\cdot z+c@f$ as one would @f$f(z)=z^2+c@f$ to render a Mandelbrot set.  Vary the parameter @f$a@f$ by moving it around the unit circle, and
+  drop out an image for each @f$a@f$.  The resulting images may be rendered into movies like this:
 
   - Make a gif
     convert -delay 1 -loop 0 -dispose previous mandelbrot_wave_???.tiff mandelbrot_wave_mean.gif
