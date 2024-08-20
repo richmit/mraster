@@ -16,6 +16,8 @@ fi
 # Get the tag name out of CMakeLists.txt
 TAG_NAME=$(grep '^set(PROJECT_VERSION_ID' CMakeLists.txt | sed 's/^.* //; s/)$//')
 
+echo "Tag found in CMakeLists.txt: " $TAG_NAME
+
 # Make sure the tag doesn't already exist
 if git show-ref --tags "$TAG_NAME" --quiet; then
   echo "Tag already exists!!"
@@ -23,12 +25,12 @@ if git show-ref --tags "$TAG_NAME" --quiet; then
 fi
 
 # Make sure the tag is in the doxygen documentation too
-if grep -Fq "PROJECT_NAME           = \"MRaster $TAG_NAME lib\"" ~/world/WWW/site/SS/mraster/doc-lib/Doxyfile; then
+if grep -Fq "PROJECT_NAME           = \"MRaster $TAG_NAME lib\"" ~/Documents/WWW/site/SS/mraster/doc-lib/Doxyfile; then
   echo "Deployed doxygen documentation has correct tag string"
 else
   echo "Deployed doxygen documentation has incorrect tag string:"
-  echo "   ~/world/WWW/site/SS/mraster/doc-lib/Doxyfile:"
-  grep "^PROJECT_NAME" ~/world/WWW/site/SS/mraster/doc-lib/Doxyfile | sed 's/^/   /'
+  echo "   ~/Documents/WWW/site/SS/mraster/doc-lib/Doxyfile:"
+  grep "^PROJECT_NAME" ~/Documents/WWW/site/SS/mraster/doc-lib/Doxyfile | sed 's/^/   /'
   exit
 fi
 
