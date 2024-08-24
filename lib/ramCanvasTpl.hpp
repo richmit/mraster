@@ -33,7 +33,7 @@
 
 #ifndef MJR_INCLUDE_ramCanvasTpl
 
-#ifdef TIFF_FOUND
+#ifdef MRASTER_FOUND_TIFF
 #include <unistd.h>                                                      /* UNIX std stf            POSIX    */
 #include <tiffio.h>                                                      /* libTIFF                 libTIFF  */
 #endif
@@ -4473,7 +4473,7 @@ namespace mjr {
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
     int
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::readTIFFfile(std::string fileName) {
-#ifndef TIFF_FOUND
+#ifndef MRASTER_FOUND_TIFF
     std::cerr << "ERROR: libTIFF no supported: readTIFFfile can't read " << fileName << std::endl;
     return 32;
 #else
@@ -4608,7 +4608,7 @@ namespace mjr {
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
     inline bool
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::supportLibTIFF() {
-#ifndef TIFF_FOUND
+#ifndef MRASTER_FOUND_TIFF
     return true;
 #else
     return false;

@@ -6,69 +6,126 @@ set(OpenGL_GL_PREFERENCE "GLVND") # Alternative
 ######################################################################################################################################################
 # Proejct meta data
 
-project(MRaster CXX)
+project(MRaster
+  VERSION 20.12.3.0
+  DESCRIPTION "Image Processing Library"
+  HOMEPAGE_URL "https://github.com/richmit/mraster/"
+  LANGUAGES CXX)
 
-set(PROJECT_VERSION_DATE  2024-08-20)
-set(PROJECT_VERSION_ID    v20.12.3)
-mark_as_advanced(PROJECT_VERSION_DATE PROJECT_VERSION_ID)
+set(MRASTER_VERSION_DATE  2024-08-20)
+mark_as_advanced(MRASTER_VERSION_DATE)
 
 ######################################################################################################################################################
 # Here are the options we use to modify the build -- these options are passed to cmake like so: cmake -DO_OPENSSL=YES or -DO_OPENSSL=NO
 
-OPTION(O_DOXYGEN "Include support for doxygen"         ON )
-OPTION(O_TIFF    "Include support for libTIFF"         ON )
-OPTION(O_OPENGL  "Include support for OpenGL & GLUT"   ON )
-OPTION(O_OPENMP  "Include support for OpenMP"          ON )
-OPTION(O_MOVIE   "Include support making movies"       ON )
-OPTION(O_RAY     "Include support ray-tracing"         ON )
-OPTION(O_BTEST   "Include support for boost.test"      ON )
-OPTION(O_SDL2    "Include support for SDL2"            ON )
-
-set(POVRAY_HINT "c:/Program Files/POV-Ray/v3.7/bin/")
+OPTION(O_DOXYGEN "Include support for doxygen"                   ON )
+OPTION(O_TIFF    "Include support for libTIFF"                   ON )
+OPTION(O_OPENGL  "Include support for OpenGL & GLUT"             ON )
+OPTION(O_OPENMP  "Include support for OpenMP"                    ON )
+OPTION(O_BTEST   "Include support for boost.test"                ON )
+OPTION(O_SDL2    "Include support for SDL2"                      ON )
+OPTION(O_128_INT "Include support for 128-bit ints if possible"  ON )
 
 ######################################################################################################################################################
-# Find tools & libraries used to build primary/secondary/tertiary targets
-
-if(O_MOVIE)
-  find_program(MAKEMOV avconv)
-  find_program(MAKEMOV ffmpeg)
-  if(${MAKEMOV} STREQUAL "MAKEMOV-NOTFOUND")
-    message(WARNING "Could not find movie making command for MAKEMOV")
-  endif()
-endif()
-
-if(O_RAY)
-  find_program(POVRAY pvengine HINTS ${POVRAY_HINT})
-  find_program(POVRAY povray)
-  if(${POVRAY} STREQUAL "POVRAY-NOTFOUND")
-    message(WARNING "Could not find POV-ray for POVRAY")
-  endif()
-endif()
+# Find tools & libraries used to build primary/secondary/tertiary targets.  Set config include file variables for options.
 
 if(O_DOXYGEN)
+  set(MRASTER_OPT_DOXYGEN "1")
   find_package(Doxygen)
+else()
+  set(MRASTER_OPT_DOXYGEN "0")
 endif()
 
 if(O_TIFF)
+  set(MRASTER_OPT_TIFF "1")
   find_package(TIFF)
+else()
+  set(MRASTER_OPT_TIFF "0")
 endif()
 
 if(O_OPENGL)
+  set(MRASTER_OPT_OPENGL "1")
   find_package(OpenGL)
   find_package(GLUT)
+else()
+  set(MRASTER_OPT_OPENGL "0")
 endif()
 
 if(O_OPENMP)
+  set(MRASTER_OPT_OPENMP "1")
   find_package(OpenMP)
+else()
+  set(MRASTER_OPT_OPENMP "0")
 endif()
 
 if(O_SDL2)
-find_package (SDL2)
+  set(MRASTER_OPT_SDL2 "1")
+  find_package (SDL2)
+else()
+  set(MRASTER_OPT_SDL2 "0")
 endif()
 
 if(O_BTEST)
-find_package(Boost COMPONENTS unit_test_framework)
+  set(MRASTER_OPT_BTEST "1")
+  find_package(Boost COMPONENTS unit_test_framework)
+else()
+  set(MRASTER_OPT_BTEST "0")
 endif()
+
+IF(O_128_INT)
+  set(MRASTER_OPT_128_INT "1")
+else()
+  set(MRASTER_OPT_128_INT "0")
+endif()
+
+mark_as_advanced(MRASTER_OPT_128_INT MRASTER_OPT_BTEST MRASTER_OPT_DOXYGEN  MRASTER_OPT_OPENGL MRASTER_OPT_OPENMP MRASTER_OPT_SDL2 MRASTER_OPT_TIFF)
+
+######################################################################################################################################################
+# Setup  config include files variables related to found requirements
+
+if(Doxygen_FOUND)
+  set(MRASTER_FOUND_DOXYGEN "1")
+else()
+  set(MRASTER_FOUND_DOXYGEN "0")
+endif()
+
+if(TIFF_FOUND)
+  set(MRASTER_FOUND_TIFF "1")
+else()
+  set(MRASTER_FOUND_TIFF "0")
+endif()
+
+if(OpenGL_FOUND)
+  set(MRASTER_FOUND_OPENGL "1")
+else()
+  set(MRASTER_FOUND_OPENGL "0")
+endif()
+
+if(GLUT_FOUND)
+  set(MRASTER_FOUND_GLUT "1")
+else()
+  set(MRASTER_FOUND_GLUT "0")
+endif()
+
+if(OpenMP_FOUND)
+  set(MRASTER_FOUND_OPENMP "1")
+else()
+  set(MRASTER_FOUND_OPENMP "0")
+endif()
+
+if(SDL2_FOUND)
+  set(MRASTER_FOUND_SDL2 "1")
+else()
+  set(MRASTER_FOUND_SDL2 "0")
+endif()
+
+if(Boost_FOUND)
+  set(MRASTER_FOUND_BTEST "1")
+else()
+  set(MRASTER_FOUND_BTEST "0")
+endif()
+
+mark_as_advanced(MRASTER_FOUND_DOXYGEN MRASTER_FOUND_TIFF MRASTER_FOUND_OPENGL MRASTER_FOUND_OPENMP MRASTER_FOUND_SDL2 MRASTER_FOUND_BTEST)
 
 ######################################################################################################################################################
 
@@ -216,7 +273,6 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
   # Add build requirements for examples using libTIFF
   list (FIND TARGETS_REQ_TIFF ${CURTGT} TMPR)
   if(TIFF_FOUND AND (${TMPR} GREATER -1))
-    target_compile_definitions(${CURTGT} PUBLIC TIFF_FOUND=1)
     target_include_directories(${CURTGT} PRIVATE ${TIFF_INCLUDE_DIRS})
     target_link_libraries(${CURTGT} ${TIFF_LIBRARIES})
   endif()
@@ -228,7 +284,6 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
       target_compile_options(${CURTGT} PUBLIC "-mwindows")
       target_link_options(${CURTGT} PUBLIC "-Wl,-subsystem,windows")
     endif()
-    target_compile_definitions(${CURTGT} PUBLIC SDL2_FOUND=1)
     target_include_directories(${CURTGT} PRIVATE ${SDL2_INCLUDE_DIRS})
     target_link_libraries(${CURTGT} ${SDL2_LIBRARIES})
   endif()
@@ -266,21 +321,13 @@ if(EXISTS "c:/Users/richmit/Documents/WWW/site/SS/mraster/doc-examples/")
 endif()
 
 ######################################################################################################################################################
-
-# Add targets using povray
-
-######################################################################################################################################################
-
-# Add targets making movies
-
-######################################################################################################################################################
 # Generate an include file with various methdata about the build.
 
-CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/config.hpp.cmake ${CMAKE_BINARY_DIR}/config.hpp)
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/mraster_config.hpp.cmake ${CMAKE_BINARY_DIR}/mraster_config.hpp)
 
 ######################################################################################################################################################
-
 # Add targets for documentation
+
 if(Doxygen_FOUND)
   foreach(DOXINPUT IN ITEMS "lib" "examples")
     message("Info: Generateing doxygen target for ${DOXINPUT}")
@@ -288,9 +335,29 @@ if(Doxygen_FOUND)
     add_custom_target(doc-${DOXINPUT}
       COMMAND ${DOXYGEN_EXECUTABLE} > dox.out
       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc-${DOXINPUT}
-      COMMENT "Generating documentation with Doxygen"
+      COMMENT "Generating ${DOXINPUT} documentation with Doxygen"
       VERBATIM)
   endforeach(DOXINPUT)
 else()
   message("Warning: Doxygen not found.  No documentation targets!")
 endif()
+
+######################################################################################################################################################
+# This configuration "installs" all the stuff required to build things with mraster into the export directory -- it's just header files.
+# Compile notes for using the headers:
+#   - if libTIFF was found when cmake configured the project, then link options will need to be added to compile commands using mraster.
+#   - The directory with the include files may need to be added to the compiler's header search path (-I for GNU compilers)
+# Note everything in this directory is relocatable -- You can move this stuff wherever you want.
+
+set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/export")
+include(GNUInstallDirs)
+install(FILES "build/mraster_config.hpp"
+              "lib/color.hpp" 
+              "lib/colorTpl.hpp"
+              "lib/hersheyFont.hpp"
+              "lib/mjrmath.hpp"
+              "lib/point2d.hpp"
+              "lib/ramCanvas.hpp"
+              "lib/ramCanvasTpl.hpp"
+        TYPE INCLUDE)
+            

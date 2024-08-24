@@ -32,6 +32,8 @@
 #ifndef MJR_INCLUDE_colorTpl
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#include "mraster_config.hpp"
+
 #include "mjrmath.hpp"
 
 #include <algorithm>                                                     /* STL algorithm           C++11    */
@@ -57,7 +59,7 @@
 /** Set to 1 to look for 128-bit integer types, and 0 to not look for them.
     Right now this only works on GCC & Clang! */
 #ifndef MJR_LOOK_FOR_128_BIT_TYPES
-#define MJR_LOOK_FOR_128_BIT_TYPES 1
+#define MJR_LOOK_FOR_128_BIT_TYPES MRASTER_OPT_128_INT
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
