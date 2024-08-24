@@ -112,19 +112,19 @@ if [ -e ../CMakeLists.txt ]; then
     # Run cmake
     if [ "$CMAKE_TARGET_SRC" == "COMMAND_LINE" ]; then
       if [ -z "$CMAKE_CARG" ]; then
-        echo AA cmake "$@" ../
-        cmake "$@" ../
+        echo AA cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' "$@" ../
+        cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' "$@" ../
       else
-        echo BB cmake "$CMAKE_CARG" "$@" ../
-        cmake "$CMAKE_CARG" "$@" ../
+        echo BB cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' "$CMAKE_CARG" "$@" ../
+        cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' "$CMAKE_CARG" "$@" ../
       fi
     else
       if [ -z "$CMAKE_CARG" ]; then
-        echo CC cmake -G "$CMAKE_TARGET" "$@" ../
-        cmake -G "$CMAKE_TARGET" "$@" ../
+        echo CC cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' -G "$CMAKE_TARGET" "$@" ../
+        cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' -G "$CMAKE_TARGET" "$@" ../
       else
-        echo DD cmake -G "$CMAKE_TARGET" "$CMAKE_CARG" "$@" ../
-        cmake -G "$CMAKE_TARGET" "$CMAKE_CARG" "$@" ../
+        echo DD cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' -G "$CMAKE_TARGET" "$CMAKE_CARG" "$@" ../
+        cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' -G "$CMAKE_TARGET" "$CMAKE_CARG" "$@" ../
       fi
     fi
   else
