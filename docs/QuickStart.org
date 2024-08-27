@@ -47,7 +47,16 @@ git clone 'https://github.com/richmit/mraster.git'
 #+END_EXAMPLE
 
 Once you have it downloaded, make note of the "=lib=" folder within the repository.  This folder contains everything you need to develop with *=MRaster=*, and you
-can simply put your code right in that directory.  So let's create a file called "=hello.cpp=" right inside the "=lib=" directory with the following content:
+can simply put your code right in that directory.  
+
+First we need to put in place a header file that tells *=MRaster=* what software you have on your system.  We can do this by copying a template header file into place like so:
+
+#+begin_src sh
+cp mraster_config_no_cmake_template.hpp mraster_config.hpp
+#+end_src
+
+
+Now let's create a file called "=hello.cpp=" right inside the "=lib=" directory with the following content:
 
 #+begin_src sh :results output verbatum :exports results :wrap "src c++ :eval never :tangle no"
 cat ../lib/hello.cpp

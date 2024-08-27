@@ -1,6 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#define MRASTER_CMAKE_CONFIG  1
+
 #define MRASTER_PROJECT_NAME  "@CMAKE_PROJECT_NAME@"
 
 #define MRASTER_VERSION       "@MRaster_VERSION@"

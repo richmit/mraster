@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-08-20 Tue 14:56 -->
+<!-- 2024-08-27 Tue 15:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster Quick Start</title>
@@ -284,13 +284,27 @@ The first step is to download <b><code>MRaster</code></b>.  You can grab the <a 
 clone the repository with GIT like this:
 </p>
 
-<pre class="example" id="orgd147dcb">
+<pre class="example" id="orgbd038be">
 git clone 'https://github.com/richmit/mraster.git'
 </pre>
 
 <p>
 Once you have it downloaded, make note of the "<code>lib</code>" folder within the repository.  This folder contains everything you need to develop with <b><code>MRaster</code></b>, and you
-can simply put your code right in that directory.  So let's create a file called "<code>hello.cpp</code>" right inside the "<code>lib</code>" directory with the following content:
+can simply put your code right in that directory.  
+</p>
+
+<p>
+First we need to put in place a header file that tells <b><code>MRaster</code></b> what software you have on your system.  We can do this by copying a template header file into place like so:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">cp mraster_config_no_cmake_template.hpp mraster_config.hpp
+</pre>
+</div>
+
+
+<p>
+Now let's create a file called "<code>hello.cpp</code>" right inside the "<code>lib</code>" directory with the following content:
 </p>
 
 <div class="org-src-container">
@@ -320,7 +334,7 @@ Now you can run it, and take a look at the file it created ("<code>hello.tiff</c
 </p>
 
 
-<div id="org524b48c" class="figure">
+<div id="org8efdd88" class="figure">
 <p><img src="./pics/quick/hello.png" alt="hello.png" width="800" align="center" />
 </p>
 </div>

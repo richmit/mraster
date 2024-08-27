@@ -33,11 +33,7 @@
 
 #ifndef MJR_INCLUDE_ramCanvasTpl
 
-#ifdef MRASTER_FOUND_TIFF
-#include <unistd.h>                                                      /* UNIX std stf            POSIX    */
-#include <tiffio.h>                                                      /* libTIFF                 libTIFF  */
-#endif
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include <algorithm>                                                     /* STL algorithm           C++11    */
 #include <chrono>                                                        /* time                    C++11    */
 #include <cmath>                                                         /* std:: C math.h          C++11    */
@@ -59,10 +55,20 @@
 #include <utility>                                                       /* STL Misc Utilities      C++11    */
 #include <vector>                                                        /* STL vector              C++11    */ 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "color.hpp"
 #include "hersheyFont.hpp"
 #include "point2d.hpp"
 
+#include "mraster_config.hpp"
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#ifdef MRASTER_FOUND_TIFF
+#include <unistd.h>                                                      /* UNIX std stf            POSIX    */
+#include <tiffio.h>                                                      /* libTIFF                 libTIFF  */
+#endif
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Put everything in the mjr namespace
 namespace mjr {
   /** @brief Class providing off-screen drawing functionality.@EOL

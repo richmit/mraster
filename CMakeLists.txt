@@ -215,9 +215,10 @@ endif()
 # Add a target for each example we can build
 foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
   add_executable(${CURTGT} "examples/${CURTGT}.cpp")
-  target_include_directories(${CURTGT} PRIVATE lib)
+  target_compile_definitions(${CURTGT} PUBLIC MRASTER_CMAKE_BUILD=1)
+  target_include_directories(${CURTGT} AFTER PRIVATE lib)
   target_compile_features(${CURTGT} PUBLIC cxx_std_20)
-  target_include_directories(${CURTGT} PRIVATE ${CMAKE_BINARY_DIR})
+  target_include_directories(${CURTGT} BEFORE PRIVATE ${CMAKE_BINARY_DIR})
 
   if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     target_compile_options(${CURTGT} PUBLIC -Wstrict-overflow=0)
