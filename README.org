@@ -53,3 +53,4 @@ The code: [[https://github.com/richmit/mraster/]]
    - Old school API
 
 *Version Recommendation:* Use 20.x.x unless you have an old creepy compiler that just can't do C++20.
+I also strongly recommend you clone one of the tagged releases instead of main.
