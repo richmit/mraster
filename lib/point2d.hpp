@@ -32,7 +32,7 @@
 
 #include "MRpoint2d.hpp"
 
-static_assert(1=2, "The header point2d.hpp is deprecated.  Use MRpoint2d.hpp instead.")
+#warning "The header point2d.hpp is deprecated.  Use MRpoint2d.hpp instead."
 
 #define MJR_INCLUDE_MRpoint2d
 #endif

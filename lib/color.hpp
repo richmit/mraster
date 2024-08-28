@@ -32,7 +32,7 @@
 
 #include "MRcolor.hpp"
 
-static_assert(1=2, "The header color.hpp is deprecated.  Use MRcolor.hpp instead.")
+#warning "The header color.hpp is deprecated.  Use MRcolor.hpp instead."
 
 #define MJR_INCLUDE_MRcolor
 #endif
