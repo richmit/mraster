@@ -300,6 +300,11 @@ endif()
 
 ######################################################################################################################################################
 
+add_custom_target(examples
+  DEPENDS ${EXAMPLE_TARGETS}
+  COMMENT "Building Examples"
+)
+
 add_custom_target(clean-images
   COMMAND  rm -f *.tga *.tif *.tiff *.mrw *.bin
   COMMENT "Cleaning Image files"
