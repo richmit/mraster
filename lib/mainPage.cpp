@@ -57,9 +57,9 @@
 
  The include files:
 
-   - color.hpp ......... The include file most users will include for color support
-   - ramCanvas.hpp ..... The include file most users will include for ramCanvas support (includes color.hpp)
-   - colorTpl.hpp ...... Implementation of the color/pixel object
+   - MRcolor.hpp ....... The include file most users will include for color support
+   - ramCanvas.hpp ..... The include file most users will include for ramCanvas support (includes MRcolor.hpp)
+   - MRcolorTpl.hpp .... Implementation of the color/pixel object
    - ramCanvasTpl.hpp .. Implementation for ramCanvasTpl object
    - mjrmath.hpp ....... Simple math stuff
    - mainPage.cpp ...... Documentation

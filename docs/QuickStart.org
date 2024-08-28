@@ -495,7 +495,7 @@ g++ -DMJR_LOOK_FOR_128_BIT_TYPES=0 -m64 --std=c++20 hello.cpp -o hello
 
 #+BEGIN_QUOTE
 *A:* It is good form to place necessary includes in each file that needs them; however, I have violated this sound practice in the examples shipped with
-*=MRaster=*.  In particular, because the =ramCanvasTpl.hpp= and =colorTpl.hpp= files include just about everything the examples need I have tended to shorten
+*=MRaster=*.  In particular, because the =ramCanvasTpl.hpp= and =MRcolorTpl.hpp= files include just about everything the examples need I have tended to shorten
 up the examples and depend on the includes from these headers.
 #+END_QUOTE
 

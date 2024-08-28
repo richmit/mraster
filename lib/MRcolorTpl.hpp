@@ -1,7 +1,7 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      colorTpl.hpp
+ @file      MRcolorTpl.hpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Header for the ramColor class@EOL
  @copyright
@@ -29,7 +29,7 @@
 /*******************************************************************************************************************************************************.H.E.**/
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#ifndef MJR_INCLUDE_colorTpl
+#ifndef MJR_INCLUDE_MRcolorTpl
 
 #include "mjrmath.hpp"
 
@@ -5184,5 +5184,5 @@ namespace mjr {
 
 } // end namespace mjr
 
-#define MJR_INCLUDE_colorTpl
+#define MJR_INCLUDE_MRcolorTpl
 #endif

@@ -30,7 +30,7 @@
 
 #ifndef MJR_INCLUDE_ramCanvas
 
-#include "color.hpp"
+#include "MRcolor.hpp"
 #include "ramCanvasTpl.hpp"
 
 // Put everything in the mjr namespace

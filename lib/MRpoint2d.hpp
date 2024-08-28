@@ -1,7 +1,7 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      point2d.hpp
+ @file      MRpoint2d.hpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Internal include file for ramCanvas types.@EOL
  @copyright
@@ -28,7 +28,7 @@
 */
 /*******************************************************************************************************************************************************.H.E.**/
 
-#ifndef MJR_INCLUDE_point2d
+#ifndef MJR_INCLUDE_MRpoint2d
 
 #include <iomanip>                                                       /* C++ stream formatting   C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
@@ -77,5 +77,5 @@ namespace mjr {
   }; // end point2d
 } // end namespace mjr
 
-#define MJR_INCLUDE_point2d
+#define MJR_INCLUDE_MRpoint2d
 #endif

@@ -214,7 +214,7 @@ endif()
 
 # Add a target for each example we can build
 foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
-  add_executable(${CURTGT} "examples/${CURTGT}.cpp")
+  add_executable(${CURTGT} EXCLUDE_FROM_ALL "examples/${CURTGT}.cpp")
   target_include_directories(${CURTGT} AFTER PRIVATE lib)
   target_compile_features(${CURTGT} PUBLIC cxx_std_20)
   target_include_directories(${CURTGT} BEFORE PRIVATE ${CMAKE_BINARY_DIR})
@@ -344,21 +344,63 @@ else()
 endif()
 
 ######################################################################################################################################################
-# This configuration "installs" all the stuff required to build things with mraster into the export directory -- it's just header files.
-# Compile notes for using the headers:
-#   - if libTIFF was found when cmake configured the project, then link options will need to be added to compile commands using mraster.
-#   - The directory with the include files may need to be added to the compiler's header search path (-I for GNU compilers)
-# Note everything in this directory is relocatable -- You can move this stuff wherever you want.
+# The development target
 
-set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/export")
+set(MRASTER_INCLUDES "build/mraster_config.hpp"
+                     "lib/MRcolor.hpp" 
+                     "lib/MRcolorTpl.hpp"
+                     "lib/hersheyFont.hpp"
+                     "lib/mjrmath.hpp"
+                     "lib/MRpoint2d.hpp"
+                     "lib/ramCanvas.hpp"
+                     "lib/ramCanvasTpl.hpp")
+add_library(MRaster INTERFACE ${MRASTER_INCLUDES})
+if(TIFF_FOUND)
+  target_compile_definitions(MRaster INTERFACE MRASTER_FOUND_TIFF=1)
+  target_include_directories(MRaster INTERFACE ${TIFF_INCLUDE_DIRS})
+  target_link_libraries(MRaster INTERFACE ${TIFF_LIBRARIES})
+endif()
+target_include_directories(MRaster INTERFACE 
+    "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>"
+    "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/build>"
+    "$<INSTALL_INTERFACE:include>"
+)
+
+export(TARGETS MRaster FILE "${CMAKE_BINARY_DIR}/MRasterLib.cmake")
+
+######################################################################################################################################################
+include(CMakePackageConfigHelpers)
+
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/MRasterConfig.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/MRasterConfig.cmake"
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/MRaster
+)
+
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/MRasterConfigVersion.cmake"
+  COMPATIBILITY AnyNewerVersion
+)
+
+# ######################################################################################################################################################
+# # This configuration "installs" all the stuff required to build things with mraster into the export directory -- it's just header files.
+# # Compile notes for using the headers:
+# #   - if libTIFF was found when cmake configured the project, then link options will need to be added to compile commands using mraster.
+# #   - The directory with the include files may need to be added to the compiler's header search path (-I for GNU compilers)
+# # Note everything in this directory is relocatable -- You can move this stuff wherever you want.
+
+set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/build/install")
 include(GNUInstallDirs)
-install(FILES "build/mraster_config.hpp"
-              "lib/color.hpp" 
-              "lib/colorTpl.hpp"
-              "lib/hersheyFont.hpp"
-              "lib/mjrmath.hpp"
-              "lib/point2d.hpp"
-              "lib/ramCanvas.hpp"
-              "lib/ramCanvasTpl.hpp"
-        TYPE INCLUDE)
-            
+install(FILES ${MRASTER_INCLUDES} TYPE INCLUDE)
+install(TARGETS MRaster EXPORT MRasterLib)
+
+install(EXPORT MRasterLib
+        FILE MRasterLib.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/MRaster
+)
+
+install(FILES
+          "${CMAKE_CURRENT_BINARY_DIR}/MRasterConfig.cmake"
+          "${CMAKE_CURRENT_BINARY_DIR}/MRasterConfigVersion.cmake"
+          DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/MRaster
+)
+

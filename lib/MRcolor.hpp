@@ -1,7 +1,7 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      color.hpp
+ @file      MRcolor.hpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     User include file for color types@EOL
  @copyright
@@ -28,12 +28,12 @@
 */
 /*******************************************************************************************************************************************************.H.E.**/
 
-#ifndef MJR_INCLUDE_color
+#ifndef MJR_INCLUDE_MRcolor
 
 #include <cstdint>                                                       /* std:: C stdint.h        C++11    */
 #include <limits>                                                        /* C++ Numeric limits      C++11    */
 
-#include "colorTpl.hpp"
+#include "MRcolorTpl.hpp"
 
 // Put everything in the mjr namespace
 namespace mjr {
@@ -156,5 +156,5 @@ namespace mjr {
 
 } // end namespace mjr
 
-#define MJR_INCLUDE_color
+#define MJR_INCLUDE_MRcolor
 #endif
