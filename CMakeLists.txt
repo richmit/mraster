@@ -402,10 +402,9 @@ install(TARGETS MRaster EXPORT MRasterLib)
 
 install(EXPORT MRasterLib
         FILE MRasterLib.cmake
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/MRaster")
+        DESTINATION "${CMAKE_INSTALL_DATADIR}/cmake/MRaster")
 
 install(FILES
         "${CMAKE_CURRENT_BINARY_DIR}/MRasterConfig.cmake"
         "${CMAKE_CURRENT_BINARY_DIR}/MRasterConfigVersion.cmake"
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/MRaster")
-
+        DESTINATION "${CMAKE_INSTALL_DATADIR}/cmake/MRaster")
