@@ -349,7 +349,7 @@ else()
 endif()
 
 ######################################################################################################################################################
-# The development target
+# Create interface target for the entire project
 
 set(MRASTER_INCLUDES "build/mraster_config.hpp"
                      "lib/MRcolor.hpp" 
@@ -366,32 +366,34 @@ if(TIFF_FOUND)
   target_link_libraries(MRaster INTERFACE ${TIFF_LIBRARIES})
 endif()
 target_include_directories(MRaster INTERFACE 
-    "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>"
-    "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/build>"
-    "$<INSTALL_INTERFACE:include>"
-)
+                           "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>"
+                           "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/build>"
+                           "$<INSTALL_INTERFACE:include>")
+
+######################################################################################################################################################
+# Export the library interface cmake file
 
 export(TARGETS MRaster FILE "${CMAKE_BINARY_DIR}/MRasterLib.cmake")
 
 ######################################################################################################################################################
+# Create Package Files
+
 include(CMakePackageConfigHelpers)
 
-configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/MRasterConfig.cmake.in
-  "${CMAKE_CURRENT_BINARY_DIR}/MRasterConfig.cmake"
-  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/MRaster
-)
+configure_package_config_file("${CMAKE_CURRENT_SOURCE_DIR}/MRasterConfig.cmake.in"
+                              "${CMAKE_CURRENT_BINARY_DIR}/MRasterConfig.cmake"
+                              INSTALL_DESTINATION $"{CMAKE_INSTALL_LIBDIR}/cmake/MRaster")
 
-write_basic_package_version_file(
-  "${CMAKE_CURRENT_BINARY_DIR}/MRasterConfigVersion.cmake"
-  COMPATIBILITY AnyNewerVersion
-)
+write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/MRasterConfigVersion.cmake"
+                                 COMPATIBILITY AnyNewerVersion)
 
-# ######################################################################################################################################################
-# # This configuration "installs" all the stuff required to build things with mraster into the export directory -- it's just header files.
-# # Compile notes for using the headers:
-# #   - if libTIFF was found when cmake configured the project, then link options will need to be added to compile commands using mraster.
-# #   - The directory with the include files may need to be added to the compiler's header search path (-I for GNU compilers)
-# # Note everything in this directory is relocatable -- You can move this stuff wherever you want.
+######################################################################################################################################################
+# Install
+#
+# This configuration "installs" all the stuff required to build things with mraster into the export directory:
+#  - Non-deprecated Header files
+#  - cmake package
+#  - cmake export for library
 
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/build/install")
 include(GNUInstallDirs)
@@ -400,12 +402,10 @@ install(TARGETS MRaster EXPORT MRasterLib)
 
 install(EXPORT MRasterLib
         FILE MRasterLib.cmake
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/MRaster
-)
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/MRaster")
 
 install(FILES
-          "${CMAKE_CURRENT_BINARY_DIR}/MRasterConfig.cmake"
-          "${CMAKE_CURRENT_BINARY_DIR}/MRasterConfigVersion.cmake"
-          DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/MRaster
-)
+        "${CMAKE_CURRENT_BINARY_DIR}/MRasterConfig.cmake"
+        "${CMAKE_CURRENT_BINARY_DIR}/MRasterConfigVersion.cmake"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/MRaster")
 
