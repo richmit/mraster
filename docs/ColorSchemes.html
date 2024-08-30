@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-11-06 Sun 20:32 -->
+<!-- 2024-08-30 Fri 14:41 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster Color Schemes</title>
@@ -206,27 +206,38 @@
 <style>.org-src-container>pre { line-height: 1.2em; padding-top: 1.5em; margin: 0.5em; background-color: #404040; color: white; overflow: auto; }</style>
 <style>.org-src-container>pre:before { display: block; position: absolute; background-color: #b3b3b3; top: 0; right: 0; padding: 0 0.2em 0 0.4em; border-bottom-left-radius: 8px; border: 0; color: white; font-size: 100%; font-family: Helvetica, sans-serif;}</style>
 <style>pre.example { white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; font-family: Lucida Console, monospace; font-size: 80%; background: #404040; color: white; display: block; padding: 0em; border: 2px solid black; }</style>
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        displayAlign: "center",
-        displayIndent: "0em",
-
-        "HTML-CSS": { scale: 100,
-                        linebreaks: { automatic: "false" },
-                        webFont: "TeX"
-                       },
-        SVG: {scale: 100,
-              linebreaks: { automatic: "false" },
-              font: "TeX"},
-        NativeMML: {scale: 100},
-        TeX: { equationNumbers: {autoNumber: "AMS"},
-               MultLineWidth: "85%",
-               TagSide: "right",
-               TagIndent: ".8em"
-             }
-});
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
 </head>
 <body>
 <div id="org-div-home-and-up">
@@ -243,7 +254,7 @@
 </colgroup>
 <tbody>
 <tr>
-<td class="org-left">Copyright &copy; 2022 Mitch Richling. All rights reserved.</td>
+<td class="org-left">Copyright &copy; 2024 Mitch Richling. All rights reserved.</td>
 </tr>
 </tbody>
 </table>
@@ -376,7 +387,7 @@ These classes are static in nature, and an instance is not required to use them.
 </p>
 
 <p>
-When used as a factory, color scheme classes return fully constructed  <code>colorTpl</code>  objects:
+When used as a factory, color scheme classes return fully constructed <code>colorTpl</code> objects:
 </p>
 
 <div class="org-src-container">
@@ -459,62 +470,46 @@ Many color schemes provide a number of colors that is a function of <code>chanSt
 <div id="outline-container-cc-intro" class="outline-2">
 <h2 id="cc-intro"><span class="section-number-2">2.</span> Color Cube Edge/Diagonal Graph Color Schemes</h2>
 <div class="outline-text-2" id="text-cc-intro">
-<p>
-The RGB color cube:
-</p>
-
 <div class="org-src-container">
-<pre class="src src-text">.                                                       _________________________
-.                                                green / _____________________  /| yellow
-.                                                     / / ___________________/ / |
-.                                                    / / /| |               / /  |
-.                                                   / / / | |              / / . |
-.                                                  / / /| | |             / / /| |
-.                                                 / / / | | |            / / / | |
-.                                                / / /  | | |     white / / /| | |
-.                                               / /_/__________________/ / / | | |
-.                                              /________________________/ /  | | |
-.                                         cyan | ______________________ | |  | | |
-.                                              | | |    | | |_________| | |__| | |
-.                                              | | |    | |___________| | |____| |
-.                                              | | |   / / ___________| | |_  / / red
-.                                              | | |  / / /           | | |/ / /
-.                                              | | | / / /  black     | | | / /
-.                                              | | |/ / /             | | |/ /
-.                                              | | | / /              | | ' /
-.                                              | | |/_/_______________| |  /
-.                                              | |____________________| | /
-.                                         blue |________________________|/ magenta
-.
-.                                       Vertexes and Center of the RGB Color Cube:
-.                                       Name     R     G     B     Abriv
-.                                       black    0.0   0.0   0.0   0
-.                                       blue     0.0   0.0   1.0   b
-.                                       green    0.0   1.0   0.0   g
-.                                       red      1.0   0.0   0.0   r
-.                                       yellow   1.0   1.0   0.0   y
-.                                       cyan     0.0   1.0   1.0   c
-.                                       magenta  1.0   0.0   1.0   m
-.                                       white    1.0   1.0   1.0   w
-.                                       grey50   0.5   0.5   0.5   h
+<pre class="src src-text">The RGB Color Cube                                       _________________________
+                                                  green / _____________________  /| yellow
+                                                       / / ___________________/ / |
+                                                      / / /| |               / /  |
+                                                     / / / | |              / / . |
+                                                    / / /| | |             / / /| |
+                                                   / / / | | |            / / / | |
+                                                  / / /  | | |     white / / /| | |
+                                                 / /_/__________________/ / / | | |
+                                                /________________________/ /  | | |
+Vertexes and Center of the Cube:           cyan | ______________________ | |  | | |
+Name     R     G     B     Abriv                | | |    | | |_________| | |__| | |
+black    0.0   0.0   0.0   0                    | | |    | |___________| | |____| |
+blue     0.0   0.0   1.0   b                    | | |   / / ___________| | |_  / / red
+green    0.0   1.0   0.0   g                    | | |  / / /           | | |/ / /
+red      1.0   0.0   0.0   r                    | | | / / /  black     | | | / /
+yellow   1.0   1.0   0.0   y                    | | |/ / /             | | |/ /
+cyan     0.0   1.0   1.0   c                    | | | / /              | | ' /
+magenta  1.0   0.0   1.0   m                    | | |/_/_______________| |  /
+white    1.0   1.0   1.0   w                    | |____________________| | /
+grey50   0.5   0.5   0.5   h               blue |________________________|/ magenta
 </pre>
 </div>
 
 <p>
 The RGB color cube is usually considered as part of the 3D Euclidean space \(\mathbb{R}^3\) &#x2013; that is \(R\), \(G\), &amp; \(B\) are real values in \(I=[0, 1]\).  This
-subset of \(\mathbb{R}^3\) is frequently called the "unit cube" and denoted by \(I^3\).  A gradient in this context is a continuous curve, \(c:I\rightarrow I^3\), from one
-point in the cube to another.  In this way we define an infinite sequence of colors.  The most popular gradients are straight lines connecting two colors
-together.  The next most popular is a pairwise linear curve connecting several colors together &#x2013; usually with each linear component the same length.
+subset of \(\mathbb{R}^3\) is frequently called the "unit cube" and denoted by \(I^3\).  A gradient in this context is a continuous curve, \(c:I\rightarrow I^3\),
+from one point in the cube to another.  In this way we define an infinite sequence of colors.  The most popular gradients are straight lines connecting two
+colors together.  The next most popular is a pairwise linear curve connecting several colors together &#x2013; usually with each linear component the same length.
 </p>
 
 <p>
-Digital images are most commonly represented with integer values for \(R\), \(G\), &amp; \(B\).  Most commonly unsigned, 8-bit integers &#x2013; \(0.0\) mapping to \(0\) and \(1.0\)
-mapping to \(255\).  In this scenario one might think of the RGB color space as a discrete set of \(16777216\) values, and color gradients as finite sequences of
-discrete "steps" from one discrete color value to another.  For example, a linear gradient from "green" to "yellow" will have precisely \(256\) unique steps when
-the color space is defined in terms of 8-bit, integer color channels.  Note that a linear gradient from "green" to "magenta", across the diagonal of the cube,
-will also have \(256\) color steps &#x2013; one of the oddities of distance measurement the discrete RGB space!  Lastly, note that if we had a gradient from "green"
-through "yellow" and ending at "red", we would have have \(511\) distinct colors.  So discreet RGB color spaces produce discreet gradients, and the number of
-colors in the gradient will differ depending on the points traversed.
+Digital images are most commonly represented with integer values for \(R\), \(G\), &amp; \(B\).  Most commonly unsigned, 8-bit integers &#x2013; \(0.0\) mapping to \(0\) and
+\(1.0\) mapping to \(255\).  In this scenario one might think of the RGB color space as a discrete set of \(16777216\) values, and color gradients as finite
+sequences of discrete "steps" from one discrete color value to another.  For example, a linear gradient from "green" to "yellow" will have precisely \(256\)
+unique steps when the color space is defined in terms of 8-bit, integer color channels.  Note that a linear gradient from "green" to "magenta", across the
+diagonal of the cube, will also have \(256\) color steps &#x2013; one of the oddities of distance measurement the discrete RGB space!  Lastly, note that if we had a
+gradient from "green" through "yellow" and ending at "red", we would have have \(511\) distinct colors.  So discreet RGB color spaces produce discreet
+gradients, and the number of colors in the gradient will differ depending on the points traversed.
 </p>
 
 <p>
@@ -562,8 +557,8 @@ channels, the discreet gradients have \(2^{31}\) steps between corner colors.
 <h3 id="cc-max-e-circ"><span class="section-number-3">2.1.</span> Maximal circuits in the cube edge graph</h3>
 <div class="outline-text-3" id="text-cc-max-e-circ">
 <p>
-This is one of the most commonly seen color schemes in scientific visualization.  The color cube rainbow map is generated by the unique six segment (6
-vertex) cycle in the face edge graph not involving white or black:
+This is one of the most commonly seen color schemes in scientific visualization.  The color cube rainbow map is generated by the unique six segment (6 vertex)
+cycle in the face edge graph not involving white or black:
 </p>
 
 <ul class="org-ul">
@@ -613,8 +608,8 @@ If we expand to the edge face/diagonal graph, then we have may more six segment 
 <h3 id="cc-corners"><span class="section-number-3">2.3.</span> Hitting all the corners</h3>
 <div class="outline-text-3" id="text-cc-corners">
 <p>
-A common request is for a cycle in the face edge graph that uses every corner color of the RGB cube.  Not only do we have one, but 6 uniquely
-different ones &#x2013; not counting rearrangements or reversals:
+A common request is for a cycle in the face edge graph that uses every corner color of the RGB cube.  Not only do we have one, but 6 uniquely different ones
+&#x2013; not counting rearrangements or reversals:
 </p>
 
 <ul class="org-ul">
@@ -656,8 +651,8 @@ Another common request is for trees (so no color is used twice) starting at blac
 <h3 id="cc-bw-trees"><span class="section-number-3">2.5.</span> Black to White in Three Trees</h3>
 <div class="outline-text-3" id="text-cc-bw-trees">
 <p>
-The three segment trees from black to white are useful in that the intensity (sum of the components) is a monotone increasing function from zero up to
-three.  One of them (<code>0RYW</code>) is often called the "fire ramp" as it ranges from black (flame base), up to yellow, then red, and finally to white hot.
+The three segment trees from black to white are useful in that the intensity (sum of the components) is a monotone increasing function from zero up to three.
+One of them (<code>0RYW</code>) is often called the "fire ramp" as it ranges from black (flame base), up to yellow, then red, and finally to white hot.
 </p>
 
 <ul class="org-ul">
@@ -796,9 +791,9 @@ from black to white in the RGB edge/diagonal graph &#x2013; they are the same as
 <h3 id="cc-h-t-c"><span class="section-number-3">2.9.</span> Hot Too Cold</h3>
 <div class="outline-text-3" id="text-cc-h-t-c">
 <p>
-A very common color map used to map data with ranges from cold up to hot is known as the "cold too hot ramp".  This ramp provides colors from blue, up
-through green, and ends in red. It suffers from the same defects as the color cube rainbow; however, its use is so common that special support is provided
-via a named method.
+A very common color map used to map data with ranges from cold up to hot is known as the "cold too hot ramp".  This ramp provides colors from blue, up through
+green, and ends in red. It suffers from the same defects as the color cube rainbow; however, its use is so common that special support is provided via a named
+method.
 </p>
 
 <ul class="org-ul">
@@ -890,8 +885,8 @@ always render a "bright" color.  The lower intensity version is best for project
 <h3 id="cc-div-1"><span class="section-number-3">2.12.</span> One Segment Diverging Maps</h3>
 <div class="outline-text-3" id="text-cc-div-1">
 <p>
-One edge trees in the face diagonal graph with a nearly constant intensity of 2 along the entire edge are useful for "diverging" or "bipolar" color
-schemes.  By definition, such color schemes will never involve black or white.
+One edge trees in the face diagonal graph with a nearly constant intensity of 2 along the entire edge are useful for "diverging" or "bipolar" color schemes.
+By definition, such color schemes will never involve black or white.
 </p>
 
 <p>
@@ -908,8 +903,8 @@ While rarely used, the following maps are useful and suggested.  None of them ha
 </ul>
 
 <p>
-The naming convention for the methods is not obvious.  Take, for example, setRGBcmpUpDownRampBr.  This is so named because of the computational algorithm
-used to compute the scheme: Blue up, red down, green constant (maxChanVal).
+The naming convention for the methods is not obvious.  Take, for example, setRGBcmpUpDownRampBr.  This is so named because of the computational algorithm used
+to compute the scheme: Blue up, red down, green constant (maxChanVal).
 </p>
 </div>
 
@@ -938,9 +933,9 @@ used to compute the scheme: Blue up, red down, green constant (maxChanVal).
 <h3 id="cc-div-3"><span class="section-number-3">2.13.</span> Three Segment Diverging Maps</h3>
 <div class="outline-text-3" id="text-cc-div-3">
 <p>
-Some three edge trees utilizing very different colors for starting and terminal points can form very nice "divergent" color maps.  Such maps can
-successfully illustrate variables with both positive and negative values or two mutually exclusive, opposing variables.  Only two are directly
-supported via named methods (selected for attractiveness):
+Some three edge trees utilizing very different colors for starting and terminal points can form very nice "divergent" color maps.  Such maps can successfully
+illustrate variables with both positive and negative values or two mutually exclusive, opposing variables.  Only two are directly supported via named methods
+(selected for attractiveness):
 </p>
 
 <ul class="org-ul">
@@ -966,9 +961,9 @@ supported via named methods (selected for attractiveness):
 <h3 id="cc-h-rmp"><span class="section-number-3">2.14.</span> Center point ramps (HSL schemes)</h3>
 <div class="outline-text-3" id="text-cc-h-rmp">
 <p>
-Color schemes defined as gradients from the center of the HSL color space to an extreme edge are mostly perceptually linear.  These are also one segment
-trees in the complete cube graph with center.  Recall that we call the vertex at the center of the cube "<code>H</code>" &#x2013; for "Half way between everything". Using
-this new vertex, we have the following saturation based color schemes:
+Color schemes defined as gradients from the center of the HSL color space to an extreme edge are mostly perceptually linear.  These are also one segment trees
+in the complete cube graph with center.  Recall that we call the vertex at the center of the cube "<code>H</code>" &#x2013; for "Half way between everything". Using this new
+vertex, we have the following saturation based color schemes:
 </p>
 
 <ul class="org-ul">
@@ -1041,9 +1036,9 @@ from the black-white one, these can form effective divergent color schemes.
 <div class="outline-text-2" id="text-csPLY">
 <p>
 These schemes are "continuous" in that they take a floating point value to select the color, and are derived from continuous polynomial curves in the RGB cube
-space.  Many of them are very similar to color maps in popular use (with similar names), but these are only only similar to those popular maps.  In
-particular, the maps here may not be as precise when it comes to things like monotonously of intensity.  That said these look nice and I like easy to compute
-color maps that don't require fancy interpolating schemes.
+space.  Many of them are very similar, but not necessarily identical, to color maps in popular use (with similar names).  In particular, the maps here may not
+be as precise when it comes to things like monotonously of intensity.  That said these look nice and I like easy to compute color maps that don't require
+fancy interpolating schemes.
 </p>
 
 <dl class="org-dl">
@@ -1109,8 +1104,8 @@ These schemes are not true greyscale, but the colors are very close to grey.  Th
 <h2 id="csRainbow"><span class="section-number-2">6.</span> Spectral</h2>
 <div class="outline-text-2" id="text-csRainbow">
 <p>
-These color schemes are based on the spectrum and color match functions.  These aren't really suitable for visualization, but some
-interesting color schemes can be derived from them.
+These color schemes are based on the spectrum and color match functions.  These aren't really suitable for visualization, but some interesting color schemes
+can be derived from them.
 </p>
 
 <dl class="org-dl">

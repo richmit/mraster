@@ -1,4 +1,3 @@
-
 # -*- Mode:Org; Coding:utf-8; fill-column:158 -*-
 # ######################################################################################################################################################.H.S.##
 # FILE:        ColorSchemes.org
@@ -75,7 +74,7 @@ inner classes follow a regular naming convention:
 These classes are static in nature, and an instance is not required to use them.  They all have members named "=c=" which can set the color of an existing
 =colorTpl= instance (a "setter") or create a brand new instance (a "factory").
 
-When used as a factory, color scheme classes return fully constructed  =colorTpl=  objects:
+When used as a factory, color scheme classes return fully constructed =colorTpl= objects:
 
 #+begin_src c++
 mjr:color3c8b aColor = mjr::color3c8b::webSafeNormalVision.c(25);
@@ -130,56 +129,42 @@ Many color schemes provide a number of colors that is a function of =chanStepMax
 :CUSTOM_ID: cc-intro
 :END:
 
- The RGB color cube:
-
 #+begin_src text
-.                                                       _________________________
-.                                                green / _____________________  /| yellow
-.                                                     / / ___________________/ / |
-.                                                    / / /| |               / /  |
-.                                                   / / / | |              / / . |
-.                                                  / / /| | |             / / /| |
-.                                                 / / / | | |            / / / | |
-.                                                / / /  | | |     white / / /| | |
-.                                               / /_/__________________/ / / | | |
-.                                              /________________________/ /  | | |
-.                                         cyan | ______________________ | |  | | |
-.                                              | | |    | | |_________| | |__| | |
-.                                              | | |    | |___________| | |____| |
-.                                              | | |   / / ___________| | |_  / / red
-.                                              | | |  / / /           | | |/ / /
-.                                              | | | / / /  black     | | | / /
-.                                              | | |/ / /             | | |/ /
-.                                              | | | / /              | | ' /
-.                                              | | |/_/_______________| |  /
-.                                              | |____________________| | /
-.                                         blue |________________________|/ magenta
-.
-.                                       Vertexes and Center of the RGB Color Cube:
-.                                       Name     R     G     B     Abriv
-.                                       black    0.0   0.0   0.0   0
-.                                       blue     0.0   0.0   1.0   b
-.                                       green    0.0   1.0   0.0   g
-.                                       red      1.0   0.0   0.0   r
-.                                       yellow   1.0   1.0   0.0   y
-.                                       cyan     0.0   1.0   1.0   c
-.                                       magenta  1.0   0.0   1.0   m
-.                                       white    1.0   1.0   1.0   w
-.                                       grey50   0.5   0.5   0.5   h
+ The RGB Color Cube                                       _________________________
+                                                   green / _____________________  /| yellow
+                                                        / / ___________________/ / |
+                                                       / / /| |               / /  |
+                                                      / / / | |              / / . |
+                                                     / / /| | |             / / /| |
+                                                    / / / | | |            / / / | |
+                                                   / / /  | | |     white / / /| | |
+                                                  / /_/__________________/ / / | | |
+                                                 /________________________/ /  | | |
+ Vertexes and Center of the Cube:           cyan | ______________________ | |  | | |
+ Name     R     G     B     Abriv                | | |    | | |_________| | |__| | |
+ black    0.0   0.0   0.0   0                    | | |    | |___________| | |____| |
+ blue     0.0   0.0   1.0   b                    | | |   / / ___________| | |_  / / red
+ green    0.0   1.0   0.0   g                    | | |  / / /           | | |/ / /
+ red      1.0   0.0   0.0   r                    | | | / / /  black     | | | / /
+ yellow   1.0   1.0   0.0   y                    | | |/ / /             | | |/ /
+ cyan     0.0   1.0   1.0   c                    | | | / /              | | ' /
+ magenta  1.0   0.0   1.0   m                    | | |/_/_______________| |  /
+ white    1.0   1.0   1.0   w                    | |____________________| | /
+ grey50   0.5   0.5   0.5   h               blue |________________________|/ magenta
 #+end_src
 
 The RGB color cube is usually considered as part of the 3D Euclidean space $\mathbb{R}^3$ -- that is $R$, $G$, & $B$ are real values in $I=[0, 1]$.  This
-subset of $\mathbb{R}^3$ is frequently called the "unit cube" and denoted by $I^3$.  A gradient in this context is a continuous curve, $c:I\rightarrow I^3$, from one
-point in the cube to another.  In this way we define an infinite sequence of colors.  The most popular gradients are straight lines connecting two colors
-together.  The next most popular is a pairwise linear curve connecting several colors together -- usually with each linear component the same length.
+subset of $\mathbb{R}^3$ is frequently called the "unit cube" and denoted by $I^3$.  A gradient in this context is a continuous curve, $c:I\rightarrow I^3$,
+from one point in the cube to another.  In this way we define an infinite sequence of colors.  The most popular gradients are straight lines connecting two
+colors together.  The next most popular is a pairwise linear curve connecting several colors together -- usually with each linear component the same length.
 
-Digital images are most commonly represented with integer values for $R$, $G$, & $B$.  Most commonly unsigned, 8-bit integers -- $0.0$ mapping to $0$ and $1.0$
-mapping to $255$.  In this scenario one might think of the RGB color space as a discrete set of $16777216$ values, and color gradients as finite sequences of
-discrete "steps" from one discrete color value to another.  For example, a linear gradient from "green" to "yellow" will have precisely $256$ unique steps when
-the color space is defined in terms of 8-bit, integer color channels.  Note that a linear gradient from "green" to "magenta", across the diagonal of the cube,
-will also have $256$ color steps -- one of the oddities of distance measurement the discrete RGB space!  Lastly, note that if we had a gradient from "green"
-through "yellow" and ending at "red", we would have have $511$ distinct colors.  So discreet RGB color spaces produce discreet gradients, and the number of
-colors in the gradient will differ depending on the points traversed.
+Digital images are most commonly represented with integer values for $R$, $G$, & $B$.  Most commonly unsigned, 8-bit integers -- $0.0$ mapping to $0$ and
+$1.0$ mapping to $255$.  In this scenario one might think of the RGB color space as a discrete set of $16777216$ values, and color gradients as finite
+sequences of discrete "steps" from one discrete color value to another.  For example, a linear gradient from "green" to "yellow" will have precisely $256$
+unique steps when the color space is defined in terms of 8-bit, integer color channels.  Note that a linear gradient from "green" to "magenta", across the
+diagonal of the cube, will also have $256$ color steps -- one of the oddities of distance measurement the discrete RGB space!  Lastly, note that if we had a
+gradient from "green" through "yellow" and ending at "red", we would have have $511$ distinct colors.  So discreet RGB color spaces produce discreet
+gradients, and the number of colors in the gradient will differ depending on the points traversed.
 
 The corners of the color cube are by far the most popular choices for gradient control points.  In describing these gradients it is usefully to think about
 the corners and how we can connect them as a mathematical graph.
@@ -188,7 +173,7 @@ The edges of the cube taken with the corners as vertexes form a graph (referred 
 unique edges) with $n$ edges generates a color scheme with $\mathrm{maxChanVal}\cdot n - 1$ unique colors.  To make this scheme unique, we define the tree to
 have one of its end points the "start" of the scheme -- so we can map the integers from $[0,\mathrm{maxChanVal}\cdot n]$ to unique colors.
 
- Example:
+Example:
 
 #+BEGIN_QUOTE
     ="BCG"= defines a trail starting at =B= (blue), moving to =C= (cyan) next, and ending at =G= (green).  The color scheme has $0$ mapped to blue (the first
@@ -212,8 +197,8 @@ channels, the discreet gradients have $2^{31}$ steps between corner colors.
 :CUSTOM_ID: cc-max-e-circ
 :END:
 
- This is one of the most commonly seen color schemes in scientific visualization.  The color cube rainbow map is generated by the unique six segment (6
- vertex) cycle in the face edge graph not involving white or black:
+This is one of the most commonly seen color schemes in scientific visualization.  The color cube rainbow map is generated by the unique six segment (6 vertex)
+cycle in the face edge graph not involving white or black:
 
   - =RYGCBMR= -- =csCColdeRainbow=
 
@@ -222,15 +207,15 @@ channels, the discreet gradients have $2^{31}$ steps between corner colors.
 :CUSTOM_ID: csCColdeRainbow
 :END:
 
- - =csCColdeRainbow= :: \\
-  [[./pics/cs/color_lut_docs_csCColdeRainbow_50.png]]
+  - =csCColdeRainbow= :: \\
+    [[./pics/cs/color_lut_docs_csCColdeRainbow_50.png]]
 
 ** Maximal circuits in the cube edge/diagonal graph
 :PROPERTIES:
 :CUSTOM_ID: cc-max-ed-circ
 :END:
 
- If we expand to the edge face/diagonal graph, then we have may more six segment cycles not involving white or black:
+If we expand to the edge face/diagonal graph, then we have may more six segment cycles not involving white or black:
 
   - =RBCGYMR=
   - =RBCMYGR=
@@ -253,167 +238,167 @@ channels, the discreet gradients have $2^{31}$ steps between corner colors.
 :CUSTOM_ID: cc-corners
 :END:
 
-  A common request is for a cycle in the face edge graph that uses every corner color of the RGB cube.  Not only do we have one, but 6 uniquely
-  different ones -- not counting rearrangements or reversals:
+A common request is for a cycle in the face edge graph that uses every corner color of the RGB cube.  Not only do we have one, but 6 uniquely different ones
+-- not counting rearrangements or reversals:
 
-   - =0BCGYWMR0=
-   - =0BCWMRYG0=
-   - =0BMRYWCG0=
-   - =0BMWCGYR0=
-   - =0GCBMWYR0=
-   - =0GYWCBMR0=
+  - =0BCGYWMR0=
+  - =0BCWMRYG0=
+  - =0BMRYWCG0=
+  - =0BMWCGYR0=
+  - =0GCBMWYR0=
+  - =0GYWCBMR0=
 
 ** Large Trees
 :PROPERTIES:
 :CUSTOM_ID: cc-big-trees
 :END:
 
-  Another common request is for trees (so no color is used twice) starting at black and ending at white.  Several trees exist of lengths of 7 and 5:
+Another common request is for trees (so no color is used twice) starting at black and ending at white.  Several trees exist of lengths of 7 and 5:
 
-   - =0BCGYRMW=
-   - =0BMRYGCW=
-   - =0GCBMRYW=
-   - =0GYRMBCW=
-   - =0RMBCGYW=
-   - =0RYGCBMW=
-   - =0BCGYW=
-   - =0BMRYW=
-   - =0GCBMW=
-   - =0GYRMW=
-   - =0RMBCW=
-   - =0RYGCW=
+  - =0BCGYRMW=
+  - =0BMRYGCW=
+  - =0GCBMRYW=
+  - =0GYRMBCW=
+  - =0RMBCGYW=
+  - =0RYGCBMW=
+  - =0BCGYW=
+  - =0BMRYW=
+  - =0GCBMW=
+  - =0GYRMW=
+  - =0RMBCW=
+  - =0RYGCW=
 
 ** Black to White in Three Trees
 :PROPERTIES:
 :CUSTOM_ID: cc-bw-trees
 :END:
 
-  The three segment trees from black to white are useful in that the intensity (sum of the components) is a monotone increasing function from zero up to
-  three.  One of them (=0RYW=) is often called the "fire ramp" as it ranges from black (flame base), up to yellow, then red, and finally to white hot.
+The three segment trees from black to white are useful in that the intensity (sum of the components) is a monotone increasing function from zero up to three.
+One of them (=0RYW=) is often called the "fire ramp" as it ranges from black (flame base), up to yellow, then red, and finally to white hot.
 
-   - =0BCW= -- =csCCsumBGR=
-   - =0BMW= -- =csCCsumBRG=
-   - =0GCW= -- =csCCsumGBR=
-   - =0GYW= -- =csCCsumGRB=
-   - =0RMW= -- =csCCsumRBG=
-   - =0RYW= -- =csCCsumRGB= & =csCColdeFireRamp=
+  - =0BCW= -- =csCCsumBGR=
+  - =0BMW= -- =csCCsumBRG=
+  - =0GCW= -- =csCCsumGBR=
+  - =0GYW= -- =csCCsumGRB=
+  - =0RMW= -- =csCCsumRBG=
+  - =0RYW= -- =csCCsumRGB= & =csCColdeFireRamp=
 
 *** Predefined Schemes
 :PROPERTIES:
 :CUSTOM_ID: csCCsum
 :END:
 
- - =csCCsumBGR= :: \\
-  [[./pics/cs/color_lut_docs_csCCsumBGR_50.png]]
- - =csCCsumBRG= :: \\
-  [[./pics/cs/color_lut_docs_csCCsumBRG_50.png]]
- - =csCCsumGBR= :: \\
-  [[./pics/cs/color_lut_docs_csCCsumGBR_50.png]]
- - =csCCsumGRB= :: \\
-  [[./pics/cs/color_lut_docs_csCCsumGRB_50.png]]
- - =csCCsumRBG= :: \\
-  [[./pics/cs/color_lut_docs_csCCsumRBG_50.png]]
- - =csCCsumRGB= & =csCColdeFireRamp= :: \\
-  [[./pics/cs/color_lut_docs_csCCsumRGB_50.png]]
+  - =csCCsumBGR= :: \\
+    [[./pics/cs/color_lut_docs_csCCsumBGR_50.png]]
+  - =csCCsumBRG= :: \\
+    [[./pics/cs/color_lut_docs_csCCsumBRG_50.png]]
+  - =csCCsumGBR= :: \\
+    [[./pics/cs/color_lut_docs_csCCsumGBR_50.png]]
+  - =csCCsumGRB= :: \\
+    [[./pics/cs/color_lut_docs_csCCsumGRB_50.png]]
+  - =csCCsumRBG= :: \\
+    [[./pics/cs/color_lut_docs_csCCsumRBG_50.png]]
+  - =csCCsumRGB= & =csCColdeFireRamp= :: \\
+    [[./pics/cs/color_lut_docs_csCCsumRGB_50.png]]
 
 ** Black to Corner in One Trees
 :PROPERTIES:
 :CUSTOM_ID: cc-bc1-trees
 :END:
 
-  These minimal trees go from black to a corner of the cube -- not much of a tree!!  Still, they are exceedingly common in applications, and thus have
-  predefined color schemes.
+These minimal trees go from black to a corner of the cube -- not much of a tree!!  Still, they are exceedingly common in applications, and thus have
+predefined color schemes.
 
-   - =0W= -- =csCCu0W=
-   - =0R= -- =csCCu0R=
-   - =0B= -- =csCCu0B=
-   - =0G= -- =csCCu0G=
-   - =0C= -- =csCCu0C=
-   - =0M= -- =csCCu0M=
-   - =0Y= -- =csCCu0Y=
+  - =0W= -- =csCCu0W=
+  - =0R= -- =csCCu0R=
+  - =0B= -- =csCCu0B=
+  - =0G= -- =csCCu0G=
+  - =0C= -- =csCCu0C=
+  - =0M= -- =csCCu0M=
+  - =0Y= -- =csCCu0Y=
 
 *** Predefined Schemes
 :PROPERTIES:
 :CUSTOM_ID: csCCu
 :END:
 
- - =csCCu0W= :: \\
-  [[./pics/cs/color_lut_docs_csCCu0W_50.png]]
- - =csCCu0R= :: \\
-  [[./pics/cs/color_lut_docs_csCCu0R_50.png]]
- - =csCCu0B= :: \\
-  [[./pics/cs/color_lut_docs_csCCu0B_50.png]]
- - =csCCu0G= :: \\
-  [[./pics/cs/color_lut_docs_csCCu0G_50.png]]
- - =csCCu0C= :: \\
-  [[./pics/cs/color_lut_docs_csCCu0C_50.png]]
- - =csCCu0M= :: \\
-  [[./pics/cs/color_lut_docs_csCCu0M_50.png]]
- - =csCCu0Y= :: \\
-  [[./pics/cs/color_lut_docs_csCCu0Y_50.png]]
+  - =csCCu0W= :: \\
+    [[./pics/cs/color_lut_docs_csCCu0W_50.png]]
+  - =csCCu0R= :: \\
+    [[./pics/cs/color_lut_docs_csCCu0R_50.png]]
+  - =csCCu0B= :: \\
+    [[./pics/cs/color_lut_docs_csCCu0B_50.png]]
+  - =csCCu0G= :: \\
+    [[./pics/cs/color_lut_docs_csCCu0G_50.png]]
+  - =csCCu0C= :: \\
+    [[./pics/cs/color_lut_docs_csCCu0C_50.png]]
+  - =csCCu0M= :: \\
+    [[./pics/cs/color_lut_docs_csCCu0M_50.png]]
+  - =csCCu0Y= :: \\
+    [[./pics/cs/color_lut_docs_csCCu0Y_50.png]]
 
 ** White In Center Circular Gradients
 :PROPERTIES:
 :CUSTOM_ID: cc-wic-cycles
 :END:
 
-  These three node cycles start and end with a primary or secondary color, and have white in the center.  They are usefull for highlighting one segment of a
-  circular data set -- for example highlighting a sector of angles on a circle.  As such they find application in complex number argument plots.
+These three node cycles start and end with a primary or secondary color, and have white in the center.  They are usefull for highlighting one segment of a
+circular data set -- for example highlighting a sector of angles on a circle.  As such they find application in complex number argument plots.
   
-   - =RWR= -- =csCCwicR=
-   - =GWG= -- =csCCwicG=
-   - =BWB= -- =csCCwicB=
-   - =MWM= -- =csCCwicM=
-   - =YWY= -- =csCCwicY=
-   - =CWC= -- =csCCwicC=
+  - =RWR= -- =csCCwicR=
+  - =GWG= -- =csCCwicG=
+  - =BWB= -- =csCCwicB=
+  - =MWM= -- =csCCwicM=
+  - =YWY= -- =csCCwicY=
+  - =CWC= -- =csCCwicC=
 
 *** Predefined Schemes
 :PROPERTIES:
 :CUSTOM_ID: csCCwic
 :END:
 
- - =csCCwicR= :: \\
-  [[./pics/cs/color_lut_docs_csCCwicR_50.png]]
- - =csCCwicG= :: \\
-  [[./pics/cs/color_lut_docs_csCCwicG_50.png]]
- - =csCCwicB= :: \\
-  [[./pics/cs/color_lut_docs_csCCwicB_50.png]]
- - =csCCwicM= :: \\
-  [[./pics/cs/color_lut_docs_csCCwicM_50.png]]
- - =csCCwicY= :: \\
-  [[./pics/cs/color_lut_docs_csCCwicY_50.png]]
- - =csCCwicC= :: \\
-  [[./pics/cs/color_lut_docs_csCCwicC_50.png]]
+  - =csCCwicR= :: \\
+    [[./pics/cs/color_lut_docs_csCCwicR_50.png]]
+  - =csCCwicG= :: \\
+    [[./pics/cs/color_lut_docs_csCCwicG_50.png]]
+  - =csCCwicB= :: \\
+    [[./pics/cs/color_lut_docs_csCCwicB_50.png]]
+  - =csCCwicM= :: \\
+    [[./pics/cs/color_lut_docs_csCCwicM_50.png]]
+  - =csCCwicY= :: \\
+    [[./pics/cs/color_lut_docs_csCCwicY_50.png]]
+  - =csCCwicC= :: \\
+    [[./pics/cs/color_lut_docs_csCCwicC_50.png]]
 
 ** Luminance based color schemes
 :PROPERTIES:
 :CUSTOM_ID: lum
 :END:
 
-  Luminance based color schemes defined as color gradients from the center of the in the HSL color space to an extreem vertex are quite popular.  Many of the
-  most popular luminance based color schemes in the HSL color space are also edge graphs in the RGB color cube!  Of particular note, are the two segment trees
-  from black to white in the RGB edge/diagonal graph -- they are the same as the two segment graphs in the edges of the HSL hexcone from black to white!
+Luminance based color schemes defined as color gradients from the center of the in the HSL color space to an extreem vertex are quite popular.  Many of the
+most popular luminance based color schemes in the HSL color space are also edge graphs in the RGB color cube!  Of particular note, are the two segment trees
+from black to white in the RGB edge/diagonal graph -- they are the same as the two segment graphs in the edges of the HSL hexcone from black to white!
 
-   - =0RW= -- =H=000= -- red edge of the HSL hexcone
-   - =0YW= -- =H=060= -- yellow edge of the HSL hexcone
-   - =0GW= -- =H=120= -- green edge of the HSL hexcone
-   - =0CW= -- =H=180= -- cyan edge of the HSL hexcone
-   - =0BW= -- =H=240= -- blue edge of the HSL hexcone
-   - =0MW= -- =H=300= -- magenta edge of the HSL hexcone
+  - =0RW= -- =H=000= -- red edge of the HSL hexcone
+  - =0YW= -- =H=060= -- yellow edge of the HSL hexcone
+  - =0GW= -- =H=120= -- green edge of the HSL hexcone
+  - =0CW= -- =H=180= -- cyan edge of the HSL hexcone
+  - =0BW= -- =H=240= -- blue edge of the HSL hexcone
+  - =0MW= -- =H=300= -- magenta edge of the HSL hexcone
 
 ** Hot Too Cold
 :PROPERTIES:
 :CUSTOM_ID: cc-h-t-c
 :END:
 
- A very common color map used to map data with ranges from cold up to hot is known as the "cold too hot ramp".  This ramp provides colors from blue, up
- through green, and ends in red. It suffers from the same defects as the color cube rainbow; however, its use is so common that special support is provided
- via a named method.
+A very common color map used to map data with ranges from cold up to hot is known as the "cold too hot ramp".  This ramp provides colors from blue, up through
+green, and ends in red. It suffers from the same defects as the color cube rainbow; however, its use is so common that special support is provided via a named
+method.
 
   - =BCGYR= -- =csCColdeColdToHot=
 
- The traditional cold to hot ramp can be improved -- this is my personal opinion.  This new ramp still has the same problems the color cube rainbow has;
- however, it is more attractive.  This one moves from white (ice), up to water (blue), and then up to red (hot) via yellow.
+The traditional cold to hot ramp can be improved -- this is my personal opinion.  This new ramp still has the same problems the color cube rainbow has;
+however, it is more attractive.  This one moves from white (ice), up to water (blue), and then up to red (hot) via yellow.
 
   - =WCBYR= -- =csCColdeIceToWaterToHot=
 
@@ -422,10 +407,10 @@ channels, the discreet gradients have $2^{31}$ steps between corner colors.
 :CUSTOM_ID: csCColde
 :END:
 
- - =csCColdeColdToHot= :: \\
-  [[./pics/cs/color_lut_docs_csCColdeColdToHot_50.png]]
- - =csCColdeIceToWaterToHot= :: \\
-  [[./pics/cs/color_lut_docs_csCColdeIceToWaterToHot_50.png]]
+  - =csCColdeColdToHot= :: \\
+    [[./pics/cs/color_lut_docs_csCColdeColdToHot_50.png]]
+  - =csCColdeIceToWaterToHot= :: \\
+    [[./pics/cs/color_lut_docs_csCColdeIceToWaterToHot_50.png]]
 
 
 ** Common Fractal Color Graphs
@@ -433,32 +418,32 @@ channels, the discreet gradients have $2^{31}$ steps between corner colors.
 :CUSTOM_ID: cc-fractal-trees
 :END:
 
-  These color schemes have no special cycle/tree/graph structure at all, but they are commonly used to color fractals.  Common enough that I have included
-  predefined schemes for them.
+These color schemes have no special cycle/tree/graph structure at all, but they are commonly used to color fractals.  Common enough that I have included
+predefined schemes for them.
 
-   - =0RYBCW= -- =csCCfractal0RYBCW=
-   - =YR=     -- =csCCfractalYR=
-   - =YB=     -- =csCCfractalYB=
+  - =0RYBCW= -- =csCCfractal0RYBCW=
+  - =YR=     -- =csCCfractalYR=
+  - =YB=     -- =csCCfractalYB=
 
 *** Predefined Schemes
 :PROPERTIES:
 :CUSTOM_ID: csCCfractal
 :END:
 
- - =csCCfractal0RYBCW= :: \\
-  [[./pics/cs/color_lut_docs_csCCfractal0RYBCW_50.png]]
- - =csCCfractalYR= :: \\
-  [[./pics/cs/color_lut_docs_csCCfractalYR_50.png]]
- - =csCCfractalYB= :: \\
-  [[./pics/cs/color_lut_docs_csCCfractalYB_50.png]]
+  - =csCCfractal0RYBCW= :: \\
+    [[./pics/cs/color_lut_docs_csCCfractal0RYBCW_50.png]]
+  - =csCCfractalYR= :: \\
+    [[./pics/cs/color_lut_docs_csCCfractalYR_50.png]]
+  - =csCCfractalYB= :: \\
+    [[./pics/cs/color_lut_docs_csCCfractalYB_50.png]]
 
 ** Constant Intensity Cycles
 :PROPERTIES:
 :CUSTOM_ID: cc-cons
 :END:
 
- Two cycles, with three edges each, exhibiting constant intensity for every color in the color scheme are genuinely useful.  They have the advantage that they
- always render a "bright" color.  The lower intensity version is best for projected media that don't do well with yellow.
+Two cycles, with three edges each, exhibiting constant intensity for every color in the color scheme are genuinely useful.  They have the advantage that they
+always render a "bright" color.  The lower intensity version is best for projected media that don't do well with yellow.
 
   - =CMY= -- =csCCconsTwo= -- intensity == 2
   - =BRG= -- =csCCconsOne= -- intensity == 1
@@ -468,20 +453,20 @@ channels, the discreet gradients have $2^{31}$ steps between corner colors.
 :CUSTOM_ID: csCCcons
 :END:
 
- - =csCCconsTwo= :: \\
-  [[./pics/cs/color_lut_docs_csCCconsTwo_50.png]]
- - =csCCconsOne= :: \\
-  [[./pics/cs/color_lut_docs_csCCconsOne_50.png]]
+  - =csCCconsTwo= :: \\
+    [[./pics/cs/color_lut_docs_csCCconsTwo_50.png]]
+  - =csCCconsOne= :: \\
+    [[./pics/cs/color_lut_docs_csCCconsOne_50.png]]
 
 ** One Segment Diverging Maps
 :PROPERTIES:
 :CUSTOM_ID: cc-div-1
 :END:
 
- One edge trees in the face diagonal graph with a nearly constant intensity of 2 along the entire edge are useful for "diverging" or "bipolar" color
- schemes.  By definition, such color schemes will never involve black or white.
+One edge trees in the face diagonal graph with a nearly constant intensity of 2 along the entire edge are useful for "diverging" or "bipolar" color schemes.
+By definition, such color schemes will never involve black or white.
 
- While rarely used, the following maps are useful and suggested.  None of them have the problems associated with the color cube rainbow.
+While rarely used, the following maps are useful and suggested.  None of them have the problems associated with the color cube rainbow.
 
   - =YC= -- =csCCudBr=
   - =YM= -- =csCCudBg=
@@ -490,35 +475,35 @@ channels, the discreet gradients have $2^{31}$ steps between corner colors.
   - =CM= -- =csCCudRg=
   - =CY= -- =csCCudRb=
 
- The naming convention for the methods is not obvious.  Take, for example, setRGBcmpUpDownRampBr.  This is so named because of the computational algorithm
- used to compute the scheme: Blue up, red down, green constant (maxChanVal).
+The naming convention for the methods is not obvious.  Take, for example, setRGBcmpUpDownRampBr.  This is so named because of the computational algorithm used
+to compute the scheme: Blue up, red down, green constant (maxChanVal).
 
 *** Predefined Schemes
 :PROPERTIES:
 :CUSTOM_ID: csCCud
 :END:
 
- - =csCCudBr= :: \\
-  [[./pics/cs/color_lut_docs_csCCudBr_50.png]]
- - =csCCudBg= :: \\
-  [[./pics/cs/color_lut_docs_csCCudBg_50.png]]
- - =csCCudGr= :: \\
-  [[./pics/cs/color_lut_docs_csCCudGr_50.png]]
- - =csCCudGb= :: \\
-  [[./pics/cs/color_lut_docs_csCCudGb_50.png]]
- - =csCCudRg= :: \\
-  [[./pics/cs/color_lut_docs_csCCudRg_50.png]]
- - =csCCudRb= :: \\
-  [[./pics/cs/color_lut_docs_csCCudRb_50.png]]
+  - =csCCudBr= :: \\
+    [[./pics/cs/color_lut_docs_csCCudBr_50.png]]
+  - =csCCudBg= :: \\
+    [[./pics/cs/color_lut_docs_csCCudBg_50.png]]
+  - =csCCudGr= :: \\
+    [[./pics/cs/color_lut_docs_csCCudGr_50.png]]
+  - =csCCudGb= :: \\
+    [[./pics/cs/color_lut_docs_csCCudGb_50.png]]
+  - =csCCudRg= :: \\
+    [[./pics/cs/color_lut_docs_csCCudRg_50.png]]
+  - =csCCudRb= :: \\
+    [[./pics/cs/color_lut_docs_csCCudRb_50.png]]
 
 ** Three Segment Diverging Maps
 :PROPERTIES:
 :CUSTOM_ID: cc-div-3
 :END:
 
- Some three edge trees utilizing very different colors for starting and terminal points can form very nice "divergent" color maps.  Such maps can
- successfully illustrate variables with both positive and negative values or two mutually exclusive, opposing variables.  Only two are directly
- supported via named methods (selected for attractiveness):
+Some three edge trees utilizing very different colors for starting and terminal points can form very nice "divergent" color maps.  Such maps can successfully
+illustrate variables with both positive and negative values or two mutually exclusive, opposing variables.  Only two are directly supported via named methods
+(selected for attractiveness):
 
   - =BWR= -- intensity between 1 and 3
   - =CWM= -- intensity between 2 and 3
@@ -528,19 +513,19 @@ channels, the discreet gradients have $2^{31}$ steps between corner colors.
 :CUSTOM_ID: csCCdiv
 :END:
 
- - =csCCdivBWR= :: \\
-  [[./pics/cs/color_lut_docs_csCCdivBWR_50.png]]
- - =csCCdivCWM= :: \\
-  [[./pics/cs/color_lut_docs_csCCdivCWM_50.png]]
+  - =csCCdivBWR= :: \\
+    [[./pics/cs/color_lut_docs_csCCdivBWR_50.png]]
+  - =csCCdivCWM= :: \\
+    [[./pics/cs/color_lut_docs_csCCdivCWM_50.png]]
 
 ** Center point ramps (HSL schemes)
 :PROPERTIES:
 :CUSTOM_ID: cc-h-rmp
 :END:
 
- Color schemes defined as gradients from the center of the HSL color space to an extreme edge are mostly perceptually linear.  These are also one segment
- trees in the complete cube graph with center.  Recall that we call the vertex at the center of the cube "=H=" -- for "Half way between everything". Using
- this new vertex, we have the following saturation based color schemes:
+Color schemes defined as gradients from the center of the HSL color space to an extreme edge are mostly perceptually linear.  These are also one segment trees
+in the complete cube graph with center.  Recall that we call the vertex at the center of the cube "=H=" -- for "Half way between everything". Using this new
+vertex, we have the following saturation based color schemes:
 
   - =HR= -- =csHSLhR=
   - =HG= -- =csHSLhG=
@@ -554,26 +539,26 @@ channels, the discreet gradients have $2^{31}$ steps between corner colors.
 :CUSTOM_ID: csHSLh
 :END:
 
- - =csHSLhR= :: \\
-  [[./pics/cs/color_lut_docs_csHSLhR_50.png]]
- - =csHSLhG= :: \\
-  [[./pics/cs/color_lut_docs_csHSLhG_50.png]]
- - =csHSLhB= :: \\
-  [[./pics/cs/color_lut_docs_csHSLhB_50.png]]
- - =csHSLhC= :: \\
-  [[./pics/cs/color_lut_docs_csHSLhC_50.png]]
- - =csHSLhY= :: \\
-  [[./pics/cs/color_lut_docs_csHSLhY_50.png]]
- - =csHSLhM= :: \\
-  [[./pics/cs/color_lut_docs_csHSLhM_50.png]]
+  - =csHSLhR= :: \\
+    [[./pics/cs/color_lut_docs_csHSLhR_50.png]]
+  - =csHSLhG= :: \\
+    [[./pics/cs/color_lut_docs_csHSLhG_50.png]]
+  - =csHSLhB= :: \\
+    [[./pics/cs/color_lut_docs_csHSLhB_50.png]]
+  - =csHSLhC= :: \\
+    [[./pics/cs/color_lut_docs_csHSLhC_50.png]]
+  - =csHSLhY= :: \\
+    [[./pics/cs/color_lut_docs_csHSLhY_50.png]]
+  - =csHSLhM= :: \\
+    [[./pics/cs/color_lut_docs_csHSLhM_50.png]]
 
 ** Stacked HSL Schemes
 :PROPERTIES:
 :CUSTOM_ID: cc-stack-hsl
 :END:
 
- The diagonal traversals (diagonal meaning through the center of the cube) are essentially two of the HSL saturation based schemes placed back to back.  Aside
- from the black-white one, these can form effective divergent color schemes.
+The diagonal traversals (diagonal meaning through the center of the cube) are essentially two of the HSL saturation based schemes placed back to back.  Aside
+from the black-white one, these can form effective divergent color schemes.
 
   - =CR= -- =csCCdiagCR=
   - =MG= -- =csCCdiagMG=
@@ -585,14 +570,14 @@ channels, the discreet gradients have $2^{31}$ steps between corner colors.
 :CUSTOM_ID: csCCdiag
 :END:
 
- - =csCCdiagCR= :: \\
-  [[./pics/cs/color_lut_docs_csCCdiagCR_50.png]]
- - =csCCdiagMG= :: \\
-  [[./pics/cs/color_lut_docs_csCCdiagMG_50.png]]
- - =csCCdiagYB= :: \\
-  [[./pics/cs/color_lut_docs_csCCdiagYB_50.png]]
- - =csCCdiag01= :: \\
-  [[./pics/cs/color_lut_docs_csCCdiag01_50.png]]
+  - =csCCdiagCR= :: \\
+    [[./pics/cs/color_lut_docs_csCCdiagCR_50.png]]
+  - =csCCdiagMG= :: \\
+    [[./pics/cs/color_lut_docs_csCCdiagMG_50.png]]
+  - =csCCdiagYB= :: \\
+    [[./pics/cs/color_lut_docs_csCCdiagYB_50.png]]
+  - =csCCdiag01= :: \\
+    [[./pics/cs/color_lut_docs_csCCdiag01_50.png]]
 
 * Continuous Polynomial Schemes
 :PROPERTIES:
@@ -600,30 +585,30 @@ channels, the discreet gradients have $2^{31}$ steps between corner colors.
 :END:
 
 These schemes are "continuous" in that they take a floating point value to select the color, and are derived from continuous polynomial curves in the RGB cube
-space.  Many of them are very similar to color maps in popular use (with similar names), but these are only only similar to those popular maps.  In
-particular, the maps here may not be as precise when it comes to things like monotonously of intensity.  That said these look nice and I like easy to compute
-color maps that don't require fancy interpolating schemes.
+space.  Many of them are very similar, but not necessarily identical, to color maps in popular use (with similar names).  In particular, the maps here may not
+be as precise when it comes to things like monotonously of intensity.  That said these look nice and I like easy to compute color maps that don't require
+fancy interpolating schemes.
 
- - =csPLYgrey= :: \\
-  [[./pics/cs/color_lut_docs_csPLYgrey_50.png]]
- - =csPLYquad= :: \\
-  [[./pics/cs/color_lut_docs_csPLYquad_50.png]]
- - =csPLYinferno= :: \\
-  [[./pics/cs/color_lut_docs_csPLYinferno_50.png]]
- - =csPLYmagma= :: \\
-  [[./pics/cs/color_lut_docs_csPLYmagma_50.png]]
- - =csPLYparula= :: \\
-  [[./pics/cs/color_lut_docs_csPLYparula_50.png]]
- - =csPLYplasma= :: \\
-  [[./pics/cs/color_lut_docs_csPLYplasma_50.png]]
- - =csPLYturbo= :: \\
-  [[./pics/cs/color_lut_docs_csPLYturbo_50.png]]
- - =csPLYviridis= :: \\
-  [[./pics/cs/color_lut_docs_csPLYviridis_50.png]]
- - =csPLYcividis= :: \\
-  [[./pics/cs/color_lut_docs_csPLYcividis_50.png]]
- - =csPLYhsvRB= :: \\
-  [[./pics/cs/color_lut_docs_csPLYhsvRB_50.png]]
+  - =csPLYgrey= :: \\
+    [[./pics/cs/color_lut_docs_csPLYgrey_50.png]]
+  - =csPLYquad= :: \\
+    [[./pics/cs/color_lut_docs_csPLYquad_50.png]]
+  - =csPLYinferno= :: \\
+    [[./pics/cs/color_lut_docs_csPLYinferno_50.png]]
+  - =csPLYmagma= :: \\
+    [[./pics/cs/color_lut_docs_csPLYmagma_50.png]]
+  - =csPLYparula= :: \\
+    [[./pics/cs/color_lut_docs_csPLYparula_50.png]]
+  - =csPLYplasma= :: \\
+    [[./pics/cs/color_lut_docs_csPLYplasma_50.png]]
+  - =csPLYturbo= :: \\
+    [[./pics/cs/color_lut_docs_csPLYturbo_50.png]]
+  - =csPLYviridis= :: \\
+    [[./pics/cs/color_lut_docs_csPLYviridis_50.png]]
+  - =csPLYcividis= :: \\
+    [[./pics/cs/color_lut_docs_csPLYcividis_50.png]]
+  - =csPLYhsvRB= :: \\
+    [[./pics/cs/color_lut_docs_csPLYhsvRB_50.png]]
 
 * Dave Green's cubehelix color maps
 :PROPERTIES:
@@ -632,12 +617,12 @@ color maps that don't require fancy interpolating schemes.
 
 The =csCubeHelix_tpl= templte can geneate any of the cubehelix schemes, but =colorTpl= predefines three I particularly like:
 
- - =csCHstd= :: \\
-  [[./pics/cs/color_lut_docs_csCHstd_50.png]]
- - =csCHblu= :: \\
-  [[./pics/cs/color_lut_docs_csCHblu_50.png]]
- - =csCHvio= :: \\
-  [[./pics/cs/color_lut_docs_csCHvio_50.png]]
+  - =csCHstd= :: \\
+    [[./pics/cs/color_lut_docs_csCHstd_50.png]]
+  - =csCHblu= :: \\
+    [[./pics/cs/color_lut_docs_csCHblu_50.png]]
+  - =csCHvio= :: \\
+    [[./pics/cs/color_lut_docs_csCHvio_50.png]]
 
 * Pseudo-Greyscale
 :PROPERTIES:
@@ -646,31 +631,31 @@ The =csCubeHelix_tpl= templte can geneate any of the cubehelix schemes, but =col
 
 These schemes are not true greyscale, but the colors are very close to grey.  These schemes are discreet!
 
- - =csPGrey3x= :: \\
-  [[./pics/cs/color_lut_docs_csPGrey3x_50.png]]
- - =csPGrey4x= :: \\
-  [[./pics/cs/color_lut_docs_csPGrey4x_50.png]]
+  - =csPGrey3x= :: \\
+    [[./pics/cs/color_lut_docs_csPGrey3x_50.png]]
+  - =csPGrey4x= :: \\
+    [[./pics/cs/color_lut_docs_csPGrey4x_50.png]]
 
 * Spectral
 :PROPERTIES:
 :CUSTOM_ID: csRainbow
 :END:
 
-These color schemes are based on the spectrum and color match functions.  These aren't really suitable for visualization, but some
-interesting color schemes can be derived from them.
+These color schemes are based on the spectrum and color match functions.  These aren't really suitable for visualization, but some interesting color schemes
+can be derived from them.
 
- - =csRainbowLA= :: \\
-  [[./pics/cs/color_lut_docs_csRainbowLA_50.png]]
- - =csRainbowCM= with =BUMP= :: \\
-  [[./pics/cs/color_lut_docs_csRainbowCMb_50.png]]
- - =csRainbowCM= with =LINEAR= :: \\
-  [[./pics/cs/color_lut_docs_csRainbowCMl_50.png]]
- - =csRainbowCM= with =FLOOR= :: \\
-  [[./pics/cs/color_lut_docs_csRainbowCMf_50.png]]
- - =csRainbowCM= with =CEILING= :: \\
-  [[./pics/cs/color_lut_docs_csRainbowCMc_50.png]]
- - =csRainbowCM= with =NEAREST= :: \\
-  [[./pics/cs/color_lut_docs_csRainbowCMn_50.png]]
+  - =csRainbowLA= :: \\
+    [[./pics/cs/color_lut_docs_csRainbowLA_50.png]]
+  - =csRainbowCM= with =BUMP= :: \\
+    [[./pics/cs/color_lut_docs_csRainbowCMb_50.png]]
+  - =csRainbowCM= with =LINEAR= :: \\
+    [[./pics/cs/color_lut_docs_csRainbowCMl_50.png]]
+  - =csRainbowCM= with =FLOOR= :: \\
+    [[./pics/cs/color_lut_docs_csRainbowCMf_50.png]]
+  - =csRainbowCM= with =CEILING= :: \\
+    [[./pics/cs/color_lut_docs_csRainbowCMc_50.png]]
+  - =csRainbowCM= with =NEAREST= :: \\
+    [[./pics/cs/color_lut_docs_csRainbowCMn_50.png]]
 
 * Color Brewer
 :PROPERTIES:
@@ -684,131 +669,131 @@ Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30.
 Most of these schemes can provide a variable number of steps from 3 up to what is illustrated in each color swatch below.  Also note that =colorTpl= provides
 a continuous gradient version of each color scheme -- which is kinda weird, but I like some of them.
 
- - =csCBAccent= :: \\
-  [[./pics/cs/color_lut_docs_csCBAccent_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBAccentC_50.png]]
- - =csCBBlues= :: \\
-  [[./pics/cs/color_lut_docs_csCBBlues_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBBluesC_50.png]]
- - =csCBBrBG= :: \\
-  [[./pics/cs/color_lut_docs_csCBBrBG_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBBrBGC_50.png]]
- - =csCBBuGn= :: \\
-  [[./pics/cs/color_lut_docs_csCBBuGn_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBBuGnC_50.png]]
- - =csCBBuPu= :: \\
-  [[./pics/cs/color_lut_docs_csCBBuPu_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBBuPuC_50.png]]
- - =csCBDark2= :: \\
-  [[./pics/cs/color_lut_docs_csCBDark2_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBDark2C_50.png]]
- - =csCBGnBu= :: \\
-  [[./pics/cs/color_lut_docs_csCBGnBu_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBGnBuC_50.png]]
- - =csCBGreens= :: \\
-  [[./pics/cs/color_lut_docs_csCBGreens_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBGreensC_50.png]]
- - =csCBGreys= :: \\
-  [[./pics/cs/color_lut_docs_csCBGreys_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBGreysC_50.png]]
- - =csCBOranges= :: \\
-  [[./pics/cs/color_lut_docs_csCBOranges_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBOrangesC_50.png]]
- - =csCBOrRd= :: \\
-  [[./pics/cs/color_lut_docs_csCBOrRd_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBOrRdC_50.png]]
- - =csCBPaired= :: \\
-  [[./pics/cs/color_lut_docs_csCBPaired_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBPairedC_50.png]]
- - =csCBPastel1= :: \\
-  [[./pics/cs/color_lut_docs_csCBPastel1_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBPastel1C_50.png]]
- - =csCBPastel2= :: \\
-  [[./pics/cs/color_lut_docs_csCBPastel2_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBPastel2C_50.png]]
- - =csCBPiYG= :: \\
-  [[./pics/cs/color_lut_docs_csCBPiYG_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBPiYGC_50.png]]
- - =csCBPRGn= :: \\
-  [[./pics/cs/color_lut_docs_csCBPRGn_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBPRGnC_50.png]]
- - =csCBPuBuGn= :: \\
-  [[./pics/cs/color_lut_docs_csCBPuBuGn_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBPuBuGnC_50.png]]
- - =csCBPuBu= :: \\
-  [[./pics/cs/color_lut_docs_csCBPuBu_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBPuBuC_50.png]]
- - =csCBPuOr= :: \\
-  [[./pics/cs/color_lut_docs_csCBPuOr_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBPuOrC_50.png]]
- - =csCBPuRd= :: \\
-  [[./pics/cs/color_lut_docs_csCBPuRd_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBPuRdC_50.png]]
- - =csCBPurples= :: \\
-  [[./pics/cs/color_lut_docs_csCBPurples_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBPurplesC_50.png]]
- - =csCBRdBu= :: \\
-  [[./pics/cs/color_lut_docs_csCBRdBu_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBRdBuC_50.png]]
- - =csCBRdGy= :: \\
-  [[./pics/cs/color_lut_docs_csCBRdGy_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBRdGyC_50.png]]
- - =csCBRdPu= :: \\
-  [[./pics/cs/color_lut_docs_csCBRdPu_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBRdPuC_50.png]]
- - =csCBRdYlBu= :: \\
-  [[./pics/cs/color_lut_docs_csCBRdYlBu_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBRdYlBuC_50.png]]
- - =csCBRdYlGn= :: \\
-  [[./pics/cs/color_lut_docs_csCBRdYlGn_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBRdYlGnC_50.png]]
- - =csCBReds= :: \\
-  [[./pics/cs/color_lut_docs_csCBReds_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBRedsC_50.png]]
- - =csCBSet1= :: \\
-  [[./pics/cs/color_lut_docs_csCBSet1_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBSet1C_50.png]]
- - =csCBSet2= :: \\
-  [[./pics/cs/color_lut_docs_csCBSet2_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBSet2C_50.png]]
- - =csCBSet3= :: \\
-  [[./pics/cs/color_lut_docs_csCBSet3_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBSet3C_50.png]]
- - =csCBSpectral= :: \\
-  [[./pics/cs/color_lut_docs_csCBSpectral_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBSpectralC_50.png]]
- - =csCBYlGnBu= :: \\
-  [[./pics/cs/color_lut_docs_csCBYlGnBu_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBYlGnBuC_50.png]]
- - =csCBYlGn= :: \\
-  [[./pics/cs/color_lut_docs_csCBYlGn_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBYlGnC_50.png]]
- - =csCBYlOrBr= :: \\
-  [[./pics/cs/color_lut_docs_csCBYlOrBr_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBYlOrBrC_50.png]]
- - =csCBYlOrRd= :: \\
-  [[./pics/cs/color_lut_docs_csCBYlOrRd_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBYlOrRdC_50.png]]
+  - =csCBAccent= :: \\
+    [[./pics/cs/color_lut_docs_csCBAccent_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBAccentC_50.png]]
+  - =csCBBlues= :: \\
+    [[./pics/cs/color_lut_docs_csCBBlues_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBBluesC_50.png]]
+  - =csCBBrBG= :: \\
+    [[./pics/cs/color_lut_docs_csCBBrBG_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBBrBGC_50.png]]
+  - =csCBBuGn= :: \\
+    [[./pics/cs/color_lut_docs_csCBBuGn_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBBuGnC_50.png]]
+  - =csCBBuPu= :: \\
+    [[./pics/cs/color_lut_docs_csCBBuPu_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBBuPuC_50.png]]
+  - =csCBDark2= :: \\
+    [[./pics/cs/color_lut_docs_csCBDark2_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBDark2C_50.png]]
+  - =csCBGnBu= :: \\
+    [[./pics/cs/color_lut_docs_csCBGnBu_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBGnBuC_50.png]]
+  - =csCBGreens= :: \\
+    [[./pics/cs/color_lut_docs_csCBGreens_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBGreensC_50.png]]
+  - =csCBGreys= :: \\
+    [[./pics/cs/color_lut_docs_csCBGreys_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBGreysC_50.png]]
+  - =csCBOranges= :: \\
+    [[./pics/cs/color_lut_docs_csCBOranges_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBOrangesC_50.png]]
+  - =csCBOrRd= :: \\
+    [[./pics/cs/color_lut_docs_csCBOrRd_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBOrRdC_50.png]]
+  - =csCBPaired= :: \\
+    [[./pics/cs/color_lut_docs_csCBPaired_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBPairedC_50.png]]
+  - =csCBPastel1= :: \\
+    [[./pics/cs/color_lut_docs_csCBPastel1_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBPastel1C_50.png]]
+  - =csCBPastel2= :: \\
+    [[./pics/cs/color_lut_docs_csCBPastel2_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBPastel2C_50.png]]
+  - =csCBPiYG= :: \\
+    [[./pics/cs/color_lut_docs_csCBPiYG_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBPiYGC_50.png]]
+  - =csCBPRGn= :: \\
+    [[./pics/cs/color_lut_docs_csCBPRGn_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBPRGnC_50.png]]
+  - =csCBPuBuGn= :: \\
+    [[./pics/cs/color_lut_docs_csCBPuBuGn_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBPuBuGnC_50.png]]
+  - =csCBPuBu= :: \\
+    [[./pics/cs/color_lut_docs_csCBPuBu_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBPuBuC_50.png]]
+  - =csCBPuOr= :: \\
+    [[./pics/cs/color_lut_docs_csCBPuOr_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBPuOrC_50.png]]
+  - =csCBPuRd= :: \\
+    [[./pics/cs/color_lut_docs_csCBPuRd_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBPuRdC_50.png]]
+  - =csCBPurples= :: \\
+    [[./pics/cs/color_lut_docs_csCBPurples_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBPurplesC_50.png]]
+  - =csCBRdBu= :: \\
+    [[./pics/cs/color_lut_docs_csCBRdBu_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBRdBuC_50.png]]
+  - =csCBRdGy= :: \\
+    [[./pics/cs/color_lut_docs_csCBRdGy_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBRdGyC_50.png]]
+  - =csCBRdPu= :: \\
+    [[./pics/cs/color_lut_docs_csCBRdPu_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBRdPuC_50.png]]
+  - =csCBRdYlBu= :: \\
+    [[./pics/cs/color_lut_docs_csCBRdYlBu_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBRdYlBuC_50.png]]
+  - =csCBRdYlGn= :: \\
+    [[./pics/cs/color_lut_docs_csCBRdYlGn_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBRdYlGnC_50.png]]
+  - =csCBReds= :: \\
+    [[./pics/cs/color_lut_docs_csCBReds_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBRedsC_50.png]]
+  - =csCBSet1= :: \\
+    [[./pics/cs/color_lut_docs_csCBSet1_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBSet1C_50.png]]
+  - =csCBSet2= :: \\
+    [[./pics/cs/color_lut_docs_csCBSet2_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBSet2C_50.png]]
+  - =csCBSet3= :: \\
+    [[./pics/cs/color_lut_docs_csCBSet3_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBSet3C_50.png]]
+  - =csCBSpectral= :: \\
+    [[./pics/cs/color_lut_docs_csCBSpectral_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBSpectralC_50.png]]
+  - =csCBYlGnBu= :: \\
+    [[./pics/cs/color_lut_docs_csCBYlGnBu_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBYlGnBuC_50.png]]
+  - =csCBYlGn= :: \\
+    [[./pics/cs/color_lut_docs_csCBYlGn_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBYlGnC_50.png]]
+  - =csCBYlOrBr= :: \\
+    [[./pics/cs/color_lut_docs_csCBYlOrBr_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBYlOrBrC_50.png]]
+  - =csCBYlOrRd= :: \\
+    [[./pics/cs/color_lut_docs_csCBYlOrRd_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBYlOrRdC_50.png]]
 
 * Web Safe & Color Blind Pallets
 :PROPERTIES:
 :CUSTOM_ID: csWS
 :END:
 
- - =csWSSafeDeutanopia= :: \\
-  [[./pics/cs/color_lut_docs_csWSdeutanopia_50.png]]
- - =csWSSafeDeutanopiaAlt= :: \\
-  [[./pics/cs/color_lut_docs_csWSdeutanopiaAlt_50.png]]
- - =csWSSafeNormalVision= :: \\
-  [[./pics/cs/color_lut_docs_csWSnormalVision_50.png]]
- - =csWSSafeProtanopia= :: \\
-  [[./pics/cs/color_lut_docs_csWSprotanopia_50.png]]
- - =csWSSafeProtanopiaAlt= :: \\
-  [[./pics/cs/color_lut_docs_csWSprotanopiaAlt_50.png]]
- - =csWSSafeTritanoptia= :: \\
-  [[./pics/cs/color_lut_docs_csWStritanoptia_50.png]]
- - =csWSSafeTritanoptiaAlt= :: \\
-  [[./pics/cs/color_lut_docs_csWStritanoptiaAlt_50.png]]
+  - =csWSSafeDeutanopia= :: \\
+    [[./pics/cs/color_lut_docs_csWSdeutanopia_50.png]]
+  - =csWSSafeDeutanopiaAlt= :: \\
+    [[./pics/cs/color_lut_docs_csWSdeutanopiaAlt_50.png]]
+  - =csWSSafeNormalVision= :: \\
+    [[./pics/cs/color_lut_docs_csWSnormalVision_50.png]]
+  - =csWSSafeProtanopia= :: \\
+    [[./pics/cs/color_lut_docs_csWSprotanopia_50.png]]
+  - =csWSSafeProtanopiaAlt= :: \\
+    [[./pics/cs/color_lut_docs_csWSprotanopiaAlt_50.png]]
+  - =csWSSafeTritanoptia= :: \\
+    [[./pics/cs/color_lut_docs_csWStritanoptia_50.png]]
+  - =csWSSafeTritanoptiaAlt= :: \\
+    [[./pics/cs/color_lut_docs_csWStritanoptiaAlt_50.png]]
 
 * Miscilanious Pallets
 :PROPERTIES:
@@ -818,60 +803,60 @@ a continuous gradient version of each color scheme -- which is kinda weird, but 
 These pallets are taken from various sources.  Many of them are aviable in the NCAR collection of color maps.  In some cases I have modified these maps from
 the origonal sources.
 
- - =csFPblAqGrYeOrReVi200= :: \\
-  [[./pics/cs/color_lut_docs_csFPblAqGrYeOrReVi200_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPblAqGrYeOrReVi200C_50.png]]
- - =csFPcircular12= :: \\
-  [[./pics/cs/color_lut_docs_csFPcircular12_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPcircular12C_50.png]]
- - =csFPcircular24= :: \\
-  [[./pics/cs/color_lut_docs_csFPcircular24_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPcircular24C_50.png]]
- - =csFPcmoceanAlgae= :: \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanAlgae_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanAlgaeC_50.png]]
- - =csFPcmoceanAmp= :: \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanAmp_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanAmpC_50.png]]
- - =csFPcmoceanBalance= :: \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanBalance_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanBalanceC_50.png]]
- - =csFPcmoceanCurl= :: \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanCurl_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanCurlC_50.png]]
- - =csFPcmoceanDeep= :: \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanDeep_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanDeepC_50.png]]
- - =csFPcmoceanDense= :: \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanDense_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanDenseC_50.png]]
- - =csFPcmoceanHaline= :: \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanHaline_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanHalineC_50.png]]
- - =csFPcmoceanIce= :: \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanIce_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanIceC_50.png]]
- - =csFPcmoceanTempo= :: \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanTempo_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanTempoC_50.png]]
- - =csFPmplBrBG= :: \\
-  [[./pics/cs/color_lut_docs_csFPmplBrBG_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPmplBrBGC_50.png]]
- - =csFPmplOcean= :: \\
-  [[./pics/cs/color_lut_docs_csFPmplOcean_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPmplOceanC_50.png]]
- - =csFPmplOranges= :: \\
-  [[./pics/cs/color_lut_docs_csFPmplOranges_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPmplOrangesC_50.png]]
- - =csFPneoDdivVegetationA= :: \\
-  [[./pics/cs/color_lut_docs_csFPneoDdivVegetationA_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPneoDdivVegetationAC_50.png]]
- - =csFPneoDivVegetationC= :: \\
-  [[./pics/cs/color_lut_docs_csFPneoDivVegetationC_50.png]]
-  [[./pics/cs/color_lut_docs_csFPneoDivVegetationCC_50.png]]
- - =csFPneoModisNdvi= :: \\
-  [[./pics/cs/color_lut_docs_csFPneoModisNdvi_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPneoModisNdviC_50.png]]
+  - =csFPblAqGrYeOrReVi200= :: \\
+    [[./pics/cs/color_lut_docs_csFPblAqGrYeOrReVi200_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPblAqGrYeOrReVi200C_50.png]]
+  - =csFPcircular12= :: \\
+    [[./pics/cs/color_lut_docs_csFPcircular12_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPcircular12C_50.png]]
+  - =csFPcircular24= :: \\
+    [[./pics/cs/color_lut_docs_csFPcircular24_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPcircular24C_50.png]]
+  - =csFPcmoceanAlgae= :: \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanAlgae_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanAlgaeC_50.png]]
+  - =csFPcmoceanAmp= :: \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanAmp_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanAmpC_50.png]]
+  - =csFPcmoceanBalance= :: \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanBalance_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanBalanceC_50.png]]
+  - =csFPcmoceanCurl= :: \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanCurl_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanCurlC_50.png]]
+  - =csFPcmoceanDeep= :: \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanDeep_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanDeepC_50.png]]
+  - =csFPcmoceanDense= :: \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanDense_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanDenseC_50.png]]
+  - =csFPcmoceanHaline= :: \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanHaline_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanHalineC_50.png]]
+  - =csFPcmoceanIce= :: \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanIce_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanIceC_50.png]]
+  - =csFPcmoceanTempo= :: \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanTempo_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanTempoC_50.png]]
+  - =csFPmplBrBG= :: \\
+    [[./pics/cs/color_lut_docs_csFPmplBrBG_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPmplBrBGC_50.png]]
+  - =csFPmplOcean= :: \\
+    [[./pics/cs/color_lut_docs_csFPmplOcean_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPmplOceanC_50.png]]
+  - =csFPmplOranges= :: \\
+    [[./pics/cs/color_lut_docs_csFPmplOranges_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPmplOrangesC_50.png]]
+  - =csFPneoDdivVegetationA= :: \\
+    [[./pics/cs/color_lut_docs_csFPneoDdivVegetationA_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPneoDdivVegetationAC_50.png]]
+  - =csFPneoDivVegetationC= :: \\
+    [[./pics/cs/color_lut_docs_csFPneoDivVegetationC_50.png]]
+    [[./pics/cs/color_lut_docs_csFPneoDivVegetationCC_50.png]]
+  - =csFPneoModisNdvi= :: \\
+    [[./pics/cs/color_lut_docs_csFPneoModisNdvi_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPneoModisNdviC_50.png]]
 
 * Binary Pallets
 :PROPERTIES:
@@ -881,20 +866,20 @@ the origonal sources.
 These are really just two color fixed pallets; however, they are generally used as infinite pallets that take on the first color for even indexes and the
 second color for odd indexes. Unlike fixed pallets, these do not have a "continuous" option and they are restricted to RGB corner colors.
 
- - =csBin01= :: \\
-  [[./pics/cs/color_lut_docs_csBin01_50.png]]
- - =csBinGB= :: \\
-  [[./pics/cs/color_lut_docs_csBinGB_50.png]]
- - =csBinMC= :: \\
-  [[./pics/cs/color_lut_docs_csBinMC_50.png]]
- - =csBinMY= :: \\
-  [[./pics/cs/color_lut_docs_csBinMY_50.png]]
- - =csBinRB= :: \\
-  [[./pics/cs/color_lut_docs_csBinRB_50.png]]
- - =csBinRG= :: \\
-  [[./pics/cs/color_lut_docs_csBinRG_50.png]]
- - =csBinYC= :: \\
-  [[./pics/cs/color_lut_docs_csBinYC_50.png]]
+  - =csBin01= :: \\
+    [[./pics/cs/color_lut_docs_csBin01_50.png]]
+  - =csBinGB= :: \\
+    [[./pics/cs/color_lut_docs_csBinGB_50.png]]
+  - =csBinMC= :: \\
+    [[./pics/cs/color_lut_docs_csBinMC_50.png]]
+  - =csBinMY= :: \\
+    [[./pics/cs/color_lut_docs_csBinMY_50.png]]
+  - =csBinRB= :: \\
+    [[./pics/cs/color_lut_docs_csBinRB_50.png]]
+  - =csBinRG= :: \\
+    [[./pics/cs/color_lut_docs_csBinRG_50.png]]
+  - =csBinYC= :: \\
+    [[./pics/cs/color_lut_docs_csBinYC_50.png]]
 
 * Predefined Color Scheme Cross Reference
 :PROPERTIES:
@@ -908,23 +893,23 @@ second color for odd indexes. Unlike fixed pallets, these do not have a "continu
 
 Note =csCubeHelix_tpl= with very small amplitude produces greys similar to =csPGrey3x= & =csPGrey4x=.
 
- - =csPGrey3x= :: \\
-  [[./pics/cs/color_lut_docs_csPGrey3x_50.png]]
- - =csPGrey4x= :: \\
-  [[./pics/cs/color_lut_docs_csPGrey4x_50.png]]
- - =csCBGreys= :: \\
-  [[./pics/cs/color_lut_docs_csCBGreys_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBGreysC_50.png]]
- - =csBin01= :: \\
-  [[./pics/cs/color_lut_docs_csBin01_50.png]]
- - =csPLYgrey= :: \\
-  [[./pics/cs/color_lut_docs_csPLYgrey_50.png]]
- - =csPLYquad= :: \\
-  [[./pics/cs/color_lut_docs_csPLYquad_50.png]]
- - =csCCdiag01= :: \\
-  [[./pics/cs/color_lut_docs_csCCdiag01_50.png]]
- - =csCCu0W= :: \\
-  [[./pics/cs/color_lut_docs_csCCu0W_50.png]]
+  - =csPGrey3x= :: \\
+    [[./pics/cs/color_lut_docs_csPGrey3x_50.png]]
+  - =csPGrey4x= :: \\
+    [[./pics/cs/color_lut_docs_csPGrey4x_50.png]]
+  - =csCBGreys= :: \\
+    [[./pics/cs/color_lut_docs_csCBGreys_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBGreysC_50.png]]
+  - =csBin01= :: \\
+    [[./pics/cs/color_lut_docs_csBin01_50.png]]
+  - =csPLYgrey= :: \\
+    [[./pics/cs/color_lut_docs_csPLYgrey_50.png]]
+  - =csPLYquad= :: \\
+    [[./pics/cs/color_lut_docs_csPLYquad_50.png]]
+  - =csCCdiag01= :: \\
+    [[./pics/cs/color_lut_docs_csCCdiag01_50.png]]
+  - =csCCu0W= :: \\
+    [[./pics/cs/color_lut_docs_csCCu0W_50.png]]
 
 ** Circular
 :PROPERTIES:
@@ -935,200 +920,199 @@ Note =csCC_tpl= can be used to make circular color schemes -- any cycle in the c
 
 Note =csPLY_tpl= can be used to make circular color schemes -- any closed parametric curve in the RGB color cube space forms a circular color scheme.
 
- - =csFPblAqGrYeOrReVi200= :: \\
-  [[./pics/cs/color_lut_docs_csFPblAqGrYeOrReVi200_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPblAqGrYeOrReVi200C_50.png]]
- - =csFPcircular12= :: \\
-  [[./pics/cs/color_lut_docs_csFPcircular12_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPcircular12C_50.png]]
- - =csFPcircular24= :: \\
-  [[./pics/cs/color_lut_docs_csFPcircular24_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPcircular24C_50.png]]
- - =csCColdeRainbow= :: \\
-  [[./pics/cs/color_lut_docs_csCColdeRainbow_50.png]]
- - =csPLYhsvRB= :: \\
-  [[./pics/cs/color_lut_docs_csPLYhsvRB_50.png]]
- - =csCCconsTwo= :: \\
-  [[./pics/cs/color_lut_docs_csCCconsTwo_50.png]]
- - =csCCconsOne= :: \\
-  [[./pics/cs/color_lut_docs_csCCconsOne_50.png]]
+  - =csFPblAqGrYeOrReVi200= :: \\
+    [[./pics/cs/color_lut_docs_csFPblAqGrYeOrReVi200_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPblAqGrYeOrReVi200C_50.png]]
+  - =csFPcircular12= :: \\
+    [[./pics/cs/color_lut_docs_csFPcircular12_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPcircular12C_50.png]]
+  - =csFPcircular24= :: \\
+    [[./pics/cs/color_lut_docs_csFPcircular24_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPcircular24C_50.png]]
+  - =csCColdeRainbow= :: \\
+    [[./pics/cs/color_lut_docs_csCColdeRainbow_50.png]]
+  - =csPLYhsvRB= :: \\
+    [[./pics/cs/color_lut_docs_csPLYhsvRB_50.png]]
+  - =csCCconsTwo= :: \\
+    [[./pics/cs/color_lut_docs_csCCconsTwo_50.png]]
+  - =csCCconsOne= :: \\
+    [[./pics/cs/color_lut_docs_csCCconsOne_50.png]]
 
 ** Divergent
 :PROPERTIES:
 :CUSTOM_ID: xRefDiv
 :END:
 
- - =csFPcmoceanBalance= :: \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanBalance_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanBalanceC_50.png]]
- - =csFPcmoceanCurl= :: \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanCurl_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanCurlC_50.png]]
- - =csFPneoDdivVegetationA= :: \\
-  [[./pics/cs/color_lut_docs_csFPneoDdivVegetationA_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPneoDdivVegetationAC_50.png]]
- - =csFPneoDivVegetationC= :: \\
-  [[./pics/cs/color_lut_docs_csFPneoDivVegetationC_50.png]]
-  [[./pics/cs/color_lut_docs_csFPneoDivVegetationCC_50.png]]
- - =csFPmplBrBG= :: \\
-  [[./pics/cs/color_lut_docs_csFPmplBrBG_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPmplBrBGC_50.png]]
- - =csCBBrBG= :: \\
-  [[./pics/cs/color_lut_docs_csCBBrBG_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBBrBGC_50.png]]
- - =csCBPuOr= :: \\
-  [[./pics/cs/color_lut_docs_csCBPuOr_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBPuOrC_50.png]]
- - =csCBPiYG= :: \\
-  [[./pics/cs/color_lut_docs_csCBPiYG_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBPiYGC_50.png]]
- - =csCBPRGn= :: \\
-  [[./pics/cs/color_lut_docs_csCBPRGn_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBPRGnC_50.png]]
- - =csCBRdBu= :: \\
-  [[./pics/cs/color_lut_docs_csCBRdBu_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBRdBuC_50.png]]
- - =csCBRdGy= :: \\
-  [[./pics/cs/color_lut_docs_csCBRdGy_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBRdGyC_50.png]]
- - =csCBRdYlGn= :: \\
-  [[./pics/cs/color_lut_docs_csCBRdYlGn_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBRdYlGnC_50.png]]
- - =csCBRdYlBu= :: \\
-  [[./pics/cs/color_lut_docs_csCBRdYlBu_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBRdYlBuC_50.png]]
- - =csCBSpectral= :: \\
-  [[./pics/cs/color_lut_docs_csCBSpectral_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBSpectralC_50.png]]
- - =csCCdivBWR= :: \\
-  [[./pics/cs/color_lut_docs_csCCdivBWR_50.png]]
- - =csCCdivCWM= :: \\
-  [[./pics/cs/color_lut_docs_csCCdivCWM_50.png]]
+  - =csFPcmoceanBalance= :: \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanBalance_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanBalanceC_50.png]]
+  - =csFPcmoceanCurl= :: \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanCurl_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanCurlC_50.png]]
+  - =csFPneoDdivVegetationA= :: \\
+    [[./pics/cs/color_lut_docs_csFPneoDdivVegetationA_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPneoDdivVegetationAC_50.png]]
+  - =csFPneoDivVegetationC= :: \\
+    [[./pics/cs/color_lut_docs_csFPneoDivVegetationC_50.png]]
+    [[./pics/cs/color_lut_docs_csFPneoDivVegetationCC_50.png]]
+  - =csFPmplBrBG= :: \\
+    [[./pics/cs/color_lut_docs_csFPmplBrBG_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPmplBrBGC_50.png]]
+  - =csCBBrBG= :: \\
+    [[./pics/cs/color_lut_docs_csCBBrBG_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBBrBGC_50.png]]
+  - =csCBPuOr= :: \\
+    [[./pics/cs/color_lut_docs_csCBPuOr_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBPuOrC_50.png]]
+  - =csCBPiYG= :: \\
+    [[./pics/cs/color_lut_docs_csCBPiYG_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBPiYGC_50.png]]
+  - =csCBPRGn= :: \\
+    [[./pics/cs/color_lut_docs_csCBPRGn_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBPRGnC_50.png]]
+  - =csCBRdBu= :: \\
+    [[./pics/cs/color_lut_docs_csCBRdBu_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBRdBuC_50.png]]
+  - =csCBRdGy= :: \\
+    [[./pics/cs/color_lut_docs_csCBRdGy_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBRdGyC_50.png]]
+  - =csCBRdYlGn= :: \\
+    [[./pics/cs/color_lut_docs_csCBRdYlGn_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBRdYlGnC_50.png]]
+  - =csCBRdYlBu= :: \\
+    [[./pics/cs/color_lut_docs_csCBRdYlBu_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBRdYlBuC_50.png]]
+  - =csCBSpectral= :: \\
+    [[./pics/cs/color_lut_docs_csCBSpectral_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBSpectralC_50.png]]
+  - =csCCdivBWR= :: \\
+    [[./pics/cs/color_lut_docs_csCCdivBWR_50.png]]
+  - =csCCdivCWM= :: \\
+    [[./pics/cs/color_lut_docs_csCCdivCWM_50.png]]
 
 ** Qualitative
 :PROPERTIES:
 :CUSTOM_ID: xRefQual
 :END:
 
- - =csCBDark2= :: \\
-  [[./pics/cs/color_lut_docs_csCBDark2_50.png]]
- - =csCBPaired= :: \\
-  [[./pics/cs/color_lut_docs_csCBPaired_50.png]]
- - =csCBSet1= :: \\
-  [[./pics/cs/color_lut_docs_csCBSet1_50.png]]
- - =csCBSet2= :: \\
-  [[./pics/cs/color_lut_docs_csCBSet2_50.png]]
- - =csCBSet3= :: \\
-  [[./pics/cs/color_lut_docs_csCBSet3_50.png]]
+  - =csCBDark2= :: \\
+    [[./pics/cs/color_lut_docs_csCBDark2_50.png]]
+  - =csCBPaired= :: \\
+    [[./pics/cs/color_lut_docs_csCBPaired_50.png]]
+  - =csCBSet1= :: \\
+    [[./pics/cs/color_lut_docs_csCBSet1_50.png]]
+  - =csCBSet2= :: \\
+    [[./pics/cs/color_lut_docs_csCBSet2_50.png]]
+  - =csCBSet3= :: \\
+    [[./pics/cs/color_lut_docs_csCBSet3_50.png]]
 
 ** Sequential
 :PROPERTIES:
 :CUSTOM_ID: xRefSeq
 :END:
 
- - =csCBBlues= :: \\
-  [[./pics/cs/color_lut_docs_csCBBlues_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBBluesC_50.png]]
+  - =csCBBlues= :: \\
+    [[./pics/cs/color_lut_docs_csCBBlues_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBBluesC_50.png]]
 
- - =csCBBuGn= :: \\
-  [[./pics/cs/color_lut_docs_csCBBuGn_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBBuGnC_50.png]]
- - =csCBBuPu= :: \\
-  [[./pics/cs/color_lut_docs_csCBBuPu_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBBuPuC_50.png]]
- - =csCBGnBu= :: \\
-  [[./pics/cs/color_lut_docs_csCBGnBu_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBGnBuC_50.png]]
- - =csCBGreens= :: \\
-  [[./pics/cs/color_lut_docs_csCBGreens_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBGreensC_50.png]]
- - =csCBGreys= :: \\
-  [[./pics/cs/color_lut_docs_csCBGreys_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBGreysC_50.png]]
- - =csCBOranges= :: \\
-  [[./pics/cs/color_lut_docs_csCBOranges_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBOrangesC_50.png]]
- - =csCBPuBuGn= :: \\
-  [[./pics/cs/color_lut_docs_csCBPuBuGn_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBPuBuGnC_50.png]]
- - =csCBPuBu= :: \\
-  [[./pics/cs/color_lut_docs_csCBPuBu_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBPuBuC_50.png]]
- - =csCBPuRd= :: \\
-  [[./pics/cs/color_lut_docs_csCBPuRd_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBPuRdC_50.png]]
- - =csCBPurples= :: \\
-  [[./pics/cs/color_lut_docs_csCBPurples_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBPurplesC_50.png]]
- - =csCBRdPu= :: \\
-  [[./pics/cs/color_lut_docs_csCBRdPu_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBRdPuC_50.png]]
- - =csCBReds= :: \\
-  [[./pics/cs/color_lut_docs_csCBReds_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBRedsC_50.png]]
- - =csCBYlGnBu= :: \\
-  [[./pics/cs/color_lut_docs_csCBYlGnBu_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBYlGnBuC_50.png]]
- - =csCBYlGn= :: \\
-  [[./pics/cs/color_lut_docs_csCBYlGn_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBYlGnC_50.png]]
- - =csCBYlOrBr= :: \\
-  [[./pics/cs/color_lut_docs_csCBYlOrBr_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBYlOrBrC_50.png]]
- - =csCBYlOrRd= :: \\
-  [[./pics/cs/color_lut_docs_csCBYlOrRd_50.png]] \\
-  [[./pics/cs/color_lut_docs_csCBYlOrRdC_50.png]]
- - =csFPcmoceanAlgae= :: \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanAlgae_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanAlgaeC_50.png]]
- - =csFPcmoceanAmp= :: \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanAmp_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanAmpC_50.png]]
- - =csFPcmoceanDeep= :: \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanDeep_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanDeepC_50.png]]
- - =csFPcmoceanDense= :: \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanDense_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanDenseC_50.png]]
- - =csFPcmoceanHaline= :: \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanHaline_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanHalineC_50.png]]
- - =csFPcmoceanIce= :: \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanIce_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanIceC_50.png]]
- - =csFPcmoceanTempo= :: \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanTempo_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPcmoceanTempoC_50.png]]
- - =csFPmplOcean= :: \\
-  [[./pics/cs/color_lut_docs_csFPmplOcean_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPmplOceanC_50.png]]
- - =csFPmplOranges= :: \\
-  [[./pics/cs/color_lut_docs_csFPmplOranges_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPmplOrangesC_50.png]]
- - =csFPneoModisNdvi= :: \\
-  [[./pics/cs/color_lut_docs_csFPneoModisNdvi_50.png]] \\
-  [[./pics/cs/color_lut_docs_csFPneoModisNdviC_50.png]]
- - =csCCsumRGB= & =csCColdeFireRamp= :: \\
-  [[./pics/cs/color_lut_docs_csCCsumRGB_50.png]]
- - =csPLYinferno= :: \\
-  [[./pics/cs/color_lut_docs_csPLYinferno_50.png]]
- - =csPLYmagma= :: \\
-  [[./pics/cs/color_lut_docs_csPLYmagma_50.png]]
- - =csPLYparula= :: \\
-  [[./pics/cs/color_lut_docs_csPLYparula_50.png]]
- - =csPLYplasma= :: \\
-  [[./pics/cs/color_lut_docs_csPLYplasma_50.png]]
- - =csPLYviridis= :: \\
-  [[./pics/cs/color_lut_docs_csPLYviridis_50.png]]
- - =csPLYcividis= :: \\
-  [[./pics/cs/color_lut_docs_csPLYcividis_50.png]]
- - =csCHstd= :: \\
-  [[./pics/cs/color_lut_docs_csCHstd_50.png]]
- - =csCHblu= :: \\
-  [[./pics/cs/color_lut_docs_csCHblu_50.png]]
- - =csCHvio= :: \\
-  [[./pics/cs/color_lut_docs_csCHvio_50.png]]
-
+  - =csCBBuGn= :: \\
+    [[./pics/cs/color_lut_docs_csCBBuGn_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBBuGnC_50.png]]
+  - =csCBBuPu= :: \\
+    [[./pics/cs/color_lut_docs_csCBBuPu_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBBuPuC_50.png]]
+  - =csCBGnBu= :: \\
+    [[./pics/cs/color_lut_docs_csCBGnBu_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBGnBuC_50.png]]
+  - =csCBGreens= :: \\
+    [[./pics/cs/color_lut_docs_csCBGreens_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBGreensC_50.png]]
+  - =csCBGreys= :: \\
+    [[./pics/cs/color_lut_docs_csCBGreys_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBGreysC_50.png]]
+  - =csCBOranges= :: \\
+    [[./pics/cs/color_lut_docs_csCBOranges_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBOrangesC_50.png]]
+  - =csCBPuBuGn= :: \\
+    [[./pics/cs/color_lut_docs_csCBPuBuGn_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBPuBuGnC_50.png]]
+  - =csCBPuBu= :: \\
+    [[./pics/cs/color_lut_docs_csCBPuBu_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBPuBuC_50.png]]
+  - =csCBPuRd= :: \\
+    [[./pics/cs/color_lut_docs_csCBPuRd_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBPuRdC_50.png]]
+  - =csCBPurples= :: \\
+    [[./pics/cs/color_lut_docs_csCBPurples_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBPurplesC_50.png]]
+  - =csCBRdPu= :: \\
+    [[./pics/cs/color_lut_docs_csCBRdPu_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBRdPuC_50.png]]
+  - =csCBReds= :: \\
+    [[./pics/cs/color_lut_docs_csCBReds_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBRedsC_50.png]]
+  - =csCBYlGnBu= :: \\
+    [[./pics/cs/color_lut_docs_csCBYlGnBu_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBYlGnBuC_50.png]]
+  - =csCBYlGn= :: \\
+    [[./pics/cs/color_lut_docs_csCBYlGn_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBYlGnC_50.png]]
+  - =csCBYlOrBr= :: \\
+    [[./pics/cs/color_lut_docs_csCBYlOrBr_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBYlOrBrC_50.png]]
+  - =csCBYlOrRd= :: \\
+    [[./pics/cs/color_lut_docs_csCBYlOrRd_50.png]] \\
+    [[./pics/cs/color_lut_docs_csCBYlOrRdC_50.png]]
+  - =csFPcmoceanAlgae= :: \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanAlgae_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanAlgaeC_50.png]]
+  - =csFPcmoceanAmp= :: \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanAmp_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanAmpC_50.png]]
+  - =csFPcmoceanDeep= :: \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanDeep_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanDeepC_50.png]]
+  - =csFPcmoceanDense= :: \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanDense_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanDenseC_50.png]]
+  - =csFPcmoceanHaline= :: \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanHaline_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanHalineC_50.png]]
+  - =csFPcmoceanIce= :: \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanIce_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanIceC_50.png]]
+  - =csFPcmoceanTempo= :: \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanTempo_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPcmoceanTempoC_50.png]]
+  - =csFPmplOcean= :: \\
+    [[./pics/cs/color_lut_docs_csFPmplOcean_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPmplOceanC_50.png]]
+  - =csFPmplOranges= :: \\
+    [[./pics/cs/color_lut_docs_csFPmplOranges_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPmplOrangesC_50.png]]
+  - =csFPneoModisNdvi= :: \\
+    [[./pics/cs/color_lut_docs_csFPneoModisNdvi_50.png]] \\
+    [[./pics/cs/color_lut_docs_csFPneoModisNdviC_50.png]]
+  - =csCCsumRGB= & =csCColdeFireRamp= :: \\
+    [[./pics/cs/color_lut_docs_csCCsumRGB_50.png]]
+  - =csPLYinferno= :: \\
+    [[./pics/cs/color_lut_docs_csPLYinferno_50.png]]
+  - =csPLYmagma= :: \\
+    [[./pics/cs/color_lut_docs_csPLYmagma_50.png]]
+  - =csPLYparula= :: \\
+    [[./pics/cs/color_lut_docs_csPLYparula_50.png]]
+  - =csPLYplasma= :: \\
+    [[./pics/cs/color_lut_docs_csPLYplasma_50.png]]
+  - =csPLYviridis= :: \\
+    [[./pics/cs/color_lut_docs_csPLYviridis_50.png]]
+  - =csPLYcividis= :: \\
+    [[./pics/cs/color_lut_docs_csPLYcividis_50.png]]
+  - =csCHstd= :: \\
+    [[./pics/cs/color_lut_docs_csCHstd_50.png]]
+  - =csCHblu= :: \\
+    [[./pics/cs/color_lut_docs_csCHblu_50.png]]
+  - =csCHvio= :: \\
+    [[./pics/cs/color_lut_docs_csCHvio_50.png]]
 
 * Converting and processing previews                               :noexport:
 :PROPERTIES:
@@ -1154,7 +1138,6 @@ for f in ../build/color_lut_docs_*.tiff(:r); do echo $f; nf=pics/cs/`basename $f
 | ../build/color_lut_docs_csCCwicM |
 | ../build/color_lut_docs_csCCwicR |
 | ../build/color_lut_docs_csCCwicY |
-
 
 #+begin_src zsh
 for f in ../build/color_lut_docs_*.tiff(:r); do echo $f; nf=pics/cs/`basename $f`_50.png; convert -resize 50% $f.tiff $nf; done
