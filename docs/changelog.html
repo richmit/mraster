@@ -1,0 +1,1518 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-08-30 Fri 15:23 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=1024, initial-scale=1" />
+<title>Change Log</title>
+<meta name="author" content="Mitch Richling" />
+<meta name="keywords" content="release history changelog" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<style>body { width: 95%; margin: 2% auto; font-size: 18px; line-height: 1.4em; font-family: Georgia, serif; color: black; background-color: white; }</style>
+<style>body { min-width: 500px; max-width: 1024px; }</style>
+<style>h1,h2,h3,h4,h5,h6 { color: #A5573E; line-height: 1em; font-family: Helvetica, sans-serif; }</style>
+<style>h1,h2,h3 { line-height: 1.4em; }</style>
+<style>h1.title { font-size: 3em; }</style>
+<style>.subtitle { font-size: 0.6em; }</style>
+<style>h4,h5,h6 { font-size: 1em; }</style>
+<style>.org-src-container { border: 1px solid #ccc; box-shadow: 3px 3px 3px #eee; font-family: Lucida Console, monospace; font-size: 80%; margin: 0px; padding: 0px 0px; position: relative; }</style>
+<style>.org-src-container>pre { line-height: 1.2em; padding-top: 1.5em; margin: 0.5em; background-color: #404040; color: white; overflow: auto; }</style>
+<style>.org-src-container>pre:before { display: block; position: absolute; background-color: #b3b3b3; top: 0; right: 0; padding: 0 0.2em 0 0.4em; border-bottom-left-radius: 8px; border: 0; color: white; font-size: 100%; font-family: Helvetica, sans-serif;}</style>
+<style>pre.example { white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; font-family: Lucida Console, monospace; font-size: 80%; background: #404040; color: white; display: block; padding: 0em; border: 2px solid black; }</style>
+<style>blockquote { margin-bottom: 0.5em; padding: 0.5em; background-color: #FFF8DC; border-left: 2px solid #A5573E; border-left-color: rgb(255, 228, 102); display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 5em; margin-inline-end: 5em; } </style>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="https://www.mitchr.me/FIXME"> UP </a>
+ |
+ <a accesskey="H" href="https://www.mitchr.me/"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Change Log</h1>
+<table border="2 solid #ccc" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" align="center">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right"><b>Author:</b></td>
+<td class="org-left"><i>Mitch Richling</i></td>
+</tr>
+
+<tr>
+<td class="org-right"><b>Updated:</b></td>
+<td class="org-left"><i>2024-08-30 15:23:21</i></td>
+</tr>
+
+<tr>
+<td class="org-right"><b>Generated:</b></td>
+<td class="org-left"><i>2024-08-30 15:23:26</i></td>
+</tr>
+</tbody>
+</table>
+<p align="center">
+Copyright &copy; 2024 Mitch Richling. All rights reserved.
+</p>
+
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#latest">1. Changes On HEAD Since Last Release</a></li>
+<li><a href="#v20.12.3">2. v20.12.3: Feature Release</a></li>
+<li><a href="#v20.12.0">3. v20.12.0: Feature Release</a></li>
+<li><a href="#v20.11.0">4. v20.11.0: Feature Release</a></li>
+<li><a href="#v20.10.5">5. v20.10.5: Public Release</a></li>
+<li><a href="#v20.10.0rc3">6. v20.10.0rc3: Unit tests. New features.</a></li>
+<li><a href="#v20.9.0rc2">7. v20.9.0rc2: Bug fixes. Unit tests. New features. Better platform support.</a></li>
+<li><a href="#v20.8.1b">8. v20.8.1b: Unit tests for ramCanvasTpl. Bugs.  New stuff.</a></li>
+<li><a href="#v20.8.2rc1">9. v20.8.2rc1: Unit tests for ramCanvasTpl.</a></li>
+<li><a href="#v20.8.0b">10. v20.8.0b: ramCanvasTpl refactor.  clang support. Cleanup.</a></li>
+<li><a href="#v20.7.0b">11. v20.7.0b: New Features. Bug Fixes. Unit Tests.</a></li>
+<li><a href="#v20.6.0b">12. v20.6.0b: Refactor, Bug Fixs, Unit Tests</a></li>
+<li><a href="#v20.5.0b">13. v20.5.0b: Unit tests, bug fixes, refactoring, &amp; cleanup</a></li>
+<li><a href="#v20.4.0a">14. v20.4.0a: Refactor, unit tests, doxygen docs</a></li>
+<li><a href="#v20.3.0a">15. v20.3.0a: ramConfig Refactor</a></li>
+<li><a href="#v20.2.0a">16. v20.2.0a: Refactor of hershey fonts &amp; RGBA</a></li>
+<li><a href="#v20.0.0a">17. v20.0.0a: Complete Refactor Of colorTpl &amp; ramCanvasTpl</a></li>
+<li><a href="#v6.0.0">18. v6.0.0: Feature &amp; Bugfix Release</a></li>
+<li><a href="#v5.0.0">19. v5.0.0: Refactor Release</a></li>
+<li><a href="#v4.5.0">20. v4.5.0: Feature &amp; Bugfix Release</a></li>
+<li><a href="#v4.0.0">21. v4.0.0: Feature &amp; Bugfix Release</a></li>
+<li><a href="#v3.0.0">22. v3.0.0: Major cleanup of old code.  Added cycles examples</a></li>
+<li><a href="#v2.0.0">23. v2.0.0: Feature &amp; Bugfix Release</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-latest" class="outline-2">
+<h2 id="latest"><span class="section-number-2">1.</span> Changes On HEAD Since Last Release</h2>
+<div class="outline-text-2" id="text-latest">
+<ul class="org-ul">
+<li>Examples
+<ul class="org-ul">
+<li>New
+<ul class="org-ul">
+<li>N/A</li>
+</ul></li>
+<li>Updated
+<ul class="org-ul">
+<li>N/A</li>
+</ul></li>
+</ul></li>
+<li>Fixed Bugs
+<ul class="org-ul">
+<li>N/A</li>
+</ul></li>
+<li>Known Issues
+<ul class="org-ul">
+<li>N/A</li>
+</ul></li>
+<li>API breaking Changes
+<ul class="org-ul">
+<li>WARNING: Eventually the deprecated headers will be removed.</li>
+<li>The "all" target has been removed.  Use the "examples" target instead.</li>
+</ul></li>
+<li>New functionality
+<ul class="org-ul">
+<li>Library exported via build/MRasterLib.cmake</li>
+<li>Package exported via build/MRasterConfig.cmake &amp; build/MRasterConfigVersion.cmake</li>
+<li>Install target created that installs:
+<ul class="org-ul">
+<li>MRasterLib.cmake</li>
+<li>MRasterConfig.cmake &amp; MRasterConfigVersion.cmake</li>
+<li>Non-deprecated headers</li>
+</ul></li>
+<li>New include file: mraster_config.hpp
+<ul class="org-ul">
+<li>Defines for cmake configuration information</li>
+<li>Functions returning version information
+Note this change limits future version numbers to numeric components.</li>
+</ul></li>
+</ul></li>
+<li>Deprecated functionality
+<ul class="org-ul">
+<li>Several people reported conflicts with other packages using the same header names
+<ul class="org-ul">
+<li>Deprecated header color.hpp &#x2013; USE MRcolor.hpp instead</li>
+<li>Deprecated header point2d.hpp &#x2013; USE MRpoint2d.hpp instead</li>
+<li>Deprecated header colorTpl.hpp &#x2013; USE MRcolorTpl.hpp instead</li>
+</ul></li>
+</ul></li>
+<li>Miscellaneous
+<ul class="org-ul">
+<li>The color scheme org-mode document has been cleaned up</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-v20.12.3" class="outline-2">
+<h2 id="v20.12.3"><span class="section-number-2">2.</span> v20.12.3: Feature Release</h2>
+<div class="outline-text-2" id="text-v20.12.3">
+<ul class="org-ul">
+<li>Examples
+<ul class="org-ul">
+<li>New
+<ul class="org-ul">
+<li>newton_roter</li>
+<li>newton_3updown</li>
+<li>newton_min_angle</li>
+<li>mandelbrot_count_movie</li>
+<li>laguerre_3updown.cpp</li>
+<li>laguerre_simple.cpp</li>
+</ul></li>
+<li>Updated
+<ul class="org-ul">
+<li>mandelbrot_simple: Now uses OpenMP</li>
+</ul></li>
+</ul></li>
+<li>API breaking Changes
+<ul class="org-ul">
+<li>The ramCanvas constructors now throw.
+The cases where they throw would have likely caused a runtime issue later
+anyhow, so I don't expect very many people to notice this one&#x2026;</li>
+<li>The configure.sh script must now be run from the build directory.
+It is also much smarter about finding a good compiler.</li>
+</ul></li>
+<li>New functionality
+<ul class="org-ul">
+<li>Numerous documentation updates &amp; fixes</li>
+<li>unitTooIntLinMap: template version now handles large integers</li>
+<li>2D color maps
+<ul class="org-ul">
+<li>csSet(): Added two argument version</li>
+<li>cs2dIdxPalArg: Create an argument color scheme from an indexed color scheme</li>
+<li>cs2dFltPalArg: Create an argument color scheme from a continuous color scheme</li>
+<li>cs2dRichardson: Richardson's 2D complex number coloring scheme.</li>
+<li>cs2dThaller_tpl: Meta class for Bernd Thaller's 2D complex number color methods
+<ul class="org-ul">
+<li>cs2dThallerHSL: Thaller method using HSL</li>
+<li>cs2dThallerHSVm: Thaller method using HSV with maximal V value</li>
+<li>cs2dThallerHSV: Thaller method using HSV with dynamic V value</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-v20.12.0" class="outline-2">
+<h2 id="v20.12.0"><span class="section-number-2">3.</span> v20.12.0: Feature Release</h2>
+<div class="outline-text-2" id="text-v20.12.0">
+<ul class="org-ul">
+<li>Examples
+<ul class="org-ul">
+<li>Many examples have been improved</li>
+<li>New:
+<ul class="org-ul">
+<li>newton_max_back.cpp'</li>
+<li>newton_min_root.cpp</li>
+<li>mandelbrot_ltrap.cpp</li>
+<li>mandelbrot_pickover.cpp</li>
+<li>biomorphMorph.cpp</li>
+<li>mandelbrot_precomp.cpp</li>
+<li>julia.cpp</li>
+<li>juliaM2.cpp</li>
+<li>juliaM.cpp</li>
+<li>newton_modified.cpp</li>
+</ul></li>
+<li>Renamed:
+<ul class="org-ul">
+<li>mandelbrot_cycles.cpp -&gt; mandelbrot_1n2cycles.cpp</li>
+</ul></li>
+<li>New/updated web pages:
+<ul class="org-ul">
+<li><a href="https://www.mitchr.me/SS/biomorphMorph/index.html">https://www.mitchr.me/SS/biomorphMorph/index.html</a></li>
+<li><a href="https://www.mitchr.me/SS/newton/index.html">https://www.mitchr.me/SS/newton/index.html</a></li>
+</ul></li>
+<li>Removed:
+<ul class="org-ul">
+<li>newton_bm_*.cpp</li>
+<li>mandelbrot_distance_old.cpp</li>
+<li>mandelbrot_bm_real_eqop.cpp</li>
+<li>mandelbrot_1n2cycles.cpp</li>
+</ul></li>
+</ul></li>
+<li>Bugs
+<ul class="org-ul">
+<li>mjr::ramCanvasTpl::expandCanvas.  Fixed a bug with monochrome
+images.  Changed the behavior when x1 or y1 is off the
+canvas. Fixed a bug with non-zero x1 argument.</li>
+<li>Swapped mjr::ramCanvasTpl::rotate90CW &amp;
+mjr::ramCanvasTpl::rotate90CW</li>
+<li>mjr::ramCanvasTpl::autoMaxHistStrech(). Fixed bug when RGB were not
+on default channels.</li>
+</ul></li>
+<li>New functionality
+<ul class="org-ul">
+<li>ramCanvasTpl::getCanvasWidD()</li>
+<li>New canvas converter: rcConverterMonoIntensity</li>
+<li>ramCanvasTpl::adjoinCanvasRight()</li>
+<li>ramCanvasTpl::adjoinCanvasLeft()</li>
+<li>ramCanvasTpl::adjoinCanvasBottom()</li>
+<li>ramCanvasTpl::adjoinCanvasTop()</li>
+<li>ramCanvasTpl::insertCanvas() &#x2013; insert a canvas into another canvas</li>
+<li>mjr::sgn() &#x2013; the sign function</li>
+<li>mjr::point2d now has a conversion operator for complex numbers</li>
+<li>ramCanvasTpl now has coordinate conversion methods that work
+with point2d allowing code like this:
+  std::complex&lt;double&gt; c = theRamCanvas.int2real(x, y);
+<ul class="org-ul">
+<li>mjr::ramCanvasTpl::int2real</li>
+<li>mjr::ramCanvasTpl::real2int</li>
+</ul></li>
+<li>mjr::fmtInt(int inInt, int width, char fill) &#x2013; Strings with
+formatted integers in them.  Someday when compilers support the
+C++20 formatting features, we won't need this&#x2026;</li>
+<li>colorTpl::distDeltaE1976(colorArgType aColor) &#x2013; The LAB Delta E*(1976) distance</li>
+<li>colorTpl::distDeltaE1994(colorArgType aColor) &#x2013; The LAB Delta E*(1994) distance</li>
+<li>Real coordinate overloads for:
+<ul class="org-ul">
+<li>ramCanvasTpl::drawHersheyGlyph</li>
+<li>ramCanvasTpl::drawString</li>
+<li>ramCanvasTpl::drawStringBox</li>
+</ul></li>
+<li>Polynomial routines
+<ul class="org-ul">
+<li>mjr::evalBiPoly &#x2013; bivariate polynomial evaluation</li>
+<li>mjr::maxExpBiPoly &#x2013; figure out maximum theoretical exponent of a bivariate polynomial</li>
+<li>mjr::evalUniPoly &#x2013; univariate polynomial evaluation</li>
+</ul></li>
+<li>New log transformation function colorTpl::tfrmLn(double scale) &#x2013; note new name for
+the old version of this function: tfrmLn1()</li>
+</ul></li>
+<li>API Change
+<ul class="org-ul">
+<li>colorTpl::tfrmLn()  renamed to tfrmLn1()</li>
+<li>ramCanvasTpl::autoMaxHistStrech renamed to autoMaxHistStrechRGB</li>
+</ul></li>
+<li>Updated/New experimental geometric transformations functionality (geomTfrmRev* methods)
+These feel like they are approaching a final state, but I'm going to keep them classified
+as "experimental" for now.
+<ul class="org-ul">
+<li>Fixed a clipping bug for existing geomTfrmRef functions:
+<ul class="org-ul">
+<li>ramCanvasTpl::geomTfrmRevRPoly</li>
+<li>ramCanvasTpl::geomTfrmRevAff</li>
+<li>ramCanvasTpl::geomTfrmRevArb</li>
+</ul></li>
+<li>Transform methods now take a uniform set of shift &amp; scale arguments:
+<ul class="org-ul">
+<li>Xo &#x2013; X coordinate for the offset from image center.</li>
+<li>Yo &#x2013; Y coordinate for the offset from image center.</li>
+<li>oScale &#x2013; Scale to apply after transform but before reverse translation</li>
+</ul></li>
+</ul></li>
+<li>Started making some unit tests for mjrmath.hpp.  Coverage right now is just for the new
+polynomial routines.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-v20.11.0" class="outline-2">
+<h2 id="v20.11.0"><span class="section-number-2">4.</span> v20.11.0: Feature Release</h2>
+<div class="outline-text-2" id="text-v20.11.0">
+<ul class="org-ul">
+<li>Removed recently introduced GCC'isms.  The code now compiles
+cleanly with clang and msvc.</li>
+<li>New examples:
+<ul class="org-ul">
+<li>pickoverPopcorn.cpp</li>
+<li>mandelbrot_biomorph.cpp</li>
+<li>mandelbrot_simple.cpp</li>
+<li>invertedMandelbrot.cpp</li>
+<li>tippets.cpp</li>
+<li>multibrotSnaps.cpp</li>
+<li>multibrotMovie.cpp</li>
+<li>tricornMovie.cpp</li>
+<li>tricorn.cpp</li>
+<li>collatz.cpp</li>
+</ul></li>
+<li>New web pages for examples:
+<ul class="org-ul">
+<li><a href="https://www.mitchr.me/SS/BurningShip/index.html">https://www.mitchr.me/SS/BurningShip/index.html</a></li>
+<li><a href="https://www.mitchr.me/SS/multibrot/index.html">https://www.mitchr.me/SS/multibrot/index.html</a></li>
+<li><a href="https://www.mitchr.me/SS/tricorn/index.html">https://www.mitchr.me/SS/tricorn/index.html</a></li>
+<li><a href="https://www.mitchr.me/SS/collatz/index.html">https://www.mitchr.me/SS/collatz/index.html</a></li>
+<li><a href="https://www.mitchr.me/SS/tippets/index.html">https://www.mitchr.me/SS/tippets/index.html</a></li>
+<li><a href="https://www.mitchr.me/SS/PickoverPopcorn/index.html">https://www.mitchr.me/SS/PickoverPopcorn/index.html</a></li>
+<li><a href="https://www.mitchr.me/SS/mandelbrotBiomorph/index.html">https://www.mitchr.me/SS/mandelbrotBiomorph/index.html</a></li>
+<li><a href="https://www.mitchr.me/SS/mandelbrotInv/index.html">https://www.mitchr.me/SS/mandelbrotInv/index.html</a></li>
+</ul></li>
+<li>Updated examples:
+<ul class="org-ul">
+<li>sic.cpp &#x2013; Updated the comment on the colorizer object to
+reference another way to do the same thing illustrated in the
+pickoverPopcorn.cpp example.</li>
+<li>biomorph2.cpp &amp; biomorph1.cpp &#x2013; Cleaned up the way colors were
+set.</li>
+<li>mandelbrot_bm_real.cpp &amp; mandelbrot_bm_real_eqop.cpp &#x2013; Fixed
+typos in header.</li>
+</ul></li>
+<li>New feature:
+<ul class="org-ul">
+<li>ramCanvasTpl::rcConverterColorScheme &#x2013; Colorize a ramCanvasTpl
+with integer channels using a color scheme.  This gives one the
+ability to produce a ramCanvasTpl with some data in it, and then
+colorize it when the image files are written out.  For example,
+we could store the L function for a Mandelbrot render in a
+grayscale image, and then write out any number of RGB images
+with different color schemes.</li>
+<li>New class of color schemes: common fractal schemes
+<ul class="org-ul">
+<li>colorTpl::csCCfractal0RYBCW</li>
+<li>colorTpl::csCCfractalYR</li>
+<li>colorTpl::csCCfractalYB</li>
+</ul></li>
+<li>New class of color schemes: Ramp from black to corner
+<ul class="org-ul">
+<li>colorTpl::csCCu0W &#x2013; Ramp from black to white</li>
+<li>colorTpl::csCCu0R &#x2013; Ramp from black to red</li>
+<li>colorTpl::csCCu0B &#x2013; Ramp from black to blue</li>
+<li>colorTpl::csCCu0G &#x2013; Ramp from black to green</li>
+<li>colorTpl::csCCu0C &#x2013; Ramp from black to cyan</li>
+<li>colorTpl::csCCu0M &#x2013; Ramp from black to magenta</li>
+<li>colorTpl::csCCu0Y &#x2013; Ramp from black to yellow</li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-v20.10.5" class="outline-2">
+<h2 id="v20.10.5"><span class="section-number-2">5.</span> v20.10.5: Public Release</h2>
+<div class="outline-text-2" id="text-v20.10.5">
+<p>
+I'm done with major changes, and the code feels solid.
+</p>
+</div>
+</div>
+<div id="outline-container-v20.10.0rc3" class="outline-2">
+<h2 id="v20.10.0rc3"><span class="section-number-2">6.</span> v20.10.0rc3: Unit tests. New features.</h2>
+<div class="outline-text-2" id="text-v20.10.0rc3">
+<p>
+Release Candidate #3
+</p>
+
+<ul class="org-ul">
+<li>Last time I removed the filter option from the file write APIs,
+and that annoyed some people. ;) So I have added filters back, but
+the new filters are more capable in that they can be used for not
+just homogeneous transforms but geometric ones too.
+<ul class="org-ul">
+<li>Removed: pixelFormatEnum</li>
+<li>New converter classes inside ramCanvasTpl:
+<ul class="org-ul">
+<li>ramCanvasTpl::rcConverterIdentity</li>
+<li>ramCanvasTpl::rcConverterRGBbyte</li>
+<li>ramCanvasTpl::rcConverterRGBAbyte</li>
+<li>ramCanvasTpl::rcConverterRGBdbl</li>
+<li>ramCanvasTpl::rcConverterRGBAdbl</li>
+</ul></li>
+<li>convertRawToTIFF.cpp illustrates the new API</li>
+</ul></li>
+<li>New: "Canonical Color Types" &#x2013; color types with unsigned byte and
+floating point channels in RGB, RGBA, and numChan.  These provide a
+handy interface for conversions with the two most common channel
+types people use, and are useful for working with external
+interfaces.
+<ul class="org-ul">
+<li>Set color from a canonical color type
+<ul class="org-ul">
+<li>colorTpl&amp; colorTpl::setChans_dbl(colConALLdbl dblColor)</li>
+<li>colorTpl&amp; colorTpl::setChans_byte(colConALLbyte byteColor)</li>
+<li>colorTpl&amp; colorTpl::setChansRGBA_dbl(colConRGBAdbl dblColor)</li>
+<li>colorTpl&amp; colorTpl::setChansRGB_dbl(colConRGBdbl dblColor)</li>
+<li>colorTpl&amp; colorTpl::setChansRGBA_byte(colConRGBAbyte byteColor)</li>
+<li>colorTpl&amp; colorTpl::setChansRGB_byte(colConRGBbyte byteColor)</li>
+</ul></li>
+<li>convert color to a canonical color type
+<ul class="org-ul">
+<li>colConALLdbl   colorTpl::getColCon_dbl()</li>
+<li>colConALLbyte  colorTpl::getColCon_byte()</li>
+<li>colConRGBAdbl  colorTpl::getColConRGBA_dbl()</li>
+<li>colConRGBdbl   colorTpl::getColConRGB_dbl()</li>
+<li>colConRGBAbyte colorTpl::getColConRGBA_byte()</li>
+<li>colConRGBbyte  colorTpl::getColConRGB_byte()</li>
+</ul></li>
+<li>typedefs for  canonical color types
+<ul class="org-ul">
+<li>colorTpl::colConRGBdbl</li>
+<li>colorTpl::colConRGBAdbl</li>
+<li>colorTpl::colConRGBbyte</li>
+<li>colorTpl::colConRGBAbyte</li>
+<li>colorTpl::colConALLdbl</li>
+<li>colorTpl::colConALLbyte</li>
+</ul></li>
+</ul></li>
+<li>New integer axis orientation predicates
+<ul class="org-ul">
+<li>ramCanvasTpl::isIntAxOrientationNaturalX()</li>
+<li>ramCanvasTpl::isIntAxOrientationNaturalY()</li>
+</ul></li>
+<li>New helpers to guess named channel.  These are helpful when
+we have a color with unknown structure, and want to get the
+best option for a named color channel.
+<ul class="org-ul">
+<li>colorTpl::bestRedChan()</li>
+<li>colorTpl::bestGreenChan()</li>
+<li>colorTpl::bestBlueChan()</li>
+<li>colorTpl::bestAlphaChan()</li>
+</ul></li>
+<li>Unit tests
+<ul class="org-ul">
+<li>colorTpl::colCon*</li>
+<li>colorTpl::best*Chan</li>
+</ul></li>
+<li>sic.cpp now uses the filter instead of making a new ramCanvasTpl
+object &#x2013; like it did in the past.</li>
+<li>Added DO_CIRCLE to bmark.cpp</li>
+<li>Doxygen tag files &amp; links into doxygen docs.</li>
+<li>Unit tests for ramCanvasTpl simple geom transforms</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-v20.9.0rc2" class="outline-2">
+<h2 id="v20.9.0rc2"><span class="section-number-2">7.</span> v20.9.0rc2: Bug fixes. Unit tests. New features. Better platform support.</h2>
+<div class="outline-text-2" id="text-v20.9.0rc2">
+<p>
+Release Candidate #2
+</p>
+<ul class="org-ul">
+<li>Bugs:
+<ul class="org-ul">
+<li>ramCanvasTpl::writeFile
+<ul class="org-ul">
+<li>Failed to pass return code from stream write helper function.</li>
+<li>Potential beyond buffer access</li>
+</ul></li>
+</ul></li>
+<li>New features:
+<ul class="org-ul">
+<li>ramCanvasTpl::readRAWfile</li>
+</ul></li>
+<li>Breaking Changes
+<ul class="org-ul">
+<li>Replaced the toTRU &amp; filter arguments with an enum to convert to
+8-bit RGB/RGBA. In addition, writeTIFF* no longer has an alpha
+argument &#x2013; the enum takes care of that too.</li>
+</ul></li>
+<li>Unit tests for ramCanvasTpl now use isEqual and readRAWfile instead
+of comparing file content.</li>
+<li>Platform Support
+<ul class="org-ul">
+<li>Tested with several OS/compiler combinations
+<ul class="org-ul">
+<li>Windows with MSVC, MSYS2 MSVC, MSYS2 clang, and MSYS2 GCC</li>
+<li>Debian 11 with GCC-10, and GCC-11</li>
+<li>MacOS with Apple clang and homebrew GCC</li>
+</ul></li>
+<li>Made several little code changes for better platform support.</li>
+<li>The big change is a couple of macros controlling conditional
+compilation of code.  This allows the code to be compiled, with
+some reduced functionality, using some older compilers.
+<ul class="org-ul">
+<li>Added a couple of conditional compiles:
+<ul class="org-ul">
+<li>MISSING_P0476R2 &#x2013; Omits code using bit_cast</li>
+<li>MISSING_P1907R1 &#x2013; Omits code using floating point template parameters</li>
+</ul></li>
+<li>Added cmake rules for conditional code:
+<ul class="org-ul">
+<li>Detect GCC version and set MISSING_P0476R2 &amp; MISSING_P1907R1 as required.</li>
+<li>Set MISSING_P1907R1 for clang (both regular and Apple)</li>
+<li>Set MISSING_P0476R2 for Apple clang</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-v20.8.1b" class="outline-2">
+<h2 id="v20.8.1b"><span class="section-number-2">8.</span> v20.8.1b: Unit tests for ramCanvasTpl. Bugs.  New stuff.</h2>
+<div class="outline-text-2" id="text-v20.8.1b">
+<p>
+I'm still calling it a beta, but it's pretty solid right now.
+</p>
+
+<p>
+Please test and report back!
+</p>
+
+<ul class="org-ul">
+<li>New predefined ramCanvas types:
+<ul class="org-ul">
+<li>ramCanvas4c64b</li>
+<li>ramCanvas3c64b</li>
+<li>ramCanvasRGBA64b</li>
+<li>ramCanvasRGB64b</li>
+<li>ramCanvas1c32F</li>
+<li>ramCanvas1c64F</li>
+</ul></li>
+<li>Added const:
+<ul class="org-ul">
+<li>colorTpl::rgb2GreyDotProd</li>
+<li>colorTpl::luminanceRGB</li>
+<li>colorTpl::intensityRGB</li>
+<li>colorTpl::intensity</li>
+<li>colorTpl::intensityScaledRGB</li>
+<li>colorTpl::intensityScaled</li>
+<li>colorTpl::getMaxC</li>
+<li>colorTpl::getMinC</li>
+<li>colorTpl::getMaxRGB</li>
+<li>colorTpl::getMinRGB</li>
+<li>colorTpl::dotProd</li>
+<li>colorTpl::distHypot</li>
+<li>colorTpl::distSumAbs</li>
+<li>colorTpl::distMaxAbs</li>
+<li>colorTpl::isClose</li>
+<li>colorTpl::isCloseRGB</li>
+<li>colorTpl::isEqual</li>
+<li>colorTpl::isEqualRGB</li>
+<li>colorTpl::isNotEqual</li>
+<li>colorTpl::isBlack</li>
+<li>colorTpl::isBlackRGB</li>
+</ul></li>
+<li>ramCanvasTpl::drawFillTriangleUtl
+<ul class="org-ul">
+<li>Better comment for cases &amp; code</li>
+<li>Much better organization of code for each case</li>
+<li>Much faster for degenerate triangles using barycentric coloring</li>
+<li>Much more accurate barycentric coloring, but a slight performance hit.</li>
+<li>More accurate edges.</li>
+</ul></li>
+<li>ramCanvasTpl::triangleEdger
+<ul class="org-ul">
+<li>Added code to find min/max for each y value&#x2026;</li>
+<li>I plan on updating this to support cropped triangles at some point.</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-v20.8.2rc1" class="outline-2">
+<h2 id="v20.8.2rc1"><span class="section-number-2">9.</span> v20.8.2rc1: Unit tests for ramCanvasTpl.</h2>
+<div class="outline-text-2" id="text-v20.8.2rc1">
+<p>
+This is release candidate #1!  Please test and report back!
+</p>
+</div>
+</div>
+<div id="outline-container-v20.8.0b" class="outline-2">
+<h2 id="v20.8.0b"><span class="section-number-2">10.</span> v20.8.0b: ramCanvasTpl refactor.  clang support. Cleanup.</h2>
+<div class="outline-text-2" id="text-v20.8.0b">
+<p>
+Still beta, but approaching production.
+</p>
+
+<p>
+Please test and report back!
+</p>
+
+<ul class="org-ul">
+<li>ramCanvasTpl refactor
+<ul class="org-ul">
+<li>Data member naming consistency</li>
+<li>Fixed get/set methods to use uniform naming</li>
+<li>Added requires</li>
+<li>Comment cleanup</li>
+</ul></li>
+<li>Clang support
+<ul class="org-ul">
+<li>Duplicated requires clauses as necessary</li>
+<li>Added conditional compile around floating point template parameters</li>
+<li>Added defines to CMakeLists.txt</li>
+<li>Added warnings about missing examples to CMakeLists.txt</li>
+<li>Propagated requires outside of class definition</li>
+</ul></li>
+<li>Bugs
+<ul class="org-ul">
+<li>colorTpl::distHypot</li>
+<li>colorTpl::rgb2GreyDotProd</li>
+</ul></li>
+<li>Upgrades
+<ul class="org-ul">
+<li>colorTpl::cmpRGBcornerDGradiant &#x2013; Faster &amp; safer.</li>
+</ul></li>
+<li>Removed FLTK from CMakeLists.txt &#x2013; it was not used.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-v20.7.0b" class="outline-2">
+<h2 id="v20.7.0b"><span class="section-number-2">11.</span> v20.7.0b: New Features. Bug Fixes. Unit Tests.</h2>
+<div class="outline-text-2" id="text-v20.7.0b">
+<p>
+Still beta, but approaching production.
+</p>
+
+<p>
+Please test and report back!
+</p>
+
+<ul class="org-ul">
+<li>Many more unit tests</li>
+<li>Bug Fixes (mostly related to getC# refactor)
+<ul class="org-ul">
+<li>setRGBfromUnitHSL</li>
+<li>cmpRGBcornerDGradiant</li>
+<li>isBlackRGB</li>
+<li>isEqualRGB</li>
+<li>cmpGradiant</li>
+<li>rgb2colorSpace</li>
+<li>tfrmStdPowRGB</li>
+<li>rgb2GreyDotProd</li>
+<li>luminanceRGB</li>
+<li>getMaxRGB</li>
+<li>getMinRGB</li>
+</ul></li>
+<li>New
+<ul class="org-ul">
+<li>isClose</li>
+<li>isCloseRGB</li>
+<li>linearInterpolateRGB</li>
+<li>csCCdivBWR</li>
+<li>csCCdivCWM</li>
+<li>setChansToMean()</li>
+</ul></li>
+<li>The color space colorTpl&lt;double, 3&gt; typedef is colSpaceDbl3</li>
+<li>Fixed color swatch names for web safe pallets in documentation.</li>
+<li>Fixed bug with csWSprotanopia class name</li>
+<li>Fixed class names for binary schemes.</li>
+<li>SDL2 support
+<ul class="org-ul">
+<li>Added SDL2 to CMakeLists.txt so it's easy to add SDL code.</li>
+<li>Added a new example: displayImageSDL2.cpp</li>
+</ul></li>
+<li>Better support for msys2 on windows:
+Added options in CMakeLists.txt to make GLUT, FLTK, &amp; SDL2 code be
+compiled as a "GUI" application instead of a "console" application
+as before.  The console applications would fail to open a window
+when run within some contexts.  I may need to do something for
+MSVC too, but I don't know as much about that environment&#x2026;</li>
+<li>Color documentation (ColorSchemes.org)
+<ul class="org-ul">
+<li>Added binary pallets</li>
+<li>Added three segment CC diverging color schemes</li>
+<li>Added continuous swatches to fixed pallets</li>
+<li>Added cross reference</li>
+</ul></li>
+<li>Various documentation updates.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-v20.6.0b" class="outline-2">
+<h2 id="v20.6.0b"><span class="section-number-2">12.</span> v20.6.0b: Refactor, Bug Fixs, Unit Tests</h2>
+<div class="outline-text-2" id="text-v20.6.0b">
+<p>
+Still beta.  Still a few API changes, but things are stabilizing.
+</p>
+
+<p>
+Please test and report back!
+</p>
+
+<ul class="org-ul">
+<li>Tons of unit tests</li>
+<li>Rearranged some code in colorTpl for better Doxygen results.</li>
+<li>colorTpl::csFP_tpl now provides both discreet and continuous color
+schemes via overloads to the c member.  Much like csCB_tpl.</li>
+<li>New:
+<ul class="org-ul">
+<li>colorTpl::csWS_tpl &#x2013; A color scheme template for web safe colors</li>
+<li>colorTpl::setRGBAfromLogPackIntBGRA</li>
+<li>colorTpl::setRGBfromLogPackIntBGRA</li>
+</ul></li>
+<li>Fixed bugs
+<ul class="org-ul">
+<li>colorTpl::tfrmDiracTot</li>
+<li>colorTpl::tfrmStdPowRGB</li>
+<li>colorTpl::tfrmLn</li>
+<li>colorTpl::tfrmLinearGreyLevelScaleRGB</li>
+<li>colorTpl::tfrmWebSafeRGB
+<ul class="org-ul">
+<li>When clrChanT wasn't uint8_t, this function would scale the
+components incorrectly.  Not sure this is really a bug as "web
+safe" doesn't really apply to such images.  Still, it's fixed.</li>
+<li>Now only operates on the red, blue, and green channels.</li>
+</ul></li>
+<li>colorTpl::intensityScaledRGB
+Scaling was incorrect for images with more than 3 channels.
+<ul class="org-ul">
+<li>RGBA Bugs Fixed (using getC instead of getRed/Blue/Green/Alpha)
+<ul class="org-ul">
+<li>colorTpl::tfrmGreyScaleRGB</li>
+<li>colorTpl::tfrmWebSafePro216</li>
+<li>colorTpl::tfrmWebSafeDeu216</li>
+<li>colorTpl::tfrmWebSafeTri216</li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li>Renamed
+<ul class="org-ul">
+<li>tfrmWebSafe216              -&gt; tfrmWebSafeRGB</li>
+<li>interplColors(dbl, c1, c2)  -&gt; linearInterpolate</li>
+<li>interplColors(dbl, col)     -&gt;  tfrmMix</li>
+</ul></li>
+<li>Removed:
+<ul class="org-ul">
+<li>colorTpl::tfrmGmeanClamp</li>
+<li>colorTpl::colorComp2CloseColorComp</li>
+<li>colorTpl::tfrmWebSafePro216</li>
+<li>colorTpl::tfrmWebSafeDeu216</li>
+<li>colorTpl::tfrmWebSafeTri216</li>
+<li>colorTpl::tfrmLinearGreyLevelScale taking colorTpl</li>
+</ul></li>
+<li>Web safe color schemes
+<ul class="org-ul">
+<li>Now use csWS_tpl instead of csFP_tpl.</li>
+<li>Provide a setter that takes a color object</li>
+<li>Renamed:
+<ul class="org-ul">
+<li>csFPwebSafeNormalVision    -&gt; csWSnormalVision</li>
+<li>csFPwXebSafeProtanopia     -&gt; csWSnrotanopia</li>
+<li>csFPwXebSafeDeutanopia     -&gt; csWSdeutanopia</li>
+<li>csFPwXebSafeTritanoptia    -&gt; csWStritanoptia</li>
+<li>csFPwXebSafeProtanopiaAlt  -&gt; csWSprotanopiaAlt</li>
+<li>csFPwXebSafeDeutanopiaAlt  -&gt; csWSdeutanopiaAlt</li>
+<li>csFPwXebSafeTritanoptiaAlt -&gt; csWStritanoptiaAlt</li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-v20.5.0b" class="outline-2">
+<h2 id="v20.5.0b"><span class="section-number-2">13.</span> v20.5.0b: Unit tests, bug fixes, refactoring, &amp; cleanup</h2>
+<div class="outline-text-2" id="text-v20.5.0b">
+<p>
+Moving it from alpha to beta.  I hope this is the last of the API
+changes for a while.
+</p>
+
+<p>
+Please test and report back!
+</p>
+
+<p>
+The API changes are mostly member name changes in colorTpl.  These will
+impact some users, but the refactor should be a simple search-n-replace.
+Unit tests are fleshing out, and I've fixed a few bugs.
+</p>
+
+<ul class="org-ul">
+<li>Fixed a bugs:
+<ul class="org-ul">
+<li>colorTpl::isBlack()</li>
+<li>colorTpl::rgbSumIntensity()</li>
+</ul></li>
+<li>Removed loop from cmpRGBcornerCGradiant()</li>
+<li>Tons of unit tests &#x2013; up to about 40% coverage for colorTpl</li>
+<li>Removed methods
+<ul class="org-ul">
+<li>colorTpl::distP2sq &#x2013; this one wasn't very useful because the
+sum of the squares was frequently too large to fit into an
+Sums/Products integer type.</li>
+</ul></li>
+<li>Renamed methods
+<ul class="org-ul">
+<li>colorTpl::distAbs -&gt; distSumAbs</li>
+<li>colorTpl::rgbSumIntensity -&gt; intensitySum</li>
+<li>colorTpl::rgbLuminance -&gt; luminanceRGB</li>
+<li>colorTpl::sumIntensity -&gt; intensity</li>
+<li>colorTpl::rgbScaledIntensity -&gt; IntensityScaledRGB</li>
+<li>colorTpl::sumScaledIntensity -&gt; intensityScaled</li>
+</ul></li>
+<li>Changed methods
+<ul class="org-ul">
+<li>colorTpl::rgb2GreyDotProd &amp; colorTpl::dotProd now return a
+channelArithFltType and use floating point arithmetic for all
+intermediate computations.</li>
+</ul></li>
+<li>New methods
+<ul class="org-ul">
+<li>colorTpl::distMaxAbs</li>
+<li>colorTpl::distHypot &#x2013; Like distP2sq, but the square root so it
+is much smaller.  All arithmetic is done with doubles.</li>
+<li>colorTpl::cmpGradiant(csFltType csX, csIntType numColors, const packed4Cint* colors).</li>
+</ul></li>
+<li>colorTpl::cmpGradiant() now uses csFltType for inputs and anchors.
+Not really an API change as csFltType is double.  Just makes
+things more consistent and readable.</li>
+<li>Added some typedefs for clarity
+<ul class="org-ul">
+<li>Packed integers</li>
+<li>color type for color space computations</li>
+</ul></li>
+<li>Continuous gradient colorbrewer2
+<ul class="org-ul">
+<li>Added continuous gradients to colorbrewer2 color schemes</li>
+<li>Added swatches to documentation</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-v20.4.0a" class="outline-2">
+<h2 id="v20.4.0a"><span class="section-number-2">14.</span> v20.4.0a: Refactor, unit tests, doxygen docs</h2>
+<div class="outline-text-2" id="text-v20.4.0a">
+<p>
+Still alpha.  Still changing the API. :)
+</p>
+
+<p>
+Please test and report back!
+</p>
+
+<p>
+The API changes are mostly member name changes in colorTpl.  These will
+impact some users, but the refactor should be a simple search-n-replace.
+Unit tests are fleshing out, and I've cleaned up the doxygen output.
+</p>
+
+<ul class="org-ul">
+<li>Renamed "clp" tfrm methods to "clamp" to better align with C++ use.
+<ul class="org-ul">
+<li>colorTpl::tfrmMultClp    -&gt; tfrmMultClamp</li>
+<li>colorTpl::tfrmDiffClp    -&gt; tfrmDiffClamp</li>
+<li>colorTpl::tfrmNegDiffClp -&gt; tfrmNegDiffClamp</li>
+<li>colorTpl::tfrmAddClp     -&gt; tfrmAddClamp</li>
+<li>colorTpl::tfrmAddDivClp  -&gt; tfrmAddDivClamp</li>
+<li>colorTpl::tfrmGmeanClp   -&gt; tfrmGmeanClamp</li>
+</ul></li>
+<li>Renamed "clip" methods to "clamp" to better align with C++ use.
+<ul class="org-ul">
+<li>colorTpl::clipTop -&gt; clampTop</li>
+<li>colorTpl::clipAll -&gt; clampAll</li>
+<li>colorTpl::clipBot -&gt; clampBot</li>
+</ul></li>
+<li>Renamed "CLIP" drawModeType values to "CLAMP" to better align with C++ use.
+<ul class="org-ul">
+<li>ramCanvasTpl::drawModeType::ADDCLAMP</li>
+<li>ramCanvasTpl::drawModeType::AND</li>
+<li>ramCanvasTpl::drawModeType::OR</li>
+<li>ramCanvasTpl::drawModeType::DIFFCLAMP</li>
+<li>ramCanvasTpl::drawModeType::MULTCLAMP</li>
+</ul></li>
+<li>Many many many more unit tests.  Coverage for colorTpl is now at
+about 25%.</li>
+<li>Published doxygen documentation on web
+<ul class="org-ul">
+<li><a href="https://www.mitchr.me/SS/mraster/doc-examples/autodocs/html/index.html">https://www.mitchr.me/SS/mraster/doc-examples/autodocs/html/index.html</a></li>
+<li><a href="https://www.mitchr.me/SS/mraster/doc-lib/autodocs/html/index.html">https://www.mitchr.me/SS/mraster/doc-lib/autodocs/html/index.html</a></li>
+</ul></li>
+<li>Added links to published doxygen documentation to github documentation</li>
+<li>Made some updates to doxygen config changes
+<ul class="org-ul">
+<li>Including the comments in the published source</li>
+<li>Excluded  some problematic bits of code that was confusing Doxygen.</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-v20.3.0a" class="outline-2">
+<h2 id="v20.3.0a"><span class="section-number-2">15.</span> v20.3.0a: ramConfig Refactor</h2>
+<div class="outline-text-2" id="text-v20.3.0a">
+<p>
+Still alpha.  Still changing the API. :)
+</p>
+
+<p>
+The big API change is the addition of an argument to ramCanvasTpl,
+and the removal of ramConfig.hpp.  That will all be transparent to
+people using the color.hpp &amp; ramCanvas.hpp typedefs&#x2026;
+</p>
+
+<ul class="org-ul">
+<li>Added color types for common 8-bit channel RGBA orderings:
+<ul class="org-ul">
+<li>colorBGR8b  -&gt; ramCanvasBGR8b</li>
+<li>colorARGB8b -&gt; ramCanvasARGB8b</li>
+<li>colorBGRA8b -&gt; ramCanvasBGRA8b</li>
+<li>colorABGR8b -&gt; ramCanvasABGR8b</li>
+</ul></li>
+<li>ramCanvasTpl::writeTGAstream now uses the R, G, &amp; B channels when
+writing a file if they are available.  If not it reverts to the old
+behavior of using the first three channels.</li>
+<li>ramCanvasTpl::colorizeFltCanvas &amp; ramCanvasTpl::colorizeIntCanvas.
+<ul class="org-ul">
+<li>color an entire canvas based upon a function that takes pixel
+coordinates and returns a color.</li>
+<li>mandelbrot_bm_real_cfun.cpp &#x2013; Demonstrates colorizeFltCanvas.</li>
+</ul></li>
+<li>ramCanvasTpl
+<ul class="org-ul">
+<li>Cleaned up some casts making things a bit safer, and eliminating
+compiler warnings for edge cases.</li>
+<li>Moved a few small functions into the class.  I hope to move more
+eventually so as to avoid all the extra requires clauses for
+externally defined methods.</li>
+<li>Cleaned up the doxygen overload tags &#x2013; they just make the
+document harder to read.</li>
+<li>New: isOnCanvas &#x2013; logical inverse of isCliped.</li>
+</ul></li>
+<li>Removed ramConfig.hpp include
+<ul class="org-ul">
+<li>The SUPPORT_DRAWING_MODE macro has been replaced with a template
+parameter (enableDrawModes) to ramCanvasTpl.</li>
+<li>The REAL_CORD &amp; INT_CORD macros have been replaced with typedefs
+rcSimpleFltCrdT &amp; rcSimpleIntCrdT in ramCanvas.hpp.</li>
+<li>The ramConfig class is simply gone.</li>
+<li>All the 128 bit stuff is now at the top of colorTpl.hpp:
+<ul class="org-ul">
+<li>macros: MJR_LOOK_FOR_128_BIT_TYPES &amp; MJR_HAVE_128_BIT_TYPES</li>
+<li>typedefs: mjr_uint128_t &amp; mjr_int128_t</li>
+<li>Note this stuff is not inside the mjr name space &#x2013; it's
+outside just like before.</li>
+</ul></li>
+</ul></li>
+<li>Fixed a bug in bmark.cpp &#x2013; used wrong set_chans function.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-v20.2.0a" class="outline-2">
+<h2 id="v20.2.0a"><span class="section-number-2">16.</span> v20.2.0a: Refactor of hershey fonts &amp; RGBA</h2>
+<div class="outline-text-2" id="text-v20.2.0a">
+<p>
+Several serious bugs, and two API changing refactors in this update.
+</p>
+
+<p>
+This release is BETA quality!!!  Please test it, and report bugs.
+</p>
+
+<ul class="org-ul">
+<li>Fixed bug with set/clear_byte funcs with clrChanT integer</li>
+<li>Added "color scheme" classes to colorTpl
+<ul class="org-ul">
+<li>They know how many colors they support</li>
+<li>Much better encapsulation.</li>
+<li>The csSet method of colorTpl can be used to set the current
+color object's color from a color scheme class
+aColor.csSet&lt;mjr:color3c8b::webSafeNormalVision&gt;(25);</li>
+<li>Color scheme classes may be used as a factory for colorTpl objects
+aColor = mjr:color3c8b::webSafeNormalVision.c(25);</li>
+<li>Color scheme classes may also set the color of a colorTpl object passed in
+mjr:color3c8b::webSafeNormalVision.c(aColor, 25);</li>
+<li>Quite a few new color schemes.</li>
+<li>Some of the old U of O schemes are gone.</li>
+<li>Many methods are gone replaced by color scheme classes
+<ul class="org-ul">
+<li>setRGBtoWebSafe216 -&gt; webSafeNormalVision</li>
+<li>setRGBfromICP -&gt; csCb* &amp; webSafe* classes</li>
+<li>setRGBcmpBinaryColorRampRG -&gt; csBinRG</li>
+<li>setRGBcmpBinaryColorRampRB -&gt; csBinRB</li>
+<li>setRGBcmpBinaryColorRampGR -&gt; csBinRG</li>
+<li>setRGBcmpBinaryColorRampGB -&gt; csBinGB</li>
+<li>setRGBcmpBinaryColorRampBR -&gt; csBinRB</li>
+<li>setRGBcmpBinaryColorRampBG -&gt; csBinGB</li>
+<li>NEW -&gt; csBin01</li>
+<li>NEW -&gt; csBinCM</li>
+<li>NEW -&gt; csBinMY</li>
+<li>NEW -&gt; csBinYM</li>
+<li>setRGBcmpUpDownRampRg -&gt; csCCudRg</li>
+<li>setRGBcmpUpDownRampRb -&gt; csCCudRb</li>
+<li>setRGBcmpUpDownRampGr -&gt; csCCudGr</li>
+<li>setRGBcmpUpDownRampGb -&gt; csCCudGb</li>
+<li>setRGBcmpUpDownRampBr -&gt; csCCudBr</li>
+<li>setRGBcmpUpDownRampBg -&gt; csCCudBg</li>
+<li>setRGBcmpGrey -&gt; csCCdiag01</li>
+<li>setRGBcmpDiagRampCR -&gt; csCCdiagCR</li>
+<li>setRGBcmpDiagRampMG -&gt; csCCdiagMG</li>
+<li>setRGBcmpDiagRampYB -&gt; csCCdiagYB</li>
+<li>setRGBcmpConstTwoRamp -&gt; csCCconsTwo</li>
+<li>setRGBcmpConstOneRamp -&gt; csCCconsOne</li>
+<li>setRGBcmpFireRamp -&gt; csCColdeFireRamp</li>
+<li>setRGBcmpColdToHot -&gt; csCColdeColdToHot</li>
+<li>setRGBcmpIceToWaterToHot -&gt; csCColdeIceToWaterToHot</li>
+<li>setRGBcmpSumRampRGB -&gt; csCCsumRGB</li>
+<li>setRGBcmpSumRampBGR -&gt; csCCsumBGR</li>
+<li>setRGBcmpSumRampGRB -&gt; csCCsumGRB</li>
+<li>setRGBcmpSumRampBRG -&gt; csCCsumBRG</li>
+<li>setRGBcmpSumRampGBR -&gt; csCCsumGBR</li>
+<li>setRGBcmpSumRampRBG -&gt; csCCsumRBG</li>
+<li>setRGBcmpGreyRGB -&gt; csCCdiag01</li>
+<li>setRGBcmpGrey3x -&gt; csPGrey3x</li>
+<li>setRGBcmpGrey4x -&gt; csPGrey4x</li>
+<li>setRGBcmpRampGrey2R -&gt; csHSLhR</li>
+<li>setRGBcmpRampGrey2G -&gt; csHSLhG</li>
+<li>setRGBcmpRampGrey2B -&gt; csHSLhB</li>
+<li>setRGBcmpRampGrey2C -&gt; csHSLhC</li>
+<li>setRGBcmpRampGrey2M -&gt; csHSLhM</li>
+<li>setRGBcmpRampGrey2Y -&gt; csHSLhY</li>
+<li>setRGBcmpClrCubeRainbow -&gt; csCColdeRainbow</li>
+<li>setRGBcmpRainbowHSV -&gt; csCColdeRainbow</li>
+<li>colorTpl&amp; setRGBcmpRainbowLA -&gt; csRainbowLA</li>
+<li>colorTpl&amp; setRGBcmpRainbowCM -&gt; csRainbowCM</li>
+</ul></li>
+</ul></li>
+<li>Colorbrewer
+<ul class="org-ul">
+<li>Updated to colorbrewer2</li>
+<li>Everything is now implemented as color schemes in the colorTpl class</li>
+<li>Some of the old schemes are gone now.</li>
+</ul></li>
+<li>Removed colorData.cpp &amp; colorData.hpp</li>
+<li>Added RGBA specific set &amp; get methods
+<ul class="org-ul">
+<li>The R, G, B, &amp; A channel indexes are specified as colorTpl arguments</li>
+<li>Allows one to specify the RAM layout for colors.  For example
+we can make frame buffers in GL_RGBA or GL_BGRA layout.</li>
+</ul></li>
+<li>Reduced some of the Doxygen comment duplication, and regrouped
+some members.  This makes the code much easier to read.</li>
+<li>Added heart2022.cpp</li>
+<li>hershey refactor
+<ul class="org-ul">
+<li>The old hershey data include and source are gone.</li>
+<li>The library is 100% header only now!</li>
+<li>The old hershey stuff is now in a hershey class.</li>
+</ul></li>
+<li>Several doc &amp; bug fixes</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-v20.0.0a" class="outline-2">
+<h2 id="v20.0.0a"><span class="section-number-2">17.</span> v20.0.0a: Complete Refactor Of colorTpl &amp; ramCanvasTpl</h2>
+<div class="outline-text-2" id="text-v20.0.0a">
+<p>
+One might consider this a brand new library; however, I expect most
+users will need to make few changes &#x2013; and the changes made will be
+pretty simple search-n-replace type changes.
+</p>
+
+<ul class="org-ul">
+<li>This release ie PRE-ALPHA!!!
+Please test it, and report bugs.</li>
+<li>C++20 is now the language</li>
+<li>Much of the krazy code required for performance &#x2013; with zero
+performance impact with gcc 11.2.0, clang 14.0.0, and
+MSVC 2022. In many cases this was achievable simply due to better
+compilers, but much of it is a direct result of new C++20 features.</li>
+<li>Template parameters are simplified
+<ul class="org-ul">
+<li>Many former parameters are now derived from remaining parameters.</li>
+<li>Concepts are used to constrain types and specialize</li>
+</ul></li>
+<li>Removed non-RGB references where not really related to RGB &#x2013;
+partly related to removing the optimizing "name" struct.</li>
+<li>Floating point channels are back!</li>
+<li>Many performance improvements.</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-v6.0.0" class="outline-2">
+<h2 id="v6.0.0"><span class="section-number-2">18.</span> v6.0.0: Feature &amp; Bugfix Release</h2>
+<div class="outline-text-2" id="text-v6.0.0">
+<ul class="org-ul">
+<li>Bugs
+<ul class="org-ul">
+<li>Fixed bug with &lt;&lt; operator for colorTpl</li>
+<li>Fixed a few edge case casts with very deep images</li>
+<li>Tighter constraints in colorTpl static_assert block</li>
+</ul></li>
+<li>Performance improvements
+<ul class="org-ul">
+<li>ramCanvasTpl::convolution is roughly 2x faster</li>
+<li>Added performance notes to ramCanvasTpl::clrCanvasToBlack()</li>
+</ul></li>
+<li>Compiler support
+<ul class="org-ul">
+<li>A few code &amp; CMakeLists.txt updates for clang</li>
+<li>More testing on MSVC++</li>
+</ul></li>
+<li>Improved colorspace support
+<ul class="org-ul">
+<li>More spaces: HSL, HSV, LAB, RGB, LCH, &amp; XYZ</li>
+<li>Added a new enum to specify color space: colorSpaceEnum
+<ul class="org-ul">
+<li>Removed the old enum: colorInterpMethEnum</li>
+</ul></li>
+<li>Specific color space functions replaced with general ones taking
+a colorspace argument.
+<ul class="org-ul">
+<li>setColorFromColorSpace replaces setColorFromNaturalHSV &amp;
+setColorFromNaturalHSL</li>
+<li>rgb2colorSpace replaces rgb2hsv &amp; rgb2hsl</li>
+<li>interplColorSpace replaces interplColorsHSL</li>
+</ul></li>
+</ul></li>
+<li>mapclamp.hpp is now mjrmath.hpp
+<ul class="org-ul">
+<li>Has a constant for PI.</li>
+<li>Added several new functions
+<ul class="org-ul">
+<li>interpolateLinear</li>
+<li>interpolateLinearAnglesDeg</li>
+<li>realWrap</li>
+</ul></li>
+<li>Corrected/changed negative wrap behavior in intWrap</li>
+</ul></li>
+<li>Examples
+<ul class="org-ul">
+<li>Added high resolution timers to most examples</li>
+<li>bmark.cpp has more tests (including one for convolution)</li>
+<li>Examples use types from ramCanvasTpl not colorTpl</li>
+<li>Reworked circles example</li>
+<li>Uniform formatting in examples</li>
+<li>Fleshed out cplxColor
+<ul class="org-ul">
+<li>Expanded code demoing how to make nice colors</li>
+<li>Added a few Eisenstein series examples to cplxColor.cpp</li>
+</ul></li>
+<li>color_interp_hsl_vs_rgb.cpp
+<ul class="org-ul">
+<li>Demos all the new interpolation methods</li>
+<li>Labels the methods in the resulting image which is why it
+moved in CMakeLists.txt</li>
+<li>Illustrates the color space conversion functions as well</li>
+</ul></li>
+<li>color_interp_hsl_vs_rgb is improved
+<ul class="org-ul">
+<li>Demonstrates the various interpolation methods</li>
+<li>Labels the image with which method is used for each strip</li>
+</ul></li>
+</ul></li>
+<li>Documentation
+<ul class="org-ul">
+<li>Updated to newer Doxygen</li>
+<li>Changed flowerbox comments take advantage of Doxygen's new
+JAVADOC_BANNER option</li>
+<li>Lots of little fixes (spelling, grammar, whitespace cleanup)</li>
+<li>Better docs for colorChanArithT</li>
+</ul></li>
+<li>Code reformatting
+<ul class="org-ul">
+<li>Put member return type separate line</li>
+<li>Made sure multi-line argument lists are lined up</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-v5.0.0" class="outline-2">
+<h2 id="v5.0.0"><span class="section-number-2">19.</span> v5.0.0: Refactor Release</h2>
+<div class="outline-text-2" id="text-v5.0.0">
+<ul class="org-ul">
+<li>Removed floating point argument from color template (API breaking change)
+<ul class="org-ul">
+<li>I expect most people probably use the pre-defined types in
+color.hpp and ramCanvas.hpp, so they may not even have exposure
+to this change &#x2013; Other than fewer compiler complaints about
+implicit type casts.</li>
+<li>I looked through my code and didn't find a single place where I
+took advantage of the floating pint arithmetic type.  It was
+useful back when the library could have floating point channels,
+but now it's just sort of a vestigial toe.</li>
+<li>All floating point color computations are now done with doubles</li>
+<li>This simplifies the code, and makes it easier to use</li>
+<li>I have included some compatibility typedefs to mask the change:
+<ul class="org-ul">
+<li>clrChanIArthT</li>
+<li>channelIntArithType</li>
+<li>clrChanFArthT</li>
+<li>channelFltArithType</li>
+</ul></li>
+<li>In general one should avoid the compatibility typedefs and use
+<ul class="org-ul">
+<li>double instead of clrChanFArthT or channelFltArithType</li>
+<li>channelArithType instead of clrChanIArthT or channelIntArithType</li>
+</ul></li>
+</ul></li>
+<li>Several typedef changes in ramCanvasTpl.  I have attempted to make
+the typedef names more uniform, and simplify access to contained
+types.  All the examples have been updated to use the new names.
+<ul class="org-ul">
+<li>New typedefs
+<ul class="org-ul">
+<li>pointFltType &#x2026;&#x2026;.. Real coordinate pair type</li>
+<li>pointIntType &#x2026;&#x2026;.. Integer coordinate pair type</li>
+<li>coordIntType &#x2026;&#x2026;.. Integer type for coordinates</li>
+<li>coordFltType &#x2026;&#x2026;.. Real type for coordinates</li>
+<li>colorType &#x2026;&#x2026;&#x2026;.. Color type for pixels</li>
+<li>colorChanType &#x2026;&#x2026;. Channel type for color type for pixels</li>
+<li>colorChanArithType .. Type for integer channel arithmetic</li>
+</ul></li>
+<li>Deprecated typedefs
+<ul class="org-ul">
+<li>rcPointFlt</li>
+<li>rcPointInt</li>
+<li>rcCordInt</li>
+<li>rcCordFlt</li>
+<li>rcColor</li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-v4.5.0" class="outline-2">
+<h2 id="v4.5.0"><span class="section-number-2">20.</span> v4.5.0: Feature &amp; Bugfix Release</h2>
+<div class="outline-text-2" id="text-v4.5.0">
+<ul class="org-ul">
+<li>New/Improved interpolation methods
+<ul class="org-ul">
+<li>getPxColorInterpBLin</li>
+<li>getPxColorInterpTrunc</li>
+<li>getPxColorInterpNear</li>
+<li>getPxColorInterpAvg4</li>
+<li>getPxColorInterpAvg9</li>
+</ul></li>
+<li>Example test_gtfrm_scale.cpp illistrates all interpolation methods by scaleing an image</li>
+<li>Example bmark.cpp has benchmarks for getPxColorInterpAvg9</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-v4.0.0" class="outline-2">
+<h2 id="v4.0.0"><span class="section-number-2">21.</span> v4.0.0: Feature &amp; Bugfix Release</h2>
+<div class="outline-text-2" id="text-v4.0.0">
+<ul class="org-ul">
+<li>The string drawing functions now take std::string instead of c-style strings</li>
+<li>Added static_cast in several places we had automatic conversions to document that we really do want that cast.</li>
+<li>More careful about using types from the classes instead of integers in the examples for things like image coordinates and color channels.  It's still a
+bit uneven &#x2013; even sloppy in some of the examples.</li>
+<li>Experimental support for MSVC++ (tested with MSVS CC 2022).  I may well have introduced some bugs or different behavior &#x2013; especially in the examples.  So
+be on the lookout for oddness.</li>
+<li>I have recently become interested in arbitrary geometric transformations, and just added a bilinear interpolation method. I expect to adding several
+interpolation methods along with a generic interface to them later.  I also plan on adding a canvas transformation method.  Lastly, the example
+test_gtfrm_scale.cpp will eventually be used to demonstrate that transformation method &#x2013; right now it just demonstrates the interpolation bits&#x2026;
+<ul class="org-ul">
+<li>White space cleanup across the code base.  So if you do diffs, make sure to tell them to ignore white space changes.</li>
+<li>Removed all the extra template arg bits in the colorTpl template.  Not sure how they got in there &#x2013; probably a fit of cut-n-paste at some point?  They
+were not errors, just unnecessary.</li>
+<li>Hard coded the C++ version to 2011 just to make sure the compiler was using something at least that new.</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-v3.0.0" class="outline-2">
+<h2 id="v3.0.0"><span class="section-number-2">22.</span> v3.0.0: Major cleanup of old code.  Added cycles examples</h2>
+<div class="outline-text-2" id="text-v3.0.0">
+</div>
+</div>
+<div id="outline-container-v2.0.0" class="outline-2">
+<h2 id="v2.0.0"><span class="section-number-2">23.</span> v2.0.0: Feature &amp; Bugfix Release</h2>
+<div class="outline-text-2" id="text-v2.0.0">
+<ul class="org-ul">
+<li>New version numbersk</li>
+<li>Several new examples:
+<ul class="org-ul">
+<li>examples/brownianDiffusion.cpp</li>
+<li>examples/dlaDriver.sh</li>
+<li>examples/lorenz_fuz.cpp</li>
+<li>examples/lorenz_multi.cpp</li>
+<li>examples/sprott2d.cpp</li>
+</ul></li>
+<li>Added some aux files:
+<ul class="org-ul">
+<li>examples/mandelbrot_potential_a_0.pov</li>
+<li>examples/mandelbrot_potential_a_1.pov</li>
+<li>examples/mandelbrot_potential_a_1t.pov</li>
+<li>examples/mandelbrot_potential_a_2.pov</li>
+<li>examples/mandelbrot_potential_b_0.bov</li>
+<li>examples/mandelbrot_potential_b_0.pov</li>
+<li>examples/mandelbrot_potential_b_1.pov</li>
+<li>examples/mandelbrot_potential_b_2.pov</li>
+</ul></li>
+<li>Updated a few examples:
+<ul class="org-ul">
+<li>examples/circles.cpp</li>
+<li>examples/dlaSeed.cpp</li>
+<li>examples/peterdejong.cpp</li>
+<li>examples/sic_search.cpp</li>
+</ul></li>
+<li>A few cmake &amp; build changes</li>
+<li>A couple updates to the base library</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+</div>
+</body>
+</html>

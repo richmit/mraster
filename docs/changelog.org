@@ -1,0 +1,912 @@
+# -*- Mode:Org; Coding:utf-8; fill-column:158 -*-
+# ######################################################################################################################################################.H.S.##
+# FILE:        changelog.org
+#+TITLE:       Change Log
+#+AUTHOR:      Mitch Richling
+#+EMAIL:       http://www.mitchr.me/
+#+DATE:        2024-08-30
+#+KEYWORDS:    release history changelog
+#+LANGUAGE:    en
+#+OPTIONS:     num:t toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t skip:nil d:nil todo:t pri:nil H:5 p:t author:t html-scripts:nil 
+#+SEQ_TODO:    TODO:NEW(t)                         TODO:WORK(w)    TODO:HOLD(h)    | TODO:FUTURE(f)   TODO:DONE(d)    TODO:CANCELED(c)
+#+PROPERTY: header-args :eval never-export
+#+HTML_HEAD: <style>body { width: 95%; margin: 2% auto; font-size: 18px; line-height: 1.4em; font-family: Georgia, serif; color: black; background-color: white; }</style>
+#+HTML_HEAD: <style>body { min-width: 500px; max-width: 1024px; }</style>
+#+HTML_HEAD: <style>h1,h2,h3,h4,h5,h6 { color: #A5573E; line-height: 1em; font-family: Helvetica, sans-serif; }</style>
+#+HTML_HEAD: <style>h1,h2,h3 { line-height: 1.4em; }</style>
+#+HTML_HEAD: <style>h1.title { font-size: 3em; }</style>
+#+HTML_HEAD: <style>.subtitle { font-size: 0.6em; }</style>
+#+HTML_HEAD: <style>h4,h5,h6 { font-size: 1em; }</style>
+#+HTML_HEAD: <style>.org-src-container { border: 1px solid #ccc; box-shadow: 3px 3px 3px #eee; font-family: Lucida Console, monospace; font-size: 80%; margin: 0px; padding: 0px 0px; position: relative; }</style>
+#+HTML_HEAD: <style>.org-src-container>pre { line-height: 1.2em; padding-top: 1.5em; margin: 0.5em; background-color: #404040; color: white; overflow: auto; }</style>
+#+HTML_HEAD: <style>.org-src-container>pre:before { display: block; position: absolute; background-color: #b3b3b3; top: 0; right: 0; padding: 0 0.2em 0 0.4em; border-bottom-left-radius: 8px; border: 0; color: white; font-size: 100%; font-family: Helvetica, sans-serif;}</style>
+#+HTML_HEAD: <style>pre.example { white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; font-family: Lucida Console, monospace; font-size: 80%; background: #404040; color: white; display: block; padding: 0em; border: 2px solid black; }</style>
+#+HTML_HEAD: <style>blockquote { margin-bottom: 0.5em; padding: 0.5em; background-color: #FFF8DC; border-left: 2px solid #A5573E; border-left-color: rgb(255, 228, 102); display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 5em; margin-inline-end: 5em; } </style>
+#+HTML_LINK_HOME: https://www.mitchr.me/
+#+HTML_LINK_UP: https://www.mitchr.me/FIXME
+# ######################################################################################################################################################.H.E.##
+
+#+ATTR_HTML: :border 2 solid #ccc :frame hsides :align center
+|          <r> | <l>                                          |
+|    *Author:* | /{{{author}}}/                               |
+|   *Updated:* | /{{{modification-time(%Y-%m-%d %H:%M:%S)}}}/ |
+| *Generated:* | /{{{time(%Y-%m-%d %H:%M:%S)}}}/              |
+#+ATTR_HTML: :align center
+Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
+
+#+TOC: headlines 5
+
+* Changes On HEAD Since Last Release
+:PROPERTIES:
+:CUSTOM_ID: latest
+:END:
+
+  - Examples
+    - New
+      - N/A
+    - Updated
+      - N/A
+  - Fixed Bugs
+    - N/A
+  - Known Issues
+    - N/A
+  - API breaking Changes
+    - WARNING: Eventually the deprecated headers will be removed.
+    - The "all" target has been removed.  Use the "examples" target instead.
+  - New functionality
+    - Library exported via build/MRasterLib.cmake
+    - Package exported via build/MRasterConfig.cmake & build/MRasterConfigVersion.cmake
+    - Install target created that installs:
+      - MRasterLib.cmake
+      - MRasterConfig.cmake & MRasterConfigVersion.cmake
+      - Non-deprecated headers
+    - New include file: mraster_config.hpp
+      - Defines for cmake configuration information
+      - Functions returning version information
+        Note this change limits future version numbers to numeric components.
+  - Deprecated functionality
+    - Several people reported conflicts with other packages using the same header names
+      - Deprecated header color.hpp -- USE MRcolor.hpp instead
+      - Deprecated header point2d.hpp -- USE MRpoint2d.hpp instead
+      - Deprecated header colorTpl.hpp -- USE MRcolorTpl.hpp instead
+  - Miscellaneous
+    - The color scheme org-mode document has been cleaned up
+* v20.12.3: Feature Release
+:PROPERTIES:
+:CUSTOM_ID: v20.12.3
+:END:
+  - Examples
+    - New
+      - newton_roter
+      - newton_3updown
+      - newton_min_angle
+      - mandelbrot_count_movie
+      - laguerre_3updown.cpp
+      - laguerre_simple.cpp
+    - Updated
+      - mandelbrot_simple: Now uses OpenMP
+  - API breaking Changes
+    - The ramCanvas constructors now throw.
+      The cases where they throw would have likely caused a runtime issue later
+      anyhow, so I don't expect very many people to notice this one...
+    - The configure.sh script must now be run from the build directory.
+      It is also much smarter about finding a good compiler.
+  - New functionality
+    - Numerous documentation updates & fixes
+    - unitTooIntLinMap: template version now handles large integers
+    - 2D color maps
+      - csSet(): Added two argument version
+      - cs2dIdxPalArg: Create an argument color scheme from an indexed color scheme
+      - cs2dFltPalArg: Create an argument color scheme from a continuous color scheme
+      - cs2dRichardson: Richardson's 2D complex number coloring scheme.
+      - cs2dThaller_tpl: Meta class for Bernd Thaller's 2D complex number color methods
+        - cs2dThallerHSL: Thaller method using HSL
+        - cs2dThallerHSVm: Thaller method using HSV with maximal V value
+        - cs2dThallerHSV: Thaller method using HSV with dynamic V value
+* v20.12.0: Feature Release
+:PROPERTIES:
+:CUSTOM_ID: v20.12.0
+:END:
+  - Examples
+    - Many examples have been improved
+    - New:
+      - newton_max_back.cpp'
+      - newton_min_root.cpp
+      - mandelbrot_ltrap.cpp
+      - mandelbrot_pickover.cpp
+      - biomorphMorph.cpp
+      - mandelbrot_precomp.cpp
+      - julia.cpp
+      - juliaM2.cpp
+      - juliaM.cpp
+      - newton_modified.cpp
+    - Renamed:
+  	- mandelbrot_cycles.cpp -> mandelbrot_1n2cycles.cpp
+    - New/updated web pages:
+      - https://www.mitchr.me/SS/biomorphMorph/index.html
+      - https://www.mitchr.me/SS/newton/index.html
+    - Removed:
+      - newton_bm_*.cpp
+      - mandelbrot_distance_old.cpp
+      - mandelbrot_bm_real_eqop.cpp
+      - mandelbrot_1n2cycles.cpp
+  - Bugs
+    - mjr::ramCanvasTpl::expandCanvas.  Fixed a bug with monochrome
+      images.  Changed the behavior when x1 or y1 is off the
+      canvas. Fixed a bug with non-zero x1 argument.
+    - Swapped mjr::ramCanvasTpl::rotate90CW &
+      mjr::ramCanvasTpl::rotate90CW
+    - mjr::ramCanvasTpl::autoMaxHistStrech(). Fixed bug when RGB were not
+      on default channels.
+  - New functionality
+    - ramCanvasTpl::getCanvasWidD()
+    - New canvas converter: rcConverterMonoIntensity
+    - ramCanvasTpl::adjoinCanvasRight()
+    - ramCanvasTpl::adjoinCanvasLeft()
+    - ramCanvasTpl::adjoinCanvasBottom()
+    - ramCanvasTpl::adjoinCanvasTop()
+    - ramCanvasTpl::insertCanvas() -- insert a canvas into another canvas
+    - mjr::sgn() -- the sign function
+    - mjr::point2d now has a conversion operator for complex numbers
+    - ramCanvasTpl now has coordinate conversion methods that work
+      with point2d allowing code like this:
+        std::complex<double> c = theRamCanvas.int2real(x, y);
+      - mjr::ramCanvasTpl::int2real
+      - mjr::ramCanvasTpl::real2int
+    - mjr::fmtInt(int inInt, int width, char fill) -- Strings with
+      formatted integers in them.  Someday when compilers support the
+      C++20 formatting features, we won't need this...
+    - colorTpl::distDeltaE1976(colorArgType aColor) -- The LAB Delta E*(1976) distance
+    - colorTpl::distDeltaE1994(colorArgType aColor) -- The LAB Delta E*(1994) distance
+    - Real coordinate overloads for:
+      - ramCanvasTpl::drawHersheyGlyph
+      - ramCanvasTpl::drawString
+      - ramCanvasTpl::drawStringBox
+    - Polynomial routines
+      - mjr::evalBiPoly -- bivariate polynomial evaluation
+      - mjr::maxExpBiPoly -- figure out maximum theoretical exponent of a bivariate polynomial
+      - mjr::evalUniPoly -- univariate polynomial evaluation
+    - New log transformation function colorTpl::tfrmLn(double scale) -- note new name for
+      the old version of this function: tfrmLn1()
+  - API Change
+    - colorTpl::tfrmLn()  renamed to tfrmLn1()
+    - ramCanvasTpl::autoMaxHistStrech renamed to autoMaxHistStrechRGB
+  - Updated/New experimental geometric transformations functionality (geomTfrmRev* methods)
+    These feel like they are approaching a final state, but I'm going to keep them classified
+    as "experimental" for now.
+    - Fixed a clipping bug for existing geomTfrmRef functions:
+      - ramCanvasTpl::geomTfrmRevRPoly
+      - ramCanvasTpl::geomTfrmRevAff
+      - ramCanvasTpl::geomTfrmRevArb
+    - Transform methods now take a uniform set of shift & scale arguments:
+      - Xo -- X coordinate for the offset from image center.
+      - Yo -- Y coordinate for the offset from image center.
+      - oScale -- Scale to apply after transform but before reverse translation
+  - Started making some unit tests for mjrmath.hpp.  Coverage right now is just for the new
+    polynomial routines.
+* v20.11.0: Feature Release
+:PROPERTIES:
+:CUSTOM_ID: v20.11.0
+:END:
+  - Removed recently introduced GCC'isms.  The code now compiles
+    cleanly with clang and msvc.
+  - New examples:
+    - pickoverPopcorn.cpp
+    - mandelbrot_biomorph.cpp
+    - mandelbrot_simple.cpp
+    - invertedMandelbrot.cpp
+    - tippets.cpp
+    - multibrotSnaps.cpp
+    - multibrotMovie.cpp
+    - tricornMovie.cpp
+    - tricorn.cpp
+    - collatz.cpp
+  - New web pages for examples:
+    - https://www.mitchr.me/SS/BurningShip/index.html
+    - https://www.mitchr.me/SS/multibrot/index.html
+    - https://www.mitchr.me/SS/tricorn/index.html
+    - https://www.mitchr.me/SS/collatz/index.html
+    - https://www.mitchr.me/SS/tippets/index.html
+    - https://www.mitchr.me/SS/PickoverPopcorn/index.html
+    - https://www.mitchr.me/SS/mandelbrotBiomorph/index.html
+    - https://www.mitchr.me/SS/mandelbrotInv/index.html
+  - Updated examples:
+    - sic.cpp -- Updated the comment on the colorizer object to
+      reference another way to do the same thing illustrated in the
+      pickoverPopcorn.cpp example.
+    - biomorph2.cpp & biomorph1.cpp -- Cleaned up the way colors were
+      set.
+    - mandelbrot_bm_real.cpp & mandelbrot_bm_real_eqop.cpp -- Fixed
+      typos in header.
+  - New feature:
+    - ramCanvasTpl::rcConverterColorScheme -- Colorize a ramCanvasTpl
+      with integer channels using a color scheme.  This gives one the
+      ability to produce a ramCanvasTpl with some data in it, and then
+      colorize it when the image files are written out.  For example,
+      we could store the L function for a Mandelbrot render in a
+      grayscale image, and then write out any number of RGB images
+      with different color schemes.
+    - New class of color schemes: common fractal schemes
+      - colorTpl::csCCfractal0RYBCW
+      - colorTpl::csCCfractalYR
+      - colorTpl::csCCfractalYB
+    - New class of color schemes: Ramp from black to corner
+      - colorTpl::csCCu0W -- Ramp from black to white
+      - colorTpl::csCCu0R -- Ramp from black to red
+      - colorTpl::csCCu0B -- Ramp from black to blue
+      - colorTpl::csCCu0G -- Ramp from black to green
+      - colorTpl::csCCu0C -- Ramp from black to cyan
+      - colorTpl::csCCu0M -- Ramp from black to magenta
+      - colorTpl::csCCu0Y -- Ramp from black to yellow
+* v20.10.5: Public Release
+:PROPERTIES:
+:CUSTOM_ID: v20.10.5
+:END:
+  I'm done with major changes, and the code feels solid.
+* v20.10.0rc3: Unit tests. New features.
+:PROPERTIES:
+:CUSTOM_ID: v20.10.0rc3
+:END:
+  Release Candidate #3
+
+  - Last time I removed the filter option from the file write APIs,
+    and that annoyed some people. ;) So I have added filters back, but
+    the new filters are more capable in that they can be used for not
+    just homogeneous transforms but geometric ones too.
+    - Removed: pixelFormatEnum
+    - New converter classes inside ramCanvasTpl:
+      - ramCanvasTpl::rcConverterIdentity
+      - ramCanvasTpl::rcConverterRGBbyte
+      - ramCanvasTpl::rcConverterRGBAbyte
+      - ramCanvasTpl::rcConverterRGBdbl
+      - ramCanvasTpl::rcConverterRGBAdbl
+    - convertRawToTIFF.cpp illustrates the new API
+  - New: "Canonical Color Types" -- color types with unsigned byte and
+    floating point channels in RGB, RGBA, and numChan.  These provide a
+    handy interface for conversions with the two most common channel
+    types people use, and are useful for working with external
+    interfaces.
+    - Set color from a canonical color type
+      - colorTpl& colorTpl::setChans_dbl(colConALLdbl dblColor)
+      - colorTpl& colorTpl::setChans_byte(colConALLbyte byteColor)
+      - colorTpl& colorTpl::setChansRGBA_dbl(colConRGBAdbl dblColor)
+      - colorTpl& colorTpl::setChansRGB_dbl(colConRGBdbl dblColor)
+      - colorTpl& colorTpl::setChansRGBA_byte(colConRGBAbyte byteColor)
+      - colorTpl& colorTpl::setChansRGB_byte(colConRGBbyte byteColor)
+    - convert color to a canonical color type
+      - colConALLdbl   colorTpl::getColCon_dbl()
+      - colConALLbyte  colorTpl::getColCon_byte()
+      - colConRGBAdbl  colorTpl::getColConRGBA_dbl()
+      - colConRGBdbl   colorTpl::getColConRGB_dbl()
+      - colConRGBAbyte colorTpl::getColConRGBA_byte()
+      - colConRGBbyte  colorTpl::getColConRGB_byte()
+    - typedefs for  canonical color types
+      - colorTpl::colConRGBdbl
+      - colorTpl::colConRGBAdbl
+      - colorTpl::colConRGBbyte
+      - colorTpl::colConRGBAbyte
+      - colorTpl::colConALLdbl
+      - colorTpl::colConALLbyte
+  - New integer axis orientation predicates
+    - ramCanvasTpl::isIntAxOrientationNaturalX()
+    - ramCanvasTpl::isIntAxOrientationNaturalY()
+  - New helpers to guess named channel.  These are helpful when
+    we have a color with unknown structure, and want to get the
+    best option for a named color channel.
+    - colorTpl::bestRedChan()
+    - colorTpl::bestGreenChan()
+    - colorTpl::bestBlueChan()
+    - colorTpl::bestAlphaChan()
+  - Unit tests
+    - colorTpl::colCon*
+    - colorTpl::best*Chan
+  - sic.cpp now uses the filter instead of making a new ramCanvasTpl
+    object -- like it did in the past.
+  - Added DO_CIRCLE to bmark.cpp
+  - Doxygen tag files & links into doxygen docs.
+  - Unit tests for ramCanvasTpl simple geom transforms
+* v20.9.0rc2: Bug fixes. Unit tests. New features. Better platform support.
+:PROPERTIES:
+:CUSTOM_ID: v20.9.0rc2
+:END:
+  Release Candidate #2
+  - Bugs:
+    - ramCanvasTpl::writeFile
+      - Failed to pass return code from stream write helper function.
+      - Potential beyond buffer access
+  - New features:
+    - ramCanvasTpl::readRAWfile
+  - Breaking Changes
+    - Replaced the toTRU & filter arguments with an enum to convert to
+      8-bit RGB/RGBA. In addition, writeTIFF* no longer has an alpha
+      argument -- the enum takes care of that too.
+  - Unit tests for ramCanvasTpl now use isEqual and readRAWfile instead
+    of comparing file content.
+  - Platform Support
+    - Tested with several OS/compiler combinations
+      - Windows with MSVC, MSYS2 MSVC, MSYS2 clang, and MSYS2 GCC
+      - Debian 11 with GCC-10, and GCC-11
+      - MacOS with Apple clang and homebrew GCC
+    - Made several little code changes for better platform support.
+    - The big change is a couple of macros controlling conditional
+      compilation of code.  This allows the code to be compiled, with
+      some reduced functionality, using some older compilers.
+      - Added a couple of conditional compiles:
+        - MISSING_P0476R2 -- Omits code using bit_cast
+        - MISSING_P1907R1 -- Omits code using floating point template parameters
+      - Added cmake rules for conditional code:
+        - Detect GCC version and set MISSING_P0476R2 & MISSING_P1907R1 as required.
+        - Set MISSING_P1907R1 for clang (both regular and Apple)
+        - Set MISSING_P0476R2 for Apple clang
+* v20.8.1b: Unit tests for ramCanvasTpl. Bugs.  New stuff.
+:PROPERTIES:
+:CUSTOM_ID: v20.8.1b
+:END:
+  I'm still calling it a beta, but it's pretty solid right now.
+   
+  Please test and report back!
+    
+  - New predefined ramCanvas types:
+    - ramCanvas4c64b
+    - ramCanvas3c64b
+    - ramCanvasRGBA64b
+    - ramCanvasRGB64b
+    - ramCanvas1c32F
+    - ramCanvas1c64F
+  - Added const:
+    - colorTpl::rgb2GreyDotProd
+    - colorTpl::luminanceRGB
+    - colorTpl::intensityRGB
+    - colorTpl::intensity
+    - colorTpl::intensityScaledRGB
+    - colorTpl::intensityScaled
+    - colorTpl::getMaxC
+    - colorTpl::getMinC
+    - colorTpl::getMaxRGB
+    - colorTpl::getMinRGB
+    - colorTpl::dotProd
+    - colorTpl::distHypot
+    - colorTpl::distSumAbs
+    - colorTpl::distMaxAbs
+    - colorTpl::isClose
+    - colorTpl::isCloseRGB
+    - colorTpl::isEqual
+    - colorTpl::isEqualRGB
+    - colorTpl::isNotEqual
+    - colorTpl::isBlack
+    - colorTpl::isBlackRGB
+  - ramCanvasTpl::drawFillTriangleUtl
+    - Better comment for cases & code
+    - Much better organization of code for each case
+    - Much faster for degenerate triangles using barycentric coloring
+    - Much more accurate barycentric coloring, but a slight performance hit.
+    - More accurate edges.
+  - ramCanvasTpl::triangleEdger
+    - Added code to find min/max for each y value...
+    - I plan on updating this to support cropped triangles at some point.
+* v20.8.2rc1: Unit tests for ramCanvasTpl.
+:PROPERTIES:
+:CUSTOM_ID: v20.8.2rc1
+:END:
+  This is release candidate #1!  Please test and report back!
+* v20.8.0b: ramCanvasTpl refactor.  clang support. Cleanup.
+:PROPERTIES:
+:CUSTOM_ID: v20.8.0b
+:END:
+  Still beta, but approaching production.
+    
+  Please test and report back!
+    
+  - ramCanvasTpl refactor
+    - Data member naming consistency
+    - Fixed get/set methods to use uniform naming
+    - Added requires
+    - Comment cleanup
+  - Clang support
+    - Duplicated requires clauses as necessary
+    - Added conditional compile around floating point template parameters
+    - Added defines to CMakeLists.txt
+    - Added warnings about missing examples to CMakeLists.txt
+    - Propagated requires outside of class definition
+  - Bugs
+    - colorTpl::distHypot
+    - colorTpl::rgb2GreyDotProd
+  - Upgrades
+    - colorTpl::cmpRGBcornerDGradiant -- Faster & safer.
+  - Removed FLTK from CMakeLists.txt -- it was not used.
+* v20.7.0b: New Features. Bug Fixes. Unit Tests.
+:PROPERTIES:
+:CUSTOM_ID: v20.7.0b
+:END:
+  Still beta, but approaching production.
+    
+  Please test and report back!
+    
+  - Many more unit tests
+  - Bug Fixes (mostly related to getC# refactor)
+    - setRGBfromUnitHSL
+    - cmpRGBcornerDGradiant
+    - isBlackRGB
+    - isEqualRGB
+    - cmpGradiant
+    - rgb2colorSpace
+    - tfrmStdPowRGB
+    - rgb2GreyDotProd
+    - luminanceRGB
+    - getMaxRGB
+    - getMinRGB
+  - New
+    - isClose
+    - isCloseRGB
+    - linearInterpolateRGB
+    - csCCdivBWR
+    - csCCdivCWM
+    - setChansToMean()
+  - The color space colorTpl<double, 3> typedef is colSpaceDbl3
+  - Fixed color swatch names for web safe pallets in documentation.
+  - Fixed bug with csWSprotanopia class name
+  - Fixed class names for binary schemes.
+  - SDL2 support
+    - Added SDL2 to CMakeLists.txt so it's easy to add SDL code.
+    - Added a new example: displayImageSDL2.cpp
+  - Better support for msys2 on windows:
+    Added options in CMakeLists.txt to make GLUT, FLTK, & SDL2 code be
+    compiled as a "GUI" application instead of a "console" application
+    as before.  The console applications would fail to open a window
+    when run within some contexts.  I may need to do something for
+    MSVC too, but I don't know as much about that environment...
+  - Color documentation (ColorSchemes.org)
+    - Added binary pallets
+    - Added three segment CC diverging color schemes
+    - Added continuous swatches to fixed pallets
+    - Added cross reference
+  - Various documentation updates.
+* v20.6.0b: Refactor, Bug Fixs, Unit Tests
+:PROPERTIES:
+:CUSTOM_ID: v20.6.0b
+:END:
+  Still beta.  Still a few API changes, but things are stabilizing.
+    
+  Please test and report back!
+    
+  - Tons of unit tests
+  - Rearranged some code in colorTpl for better Doxygen results.
+  - colorTpl::csFP_tpl now provides both discreet and continuous color
+    schemes via overloads to the c member.  Much like csCB_tpl.
+  - New:
+    - colorTpl::csWS_tpl -- A color scheme template for web safe colors
+    - colorTpl::setRGBAfromLogPackIntBGRA
+    - colorTpl::setRGBfromLogPackIntBGRA
+  - Fixed bugs
+    - colorTpl::tfrmDiracTot
+    - colorTpl::tfrmStdPowRGB
+    - colorTpl::tfrmLn
+    - colorTpl::tfrmLinearGreyLevelScaleRGB
+    - colorTpl::tfrmWebSafeRGB
+      - When clrChanT wasn't uint8_t, this function would scale the
+        components incorrectly.  Not sure this is really a bug as "web
+        safe" doesn't really apply to such images.  Still, it's fixed.
+      - Now only operates on the red, blue, and green channels.
+    - colorTpl::intensityScaledRGB
+      Scaling was incorrect for images with more than 3 channels.
+      - RGBA Bugs Fixed (using getC instead of getRed/Blue/Green/Alpha)
+        - colorTpl::tfrmGreyScaleRGB
+        - colorTpl::tfrmWebSafePro216
+        - colorTpl::tfrmWebSafeDeu216
+        - colorTpl::tfrmWebSafeTri216
+  - Renamed
+    - tfrmWebSafe216              -> tfrmWebSafeRGB
+    - interplColors(dbl, c1, c2)  -> linearInterpolate
+    - interplColors(dbl, col)     ->  tfrmMix
+  - Removed:
+    - colorTpl::tfrmGmeanClamp
+    - colorTpl::colorComp2CloseColorComp
+    - colorTpl::tfrmWebSafePro216
+    - colorTpl::tfrmWebSafeDeu216
+    - colorTpl::tfrmWebSafeTri216
+    - colorTpl::tfrmLinearGreyLevelScale taking colorTpl
+  - Web safe color schemes
+    - Now use csWS_tpl instead of csFP_tpl.
+    - Provide a setter that takes a color object
+    - Renamed:
+      - csFPwebSafeNormalVision    -> csWSnormalVision
+      - csFPwXebSafeProtanopia     -> csWSnrotanopia
+      - csFPwXebSafeDeutanopia     -> csWSdeutanopia
+      - csFPwXebSafeTritanoptia    -> csWStritanoptia
+      - csFPwXebSafeProtanopiaAlt  -> csWSprotanopiaAlt
+      - csFPwXebSafeDeutanopiaAlt  -> csWSdeutanopiaAlt
+      - csFPwXebSafeTritanoptiaAlt -> csWStritanoptiaAlt
+* v20.5.0b: Unit tests, bug fixes, refactoring, & cleanup
+:PROPERTIES:
+:CUSTOM_ID: v20.5.0b
+:END:
+  Moving it from alpha to beta.  I hope this is the last of the API
+  changes for a while.
+    
+  Please test and report back!
+  
+  The API changes are mostly member name changes in colorTpl.  These will
+  impact some users, but the refactor should be a simple search-n-replace.
+  Unit tests are fleshing out, and I've fixed a few bugs.
+    
+  - Fixed a bugs:
+    - colorTpl::isBlack()
+    - colorTpl::rgbSumIntensity()
+  - Removed loop from cmpRGBcornerCGradiant()
+  - Tons of unit tests -- up to about 40% coverage for colorTpl
+  - Removed methods
+    - colorTpl::distP2sq -- this one wasn't very useful because the
+      sum of the squares was frequently too large to fit into an
+      Sums/Products integer type.
+  - Renamed methods
+    - colorTpl::distAbs -> distSumAbs
+    - colorTpl::rgbSumIntensity -> intensitySum
+    - colorTpl::rgbLuminance -> luminanceRGB
+    - colorTpl::sumIntensity -> intensity
+    - colorTpl::rgbScaledIntensity -> IntensityScaledRGB
+    - colorTpl::sumScaledIntensity -> intensityScaled
+  - Changed methods
+    - colorTpl::rgb2GreyDotProd & colorTpl::dotProd now return a
+      channelArithFltType and use floating point arithmetic for all
+      intermediate computations.
+  - New methods
+    - colorTpl::distMaxAbs
+    - colorTpl::distHypot -- Like distP2sq, but the square root so it
+      is much smaller.  All arithmetic is done with doubles.
+    - colorTpl::cmpGradiant(csFltType csX, csIntType numColors, const packed4Cint* colors).
+  - colorTpl::cmpGradiant() now uses csFltType for inputs and anchors.
+    Not really an API change as csFltType is double.  Just makes
+    things more consistent and readable.
+  - Added some typedefs for clarity
+    - Packed integers
+    - color type for color space computations
+  - Continuous gradient colorbrewer2
+    - Added continuous gradients to colorbrewer2 color schemes
+    - Added swatches to documentation
+* v20.4.0a: Refactor, unit tests, doxygen docs
+:PROPERTIES:
+:CUSTOM_ID: v20.4.0a
+:END:
+  Still alpha.  Still changing the API. :)
+    
+  Please test and report back!
+    
+  The API changes are mostly member name changes in colorTpl.  These will
+  impact some users, but the refactor should be a simple search-n-replace.
+  Unit tests are fleshing out, and I've cleaned up the doxygen output.
+    
+  - Renamed "clp" tfrm methods to "clamp" to better align with C++ use.
+    - colorTpl::tfrmMultClp    -> tfrmMultClamp
+    - colorTpl::tfrmDiffClp    -> tfrmDiffClamp
+    - colorTpl::tfrmNegDiffClp -> tfrmNegDiffClamp
+    - colorTpl::tfrmAddClp     -> tfrmAddClamp
+    - colorTpl::tfrmAddDivClp  -> tfrmAddDivClamp
+    - colorTpl::tfrmGmeanClp   -> tfrmGmeanClamp
+  - Renamed "clip" methods to "clamp" to better align with C++ use.
+    - colorTpl::clipTop -> clampTop
+    - colorTpl::clipAll -> clampAll
+    - colorTpl::clipBot -> clampBot
+  - Renamed "CLIP" drawModeType values to "CLAMP" to better align with C++ use.
+    - ramCanvasTpl::drawModeType::ADDCLAMP
+    - ramCanvasTpl::drawModeType::AND
+    - ramCanvasTpl::drawModeType::OR
+    - ramCanvasTpl::drawModeType::DIFFCLAMP
+    - ramCanvasTpl::drawModeType::MULTCLAMP
+  - Many many many more unit tests.  Coverage for colorTpl is now at
+    about 25%.
+  - Published doxygen documentation on web
+    - https://www.mitchr.me/SS/mraster/doc-examples/autodocs/html/index.html
+    - https://www.mitchr.me/SS/mraster/doc-lib/autodocs/html/index.html
+  - Added links to published doxygen documentation to github documentation
+  - Made some updates to doxygen config changes
+    - Including the comments in the published source
+    - Excluded  some problematic bits of code that was confusing Doxygen.
+* v20.3.0a: ramConfig Refactor
+:PROPERTIES:
+:CUSTOM_ID: v20.3.0a
+:END:
+  Still alpha.  Still changing the API. :)
+    
+  The big API change is the addition of an argument to ramCanvasTpl,
+  and the removal of ramConfig.hpp.  That will all be transparent to
+  people using the color.hpp & ramCanvas.hpp typedefs...
+    
+  - Added color types for common 8-bit channel RGBA orderings:
+    - colorBGR8b  -> ramCanvasBGR8b
+    - colorARGB8b -> ramCanvasARGB8b
+    - colorBGRA8b -> ramCanvasBGRA8b
+    - colorABGR8b -> ramCanvasABGR8b
+  - ramCanvasTpl::writeTGAstream now uses the R, G, & B channels when
+    writing a file if they are available.  If not it reverts to the old
+    behavior of using the first three channels.
+  - ramCanvasTpl::colorizeFltCanvas & ramCanvasTpl::colorizeIntCanvas.
+    - color an entire canvas based upon a function that takes pixel
+      coordinates and returns a color.
+    - mandelbrot_bm_real_cfun.cpp -- Demonstrates colorizeFltCanvas.
+  - ramCanvasTpl
+    - Cleaned up some casts making things a bit safer, and eliminating
+      compiler warnings for edge cases.
+    - Moved a few small functions into the class.  I hope to move more
+      eventually so as to avoid all the extra requires clauses for
+      externally defined methods.
+    - Cleaned up the doxygen overload tags -- they just make the
+      document harder to read.
+    - New: isOnCanvas -- logical inverse of isCliped.
+  - Removed ramConfig.hpp include
+    - The SUPPORT_DRAWING_MODE macro has been replaced with a template
+      parameter (enableDrawModes) to ramCanvasTpl.
+    - The REAL_CORD & INT_CORD macros have been replaced with typedefs
+      rcSimpleFltCrdT & rcSimpleIntCrdT in ramCanvas.hpp.
+    - The ramConfig class is simply gone.
+    - All the 128 bit stuff is now at the top of colorTpl.hpp:
+      - macros: MJR_LOOK_FOR_128_BIT_TYPES & MJR_HAVE_128_BIT_TYPES
+      - typedefs: mjr_uint128_t & mjr_int128_t
+      - Note this stuff is not inside the mjr name space -- it's
+        outside just like before.
+  - Fixed a bug in bmark.cpp -- used wrong set_chans function.
+* v20.2.0a: Refactor of hershey fonts & RGBA
+:PROPERTIES:
+:CUSTOM_ID: v20.2.0a
+:END:
+  Several serious bugs, and two API changing refactors in this update.
+    
+  This release is BETA quality!!!  Please test it, and report bugs.
+    
+  - Fixed bug with set/clear_byte funcs with clrChanT integer
+  - Added "color scheme" classes to colorTpl
+    - They know how many colors they support
+    - Much better encapsulation.
+    - The csSet method of colorTpl can be used to set the current
+      color object's color from a color scheme class
+      aColor.csSet<mjr:color3c8b::webSafeNormalVision>(25);
+    - Color scheme classes may be used as a factory for colorTpl objects
+      aColor = mjr:color3c8b::webSafeNormalVision.c(25);
+    - Color scheme classes may also set the color of a colorTpl object passed in
+      mjr:color3c8b::webSafeNormalVision.c(aColor, 25);
+    - Quite a few new color schemes.
+    - Some of the old U of O schemes are gone.
+    - Many methods are gone replaced by color scheme classes
+      - setRGBtoWebSafe216 -> webSafeNormalVision
+      - setRGBfromICP -> csCb* & webSafe* classes
+      - setRGBcmpBinaryColorRampRG -> csBinRG
+      - setRGBcmpBinaryColorRampRB -> csBinRB
+      - setRGBcmpBinaryColorRampGR -> csBinRG
+      - setRGBcmpBinaryColorRampGB -> csBinGB
+      - setRGBcmpBinaryColorRampBR -> csBinRB
+      - setRGBcmpBinaryColorRampBG -> csBinGB
+      - NEW -> csBin01
+      - NEW -> csBinCM
+      - NEW -> csBinMY
+      - NEW -> csBinYM
+      - setRGBcmpUpDownRampRg -> csCCudRg
+      - setRGBcmpUpDownRampRb -> csCCudRb
+      - setRGBcmpUpDownRampGr -> csCCudGr
+      - setRGBcmpUpDownRampGb -> csCCudGb
+      - setRGBcmpUpDownRampBr -> csCCudBr
+      - setRGBcmpUpDownRampBg -> csCCudBg
+      - setRGBcmpGrey -> csCCdiag01
+      - setRGBcmpDiagRampCR -> csCCdiagCR
+      - setRGBcmpDiagRampMG -> csCCdiagMG
+      - setRGBcmpDiagRampYB -> csCCdiagYB
+      - setRGBcmpConstTwoRamp -> csCCconsTwo
+      - setRGBcmpConstOneRamp -> csCCconsOne
+      - setRGBcmpFireRamp -> csCColdeFireRamp
+      - setRGBcmpColdToHot -> csCColdeColdToHot
+      - setRGBcmpIceToWaterToHot -> csCColdeIceToWaterToHot
+      - setRGBcmpSumRampRGB -> csCCsumRGB
+      - setRGBcmpSumRampBGR -> csCCsumBGR
+      - setRGBcmpSumRampGRB -> csCCsumGRB
+      - setRGBcmpSumRampBRG -> csCCsumBRG
+      - setRGBcmpSumRampGBR -> csCCsumGBR
+      - setRGBcmpSumRampRBG -> csCCsumRBG
+      - setRGBcmpGreyRGB -> csCCdiag01
+      - setRGBcmpGrey3x -> csPGrey3x
+      - setRGBcmpGrey4x -> csPGrey4x
+      - setRGBcmpRampGrey2R -> csHSLhR
+      - setRGBcmpRampGrey2G -> csHSLhG
+      - setRGBcmpRampGrey2B -> csHSLhB
+      - setRGBcmpRampGrey2C -> csHSLhC
+      - setRGBcmpRampGrey2M -> csHSLhM
+      - setRGBcmpRampGrey2Y -> csHSLhY
+      - setRGBcmpClrCubeRainbow -> csCColdeRainbow
+      - setRGBcmpRainbowHSV -> csCColdeRainbow
+      - colorTpl& setRGBcmpRainbowLA -> csRainbowLA
+      - colorTpl& setRGBcmpRainbowCM -> csRainbowCM
+  - Colorbrewer
+    - Updated to colorbrewer2
+    - Everything is now implemented as color schemes in the colorTpl class
+    - Some of the old schemes are gone now.
+  - Removed colorData.cpp & colorData.hpp
+  - Added RGBA specific set & get methods
+    - The R, G, B, & A channel indexes are specified as colorTpl arguments
+    - Allows one to specify the RAM layout for colors.  For example
+      we can make frame buffers in GL_RGBA or GL_BGRA layout.
+  - Reduced some of the Doxygen comment duplication, and regrouped
+    some members.  This makes the code much easier to read.
+  - Added heart2022.cpp
+  - hershey refactor
+    - The old hershey data include and source are gone.
+    - The library is 100% header only now!
+    - The old hershey stuff is now in a hershey class.
+  - Several doc & bug fixes
+* v20.0.0a: Complete Refactor Of colorTpl & ramCanvasTpl
+:PROPERTIES:
+:CUSTOM_ID: v20.0.0a
+:END:
+  One might consider this a brand new library; however, I expect most
+  users will need to make few changes -- and the changes made will be
+  pretty simple search-n-replace type changes.
+    
+  - This release ie PRE-ALPHA!!!
+    Please test it, and report bugs.
+  - C++20 is now the language
+  - Much of the krazy code required for performance -- with zero
+    performance impact with gcc 11.2.0, clang 14.0.0, and
+    MSVC 2022. In many cases this was achievable simply due to better
+    compilers, but much of it is a direct result of new C++20 features.
+  - Template parameters are simplified
+    - Many former parameters are now derived from remaining parameters.
+    - Concepts are used to constrain types and specialize
+  - Removed non-RGB references where not really related to RGB --
+    partly related to removing the optimizing "name" struct.
+  - Floating point channels are back!
+  - Many performance improvements.
+* v6.0.0: Feature & Bugfix Release
+:PROPERTIES:
+:CUSTOM_ID: v6.0.0
+:END:
+  - Bugs
+    - Fixed bug with << operator for colorTpl
+    - Fixed a few edge case casts with very deep images
+    - Tighter constraints in colorTpl static_assert block
+  - Performance improvements
+    - ramCanvasTpl::convolution is roughly 2x faster
+    - Added performance notes to ramCanvasTpl::clrCanvasToBlack()
+  - Compiler support
+    - A few code & CMakeLists.txt updates for clang
+    - More testing on MSVC++
+  - Improved colorspace support
+    - More spaces: HSL, HSV, LAB, RGB, LCH, & XYZ
+    - Added a new enum to specify color space: colorSpaceEnum
+      - Removed the old enum: colorInterpMethEnum
+    - Specific color space functions replaced with general ones taking
+      a colorspace argument.
+      - setColorFromColorSpace replaces setColorFromNaturalHSV &
+        setColorFromNaturalHSL
+      - rgb2colorSpace replaces rgb2hsv & rgb2hsl
+      - interplColorSpace replaces interplColorsHSL
+  - mapclamp.hpp is now mjrmath.hpp
+    - Has a constant for PI.
+    - Added several new functions
+      - interpolateLinear
+      - interpolateLinearAnglesDeg
+      - realWrap
+    - Corrected/changed negative wrap behavior in intWrap
+  - Examples
+    - Added high resolution timers to most examples
+    - bmark.cpp has more tests (including one for convolution)
+    - Examples use types from ramCanvasTpl not colorTpl
+    - Reworked circles example
+    - Uniform formatting in examples
+    - Fleshed out cplxColor
+      - Expanded code demoing how to make nice colors
+      - Added a few Eisenstein series examples to cplxColor.cpp
+    - color_interp_hsl_vs_rgb.cpp
+      - Demos all the new interpolation methods
+      - Labels the methods in the resulting image which is why it
+        moved in CMakeLists.txt
+      - Illustrates the color space conversion functions as well
+    - color_interp_hsl_vs_rgb is improved
+      - Demonstrates the various interpolation methods
+      - Labels the image with which method is used for each strip
+  - Documentation
+    - Updated to newer Doxygen
+    - Changed flowerbox comments take advantage of Doxygen's new
+      JAVADOC_BANNER option
+    - Lots of little fixes (spelling, grammar, whitespace cleanup)
+    - Better docs for colorChanArithT
+  - Code reformatting
+    - Put member return type separate line
+    - Made sure multi-line argument lists are lined up
+* v5.0.0: Refactor Release
+:PROPERTIES:
+:CUSTOM_ID: v5.0.0
+:END:
+  - Removed floating point argument from color template (API breaking change)
+    - I expect most people probably use the pre-defined types in
+      color.hpp and ramCanvas.hpp, so they may not even have exposure
+      to this change -- Other than fewer compiler complaints about
+      implicit type casts.
+    - I looked through my code and didn't find a single place where I
+      took advantage of the floating pint arithmetic type.  It was
+      useful back when the library could have floating point channels,
+      but now it's just sort of a vestigial toe.
+    - All floating point color computations are now done with doubles
+    - This simplifies the code, and makes it easier to use
+    - I have included some compatibility typedefs to mask the change:
+       - clrChanIArthT
+       - channelIntArithType
+       - clrChanFArthT
+       - channelFltArithType
+    - In general one should avoid the compatibility typedefs and use
+      - double instead of clrChanFArthT or channelFltArithType
+      - channelArithType instead of clrChanIArthT or channelIntArithType
+  - Several typedef changes in ramCanvasTpl.  I have attempted to make
+    the typedef names more uniform, and simplify access to contained
+    types.  All the examples have been updated to use the new names.
+    - New typedefs
+       - pointFltType ........ Real coordinate pair type
+       - pointIntType ........ Integer coordinate pair type
+       - coordIntType ........ Integer type for coordinates
+       - coordFltType ........ Real type for coordinates
+       - colorType ........... Color type for pixels
+       - colorChanType ....... Channel type for color type for pixels
+       - colorChanArithType .. Type for integer channel arithmetic
+    - Deprecated typedefs
+       - rcPointFlt
+       - rcPointInt
+       - rcCordInt
+       - rcCordFlt
+       - rcColor
+* v4.5.0: Feature & Bugfix Release
+:PROPERTIES:
+:CUSTOM_ID: v4.5.0
+:END:
+  - New/Improved interpolation methods
+    - getPxColorInterpBLin
+    - getPxColorInterpTrunc
+    - getPxColorInterpNear
+    - getPxColorInterpAvg4
+    - getPxColorInterpAvg9
+  - Example test_gtfrm_scale.cpp illistrates all interpolation methods by scaleing an image
+  - Example bmark.cpp has benchmarks for getPxColorInterpAvg9
+* v4.0.0: Feature & Bugfix Release
+:PROPERTIES:
+:CUSTOM_ID: v4.0.0
+:END:
+  - The string drawing functions now take std::string instead of c-style strings
+  - Added static_cast in several places we had automatic conversions to document that we really do want that cast.
+  - More careful about using types from the classes instead of integers in the examples for things like image coordinates and color channels.  It's still a
+    bit uneven -- even sloppy in some of the examples.  
+  - Experimental support for MSVC++ (tested with MSVS CC 2022).  I may well have introduced some bugs or different behavior -- especially in the examples.  So
+    be on the lookout for oddness.
+  - I have recently become interested in arbitrary geometric transformations, and just added a bilinear interpolation method. I expect to adding several
+    interpolation methods along with a generic interface to them later.  I also plan on adding a canvas transformation method.  Lastly, the example
+    test_gtfrm_scale.cpp will eventually be used to demonstrate that transformation method -- right now it just demonstrates the interpolation bits...
+    - White space cleanup across the code base.  So if you do diffs, make sure to tell them to ignore white space changes.
+    - Removed all the extra template arg bits in the colorTpl template.  Not sure how they got in there -- probably a fit of cut-n-paste at some point?  They
+      were not errors, just unnecessary.    
+    - Hard coded the C++ version to 2011 just to make sure the compiler was using something at least that new.
+* v3.0.0: Major cleanup of old code.  Added cycles examples
+:PROPERTIES:
+:CUSTOM_ID: v3.0.0
+:END:
+* v2.0.0: Feature & Bugfix Release
+:PROPERTIES:
+:CUSTOM_ID: v2.0.0
+:END:
+  - New version numbersk
+  - Several new examples:
+    - examples/brownianDiffusion.cpp
+    - examples/dlaDriver.sh
+    - examples/lorenz_fuz.cpp
+    - examples/lorenz_multi.cpp
+    - examples/sprott2d.cpp
+  - Added some aux files:
+    - examples/mandelbrot_potential_a_0.pov
+    - examples/mandelbrot_potential_a_1.pov
+    - examples/mandelbrot_potential_a_1t.pov
+    - examples/mandelbrot_potential_a_2.pov
+    - examples/mandelbrot_potential_b_0.bov
+    - examples/mandelbrot_potential_b_0.pov
+    - examples/mandelbrot_potential_b_1.pov
+    - examples/mandelbrot_potential_b_2.pov
+  - Updated a few examples:
+    - examples/circles.cpp
+    - examples/dlaSeed.cpp
+    - examples/peterdejong.cpp
+    - examples/sic_search.cpp
+  - A few cmake & build changes
+  - A couple updates to the base library
+
+

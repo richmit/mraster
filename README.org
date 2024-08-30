@@ -1,3 +1,5 @@
+* Introduction
+
 *MRaster* is a very simple C++ library for generating raster images --
 espeically things like fractals.
 
@@ -41,16 +43,18 @@ Example Documentation: [[https://www.mitchr.me/SS/mraster/doc-examples/autodocs/
 
 The code: [[https://github.com/richmit/mraster/]]
 
-*Versions:*
- - Version 20.x.x
-   - Much more modern API
-   - Good unit test coverage
-   - Requires a compiler with good C++20 support
-   - Still in beta, but pretty solid at this point
- - Version 6.x.x
-   - Has been published and used since the 1990's
-   - Quite mature
-   - Old school API
+* Versions
 
-*Version Recommendation:* Use 20.x.x unless you have an old creepy compiler that just can't do C++20.
-I also strongly recommend you clone one of the tagged releases instead of main.
+This library has defined "releases" intended to identify a stable
+snapshot of the code -- they are tagged in git with a tag name
+starting with a "v".  If you are looking for stability, then get the
+latest one.
+
+That said, I try to only commit complete, working code.  So I think
+it's pretty safe for most people to just pull =HEAD= -- i.e. just do a
+regular git clone.
+
+The [[https://richmit.github.io/mraster/changelog.html][change log]]
+has entries for each release as well as a section for what has changed
+on =HEAD= since the last release.
+
