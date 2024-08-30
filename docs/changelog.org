@@ -1,4 +1,4 @@
-# -*- Mode:Org; Coding:utf-8; fill-column:158 -*-
+# -*- Mode:Org; Coding:utf-8; fill-column:78 -*-
 # ######################################################################################################################################################.H.S.##
 # FILE:        changelog.org
 #+TITLE:       Change Log
@@ -40,12 +40,6 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
 :PROPERTIES:
 :CUSTOM_ID: latest
 :END:
-
-  - Examples
-    - New
-      - N/A
-    - Updated
-      - N/A
   - Fixed Bugs
     - N/A
   - Known Issues
@@ -53,24 +47,36 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
   - API breaking Changes
     - WARNING: Eventually the deprecated headers will be removed.
     - The "all" target has been removed.  Use the "examples" target instead.
+  - Deprecated functionality
+    - Several people reported conflicts with other packages using the same
+      header names
+      - Deprecated header color.hpp -- USE MRcolor.hpp instead
+      - Deprecated header point2d.hpp -- USE MRpoint2d.hpp instead
+      - Deprecated header colorTpl.hpp -- USE MRcolorTpl.hpp instead
   - New functionality
     - Library exported via build/MRasterLib.cmake
-    - Package exported via build/MRasterConfig.cmake & build/MRasterConfigVersion.cmake
+    - Package exported via build/MRasterConfig.cmake &
+      build/MRasterConfigVersion.cmake
     - Install target created that installs:
       - MRasterLib.cmake
       - MRasterConfig.cmake & MRasterConfigVersion.cmake
       - Non-deprecated headers
     - New include file: mraster_config.hpp
       - Defines for cmake configuration information
-      - Functions returning version information
-        Note this change limits future version numbers to numeric components.
-  - Deprecated functionality
-    - Several people reported conflicts with other packages using the same header names
-      - Deprecated header color.hpp -- USE MRcolor.hpp instead
-      - Deprecated header point2d.hpp -- USE MRpoint2d.hpp instead
-      - Deprecated header colorTpl.hpp -- USE MRcolorTpl.hpp instead
-  - Miscellaneous
+      - Functions returning version information Note this change limits future
+        version numbers to numeric components.
+  - Documentation
     - The color scheme org-mode document has been cleaned up
+    - Added change log (this very file!)
+    - Updated README.org to reflect change log and remove comments about very
+      old versions
+  - Examples
+    - New
+      - N/A
+    - Updated
+      - N/A
+  - Miscellaneous
+    - N/A
 * v20.12.3: Feature Release
 :PROPERTIES:
 :CUSTOM_ID: v20.12.3

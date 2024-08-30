@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-08-30 Fri 15:33 -->
+<!-- 2024-08-30 Fri 15:46 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>Change Log</title>
@@ -230,12 +230,12 @@
 
 <tr>
 <td class="org-right"><b>Updated:</b></td>
-<td class="org-left"><i>2024-08-30 15:33:10</i></td>
+<td class="org-left"><i>2024-08-30 15:45:43</i></td>
 </tr>
 
 <tr>
 <td class="org-right"><b>Generated:</b></td>
-<td class="org-left"><i>2024-08-30 15:33:13</i></td>
+<td class="org-left"><i>2024-08-30 15:46:45</i></td>
 </tr>
 </tbody>
 </table>
@@ -278,17 +278,6 @@ Copyright &copy; 2024 Mitch Richling. All rights reserved.
 <h2 id="latest"><span class="section-number-2">1.</span> Changes On HEAD Since Last Release</h2>
 <div class="outline-text-2" id="text-latest">
 <ul class="org-ul">
-<li>Examples
-<ul class="org-ul">
-<li>New
-<ul class="org-ul">
-<li>N/A</li>
-</ul></li>
-<li>Updated
-<ul class="org-ul">
-<li>N/A</li>
-</ul></li>
-</ul></li>
 <li>Fixed Bugs
 <ul class="org-ul">
 <li>N/A</li>
@@ -302,10 +291,21 @@ Copyright &copy; 2024 Mitch Richling. All rights reserved.
 <li>WARNING: Eventually the deprecated headers will be removed.</li>
 <li>The "all" target has been removed.  Use the "examples" target instead.</li>
 </ul></li>
+<li>Deprecated functionality
+<ul class="org-ul">
+<li>Several people reported conflicts with other packages using the same
+header names
+<ul class="org-ul">
+<li>Deprecated header color.hpp &#x2013; USE MRcolor.hpp instead</li>
+<li>Deprecated header point2d.hpp &#x2013; USE MRpoint2d.hpp instead</li>
+<li>Deprecated header colorTpl.hpp &#x2013; USE MRcolorTpl.hpp instead</li>
+</ul></li>
+</ul></li>
 <li>New functionality
 <ul class="org-ul">
 <li>Library exported via build/MRasterLib.cmake</li>
-<li>Package exported via build/MRasterConfig.cmake &amp; build/MRasterConfigVersion.cmake</li>
+<li>Package exported via build/MRasterConfig.cmake &amp;
+build/MRasterConfigVersion.cmake</li>
 <li>Install target created that installs:
 <ul class="org-ul">
 <li>MRasterLib.cmake</li>
@@ -315,22 +315,31 @@ Copyright &copy; 2024 Mitch Richling. All rights reserved.
 <li>New include file: mraster_config.hpp
 <ul class="org-ul">
 <li>Defines for cmake configuration information</li>
-<li>Functions returning version information
-Note this change limits future version numbers to numeric components.</li>
+<li>Functions returning version information Note this change limits future
+version numbers to numeric components.</li>
 </ul></li>
 </ul></li>
-<li>Deprecated functionality
+<li>Documentation
 <ul class="org-ul">
-<li>Several people reported conflicts with other packages using the same header names
+<li>The color scheme org-mode document has been cleaned up</li>
+<li>Added change log (this very file!)</li>
+<li>Updated README.org to reflect change log and remove comments about very
+old versions</li>
+</ul></li>
+<li>Examples
 <ul class="org-ul">
-<li>Deprecated header color.hpp &#x2013; USE MRcolor.hpp instead</li>
-<li>Deprecated header point2d.hpp &#x2013; USE MRpoint2d.hpp instead</li>
-<li>Deprecated header colorTpl.hpp &#x2013; USE MRcolorTpl.hpp instead</li>
+<li>New
+<ul class="org-ul">
+<li>N/A</li>
+</ul></li>
+<li>Updated
+<ul class="org-ul">
+<li>N/A</li>
 </ul></li>
 </ul></li>
 <li>Miscellaneous
 <ul class="org-ul">
-<li>The color scheme org-mode document has been cleaned up</li>
+<li>N/A</li>
 </ul></li>
 </ul>
 </div>
