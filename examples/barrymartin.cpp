@@ -30,43 +30,43 @@
 
   This code is very similar to peterdejong.cpp, but uses different equations.  We use the following formula to produce several named fractals:
   @f[  \begin{align*}
-         x_{n+1} & = y+d \cdot \mathrm{ssgn}(x) \cdot \left(f \cdot \sqrt{\vert b x-c\vert} + g \cdot \sin{(b x-c)} + h \cdot \vert b x-c\vert \right) \\
-         y_{n+1} & = a-x
+         x_{n+1} & = y_n+d \cdot \mathrm{ssgn}(x_n) \cdot \left(f \cdot \sqrt{\vert b x_n-c\vert} + g \cdot \sin{(b x_n-c)} + h \cdot \vert b x_n-c\vert \right) \\
+         y_{n+1} & = a-x_n
        \end{align*} @f]
   Where
-  @f[  \mathrm{ssgn}(x) = \cases{ s & $x\lt 0$ \cr
-                                  1 & $x\ge 0$ } @f]
+  @f[  \mathrm{ssgn}(v) = \cases{ s & $v\lt 0$ \cr
+                                  1 & $v\ge 0$ } @f]
 
   Note some special cases:
    - When @f$ d=-1, s=-1, f=1, g=0, h=0 @f$, the map becomes the "Classic Barry Martin fractal":
      @f[  \begin{align*}
-            x_{n+1} & = y - \mathrm{sgn}(x) \cdot \sqrt{\vert b x-c\vert} \\ 
-            y_{n+1} & = a-x
+            x_{n+1} & = y_n - \mathrm{sgn}(x_n) \cdot \sqrt{\vert b x_n-c\vert} \\ 
+            y_{n+1} & = a-x_n
           \end{align*} @f]
    - When @f$ d=1, s=-1, f=1, g=0, h=0 @f$, the map becomes the "Positive Barry Martin fractal":
      @f[  \begin{align*}
-            x_{n+1} & = y + \mathrm{sgn}(x) \cdot \sqrt{\vert b x-c\vert} \\ 
-            y_{n+1} & = a-x
+            x_{n+1} & = y_n + \mathrm{sgn}(x_n) \cdot \sqrt{\vert b x_n-c\vert} \\ 
+            y_{n+1} & = a-x_n
           \end{align*} @f]
    - When @f$ d=1, s=1, f=1, g=0, h=0 @f$, the map becomes the "Additive Barry Martin fractal":
      @f[  \begin{align*}
-            x_{n+1} & = y + \sqrt{\vert b x-c\vert} \\ 
-            y_{n+1} & = a-x
+            x_{n+1} & = y_n + \sqrt{\vert b x_n-c\vert} \\ 
+            y_{n+1} & = a-x_n
           \end{align*} @f]
    - When @f$ d=1, s=1, f=0, g=1, h=0, c=0 @f$, the map becomes the "Sinusoidal Barry Martin fractal":
      @f[  \begin{align*}
-            x_{n+1} & = y + \sin{(b x-c)} \\ 
-            y_{n+1} & = a-x
+            x_{n+1} & = y_n + \sin{(b x_n-c)} \\ 
+            y_{n+1} & = a-x_n
           \end{align*} @f]
    - When @f$ d=1, s=1, f=0, g=0, h=1, c=0 @f$, the map becomes the "The Gingerbread Man":
      @f[  \begin{align*}
-            x_{n+1} & = y + \sin{(b x)} \\ 
-            y_{n+1} & = a-x
+            x_{n+1} & = y_n + \sin{(b x_n)} \\ 
+            y_{n+1} & = a-x_n
           \end{align*} @f]
    - When @f$ d=1, s=1, f=0, g=0, h=1, c\ne0 @f$, the map becomes the "The Shifted Gingerbread Man":
      @f[  \begin{align*}
-            x_{n+1} & = y + \sin{(b x-c)} \\ 
-            y_{n+1} & = a-x
+            x_{n+1} & = y_n + \sin{(b x_n-c)} \\ 
+            y_{n+1} & = a-x_n
           \end{align*} @f]
 
   Refrences:

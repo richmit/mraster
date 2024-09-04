@@ -30,8 +30,8 @@
 
   This code is very similar to peterdejong.cpp, but uses different equations:
   @f[ \begin{align*}
-        x_{n+1} & = (x^2-y^2)+ax+by \\
-        y_{n+1} & = 2xy+cx+dy
+        x_{n+1} & = x_n^2-y_n^2+ax_n+by_n \\
+        y_{n+1} & = 2x_ny_n+cx_n+dy_n
       \end{align*} @f]
 
   Refrences:
