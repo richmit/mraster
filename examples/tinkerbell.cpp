@@ -5,7 +5,6 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw some Tinkerbell Attractors.@EOL
  @std       C++20
- @see       https://www.mitchr.me/SS/swirl/index.html
  @copyright
   @parblock
   Copyright (c) 2024, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
