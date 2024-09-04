@@ -43,8 +43,7 @@ typedef mjr::ramCanvas3c8b rct;
 typedef rct::colorType ct;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-const int NPR = 27;
-typename mjr::ramCanvas1c16b::coordFltType params[NPR][12] = {
+std::vector<std::array<mjr::ramCanvas1c16b::coordFltType, 12>> params {
   /*  lambda       alpha      beta     gamma      omega   n    ipw   xmin  xmax   ymin  ymax    1=mean */
   { 1.375390, -0.4212800,  0.26969,  0.08352,  0.338347,  6, 15.00, -1.30, 1.30, -1.30, 1.30, 1.0}, // 0  |
   { 1.600230, -1.1340800, -0.17506,  0.67872,  0.049490,  6, 14.00,  0.10, 0.70,  0.43, 0.90, 0.0}, // 1  |  WACKY
@@ -104,8 +103,7 @@ int main(void) {
   const int BSIZ = 7680/4;
   mjr::ramCanvas1c16b::colorType aColor;
   aColor.setChans(1);
-  //for(int j=0; j<NPR; j++) {
-    for(int j : { 0 } ) {
+  for(decltype(params.size()) j=0; j<params.size(); ++j) {
     mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, params[j][7], params[j][8], params[j][9], params[j][10]);
     typename mjr::ramCanvas1c16b::coordFltType lambda = params[j][0];
     typename mjr::ramCanvas1c16b::coordFltType alpha  = params[j][1];

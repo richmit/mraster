@@ -35,9 +35,7 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-const int NPR = 18;
-
-double params[NPR][9] = {
+std::vector<std::array<double, 9>> params {
   /*        a         b         c         d          e          f          g         h     p */
   {  -1.68661, -1.99168,  1.71743, -1.64958,  0.299086, -1.293460, -0.054505, -1.73135, 2.00},   //  0 128822725
   {   1.50503, -1.44118, -1.23281,  1.78607,  1.709360,  1.794210,  1.893750, -1.38227, 2.10},   //  1 101379662
@@ -65,7 +63,7 @@ int main(void) {
   const int BSIZ = 7680;
   mjr::ramCanvas1c16b::colorType aColor;
   aColor.setChans(1);
-  for(int j=0; j<NPR; j++) {
+  for(decltype(params.size()) j=0; j<params.size(); ++j) {
     mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -2, 2, -2, 2);
 
     double a = params[j][0];
