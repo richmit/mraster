@@ -1872,6 +1872,32 @@ namespace mjr {
       void colorizeIntCanvas(std::function<colorT (pointIntType)> cFun);
       //@}
 
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Canvas Level Statistical Computation.
+      */
+      //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      intCrdT statNumNonZeroPixels(intCrdT x1, intCrdT y1, intCrdT x2, intCrdT y2) {
+        intCrdT retCount = 0;
+        if( !isCliped(x1, y1) && !isCliped(x2, y2) ) {
+          if(x1 > x2)
+            std::swap(x1, x2);
+          if(y1 > y2)
+            std::swap(y1, y2);
+          for(intCrdT y=y1;y<=y2;y++)
+            for(intCrdT x=x1;x<=x2;x++)
+              //if ( !(getPxColor(x, y).isBlack()))
+              if ( !(getPxColorRefNC(x, y).isBlack()))
+                retCount++;
+        }
+        return(retCount);
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      intCrdT statNumNonZeroPixels() {
+        return statNumNonZeroPixels(0, 0, numPixX-1, numPixY-1);
+      }
+      //@}
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
