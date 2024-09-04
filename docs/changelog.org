@@ -72,7 +72,9 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
       old versions
   - Examples
     - New
-      - N/A
+      - barrymartin.cpp -- Barry Martin attractors
+      - tinkerbell.cpp -- Tinkerbell attractors
+      - tinkerbell_search.cpp -- Search for interesting Tinkerbell parameters
     - Updated
       - N/A
   - Miscellaneous
