@@ -259,24 +259,32 @@ namespace mjr {
     @param fill          Fill character
     @param base          An integer (valid values: 16, 10, 8)
     @param rightJustify  If true, then right justify.  Otherwise, left.
-    @return A formatted string. */
-  std::string fmtInt(int inInt, int width = 0, char fill = ' ', int base = 10, bool rightJustify = true) {
-    std::ostringstream stringStream;
-    if (width > 0)
-      stringStream << std::setfill(fill) << std::setw(width);
-    else
-      stringStream << std::setfill(fill) << std::setw(0);
-    if(rightJustify)
-      stringStream << std::right;
-    else
-      stringStream << std::left;
-    if (base == 16)
-      stringStream << std::hex << std::noshowbase;
-    if (base == 8)
-      stringStream << std::oct << std::noshowbase;
-    // TODO: Should throw if base is not 8, 10, or 16...
-    stringStream << inInt;
-    return stringStream.str();
+    If the type of inInt is convertable to an int, then it will be converted to int and will be formated via an std::ostringstream.  If it can't be converted,
+    then it will be passed unchanged.
+    @return A formatted string.  */
+  template <typename intType>
+  requires (std::integral<intType>)
+  std::string fmtInt(intType inInt, int width = 0, char fill = ' ', int base = 10, bool rightJustify = true) {
+    if constexpr ( !(std::same_as<intType, int>) && std::convertible_to<intType, int>) {
+      return fmtInt(static_cast<int>(inInt), width, fill, base, rightJustify);
+    } else {
+      std::ostringstream stringStream;
+      if (width > 0)
+        stringStream << std::setfill(fill) << std::setw(width);
+      else
+        stringStream << std::setfill(fill) << std::setw(0);
+      if(rightJustify)
+        stringStream << std::right;
+      else
+        stringStream << std::left;
+      if (base == 16)
+        stringStream << std::hex << std::noshowbase;
+      if (base == 8)
+        stringStream << std::oct << std::noshowbase;
+      // TODO: Should throw if base is not 8, 10, or 16...
+      stringStream << inInt;
+      return stringStream.str();
+    }
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
