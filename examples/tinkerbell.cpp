@@ -76,8 +76,8 @@ int main(void) {
     double c = params[j][2];
     double d = params[j][3];
 
-    /* Draw the atractor on a 16-bit, greyscale canvas -- the grey level will be an integer represeting the hit count for that pixel.  This is a good example
-       of how an image can have pixel values that are generic "data" as well as color information. */
+    /* Draw the Attractor on a 16-bit, greyscale canvas such that the level is the hit count for that pixel.  
+       Thus we are using an "image" as a way to store field data instead of color information. */
     double x        = params[j][4];
     double y        = params[j][5];
     uint64_t maxII  = 0;
@@ -94,7 +94,7 @@ int main(void) {
         if(theRamCanvas.getPxColor(x, y).getC0() > maxII) {
           maxII = theRamCanvas.getPxColor(x, y).getC0();
           if(maxII > 16384) { // 1/4 of max possible intensity
-            std::cout << "ITER(" << j <<  "): " << itr << " MAXS: " << maxII << " EXIT: Maximum image intensity reached" << std::endl;
+            std::cout << "ITER(" << j <<  "): " << itr << " MAXS: " << maxII << " EXIT: Maximum intensity reached" << std::endl;
             break;
           }
         }
