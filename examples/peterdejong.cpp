@@ -98,7 +98,7 @@ int main(void) {
       y=yNew;
     }
 
-    theRamCanvas.writeRAWfile("peterdejong_" + std::to_string(j) + ".mrw");
+    theRamCanvas.writeRAWfile("peterdejong_" + mjr::fmtInt(j, 2, '0') + ".mrw");
 
     // Root image transform
     theRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas1c16b::colorType::tfrmStdPow, 1.0/p);
@@ -116,7 +116,7 @@ int main(void) {
       for(int xi=0;xi<theRamCanvas.getNumPixX();xi++)
         anotherRamCanvas.drawPoint(xi, yi, bColor.cmpRGBcornerDGradiant(static_cast<mjr::ramCanvas3c8b::csIntType>(theRamCanvas.getPxColor(xi, yi).getC0() * 1275 / maxII), "0RYBCW"));
 
-    anotherRamCanvas.writeTIFFfile("peterdejong_" + std::to_string(j) + ".tiff");
+    anotherRamCanvas.writeTIFFfile("peterdejong_" + mjr::fmtInt(j, 2, '0') + ".tiff");
   }
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;

@@ -137,7 +137,7 @@ int main(void) {
     }
 
     std::cout << "ITER(" << j <<  "): " << "Big TIFF" << std::endl;
-    theRamCanvas.writeTIFFfile("sic_" + std::to_string(j) + ".tiff");
+    theRamCanvas.writeTIFFfile("sic_" + mjr::fmtInt(j, 2, '0') + ".tiff");
 
     // Root image transform
     std::cout << "ITER(" << j <<  "): " << "TFRM & SCALE" << std::endl;
@@ -159,7 +159,7 @@ int main(void) {
 
     std::cout << "ITER(" << j <<  "): " << "TIFF" << std::endl;
     /* Dump the 16-bit grayscale TIFF */
-    theRamCanvas.writeTIFFfile("sicM_" + std::to_string(j) + ".tiff");
+    theRamCanvas.writeTIFFfile("sicM_" + mjr::fmtInt(j, 2, '0') + ".tiff");
     /* Now we would like a false color version (24-bit RGB).   We could create a new canvas like this:
                rct cRamCanvas(theRamCanvas.getNumPixX(), theRamCanvas.getNumPixY());
                for(mjr::ramCanvas1c16b::coordIntType y=0;y<theRamCanvas.getNumPixY();y++)
@@ -167,11 +167,11 @@ int main(void) {
                    auto ci = static_cast<rct::csIntType>(theRamCanvas.getPxColorRefNC(x, y).getC0() * 1275 / maxII)
                    cRamCanvas.getPxColorRefNC(x, y).cmpRGBcornerDGradiant(ci, "0RYBCW");
                  }
-               cRamCanvas.writeTIFFfile("sicC_" + std::to_string(j) + ".tiff");
+               cRamCanvas.writeTIFFfile("sicC_" + mjr::fmtInt(j, 2, '0') + ".tiff");
        We have a better way.  One that dosen't require the RAM to create a brand new canvas.  We can use
        the filter option of writeTIFFfile! */
     g2rgb8 rcFilt(theRamCanvas, maxII);
-    theRamCanvas.writeTIFFfile("sicCC_" + std::to_string(j) + ".tiff", rcFilt, false);
+    theRamCanvas.writeTIFFfile("sicCC_" + mjr::fmtInt(j, 2, '0') + ".tiff", rcFilt, false);
   }
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
