@@ -5,6 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw some Tinkerbell Attractors.@EOL
  @std       C++20
+ @see       https://www.mitchr.me/SS/tinkerbell/index.html
  @copyright
   @parblock
   Copyright (c) 2024, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -27,15 +28,12 @@
   DAMAGE.
   @endparblock
  @filedetails
-
-  This code is very similar to peterdejong.cpp, but uses different equations:
+  The Tinkerbell Attractor is a discrete-time dynamical system defined by the following relationship:
   @f[ \begin{align*}
         x_{n+1} & = x_n^2-y_n^2+ax_n+by_n \\
         y_{n+1} & = 2x_ny_n+cx_n+dy_n
       \end{align*} @f]
-
-  Refrences:
-   - https://en.wikipedia.org/wiki/Tinkerbell_map
+  Most any non-zero initial conditions may be used for \( (x_1, y_1) \).
 */
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */

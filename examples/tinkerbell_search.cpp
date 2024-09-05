@@ -5,6 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Find parameters for tinkerbell fractals.@EOL
  @std       C++20
+ @see       https://www.mitchr.me/SS/barrymartin/index.html
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
