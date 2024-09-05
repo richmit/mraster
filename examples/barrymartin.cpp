@@ -5,6 +5,7 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw some Barry Martin Attractors.@EOL
  @std       C++20
+ @see       https://www.mitchr.me/SS/barrymartin/index.html
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -28,50 +29,52 @@
   @endparblock
  @filedetails   
 
-  This code is very similar to peterdejong.cpp, but uses different equations.  We use the following formula to produce several named fractals:
-  @f[  \begin{align*}
-         x_{n+1} & = y_n+d \cdot \mathrm{ssgn}(x_n) \cdot \left(f \cdot \sqrt{\vert b x_n-c\vert} + g \cdot \sin{(b x_n-c)} + h \cdot \vert b x_n-c\vert \right) \\
-         y_{n+1} & = a-x_n
-       \end{align*} @f]
-  Where
-  @f[  \mathrm{ssgn}(v) = \cases{ s & $v\lt 0$ \cr
-                                  1 & $v\ge 0$ } @f]
-
-  Note some special cases:
-   - When @f$ d=-1, s=-1, f=1, g=0, h=0 @f$, the map becomes the "Classic Barry Martin fractal":
-     @f[  \begin{align*}
-            x_{n+1} & = y_n - \mathrm{sgn}(x_n) \cdot \sqrt{\vert b x_n-c\vert} \\ 
-            y_{n+1} & = a-x_n
-          \end{align*} @f]
-   - When @f$ d=1, s=-1, f=1, g=0, h=0 @f$, the map becomes the "Positive Barry Martin fractal":
-     @f[  \begin{align*}
-            x_{n+1} & = y_n + \mathrm{sgn}(x_n) \cdot \sqrt{\vert b x_n-c\vert} \\ 
-            y_{n+1} & = a-x_n
-          \end{align*} @f]
-   - When @f$ d=1, s=1, f=1, g=0, h=0 @f$, the map becomes the "Additive Barry Martin fractal":
-     @f[  \begin{align*}
-            x_{n+1} & = y_n + \sqrt{\vert b x_n-c\vert} \\ 
-            y_{n+1} & = a-x_n
-          \end{align*} @f]
-   - When @f$ d=1, s=1, f=0, g=1, h=0, c=0 @f$, the map becomes the "Sinusoidal Barry Martin fractal":
-     @f[  \begin{align*}
-            x_{n+1} & = y_n + \sin{(b x_n-c)} \\ 
-            y_{n+1} & = a-x_n
-          \end{align*} @f]
-   - When @f$ d=1, s=1, f=0, g=0, h=1, c=0 @f$, the map becomes the "The Gingerbread Man":
-     @f[  \begin{align*}
-            x_{n+1} & = y_n + \sin{(b x_n)} \\ 
-            y_{n+1} & = a-x_n
-          \end{align*} @f]
-   - When @f$ d=1, s=1, f=0, g=0, h=1, c\ne0 @f$, the map becomes the "The Shifted Gingerbread Man":
-     @f[  \begin{align*}
-            x_{n+1} & = y_n + \sin{(b x_n-c)} \\ 
-            y_{n+1} & = a-x_n
-          \end{align*} @f]
-
-  Refrences:
-   - Martin, Barry. 1989. "Graphic Potential of Recursive Functions." In Computers in Art, Design and Animation, 109-29. Berlin, Heidelberg: Springer-Verlag.
-   - A. K. Dewdney. 1986. "Wallpaper for the Mind: Computer Images That Are Almost, but Not Quite, Repetitive." Scientific American, September, 12-23.
+  Barry Martin's "Hopalong" orbit fractals are a family of discrete-time dynamical systems:
+     - Classic Barry Martin fractal:
+       @f[  \begin{align*}
+              x_{n+1} & = y_n - \mathrm{sgn}(x_n) \cdot \sqrt{\vert b x_n-c\vert} \\ 
+              y_{n+1} & = a-x_n
+            \end{align*} @f]
+     - Positive Barry Martin fractal:
+       @f[  \begin{align*}
+              x_{n+1} & = y_n + \mathrm{sgn}(x_n) \cdot \sqrt{\vert b x_n-c\vert} \\ 
+              y_{n+1} & = a-x_n
+            \end{align*} @f]
+     - Additive Barry Martin fractal:
+       @f[  \begin{align*}
+              x_{n+1} & = y_n + \sqrt{\vert b x_n-c\vert} \\ 
+              y_{n+1} & = a-x_n
+            \end{align*} @f]
+     - Sinusoidal Barry Martin fractal:
+       @f[  \begin{align*}
+              x_{n+1} & = y_n + \sin{(b x_n-c)} \\ 
+              y_{n+1} & = a-x_n
+            \end{align*} @f]
+  
+  All of these maps, and others, may be constructed from the following system as special cases:
+    @f[  \begin{align*}
+           x_{n+1} & = y_n+d \cdot \mathrm{ssgn}(x_n) \cdot \left(f \cdot \sqrt{\vert b x_n-c\vert} + g \cdot \sin{(b x_n-c)} + h \cdot \vert b x_n-c\vert \right) \\
+           y_{n+1} & = a-x_n
+         \end{align*} @f]
+    Where
+    @f[  \mathrm{ssgn}(v) = \cases{ s & $v\lt 0$ \cr
+                                    1 & $v\ge 0$ } @f]
+  
+    Some special cases:
+     - When @f$ d=-1, s=-1, f=1, g=0, h=0 @f$, the map becomes the "Classic Barry Martin fractal"
+     - When @f$ d=1, s=-1, f=1, g=0, h=0 @f$, the map becomes the "Positive Barry Martin fractal"
+     - When @f$ d=1, s=1, f=1, g=0, h=0 @f$, the map becomes the "Additive Barry Martin fractal"
+     - When @f$ d=1, s=1, f=0, g=1, h=0, c=0 @f$, the map becomes the "Sinusoidal Barry Martin fractal"
+     - When @f$ d=1, s=1, f=0, g=0, h=1, c=0 @f$, the map becomes the "The Gingerbread Man":
+       @f[  \begin{align*}
+              x_{n+1} & = y_n + \sin{(b x_n)} \\ 
+              y_{n+1} & = a-x_n
+            \end{align*} @f]
+     - When @f$ d=1, s=1, f=0, g=0, h=1, c\ne0 @f$, the map becomes the "The Shifted Gingerbread Man":
+       @f[  \begin{align*}
+              x_{n+1} & = y_n + \sin{(b x_n-c)} \\ 
+              y_{n+1} & = a-x_n
+            \end{align*} @f]
 */
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
@@ -121,8 +124,8 @@ int main(void) {
     double g = params[j][6];
     double h = params[j][7];
 
-    /* Draw the atractor on a 16-bit, greyscale canvas -- the grey level will be an integer represeting the hit count for that pixel.  This is a good example
-       of how an image can have pixel values that are generic "data" as well as color information. */
+    /* Draw the Attractor on a 16-bit, greyscale canvas such that the level is the hit count for that pixel.  
+       Thus we are using an "image" as a way to store field data instead of color information. */
     double x        = 0.0;
     double y        = 0.0;
     uint64_t maxII  = 0;
