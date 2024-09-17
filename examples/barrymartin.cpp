@@ -59,6 +59,10 @@
     Where
     @f[  \mathrm{ssgn}(v) = \cases{ s & $v\lt 0$ \cr
                                     1 & $v\ge 0$ } @f]
+    @f[  \mathrm{sgn}(v) = \cases{ -1 & $v\lt 0$ \cr
+                                   +1 & $v\ge 0$ } @f]
+
+    Note the simplified form of the @f$\mathrm{sgn}(v)@f$ function used -- the standard definition may be used for nearly identical results.
   
     Some special cases:
      - When @f$ d=-1, s=-1, f=1, g=0, h=0 @f$, the map becomes the "Classic Barry Martin fractal"
