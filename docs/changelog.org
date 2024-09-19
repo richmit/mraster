@@ -72,6 +72,10 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
       old versions
   - Examples
     - New
+      - kalisetJ.cpp -- Julia style kaliset
+      - kalisetM1.cpp -- Mandelbrot style kaliset
+      - kalisetM2.cpp -- Mandelbrot style kaliset
+      - butterfly.cpp -- A kaliset inspired butterfly
       - barrymartin.cpp -- Barry Martin attractors
       - tinkerbell.cpp -- Tinkerbell attractors
       - tinkerbell_search.cpp -- Search for interesting Tinkerbell parameters

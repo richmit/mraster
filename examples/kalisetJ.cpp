@@ -1,9 +1,9 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      butterfly.cpp
+ @file      kalisetJ.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     A kaliset inspired butterfly fractal.@EOL
+ @brief     Draw a kaliset julia-style.@EOL
  @std       C++20
  @copyright
   @parblock
@@ -39,15 +39,16 @@ typedef mjr::ramCanvas3c8b::colorType ct;
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const int    WIDTH  = 1920*4;
-  const int    HEIGHT = 1080*4;
-  const int    NUMITR = 55;
+  const int    WIDTH  = 1920*1;
+  const int    HEIGHT = 1920*1;
+  const int    NUMITR = 100;
   const double MAXZ   = 4.0;
-  mjr::ramCanvas3c8b theRamCanvas(WIDTH, HEIGHT, -0.111, 0.111, -1.23, -1.03);
+  mjr::ramCanvas3c8b theRamCanvas(WIDTH, HEIGHT, -2.0, 2.0, -2.0, 2.0);
+# pragma omp parallel for schedule(static,1)
   for(int y=0;y<theRamCanvas.getNumPixY();y++) {
     for(int x=0;x<theRamCanvas.getNumPixX();x++) {
-      std::complex<double> c(std::abs(theRamCanvas.int2realX(x))-0.124, theRamCanvas.int2realY(y));
-      std::complex<double> z(-1.6, 0.0001);
+      std::complex<double> c(-1.6, 0.0001);
+      std::complex<double> z(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
       int count = 0;
       while((std::norm(z)<MAXZ) && (count<=NUMITR)) {
         z = std::complex<double>(std::abs(std::real(z)), std::abs(std::imag(z)));
@@ -60,7 +61,7 @@ int main(void) {
         theRamCanvas.drawPoint(x, y, ct::csCCfractal0RYBCW::c(static_cast<ct::csIntType>(count*20)));
     }
   }
-  theRamCanvas.writeTIFFfile("butterfly.tiff");
+  theRamCanvas.writeTIFFfile("kalisetJ.tiff");
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
