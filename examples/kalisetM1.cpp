@@ -39,8 +39,8 @@ typedef mjr::ramCanvas3c8b::colorType ct;
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const int    WIDTH  = 1920*1;
-  const int    HEIGHT = 1920*1;
+  const int    WIDTH  = 1920*4;
+  const int    HEIGHT = 1920*4;
   const int    NUMITR = 100;
   const double MAXZ   = 4.0;
   mjr::ramCanvas3c8b theRamCanvas(WIDTH, HEIGHT, -0.59, -0.53, -0.812, -0.773);

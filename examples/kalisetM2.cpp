@@ -39,9 +39,9 @@ typedef mjr::ramCanvas3c8b::colorType ct;
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const int    WIDTH  = 1920*1;
-  const int    HEIGHT = 1920*1;
-  const int    NUMITR = 100;
+  const int    WIDTH  = 1920*4;
+  const int    HEIGHT = 1920*4;
+  const int    NUMITR = 500;
   const double MAXZ   = 4.0;
   mjr::ramCanvas3c8b theRamCanvas(WIDTH, HEIGHT, -2.0, 0.0, -2.0, 0.0);
 # pragma omp parallel for schedule(static,1)
