@@ -45,8 +45,32 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
   - Known Issues
     - N/A
   - API breaking Changes
+    - N/A
+  - Deprecated functionality
+    - N/A
+  - New functionality
+    - N/A
+  - Documentation
+    - N/A
+  - Examples
+    - New
+      - N/A
+    - Updated
+      - N/A
+  - Miscellaneous
+    - N/A
+* v20.15.0.0: Feature Release
+:PROPERTIES:
+:CUSTOM_ID: v20.15.0.0
+:END:
+  - Fixed Bugs
+    - N/A
+  - Known Issues
+    - N/A
+  - API breaking Changes
     - WARNING: Eventually the deprecated headers will be removed.
     - The "all" target has been removed.  Use the "examples" target instead.
+    - New release process with 4 component version numbers
   - Deprecated functionality
     - Several people reported conflicts with other packages using the same
       header names

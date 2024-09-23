@@ -7,7 +7,7 @@ set(OpenGL_GL_PREFERENCE "GLVND") # Alternative
 # Proejct meta data
 
 project(MRaster
-  VERSION 20.12.3.0
+  VERSION 20.15.0.0
   DESCRIPTION "Image Processing Library"
   HOMEPAGE_URL "https://github.com/richmit/mraster/"
   LANGUAGES CXX)
