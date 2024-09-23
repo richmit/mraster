@@ -42,13 +42,13 @@ DOXYFILE_ENCODING      = UTF-8
 # title of most generated pages and in a few other places.
 # The default value is: My Project.
 
-PROJECT_NAME           = "@CMAKE_PROJECT_NAME@ @PROJECT_VERSION_ID@ @DOXINPUT@"
+PROJECT_NAME           = "@CMAKE_PROJECT_NAME@ v@MRaster_VERSION@ @DOXINPUT@"
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. This
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER         = @PROJECT_VERSION_DATE@
+PROJECT_NUMBER         = @MRaster_VERSION@
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer a

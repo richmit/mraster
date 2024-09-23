@@ -1,5 +1,2 @@
 
 This directory contains scripts used for the development of *MRaster*:
-
-  - mk_tag.sh :: Used to make a git tag.
-  - deploy_doxygen.sh :: Used to generate and deploy doxygen documentation.
