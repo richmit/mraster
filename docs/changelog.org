@@ -54,7 +54,8 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
     - N/A
   - Examples
     - New
-      - N/A
+      - examples/phoenix.cpp
+      - examples/phoenixM.cpp
     - Updated
       - N/A
   - Miscellaneous
