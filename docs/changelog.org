@@ -51,13 +51,13 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
   - New functionality
     - N/A
   - Documentation
-    - N/A
+    - ColorSchemes.html now has images for all CB schemes
   - Examples
     - New
-      - examples/phoenix.cpp
-      - examples/phoenixM.cpp
+      - phoenix: Classic phoenix fractal
+      - phoenixM: A movie of the classic phoenix fractal
     - Updated
-      - N/A
+      - color_lut_docs: Now generates images for all CB schemes
   - Miscellaneous
     - N/A
 * v20.15.0.0: Feature Release

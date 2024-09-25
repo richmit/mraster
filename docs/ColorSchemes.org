@@ -668,112 +668,571 @@ Credit: Brewer, Cynthia A., 2022. http://www.ColorBrewer.org2, 2022-07-30.
 #+END_QUOTE
 Most of these schemes can provide a variable number of steps from 3 up to what is illustrated in each color swatch below.  Also note that =colorTpl= provides
 a continuous gradient version of each color scheme -- which is kinda weird, but I like some of them.
-
-  - =csCBAccent= :: \\
-    [[./pics/cs/color_lut_docs_csCBAccent_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBAccentC_50.png]]
-  - =csCBBlues= :: \\
-    [[./pics/cs/color_lut_docs_csCBBlues_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBBluesC_50.png]]
-  - =csCBBrBG= :: \\
-    [[./pics/cs/color_lut_docs_csCBBrBG_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBBrBGC_50.png]]
-  - =csCBBuGn= :: \\
-    [[./pics/cs/color_lut_docs_csCBBuGn_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBBuGnC_50.png]]
-  - =csCBBuPu= :: \\
-    [[./pics/cs/color_lut_docs_csCBBuPu_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBBuPuC_50.png]]
-  - =csCBDark2= :: \\
-    [[./pics/cs/color_lut_docs_csCBDark2_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBDark2C_50.png]]
-  - =csCBGnBu= :: \\
-    [[./pics/cs/color_lut_docs_csCBGnBu_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBGnBuC_50.png]]
-  - =csCBGreens= :: \\
-    [[./pics/cs/color_lut_docs_csCBGreens_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBGreensC_50.png]]
-  - =csCBGreys= :: \\
-    [[./pics/cs/color_lut_docs_csCBGreys_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBGreysC_50.png]]
-  - =csCBOranges= :: \\
-    [[./pics/cs/color_lut_docs_csCBOranges_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBOrangesC_50.png]]
-  - =csCBOrRd= :: \\
-    [[./pics/cs/color_lut_docs_csCBOrRd_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBOrRdC_50.png]]
-  - =csCBPaired= :: \\
-    [[./pics/cs/color_lut_docs_csCBPaired_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBPairedC_50.png]]
-  - =csCBPastel1= :: \\
-    [[./pics/cs/color_lut_docs_csCBPastel1_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBPastel1C_50.png]]
-  - =csCBPastel2= :: \\
-    [[./pics/cs/color_lut_docs_csCBPastel2_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBPastel2C_50.png]]
-  - =csCBPiYG= :: \\
-    [[./pics/cs/color_lut_docs_csCBPiYG_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBPiYGC_50.png]]
-  - =csCBPRGn= :: \\
-    [[./pics/cs/color_lut_docs_csCBPRGn_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBPRGnC_50.png]]
-  - =csCBPuBuGn= :: \\
-    [[./pics/cs/color_lut_docs_csCBPuBuGn_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBPuBuGnC_50.png]]
-  - =csCBPuBu= :: \\
-    [[./pics/cs/color_lut_docs_csCBPuBu_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBPuBuC_50.png]]
-  - =csCBPuOr= :: \\
-    [[./pics/cs/color_lut_docs_csCBPuOr_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBPuOrC_50.png]]
-  - =csCBPuRd= :: \\
-    [[./pics/cs/color_lut_docs_csCBPuRd_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBPuRdC_50.png]]
-  - =csCBPurples= :: \\
-    [[./pics/cs/color_lut_docs_csCBPurples_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBPurplesC_50.png]]
-  - =csCBRdBu= :: \\
-    [[./pics/cs/color_lut_docs_csCBRdBu_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBRdBuC_50.png]]
-  - =csCBRdGy= :: \\
-    [[./pics/cs/color_lut_docs_csCBRdGy_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBRdGyC_50.png]]
-  - =csCBRdPu= :: \\
-    [[./pics/cs/color_lut_docs_csCBRdPu_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBRdPuC_50.png]]
-  - =csCBRdYlBu= :: \\
-    [[./pics/cs/color_lut_docs_csCBRdYlBu_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBRdYlBuC_50.png]]
-  - =csCBRdYlGn= :: \\
-    [[./pics/cs/color_lut_docs_csCBRdYlGn_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBRdYlGnC_50.png]]
-  - =csCBReds= :: \\
-    [[./pics/cs/color_lut_docs_csCBReds_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBRedsC_50.png]]
-  - =csCBSet1= :: \\
-    [[./pics/cs/color_lut_docs_csCBSet1_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBSet1C_50.png]]
-  - =csCBSet2= :: \\
-    [[./pics/cs/color_lut_docs_csCBSet2_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBSet2C_50.png]]
-  - =csCBSet3= :: \\
-    [[./pics/cs/color_lut_docs_csCBSet3_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBSet3C_50.png]]
-  - =csCBSpectral= :: \\
-    [[./pics/cs/color_lut_docs_csCBSpectral_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBSpectralC_50.png]]
-  - =csCBYlGnBu= :: \\
-    [[./pics/cs/color_lut_docs_csCBYlGnBu_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBYlGnBuC_50.png]]
-  - =csCBYlGn= :: \\
-    [[./pics/cs/color_lut_docs_csCBYlGn_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBYlGnC_50.png]]
-  - =csCBYlOrBr= :: \\
-    [[./pics/cs/color_lut_docs_csCBYlOrBr_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBYlOrBrC_50.png]]
-  - =csCBYlOrRd= :: \\
-    [[./pics/cs/color_lut_docs_csCBYlOrRd_50.png]] \\
-    [[./pics/cs/color_lut_docs_csCBYlOrRdC_50.png]]
+  - =csCBAccent= (3-8) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBAccent_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBAccentC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBAccent_04_50.png]] \\
+    =--= [[./pics/cs/color_lut_docs_csCBAccentC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBAccent_05_50.png]] \\
+    =--= [[./pics/cs/color_lut_docs_csCBAccentC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBAccent_06_50.png]] \\
+    =--= [[./pics/cs/color_lut_docs_csCBAccentC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBAccent_07_50.png]] \\
+    =--= [[./pics/cs/color_lut_docs_csCBAccentC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBAccent_08_50.png]] \\
+    =--= [[./pics/cs/color_lut_docs_csCBAccentC_08_50.png]]
+  - =csCBBlues= (3-9) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBBlues_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBluesC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBBlues_04_50.png]] \\
+    =--= [[./pics/cs/color_lut_docs_csCBBluesC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBBlues_05_50.png]] \\
+    =--= [[./pics/cs/color_lut_docs_csCBBluesC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBBlues_06_50.png]] \\
+    =--= [[./pics/cs/color_lut_docs_csCBBluesC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBBlues_07_50.png]] \\
+    =--= [[./pics/cs/color_lut_docs_csCBBluesC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBBlues_08_50.png]] \\
+    =--= [[./pics/cs/color_lut_docs_csCBBluesC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBBlues_09_50.png]] \\
+    =--= [[./pics/cs/color_lut_docs_csCBBluesC_09_50.png]]
+  - =csCBBrBG= (3-11) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBBrBG_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBrBGC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBBrBG_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBrBGC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBBrBG_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBrBGC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBBrBG_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBrBGC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBBrBG_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBrBGC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBBrBG_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBrBGC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBBrBG_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBrBGC_09_50.png]] \\
+    =10= [[./pics/cs/color_lut_docs_csCBBrBG_10_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBrBGC_10_50.png]] \\
+    =11= [[./pics/cs/color_lut_docs_csCBBrBG_11_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBrBGC_11_50.png]] \\
+  - =csCBBuGn= (3-9) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBBuGn_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBuGnC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBBuGn_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBuGnC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBBuGn_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBuGnC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBBuGn_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBuGnC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBBuGn_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBuGnC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBBuGn_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBuGnC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBBuGn_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBuGnC_09_50.png]]
+  - =csCBBuPu= (3-9) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBBuPu_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBuPuC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBBuPu_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBuPuC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBBuPu_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBuPuC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBBuPu_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBuPuC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBBuPu_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBuPuC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBBuPu_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBuPuC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBBuPu_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBBuPuC_09_50.png]]
+  - =csCBDark2= (3-8) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBDark2_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBDark2C_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBDark2_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBDark2C_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBDark2_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBDark2C_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBDark2_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBDark2C_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBDark2_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBDark2C_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBDark2_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBDark2C_08_50.png]]
+  - =csCBGnBu= (3-9) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBGnBu_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBGnBuC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBGnBu_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBGnBuC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBGnBu_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBGnBuC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBGnBu_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBGnBuC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBGnBu_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBGnBuC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBGnBu_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBGnBuC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBGnBu_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBGnBuC_09_50.png]]
+  - =csCBGreens= (3-9) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBGreens_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBGreensC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBGreens_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBGreensC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBGreens_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBGreensC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBGreens_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBGreensC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBGreens_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBGreensC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBGreens_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBGreensC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBGreens_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBGreensC_09_50.png]]
+  - =csCBGreys= (3-9) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBGreys_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBGreysC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBGreys_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBGreysC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBGreys_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBGreysC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBGreys_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBGreysC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBGreys_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBGreysC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBGreys_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBGreysC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBGreys_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBGreysC_09_50.png]]
+  - =csCBOranges= (3-9) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBOranges_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBOrangesC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBOranges_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBOrangesC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBOranges_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBOrangesC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBOranges_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBOrangesC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBOranges_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBOrangesC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBOranges_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBOrangesC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBOranges_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBOrangesC_09_50.png]]
+  - =csCBOrRd= (3-9) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBOrRd_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBOrRdC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBOrRd_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBOrRdC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBOrRd_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBOrRdC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBOrRd_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBOrRdC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBOrRd_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBOrRdC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBOrRd_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBOrRdC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBOrRd_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBOrRdC_09_50.png]]
+  - =csCBPaired= (3-12) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBPaired_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPairedC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBPaired_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPairedC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBPaired_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPairedC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBPaired_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPairedC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBPaired_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPairedC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBPaired_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPairedC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBPaired_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPairedC_09_50.png]] \\
+    =10= [[./pics/cs/color_lut_docs_csCBPaired_10_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPairedC_10_50.png]] \\
+    =11= [[./pics/cs/color_lut_docs_csCBPaired_11_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPairedC_11_50.png]] \\
+    =12= [[./pics/cs/color_lut_docs_csCBPaired_12_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPairedC_12_50.png]]
+  - =csCBPastel1= (3-9) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBPastel1_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPastel1C_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBPastel1_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPastel1C_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBPastel1_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPastel1C_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBPastel1_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPastel1C_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBPastel1_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPastel1C_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBPastel1_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPastel1C_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBPastel1_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPastel1C_09_50.png]]
+  - =csCBPastel2= (3-9) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBPastel2_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPastel2C_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBPastel2_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPastel2C_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBPastel2_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPastel2C_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBPastel2_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPastel2C_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBPastel2_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPastel2C_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBPastel2_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPastel2C_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBPastel2_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPastel2C_09_50.png]]
+  - =csCBPiYG= (3-11) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBPiYG_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPiYGC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBPiYG_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPiYGC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBPiYG_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPiYGC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBPiYG_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPiYGC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBPiYG_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPiYGC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBPiYG_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPiYGC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBPiYG_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPiYGC_09_50.png]] \\
+    =10= [[./pics/cs/color_lut_docs_csCBPiYG_10_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPiYGC_10_50.png]] \\
+    =11= [[./pics/cs/color_lut_docs_csCBPiYG_11_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPiYGC_11_50.png]] 
+  - =csCBPRGn= (3-11) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBPRGn_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPRGnC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBPRGn_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPRGnC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBPRGn_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPRGnC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBPRGn_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPRGnC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBPRGn_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPRGnC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBPRGn_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPRGnC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBPRGn_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPRGnC_09_50.png]] \\
+    =10= [[./pics/cs/color_lut_docs_csCBPRGn_10_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPRGnC_10_50.png]] \\
+    =11= [[./pics/cs/color_lut_docs_csCBPRGn_11_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPRGnC_11_50.png]] 
+  - =csCBPuBuGn= (3-9) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBPuBuGn_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuBuGnC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBPuBuGn_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuBuGnC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBPuBuGn_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuBuGnC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBPuBuGn_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuBuGnC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBPuBuGn_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuBuGnC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBPuBuGn_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuBuGnC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBPuBuGn_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuBuGnC_09_50.png]] 
+  - =csCBPuBu= (3-9) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBPuBu_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuBuC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBPuBu_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuBuC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBPuBu_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuBuC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBPuBu_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuBuC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBPuBu_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuBuC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBPuBu_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuBuC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBPuBu_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuBuC_09_50.png]] 
+  - =csCBPuOr= (3-11) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBPuOr_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuOrC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBPuOr_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuOrC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBPuOr_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuOrC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBPuOr_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuOrC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBPuOr_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuOrC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBPuOr_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuOrC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBPuOr_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuOrC_09_50.png]] \\
+    =10= [[./pics/cs/color_lut_docs_csCBPuOr_10_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuOrC_10_50.png]] \\
+    =11= [[./pics/cs/color_lut_docs_csCBPuOr_11_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuOrC_11_50.png]] 
+  - =csCBPuRd= (3-9) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBPuRd_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuRdC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBPuRd_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuRdC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBPuRd_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuRdC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBPuRd_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuRdC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBPuRd_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuRdC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBPuRd_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuRdC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBPuRd_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPuRdC_09_50.png]] 
+  - =csCBPurples= (3-9) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBPurples_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPurplesC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBPurples_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPurplesC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBPurples_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPurplesC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBPurples_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPurplesC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBPurples_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPurplesC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBPurples_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPurplesC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBPurples_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBPurplesC_09_50.png]] 
+  - =csCBRdBu= (3-11) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBRdBu_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdBuC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBRdBu_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdBuC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBRdBu_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdBuC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBRdBu_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdBuC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBRdBu_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdBuC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBRdBu_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdBuC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBRdBu_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdBuC_09_50.png]] \\
+    =10= [[./pics/cs/color_lut_docs_csCBRdBu_10_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdBuC_10_50.png]] \\
+    =11= [[./pics/cs/color_lut_docs_csCBRdBu_11_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdBuC_11_50.png]] 
+  - =csCBRdGy= (3-11) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBRdGy_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdGyC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBRdGy_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdGyC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBRdGy_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdGyC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBRdGy_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdGyC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBRdGy_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdGyC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBRdGy_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdGyC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBRdGy_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdGyC_09_50.png]] \\
+    =10= [[./pics/cs/color_lut_docs_csCBRdGy_10_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdGyC_10_50.png]] \\
+    =11= [[./pics/cs/color_lut_docs_csCBRdGy_11_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdGyC_11_50.png]] 
+  - =csCBRdPu= (3-9) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBRdPu_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdPuC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBRdPu_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdPuC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBRdPu_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdPuC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBRdPu_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdPuC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBRdPu_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdPuC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBRdPu_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdPuC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBRdPu_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdPuC_09_50.png]] 
+  - =csCBRdYlBu= (3-11) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBRdYlBu_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdYlBuC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBRdYlBu_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdYlBuC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBRdYlBu_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdYlBuC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBRdYlBu_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdYlBuC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBRdYlBu_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdYlBuC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBRdYlBu_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdYlBuC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBRdYlBu_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdYlBuC_09_50.png]] \\
+    =10= [[./pics/cs/color_lut_docs_csCBRdYlBu_10_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdYlBuC_10_50.png]] \\
+    =11= [[./pics/cs/color_lut_docs_csCBRdYlBu_11_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdYlBuC_11_50.png]] 
+  - =csCBRdYlGn= (3-11) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBRdYlGn_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdYlGnC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBRdYlGn_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdYlGnC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBRdYlGn_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdYlGnC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBRdYlGn_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdYlGnC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBRdYlGn_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdYlGnC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBRdYlGn_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdYlGnC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBRdYlGn_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdYlGnC_09_50.png]] \\
+    =10= [[./pics/cs/color_lut_docs_csCBRdYlGn_10_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdYlGnC_10_50.png]] \\
+    =11= [[./pics/cs/color_lut_docs_csCBRdYlGn_11_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRdYlGnC_11_50.png]] 
+  - =csCBReds= (3-9) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBReds_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRedsC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBReds_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRedsC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBReds_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRedsC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBReds_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRedsC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBReds_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRedsC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBReds_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRedsC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBReds_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBRedsC_09_50.png]] 
+  - =csCBSet1= (3-9) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBSet1_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet1C_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBSet1_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet1C_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBSet1_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet1C_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBSet1_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet1C_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBSet1_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet1C_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBSet1_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet1C_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBSet1_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet1C_09_50.png]] 
+  - =csCBSet2= (3-8) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBSet2_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet2C_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBSet2_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet2C_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBSet2_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet2C_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBSet2_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet2C_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBSet2_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet2C_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBSet2_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet2C_08_50.png]] 
+  - =csCBSet3= (3-12) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBSet3_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet3C_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBSet3_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet3C_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBSet3_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet3C_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBSet3_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet3C_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBSet3_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet3C_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBSet3_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet3C_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBSet3_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet3C_09_50.png]] \\
+    =10= [[./pics/cs/color_lut_docs_csCBSet3_10_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet3C_10_50.png]] \\
+    =11= [[./pics/cs/color_lut_docs_csCBSet3_11_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet3C_11_50.png]] \\
+    =12= [[./pics/cs/color_lut_docs_csCBSet3_12_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSet3C_12_50.png]]
+  - =csCBSpectral= (3-11) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBSpectral_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSpectralC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBSpectral_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSpectralC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBSpectral_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSpectralC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBSpectral_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSpectralC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBSpectral_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSpectralC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBSpectral_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSpectralC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBSpectral_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSpectralC_09_50.png]] \\
+    =10= [[./pics/cs/color_lut_docs_csCBSpectral_10_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSpectralC_10_50.png]] \\
+    =11= [[./pics/cs/color_lut_docs_csCBSpectral_11_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBSpectralC_11_50.png]] 
+  - =csCBYlGnBu= (3-9) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBYlGnBu_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlGnBuC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBYlGnBu_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlGnBuC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBYlGnBu_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlGnBuC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBYlGnBu_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlGnBuC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBYlGnBu_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlGnBuC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBYlGnBu_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlGnBuC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBYlGnBu_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlGnBuC_09_50.png]] 
+  - =csCBYlGn= (3-9) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBYlGn_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlGnC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBYlGn_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlGnC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBYlGn_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlGnC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBYlGn_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlGnC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBYlGn_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlGnC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBYlGn_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlGnC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBYlGn_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlGnC_09_50.png]] 
+  - =csCBYlOrBr= (3-9) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBYlOrBr_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlOrBrC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBYlOrBr_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlOrBrC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBYlOrBr_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlOrBrC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBYlOrBr_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlOrBrC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBYlOrBr_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlOrBrC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBYlOrBr_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlOrBrC_08_50.png]] \\
+    =09= [[./pics/cs/color_lut_docs_csCBYlOrBr_09_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlOrBrC_09_50.png]] 
+  - =csCBYlOrRd= (3-8) :: \\
+    =03= [[./pics/cs/color_lut_docs_csCBYlOrRd_03_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlOrRdC_03_50.png]] \\
+    =04= [[./pics/cs/color_lut_docs_csCBYlOrRd_04_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlOrRdC_04_50.png]] \\
+    =05= [[./pics/cs/color_lut_docs_csCBYlOrRd_05_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlOrRdC_05_50.png]] \\
+    =06= [[./pics/cs/color_lut_docs_csCBYlOrRd_06_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlOrRdC_06_50.png]] \\
+    =07= [[./pics/cs/color_lut_docs_csCBYlOrRd_07_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlOrRdC_07_50.png]] \\
+    =08= [[./pics/cs/color_lut_docs_csCBYlOrRd_08_50.png]]  \\
+    =--= [[./pics/cs/color_lut_docs_csCBYlOrRdC_08_50.png]] 
 
 * Web Safe & Color Blind Pallets
 :PROPERTIES:
@@ -897,7 +1356,7 @@ Note =csCubeHelix_tpl= with very small amplitude produces greys similar to =csPG
     [[./pics/cs/color_lut_docs_csPGrey3x_50.png]]
   - =csPGrey4x= :: \\
     [[./pics/cs/color_lut_docs_csPGrey4x_50.png]]
-  - =csCBGreys= :: \\
+  - =csCBGreys= (illustrated with 9 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBGreys_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBGreysC_50.png]]
   - =csBin01= :: \\
@@ -958,31 +1417,31 @@ Note =csPLY_tpl= can be used to make circular color schemes -- any closed parame
   - =csFPmplBrBG= :: \\
     [[./pics/cs/color_lut_docs_csFPmplBrBG_50.png]] \\
     [[./pics/cs/color_lut_docs_csFPmplBrBGC_50.png]]
-  - =csCBBrBG= :: \\
+  - =csCBBrBG= (illustrated with 11 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBBrBG_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBBrBGC_50.png]]
-  - =csCBPuOr= :: \\
+  - =csCBPuOr= (illustrated with 11 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBPuOr_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBPuOrC_50.png]]
-  - =csCBPiYG= :: \\
+  - =csCBPiYG= (illustrated with 11 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBPiYG_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBPiYGC_50.png]]
-  - =csCBPRGn= :: \\
+  - =csCBPRGn= (illustrated with 11 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBPRGn_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBPRGnC_50.png]]
-  - =csCBRdBu= :: \\
+  - =csCBRdBu= (illustrated with 11 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBRdBu_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBRdBuC_50.png]]
-  - =csCBRdGy= :: \\
+  - =csCBRdGy= (illustrated with 11 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBRdGy_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBRdGyC_50.png]]
-  - =csCBRdYlGn= :: \\
+  - =csCBRdYlGn= (illustrated with 11 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBRdYlGn_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBRdYlGnC_50.png]]
-  - =csCBRdYlBu= :: \\
+  - =csCBRdYlBu= (illustrated with 11 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBRdYlBu_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBRdYlBuC_50.png]]
-  - =csCBSpectral= :: \\
+  - =csCBSpectral= (illustrated with 11 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBSpectral_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBSpectralC_50.png]]
   - =csCCdivBWR= :: \\
@@ -995,15 +1454,15 @@ Note =csPLY_tpl= can be used to make circular color schemes -- any closed parame
 :CUSTOM_ID: xRefQual
 :END:
 
-  - =csCBDark2= :: \\
+  - =csCBDark2= (illustrated with 8 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBDark2_50.png]]
-  - =csCBPaired= :: \\
+  - =csCBPaired= (illustrated with 12 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBPaired_50.png]]
-  - =csCBSet1= :: \\
+  - =csCBSet1= (illustrated with 9 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBSet1_50.png]]
-  - =csCBSet2= :: \\
+  - =csCBSet2= (illustrated with 8 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBSet2_50.png]]
-  - =csCBSet3= :: \\
+  - =csCBSet3= (illustrated with 12 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBSet3_50.png]]
 
 ** Sequential
@@ -1011,56 +1470,55 @@ Note =csPLY_tpl= can be used to make circular color schemes -- any closed parame
 :CUSTOM_ID: xRefSeq
 :END:
 
-  - =csCBBlues= :: \\
+  - =csCBBlues= (illustrated with 9 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBBlues_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBBluesC_50.png]]
-
-  - =csCBBuGn= :: \\
+  - =csCBBuGn= (illustrated with 9 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBBuGn_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBBuGnC_50.png]]
-  - =csCBBuPu= :: \\
+  - =csCBBuPu= (illustrated with 9 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBBuPu_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBBuPuC_50.png]]
-  - =csCBGnBu= :: \\
+  - =csCBGnBu= (illustrated with 9 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBGnBu_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBGnBuC_50.png]]
-  - =csCBGreens= :: \\
+  - =csCBGreens= (illustrated with 9 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBGreens_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBGreensC_50.png]]
-  - =csCBGreys= :: \\
+  - =csCBGreys= (illustrated with 9 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBGreys_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBGreysC_50.png]]
-  - =csCBOranges= :: \\
+  - =csCBOranges= (illustrated with 9 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBOranges_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBOrangesC_50.png]]
-  - =csCBPuBuGn= :: \\
+  - =csCBPuBuGn= (illustrated with 9 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBPuBuGn_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBPuBuGnC_50.png]]
-  - =csCBPuBu= :: \\
+  - =csCBPuBu= (illustrated with 9 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBPuBu_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBPuBuC_50.png]]
-  - =csCBPuRd= :: \\
+  - =csCBPuRd= (illustrated with 9 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBPuRd_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBPuRdC_50.png]]
-  - =csCBPurples= :: \\
+  - =csCBPurples= (illustrated with 9 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBPurples_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBPurplesC_50.png]]
-  - =csCBRdPu= :: \\
+  - =csCBRdPu= (illustrated with 9 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBRdPu_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBRdPuC_50.png]]
-  - =csCBReds= :: \\
+  - =csCBReds= (illustrated with 9 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBReds_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBRedsC_50.png]]
-  - =csCBYlGnBu= :: \\
+  - =csCBYlGnBu= (illustrated with 9 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBYlGnBu_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBYlGnBuC_50.png]]
-  - =csCBYlGn= :: \\
+  - =csCBYlGn= (illustrated with 9 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBYlGn_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBYlGnC_50.png]]
-  - =csCBYlOrBr= :: \\
+  - =csCBYlOrBr= (illustrated with 9 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBYlOrBr_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBYlOrBrC_50.png]]
-  - =csCBYlOrRd= :: \\
+  - =csCBYlOrRd= (illustrated with 8 colors) :: \\
     [[./pics/cs/color_lut_docs_csCBYlOrRd_50.png]] \\
     [[./pics/cs/color_lut_docs_csCBYlOrRdC_50.png]]
   - =csFPcmoceanAlgae= :: \\
@@ -1127,20 +1585,96 @@ make color_lut_docs && ./color_lut_docs.exe
 
 In this directory, we run the following to create PNGs:
 
-#+begin_src zsh
-for f in ../build/color_lut_docs_*.tiff(:r); do echo $f; nf=pics/cs/`basename $f`.png; convert $f.tiff $nf; done
+#+begin_src bash :results output verbatim
+for f in ../build/color_lut_docs_*.tiff; do 
+  echo $f; 
+  nf100=$(echo pics/cs/`basename $f` | sed 's/.tiff/.png/')
+  magick $f $nf100; 
+  nf50=$(echo pics/cs/`basename $f` | sed 's/.tiff/_50.png/')
+  magick $f -resize 50% $nf50; 
+done
 #+end_src
 
 #+RESULTS:
-| ../build/color_lut_docs_csCCwicB |
-| ../build/color_lut_docs_csCCwicC |
-| ../build/color_lut_docs_csCCwicG |
-| ../build/color_lut_docs_csCCwicM |
-| ../build/color_lut_docs_csCCwicR |
-| ../build/color_lut_docs_csCCwicY |
+#+begin_example
+../build/color_lut_docs_csCBAccent.tiff
+../build/color_lut_docs_csCBAccentC.tiff
+../build/color_lut_docs_csCBBlues.tiff
+../build/color_lut_docs_csCBBluesC.tiff
+../build/color_lut_docs_csCBBrBG.tiff
+../build/color_lut_docs_csCBBrBGC.tiff
+../build/color_lut_docs_csCBBuGn.tiff
+../build/color_lut_docs_csCBBuGnC.tiff
+../build/color_lut_docs_csCBBuPu.tiff
+../build/color_lut_docs_csCBBuPuC.tiff
+../build/color_lut_docs_csCBDark2.tiff
+../build/color_lut_docs_csCBDark2C.tiff
+../build/color_lut_docs_csCBGnBu.tiff
+../build/color_lut_docs_csCBGnBuC.tiff
+../build/color_lut_docs_csCBGreens.tiff
+../build/color_lut_docs_csCBGreensC.tiff
+../build/color_lut_docs_csCBGreys.tiff
+../build/color_lut_docs_csCBGreysC.tiff
+../build/color_lut_docs_csCBOrRd.tiff
+../build/color_lut_docs_csCBOrRdC.tiff
+../build/color_lut_docs_csCBOranges.tiff
+../build/color_lut_docs_csCBOrangesC.tiff
+../build/color_lut_docs_csCBPRGn.tiff
+../build/color_lut_docs_csCBPRGnC.tiff
+../build/color_lut_docs_csCBPaired.tiff
+../build/color_lut_docs_csCBPairedC.tiff
+../build/color_lut_docs_csCBPastel1.tiff
+../build/color_lut_docs_csCBPastel1C.tiff
+../build/color_lut_docs_csCBPastel2.tiff
+../build/color_lut_docs_csCBPastel2C.tiff
+../build/color_lut_docs_csCBPiYG.tiff
+../build/color_lut_docs_csCBPiYGC.tiff
+../build/color_lut_docs_csCBPuBu.tiff
+../build/color_lut_docs_csCBPuBuC.tiff
+../build/color_lut_docs_csCBPuBuGn.tiff
+../build/color_lut_docs_csCBPuBuGnC.tiff
+../build/color_lut_docs_csCBPuOr.tiff
+../build/color_lut_docs_csCBPuOrC.tiff
+../build/color_lut_docs_csCBPuRd.tiff
+../build/color_lut_docs_csCBPuRdC.tiff
+../build/color_lut_docs_csCBPurples.tiff
+../build/color_lut_docs_csCBPurplesC.tiff
+../build/color_lut_docs_csCBRdBu.tiff
+../build/color_lut_docs_csCBRdBuC.tiff
+../build/color_lut_docs_csCBRdGy.tiff
+../build/color_lut_docs_csCBRdGyC.tiff
+../build/color_lut_docs_csCBRdPu.tiff
+../build/color_lut_docs_csCBRdPuC.tiff
+../build/color_lut_docs_csCBRdYlBu.tiff
+../build/color_lut_docs_csCBRdYlBuC.tiff
+../build/color_lut_docs_csCBRdYlGn.tiff
+../build/color_lut_docs_csCBRdYlGnC.tiff
+../build/color_lut_docs_csCBReds.tiff
+../build/color_lut_docs_csCBRedsC.tiff
+../build/color_lut_docs_csCBSet1.tiff
+../build/color_lut_docs_csCBSet1C.tiff
+../build/color_lut_docs_csCBSet2.tiff
+../build/color_lut_docs_csCBSet2C.tiff
+../build/color_lut_docs_csCBSet3.tiff
+../build/color_lut_docs_csCBSet3C.tiff
+../build/color_lut_docs_csCBSpectral.tiff
+../build/color_lut_docs_csCBSpectralC.tiff
+../build/color_lut_docs_csCBYlGn.tiff
+../build/color_lut_docs_csCBYlGnBu.tiff
+../build/color_lut_docs_csCBYlGnBuC.tiff
+../build/color_lut_docs_csCBYlGnC.tiff
+../build/color_lut_docs_csCBYlOrBr.tiff
+../build/color_lut_docs_csCBYlOrBrC.tiff
+../build/color_lut_docs_csCBYlOrRd.tiff
+../build/color_lut_docs_csCBYlOrRdC.tiff
+#+end_example
 
 #+begin_src zsh
-for f in ../build/color_lut_docs_*.tiff(:r); do echo $f; nf=pics/cs/`basename $f`_50.png; convert -resize 50% $f.tiff $nf; done
+for f in ../build/color_lut_docs_*.tiff(:r); do 
+  echo $f; 
+  nf=pics/cs/`basename $f`_50.png; 
+  convert -resize 50% $f.tiff $nf; 
+done
 #+end_src
 
 #+RESULTS:
