@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-09-25 Wed 15:33 -->
+<!-- 2024-09-25 Wed 16:13 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster Color Schemes</title>
@@ -436,25 +436,25 @@ Not all color scheme classes have the same interface; however, the interfaces ar
 <ul class="org-ul">
 <li>The <code>c</code> methods come in pairs:
 <ul class="org-ul">
-<li>A <code>colorTpl</code> factory methodand that takes one or more arguments identifying the color within the color scheme
+<li>A <code>colorTpl</code> factory method and that takes one or more arguments identifying the color within the color scheme
 <ul class="org-ul">
 <li>The first argument is the color scheme selector used to select a color from the scheme:
 <ul class="org-ul">
-<li><b><code>csIntType csIdx</code>:</b> An integer "index" for descrete color schemes (like Colorbrewer schemes)</li>
-<li><b><code>csFltType csX</code>:</b>   A floating point value in [0, 1] used to select colors from continuous schemes (like gradiants)</li>
+<li><b><code>csIntType csIdx</code>:</b> An integer "index" for discrete color schemes (like Colorbrewer schemes)</li>
+<li><b><code>csFltType csX</code>:</b>   A floating point value in [0, 1] used to select colors from continuous schemes (like gradients)</li>
 <li><b><code>csNatType csVal</code>:</b> A <code>csFltType</code> or <code>csIntType</code> depending on the <code>clrChanT</code>.  Used as described above.</li>
 <li><b><code>colorTpl  csCol</code>:</b> A color object to be converted to a color.  See the <code>csHSLh*</code> schemes as an example.</li>
 <li><b><code>typename  csG</code>:</b>   A generic color selector used in a template</li>
 </ul></li>
-<li>The remaining arguments are generally used to specify some characterstic of the scheme itself.  Examples:
+<li>The remaining arguments are generally used to specify some characteristic of the scheme itself.  Examples:
 <ul class="org-ul">
 <li>A <code>numC</code> argument specifying the number of elements in a discrete scheme (like Colorbrewer schemes)</li>
-<li>The color match function based rainbow color schemes take an argument <code>interpMethod</code> specifiying an interpolation method. is</li>
+<li>The rainbow color schemes based on "color match functions" an argument <code>interpMethod</code> specifying an interpolation method.</li>
 </ul></li>
 </ul></li>
 <li>A method that takes a <code>colorTpl</code> as it's first argument, with the remaining arguments as in the factory method form of <code>c</code>.</li>
 </ul></li>
-<li>It is entirely possilbe that a color scheme object may have more than two <code>c</code> methods.  For example, <code>csCC*</code> color schemes have a pair of <code>c</code> methods
+<li>It is entirely possible that a color scheme object may have more than two <code>c</code> methods.  For example, <code>csCC*</code> color schemes have a pair of <code>c</code> methods
 taking integer color selectors and another pair taking a floating point color selectors.</li>
 </ul></li>
 </ul>

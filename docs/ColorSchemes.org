@@ -107,18 +107,18 @@ Not all color scheme classes have the same interface; however, the interfaces ar
       - These schemes have two members specifying the range for =numC=: =minNumC= & =maxNumC=.
   - *=c=:* methods are used to set colors
     - The =c= methods come in pairs:
-      - A =colorTpl= factory methodand that takes one or more arguments identifying the color within the color scheme
+      - A =colorTpl= factory method and that takes one or more arguments identifying the color within the color scheme
         - The first argument is the color scheme selector used to select a color from the scheme:
-          - *=csIntType csIdx=:* An integer "index" for descrete color schemes (like Colorbrewer schemes)
-          - *=csFltType csX=:*   A floating point value in [0, 1] used to select colors from continuous schemes (like gradiants)
+          - *=csIntType csIdx=:* An integer "index" for discrete color schemes (like Colorbrewer schemes)
+          - *=csFltType csX=:*   A floating point value in [0, 1] used to select colors from continuous schemes (like gradients)
           - *=csNatType csVal=:* A =csFltType= or =csIntType= depending on the =clrChanT=.  Used as described above.
           - *=colorTpl  csCol=:* A color object to be converted to a color.  See the =csHSLh*= schemes as an example.
           - *=typename  csG=:*   A generic color selector used in a template
-        - The remaining arguments are generally used to specify some characterstic of the scheme itself.  Examples:
+        - The remaining arguments are generally used to specify some characteristic of the scheme itself.  Examples:
           - A =numC= argument specifying the number of elements in a discrete scheme (like Colorbrewer schemes)
-          - The color match function based rainbow color schemes take an argument =interpMethod= specifiying an interpolation method. is
+          - The rainbow color schemes based on "color match functions" an argument =interpMethod= specifying an interpolation method.
       - A method that takes a =colorTpl= as it's first argument, with the remaining arguments as in the factory method form of =c=.
-    - It is entirely possilbe that a color scheme object may have more than two =c= methods.  For example, =csCC*= color schemes have a pair of =c= methods
+    - It is entirely possible that a color scheme object may have more than two =c= methods.  For example, =csCC*= color schemes have a pair of =c= methods
       taking integer color selectors and another pair taking a floating point color selectors.
 
 Many color schemes provide a number of colors that is a function of =chanStepMax=, which is directly related to the value of =clrChanT=.  For integral
