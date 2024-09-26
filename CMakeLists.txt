@@ -147,7 +147,7 @@ set(TARGETS_USE_OPENMP "mandelbrot_bm_cplx_openmp" "mandelbrot_precomp" "mandelb
                        "mandelbrot_distance" "mandelbrot_wave" "peterdejongM" "newton_orbits" "newton_simple" "newton_max_mod" "mandelbrot_pickover"
                        "mandelbrot_ltrap" "newton_max_back" "newton_min_angle" "mandelbrot_simple" 
                        "newton_half" "newton_vs" "newton_z6" "newton_modified" "newton_min_root" "newton_3updown" "newton_roter" "attracting_torus_shadowM"
-                       "laguerre_3updown" "laguerre_simple" "kalisetJ" "kalisetM1" "kalisetM2" "phoenix" "phoenixM")
+                       "laguerre_3updown" "laguerre_simple" "kalisetJ" "kalisetM1" "kalisetM2" "phoenix" "phoenixM" "phoenixM2")
 set(TARGETS_REQ_BTEST  "utest_colorTpl_ia64nGCC" "utest_colorTpl" "utest_ramCanvasTpl" "utest_mjrmath")
 set(TARGETS_REQ_SDL2   "displayImageSDL2")
 

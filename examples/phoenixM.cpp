@@ -1,11 +1,11 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      mandelbrot_simple.cpp
+ @file      phoenixM.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Create a Julia set movie.@EOL
+ @brief     Create a phoenix Julia set movie.@EOL
  @std       C++20
- @see       https://www.mitchr.me/SS/julia/index.html
+ @see       
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -27,11 +27,6 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
- @filedetails
-
-  Moves $c$ around a circle just a bit larger than the period 2 disk.  A GIF may be rendered from the frames like this:
-
-       time convert -delay 1 -loop 0 -dispose previous juliaM_???.tiff juliaM.gif
 */
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
@@ -63,9 +58,7 @@ int main(void) {
 
     const std::complex<double> c(0.566700, 0.00000);
     const std::complex<double> p(-0.50000+RADIUS*std::cos(angle),  0.00000+0*RADIUS*std::sin(angle));
-    
-    //mjr::ramCanvas3c8b theRamCanvas(WIDTH, HEIGHT, -1.35,  1.35, -1.35,  1.35);
-mjr::ramCanvas3c8b theRamCanvas(WIDTH, HEIGHT, -0.75, -0.5, 0.13, 0.32);
+    mjr::ramCanvas3c8b theRamCanvas(WIDTH, HEIGHT, -0.75, -0.5, 0.13, 0.32);
 
     for(int y=0;y<theRamCanvas.getNumPixY();y++) {
       for(int x=0;x<theRamCanvas.getNumPixX();x++) {

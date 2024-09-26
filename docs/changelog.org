@@ -56,6 +56,7 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
     - New
       - phoenix: Classic phoenix fractal
       - phoenixM: A movie of the classic phoenix fractal
+      - phoenixM2: Another movie of the classic phoenix fractal
     - Updated
       - color_lut_docs: Now generates images for all CB schemes
   - Miscellaneous
