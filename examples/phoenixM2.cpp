@@ -5,7 +5,10 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Create a phoenix Julia set movie.@EOL
  @std       C++20
- @see       
+ @see       Writeup with images: https://www.mitchr.me/SS/phoenix/
+ @see       MRaster repository: https://github.com/richmit/mraster/
+ @see       Doxygen documentation: https://www.mitchr.me/SS/mraster/doc-examples/autodocs/html/
+ @see       Related example: https://github.com/richmit/mraster/blob/master/examples/phoenix.cpp
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.

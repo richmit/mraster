@@ -5,7 +5,10 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Create a phoenix Julia set movie.@EOL
  @std       C++20
- @see       
+ @see       Writeup with images: https://www.mitchr.me/SS/phoenix/
+ @see       MRaster repository: https://github.com/richmit/mraster/
+ @see       Doxygen documentation: https://www.mitchr.me/SS/mraster/doc-examples/autodocs/html/
+ @see       Related example: https://github.com/richmit/mraster/blob/master/examples/phoenix.cpp
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -57,7 +60,7 @@ int main(void) {
     double angle = frame*(ANGMAX-ANGMIN)/NUMFRM+ANGMIN;
 
     const std::complex<double> c(0.566700, 0.00000);
-    const std::complex<double> p(-0.50000+RADIUS*std::cos(angle),  0.00000+0*RADIUS*std::sin(angle));
+    const std::complex<double> p(-0.50000+RADIUS*std::cos(angle),  0.00000);
     mjr::ramCanvas3c8b theRamCanvas(WIDTH, HEIGHT, -0.75, -0.5, 0.13, 0.32);
 
     for(int y=0;y<theRamCanvas.getNumPixY();y++) {
