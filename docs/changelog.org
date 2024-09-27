@@ -54,7 +54,8 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
     - ColorSchemes.html now has images for all CB schemes
   - Examples
     - New
-      - phoenix: Classic phoenix fractal
+      - phoenix: Classic phoenix fractal (escape time)
+      - phoenixD: Classic phoenix fractal (distance estimator)
       - phoenixM: A movie of the classic phoenix fractal
       - phoenixM2: Another movie of the classic phoenix fractal
     - Updated
