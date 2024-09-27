@@ -947,4 +947,64 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
   - A few cmake & build changes
   - A couple updates to the base library
 
+* Update next-tag.org                                              :noexport: 
 
+Part of my release process is to create a git tag for each release with the
+git-make-release.rb script.  That script uses the contents of a file named
+'next-tag.org' in the root of the git repository as the tag comment.  That
+file contains a title line and the contents of the section above named
+[[Changes On HEAD Since Last Release]].  The code below will:
+
+ - Load next-tag.org into a buffer
+ - Clear out the buffer
+ - Add a headline string to the file
+ - Add the contents of the [[Changes On HEAD Since Last Release]] section
+ - And leave the cursor on the headline
+
+#+BEGIN_SRC emacs-lisp :results code
+(let ((latest-text (org-element-map (org-element-parse-buffer)
+                       'headline
+                     (lambda (an-org-ele)
+                       (if (string-equal (org-element-property :CUSTOM_ID an-org-ele) "latest")
+                           (buffer-substring-no-properties
+                            (save-excursion
+                              (goto-char (org-element-property :begin an-org-ele))
+                              (org-end-of-meta-data)
+                              (point))
+                            (org-element-property :contents-end an-org-ele)))))))
+      (find-file "../next-tag.org")
+      (erase-buffer)
+      (goto-char (point-min))
+      (insert "VERSION HEADLINE\n\n")
+      (insert (car latest-text))
+      (goto-char (point-min)))
+#+END_SRC
+
+#+RESULTS:
+#+begin_src emacs-lisp
+1
+#+end_src
+
+* Changes On HEAD Since Last Release TEMPLATE                      :noexport:
+:PROPERTIES:
+:CUSTOM_ID: latest_TEMPLATE
+:END:
+  - Fixed Bugs
+    - N/A
+  - Known Issues
+    - N/A
+  - API breaking Changes
+    - N/A
+  - Deprecated functionality
+    - N/A
+  - New functionality
+    - N/A
+  - Documentation
+    - N/A
+  - Examples
+    - New
+      - N/A
+    - Updated
+      - N/A
+  - Miscellaneous
+    - N/A

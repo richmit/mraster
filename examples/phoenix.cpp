@@ -5,6 +5,9 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw Phoenix Julia set fractals.@EOL
  @std       C++20
+ @see       Doxygen documentation: https://www.mitchr.me/SS/mraster/doc-examples/autodocs/html/
+ @see       Writeup with images: https://www.mitchr.me/SS/phoenix/
+ @see       MRaster repository: https://github.com/richmit/mraster/
  @copyright
   @parblock
   Copyright (c) 2024, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
@@ -26,6 +29,31 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
+ @filedetails   
+
+  The Phoenix Fractal is given by the following iteration:
+
+    @f[ z_n = z_{n-1} + c + P\cdot z_{n-1} @f]
+
+  Where @f$ c @f$ and @f$ p @f$ are both complex parameters we may set as we wish.
+
+  This formula is iterated for each point in the complex plane (z) with the initial conditions:
+
+    @f[ \begin{align*}
+          z_{-1} & = \Im(z) + \Re(z)\cdot i \\
+          z_{-2} & = 0
+        \end{align*} @f] 
+
+  An exterior distance estimator is given by:
+
+    @f[ d_{n} = 2\cdot d_{n-1}\cdot z_{n-1} + P\cdot d_{n-2} @f]
+
+  With the initial conditions:
+
+    @f[ \begin{align*}
+          d_{-1} & = 1 \\
+          d_{-2} & = 0
+        \end{align*} @f] 
 */
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
