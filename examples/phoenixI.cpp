@@ -1,9 +1,9 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      phoenixD.cpp
+ @file      phoenixI.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Draw Phoenix Julia set fractals with distance estimator.@EOL
+ @brief     Draw Phoenix Julia set fractal insides with distance estimator.@EOL
  @std       C++20
  @see       Writeup with images: https://www.mitchr.me/SS/phoenix/
  @see       MRaster repository: https://github.com/richmit/mraster/
@@ -42,21 +42,19 @@ typedef mjr::ramCanvas3c8b::colorType ct;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 std::vector<std::array<double, 9>> params {
-  /*       cr,       ci,       pr,       pi,     k, x-min, x-max, y-min, y-max */
-  {  0.566700,  0.00000, -0.50000,  0.00000, 100.0, -1.35,  1.35, -1.35,  1.35}, //  0 
-  {  0.544992,  0.00000, -0.47000,  0.00000, 100.0, -1.35,  1.35, -1.35,  1.35}, //  1
-  {  0.269000,  0.00000,  0.00000,  0.01000, 100.0, -1.10,  1.10, -1.00,  1.00}, //  2
-  { -0.400000,  0.10000,  0.29550,  0.00000, 100.0, -1.10,  1.10, -1.50,  1.50}, //  3
-  {  0.400000,  0.00000, -0.25000,  0.00000, 100.0, -1.30,  1.20, -1.00,  1.00}, //  4
+  /*       cr,       ci,       pr,       pi,      k, x-min, x-max, y-min, y-max */
+  {  0.566700,  0.00000, -0.50000,  0.00000,  300.0, -1.35,  1.35, -1.35,  1.35}, //  0 
+  {  0.544992,  0.00000, -0.47000,  0.00000, 1000.0, -1.35,  1.35, -1.35,  1.35}, //  1
+  { -0.400000,  0.10000,  0.29550,  0.00000,  300.0, -1.10,  1.10, -1.50,  1.50}, //  2
 };
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const int    WIDTH  = 1920*4;
-  const int    HEIGHT = 1920*4;
+  const int    WIDTH  = 1920*4*4;
+  const int    HEIGHT = 1920*4*4;
   const int    NUMITR = 500;
-  const double MAXZ   = 4.0;
+  const double MAXZ   = 6.0;
 
 # pragma omp parallel for schedule(static,1)
   for(decltype(params.size()) j=0; j<params.size(); ++j) {
@@ -80,12 +78,13 @@ int main(void) {
           d1 = d;
           count++;
         }
-        if(count < NUMITR)
-          theRamCanvas.drawPoint(x, y, ct::csCCfractal0RYBCW::c(static_cast<ct::csIntType>(dst*params[j][4])));
+        if(std::norm(z1)<MAXZ)
+          theRamCanvas.drawPoint(x, y, ct::csCCfractal0RYBCW::c(static_cast<ct::csIntType>(std::log(std::abs(d1)+1)*params[j][4])));
       }
     }
-    theRamCanvas.writeTIFFfile("phoenixD_" + mjr::fmtInt(j, 2, '0') + ".tiff");
-    std::cout << "ITER(" << j <<  "): " << "DONE " << mxd << std::endl;
+    theRamCanvas.scaleDownMean(4);
+    theRamCanvas.writeTIFFfile("phoenixI_" + mjr::fmtInt(j, 2, '0') + ".tiff");
+    std::cout << "ITER(" << j <<  "): " << "DONE " << std::endl;
   }
 
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;

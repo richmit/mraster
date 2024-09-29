@@ -55,7 +55,8 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
   - Examples
     - New
       - phoenix: Classic phoenix fractal (escape time)
-      - phoenixD: Classic phoenix fractal (distance estimator)
+      - phoenixD: Classic phoenix fractal (distance estimator outside)
+      - phoenixI: Classic phoenix fractal (distance estimator inside)
       - phoenixM: A movie of the classic phoenix fractal
       - phoenixM2: Another movie of the classic phoenix fractal
     - Updated
