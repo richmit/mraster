@@ -139,7 +139,7 @@ set(TARGETS_REQ_NONE "BurningShip" "apollony" "apomorph" "bifurcation_diagram" "
                        "mandelbrot_potential" "mandelbrot_real_cfun" "mandelbrot_triangle" "multibrotMovie" "multibrotSnaps"
                        "peterdejong" "barrymartin" "tinkerbell" "tinkerbell_search"
                        "pickoverPopcorn" "sic" "sic_search" "sierpinski_triangle" "sprott2d" "test_draw_fonts" "test_images" "tippets" "tricorn"
-                       "tricornMovie" "types" "butterfly")
+                       "tricornMovie" "types" "butterfly" "LevyCurve")
 set(TARGETS_REQ_OPENGL "glut_image")
 set(TARGETS_REQ_TIFF   "brownianDiffusion" "displayImageSDL2" "dlaBrownian" "dlaDrift" "img_process" "test_interp_scale" "geomTfrm_LensDistortion"
                        "geomTfrm_Arb"  "geomTfrm_Rotate" "mandelbrot_precomp_p1")

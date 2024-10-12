@@ -54,6 +54,7 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
     - ColorSchemes.html now has images for all CB schemes
   - Examples
     - New
+      - LevyCurve: Levy Curve via chaos game
       - phoenix: Classic phoenix fractal (escape time)
       - phoenixD: Classic phoenix fractal (distance estimator outside)
       - phoenixI: Classic phoenix fractal (distance estimator inside)
