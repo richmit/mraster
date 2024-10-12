@@ -4,9 +4,8 @@
  @file      LevyCurve.cpp
  @author    Mitch Richling http://www.mitchr.me/
  @brief     Draws Levy Curve with the Chaos Game algorithm.@EOL
- @keywords  
  @std       C++23
- @see       
+ @see       https://www.mitchr.me/SS/LevyCurveChaosGame/index.html
  @copyright 
   @parblock
   Copyright (c) 2024, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.
@@ -30,8 +29,10 @@
     @endparblock
  @filedetails   
 
-  A chaos game that generates a Levy Curve.  Start at a random point.  Randomly select one of two transformations, and transform the point.  Repeat this
-  process with the new point.  The two transformations are given by:
+  A chaos game that generates a Levy Curve:
+
+  Start at a random point.  Randomly select one of two transformations, and transform the point.  Repeat this process with the new point.  The two
+  transformations are given by:
 
   @f[ \begin{array}{ll}
         T_1(\vec{x}) & =  \left[ {\begin{array}{rr}

@@ -27,6 +27,7 @@ Some examples of what can be done with *MRaster*:
   -  [[https://www.mitchr.me/SS/tinkerbell/index.html][Tinkerbell]]
   -  [[https://www.mitchr.me/SS/barrymartin/index.html][Hopalong Fractals]]
   -  [[https://www.mitchr.me/SS/ChaosGame/index.html][Chaos Game]]
+  -  [[https://www.mitchr.me/SS/LevyCurveChaosGame/index.html][Chaos Game Levy Curve]]
   -  [[https://www.mitchr.me/SS/AGasket/index.html][Apollonian Gasket]]
   -  [[https://www.mitchr.me/SS/atorus/index.html][Attracting Torus]]
   -  [[https://www.mitchr.me/SS/julia/index.html][Julia Sets]]
