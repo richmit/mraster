@@ -28,56 +28,66 @@
   @endparblock
  @filedetails
 
-     Maxima: f:sin(z); z-f/diff(f, z);
-
  Laguerre's method:
- \f[x_k\f]
- \f[G=\frac{f'(x_n)}{f(x_n)}\f]
- \f[H=G^2-\frac{f''(x_n)}{f(x_n)}\f]
- \f[a=\frac{n}{G+-\sqrt{(n-1)(nH-G^2)}}\f]
- \f[x_{n+1}=x_n-a\f]
+ @f[x_k@f]
+ @f[G=\frac{f'(x_n)}{f(x_n)}@f]
+ @f[H=G^2-\frac{f''(x_n)}{f(x_n)}@f]
+ @f[a=\frac{n}{G+-\sqrt{(n-1)(nH-G^2)}}@f]
+ @f[x_{n+1}=x_n-a@f]
 
-        f0v=f0(x)
-        if(abs(f0v)<eps) ERROR
-        f1v=f1(x)
-        f2v=f2(x)
-        G=f1v/f0v
-        G2=G*G
-        H=G2-f2v/f0v
-        sqr=(n-1)*(n*H-G2)
-        if(sqr<0) ERROR
-        sq=sqrt(sqr)
-        b1=G+sq
-        b2=G-sq
-        if(abs(b1)>abs(b2))
-          b=b1
-        else
-          b=b2
-        fi
-        if(abs(b)<eps) ERROR
-        a=n/b
-        x=x-a
+ @verbatim
+ f0v=f0(x)
+ if(abs(f0v)<eps) ERROR
+ f1v=f1(x)
+ f2v=f2(x)
+ G=f1v/f0v
+ G2=G*G
+ H=G2-f2v/f0v
+ sqr=(n-1)*(n*H-G2)
+ if(sqr<0) ERROR
+ sq=sqrt(sqr)
+ b1=G+sq
+ b2=G-sq
+ if(abs(b1)>abs(b2))
+   b=b1
+ else
+   b=b2
+ fi
+ if(abs(b)<eps) ERROR
+ a=n/b
+ x=x-a
+ @endverbatim
 
  Newton's
- \f[x=x-\frac{f(x_n)}{f'(x_n)}\f]
+ @f[x=x-\frac{f(x_n)}{f'(x_n)}@f]
 
-        f0v=f0(x)
-        f1v=f1(x)
-        if(abs(f1v)<eps) ERROR
-        x=x-f0v/f1v
+ @verbatim
+ f0v=f0(x)
+ f1v=f1(x)
+ if(abs(f1v)<eps) ERROR
+ x=x-f0v/f1v
+ @endverbatim
+
+ Maxima: 
+ @code{.maxima}
+ f:sin(z); 
+ z-f/diff(f, z);
+ @endcode
 
  Halley's
- \f[x_n-\frac{f(x_n)}{f'(x_n)}\left[1-\frac{f(x_n)}{f'(x_n)}\cdot\frac{f''(x_n)}{2f'(x_n)}\right]^{-1}\f]
+ @f[ x_n-\frac{f(x_n)}{f'(x_n)}\left[1-\frac{f(x_n)}{f'(x_n)}\cdot\frac{f''(x_n)}{2f'(x_n)}\right]^{-1} @f]
 
-        f0v=f0(x)
-        f1v=f1(x)
-        if(abs(f1v)<eps) ERROR
-        f2v=f2(x)
-        G=f0v/f1v
-        b=1-G*f2v/f1v
-        if(abs(b)<eps) ERROR
-        a=G/b
-         xnext=x-a
+ @verbatim
+ f0v=f0(x)
+ f1v=f1(x)
+ if(abs(f1v)<eps) ERROR
+ f2v=f2(x)
+ G=f0v/f1v
+ b=1-G*f2v/f1v
+ if(abs(b)<eps) ERROR
+ a=G/b
+ xnext=x-a
+ @endverbatim
 
 */
 /*******************************************************************************************************************************************************.H.E.**/
