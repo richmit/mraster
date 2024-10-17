@@ -29,12 +29,9 @@
   @endparblock
  @filedetails   
 
-  The standard Newton fractal is generated from \f$f=z^2-1\f$.  This function is continuous on the entire complex plain.  What do we get if we add poles
-  in imaginary axis mirror locations of the roots?  i.e. for each root \f$x+iy\f$ of \f$f\f$, we add a pole at \f$-x+iy\f$?  The corresponding function is:
-         \f[f=\frac{z^3-1}{z^3+1}\f]
-
-  The code has some commented out bits to add 6 poles on a circle of radius 0.5:
-         \f[f=\frac{z^3-1}{z^6+-\frac{1}{2}}\f]
+  The standard Newton fractal is generated from @f$f=z^2-1@f$.  This function is continuous on the entire complex plain.  What do we get if we add poles
+  in imaginary axis mirror locations of the roots?  i.e. for each root @f$x+iy@f$ of @f$f@f$, we add a pole at @f$-x+iy@f$?  The corresponding function is:
+         @f[f=\frac{z^3-1}{z^3+1}@f]
 */
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
