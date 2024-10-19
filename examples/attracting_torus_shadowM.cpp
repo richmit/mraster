@@ -1,10 +1,11 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      attracting_torus_shadow.cpp
+ @file      attracting_torus_shadowM.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw the intersection of the Attracting Torus Attractor with coordinate plains.@EOL
  @std       C++20
+ @see       attracting_torus_shadow.cpp
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.

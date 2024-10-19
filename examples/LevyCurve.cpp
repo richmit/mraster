@@ -57,19 +57,17 @@
 
   We can easily expand these transforms into C code with maxima:
 
-  #+BEGIN_SRC maxima
-
-                  A : matrix([.5,  .5], [-.5, .5]);
-                  B : matrix([.5, -.5], [ .5, .5]);
-                  C : matrix([-.5], [-.5]);
-                  X : matrix([x], [y]);
-                  display2d:false;
-                  A.X;
-                      matrix([0.5*y+0.5*x],[0.5*y-0.5*x])
-                  B.X+C;
-                      matrix([(-0.5*y)+0.5*x-0.5],[0.5*y+0.5*x-0.5])
-
-  #+END_SRC      
+  @code{.maxima}
+  A : matrix([.5,  .5], [-.5, .5]);
+  B : matrix([.5, -.5], [ .5, .5]);
+  C : matrix([-.5], [-.5]);
+  X : matrix([x], [y]);
+  display2d:false;
+  A.X;
+      matrix([0.5*y+0.5*x],[0.5*y-0.5*x])
+  B.X+C;
+      matrix([(-0.5*y)+0.5*x-0.5],[0.5*y+0.5*x-0.5])
+  @endcode
 */
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */

@@ -28,9 +28,19 @@
   @endparblock
  @filedetails   
 
-  I first came across this strange attractor in Sprott's book "Elegant Automation" where it is the topic of chapter 43 starting on page 311.  In that chapter,
-  on page 315, he has an image of the intersection of the attractor with the z=0 plain.  This program reproduces that image along with the intersections of
-  the x=0 & y=0 plain.  As a bonus we produce projections of the curve as well.
+  I first came across this strange attractor in Sprott's book "Elegant Automation" where it is the topic of chapter 43 starting on page 311.  The system is
+  given by the following system of equations:
+
+  @f[\begin{align*}
+     \frac{dx}{dt} & = a_1 y   \\
+     \frac{dy}{dt} & = -a_2 x - a_3 y z \\
+     \frac{dz}{dt} & = a_4 y^2 - a_5 + a_6 z
+   \end{align*}@f]
+
+  Typical values for the constants are @f$ a_1=a_2=a_3=a_4=1 @f$, @f$ a_5=4 @f$, and @f$ a_6=\frac{1}{10} @f$.
+
+  On page 315 of Sprott's book is an image of the intersection of the attractor with the  @f$ z=0 @f$ plane.  This program reproduces that image along with the
+  intersections of the @f$ x=0 @f$ & @f$ y=0 @f$ plane.  As a bonus we produce projections of the curve as well.
 
   Reference: 
     Sprott, Julien C. Elegant Automation: Robotic Analysis of Chaotic Systems. New Jersey: World Scientific, 2023.

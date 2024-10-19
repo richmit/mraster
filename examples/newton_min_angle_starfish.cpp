@@ -7,7 +7,7 @@
  @std       C++20
  @copyright
   @parblock
-  Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
+  Copyright (c) 2024, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -31,9 +31,9 @@
   We do the standard Newton iterations, but we keep track of the minimum phase angle difference between the three bisectors between the roots. The distances
   are used to set the r, g, b channels (i.e. distance to root 1/2 bisector is r, root 1/3 bisector is g, and root 2/3 bisector is b).
 
-  The standard Newton fractal is generated from @f$f=z^2-1@f$.  This function is continuous on the entire complex plain.  What do we get if we add poles
-  in imaginary axis mirror locations of the roots?  i.e. for each root @f$x+iy@f$ of @f$f@f$, we add a pole at @f$-x+iy@f$?  The corresponding function is:
-         @f[f=\frac{z^3-1}{z^3+1}@f]
+  The standard Newton fractal is generated from @f$ f=z^2-1 @f$.  This function is continuous on the entire complex plain.  What do we get if we add poles in
+  imaginary axis mirror locations of the roots?  i.e. for each root @f$ x+iy @f$ of @f$ f @f$, we add a pole at @f$ -x+iy @f$?  The corresponding function is:
+         @f[ f=\frac{z^3-1}{z^3+1} @f]
 */
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
