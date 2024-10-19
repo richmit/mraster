@@ -52,6 +52,7 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
     - N/A
   - Documentation
     - ColorSchemes.html now has images for all CB schemes
+    - Updated mathjax configuration for better security
   - Examples
     - New
       - newton_min_angle_starfish: Min angle newton with poles.
