@@ -53,8 +53,8 @@ std::vector<std::array<double, 9>> params {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const int    WIDTH  = 1920*4;
-  const int    HEIGHT = 1920*4;
+  const int    WIDTH  = 1920*1;
+  const int    HEIGHT = 1920*1;
   const int    NUMITR = 500;
   const double MAXZ   = 4.0;
 
@@ -81,11 +81,11 @@ int main(void) {
           count++;
         }
         if(count < NUMITR)
-          theRamCanvas.drawPoint(x, y, ct::csCCfractal0RYBCW::c(static_cast<ct::csIntType>(dst*params[j][4])));
+          theRamCanvas.drawPoint(x, y, ct::csCCfractal0RYBCW::c(static_cast<ct::csIntType>(std::log(std::abs(d1)+1)*params[j][4])));
       }
     }
-    theRamCanvas.writeTIFFfile("phoenixD_" + mjr::fmtInt(j, 2, '0') + ".tiff");
-    std::cout << "ITER(" << j <<  "): " << "DONE " << mxd << std::endl;
+    theRamCanvas.writeTIFFfile("phoenixD_" + mjr::math::str::fmt_int(j, 2, '0') + ".tiff");
+    std::cout << "ITER(" << j <<  "): " << "DONE " << std::endl;
   }
 
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
