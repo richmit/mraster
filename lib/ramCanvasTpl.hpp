@@ -206,7 +206,7 @@ namespace mjr {
           inline colorType getPxColorNC(typename inRamCanvasT::coordIntType x, typename inRamCanvasT::coordIntType y) { 
             typename outColorT::csIntType csi = static_cast<typename outColorT::csIntType>(rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).getChan(chan) * factor);
             if (clamp)
-              csi = mjr::intClamp(csi, colorScheme::numC-1);
+              csi = mjr::math::ivl::clamp(csi, colorScheme::numC-1);
             return colorScheme::c(csi); 
           }
       };
@@ -3789,8 +3789,8 @@ namespace mjr {
     ///////////////////////////////////////////////////////////////////////////////////////
 
     if(y1==y3) {                                        // cA-cG
-      minPts[y1] = mjr::min3(x1, x2, x3);               //
-      maxPts[y1] = mjr::max3(x1, x2, x3);               //
+      minPts[y1] = mjr::math::odr::min3(x1, x2, x3);    //
+      maxPts[y1] = mjr::math::odr::max3(x1, x2, x3);               //
     } else {                                            // cH-cS
       if(y1==y2) {                                      //   cH-cL
         if(x1==x2) {                                    //     cH-cJ
@@ -4749,8 +4749,8 @@ namespace mjr {
       for(intCrdT x=0; x<numPixX; x++) {
         double xT = (x-Xo);
         double yT = (y-Yo);
-        double xS = mjr::evalBiPoly(BiPolyX, xT, yT) / oScale + Xo;
-        double yS = mjr::evalBiPoly(BiPolyY, xT, yT) / oScale + Yo;
+        double xS = mjr::math::bply::eval(BiPolyX, xT, yT) / oScale + Xo;
+        double yS = mjr::math::bply::eval(BiPolyY, xT, yT) / oScale + Yo;
         if (isCliped(static_cast<intCrdT>(xS), static_cast<intCrdT>(yS))) {
           newRamCanvas.drawPointNC(x, y, errorColor);
         } else {

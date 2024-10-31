@@ -168,7 +168,7 @@ int main(void) {
       for(int xi=0;xi<theRamCanvas.getNumPixX();xi++) 
         anotherRamCanvas.drawPoint(xi, yi, cs_t::c(k * theRamCanvas.getPxColor(xi, yi).getC0() / static_cast<mjr::ramCanvas3c8b::csFltType>(maxII)));
 
-    anotherRamCanvas.writeTIFFfile("barrymartin_" + mjr::fmtInt(j, 2, '0') + ".tiff");
+    anotherRamCanvas.writeTIFFfile("barrymartin_" + mjr::math::str::fmt_int(j, 2, '0') + ".tiff");
   }
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;

@@ -93,7 +93,7 @@ int main() {
     std::cout << "apomorph dump" << std::endl;
     theRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmStdPow, 1/5.0);
 
-    theRamCanvas.writeTIFFfile("apomorph_" + mjr::fmtInt(frame, 3, '0') + ".tiff");
+    theRamCanvas.writeTIFFfile("apomorph_" + mjr::math::str::fmt_int(frame, 3, '0') + ".tiff");
     std::cout << "apomorph finish" << std::endl;
   }
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;

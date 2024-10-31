@@ -93,7 +93,7 @@ int main(void) {
     }
 
     // Dump a raw image
-    theRamCanvas.writeTIFFfile("peterdejongM_" + mjr::fmtInt(frame, 3, '0') + ".mrw");
+    theRamCanvas.writeTIFFfile("peterdejongM_" + mjr::math::str::fmt_int(frame, 3, '0') + ".mrw");
 
     // Root image transform
     theRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas1c16b::colorType::tfrmStdPow, 1.0/p);
@@ -106,7 +106,7 @@ int main(void) {
     for(int yi=0;yi<theRamCanvas.getNumPixY();yi++)
       for(int xi=0;xi<theRamCanvas.getNumPixX();xi++)
         anotherRamCanvas.drawPoint(xi, yi, bColor.cmpRGBcornerDGradiant(static_cast<mjr::ramCanvas3c8b::csIntType>(theRamCanvas.getPxColor(xi, yi).getC0() * 1275 / maxII), "0RYBCW"));
-    anotherRamCanvas.writeTIFFfile("peterdejongM_" + mjr::fmtInt(frame, 3, '0') + ".tiff");
+    anotherRamCanvas.writeTIFFfile("peterdejongM_" + mjr::math::str::fmt_int(frame, 3, '0') + ".tiff");
 
   }
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;

@@ -88,7 +88,7 @@ void drawLevelCurves(int numBand, drT bandWidth, drT zMin, drT zMax, drT minReal
         theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType(0, 255, 0));
         } else {
           if(numBand == 0) {
-            clr = static_cast<mjr::ramCanvas3c8b::csIntType>(mjr::genLinMap(fxy, zMin, zMax, (drT)0, (drT)(255*4+1)));
+            clr = static_cast<mjr::ramCanvas3c8b::csIntType>(mjr::math::linm::gen_map(fxy, zMin, zMax, (drT)0, (drT)(255*4+1)));
             theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType::csCColdeIceToWaterToHot::c(clr));
           } else {
             if(bandWidth == 0) {
@@ -104,7 +104,7 @@ void drawLevelCurves(int numBand, drT bandWidth, drT zMin, drT zMax, drT minReal
                 }
               }
               if(foundBand) {
-                clr = static_cast<mjr::ramCanvas3c8b::csIntType>(mjr::genLinMap(minBand, zMin, zMax, (drT)0, (drT)(255*4+1)));
+                clr = static_cast<mjr::ramCanvas3c8b::csIntType>(mjr::math::linm::gen_map(minBand, zMin, zMax, (drT)0, (drT)(255*4+1)));
                 theRamCanvas.setDfltColor(mjr::ramCanvas3c8b::colorType::csCColdeIceToWaterToHot::c(clr));
               }
             } else {

@@ -1,7 +1,9 @@
 ######################################################################################################################################################
 ######################################################################################################################################################
 cmake_minimum_required(VERSION 3.20.0 FATAL_ERROR)
+
 set(OpenGL_GL_PREFERENCE "GLVND") # Alternative
+set(CMAKE_CXX_EXTENSIONS ON)
 
 ######################################################################################################################################################
 # Proejct meta data
@@ -18,13 +20,13 @@ mark_as_advanced(MRASTER_VERSION_DATE)
 ######################################################################################################################################################
 # Here are the options we use to modify the build -- these options are passed to cmake like so: cmake -DO_OPENSSL=YES or -DO_OPENSSL=NO
 
-OPTION(O_DOXYGEN "Include support for doxygen"                   ON )
-OPTION(O_TIFF    "Include support for libTIFF"                   ON )
-OPTION(O_OPENGL  "Include support for OpenGL & GLUT"             ON )
-OPTION(O_OPENMP  "Include support for OpenMP"                    ON )
-OPTION(O_BTEST   "Include support for boost.test"                ON )
-OPTION(O_SDL2    "Include support for SDL2"                      ON )
-OPTION(O_128_INT "Include support for 128-bit ints if possible"  ON )
+OPTION(O_DOXYGEN "Doxygen support (documentation)"        ON )
+OPTION(O_BTEST   "boost.test support (unit tests)"        ON )
+OPTION(O_TIFF    "libTIFF support (Advanced TIFF writer)" ON )
+OPTION(O_OPENGL  "OpenGL & GLUT support"                  ON )
+OPTION(O_OPENMP  "OpenMP support"                         ON )
+OPTION(O_SDL2    "SDL2 support"                           ON )
+OPTION(O_128_INT "128-bit integer support"                ON )
 
 ######################################################################################################################################################
 # Find tools & libraries used to build primary/secondary/tertiary targets.  Set config include file variables for options.
@@ -128,6 +130,38 @@ endif()
 mark_as_advanced(MRASTER_FOUND_DOXYGEN MRASTER_FOUND_TIFF MRASTER_FOUND_OPENGL MRASTER_FOUND_OPENMP MRASTER_FOUND_SDL2 MRASTER_FOUND_BTEST)
 
 ######################################################################################################################################################
+# Find MRMathCPP (MR Math CPP) -- this one is requierd!
+find_package(MRMathCPP QUIET)
+if(MRMathCPP_FOUND)
+  message(STATUS "MRMathCPP Search: Found: System package (i.e. on given cmake path)")
+else()
+  find_package(MRMathCPP QUIET HINTS "./MRMathCPP/build/install/share/cmake/MRMathCPP/" "../MRMathCPP/build/install/share/cmake/MRMathCPP/" )
+  if(MRMathCPP_FOUND)
+    message(STATUS "MRMathCPP Search: Found: Package installed in build tree")
+  else()
+    find_package(MRMathCPP QUIET HINTS "./MRMathCPP/build/" "../MRMathCPP/build/")
+    if(MRMathCPP_FOUND)
+      message(STATUS "MRMathCPP Search: Found: Package in build tree")
+    else()
+      find_file (MRMATHCPP_PATH "CMakeLists.txt" PATHS "MRMathCPP"  "../MRMathCPP")
+      if(NOT MRMATHCPP_PATH STREQUAL "MRMATHCPP_PATH-NOTFOUND")
+        cmake_path(GET MRMATHCPP_PATH PARENT_PATH MRMATHCPP_PATH)
+        if(EXISTS "${MRMATHCPP_PATH}/build/MRMathCPPLib.cmake")
+          message(STATUS "MRMathCPP Search: Found: Exported")
+          include("${MRMATHCPP_PATH}/build/MRMathCPPLib.cmake")
+        elseif(EXISTS "${MRMATHCPP_PATH}/lib/MRMathCPP.hpp")
+          message(STATUS "MRMathCPP Search: Found: Source code (headers)")
+        else()
+          message(ERROR "MRMathCPP Search: Failed: Git repo found, but no include files!!!")
+        endif()
+      else()
+          message(ERROR "MRMathCPP Search: Failed: Found nothing")
+      endif()
+    endif()
+  endif()
+endif()
+
+######################################################################################################################################################
 
 set(TARGETS_REQ_NONE "BurningShip" "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "biomorph2" "biomorphMorph" "bmark" "chaos_game" "circles"
                        "collatz" "color_all" "color_interp_hsl_vs_rgb" "color_lut_cubehelix" "color_lut_docs" "color_lut_indexed"
@@ -148,7 +182,7 @@ set(TARGETS_USE_OPENMP "mandelbrot_bm_cplx_openmp" "mandelbrot_precomp" "mandelb
                        "mandelbrot_ltrap" "newton_max_back" "newton_min_angle" "mandelbrot_simple" "newton_min_angle_starfish"
                        "newton_half" "newton_vs" "newton_z6" "newton_modified" "newton_min_root" "newton_3updown" "newton_roter" "attracting_torus_shadowM"
                        "laguerre_3updown" "laguerre_simple" "kalisetJ" "kalisetM1" "kalisetM2" "phoenix" "phoenixI" "phoenixD" "phoenixM" "phoenixM2")
-set(TARGETS_REQ_BTEST  "utest_colorTpl_ia64nGCC" "utest_colorTpl" "utest_ramCanvasTpl" "utest_mjrmath")
+set(TARGETS_REQ_BTEST  "utest_colorTpl_ia64nGCC" "utest_colorTpl" "utest_ramCanvasTpl")
 set(TARGETS_REQ_SDL2   "displayImageSDL2")
 
 # Construct list of targets we can build
@@ -219,6 +253,10 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
   target_compile_features(${CURTGT} PUBLIC cxx_std_20)
   target_include_directories(${CURTGT} BEFORE PRIVATE ${CMAKE_BINARY_DIR})
 
+  IF(O_128_INT)
+    target_compile_options(${CURTGT} PUBLIC "-DMRASTER_OPT_128_INT=1")
+  endif()
+
   if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     target_compile_options(${CURTGT} PUBLIC -Wstrict-overflow=0)
     target_compile_options(${CURTGT} PUBLIC -ffast-math)
@@ -245,10 +283,16 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
     #message("Warning: MSVC support is currently experimental")
   endif()
 
+  if(MRMathCPP_FOUND)
+    target_link_libraries(${CURTGT} PRIVATE MRMathCPP)
+  else()
+    target_include_directories(${CURTGT} PRIVATE "${MRMATHCPP_PATH}/lib")
+  endif()
+
   # Add build requirements for examples using Boost Test
   list (FIND TARGETS_REQ_BTEST ${CURTGT} TMPR)
   if((Boost_FOUND) AND (${TMPR} GREATER -1))
-    target_link_libraries(${CURTGT} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+    target_link_libraries(${CURTGT} PRIVATE ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
   endif()
 
   # Add build requirements for examples using OpenGL
@@ -259,7 +303,7 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
       target_link_options(${CURTGT} PUBLIC "-Wl,-subsystem,windows")
     endif()
     target_include_directories(${CURTGT} PRIVATE ${OPENGL_INCLUDE_DIRS}  ${GLUT_INCLUDE_DIR} )
-    target_link_libraries(${CURTGT} ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
+    target_link_libraries(${CURTGT} PRIVATE ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
   endif()
 
   # Add builtd requirements for examples using OpenMP
@@ -267,7 +311,7 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
   if (OPENMP_FOUND AND (${TMPR} GREATER -1))
     target_compile_options(${CURTGT} PUBLIC ${OpenMP_CXX_FLAGS})
     target_include_directories(${CURTGT} PRIVATE ${OpenMP_INCLUDE_PATH})
-    target_link_libraries(${CURTGT} ${OpenMP_CXX_LIBRARIES}) # ${PROJECT_LINK_LIBS}).
+    target_link_libraries(${CURTGT} PRIVATE ${OpenMP_CXX_LIBRARIES}) # ${PROJECT_LINK_LIBS}).
   endif()
 
   # Add build requirements for examples using libTIFF
@@ -275,7 +319,7 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
   if(TIFF_FOUND AND (${TMPR} GREATER -1))
     target_compile_definitions(${CURTGT} PUBLIC MRASTER_FOUND_TIFF=1)
     target_include_directories(${CURTGT} PRIVATE ${TIFF_INCLUDE_DIRS})
-    target_link_libraries(${CURTGT} ${TIFF_LIBRARIES})
+    target_link_libraries(${CURTGT} PRIVATE ${TIFF_LIBRARIES})
   endif()
 
   # Add build requirements for examples using SDL2
@@ -286,14 +330,14 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
       target_link_options(${CURTGT} PUBLIC "-Wl,-subsystem,windows")
     endif()
     target_include_directories(${CURTGT} PRIVATE ${SDL2_INCLUDE_DIRS})
-    target_link_libraries(${CURTGT} ${SDL2_LIBRARIES})
+    target_link_libraries(${CURTGT} PRIVATE ${SDL2_LIBRARIES})
   endif()
 endforeach(CURTGT)
 
 # The circles target needs drawing mode support
 target_compile_definitions(circles PUBLIC SUPPORT_DRAWING_MODE=1)
 
-# Suppress GCC maybe-uninitialized warnings for level_curves
+  # Suppress GCC maybe-uninitialized warnings for level_curves
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   target_compile_options(level_curves PRIVATE -Wno-maybe-uninitialized)
 endif()
@@ -355,7 +399,6 @@ set(MRASTER_INCLUDES "build/mraster_config.hpp"
                      "lib/MRcolor.hpp" 
                      "lib/MRcolorTpl.hpp"
                      "lib/hersheyFont.hpp"
-                     "lib/mjrmath.hpp"
                      "lib/MRpoint2d.hpp"
                      "lib/ramCanvas.hpp"
                      "lib/ramCanvasTpl.hpp")

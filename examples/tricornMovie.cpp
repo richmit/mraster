@@ -63,7 +63,7 @@ int main(void) {
           theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType::csCColdeFireRamp::c(static_cast<mjr::ramCanvas3c8b::csIntType>(count*20*std::log(p))));
       }
     }
-    theRamCanvas.writeTIFFfile("tricornMovie_" + mjr::fmtInt(f, 3, '0') + ".tiff");
+    theRamCanvas.writeTIFFfile("tricornMovie_" + mjr::math::str::fmt_int(f, 3, '0') + ".tiff");
     std::chrono::duration<double> frameRunTime = std::chrono::system_clock::now() - frameStartTime;
     std::cout << "Frame " << f << " Runtime " << frameRunTime.count() << " sec" << std::endl;
   }

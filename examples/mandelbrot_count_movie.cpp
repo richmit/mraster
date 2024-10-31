@@ -90,7 +90,7 @@ int main(void) {
           theRamCanvas.drawPoint(x, y, ct::csCColdeFireRamp::c(static_cast<ct::csFltType>(COLMAG*count)/curMaxItr));
       }
     }
-    theRamCanvas.writeTIFFfile("mandelbrot_count_movie_" + mjr::fmtInt(frame, 3, '0') + ".tiff");
+    theRamCanvas.writeTIFFfile("mandelbrot_count_movie_" + mjr::math::str::fmt_int(frame, 3, '0') + ".tiff");
     std::chrono::duration<double> frameRunTime = std::chrono::system_clock::now() - frameStartTime;
 #   pragma omp critical
     std::cout << "Frame " << frame << " of " << NUMFRM << " Runtime " << frameRunTime.count() << " sec" << std::endl;

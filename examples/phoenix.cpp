@@ -105,7 +105,7 @@ int main(void) {
           theRamCanvas.drawPoint(x, y, ct::csCCfractal0RYBCW::c(static_cast<ct::csIntType>(count*params[j][4])));
       }
     }
-    theRamCanvas.writeTIFFfile("phoenix_" + mjr::fmtInt(j, 2, '0') + ".tiff");
+    theRamCanvas.writeTIFFfile("phoenix_" + mjr::math::str::fmt_int(j, 2, '0') + ".tiff");
     std::cout << "ITER(" << j <<  "): " << "DONE" << std::endl;
   }
 

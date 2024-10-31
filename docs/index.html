@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-12-11 Sun 00:36 -->
+<!-- 2024-10-31 Thu 13:38 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster</title>
@@ -222,7 +222,7 @@
 </colgroup>
 <tbody>
 <tr>
-<td class="org-left">Copyright &copy; 2022 Mitch Richling. All rights reserved.</td>
+<td class="org-left">Copyright &copy; 2024 Mitch Richling. All rights reserved.</td>
 </tr>
 </tbody>
 </table>
@@ -231,7 +231,12 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#introduction">1. Introduction</a></li>
+<li><a href="#introduction">1. Introduction</a>
+<ul>
+<li><a href="#org10dc8b8">1.1. Introduction</a></li>
+<li><a href="#org2175d0b">1.2. Versions</a></li>
+</ul>
+</li>
 <li><a href="#goals">2. Design goals</a></li>
 <li><a href="#use">3. Who is using it, and what are they using it for?</a></li>
 <li><a href="#nonuse">4. Perhaps more important is what people don't use it for.</a></li>
@@ -246,8 +251,11 @@
 <p>
 From the README:
 </p>
-<blockquote>
 <hr />
+</div>
+<div id="outline-container-org10dc8b8" class="outline-3">
+<h3 id="org10dc8b8"><span class="section-number-3">1.1.</span> Introduction</h3>
+<div class="outline-text-3" id="text-1-1">
 <p>
 <b>MRaster</b> is a very simple C++ library for generating raster images &#x2013;
 espeically things like fractals.
@@ -279,8 +287,12 @@ Some examples of what can be done with <b>MRaster</b>:
 <li><a href="https://www.mitchr.me/SS/mandelbrotWave/index.html">Mandelbrot Wave</a></li>
 <li><a href="https://www.mitchr.me/SS/swirl/index.html">Peter de Jong Fractal</a></li>
 <li><a href="https://www.mitchr.me/SS/sic/index.html">Symmetric Fractals</a></li>
+<li><a href="https://www.mitchr.me/SS/tinkerbell/index.html">Tinkerbell</a></li>
+<li><a href="https://www.mitchr.me/SS/barrymartin/index.html">Hopalong Fractals</a></li>
 <li><a href="https://www.mitchr.me/SS/ChaosGame/index.html">Chaos Game</a></li>
+<li><a href="https://www.mitchr.me/SS/LevyCurveChaosGame/index.html">Chaos Game Levy Curve</a></li>
 <li><a href="https://www.mitchr.me/SS/AGasket/index.html">Apollonian Gasket</a></li>
+<li><a href="https://www.mitchr.me/SS/atorus/index.html">Attracting Torus</a></li>
 <li><a href="https://www.mitchr.me/SS/julia/index.html">Julia Sets</a></li>
 <li><a href="https://www.mitchr.me/SS/circles2/index.html">Circle Art</a></li>
 <li><a href="https://www.mitchr.me/SS/desktops/index.html">Some desktop backgrounds</a></li>
@@ -309,31 +321,32 @@ Example Documentation: <a href="https://www.mitchr.me/SS/mraster/doc-examples/au
 <p>
 The code: <a href="https://github.com/richmit/mraster/">https://github.com/richmit/mraster/</a>
 </p>
+</div>
+</div>
 
+<div id="outline-container-org2175d0b" class="outline-3">
+<h3 id="org2175d0b"><span class="section-number-3">1.2.</span> Versions</h3>
+<div class="outline-text-3" id="text-1-2">
 <p>
-<b>Versions:</b>
+This library has defined "releases" intended to identify a stable
+snapshot of the code &#x2013; they are tagged in git with a tag name
+starting with a "v".  If you are looking for stability, then get the
+latest one.
 </p>
-<ul class="org-ul">
-<li>Version 20.x.x
-<ul class="org-ul">
-<li>Much more modern API</li>
-<li>Good unit test coverage</li>
-<li>Requires a compiler with good C++20 support</li>
-<li>Still in beta, but pretty solid at this point</li>
-</ul></li>
-<li>Version 6.x.x
-<ul class="org-ul">
-<li>Has been published and used since the 1990's</li>
-<li>Quite mature</li>
-<li>Old school API</li>
-</ul></li>
-</ul>
 
 <p>
-<b>Version Recommendation:</b> Use 20.x.x unless you have an old creepy compiler that just can't do C++20.
+That said, I try to only commit complete, working code.  So I think
+it's pretty safe for most people to just pull <code>HEAD</code> &#x2013; i.e. just do a
+regular git clone.
+</p>
+
+<p>
+The <a href="https://richmit.github.io/mraster/changelog.html">change log</a>
+has entries for each release as well as a section for what has changed
+on <code>HEAD</code> since the last release.
 </p>
 <hr />
-</blockquote>
+</div>
 </div>
 </div>
 
@@ -341,7 +354,9 @@ The code: <a href="https://github.com/richmit/mraster/">https://github.com/richm
 <h2 id="goals"><span class="section-number-2">2.</span> Design goals</h2>
 <div class="outline-text-2" id="text-goals">
 <ul class="org-ul">
-<li><b>Extreme portability (ISO C++20 only, zero external library requirements)</b></li>
+<li><b>Extreme portability (ISO C++20 only, no third party library requirements)</b> <br />
+Note the code is broken across two git repositories &#x2013; one for MRaster proper and one for some simple mathematical utilities.  In older versions of
+MRaster these mathematical routines were included in the repo; however, I have pulled them out because they are generally useful by themselves.</li>
 <li><b>Super simple and easy to use, but full featured enough for an expert to be happy with</b><br />
 My goal was to be able to hand this package to a student with minimal C++ experience, and have them be able to create a Mandelbrot image in an few
 minutes.  For the most part my students were very successful!</li>

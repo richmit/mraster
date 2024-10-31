@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-10-19 Sat 12:41 -->
+<!-- 2024-10-31 Thu 14:19 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>Change Log</title>
@@ -230,12 +230,12 @@
 
 <tr>
 <td class="org-right"><b>Updated:</b></td>
-<td class="org-left"><i>2024-10-19 12:41:28</i></td>
+<td class="org-left"><i>2024-10-31 13:30:45</i></td>
 </tr>
 
 <tr>
 <td class="org-right"><b>Generated:</b></td>
-<td class="org-left"><i>2024-10-19 12:41:33</i></td>
+<td class="org-left"><i>2024-10-31 14:19:24</i></td>
 </tr>
 </tbody>
 </table>
@@ -281,7 +281,9 @@ Copyright &copy; 2024 Mitch Richling. All rights reserved.
 <ul class="org-ul">
 <li>Fixed Bugs
 <ul class="org-ul">
-<li>N/A</li>
+<li>clampAll, clampBot, clampTop: now limited to channel arithmatic types</li>
+<li>Problem with enabling 128-bit integers on GCC resolved</li>
+<li>Integer wrap for color schemes better for negative arguments.</li>
 </ul></li>
 <li>Known Issues
 <ul class="org-ul">
@@ -289,7 +291,9 @@ Copyright &copy; 2024 Mitch Richling. All rights reserved.
 </ul></li>
 <li>API breaking Changes
 <ul class="org-ul">
-<li>N/A</li>
+<li>Header removed: mjrmath.hpp</li>
+<li>This project now depends on the MRMathCPP project.</li>
+<li>Deprecated headers removed: colorTpl.hpp, color.hpp, &amp; point2d.hpp</li>
 </ul></li>
 <li>Deprecated functionality
 <ul class="org-ul">

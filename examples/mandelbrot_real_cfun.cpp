@@ -41,7 +41,7 @@ mjr::ramCanvas3c8b::colorType mandelbrot_esc_fun(mjr::ramCanvas3c8b::coordFltTyp
   for(zx=zy=0.0,count=0; (zx*zx+zy*zy<4)&&(count<=NUMITR); count++,tempx=zx*zx-zy*zy+x,zy=2*zx*zy+y,zx=tempx)
     ;
   if(count < NUMITR)
-    return mjr::ramCanvas3c8b::colorType::csCColdeFireRamp::c(mjr::numberWrap(static_cast<mjr::ramCanvas3c8b::csIntType>(count*20), 767));
+    return mjr::ramCanvas3c8b::colorType::csCColdeFireRamp::c(mjr::math::ivl::wrapCC(static_cast<mjr::ramCanvas3c8b::csIntType>(count*20), 767));
   else
     return mjr::ramCanvas3c8b::colorType("black");
 }

@@ -65,7 +65,7 @@ int main(void) {
             (zx*zx+zy*zy<100000)&&(count<=NUMITR);
             count++,zx=zx*zx-zy*zy+a,zy=2*zx*zy+b) ;
         if(count < NUMITR)
-          theRamCanvas.drawPoint(x, y, ct::csCColdeFireRamp::c(mjr::numberWrap(static_cast<cit>(count*20), 767)));
+          theRamCanvas.drawPoint(x, y, ct::csCColdeFireRamp::c(mjr::math::ivl::wrapCC(static_cast<cit>(count*20), 767)));
       }
     }
     theRamCanvas.writeTIFFfile("tippets" + std::to_string(i) + ".tiff");

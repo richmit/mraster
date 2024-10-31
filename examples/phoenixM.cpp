@@ -78,7 +78,7 @@ int main(void) {
           theRamCanvas.drawPoint(x, y, ct::csCCfractal0RYBCW::c(static_cast<ct::csIntType>(count*10)));
       }
     }
-    theRamCanvas.writeTIFFfile("phoenixM_" + mjr::fmtInt(frame, 2, '0') + ".tiff");
+    theRamCanvas.writeTIFFfile("phoenixM_" + mjr::math::str::fmt_int(frame, 2, '0') + ".tiff");
 #   pragma omp critical
     std::cout << "FRAME(" << frame <<  "): " << "DONE" << std::endl;
   }

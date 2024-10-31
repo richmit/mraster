@@ -120,10 +120,10 @@ int main(void) {
               std::complex<double> potNormal = z/pder;
               potNormal = potNormal/std::abs(potNormal);  // normalize potNormal
               double potShade = std::real(potNormal * std::conj(lightDirection)) + lightHeight;  // dot product with the incoming light
-              potShade = mjr::unitClamp(potShade/(1+lightHeight));  // rescale so <=1, and then clamp to keep >=0
-              potRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(static_cast<mjr::ramCanvas3c8b::colorChanType>(mjr::unitTooIntLinMap(potShade, 255)),
-                                                          static_cast<mjr::ramCanvas3c8b::colorChanType>(mjr::unitTooIntLinMap(potShade, 255)),
-                                                          static_cast<mjr::ramCanvas3c8b::colorChanType>(mjr::unitTooIntLinMap(potShade, 255))));
+              potShade = mjr::math::ivl::unit_clamp(potShade/(1+lightHeight));  // rescale so <=1, and then clamp to keep >=0
+              potRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType(static_cast<mjr::ramCanvas3c8b::colorChanType>(mjr::math::linm::scl_real_to_int(potShade, 255)),
+                                                          static_cast<mjr::ramCanvas3c8b::colorChanType>(mjr::math::linm::scl_real_to_int(potShade, 255)),
+                                                          static_cast<mjr::ramCanvas3c8b::colorChanType>(mjr::math::linm::scl_real_to_int(potShade, 255))));
             }
           }
         } else {
@@ -139,8 +139,8 @@ int main(void) {
           } else {
             distNormal = distNormal/distNormalAbs;  // normalize distNormal
             double distShade = std::real(distNormal * std::conj(lightDirection)) + lightHeight;  // dot product with the incoming light
-            distShade = mjr::unitClamp(distShade/(1+lightHeight));  // rescale so <=1, and then clamp to keep >=0
-            distRamCanvas.drawPoint(x, y, mjr::color3c8b::csCCdiag01::c(static_cast<mjr::ramCanvas3c8b::csIntType>(mjr::unitTooIntLinMap(distShade, 255))));
+            distShade = mjr::math::ivl::unit_clamp(distShade/(1+lightHeight));  // rescale so <=1, and then clamp to keep >=0
+            distRamCanvas.drawPoint(x, y, mjr::color3c8b::csCCdiag01::c(static_cast<mjr::ramCanvas3c8b::csIntType>(mjr::math::linm::scl_real_to_int(distShade, 255))));
           }
         } else {
           distRamCanvas.drawPoint(x, y, "red");

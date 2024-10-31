@@ -44,8 +44,6 @@
 
 #include "ramCanvas.hpp"
 
-#if 0
-
 // |----------+--------------------------------------------------------------------------------------------------------------|
 // | Coverage | Method                                                                                                       |
 // |----------+--------------------------------------------------------------------------------------------------------------|
@@ -5527,7 +5525,7 @@ BOOST_AUTO_TEST_CASE(tfrm_PowPow_int) {
   mjr::colorRGBA8b bColor;
 
   aColor.setChansRGB(0, 50, 100);
-  aColor.tfrmLn();
+  aColor.tfrmLn1();
   BOOST_TEST_CHECK(aColor.getRed()   == 0);
   BOOST_TEST_CHECK(aColor.getGreen() == 3);
   BOOST_TEST_CHECK(aColor.getBlue()  == 4);
@@ -5585,7 +5583,7 @@ BOOST_AUTO_TEST_CASE(tfrm_PowPow_flt, * boost::unit_test::tolerance(0.00001)) {
   mjr::colorRGB32F aColor;
 
   aColor.setChansRGB(0, 50, 100);
-  aColor.tfrmLn();
+  aColor.tfrmLn1();
   BOOST_TEST_CHECK(aColor.getRed()   == 0);
   BOOST_TEST_CHECK(aColor.getGreen() == 3.93182563272);
   BOOST_TEST_CHECK(aColor.getBlue()  == 4.61512051684);
@@ -8092,8 +8090,6 @@ BOOST_AUTO_TEST_CASE(dist_deltaE, * boost::unit_test::tolerance(0.01)) {
   BOOST_TEST_CHECK(aColor.distDeltaE1994(bColor) == 82.8807);
   //BOOST_TEST_CHECK(aColor.distDeltaE2000(bColor) == 63.5853);
 }
-
-#endif
 
 /** @endcond */
 

@@ -32,24 +32,31 @@
 
 #+TOC: headlines 5
 
-* Quick Start (The Absolute Minimum)
+* Quick Start (The Absolute Minimum *WITHOUT* Cmake)
 :PROPERTIES:
 :CUSTOM_ID: qs-min
 :END:
 
 If you are interested playing around with *=MRaster=* as quickly as possible, then this section is for you.
 
-The first step is to download *=MRaster=*.  You can grab the [[https://github.com/richmit/mraster/archive/refs/heads/master.zip][zip file]], or you can simply
-clone the repository with GIT like this:
+The first step is to download *=MRaster=* and *=MRMathCPP=*.  The easiest way is to clone them with git:
 
 #+BEGIN_EXAMPLE
 git clone 'https://github.com/richmit/mraster.git'
+git clone 'https://github.com/richmit/MRMathCPP.git'
 #+END_EXAMPLE
 
-Once you have it downloaded, make note of the "=lib=" folder within the repository.  This folder contains everything you need to develop with *=MRaster=*, and you
-can simply put your code right in that directory.  
+Alternatly, you could download the zip files:
+  - [[https://github.com/richmit/mraster/archive/refs/heads/master.zip][MRaster]]
+  - [[https://github.com/richmit/MRMathCPP/archive/refs/heads/MRMathCPP.zip][MRMathCPP]]
 
-First let's create a file called "=hello.cpp=" right inside the "=lib=" directory with the following content:
+Once you have it downloaded, make note of the "=lib=" folder within each repository containing all the headers.  Both libraries are "header only" meaning all
+you need to to to use them is include the headers.  If you are looking for the absolute simplest path forward, just copy the =*.hpp= files in *both* "=lib="
+directories into the directory with your code.  Alternately, if you are using an IDE, then you can simply "add" the include files to the project in your IDE.
+Alternately you can direct your build environment to add the "=lib=" directories to your compiler's "include path".  With an IDE that's usually a few clicks away.  
+On the command line, with GCC/Clang, you can add the directories with the =-I= option.
+
+Here is a very minimal example you can try.  Put in a file called "=hello.cpp=":
 
 #+begin_src sh :results output verbatum :exports results :wrap "src c++ :eval never :tangle no"
 cat ../lib/hello.cpp
@@ -71,7 +78,7 @@ int main(void) {
 Now we can compile it with GCC like this:
 
 #+begin_src sh :exports source :eval never
-g++ -m64 -std=gnu++20 hello.cpp -o hello2
+g++ -m64 -std=gnu++20 hello.cpp -o hello
 #+end_src
 
 Now you can run it, and take a look at the file it created ("=hello.tiff="):
@@ -81,18 +88,13 @@ Now you can run it, and take a look at the file it created ("=hello.tiff="):
 
 That's it!  How easy was that?
 
-** FAQ for people not using =cmake=
+** How do I get advanced TIFF reader support without =cmake=?
 :PROPERTIES:
-:CUSTOM_ID: qs-faq
-:END:
-
-*** Q1: How do I get advanced TIFF reader support without =cmake=?
-:PROPERTIES:
-:CUSTOM_ID: qs-faq-q1
+:CUSTOM_ID: qs-min-tiff
 :END:
 
 #+BEGIN_QUOTE
-*A:* If you have =libtiff= installed in a standard location, then you can probably just add "=-DTIFF_FOUND" to the compile command like this:
+If you have =libtiff= installed in a standard location, then you can probably just add "=-DTIFF_FOUND" to the compile command like this:
 
 #+begin_src sh :exports source :eval never
 g++ -DTIFF_FOUND -m64 --std=gcc++20 hello.cpp -o hello
@@ -101,119 +103,45 @@ g++ -DTIFF_FOUND -m64 --std=gcc++20 hello.cpp -o hello
 Please note that advanced TIFF reader is only required to *read* TIFF files.  *=MRaster=* can save TIFF, TGA, and MRAW files without any external library support.
 #+END_QUOTE
 
-*** Q2: What's up with "=-std=gcc++20=" instead of "=-std=c++20="?
-:PROPERTIES:
-:CUSTOM_ID: qs-faq-q2
-:END:
-
-#+BEGIN_QUOTE
-*A:* *=MRaster=* works just fine with standard C++20 compilers.  The "=-std=gcc++20=" option enables specific features of GCC that make *=MRaster=* better.  In
-particular, it enables 128-bit integers on platforms that support it -- allowing, for example, a very high performance floating point RGBA image format.  If
-you want to turn off 128-bit integers, and use pure C++20 instead with GCC, then you can use a command line like this:
-
-#+begin_src sh :exports source :eval never
-g++ -DMJR_LOOK_FOR_128_BIT_TYPES=0 -m64 --std=c++20 hello.cpp -o hello
-#+end_src
-#+END_QUOTE
-
-*** Q3: I got some weird errors about =bit_cast=.  What's up?
-:PROPERTIES:
-:CUSTOM_ID: qs-faq-q3
-:END:
-
-Probably your compiler is too old to support that part of the C++ standard.  One of the advantages of using =cmake= is that it tries to detect this issue.  Without =cmake=, you need to add the following
-to your compile command (or get a better compiler):
-
-#+begin_src sh :exports source :eval never
--DMISSING_P0476R2=1
-#+end_src
-
-*** Q4: I got some weird errors about complex numbers and =std::pow=? What's up?
-:PROPERTIES:
-:CUSTOM_ID: qs-faq-q4
-:END:
-
-Probably your compiler is too old to support that part of the C++ standard.  One of the advantages of using =cmake= is that it tries to detect this issue.  Without =cmake=, you need to add the following
-to your compile command (or get a better compiler):
-
-#+begin_src sh :exports source :eval never
--DMISSING_P1907R1=1
-#+end_src
-
 * Playing With *=MRaster=*'s Example Programs
 :PROPERTIES:
 :CUSTOM_ID: examples
 :END:
 
-The source code for the example programs is located in the "=examples=" directory.  *=MRaster=* ships with a =cmake= build system that should be able to
-interrogate your environment, and produce make files for your OS.  To build the example programs:
 
-   1) Change directory to the root of the git repository (you should see "=lib=" & "=examples=" directories).
-   2) Create a "=build=" directory -- cmake builds outside of the source trees.
-   3) Change directory to the build directory
-   4) Use =cmake= to generate make files for your system
-   5) Build the examples
-   6) Play with the examples
+Probably the first stop for most people trying out *=MRaster=* is the example programs.  
 
-A typical shell session following the steps outlined above might look like this:
+*=MRaster=* ships with a =cmake= build system that should be able to interrogate your environment, and produce make files for your OS.  One complication is
+that I've broken the project into two git repositories (one for some generic math stuff and another for *=MRaster=* proper).  To build the example programs:
 
 #+begin_src sh :exports code :eval never
-rm -rf build
-mkdir build
-cd build
-cmake -G 'MSYS Makefiles' ..    # For Windows running MSYS2.  Remove the "-G 'MSYS Makefiles'" bit for other platforms.
-make
+git clone 'https://github.com/richmit/MRMathCPP.git'    # Download MRMathCPP
+cd MRMathCPP                                            # Change directory to the root of the MRMathCPP git repository
+mkdir build                                             # Create a 'build' directory
+cd build                                                # Change directory to the build directory
+cmake -G 'MSYS Makefiles' ..                            # Configure the build system with cmake (NOTE 1)
+cmake --build . -t install                              # Install the package in the build directory (NOTE 2)
+cd ../..                                                # Change directory back to where you cloned the first repo
+git clone 'https://github.com/richmit/mraster.git'      # Download MRaster
+cd mraster                                              # Change directory to the root of the mraster git repository
+mkdir build                                             # Create a 'build' directory
+cd build                                                # Change directory to the build directory
+cmake -G 'MSYS Makefiles' ..                            # Configure the build system with cmake (NOTE 1)
+cmake --build . -t examples                             # Build all the examples
 #+end_src
 
-Note =cmake= can take several options like the "=-G=" option mentioned in the example above.  For more information on options related to *=MRaster=*, take a look
-at the "=configure.sh=" script in the root directory of the git repository.
-
-* Using *=MRaster=*'s =cmake= Configuration
-:PROPERTIES:
-:CUSTOM_ID: cmake-coopt
-:END:
-
-For many *=MRaster=* users, =cmake= is an unfamiliar tool.  Some of them decide to directly use *=MRaster=*'s =cmake= infrastructure, using the "=examples="
-directory as a template for the code they produce.  This can be a nice way for people new to =cmake= to get an idea of how it works; however, I have to warn
-you: I'm really a =cmake= novice!  You might just pick up some =cmake= bad habits looking at my =CMakeLists.txt= file! :)
-
-If you want to use the *=MRaster=* =cmake= infrastructure, the easiest path is to put your code in the "=examples"= directory.  Next we need to add your code to
-the "=CMakeLists.txt=" file.  Look for lines like these:
-
-#+begin_src sh :results output verbatum :exports results :wrap "src cmake :eval never :tangle no"
-grep -E '^set\(TARGETS_REQ_' ../../CMakeLists.txt | cut -d\" -f1-5 | sed 's/" *$/"  .../'
-#+end_src
-
-#+RESULTS:
-#+begin_src cmake :eval never :tangle no
-set(TARGETS_REQ_NONE   "apollony" "apomorph"  ...
-set(TARGETS_REQ_MRRL   "color_lut_indexed" "color_lut_rainbows"  ...
-set(TARGETS_REQ_OPENGL "glut_image")
-set(TARGETS_REQ_TIFF   "brownianDiffusion" "dlaBrownian"  ...
-set(TARGETS_REQ_OPENMP "mandelbrot_bm_cplx_openmp")
-set(TARGETS_REQ_BTEST  "utest_foo" "utest_color_types_ia64nGCC"  ...
-set(TARGETS_REQ_PNG    )
-set(TARGETS_REQ_IM     )
-#+end_src
-
-Each of these lines are a list of source files that require various external dependencies.  In general you should always add your source file (minus the
-"=.cpp=" extension) to the "=TARGETS_REQ_MRRL=" list.  If your program needs the advanced TIFF reader, then also add it to the "=TARGETS_REQ_TIFF=" list as
-well.  Now we are ready to go:
-
-  1) Create a directory called "=build=" in the root of the git repository
-  2) Change directory the "=build=" directory
-  3) Use =cmake= to generate make files
-  4) Build your program!
-
-These steps might look like this:
-
-#+begin_src sh :exports code :eval never
-rm -rf build
-mkdir build
-cd build
-cmake -G 'MSYS Makefiles' ..
-make your_program
-#+end_src
+ - NOTE 1 ::
+   - I normally use the "=configure.sh=" script in the root directory instead of running =cmake= directly for the configuration step.  I don't suggest it
+     above because it won't work for everybody because "=configure.sh=" is a =bash= script -- i.e.  it will only work if you have a working =bash= envoronmtn
+     (i.e. linux, macOS, UNIX, Windows MSYS 2, Windows WSL, etc...).
+   - In the example above we use "=MSYS Makefiles=" for the "=-G=" option -- this value works for Windows 10/11 running MSYS2.  
+   - If you don't know what to use for the "=-G=" option, then take a look at the "=configure.sh=" script for ideas.
+ - NOTE 2 ::
+   - The command will install the =cmake= package into the build directory within the git repository.  In particular, this step will *not* install anything on
+     your system!  If you *do* want to install the package someplace, then you can use the standard =cmake= install arguments to do that.
+   - This step is not actually necessary.  The =cmake= configuration in *=MRaster=* will detect a *=MRMathCPP=* repository located at the same level and
+     consume the include files even if the package configuration hasn't been generated or installed.  I suggest doing the install because it insures the
+     *=MRMathCPP=* can be properly configured on your system, and sets up a proper =cmake= package to export the library.
 
 * Platform Notes
 :PROPERTIES:
@@ -455,7 +383,6 @@ Now you can use the following =cmake= command:
 cmake -DCMAKE_CXX_COMPILER=g++-11 ..
 #+end_src
 
-
 * Performance                                                      :noexport:
 
 | System                                                  | Software                   | Result (sec) |
@@ -508,4 +435,44 @@ echo file:../build/doc-lib/autodocs/html/$(xmlstarlet.exe sel -t -v "/tagfile/co
 
 #+RESULTS:
 file:../build/doc-lib/autodocs/html/classmjr_1_1colorTpl.html#details
+
+* Old Stuff                                                        :noexport:
+*** Q2: What's up with "=-std=gcc++20=" instead of "=-std=c++20="?
+:PROPERTIES:
+:CUSTOM_ID: qs-faq-q2
+:END:
+
+#+BEGIN_QUOTE
+*A:* *=MRaster=* works just fine with standard C++20 compilers.  The "=-std=gcc++20=" option enables specific features of GCC that make *=MRaster=* better.  In
+particular, it enables 128-bit integers on platforms that support it -- allowing, for example, a very high performance floating point RGBA image format.  If
+you want to turn off 128-bit integers, and use pure C++20 instead with GCC, then you can use a command line like this:
+
+#+begin_src sh :exports source :eval never
+g++ -DMJR_LOOK_FOR_128_BIT_TYPES=0 -m64 --std=c++20 hello.cpp -o hello
+#+end_src
+#+END_QUOTE
+
+*** Q3: I got some weird errors about =bit_cast=.  What's up?
+:PROPERTIES:
+:CUSTOM_ID: qs-faq-q3
+:END:
+
+Probably your compiler is too old to support that part of the C++ standard.  One of the advantages of using =cmake= is that it tries to detect this issue.  Without =cmake=, you need to add the following
+to your compile command (or get a better compiler):
+
+#+begin_src sh :exports source :eval never
+-DMISSING_P0476R2=1
+#+end_src
+
+*** Q4: I got some weird errors about complex numbers and =std::pow=? What's up?
+:PROPERTIES:
+:CUSTOM_ID: qs-faq-q4
+:END:
+
+Probably your compiler is too old to support that part of the C++ standard.  One of the advantages of using =cmake= is that it tries to detect this issue.  Without =cmake=, you need to add the following
+to your compile command (or get a better compiler):
+
+#+begin_src sh :exports source :eval never
+-DMISSING_P1907R1=1
+#+end_src
 

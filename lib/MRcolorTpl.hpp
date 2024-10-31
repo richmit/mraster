@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #ifndef MJR_INCLUDE_MRcolorTpl
 
-#include "mjrmath.hpp"
+#include "MRMathCPP.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include <algorithm>                                                     /* STL algorithm           C++11    */
@@ -372,7 +372,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** This is a helper function for setRGBfromColorSpace. */
       inline double hslHelperVal(double n1, double n2, double hue) {
-        hue = realWrap(hue, 360.0);
+        hue = mjr::math::ivl::wrapCO(hue, 360.0);
         if(hue<60)
           return n1+(n2-n1)*hue/60.0;
         else if(hue<180)
@@ -1209,7 +1209,7 @@ namespace mjr {
           @return Returns a reference to the current color object. */
       inline colorTpl& setRGBcmpGreyTGA16bit(uint32_t tga16val) requires(chanIsByte) {
         /* Requires: Inherits numChan>1 from setGreen. */
-        tga16val = numberWrap(tga16val, 0x0000FFFFu);
+        tga16val = mjr::math::ivl::wrapCC(tga16val, 0x0000FFFFu);
         return setRGBfromLogPackIntABRG(tga16val);
         // setChansToMin();
         // setGreen_byte(static_cast<clrChanT>( tga16val        & 0xff));  // 0
@@ -1222,7 +1222,7 @@ namespace mjr {
           @return Returns a reference to the current color object. */
       inline colorTpl& setRGBcmpGreyTGA24bit(uint32_t tga24val) requires(chanIsByte) {
         /* Requires: Inherits numChan>2 from setBlue. */
-        tga24val = numberWrap(tga24val, 0x00FFFFFFu);
+        tga24val = mjr::math::ivl::wrapCC(tga24val, 0x00FFFFFFu);
         return setRGBfromLogPackIntABRG(tga24val);
         // setGreen_byte( tga24val        & 0xff); // 0
         // setRed_byte(  (tga24val >> 8)  & 0xff); // 1
@@ -1301,7 +1301,7 @@ namespace mjr {
         double outR = 0.0, outG = 0.0, outB = 0.0;
         if (space == colorSpaceEnum::HSL) {
           if( (inCh3 >= 0.0) && (inCh3 <= 1.0) && (inCh2 >= 0.0) && (inCh2 <= 1.0) ) {
-            double H = realWrap(inCh1, 360.0);
+            double H = mjr::math::ivl::wrapCO(inCh1, 360.0);
             const double epsilon = 0.000001;
             double m1, m2;
             if(inCh3 <= 0.5)
@@ -1314,9 +1314,9 @@ namespace mjr {
               outG = inCh3;
               outB = inCh3;
             } else {
-              outR = unitClamp(hslHelperVal(m1, m2, H+120));
-              outG = unitClamp(hslHelperVal(m1, m2, H));
-              outB = unitClamp(hslHelperVal(m1, m2, H-120));
+              outR = mjr::math::ivl::unit_clamp(hslHelperVal(m1, m2, H+120));
+              outG = mjr::math::ivl::unit_clamp(hslHelperVal(m1, m2, H));
+              outB = mjr::math::ivl::unit_clamp(hslHelperVal(m1, m2, H-120));
             }
           }
         } else if ((space == colorSpaceEnum::LAB) || (space == colorSpaceEnum::XYZ) || (space == colorSpaceEnum::LCH)) {
@@ -1341,13 +1341,13 @@ namespace mjr {
           outR = X *  3.2406 + Y * -1.5372 + Z * -0.4986;
           outG = X * -0.9689 + Y *  1.8758 + Z *  0.0415;
           outB = X *  0.0557 + Y * -0.2040 + Z *  1.0570;
-          outR = unitClamp((outR > 0.0031308 ? 1.055 * std::pow(outR, 1.0 / 2.4) - 0.055 : 12.92 * outR));
-          outG = unitClamp((outG > 0.0031308 ? 1.055 * std::pow(outG, 1.0 / 2.4) - 0.055 : 12.92 * outG));
-          outB = unitClamp((outB > 0.0031308 ? 1.055 * std::pow(outB, 1.0 / 2.4) - 0.055 : 12.92 * outB));
+          outR = mjr::math::ivl::unit_clamp((outR > 0.0031308 ? 1.055 * std::pow(outR, 1.0 / 2.4) - 0.055 : 12.92 * outR));
+          outG = mjr::math::ivl::unit_clamp((outG > 0.0031308 ? 1.055 * std::pow(outG, 1.0 / 2.4) - 0.055 : 12.92 * outG));
+          outB = mjr::math::ivl::unit_clamp((outB > 0.0031308 ? 1.055 * std::pow(outB, 1.0 / 2.4) - 0.055 : 12.92 * outB));
         } else if (space == colorSpaceEnum::RGB) {
-          outR = unitClamp(inCh1);
-          outG = unitClamp(inCh2);
-          outB = unitClamp(inCh3);
+          outR = mjr::math::ivl::unit_clamp(inCh1);
+          outG = mjr::math::ivl::unit_clamp(inCh2);
+          outB = mjr::math::ivl::unit_clamp(inCh3);
         } else if (space == colorSpaceEnum::HSV) {
           double t;
           double f = static_cast<double>(std::modf(inCh1 * 6.0 / 360.0, &t));
@@ -1357,13 +1357,13 @@ namespace mjr {
           double u = inCh3 * (1 - (inCh2 * (1 - f)));
           double w = inCh3;
           switch (i) {
-            case 0:   outR = unitClamp(w); outG = unitClamp(u); outB = unitClamp(p); break;
-            case 1:   outR = unitClamp(q); outG = unitClamp(w); outB = unitClamp(p); break;
-            case 2:   outR = unitClamp(p); outG = unitClamp(w); outB = unitClamp(u); break;
-            case 3:   outR = unitClamp(p); outG = unitClamp(q); outB = unitClamp(w); break;
-            case 4:   outR = unitClamp(u); outG = unitClamp(p); outB = unitClamp(w); break;
-            case 5:   outR = unitClamp(w); outG = unitClamp(p); outB = unitClamp(q); break;
-            default:  outR =         0.0 ; outG =         0.0 ; outB =         0.0 ; break;
+            case 0:   outR = mjr::math::ivl::unit_clamp(w); outG = mjr::math::ivl::unit_clamp(u); outB = mjr::math::ivl::unit_clamp(p); break;
+            case 1:   outR = mjr::math::ivl::unit_clamp(q); outG = mjr::math::ivl::unit_clamp(w); outB = mjr::math::ivl::unit_clamp(p); break;
+            case 2:   outR = mjr::math::ivl::unit_clamp(p); outG = mjr::math::ivl::unit_clamp(w); outB = mjr::math::ivl::unit_clamp(u); break;
+            case 3:   outR = mjr::math::ivl::unit_clamp(p); outG = mjr::math::ivl::unit_clamp(q); outB = mjr::math::ivl::unit_clamp(w); break;
+            case 4:   outR = mjr::math::ivl::unit_clamp(u); outG = mjr::math::ivl::unit_clamp(p); outB = mjr::math::ivl::unit_clamp(w); break;
+            case 5:   outR = mjr::math::ivl::unit_clamp(w); outG = mjr::math::ivl::unit_clamp(p); outB = mjr::math::ivl::unit_clamp(q); break;
+            default:  outR =                          0.0 ; outG =                          0.0 ; outB =                          0.0 ; break;
           }
         } else {
           std::cerr << "ERROR: Unsupported color space used in setRGBfromColorSpace!" << std::endl;
@@ -1674,7 +1674,7 @@ namespace mjr {
           @return A reference to this object */
       template <typename ccT>
       inline colorTpl& cmpRGBcornerDGradiant(csIntType csIdx, csIntType numColors, const ccT* cornerColors) {
-        csIdx = numberWrap(csIdx, static_cast<csIntType>(chanStepMax * numColors - chanStepMax)); // First wrap to the total color count
+        csIdx = mjr::math::ivl::wrapCC(csIdx, static_cast<csIntType>(chanStepMax * numColors - chanStepMax)); // First wrap to the total color count
         csIntType edgeNum = csIdx / chanStepMax;
         if (edgeNum == (numColors-1)) {
           edgeNum = edgeNum - 1;
@@ -1718,7 +1718,7 @@ namespace mjr {
         /* performance: I have no idea why this is slower than the linear search loop used in cmpGradiant().  Still, the code is cleaner this way.  Perhaps
            the optimizer will figure it out someday... The optimizer works in strange ways. */
         if(numColors >= 2) {
-            csX = numberWrap(csX, static_cast<csFltType>(1));
+            csX = mjr::math::ivl::wrapCC(csX, static_cast<csFltType>(1));
             csFltType mF = csX * static_cast<csFltType>(numColors - 1);
             csIntType mI = static_cast<csIntType>(mF);
             if (mI >= (numColors-2)) mI=numColors-2;
@@ -1753,14 +1753,14 @@ namespace mjr {
           // Interpolate values
           double out1, out2, out3;
           if ((space == colorSpaceEnum::HSL) || (space == colorSpaceEnum::HSV))
-            out1 = mjr::interpolateLinearAnglesDeg(acol1.getC0(), acol2.getC0(), aDouble);
+            out1 = mjr::math::linm::interpolate_degrees(acol1.getC0(), acol2.getC0(), aDouble);
           else
-            out1 = mjr::interpolateLinear(acol1.getC0(), acol2.getC0(), aDouble);
-          out2 = mjr::interpolateLinear(acol1.getC1(), acol2.getC1(), aDouble);
+            out1 = mjr::math::linm::interpolate(acol1.getC0(), acol2.getC0(), aDouble);
+          out2 = mjr::math::linm::interpolate(acol1.getC1(), acol2.getC1(), aDouble);
           if (space == colorSpaceEnum::LCH)
-            out3 = mjr::interpolateLinearAnglesDeg(acol1.getC2(), acol2.getC2(), aDouble);
+            out3 = mjr::math::linm::interpolate_degrees(acol1.getC2(), acol2.getC2(), aDouble);
           else
-            out3 = mjr::interpolateLinear(acol1.getC2(), acol2.getC2(), aDouble);
+            out3 = mjr::math::linm::interpolate(acol1.getC2(), acol2.getC2(), aDouble);
 
           // Set color
           setRGBfromColorSpace(space, out1, out2, out3);
@@ -1845,7 +1845,7 @@ namespace mjr {
       inline colorTpl& linearInterpolate(double aDouble, colorArgType col1, colorArgType col2) {
         if( (aDouble >= 0.0) && (aDouble <= 1.0) )
           for(int i=0; i<numChan; i++)
-            setChanNC(i, static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(col1.getChanNC(i)), static_cast<double>(col2.getChanNC(i)), aDouble)));
+            setChanNC(i, static_cast<clrChanT>(mjr::math::linm::interpolate(static_cast<double>(col1.getChanNC(i)), static_cast<double>(col2.getChanNC(i)), aDouble)));
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1859,7 +1859,7 @@ namespace mjr {
       inline colorTpl& linearInterpolateRGB(double aDouble, colorArgType col1, colorArgType col2) {
         if( (aDouble >= 0.0) && (aDouble <= 1.0) )
           for (int i : {redChan, blueChan, greenChan})
-            setChanNC(i, static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(col1.getChanNC(i)), static_cast<double>(col2.getChanNC(i)), aDouble)));
+            setChanNC(i, static_cast<clrChanT>(mjr::math::linm::interpolate(static_cast<double>(col1.getChanNC(i)), static_cast<double>(col2.getChanNC(i)), aDouble)));
         return *this;
       }
       //@}
@@ -2249,7 +2249,7 @@ namespace mjr {
       inline colorTpl& tfrmMix(double aDouble, colorArgType tooCol) {
         if( (aDouble >= 0.0) && (aDouble <= 1.0) )
           for(int i=0; i<numChan; i++)
-            setChanNC(i, static_cast<clrChanT>(mjr::interpolateLinear(static_cast<double>(getChanNC(i)), static_cast<double>(tooCol.getChanNC(i)), aDouble)));
+            setChanNC(i, static_cast<clrChanT>(mjr::math::linm::interpolate(static_cast<double>(getChanNC(i)), static_cast<double>(tooCol.getChanNC(i)), aDouble)));
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2511,7 +2511,7 @@ namespace mjr {
               H = 2.0 + (blueF - redF) / rangeF;
             else if(getBlue() == rgbMaxI)
               H = 4.0 + (redF - greenF) / rangeF;
-            H = realWrap(H * 60.0, 360.0);
+            H = mjr::math::ivl::wrapCO(H * 60.0, 360.0);
           }
           if (space == colorSpaceEnum::HSL)
             return colConDbl3(H, S, L);
@@ -2548,7 +2548,7 @@ namespace mjr {
 
           double H = 0.0;
           if ( std::abs(A) > 1.0e-5)  // Not Grey
-            H = realWrap(atan2(B,A) * 180.0 / std::numbers::pi, 360.0);
+            H = mjr::math::ivl::wrapCO(atan2(B,A) * 180.0 / std::numbers::pi, 360.0);
 
           if (space == colorSpaceEnum::LCH)
             return colConDbl3(L, C, H);
@@ -2740,9 +2740,9 @@ namespace mjr {
         } else if(numChan == 2) {                                  // 2 channels
           return std::max(getChanNC(0),  getChanNC(1));
         } else if(numChan == 3) {                                  // 3 channels
-          return mjr::max3(getChanNC(0), getChanNC(1), getChanNC(2));
+          return mjr::math::odr::max3(getChanNC(0), getChanNC(1), getChanNC(2));
         } else if(numChan == 4) {                                  // 4 channels
-          return mjr::max4(getChanNC(0), getChanNC(1), getChanNC(2), getChanNC(3));
+          return mjr::math::odr::max4(getChanNC(0), getChanNC(1), getChanNC(2), getChanNC(3));
         } else {                                                   // More than 3 channels
           clrChanT theMax = minChanVal;
           for(int i=0; i<numChan; i++)
@@ -2760,9 +2760,9 @@ namespace mjr {
         } else if(numChan == 2) {                                  // 2 channels
           return std::min(getChanNC(0), getChanNC(1));
         } else if(numChan == 3) {                                  // 3 channels
-          return mjr::min3(getChanNC(0), getChanNC(1), getChanNC(2));
+          return mjr::math::odr::min3(getChanNC(0), getChanNC(1), getChanNC(2));
         } else if(numChan == 4) {                                  // 4 channels
-          return mjr::min4(getChanNC(0), getChanNC(1), getChanNC(2), getChanNC(3));
+          return mjr::math::odr::min4(getChanNC(0), getChanNC(1), getChanNC(2), getChanNC(3));
         } else {
           clrChanT theMin = maxChanVal;
           for(int i=0; i<numChan; i++)
@@ -2774,11 +2774,11 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns the value of the largest component from R, G, and B. This function is highly optimized.
           @return The value of the largest color component.*/
-      inline clrChanT getMaxRGB() const { return mjr::max3(getRed(), getGreen(), getBlue()); } /* Requires: Inherits numChan>2 from getC2. */
+      inline clrChanT getMaxRGB() const { return mjr::math::odr::max3(getRed(), getGreen(), getBlue()); } /* Requires: Inherits numChan>2 from getC2. */
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns the value of the smallest component from R, G, and B. This function is highly optimized.
           @return The value of the smallest color component.*/
-      inline clrChanT getMinRGB() const { return mjr::min3(getRed(), getGreen(), getBlue()); } /* Requires: Inherits numChan>2 from getC2. */
+      inline clrChanT getMinRGB() const { return mjr::math::odr::min3(getRed(), getGreen(), getBlue()); } /* Requires: Inherits numChan>2 from getC2. */
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the dot product between the current color and the given color. i.e. c1.r*c2.r+c1.g*c2.g+...
           @param aColor the given color
@@ -2938,8 +2938,9 @@ namespace mjr {
           Input values larger than maxChanVal are mapped to maxChanVal.  Values less than minChanVal are not changed.
           @param arithValue The value to clamp */
       template <typename iT>
+      requires (std::same_as<iT, clrChanT> || std::same_as<iT, channelArithDType> || std::same_as<iT, channelArithSPType> || std::same_as<iT, channelArithSDPType> || std::same_as<iT, channelArithLogType>)
       inline clrChanT clampTop(iT arithValue) {
-        if(arithValue > maxChanVal)
+        if(arithValue > static_cast<iT>(maxChanVal))
           return static_cast<clrChanT>(maxChanVal);
         else
           return static_cast<clrChanT>(arithValue);
@@ -2947,9 +2948,10 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Clamp a value to [minChanVal, infinity).
           @param arithValue The value to clamp */
-      template <typename iT>
+      template <typename iT>                   
+      requires (std::same_as<iT, clrChanT> || std::same_as<iT, channelArithDType> || std::same_as<iT, channelArithSPType> || std::same_as<iT, channelArithSDPType> || std::same_as<iT, channelArithLogType>)
       inline clrChanT clampBot(iT arithValue) {
-        if(arithValue < minChanVal)
+        if(arithValue < static_cast<iT>(minChanVal))
           return static_cast<clrChanT>(minChanVal);
         else
           return static_cast<clrChanT>(arithValue);
@@ -2958,10 +2960,11 @@ namespace mjr {
       /** Clamp a value to [minChanVal, maxChanVal].
           @param arithValue The value to clamp */
       template <typename iT>
+      requires (std::same_as<iT, clrChanT> || std::same_as<iT, channelArithDType> || std::same_as<iT, channelArithSPType> || std::same_as<iT, channelArithSDPType> || std::same_as<iT, channelArithLogType>)
       inline clrChanT clampAll(iT arithValue) {
-        if     (arithValue > maxChanVal)
+        if     (arithValue > static_cast<iT>(maxChanVal))
           return static_cast<clrChanT>(maxChanVal);
-        else if(arithValue < minChanVal)
+        else if(arithValue < static_cast<iT>(minChanVal))
           return static_cast<clrChanT>(minChanVal);
         else
         return static_cast<clrChanT>(arithValue);
@@ -3018,7 +3021,7 @@ namespace mjr {
               @param csX A value in [0, 1] that identifies the color in the scheme.
               @return Returns a reference to \a aColor. */
           static inline colorTpl& c(colorRefType aColor, csFltType csX) {
-            //csX=mjr::numberWrap(csX, 0.0, 1.0);
+            //csX=mjr::math::ivl::wrapCC(csX, 0.0, 1.0);
             double angle=2*std::numbers::pi*(start/3.0+1.0+rots*csX);
             csX=std::pow(csX, gamma);
             double ampl=hue*csX*(1-csX)/2.0;
@@ -3044,7 +3047,7 @@ namespace mjr {
               @param csVal Index of color in pallet.  Wrapped to [0, meanChanVal].
               @return Returns a reference to \a aColor. */
           static inline colorTpl& c(colorRefType aColor, csNatType csVal) {
-            clrChanT cVal = static_cast<clrChanT>(numberWrap(csVal, meanChanVal));
+            clrChanT cVal = static_cast<clrChanT>(mjr::math::ivl::wrapCC(csVal, meanChanVal));
             colorTpl cc(corner);
             return aColor.setChansRGB(static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getRed()   ? cVal : -cVal)),
                                       static_cast<clrChanT>(meanChanVal + (meanChanVal < cc.getGreen() ? cVal : -cVal)),
@@ -3116,7 +3119,7 @@ namespace mjr {
               @return Returns a reference to \a aColor. */
           template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG) requires (std::floating_point<saT>) {
             csFltType csX = static_cast<csFltType>(csG);
-            return aColor.cmpGradiant(numberWrap(csX, 1.0), numC, d);
+            return aColor.cmpGradiant(mjr::math::ivl::wrapCC(csX, 1.0), numC, d);
           }
           /** Set given colorTpl instance to the selected color in the color scheme.
               @param aColor color object to set.
@@ -3151,7 +3154,7 @@ namespace mjr {
           template<typename saT> static inline colorTpl& c(colorRefType aColor, saT csG, csIntType numC=maxNumC) requires (std::floating_point<saT>) {
             csFltType csX = static_cast<csFltType>(csG);
             csIntType b = std::clamp(numC, minNumC, maxNumC);
-            return aColor.cmpGradiant(numberWrap(csX, 1.0), b, &d[b*(b-1)/2-3+0]);
+            return aColor.cmpGradiant(mjr::math::ivl::wrapCC(csX, 1.0), b, &d[b*(b-1)/2-3+0]);
           }
           /** Set given colorTpl instance to the selected color in the color scheme.
               @param aColor color object to set.
@@ -3814,8 +3817,8 @@ namespace mjr {
               @param numC Number of colors to provide
               @return Returns a reference to \a aColor. */
           static inline colorTpl& c(colorRefType aColor, csIntType csIdx, csIntType numC) {
-            csIdx = numberWrap(csIdx, numC);
-            return aColor.setRGBfromWavelengthLA(mjr::genLinMap(static_cast<double>(csIdx),
+            csIdx = mjr::math::ivl::wrapCC(csIdx, numC);
+            return aColor.setRGBfromWavelengthLA(mjr::math::linm::gen_map(static_cast<double>(csIdx),
                                                                 static_cast<double>(0),
                                                                 static_cast<double>(numC),
                                                                 static_cast<double>(minWavelength),
@@ -3844,8 +3847,8 @@ namespace mjr {
               @param interpMethod Specify the interpolation method (see: cmfInterpolationEnum)
               @return Returns a reference to \a aColor. */
           static inline colorTpl& c(colorRefType aColor, csIntType csIdx, csIntType numC, cmfInterpolationEnum interpMethod = cmfInterpolationEnum::LINEAR) {
-            csIdx = numberWrap(csIdx, numC);
-            return aColor.setRGBfromWavelengthCM(mjr::genLinMap(static_cast<double>(csIdx),
+            csIdx = mjr::math::ivl::wrapCC(csIdx, numC);
+            return aColor.setRGBfromWavelengthCM(mjr::math::linm::gen_map(static_cast<double>(csIdx),
                                                                 static_cast<double>(0),
                                                                 static_cast<double>(numC),
                                                                 static_cast<double>(minWavelength),
@@ -5028,7 +5031,7 @@ namespace mjr {
             double tau   = std::numbers::pi * 2;                   // 2*Pi
             double zArg  = std::atan2(csY, csX);                   // Arg
             double pzArg = (zArg < 0.0 ? tau + zArg : zArg) / tau; // Arg mapped to [0, 1]
-            aColor.csSet<colorScheme>(static_cast<csIntType>(mjr::numberWrap(mjr::unitTooIntLinMap(mjr::unitClamp(pzArg), numC*argWrap), numC)));
+            aColor.csSet<colorScheme>(static_cast<csIntType>(mjr::math::ivl::wrapCC(mjr::math::linm::scl_real_to_int(mjr::math::ivl::unit_clamp(pzArg), numC*argWrap), numC)));
             return aColor.tfrmComplexCut(std::complex<double>(csX, csY), cutDepth, argCuts, absCuts, logAbs);
           }
           /** Create a new colorTpl object and set it's color to the selected color in the color scheme.
@@ -5067,7 +5070,7 @@ namespace mjr {
             double tau   = std::numbers::pi * 2;                   // 2*Pi
             double zArg  = std::atan2(csY, csX);                   // Arg
             double pzArg = (zArg < 0.0 ? tau + zArg : zArg) / tau; // Arg mapped to [0, 1]
-            aColor.csSet<colorScheme>(static_cast<csFltType>(mjr::numberWrap(mjr::unitClamp(pzArg)*argWrap, 1.0)));
+            aColor.csSet<colorScheme>(static_cast<csFltType>(mjr::math::ivl::wrapCC(mjr::math::ivl::unit_clamp(pzArg)*argWrap, 1.0)));
             return aColor.tfrmComplexCut(std::complex<double>(csX, csY), cutDepth, argCuts, absCuts, logAbs);
           }
           /** Create a new colorTpl object and set it's color to the selected color in the color scheme.

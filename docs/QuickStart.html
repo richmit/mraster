@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-08-28 Wed 15:54 -->
+<!-- 2024-10-31 Thu 14:15 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster Quick Start</title>
@@ -234,38 +234,30 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#qs-min">1. Quick Start (The Absolute Minimum)</a>
+<li><a href="#qs-min">1. Quick Start (The Absolute Minimum <b>WITHOUT</b> Cmake)</a>
 <ul>
-<li><a href="#qs-faq">1.1. FAQ for people not using <code>cmake</code></a>
-<ul>
-<li><a href="#qs-faq-q1">1.1.1. Q1: How do I get advanced TIFF reader support without <code>cmake</code>?</a></li>
-<li><a href="#qs-faq-q2">1.1.2. Q2: What's up with "<code>-std=gcc++20</code>" instead of "<code>-std=c++20</code>"?</a></li>
-<li><a href="#qs-faq-q3">1.1.3. Q3: I got some weird errors about <code>bit_cast</code>.  What's up?</a></li>
-<li><a href="#qs-faq-q4">1.1.4. Q4: I got some weird errors about complex numbers and <code>std::pow</code>? What's up?</a></li>
-</ul>
-</li>
+<li><a href="#qs-min-tiff">1.1. How do I get advanced TIFF reader support without <code>cmake</code>?</a></li>
 </ul>
 </li>
 <li><a href="#examples">2. Playing With <b><code>MRaster</code></b>'s Example Programs</a></li>
-<li><a href="#cmake-coopt">3. Using <b><code>MRaster</code></b>'s <code>cmake</code> Configuration</a></li>
-<li><a href="#platform-notes">4. Platform Notes</a>
+<li><a href="#platform-notes">3. Platform Notes</a>
 <ul>
-<li><a href="#platform-notes-m2w11gcc12">4.1. Windows 11 with MSYS2 GCC 12.1.0 (and newer GCCs &#x2013; tested up to v14.1.0)</a></li>
-<li><a href="#platform-notes-m2w11clang14">4.2. Windows 11 with MSYS2 clang 14.0.6-18 (and newer clangs &#x2013; tested up to v18.1.6)</a></li>
-<li><a href="#platform-notes-m2w11vs2022">4.3. Windows 11 with MSYS2 cmake and Visual Studio 2022 Community Edition</a></li>
-<li><a href="#platform-notes-w11vs2022">4.4. Windows 11 with Visual Studio 2022 Community Edition</a></li>
-<li><a href="#platform-notes-osx1151hbGCC12">4.5. Mac OS X Monterey 12.5.1 with Homebrew GCC 12.1.0</a></li>
-<li><a href="#platform-notes-osx1151aclang1316">4.6. Mac OS X Monterey 12.5.1 with Apple clang 13.1.6</a></li>
-<li><a href="#platform-notes-lindeb126gcc133">4.7. Debian 12.6 bookworm with GCC 13.3.0 (or with the GCC-14 package &#x2013; tested with version 14.0.1)</a></li>
-<li><a href="#platform-notes-lindeb114gcc1021">4.8. Debian bullseye 11.4 with GCC 10.2.1</a></li>
-<li><a href="#platform-notes-lindeb114gcc113">4.9. Debian bullseye 11.4 with GCC 11.3</a></li>
-<li><a href="#platform-notes-lindeb116gcc122">4.10. Debian bullseye 11.6 with GCC 12.2</a></li>
+<li><a href="#platform-notes-m2w11gcc12">3.1. Windows 11 with MSYS2 GCC 12.1.0 (and newer GCCs &#x2013; tested up to v14.1.0)</a></li>
+<li><a href="#platform-notes-m2w11clang14">3.2. Windows 11 with MSYS2 clang 14.0.6-18 (and newer clangs &#x2013; tested up to v18.1.6)</a></li>
+<li><a href="#platform-notes-m2w11vs2022">3.3. Windows 11 with MSYS2 cmake and Visual Studio 2022 Community Edition</a></li>
+<li><a href="#platform-notes-w11vs2022">3.4. Windows 11 with Visual Studio 2022 Community Edition</a></li>
+<li><a href="#platform-notes-osx1151hbGCC12">3.5. Mac OS X Monterey 12.5.1 with Homebrew GCC 12.1.0</a></li>
+<li><a href="#platform-notes-osx1151aclang1316">3.6. Mac OS X Monterey 12.5.1 with Apple clang 13.1.6</a></li>
+<li><a href="#platform-notes-lindeb126gcc133">3.7. Debian 12.6 bookworm with GCC 13.3.0 (or with the GCC-14 package &#x2013; tested with version 14.0.1)</a></li>
+<li><a href="#platform-notes-lindeb114gcc1021">3.8. Debian bullseye 11.4 with GCC 10.2.1</a></li>
+<li><a href="#platform-notes-lindeb114gcc113">3.9. Debian bullseye 11.4 with GCC 11.3</a></li>
+<li><a href="#platform-notes-lindeb116gcc122">3.10. Debian bullseye 11.6 with GCC 12.2</a></li>
 </ul>
 </li>
-<li><a href="#gbl-faq">5. FAQ</a>
+<li><a href="#gbl-faq">4. FAQ</a>
 <ul>
-<li><a href="#gbl-faq-q1">5.1. Q1: What's up with "<code>-std=gcc++20</code>" instead of "<code>-std=c++20</code>"?</a></li>
-<li><a href="#gbl-faq-q2">5.2. Q2: The examples seem to be missing standard/system include files</a></li>
+<li><a href="#gbl-faq-q1">4.1. Q1: What's up with "<code>-std=gcc++20</code>" instead of "<code>-std=c++20</code>"?</a></li>
+<li><a href="#gbl-faq-q2">4.2. Q2: The examples seem to be missing standard/system include files</a></li>
 </ul>
 </li>
 </ul>
@@ -273,28 +265,39 @@
 </div>
 
 <div id="outline-container-qs-min" class="outline-2">
-<h2 id="qs-min"><span class="section-number-2">1.</span> Quick Start (The Absolute Minimum)</h2>
+<h2 id="qs-min"><span class="section-number-2">1.</span> Quick Start (The Absolute Minimum <b>WITHOUT</b> Cmake)</h2>
 <div class="outline-text-2" id="text-qs-min">
 <p>
 If you are interested playing around with <b><code>MRaster</code></b> as quickly as possible, then this section is for you.
 </p>
 
 <p>
-The first step is to download <b><code>MRaster</code></b>.  You can grab the <a href="https://github.com/richmit/mraster/archive/refs/heads/master.zip">zip file</a>, or you can simply
-clone the repository with GIT like this:
+The first step is to download <b><code>MRaster</code></b> and <b><code>MRMathCPP</code></b>.  The easiest way is to clone them with git:
 </p>
 
-<pre class="example" id="orga6a534c">
+<pre class="example" id="org1f237eb">
 git clone 'https://github.com/richmit/mraster.git'
+git clone 'https://github.com/richmit/MRMathCPP.git'
 </pre>
 
 <p>
-Once you have it downloaded, make note of the "<code>lib</code>" folder within the repository.  This folder contains everything you need to develop with <b><code>MRaster</code></b>, and you
-can simply put your code right in that directory.  
+Alternatly, you could download the zip files:
+</p>
+<ul class="org-ul">
+<li><a href="https://github.com/richmit/mraster/archive/refs/heads/master.zip">MRaster</a></li>
+<li><a href="https://github.com/richmit/MRMathCPP/archive/refs/heads/MRMathCPP.zip">MRMathCPP</a></li>
+</ul>
+
+<p>
+Once you have it downloaded, make note of the "<code>lib</code>" folder within each repository containing all the headers.  Both libraries are "header only" meaning all
+you need to to to use them is include the headers.  If you are looking for the absolute simplest path forward, just copy the <code>*.hpp</code> files in <b>both</b> "<code>lib</code>"
+directories into the directory with your code.  Alternately, if you are using an IDE, then you can simply "add" the include files to the project in your IDE.
+Alternately you can direct your build environment to add the "<code>lib</code>" directories to your compiler's "include path".  With an IDE that's usually a few clicks away.  
+On the command line, with GCC/Clang, you can add the directories with the <code>-I</code> option.
 </p>
 
 <p>
-First let's create a file called "<code>hello.cpp</code>" right inside the "<code>lib</code>" directory with the following content:
+Here is a very minimal example you can try.  Put in a file called "<code>hello.cpp</code>":
 </p>
 
 <div class="org-src-container">
@@ -315,7 +318,7 @@ Now we can compile it with GCC like this:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">g++ -m64 -std=gnu++20 hello.cpp -o hello2
+<pre class="src src-sh">g++ -m64 -std=gnu++20 hello.cpp -o hello
 </pre>
 </div>
 
@@ -324,7 +327,7 @@ Now you can run it, and take a look at the file it created ("<code>hello.tiff</c
 </p>
 
 
-<div id="orge80c015" class="figure">
+<div id="org6c13eb7" class="figure">
 <p><img src="./pics/quick/hello.png" alt="hello.png" width="800" align="center" />
 </p>
 </div>
@@ -334,17 +337,12 @@ That's it!  How easy was that?
 </p>
 </div>
 
-<div id="outline-container-qs-faq" class="outline-3">
-<h3 id="qs-faq"><span class="section-number-3">1.1.</span> FAQ for people not using <code>cmake</code></h3>
-<div class="outline-text-3" id="text-qs-faq">
-</div>
-
-<div id="outline-container-qs-faq-q1" class="outline-4">
-<h4 id="qs-faq-q1"><span class="section-number-4">1.1.1.</span> Q1: How do I get advanced TIFF reader support without <code>cmake</code>?</h4>
-<div class="outline-text-4" id="text-qs-faq-q1">
+<div id="outline-container-qs-min-tiff" class="outline-3">
+<h3 id="qs-min-tiff"><span class="section-number-3">1.1.</span> How do I get advanced TIFF reader support without <code>cmake</code>?</h3>
+<div class="outline-text-3" id="text-qs-min-tiff">
 <blockquote>
 <p>
-<b>A:</b> If you have <code>libtiff</code> installed in a standard location, then you can probably just add "=-DTIFF_FOUND" to the compile command like this:
+If you have <code>libtiff</code> installed in a standard location, then you can probably just add "=-DTIFF_FOUND" to the compile command like this:
 </p>
 
 <div class="org-src-container">
@@ -358,155 +356,63 @@ Please note that advanced TIFF reader is only required to <b>read</b> TIFF files
 </blockquote>
 </div>
 </div>
-
-<div id="outline-container-qs-faq-q2" class="outline-4">
-<h4 id="qs-faq-q2"><span class="section-number-4">1.1.2.</span> Q2: What's up with "<code>-std=gcc++20</code>" instead of "<code>-std=c++20</code>"?</h4>
-<div class="outline-text-4" id="text-qs-faq-q2">
-<blockquote>
-<p>
-<b>A:</b> <b><code>MRaster</code></b> works just fine with standard C++20 compilers.  The "<code>-std=gcc++20</code>" option enables specific features of GCC that make <b><code>MRaster</code></b> better.  In
-particular, it enables 128-bit integers on platforms that support it &#x2013; allowing, for example, a very high performance floating point RGBA image format.  If
-you want to turn off 128-bit integers, and use pure C++20 instead with GCC, then you can use a command line like this:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">g++ -DMJR_LOOK_FOR_128_BIT_TYPES=0 -m64 --std=c++20 hello.cpp -o hello
-</pre>
-</div>
-</blockquote>
-</div>
-</div>
-
-<div id="outline-container-qs-faq-q3" class="outline-4">
-<h4 id="qs-faq-q3"><span class="section-number-4">1.1.3.</span> Q3: I got some weird errors about <code>bit_cast</code>.  What's up?</h4>
-<div class="outline-text-4" id="text-qs-faq-q3">
-<p>
-Probably your compiler is too old to support that part of the C++ standard.  One of the advantages of using <code>cmake</code> is that it tries to detect this issue.  Without <code>cmake</code>, you need to add the following
-to your compile command (or get a better compiler):
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">-DMISSING_P0476R2=1
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-qs-faq-q4" class="outline-4">
-<h4 id="qs-faq-q4"><span class="section-number-4">1.1.4.</span> Q4: I got some weird errors about complex numbers and <code>std::pow</code>? What's up?</h4>
-<div class="outline-text-4" id="text-qs-faq-q4">
-<p>
-Probably your compiler is too old to support that part of the C++ standard.  One of the advantages of using <code>cmake</code> is that it tries to detect this issue.  Without <code>cmake</code>, you need to add the following
-to your compile command (or get a better compiler):
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">-DMISSING_P1907R1=1
-</pre>
-</div>
-</div>
-</div>
-</div>
 </div>
 
 <div id="outline-container-examples" class="outline-2">
 <h2 id="examples"><span class="section-number-2">2.</span> Playing With <b><code>MRaster</code></b>'s Example Programs</h2>
 <div class="outline-text-2" id="text-examples">
 <p>
-The source code for the example programs is located in the "<code>examples</code>" directory.  <b><code>MRaster</code></b> ships with a <code>cmake</code> build system that should be able to
-interrogate your environment, and produce make files for your OS.  To build the example programs:
+Probably the first stop for most people trying out <b><code>MRaster</code></b> is the example programs.  
 </p>
 
-<ol class="org-ol">
-<li>Change directory to the root of the git repository (you should see "<code>lib</code>" &amp; "<code>examples</code>" directories).</li>
-<li>Create a "<code>build</code>" directory &#x2013; cmake builds outside of the source trees.</li>
-<li>Change directory to the build directory</li>
-<li>Use <code>cmake</code> to generate make files for your system</li>
-<li>Build the examples</li>
-<li>Play with the examples</li>
-</ol>
-
 <p>
-A typical shell session following the steps outlined above might look like this:
+<b><code>MRaster</code></b> ships with a <code>cmake</code> build system that should be able to interrogate your environment, and produce make files for your OS.  One complication is
+that I've broken the project into two git repositories (one for some generic math stuff and another for <b><code>MRaster</code></b> proper).  To build the example programs:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">rm -rf build
-mkdir build
-<span style="color: #b0c4de;">cd</span> build
-cmake -G <span style="color: #fa8072;">'MSYS Makefiles'</span> ..    <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">For Windows running MSYS2.  Remove the "-G 'MSYS Makefiles'" bit for other platforms.</span>
-make
+<pre class="src src-sh">git clone <span style="color: #fa8072;">'https://github.com/richmit/MRMathCPP.git'</span>    <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Download MRMathCPP</span>
+<span style="color: #b0c4de;">cd</span> MRMathCPP                                            <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Change directory to the root of the MRMathCPP git repository</span>
+mkdir build                                             <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Create a 'build' directory</span>
+<span style="color: #b0c4de;">cd</span> build                                                <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Change directory to the build directory</span>
+cmake -G <span style="color: #fa8072;">'MSYS Makefiles'</span> ..                            <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Configure the build system with cmake (NOTE 1)</span>
+cmake --build . -t install                              <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Install the package in the build directory (NOTE 2)</span>
+<span style="color: #b0c4de;">cd</span> ../..                                                <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Change directory back to where you cloned the first repo</span>
+git clone <span style="color: #fa8072;">'https://github.com/richmit/mraster.git'</span>      <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Download MRaster</span>
+<span style="color: #b0c4de;">cd</span> mraster                                              <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Change directory to the root of the mraster git repository</span>
+mkdir build                                             <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Create a 'build' directory</span>
+<span style="color: #b0c4de;">cd</span> build                                                <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Change directory to the build directory</span>
+cmake -G <span style="color: #fa8072;">'MSYS Makefiles'</span> ..                            <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Configure the build system with cmake (NOTE 1)</span>
+cmake --build . -t examples                             <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Build all the examples</span>
 </pre>
 </div>
 
-<p>
-Note <code>cmake</code> can take several options like the "<code>-G</code>" option mentioned in the example above.  For more information on options related to <b><code>MRaster</code></b>, take a look
-at the "<code>configure.sh</code>" script in the root directory of the git repository.
-</p>
-</div>
-</div>
-
-<div id="outline-container-cmake-coopt" class="outline-2">
-<h2 id="cmake-coopt"><span class="section-number-2">3.</span> Using <b><code>MRaster</code></b>'s <code>cmake</code> Configuration</h2>
-<div class="outline-text-2" id="text-cmake-coopt">
-<p>
-For many <b><code>MRaster</code></b> users, <code>cmake</code> is an unfamiliar tool.  Some of them decide to directly use <b><code>MRaster</code></b>'s <code>cmake</code> infrastructure, using the "<code>examples</code>"
-directory as a template for the code they produce.  This can be a nice way for people new to <code>cmake</code> to get an idea of how it works; however, I have to warn
-you: I'm really a <code>cmake</code> novice!  You might just pick up some <code>cmake</code> bad habits looking at my <code>CMakeLists.txt</code> file! :)
-</p>
-
-<p>
-If you want to use the <b><code>MRaster</code></b> <code>cmake</code> infrastructure, the easiest path is to put your code in the "<code>examples"</code> directory.  Next we need to add your code to
-the "<code>CMakeLists.txt</code>" file.  Look for lines like these:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-cmake"><span style="color: #00fa9a; font-weight: bold;">set</span>(TARGETS_REQ_NONE   <span style="color: #fa8072;">"apollony"</span> <span style="color: #fa8072;">"apomorph"</span>  ...
-<span style="color: #00fa9a; font-weight: bold;">set</span>(TARGETS_REQ_MRRL   <span style="color: #fa8072;">"color_lut_indexed"</span> <span style="color: #fa8072;">"color_lut_rainbows"</span>  ...
-<span style="color: #00fa9a; font-weight: bold;">set</span>(TARGETS_REQ_OPENGL <span style="color: #fa8072;">"glut_image"</span>)
-<span style="color: #00fa9a; font-weight: bold;">set</span>(TARGETS_REQ_TIFF   <span style="color: #fa8072;">"brownianDiffusion"</span> <span style="color: #fa8072;">"dlaBrownian"</span>  ...
-<span style="color: #00fa9a; font-weight: bold;">set</span>(TARGETS_REQ_OPENMP <span style="color: #fa8072;">"mandelbrot_bm_cplx_openmp"</span>)
-<span style="color: #00fa9a; font-weight: bold;">set</span>(TARGETS_REQ_BTEST  <span style="color: #fa8072;">"utest_foo"</span> <span style="color: #fa8072;">"utest_color_types_ia64nGCC"</span>  ...
-<span style="color: #00fa9a; font-weight: bold;">set</span>(TARGETS_REQ_PNG    )
-<span style="color: #00fa9a; font-weight: bold;">set</span>(TARGETS_REQ_IM     )
-</pre>
-</div>
-
-<p>
-Each of these lines are a list of source files that require various external dependencies.  In general you should always add your source file (minus the
-"<code>.cpp</code>" extension) to the "<code>TARGETS_REQ_MRRL</code>" list.  If your program needs the advanced TIFF reader, then also add it to the "<code>TARGETS_REQ_TIFF</code>" list as
-well.  Now we are ready to go:
-</p>
-
-<ol class="org-ol">
-<li>Create a directory called "<code>build</code>" in the root of the git repository</li>
-<li>Change directory the "<code>build</code>" directory</li>
-<li>Use <code>cmake</code> to generate make files</li>
-<li>Build your program!</li>
-</ol>
-
-<p>
-These steps might look like this:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sh">rm -rf build
-mkdir build
-<span style="color: #b0c4de;">cd</span> build
-cmake -G <span style="color: #fa8072;">'MSYS Makefiles'</span> ..
-make your_program
-</pre>
-</div>
+<dl class="org-dl">
+<dt>NOTE 1</dt><dd><ul class="org-ul">
+<li>I normally use the "<code>configure.sh</code>" script in the root directory instead of running <code>cmake</code> directly for the configuration step.  I don't suggest it
+above because it won't work for everybody because "<code>configure.sh</code>" is a <code>bash</code> script &#x2013; i.e.  it will only work if you have a working <code>bash</code> envoronmtn
+(i.e. linux, macOS, UNIX, Windows MSYS 2, Windows WSL, etc&#x2026;).</li>
+<li>In the example above we use "<code>MSYS Makefiles</code>" for the "<code>-G</code>" option &#x2013; this value works for Windows 10/11 running MSYS2.</li>
+<li>If you don't know what to use for the "<code>-G</code>" option, then take a look at the "<code>configure.sh</code>" script for ideas.</li>
+</ul></dd>
+<dt>NOTE 2</dt><dd><ul class="org-ul">
+<li>The command will install the <code>cmake</code> package into the build directory within the git repository.  In particular, this step will <b>not</b> install anything on
+your system!  If you <b>do</b> want to install the package someplace, then you can use the standard <code>cmake</code> install arguments to do that.</li>
+<li>This step is not actually necessary.  The <code>cmake</code> configuration in <b><code>MRaster</code></b> will detect a <b><code>MRMathCPP</code></b> repository located at the same level and
+consume the include files even if the package configuration hasn't been generated or installed.  I suggest doing the install because it insures the
+<b><code>MRMathCPP</code></b> can be properly configured on your system, and sets up a proper <code>cmake</code> package to export the library.</li>
+</ul></dd>
+</dl>
 </div>
 </div>
 
 <div id="outline-container-platform-notes" class="outline-2">
-<h2 id="platform-notes"><span class="section-number-2">4.</span> Platform Notes</h2>
+<h2 id="platform-notes"><span class="section-number-2">3.</span> Platform Notes</h2>
 <div class="outline-text-2" id="text-platform-notes">
 </div>
 
 <div id="outline-container-platform-notes-m2w11gcc12" class="outline-3">
-<h3 id="platform-notes-m2w11gcc12"><span class="section-number-3">4.1.</span> Windows 11 with MSYS2 GCC 12.1.0 (and newer GCCs &#x2013; tested up to v14.1.0)</h3>
+<h3 id="platform-notes-m2w11gcc12"><span class="section-number-3">3.1.</span> Windows 11 with MSYS2 GCC 12.1.0 (and newer GCCs &#x2013; tested up to v14.1.0)</h3>
 <div class="outline-text-3" id="text-platform-notes-m2w11gcc12">
 <p>
 Everything works with the following cmake:
@@ -520,7 +426,7 @@ Everything works with the following cmake:
 </div>
 
 <div id="outline-container-platform-notes-m2w11clang14" class="outline-3">
-<h3 id="platform-notes-m2w11clang14"><span class="section-number-3">4.2.</span> Windows 11 with MSYS2 clang 14.0.6-18 (and newer clangs &#x2013; tested up to v18.1.6)</h3>
+<h3 id="platform-notes-m2w11clang14"><span class="section-number-3">3.2.</span> Windows 11 with MSYS2 clang 14.0.6-18 (and newer clangs &#x2013; tested up to v18.1.6)</h3>
 <div class="outline-text-3" id="text-platform-notes-m2w11clang14">
 <p>
 Everything works with the following cmake:
@@ -534,7 +440,7 @@ Everything works with the following cmake:
 </div>
 
 <div id="outline-container-platform-notes-m2w11vs2022" class="outline-3">
-<h3 id="platform-notes-m2w11vs2022"><span class="section-number-3">4.3.</span> Windows 11 with MSYS2 cmake and Visual Studio 2022 Community Edition</h3>
+<h3 id="platform-notes-m2w11vs2022"><span class="section-number-3">3.3.</span> Windows 11 with MSYS2 cmake and Visual Studio 2022 Community Edition</h3>
 <div class="outline-text-3" id="text-platform-notes-m2w11vs2022">
 <p>
 This method works, but you won't get any external dependencies like <code>GLUT</code>, <code>SDL2</code>, <code>libTIFF</code>, <code>boost</code>, etc&#x2026;  But, you will get enough to run many of the examples.
@@ -556,7 +462,7 @@ Then open up the directory with explorer, and double click on one of the project
 </div>
 
 <div id="outline-container-platform-notes-w11vs2022" class="outline-3">
-<h3 id="platform-notes-w11vs2022"><span class="section-number-3">4.4.</span> Windows 11 with Visual Studio 2022 Community Edition</h3>
+<h3 id="platform-notes-w11vs2022"><span class="section-number-3">3.4.</span> Windows 11 with Visual Studio 2022 Community Edition</h3>
 <div class="outline-text-3" id="text-platform-notes-w11vs2022">
 <p>
 Everything works, but it's harder to get set up.  Simply fire up VS, and open the folder with the <code>CMakeLists.txt</code> file in it.  VS will detect a <code>cmake</code>
@@ -567,7 +473,7 @@ project.  Next use <a href="https://vcpkg.io/en/index.html">vcpkg</a> to install
 </div>
 
 <div id="outline-container-platform-notes-osx1151hbGCC12" class="outline-3">
-<h3 id="platform-notes-osx1151hbGCC12"><span class="section-number-3">4.5.</span> Mac OS X Monterey 12.5.1 with Homebrew GCC 12.1.0</h3>
+<h3 id="platform-notes-osx1151hbGCC12"><span class="section-number-3">3.5.</span> Mac OS X Monterey 12.5.1 with Homebrew GCC 12.1.0</h3>
 <div class="outline-text-3" id="text-platform-notes-osx1151hbGCC12">
 <p>
 I had trouble getting <code>boost</code> to work, but everything else seems OK.  Note the <code>-DGLUT_glut_LIBRARY</code> option &#x2013; this is required to direct <code>cmake</code> to use the
@@ -600,7 +506,7 @@ And I used the following cmake:
 </div>
 
 <div id="outline-container-platform-notes-osx1151aclang1316" class="outline-3">
-<h3 id="platform-notes-osx1151aclang1316"><span class="section-number-3">4.6.</span> Mac OS X Monterey 12.5.1 with Apple clang 13.1.6</h3>
+<h3 id="platform-notes-osx1151aclang1316"><span class="section-number-3">3.6.</span> Mac OS X Monterey 12.5.1 with Apple clang 13.1.6</h3>
 <div class="outline-text-3" id="text-platform-notes-osx1151aclang1316">
 <p>
 Right now <code>clang</code> doesn't have support for floating point template parameters, and thus the templates <code>csPLY_tpl</code> &amp; <code>csCubeHelix_tpl</code> are not available.
@@ -630,7 +536,7 @@ Lastly, note the <code>-DGLUT_glut_LIBRARY</code> option &#x2013; this is requir
 </div>
 
 <div id="outline-container-platform-notes-lindeb126gcc133" class="outline-3">
-<h3 id="platform-notes-lindeb126gcc133"><span class="section-number-3">4.7.</span> Debian 12.6 bookworm with GCC 13.3.0 (or with the GCC-14 package &#x2013; tested with version 14.0.1)</h3>
+<h3 id="platform-notes-lindeb126gcc133"><span class="section-number-3">3.7.</span> Debian 12.6 bookworm with GCC 13.3.0 (or with the GCC-14 package &#x2013; tested with version 14.0.1)</h3>
 <div class="outline-text-3" id="text-platform-notes-lindeb126gcc133">
 <p>
 This is the stock compiler that comes with bookworm.  It's a bit old, but everything seems to work
@@ -660,7 +566,7 @@ Now you can use the following <code>cmake</code> command:
 </div>
 
 <div id="outline-container-platform-notes-lindeb114gcc1021" class="outline-3">
-<h3 id="platform-notes-lindeb114gcc1021"><span class="section-number-3">4.8.</span> Debian bullseye 11.4 with GCC 10.2.1</h3>
+<h3 id="platform-notes-lindeb114gcc1021"><span class="section-number-3">3.8.</span> Debian bullseye 11.4 with GCC 10.2.1</h3>
 <div class="outline-text-3" id="text-platform-notes-lindeb114gcc1021">
 <p>
 This is the stock compiler that comes with bullseye.  It's a bit old, and is missing support for both floating point template arguments and <code>bit_cast</code>.  
@@ -691,7 +597,7 @@ Now you can use the following <code>cmake</code> command:
 </div>
 
 <div id="outline-container-platform-notes-lindeb114gcc113" class="outline-3">
-<h3 id="platform-notes-lindeb114gcc113"><span class="section-number-3">4.9.</span> Debian bullseye 11.4 with GCC 11.3</h3>
+<h3 id="platform-notes-lindeb114gcc113"><span class="section-number-3">3.9.</span> Debian bullseye 11.4 with GCC 11.3</h3>
 <div class="outline-text-3" id="text-platform-notes-lindeb114gcc113">
 <p>
 With this newer compiler all <b><code>MRaster</code></b> features are supported.
@@ -754,7 +660,7 @@ Now you can use the following <code>cmake</code> command:
 </div>
 
 <div id="outline-container-platform-notes-lindeb116gcc122" class="outline-3">
-<h3 id="platform-notes-lindeb116gcc122"><span class="section-number-3">4.10.</span> Debian bullseye 11.6 with GCC 12.2</h3>
+<h3 id="platform-notes-lindeb116gcc122"><span class="section-number-3">3.10.</span> Debian bullseye 11.6 with GCC 12.2</h3>
 <div class="outline-text-3" id="text-platform-notes-lindeb116gcc122">
 <p>
 With this newer compiler all <b><code>MRaster</code></b> features are supported.
@@ -821,14 +727,13 @@ Now you can use the following <code>cmake</code> command:
 </div>
 </div>
 
-
 <div id="outline-container-gbl-faq" class="outline-2">
-<h2 id="gbl-faq"><span class="section-number-2">5.</span> FAQ</h2>
+<h2 id="gbl-faq"><span class="section-number-2">4.</span> FAQ</h2>
 <div class="outline-text-2" id="text-gbl-faq">
 </div>
 
 <div id="outline-container-gbl-faq-q1" class="outline-3">
-<h3 id="gbl-faq-q1"><span class="section-number-3">5.1.</span> Q1: What's up with "<code>-std=gcc++20</code>" instead of "<code>-std=c++20</code>"?</h3>
+<h3 id="gbl-faq-q1"><span class="section-number-3">4.1.</span> Q1: What's up with "<code>-std=gcc++20</code>" instead of "<code>-std=c++20</code>"?</h3>
 <div class="outline-text-3" id="text-gbl-faq-q1">
 <blockquote>
 <p>
@@ -846,7 +751,7 @@ you want to turn off 128-bit integers, and use pure C++20 instead with GCC, then
 </div>
 
 <div id="outline-container-gbl-faq-q2" class="outline-3">
-<h3 id="gbl-faq-q2"><span class="section-number-3">5.2.</span> Q2: The examples seem to be missing standard/system include files</h3>
+<h3 id="gbl-faq-q2"><span class="section-number-3">4.2.</span> Q2: The examples seem to be missing standard/system include files</h3>
 <div class="outline-text-3" id="text-gbl-faq-q2">
 <blockquote>
 <p>

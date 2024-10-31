@@ -30,6 +30,27 @@
 #########################################################################################################################################################.H.E.##
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------
+if [ ! -e ../CMakeLists.txt ]; then
+  echo "ERROR(configure.sh): Missing ../CMakeLists.txt"
+  if [ -e ./CMakeLists.txt ]; then
+    echo "ERROR(configure.sh): It looks like you are running from the base of the repo"
+    if [ -d ./build ]; then
+      echo "ERROR(configure.sh): cd into the build directory to run this script"
+    else
+      echo "ERROR(configure.sh): Create a 'bulid' directory and run this script in it"
+    fi
+  fi
+  echo ''
+  echo "ERROR(configure.sh): Use the -h option for help"
+  exit
+fi
+
+OPATHS=('MRaster'     \
+        'MRPTree'     \
+        'MRMathCPP'   \
+       );
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------
 if [[ "${@}" == *'-h'* ]]; then
   cat <<EOF
 
@@ -40,46 +61,68 @@ if [[ "${@}" == *'-h'* ]]; then
   Use: configure.sh [configure options] [cmake arguments]
 
     Configure Options
-     * -C Clean the build directory before running cmake
+     - -C Clean the build directory before running cmake (asks for conformation)
+     - -F Clean the build directory before running cmake (no conformation)
 
-    Common Arguments:
-     * Target -- leave it off to get the default
+    Common Cmake Arguments:
+     - Target -- leave it off to get the default
        - -G 'MSYS Makefiles'           <-- Default on MSYS2
        - -G 'Visual Studio 17 2022'
        - -G 'Unix Makefiles'           <-- Default on Linux ('Linux' means 'Not MSYS2')
        - -G Ninja
-     * Compiler -- leave it off to get the default
+     - Compiler -- leave it off to get the default
        - -DCMAKE_CXX_COMPILER=clang++
        - -DCMAKE_CXX_COMPILER=g++      <-- Default for 'MSYS Makefiles'
-       - -DCMAKE_CXX_COMPILER=g++-14   <-- Default for 'Unix Makefiles' if /usr/bin/g++-14 exists
-       - -DCMAKE_CXX_COMPILER=g++      <-- Default for 'Unix Makefiles' if /usr/bin/g++-14 missing
+       - -DCMAKE_CXX_COMPILER=g++-##   <-- Default for 'Unix Makefiles' if /usr/bin/g++-[0-9][0-9] exists
+                                           in which case the highest numbered version is selected.
+                                           This code base needs at least GCC-14.
+       - -DCMAKE_CXX_COMPILER=g++      <-- Default for 'Unix Makefiles' if /usr/bin/g++-[0-9][0-9] missing
        -                               <-- Default for 'Visual Studio 17 2022'
-     * Optional features -- leave them off to enable everything
-       - -DO_DOXYGEN=[YES|NO]  -- Doxygen (to build documentation)
-       - -DO_BTEST=[YES|NO]    -- BOOT unit tests (to run unit tests)
-       - -DO_OPENGL=[YES|NO]   -- OpenGL (used for some examples)
-       - -DO_OPENMP=[YES|NO]   -- OpenMP (used for some examples)
-       - -DO_TIFF=[YES|NO]     -- Provides advanced TIFF read functionality
-       - -DO_O_SDL2=[YES|NO]   -- SDL2 (used for some examples)
 EOF
+
+  if grep -q '^OPTION(O_' ../CMakeLists.txt; then
+     echo '     - Optional features'
+     sed -En 's/^OPTION\(O_([A-Z0-9_]+)( +)"([^"]+)".*(ON|OFF).*$/       - -DO_\1=[ON|OFF] \2 \3 (Default: \4)/p' < ../CMakeLists.txt
+  fi
+
+  OPH='     - Search Paths For MR* Components'
+  for opath in "${OPATHS[@]}"; do
+    if grep -q "${opath}_DIR" ../CMakeLists.txt; then
+      if [ -n "$OPH" ]; then
+        echo "$OPH"
+      fi
+      OPH=''
+      echo "       - -D${opath}_DIR=<PATH>"
+    fi
+  done
+
 exit
 fi
 
 if [ "$1" == "-C" ]; then
   shift
   CLEAN_DIR='YES'
+  CLEAN_ASK='YES'
+elif [ "$1" == "-F" ]; then
+  shift
+  CLEAN_DIR='YES'
+  CLEAN_ASK='NO'
 else
   CLEAN_DIR='NO'
+  CLEAN_ASK='NO'
 fi
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------
-if [ -e ../CMakeLists.txt ]; then
   if [ "$(basename $(pwd))" == "build" ]; then
     #
     # If we need to clean, then CLEAN!!
     if [ "$CLEAN_DIR" == 'YES' ]; then
-      ls
-      rm -rI *
+      if [ "$CLEAN_ASK" == 'YES' ]; then
+        ls
+        rm -rI *
+      else
+        rm -rf *
+      fi
     fi
     #
     # Figure out target
@@ -94,7 +137,7 @@ if [ -e ../CMakeLists.txt ]; then
       fi
     done
     if [ "$CMAKE_TARGET" == 'LOOKING' ]; then
-      echo "ERROR: Found -G but no following target argument"
+      echo "ERROR(configure.sh): Found -G but no following target argument"
     fi
     # No -G, figure out default!
     if [ -z "$CMAKE_TARGET" ]; then
@@ -112,7 +155,8 @@ if [ -e ../CMakeLists.txt ]; then
         CMAKE_CARG='-DCMAKE_CXX_COMPILER=g++.exe'
       fi
       if [ "$CMAKE_TARGET" == 'Unix Makefiles' ]; then
-        if [ -x '/usr/bin/g++-14' ]; then
+        HIGCC=$(ls /usr/bin/gcc-[0-9][0-9] 2>/dev/null | sort | tail -n 1)
+        if [ -x "$HIGCC" ]; then
           CMAKE_CARG='-DCMAKE_CXX_COMPILER=g++-14'
         else
           CMAKE_CARG='-DCMAKE_CXX_COMPILER=g++'
@@ -144,18 +188,7 @@ if [ -e ../CMakeLists.txt ]; then
       fi
     fi
   else
-    echo "ERROR: Must run from build directory"
+    echo "ERROR(configure.sh): Must run from build directory"
   fi
-else
-  if [ -e ./CMakeLists.txt ]; then
-    echo "ERROR: It looks like you are running from the base of the repo"
-    if [ -d ./build ]; then
-      echo "ERROR: cd into the build directory to run this script"
-    else
-      echo "ERROR: Create a directory called 'bulid'."
-      echo "ERROR: cd into the build directory to run this script"
-    fi
-  else
-    echo "ERROR: Missing ../CMakeLists.txt"
-  fi
-fi
+
+

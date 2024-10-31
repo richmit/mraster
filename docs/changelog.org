@@ -41,11 +41,15 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
 :CUSTOM_ID: latest
 :END:
   - Fixed Bugs
-    - N/A
+    - clampAll, clampBot, clampTop: now limited to channel arithmatic types
+    - Problem with enabling 128-bit integers on GCC resolved
+    - Integer wrap for color schemes better for negative arguments.
   - Known Issues
     - N/A
   - API breaking Changes
-    - N/A
+    - Header removed: mjrmath.hpp
+    - This project now depends on the MRMathCPP project.
+    - Deprecated headers removed: colorTpl.hpp, color.hpp, & point2d.hpp
   - Deprecated functionality
     - N/A
   - New functionality

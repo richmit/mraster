@@ -70,7 +70,7 @@ int main(void) {
           theRamCanvas.drawPoint(x, y, ct::csCColdeFireRamp::c(static_cast<ct::csIntType>(count*20)));
       }
     }
-    theRamCanvas.writeTIFFfile("juliaM_" + mjr::fmtInt(frame, 3, '0') + ".tiff");
+    theRamCanvas.writeTIFFfile("juliaM_" + mjr::math::str::fmt_int(frame, 3, '0') + ".tiff");
   }
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;

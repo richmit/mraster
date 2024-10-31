@@ -130,7 +130,7 @@ int main(void) {
       zOld = z;
     }
 
-    theRamCanvas.writeTIFFfile("attracting_torus_shadowM_" + mjr::fmtInt(frame, 3, '0') + ".tiff");
+    theRamCanvas.writeTIFFfile("attracting_torus_shadowM_" + mjr::math::str::fmt_int(frame, 3, '0') + ".tiff");
     std::chrono::duration<double> frameRunTime = std::chrono::system_clock::now() - frameStartTime;
 #   pragma omp critical
     std::cout << "Frame " << frame << " of " << NUMFRM << " Runtime " << frameRunTime.count() << " sec" << std::endl;

@@ -152,9 +152,9 @@ int main(void) {
         theRamCanvasK.drawPoint(x, y, ct::csCColdeRainbow::c(static_cast<cit>((std::arg(z)+3.14)*255)));
         // L
         if(std::abs(std::real(z))<std::abs(std::imag(z)))
-          theRamCanvasL.drawPoint(x, y, ct::csCCu0R::c(mjr::intClamp(static_cast<cit>(std::abs(std::real(z))/100), 255)));
+          theRamCanvasL.drawPoint(x, y, ct::csCCu0R::c(mjr::math::ivl::clamp(static_cast<cit>(std::abs(std::real(z))/100), 255)));
         else
-          theRamCanvasL.drawPoint(x, y, ct::csCCu0B::c(mjr::intClamp(static_cast<cit>(std::abs(std::imag(z))/100), 255)));
+          theRamCanvasL.drawPoint(x, y, ct::csCCu0B::c(mjr::math::ivl::clamp(static_cast<cit>(std::abs(std::imag(z))/100), 255)));
       }
     }
   }

@@ -49,16 +49,16 @@ int main(void) {
   mjr::ramCanvas3c8b::colorType aColor(255, 255, 255);
 
   i=-1;
-  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csPLYgrey::c(mjr::genLinMap(x, 0, 1024, 0.0, 1.0)));    theRC.drawString("  csPLYgrey    ", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
-  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csPLYquad::c(mjr::genLinMap(x, 0, 1024, 0.0, 1.0)));    theRC.drawString("  csPLYquad    ", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
-  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csPLYturbo::c(mjr::genLinMap(x, 0, 1024, 0.0, 1.0)));   theRC.drawString("  csPLYturbo   ", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
-  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csPLYparula::c(mjr::genLinMap(x, 0, 1024, 0.0, 1.0)));  theRC.drawString("  csPLYparula  ", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
-  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csPLYmagma::c(mjr::genLinMap(x, 0, 1024, 0.0, 1.0)));   theRC.drawString("  csPLYmagma   ", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
-  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csPLYinferno::c(mjr::genLinMap(x, 0, 1024, 0.0, 1.0))); theRC.drawString("  csPLYinferno ", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
-  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csPLYplasma::c(mjr::genLinMap(x, 0, 1024, 0.0, 1.0)));  theRC.drawString("  csPLYplasma  ", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
-  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csPLYviridis::c(mjr::genLinMap(x, 0, 1024, 0.0, 1.0))); theRC.drawString("  csPLYviridis ", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
-  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csPLYcividis::c(mjr::genLinMap(x, 0, 1024, 0.0, 1.0))); theRC.drawString("  csPLYcividis ", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
-  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csPLYhsvRB::c(mjr::genLinMap(x, 0, 1024, 0.0, 1.0)));   theRC.drawString("  csPLYhsvRB   ", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
+  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csPLYgrey::c(mjr::math::linm::gen_map(x, 0, 1024, 0.0, 1.0)));    theRC.drawString("  csPLYgrey    ", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
+  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csPLYquad::c(mjr::math::linm::gen_map(x, 0, 1024, 0.0, 1.0)));    theRC.drawString("  csPLYquad    ", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
+  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csPLYturbo::c(mjr::math::linm::gen_map(x, 0, 1024, 0.0, 1.0)));   theRC.drawString("  csPLYturbo   ", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
+  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csPLYparula::c(mjr::math::linm::gen_map(x, 0, 1024, 0.0, 1.0)));  theRC.drawString("  csPLYparula  ", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
+  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csPLYmagma::c(mjr::math::linm::gen_map(x, 0, 1024, 0.0, 1.0)));   theRC.drawString("  csPLYmagma   ", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
+  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csPLYinferno::c(mjr::math::linm::gen_map(x, 0, 1024, 0.0, 1.0))); theRC.drawString("  csPLYinferno ", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
+  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csPLYplasma::c(mjr::math::linm::gen_map(x, 0, 1024, 0.0, 1.0)));  theRC.drawString("  csPLYplasma  ", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
+  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csPLYviridis::c(mjr::math::linm::gen_map(x, 0, 1024, 0.0, 1.0))); theRC.drawString("  csPLYviridis ", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
+  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csPLYcividis::c(mjr::math::linm::gen_map(x, 0, 1024, 0.0, 1.0))); theRC.drawString("  csPLYcividis ", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
+  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csPLYhsvRB::c(mjr::math::linm::gen_map(x, 0, 1024, 0.0, 1.0)));   theRC.drawString("  csPLYhsvRB   ", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
 
   theRC.writeTIFFfile("color_lut_poly.tiff");
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;

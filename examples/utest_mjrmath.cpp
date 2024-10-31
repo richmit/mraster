@@ -47,12 +47,12 @@
 
 // |--------+----------------------------|
 // |        | numberWrap                 |
-// |        | realWrap                   |
+// |        | mjr::math::ivl::wrapCO                   |
 // |        | intClamp                   |
-// |        | unitClamp                  |
+// |        | mjr::math::ivl::unit_clamp                  |
 // |--------+----------------------------|
-// |        | interpolateLinear          |
-// |        | interpolateLinearAnglesDeg |
+// |        | mjr::math:linm::interpolate          |
+// |        | interpolate_degrees |
 // |--------+----------------------------|
 // |        | intLinMap                  |
 // |        | genLinMap                  |
@@ -98,115 +98,115 @@ BOOST_AUTO_TEST_CASE(evalBiPoly, * boost::unit_test::tolerance(0.00001)) {
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
                                                        
-  BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly01, 0, 0) ==    9);
-  BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly01, 0, 1) ==   24);
-  BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly01, 1, 0) ==   18);
-  BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly01, 1, 1) ==   45);
-  BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly01, 2, 3) ==  282);
+  BOOST_TEST_CHECK(mjr::math::bply::eval(BiPoly01, 0, 0) ==    9);
+  BOOST_TEST_CHECK(mjr::math::bply::eval(BiPoly01, 0, 1) ==   24);
+  BOOST_TEST_CHECK(mjr::math::bply::eval(BiPoly01, 1, 0) ==   18);
+  BOOST_TEST_CHECK(mjr::math::bply::eval(BiPoly01, 1, 1) ==   45);
+  BOOST_TEST_CHECK(mjr::math::bply::eval(BiPoly01, 2, 3) ==  282);
 
-  BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly02, 0, 0) ==    1);
-  BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly02, 0, 1) ==    6);
-  BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly02, 1, 0) ==   12);
-  BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly02, 1, 1) ==   45);
-  BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly02, 2, 3) ==  628);
+  BOOST_TEST_CHECK(mjr::math::bply::eval(BiPoly02, 0, 0) ==    1);
+  BOOST_TEST_CHECK(mjr::math::bply::eval(BiPoly02, 0, 1) ==    6);
+  BOOST_TEST_CHECK(mjr::math::bply::eval(BiPoly02, 1, 0) ==   12);
+  BOOST_TEST_CHECK(mjr::math::bply::eval(BiPoly02, 1, 1) ==   45);
+  BOOST_TEST_CHECK(mjr::math::bply::eval(BiPoly02, 2, 3) ==  628);
                                                           
-  BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly03, 0, 0) ==   16);
-  BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly03, 0, 1) ==   58);
-  BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly03, 1, 0) ==   40);
-  BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly03, 1, 1) ==  136);
-  BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly03, 2, 3) == 2630);
+  BOOST_TEST_CHECK(mjr::math::bply::eval(BiPoly03, 0, 0) ==   16);
+  BOOST_TEST_CHECK(mjr::math::bply::eval(BiPoly03, 0, 1) ==   58);
+  BOOST_TEST_CHECK(mjr::math::bply::eval(BiPoly03, 1, 0) ==   40);
+  BOOST_TEST_CHECK(mjr::math::bply::eval(BiPoly03, 1, 1) ==  136);
+  BOOST_TEST_CHECK(mjr::math::bply::eval(BiPoly03, 2, 3) == 2630);
 
-  BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly04, 0, 0) ==    1);
-  BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly04, 0, 1) ==   10);
-  BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly04, 1, 0) ==   28);
-  BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly04, 1, 1) ==  136);
-  BOOST_TEST_CHECK(mjr::evalBiPoly(BiPoly04, 2, 3) == 7570);
+  BOOST_TEST_CHECK(mjr::math::bply::eval(BiPoly04, 0, 0) ==    1);
+  BOOST_TEST_CHECK(mjr::math::bply::eval(BiPoly04, 0, 1) ==   10);
+  BOOST_TEST_CHECK(mjr::math::bply::eval(BiPoly04, 1, 0) ==   28);
+  BOOST_TEST_CHECK(mjr::math::bply::eval(BiPoly04, 1, 1) ==  136);
+  BOOST_TEST_CHECK(mjr::math::bply::eval(BiPoly04, 2, 3) == 7570);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 BOOST_AUTO_TEST_CASE(fmtInt) {
 
   // Check default args
-  BOOST_TEST_CHECK(mjr::fmtInt(10                  )  ==    "10");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 4               )  ==  "  10");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, ' '          )  ==  "  10");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, ' ', 10      )  ==  "  10");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, ' ', 10, true)  ==  "  10");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10                  )  ==    "10");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 4               )  ==  "  10");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 4, ' '          )  ==  "  10");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 4, ' ', 10      )  ==  "  10");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 4, ' ', 10, true)  ==  "  10");
 
   // dec
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, ' ', 10, true)  ==    "10");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, ' ', 10, true)  ==    "10");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, ' ', 10, true)  ==    "10");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, ' ', 10, true)  ==   " 10");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, ' ', 10, true)  ==  "  10");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 0, ' ', 10, true)  ==    "10");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 1, ' ', 10, true)  ==    "10");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 2, ' ', 10, true)  ==    "10");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 3, ' ', 10, true)  ==   " 10");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 4, ' ', 10, true)  ==  "  10");
 
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, 'X', 10, true)  ==    "10");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, 'X', 10, true)  ==    "10");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, 'X', 10, true)  ==    "10");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, 'X', 10, true)  ==   "X10");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, 'X', 10, true)  ==  "XX10");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 0, 'X', 10, true)  ==    "10");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 1, 'X', 10, true)  ==    "10");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 2, 'X', 10, true)  ==    "10");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 3, 'X', 10, true)  ==   "X10");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 4, 'X', 10, true)  ==  "XX10");
 
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, ' ', 10, false) ==    "10");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, ' ', 10, false) ==    "10");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, ' ', 10, false) ==    "10");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, ' ', 10, false) ==   "10 ");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, ' ', 10, false) ==  "10  ");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 0, ' ', 10, false) ==    "10");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 1, ' ', 10, false) ==    "10");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 2, ' ', 10, false) ==    "10");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 3, ' ', 10, false) ==   "10 ");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 4, ' ', 10, false) ==  "10  ");
 
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, 'X', 10, false) ==    "10");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, 'X', 10, false) ==    "10");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, 'X', 10, false) ==    "10");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, 'X', 10, false) ==   "10X");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, 'X', 10, false) ==  "10XX");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 0, 'X', 10, false) ==    "10");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 1, 'X', 10, false) ==    "10");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 2, 'X', 10, false) ==    "10");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 3, 'X', 10, false) ==   "10X");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 4, 'X', 10, false) ==  "10XX");
 
   // hex
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, ' ', 16, true)  ==     "a");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, ' ', 16, true)  ==     "a");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, ' ', 16, true)  ==    " a");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, ' ', 16, true)  ==   "  a");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, ' ', 16, true)  ==  "   a");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 0, ' ', 16, true)  ==     "a");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 1, ' ', 16, true)  ==     "a");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 2, ' ', 16, true)  ==    " a");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 3, ' ', 16, true)  ==   "  a");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 4, ' ', 16, true)  ==  "   a");
                                                   
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, 'X', 16, true)  ==     "a");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, 'X', 16, true)  ==     "a");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, 'X', 16, true)  ==    "Xa");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, 'X', 16, true)  ==   "XXa");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, 'X', 16, true)  ==  "XXXa");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 0, 'X', 16, true)  ==     "a");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 1, 'X', 16, true)  ==     "a");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 2, 'X', 16, true)  ==    "Xa");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 3, 'X', 16, true)  ==   "XXa");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 4, 'X', 16, true)  ==  "XXXa");
 
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, ' ', 16, false) ==     "a");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, ' ', 16, false) ==     "a");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, ' ', 16, false) ==    "a ");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, ' ', 16, false) ==   "a  ");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, ' ', 16, false) ==  "a   ");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 0, ' ', 16, false) ==     "a");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 1, ' ', 16, false) ==     "a");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 2, ' ', 16, false) ==    "a ");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 3, ' ', 16, false) ==   "a  ");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 4, ' ', 16, false) ==  "a   ");
                                                   
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, 'X', 16, false) ==     "a");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, 'X', 16, false) ==     "a");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, 'X', 16, false) ==    "aX");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, 'X', 16, false) ==   "aXX");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, 'X', 16, false) ==  "aXXX");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 0, 'X', 16, false) ==     "a");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 1, 'X', 16, false) ==     "a");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 2, 'X', 16, false) ==    "aX");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 3, 'X', 16, false) ==   "aXX");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 4, 'X', 16, false) ==  "aXXX");
 
   // oct
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, ' ', 8, true)   ==    "12");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, ' ', 8, true)   ==    "12");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, ' ', 8, true)   ==    "12");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, ' ', 8, true)   ==   " 12");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, ' ', 8, true)   ==  "  12");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 0, ' ', 8, true)   ==    "12");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 1, ' ', 8, true)   ==    "12");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 2, ' ', 8, true)   ==    "12");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 3, ' ', 8, true)   ==   " 12");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 4, ' ', 8, true)   ==  "  12");
 
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, 'X', 8, true)   ==    "12");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, 'X', 8, true)   ==    "12");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, 'X', 8, true)   ==    "12");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, 'X', 8, true)   ==   "X12");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, 'X', 8, true)   ==  "XX12");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 0, 'X', 8, true)   ==    "12");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 1, 'X', 8, true)   ==    "12");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 2, 'X', 8, true)   ==    "12");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 3, 'X', 8, true)   ==   "X12");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 4, 'X', 8, true)   ==  "XX12");
 
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, ' ', 8, false)  ==    "12");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, ' ', 8, false)  ==    "12");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, ' ', 8, false)  ==    "12");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, ' ', 8, false)  ==   "12 ");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, ' ', 8, false)  ==  "12  ");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 0, ' ', 8, false)  ==    "12");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 1, ' ', 8, false)  ==    "12");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 2, ' ', 8, false)  ==    "12");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 3, ' ', 8, false)  ==   "12 ");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 4, ' ', 8, false)  ==  "12  ");
 
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 0, 'X', 8, false)  ==    "12");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 1, 'X', 8, false)  ==    "12");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 2, 'X', 8, false)  ==    "12");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 3, 'X', 8, false)  ==   "12X");
-  BOOST_TEST_CHECK(mjr::fmtInt(10, 4, 'X', 8, false)  ==  "12XX");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 0, 'X', 8, false)  ==    "12");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 1, 'X', 8, false)  ==    "12");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 2, 'X', 8, false)  ==    "12");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 3, 'X', 8, false)  ==   "12X");
+  BOOST_TEST_CHECK(mjr::math::str::fmt_int(10, 4, 'X', 8, false)  ==  "12XX");
 }
 
 #endif

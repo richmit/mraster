@@ -116,7 +116,7 @@ int main(void) {
     // Label the frame
     julRamCanvas.drawString("MJR 2022", mjr::hershey::font::ROMAN_SL_SANSERIF,  IMGSIZ-IMGSIZ/6, 20, "white", 1, 20);
     // Dump out frame
-    julRamCanvas.writeTIFFfile("juliaM2_" + mjr::fmtInt(frame, 3, '0') + ".tiff");
+    julRamCanvas.writeTIFFfile("juliaM2_" + mjr::math::str::fmt_int(frame, 3, '0') + ".tiff");
   }
 
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;

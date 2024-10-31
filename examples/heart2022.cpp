@@ -51,7 +51,7 @@ int main(void) {
       if(f(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y)) > 0) 
         theRamCanvas.drawPoint(x, y, "red");
       else
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b::csPLYquad::c(mjr::genLinMap(std::hypot(x-512, y-512), maxH, 0.0, 0.5, 1.0)));
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b::csPLYquad::c(mjr::math::linm::gen_map(std::hypot(x-512, y-512), maxH, 0.0, 0.5, 1.0)));
     }
 
   theRamCanvas.drawString("MWU. M", mjr::hershey::font::ROMAN_SL_SANSERIF, 900, 90, "red",  1, 20); 

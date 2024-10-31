@@ -42,18 +42,18 @@
 :END:
 
 From the README:
-#+BEGIN_QUOTE
 ------
 #+INCLUDE: "../README.org"
 ------
-#+END_QUOTE
 
 * Design goals
 :PROPERTIES:
 :CUSTOM_ID: goals
 :END:
 
-   - *Extreme portability (ISO C++20 only, zero external library requirements)*
+   - *Extreme portability (ISO C++20 only, no third party library requirements)* \\
+     Note the code is broken across two git repositories -- one for MRaster proper and one for some simple mathematical utilities.  In older versions of
+     MRaster these mathematical routines were included in the repo; however, I have pulled them out because they are generally useful by themselves.
    - *Super simple and easy to use, but full featured enough for an expert to be happy with*\\
      My goal was to be able to hand this package to a student with minimal C++ experience, and have them be able to create a Mandelbrot image in an few
      minutes.  For the most part my students were very successful!

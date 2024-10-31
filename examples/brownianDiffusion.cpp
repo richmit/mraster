@@ -111,7 +111,7 @@ int main(int argc, char *argv[]) {
       }
     }
 
-    theRamCanvas.writeTIFFfile(argv[2] + mjr::fmtInt(tgtLumPct, 3, '0') + ".tiff");
+    theRamCanvas.writeTIFFfile(argv[2] + mjr::math::str::fmt_int(tgtLumPct, 3, '0') + ".tiff");
     std::cout << "Write: " << tgtLumPct << std::endl;
   }
 

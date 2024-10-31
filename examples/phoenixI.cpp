@@ -83,7 +83,7 @@ int main(void) {
       }
     }
     theRamCanvas.scaleDownMean(4);
-    theRamCanvas.writeTIFFfile("phoenixI_" + mjr::fmtInt(j, 2, '0') + ".tiff");
+    theRamCanvas.writeTIFFfile("phoenixI_" + mjr::math::str::fmt_int(j, 2, '0') + ".tiff");
     std::cout << "ITER(" << j <<  "): " << "DONE " << std::endl;
   }
 

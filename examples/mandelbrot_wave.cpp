@@ -93,7 +93,7 @@ int main(void) {
       }
     }
     theRamCanvas.scaleDownMean(8);   // Another good choice: theRamCanvas.scaleDownMax(8); 
-    theRamCanvas.writeTIFFfile("mandelbrot_wave_" + mjr::fmtInt(frame, 3, '0') + ".tiff");
+    theRamCanvas.writeTIFFfile("mandelbrot_wave_" + mjr::math::str::fmt_int(frame, 3, '0') + ".tiff");
   }
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;

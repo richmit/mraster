@@ -55,7 +55,7 @@ int main(void) {
           count++,z=z*z+c)
         ;
       if(count < NUMITR)
-        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType::csCColdeFireRamp::c(mjr::numberWrap(static_cast<mjr::ramCanvas3c8b::csIntType>(count*20), 767)));
+        theRamCanvas.drawPoint(x, y, mjr::ramCanvas3c8b::colorType::csCColdeFireRamp::c(mjr::math::ivl::wrapCC(static_cast<mjr::ramCanvas3c8b::csIntType>(count*20), 767)));
     }
   }
   theRamCanvas.writeTIFFfile("mandelbrot_bm_cplx.tiff");

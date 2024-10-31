@@ -49,9 +49,9 @@ int main(void) {
   mjr::ramCanvas3c8b::colorType aColor(255, 255, 255);
 
   i=-1;
-  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csCHstd::c(mjr::genLinMap(x, 0, 1024, 0.0, 1.0))); theRC.drawString("  std", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
-  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csCHblu::c(mjr::genLinMap(x, 0, 1024, 0.0, 1.0))); theRC.drawString("  blu", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
-  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csCHvio::c(mjr::genLinMap(x, 0, 1024, 0.0, 1.0))); theRC.drawString("  vio", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
+  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csCHstd::c(mjr::math::linm::gen_map(x, 0, 1024, 0.0, 1.0))); theRC.drawString("  std", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
+  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csCHblu::c(mjr::math::linm::gen_map(x, 0, 1024, 0.0, 1.0))); theRC.drawString("  blu", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
+  BMP; for(int x=0;x<maxColors;x++) theRC.drawLine(x, y1, x, y2, ct::csCHvio::c(mjr::math::linm::gen_map(x, 0, 1024, 0.0, 1.0))); theRC.drawString("  vio", hft::ROMAN_SL_SANSERIF, xt, yt, "red",  1, 20); 
     
   theRC.writeTIFFfile("color_lut_cubehelix.tiff");
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;

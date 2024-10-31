@@ -62,7 +62,7 @@ int main(void) {
       }
     }
     //theRamCanvas.autoHistStrech();
-    theRamCanvas.writeTIFFfile("multibrotSnaps_" + mjr::fmtInt(p, 3, '0') + ".tiff");
+    theRamCanvas.writeTIFFfile("multibrotSnaps_" + mjr::math::str::fmt_int(p, 3, '0') + ".tiff");
     std::chrono::duration<double> frameRunTime = std::chrono::system_clock::now() - frameStartTime;
     std::cout << "Frame " << p << " Runtime " << frameRunTime.count() << " sec" << std::endl;
   }
