@@ -48,7 +48,7 @@ PROJECT_NAME           = "@CMAKE_PROJECT_NAME@ @PROJECT_VERSION_ID@ @DOXINPUT@"
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER         = "@PROJECT_VERSION_DATE@"
+PROJECT_NUMBER         = "@CMAKE_PROJECT_VERSION@"
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer a

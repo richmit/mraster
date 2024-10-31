@@ -9,7 +9,7 @@ set(CMAKE_CXX_EXTENSIONS ON)
 # Proejct meta data
 
 project(MRaster
-  VERSION 20.15.0.0
+  VERSION 21.0.0.0
   DESCRIPTION "Image Processing Library"
   HOMEPAGE_URL "https://github.com/richmit/mraster/"
   LANGUAGES CXX)

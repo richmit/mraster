@@ -36,12 +36,12 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
 
 #+TOC: headlines 5
 
-* Changes On HEAD Since Last Release
+* Feature & Refactor Release
 :PROPERTIES:
-:CUSTOM_ID: latest
+:CUSTOM_ID: v21.0.0.0
 :END:
   - Fixed Bugs
-    - clampAll, clampBot, clampTop: now limited to channel arithmatic types
+    - clampAll, clampBot, clampTop: now limited to channel arithmetic types
     - Problem with enabling 128-bit integers on GCC resolved
     - Integer wrap for color schemes better for negative arguments.
   - Known Issues
