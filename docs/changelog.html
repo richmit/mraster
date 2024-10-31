@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-10-31 Thu 14:25 -->
+<!-- 2024-10-31 Thu 15:51 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>Change Log</title>
@@ -230,12 +230,12 @@
 
 <tr>
 <td class="org-right"><b>Updated:</b></td>
-<td class="org-left"><i>2024-10-31 14:25:44</i></td>
+<td class="org-left"><i>2024-10-31 15:51:44</i></td>
 </tr>
 
 <tr>
 <td class="org-right"><b>Generated:</b></td>
-<td class="org-left"><i>2024-10-31 14:25:44</i></td>
+<td class="org-left"><i>2024-10-31 15:51:46</i></td>
 </tr>
 </tbody>
 </table>
@@ -247,36 +247,83 @@ Copyright &copy; 2024 Mitch Richling. All rights reserved.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#v21.0.0.0">1. Feature &amp; Refactor Release</a></li>
-<li><a href="#v20.15.0.0">2. v20.15.0.0: Feature Release</a></li>
-<li><a href="#v20.12.3">3. v20.12.3: Feature Release</a></li>
-<li><a href="#v20.12.0">4. v20.12.0: Feature Release</a></li>
-<li><a href="#v20.11.0">5. v20.11.0: Feature Release</a></li>
-<li><a href="#v20.10.5">6. v20.10.5: Public Release</a></li>
-<li><a href="#v20.10.0rc3">7. v20.10.0rc3: Unit tests. New features.</a></li>
-<li><a href="#v20.9.0rc2">8. v20.9.0rc2: Bug fixes. Unit tests. New features. Better platform support.</a></li>
-<li><a href="#v20.8.1b">9. v20.8.1b: Unit tests for ramCanvasTpl. Bugs.  New stuff.</a></li>
-<li><a href="#v20.8.2rc1">10. v20.8.2rc1: Unit tests for ramCanvasTpl.</a></li>
-<li><a href="#v20.8.0b">11. v20.8.0b: ramCanvasTpl refactor.  clang support. Cleanup.</a></li>
-<li><a href="#v20.7.0b">12. v20.7.0b: New Features. Bug Fixes. Unit Tests.</a></li>
-<li><a href="#v20.6.0b">13. v20.6.0b: Refactor, Bug Fixs, Unit Tests</a></li>
-<li><a href="#v20.5.0b">14. v20.5.0b: Unit tests, bug fixes, refactoring, &amp; cleanup</a></li>
-<li><a href="#v20.4.0a">15. v20.4.0a: Refactor, unit tests, doxygen docs</a></li>
-<li><a href="#v20.3.0a">16. v20.3.0a: ramConfig Refactor</a></li>
-<li><a href="#v20.2.0a">17. v20.2.0a: Refactor of hershey fonts &amp; RGBA</a></li>
-<li><a href="#v20.0.0a">18. v20.0.0a: Complete Refactor Of colorTpl &amp; ramCanvasTpl</a></li>
-<li><a href="#v6.0.0">19. v6.0.0: Feature &amp; Bugfix Release</a></li>
-<li><a href="#v5.0.0">20. v5.0.0: Refactor Release</a></li>
-<li><a href="#v4.5.0">21. v4.5.0: Feature &amp; Bugfix Release</a></li>
-<li><a href="#v4.0.0">22. v4.0.0: Feature &amp; Bugfix Release</a></li>
-<li><a href="#v3.0.0">23. v3.0.0: Major cleanup of old code.  Added cycles examples</a></li>
-<li><a href="#v2.0.0">24. v2.0.0: Feature &amp; Bugfix Release</a></li>
+<li><a href="#latest_TEMPLATE">1. Changes On HEAD Since Last Release TEMPLATE</a></li>
+<li><a href="#v21.0.0.0">2. Feature &amp; Refactor Release</a></li>
+<li><a href="#v20.15.0.0">3. v20.15.0.0: Feature Release</a></li>
+<li><a href="#v20.12.3">4. v20.12.3: Feature Release</a></li>
+<li><a href="#v20.12.0">5. v20.12.0: Feature Release</a></li>
+<li><a href="#v20.11.0">6. v20.11.0: Feature Release</a></li>
+<li><a href="#v20.10.5">7. v20.10.5: Public Release</a></li>
+<li><a href="#v20.10.0rc3">8. v20.10.0rc3: Unit tests. New features.</a></li>
+<li><a href="#v20.9.0rc2">9. v20.9.0rc2: Bug fixes. Unit tests. New features. Better platform support.</a></li>
+<li><a href="#v20.8.1b">10. v20.8.1b: Unit tests for ramCanvasTpl. Bugs.  New stuff.</a></li>
+<li><a href="#v20.8.2rc1">11. v20.8.2rc1: Unit tests for ramCanvasTpl.</a></li>
+<li><a href="#v20.8.0b">12. v20.8.0b: ramCanvasTpl refactor.  clang support. Cleanup.</a></li>
+<li><a href="#v20.7.0b">13. v20.7.0b: New Features. Bug Fixes. Unit Tests.</a></li>
+<li><a href="#v20.6.0b">14. v20.6.0b: Refactor, Bug Fixs, Unit Tests</a></li>
+<li><a href="#v20.5.0b">15. v20.5.0b: Unit tests, bug fixes, refactoring, &amp; cleanup</a></li>
+<li><a href="#v20.4.0a">16. v20.4.0a: Refactor, unit tests, doxygen docs</a></li>
+<li><a href="#v20.3.0a">17. v20.3.0a: ramConfig Refactor</a></li>
+<li><a href="#v20.2.0a">18. v20.2.0a: Refactor of hershey fonts &amp; RGBA</a></li>
+<li><a href="#v20.0.0a">19. v20.0.0a: Complete Refactor Of colorTpl &amp; ramCanvasTpl</a></li>
+<li><a href="#v6.0.0">20. v6.0.0: Feature &amp; Bugfix Release</a></li>
+<li><a href="#v5.0.0">21. v5.0.0: Refactor Release</a></li>
+<li><a href="#v4.5.0">22. v4.5.0: Feature &amp; Bugfix Release</a></li>
+<li><a href="#v4.0.0">23. v4.0.0: Feature &amp; Bugfix Release</a></li>
+<li><a href="#v3.0.0">24. v3.0.0: Major cleanup of old code.  Added cycles examples</a></li>
+<li><a href="#v2.0.0">25. v2.0.0: Feature &amp; Bugfix Release</a></li>
 </ul>
 </div>
 </div>
 
+<div id="outline-container-latest_TEMPLATE" class="outline-2">
+<h2 id="latest_TEMPLATE"><span class="section-number-2">1.</span> Changes On HEAD Since Last Release TEMPLATE</h2>
+<div class="outline-text-2" id="text-latest_TEMPLATE">
+<ul class="org-ul">
+<li>Fixed Bugs
+<ul class="org-ul">
+<li>N/A</li>
+</ul></li>
+<li>Known Issues
+<ul class="org-ul">
+<li>N/A</li>
+</ul></li>
+<li>API breaking Changes
+<ul class="org-ul">
+<li>N/A</li>
+</ul></li>
+<li>Deprecated functionality
+<ul class="org-ul">
+<li>N/A</li>
+</ul></li>
+<li>New functionality
+<ul class="org-ul">
+<li>N/A</li>
+</ul></li>
+<li>Documentation
+<ul class="org-ul">
+<li>N/A</li>
+</ul></li>
+<li>Examples
+<ul class="org-ul">
+<li>New
+<ul class="org-ul">
+<li>N/A</li>
+</ul></li>
+<li>Updated
+<ul class="org-ul">
+<li>N/A</li>
+</ul></li>
+</ul></li>
+<li>Miscellaneous
+<ul class="org-ul">
+<li>Better check.rb</li>
+</ul></li>
+</ul>
+</div>
+</div>
 <div id="outline-container-v21.0.0.0" class="outline-2">
-<h2 id="v21.0.0.0"><span class="section-number-2">1.</span> Feature &amp; Refactor Release</h2>
+<h2 id="v21.0.0.0"><span class="section-number-2">2.</span> Feature &amp; Refactor Release</h2>
 <div class="outline-text-2" id="text-v21.0.0.0">
 <ul class="org-ul">
 <li>Fixed Bugs
@@ -334,7 +381,7 @@ Copyright &copy; 2024 Mitch Richling. All rights reserved.
 </div>
 </div>
 <div id="outline-container-v20.15.0.0" class="outline-2">
-<h2 id="v20.15.0.0"><span class="section-number-2">2.</span> v20.15.0.0: Feature Release</h2>
+<h2 id="v20.15.0.0"><span class="section-number-2">3.</span> v20.15.0.0: Feature Release</h2>
 <div class="outline-text-2" id="text-v20.15.0.0">
 <ul class="org-ul">
 <li>Fixed Bugs
@@ -411,7 +458,7 @@ old versions</li>
 </div>
 </div>
 <div id="outline-container-v20.12.3" class="outline-2">
-<h2 id="v20.12.3"><span class="section-number-2">3.</span> v20.12.3: Feature Release</h2>
+<h2 id="v20.12.3"><span class="section-number-2">4.</span> v20.12.3: Feature Release</h2>
 <div class="outline-text-2" id="text-v20.12.3">
 <ul class="org-ul">
 <li>Examples
@@ -460,7 +507,7 @@ It is also much smarter about finding a good compiler.</li>
 </div>
 </div>
 <div id="outline-container-v20.12.0" class="outline-2">
-<h2 id="v20.12.0"><span class="section-number-2">4.</span> v20.12.0: Feature Release</h2>
+<h2 id="v20.12.0"><span class="section-number-2">5.</span> v20.12.0: Feature Release</h2>
 <div class="outline-text-2" id="text-v20.12.0">
 <ul class="org-ul">
 <li>Examples
@@ -572,7 +619,7 @@ polynomial routines.</li>
 </div>
 </div>
 <div id="outline-container-v20.11.0" class="outline-2">
-<h2 id="v20.11.0"><span class="section-number-2">5.</span> v20.11.0: Feature Release</h2>
+<h2 id="v20.11.0"><span class="section-number-2">6.</span> v20.11.0: Feature Release</h2>
 <div class="outline-text-2" id="text-v20.11.0">
 <ul class="org-ul">
 <li>Removed recently introduced GCC'isms.  The code now compiles
@@ -641,7 +688,7 @@ with different color schemes.</li>
 </div>
 </div>
 <div id="outline-container-v20.10.5" class="outline-2">
-<h2 id="v20.10.5"><span class="section-number-2">6.</span> v20.10.5: Public Release</h2>
+<h2 id="v20.10.5"><span class="section-number-2">7.</span> v20.10.5: Public Release</h2>
 <div class="outline-text-2" id="text-v20.10.5">
 <p>
 I'm done with major changes, and the code feels solid.
@@ -649,7 +696,7 @@ I'm done with major changes, and the code feels solid.
 </div>
 </div>
 <div id="outline-container-v20.10.0rc3" class="outline-2">
-<h2 id="v20.10.0rc3"><span class="section-number-2">7.</span> v20.10.0rc3: Unit tests. New features.</h2>
+<h2 id="v20.10.0rc3"><span class="section-number-2">8.</span> v20.10.0rc3: Unit tests. New features.</h2>
 <div class="outline-text-2" id="text-v20.10.0rc3">
 <p>
 Release Candidate #3
@@ -734,7 +781,7 @@ object &#x2013; like it did in the past.</li>
 </div>
 </div>
 <div id="outline-container-v20.9.0rc2" class="outline-2">
-<h2 id="v20.9.0rc2"><span class="section-number-2">8.</span> v20.9.0rc2: Bug fixes. Unit tests. New features. Better platform support.</h2>
+<h2 id="v20.9.0rc2"><span class="section-number-2">9.</span> v20.9.0rc2: Bug fixes. Unit tests. New features. Better platform support.</h2>
 <div class="outline-text-2" id="text-v20.9.0rc2">
 <p>
 Release Candidate #2
@@ -790,7 +837,7 @@ some reduced functionality, using some older compilers.
 </div>
 </div>
 <div id="outline-container-v20.8.1b" class="outline-2">
-<h2 id="v20.8.1b"><span class="section-number-2">9.</span> v20.8.1b: Unit tests for ramCanvasTpl. Bugs.  New stuff.</h2>
+<h2 id="v20.8.1b"><span class="section-number-2">10.</span> v20.8.1b: Unit tests for ramCanvasTpl. Bugs.  New stuff.</h2>
 <div class="outline-text-2" id="text-v20.8.1b">
 <p>
 I'm still calling it a beta, but it's pretty solid right now.
@@ -851,7 +898,7 @@ Please test and report back!
 </div>
 </div>
 <div id="outline-container-v20.8.2rc1" class="outline-2">
-<h2 id="v20.8.2rc1"><span class="section-number-2">10.</span> v20.8.2rc1: Unit tests for ramCanvasTpl.</h2>
+<h2 id="v20.8.2rc1"><span class="section-number-2">11.</span> v20.8.2rc1: Unit tests for ramCanvasTpl.</h2>
 <div class="outline-text-2" id="text-v20.8.2rc1">
 <p>
 This is release candidate #1!  Please test and report back!
@@ -859,7 +906,7 @@ This is release candidate #1!  Please test and report back!
 </div>
 </div>
 <div id="outline-container-v20.8.0b" class="outline-2">
-<h2 id="v20.8.0b"><span class="section-number-2">11.</span> v20.8.0b: ramCanvasTpl refactor.  clang support. Cleanup.</h2>
+<h2 id="v20.8.0b"><span class="section-number-2">12.</span> v20.8.0b: ramCanvasTpl refactor.  clang support. Cleanup.</h2>
 <div class="outline-text-2" id="text-v20.8.0b">
 <p>
 Still beta, but approaching production.
@@ -899,7 +946,7 @@ Please test and report back!
 </div>
 </div>
 <div id="outline-container-v20.7.0b" class="outline-2">
-<h2 id="v20.7.0b"><span class="section-number-2">12.</span> v20.7.0b: New Features. Bug Fixes. Unit Tests.</h2>
+<h2 id="v20.7.0b"><span class="section-number-2">13.</span> v20.7.0b: New Features. Bug Fixes. Unit Tests.</h2>
 <div class="outline-text-2" id="text-v20.7.0b">
 <p>
 Still beta, but approaching production.
@@ -961,7 +1008,7 @@ MSVC too, but I don't know as much about that environment&#x2026;</li>
 </div>
 </div>
 <div id="outline-container-v20.6.0b" class="outline-2">
-<h2 id="v20.6.0b"><span class="section-number-2">13.</span> v20.6.0b: Refactor, Bug Fixs, Unit Tests</h2>
+<h2 id="v20.6.0b"><span class="section-number-2">14.</span> v20.6.0b: Refactor, Bug Fixs, Unit Tests</h2>
 <div class="outline-text-2" id="text-v20.6.0b">
 <p>
 Still beta.  Still a few API changes, but things are stabilizing.
@@ -1041,7 +1088,7 @@ Scaling was incorrect for images with more than 3 channels.
 </div>
 </div>
 <div id="outline-container-v20.5.0b" class="outline-2">
-<h2 id="v20.5.0b"><span class="section-number-2">14.</span> v20.5.0b: Unit tests, bug fixes, refactoring, &amp; cleanup</h2>
+<h2 id="v20.5.0b"><span class="section-number-2">15.</span> v20.5.0b: Unit tests, bug fixes, refactoring, &amp; cleanup</h2>
 <div class="outline-text-2" id="text-v20.5.0b">
 <p>
 Moving it from alpha to beta.  I hope this is the last of the API
@@ -1111,7 +1158,7 @@ things more consistent and readable.</li>
 </div>
 </div>
 <div id="outline-container-v20.4.0a" class="outline-2">
-<h2 id="v20.4.0a"><span class="section-number-2">15.</span> v20.4.0a: Refactor, unit tests, doxygen docs</h2>
+<h2 id="v20.4.0a"><span class="section-number-2">16.</span> v20.4.0a: Refactor, unit tests, doxygen docs</h2>
 <div class="outline-text-2" id="text-v20.4.0a">
 <p>
 Still alpha.  Still changing the API. :)
@@ -1168,7 +1215,7 @@ about 25%.</li>
 </div>
 </div>
 <div id="outline-container-v20.3.0a" class="outline-2">
-<h2 id="v20.3.0a"><span class="section-number-2">16.</span> v20.3.0a: ramConfig Refactor</h2>
+<h2 id="v20.3.0a"><span class="section-number-2">17.</span> v20.3.0a: ramConfig Refactor</h2>
 <div class="outline-text-2" id="text-v20.3.0a">
 <p>
 Still alpha.  Still changing the API. :)
@@ -1228,7 +1275,7 @@ outside just like before.</li>
 </div>
 </div>
 <div id="outline-container-v20.2.0a" class="outline-2">
-<h2 id="v20.2.0a"><span class="section-number-2">17.</span> v20.2.0a: Refactor of hershey fonts &amp; RGBA</h2>
+<h2 id="v20.2.0a"><span class="section-number-2">18.</span> v20.2.0a: Refactor of hershey fonts &amp; RGBA</h2>
 <div class="outline-text-2" id="text-v20.2.0a">
 <p>
 Several serious bugs, and two API changing refactors in this update.
@@ -1330,7 +1377,7 @@ some members.  This makes the code much easier to read.</li>
 </div>
 </div>
 <div id="outline-container-v20.0.0a" class="outline-2">
-<h2 id="v20.0.0a"><span class="section-number-2">18.</span> v20.0.0a: Complete Refactor Of colorTpl &amp; ramCanvasTpl</h2>
+<h2 id="v20.0.0a"><span class="section-number-2">19.</span> v20.0.0a: Complete Refactor Of colorTpl &amp; ramCanvasTpl</h2>
 <div class="outline-text-2" id="text-v20.0.0a">
 <p>
 One might consider this a brand new library; however, I expect most
@@ -1359,7 +1406,7 @@ partly related to removing the optimizing "name" struct.</li>
 </div>
 </div>
 <div id="outline-container-v6.0.0" class="outline-2">
-<h2 id="v6.0.0"><span class="section-number-2">19.</span> v6.0.0: Feature &amp; Bugfix Release</h2>
+<h2 id="v6.0.0"><span class="section-number-2">20.</span> v6.0.0: Feature &amp; Bugfix Release</h2>
 <div class="outline-text-2" id="text-v6.0.0">
 <ul class="org-ul">
 <li>Bugs
@@ -1447,7 +1494,7 @@ JAVADOC_BANNER option</li>
 </div>
 </div>
 <div id="outline-container-v5.0.0" class="outline-2">
-<h2 id="v5.0.0"><span class="section-number-2">20.</span> v5.0.0: Refactor Release</h2>
+<h2 id="v5.0.0"><span class="section-number-2">21.</span> v5.0.0: Refactor Release</h2>
 <div class="outline-text-2" id="text-v5.0.0">
 <ul class="org-ul">
 <li>Removed floating point argument from color template (API breaking change)
@@ -1502,7 +1549,7 @@ types.  All the examples have been updated to use the new names.
 </div>
 </div>
 <div id="outline-container-v4.5.0" class="outline-2">
-<h2 id="v4.5.0"><span class="section-number-2">21.</span> v4.5.0: Feature &amp; Bugfix Release</h2>
+<h2 id="v4.5.0"><span class="section-number-2">22.</span> v4.5.0: Feature &amp; Bugfix Release</h2>
 <div class="outline-text-2" id="text-v4.5.0">
 <ul class="org-ul">
 <li>New/Improved interpolation methods
@@ -1519,7 +1566,7 @@ types.  All the examples have been updated to use the new names.
 </div>
 </div>
 <div id="outline-container-v4.0.0" class="outline-2">
-<h2 id="v4.0.0"><span class="section-number-2">22.</span> v4.0.0: Feature &amp; Bugfix Release</h2>
+<h2 id="v4.0.0"><span class="section-number-2">23.</span> v4.0.0: Feature &amp; Bugfix Release</h2>
 <div class="outline-text-2" id="text-v4.0.0">
 <ul class="org-ul">
 <li>The string drawing functions now take std::string instead of c-style strings</li>
@@ -1541,12 +1588,12 @@ were not errors, just unnecessary.</li>
 </div>
 </div>
 <div id="outline-container-v3.0.0" class="outline-2">
-<h2 id="v3.0.0"><span class="section-number-2">23.</span> v3.0.0: Major cleanup of old code.  Added cycles examples</h2>
+<h2 id="v3.0.0"><span class="section-number-2">24.</span> v3.0.0: Major cleanup of old code.  Added cycles examples</h2>
 <div class="outline-text-2" id="text-v3.0.0">
 </div>
 </div>
 <div id="outline-container-v2.0.0" class="outline-2">
-<h2 id="v2.0.0"><span class="section-number-2">24.</span> v2.0.0: Feature &amp; Bugfix Release</h2>
+<h2 id="v2.0.0"><span class="section-number-2">25.</span> v2.0.0: Feature &amp; Bugfix Release</h2>
 <div class="outline-text-2" id="text-v2.0.0">
 <ul class="org-ul">
 <li>New version numbersk</li>

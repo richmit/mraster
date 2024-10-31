@@ -36,6 +36,29 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
 
 #+TOC: headlines 5
 
+* Changes On HEAD Since Last Release TEMPLATE                      
+:PROPERTIES:
+:CUSTOM_ID: latest_TEMPLATE
+:END:
+  - Fixed Bugs
+    - N/A
+  - Known Issues
+    - N/A
+  - API breaking Changes
+    - N/A
+  - Deprecated functionality
+    - N/A
+  - New functionality
+    - N/A
+  - Documentation
+    - N/A
+  - Examples
+    - New
+      - N/A
+    - Updated
+      - N/A
+  - Miscellaneous
+    - Better check.rb
 * Feature & Refactor Release
 :PROPERTIES:
 :CUSTOM_ID: v21.0.0.0
