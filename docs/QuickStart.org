@@ -108,7 +108,6 @@ Please note that advanced TIFF reader is only required to *read* TIFF files.  *=
 :CUSTOM_ID: examples
 :END:
 
-
 Probably the first stop for most people trying out *=MRaster=* is the example programs.  
 
 *=MRaster=* ships with a =cmake= build system that should be able to interrogate your environment, and produce make files for your OS.  One complication is

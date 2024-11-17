@@ -46,6 +46,33 @@ Example Documentation: [[https://www.mitchr.me/SS/mraster/doc-examples/autodocs/
 
 The code: [[https://github.com/richmit/mraster/]]
 
+* Getting Started
+
+For more detail read the [[https://richmit.github.io/mraster/QuickStart.html][quick start guide]]!
+
+To use this code, *TWO* repositories must be cloned -- this one and a
+basic mathematical library.  The mathematical library should then be
+configured.  Finally you can build the examples in this repository.
+This all might be done on the command line on linux or MacOS (for windows, see the
+[[https://richmit.github.io/mraster/QuickStart.html][quick start guide]]) 
+a sequence of commands like the following:
+
+#+begin_src sh :exports code :eval never
+git clone 'https://github.com/richmit/MRMathCPP.git'    # Download MRMathCPP
+cd MRMathCPP                                            # Change directory to the root of the MRMathCPP git repository
+mkdir build                                             # Create a 'build' directory
+cd build                                                # Change directory to the build directory
+cmake ..                                                # Configure the build system with cmake
+cmake --build . -t install                              # Install the package in the build directory
+cd ../..                                                # Change directory back to where you cloned the first repo
+git clone 'https://github.com/richmit/mraster.git'      # Download MRaster
+cd mraster                                              # Change directory to the root of the mraster git repository
+mkdir build                                             # Create a 'build' directory
+cd build                                                # Change directory to the build directory
+cmake ..                                                # Configure the build system with cmake
+cmake --build . -t examples                             # Build all the examples
+#+end_src
+
 * Versions
 
 This library has defined "releases" intended to identify a stable
