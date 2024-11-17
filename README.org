@@ -59,14 +59,14 @@ a sequence of commands like the following:
 
 #+begin_src sh :exports code :eval never
 git clone 'https://github.com/richmit/MRMathCPP.git'    # Download MRMathCPP
-cd MRMathCPP                                            # Change directory to the root of the MRMathCPP git repository
+cd MRMathCPP                                            # Change directory to the MRMathCPP git repo
 mkdir build                                             # Create a 'build' directory
 cd build                                                # Change directory to the build directory
 cmake ..                                                # Configure the build system with cmake
 cmake --build . -t install                              # Install the package in the build directory
-cd ../..                                                # Change directory back to where you cloned the first repo
+cd ../..                                                # Change directory back to where we started
 git clone 'https://github.com/richmit/mraster.git'      # Download MRaster
-cd mraster                                              # Change directory to the root of the mraster git repository
+cd mraster                                              # Change directory to the mraster git repo
 mkdir build                                             # Create a 'build' directory
 cd build                                                # Change directory to the build directory
 cmake ..                                                # Configure the build system with cmake
