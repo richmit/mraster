@@ -89,3 +89,7 @@ has entries for each release as well as a section for what has changed
 on =HEAD= since the last release.
 
 file:docs/pics/gallery/apollonian_gasket_2D_01_250.jpg
+
+#+BEGIN_HTML
+<img src="docs/pics/gallery/apollonian_gasket_2D_01_250.jpg" />
+#+END_HTML
