@@ -91,5 +91,7 @@ on =HEAD= since the last release.
 file:docs/pics/gallery/apollonian_gasket_2D_01_250.jpg
 
 #+BEGIN_HTML
-<img src="docs/pics/gallery/apollonian_gasket_2D_01_250.jpg" />
+<center><img src="docs/pics/gallery/apollonian_gasket_2D_01_250.jpg" /></center>
 #+END_HTML
+
+[[file:docs/pics/gallery/apollonian_gasket_2D_01_250.jpg]]
