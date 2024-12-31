@@ -88,3 +88,4 @@ The [[https://richmit.github.io/mraster/changelog.html][change log]]
 has entries for each release as well as a section for what has changed
 on =HEAD= since the last release.
 
+file:docs/pics/gallery/apollonian_gasket_2D_01_250.jpg
