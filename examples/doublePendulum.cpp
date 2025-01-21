@@ -5,7 +5,6 @@
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     For each pixel, simulate a double pendulum system over 2sec and color the pixel according to the pendulum end state.@EOL
  @std       C++20
- @see       https://www.mitchr.me/SS/PickoverPopcorn/index.html
  @copyright
   @parblock
   Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
