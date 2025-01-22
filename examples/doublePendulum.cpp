@@ -36,6 +36,10 @@
   double pendulum equations.  We then solve those equations over a time span of 2 seconds using 200 steps of Euler's method.  We dump an image of the final
   state of the simulation at the end.
 
+  Two ways are provided to map pixels -> angles controlled by the boolean CENTER.  If it's true, then the angles are mapped left to right & top to bottom from
+  0 to 2pi.  If it's false, we map from -pi to pi.  The effect is that when CENTER is true the larger angles are at the center of the image, and they are at
+  the corners otherwise.  
+
 */
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
@@ -47,8 +51,9 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const int    IMXSIZ = 7680/4;
-  const int    IMYSIZ = 7680/4;
+  const bool   CENTER = true;
+  const int    IMXSIZ = 7680/2;
+  const int    IMYSIZ = 7680/2;
   const double m1     = 1.0;
   const double m2     = 1.0;
   const double L1     = 1.0;
@@ -58,7 +63,11 @@ int main(void) {
   const double g      = 9.80665;
   const double p      = std::numbers::pi;
 
-  mjr::ramCanvas3c8b theRamCanvas(IMXSIZ, IMYSIZ, -0, 2*p, -0, 2*p);
+  mjr::ramCanvas3c8b theRamCanvas(IMXSIZ, IMYSIZ);
+  if (CENTER) 
+    theRamCanvas.newRealCoords(0, 2*p, 0, 2*p);
+  else
+    theRamCanvas.newRealCoords(-p, p, -p, p);
   theRamCanvas.clrCanvasToBlack();
 
 # pragma omp parallel for schedule(static,1)
@@ -89,7 +98,7 @@ int main(void) {
       theRamCanvas.getPxColorRefNC(x, y).setChansRGB_dbl(r, g, b);
     }
   }
-  theRamCanvas.writeTIFFfile("doublePendulum.tiff");
+  theRamCanvas.writeTIFFfile((CENTER ? "doublePendulum_center.tiff" : "doublePendulum_corner.tiff"));
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
   return 0;

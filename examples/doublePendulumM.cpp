@@ -57,7 +57,7 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const bool   CENTER = true;
+  const bool   CENTER = false;
   const int    NUMFRM = 1080;
   const int    IMXSIZ = 7680/8;
   const int    IMYSIZ = 7680/8;
