@@ -182,7 +182,7 @@ set(TARGETS_USE_OPENMP "mandelbrot_bm_cplx_openmp" "mandelbrot_precomp" "mandelb
                        "mandelbrot_ltrap" "newton_max_back" "newton_min_angle" "mandelbrot_simple" "newton_min_angle_starfish"
                        "newton_half" "newton_vs" "newton_z6" "newton_modified" "newton_min_root" "newton_3updown" "newton_roter" "attracting_torus_shadowM"
                        "laguerre_3updown" "laguerre_simple" "kalisetJ" "kalisetM1" "kalisetM2" "phoenix" "phoenixI" "phoenixD" "phoenixM" "phoenixM2"
-                       "doublePendulum" "doublePendulumM")
+                       "doublePendulum" "doublePendulumM" "wakOrb01" "wakOrb02" "wakOrb03")
 set(TARGETS_REQ_BTEST  "utest_colorTpl_ia64nGCC" "utest_colorTpl" "utest_ramCanvasTpl")
 set(TARGETS_REQ_SDL2   "displayImageSDL2")
 
