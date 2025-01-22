@@ -28,23 +28,16 @@
   @endparblock
  @filedetails
 
-  Inspired by a reddit post: 
-      https://www.reddit.com/r/FractalPorn/comments/1i4gdy8/visualization_of_a_double_pendulum_pixel_x_and_y/
+  This code makes a movie of time steps of the solution the double pendulum equations.  For the equations, see doublePendulum.cpp.
 
-  The idea is to run a double pendulum simulation for each pixel.  Each pixel is mapped to a pair of angles -- the x coordinate is mapped to the vertical
-  angle of the top rod, and the y coordinate is mapped to the vertical angle of the bottom rod.  These angles are used for thee initial conditions for the
-  double pendulum equations.  We then solve those equations over a time span of 10 seconds using 1000 steps of Euler's methjod.  We dump out an image for each
-  step.
-
-  Two ways are provided to map pixels -> angles controlled by the boolean CENTER.  If it's true, then the angles are mapped left to right & top to bottom from
-  0 to 2pi.  If it's false, we map from -pi to pi.  The effect is that when CENTER is true the larger angles are at the center of the image, and they are at
-  the corners otherwise.  I like them at the corners for the movie. :)
+  In this program we solve solve the equations over a time span of 10 seconds using 1000 steps of Euler's method.  We dump out an image for each step.
 
   Make Movies:
-    ffmpeg -y -framerate 15 -i doublePendulumM_center_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf 30 -b:v 0 -pix_fmt yuv420p doublePendulumM_center_100_crf30.mp4;
-    ffmpeg -y -framerate 15 -i doublePendulumM_center_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf  3 -b:v 0 -pix_fmt yuv420p doublePendulumM_center_100_crf01.mp4;
-    ffmpeg -y -framerate 15 -i doublePendulumM_corner_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf 30 -b:v 0 -pix_fmt yuv420p doublePendulumM_corner_100_crf30.mp4;
-    ffmpeg -y -framerate 15 -i doublePendulumM_corner_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf  3 -b:v 0 -pix_fmt yuv420p doublePendulumM_corner_100_crf01.mp4;
+
+             ffmpeg -y -framerate 15 -i doublePendulumM_center_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf 30 -b:v 0 -pix_fmt yuv420p doublePendulumM_center_100_crf30.mp4;
+             ffmpeg -y -framerate 15 -i doublePendulumM_center_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf  3 -b:v 0 -pix_fmt yuv420p doublePendulumM_center_100_crf01.mp4;
+             ffmpeg -y -framerate 15 -i doublePendulumM_corner_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf 30 -b:v 0 -pix_fmt yuv420p doublePendulumM_corner_100_crf30.mp4;
+             ffmpeg -y -framerate 15 -i doublePendulumM_corner_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf  3 -b:v 0 -pix_fmt yuv420p doublePendulumM_corner_100_crf01.mp4;
 
 */
 /*******************************************************************************************************************************************************.H.E.**/

@@ -28,17 +28,39 @@
   @endparblock
  @filedetails
 
+  The equations of motion for the double pendulum may be written as a system of first degree differential equations:
+  
+  @f[\begin{eqnarray}
+    \frac{\mathrm{d}\theta_1}{\mathrm{d}t} & = & \omega_1                                                                                                                                                                                                   \\
+    \frac{\mathrm{d}\theta_2}{\mathrm{d}t} & = & \omega_2                                                                                                                                                                                                   \\
+    \frac{\mathrm{d}\omega_1}{\mathrm{d}t} & = & \frac{-g (2 m_1+m_2) \sin(\theta_1)-m_2 g \sin(\theta_1-2 \theta_2)-2 m_2 (\omega_2^2 L_2+\omega_1^2 L_1 \cos(\theta_1-\theta_2))\sin(\theta_1-\theta_2)}{L_1 (2 m_1+m_2-m_2 \cos(2 \theta_1-2 \theta_2))} \\
+    \frac{\mathrm{d}\omega_2}{\mathrm{d}t} & = & \frac{2 \sin(\theta_1-\theta_2) (\omega_1^2 L_1 (m_1+m_2)+g (m_1+m_2) \cos(\theta_1)+\omega_2^2 L_2 m_2 \cos(\theta_1-\theta_2))}{L_2 (2 m_1+m_2-m_2 \cos(2 \theta_1-2 \theta_2))}
+  \end{eqnarray}@f]
+  
+  Where
+  
+  @f[\begin{array}{lll}
+    L_1      & = & \text{ Length of top bar}              \\
+    L_2      & = & \text{ Length of bottom bar}           \\
+    m_1      & = & \text{ Mass of top weight}             \\
+    m_2      & = & \text{ Mass of bottom weight}          \\
+    g        & = & \text{ Acceleration of gravity}        \\
+    \theta_1 & = & \text{ Vertical angle of top bar}      \\
+    \theta_2 & = & \text{ Vertical angle of bottom bar}   \\
+    \omega_1 & = & \text{ Angular velocity of top bar}    \\
+    \omega_2 & = & \text{ Angular velocity of bottom bar} 
+  \end{array}@f]
+
+  The idea is to run a double pendulum simulation for each pixel.  Each pixel is mapped to a pair of angles -- the x coordinate is mapped to @f$ \theta_1 @f$,
+  and the y coordinate is mapped to @f$ \theta_2 @f$.  These angles are used for the initial conditions for the double pendulum equations.  We then solve
+  these equations over a time span of 2 seconds using 200 steps of Euler's method.  We dump an image of the final state of the simulation at the end.
+
+  Two ways are provided to map pixels to angles controlled by the boolean `CENTER`.  If it's `true`, then the angles are mapped left to right & top to bottom
+  from @f$0@f$ to @f$2\pi@f$.  If it's `false`, we map from @f$-\pi@f$ to @f$\pi@f$.  The effect is that when `CENTER` is true the larger angles are at the
+  center of the image, and they are at the corners otherwise.
+
   Inspired by a reddit post: 
       https://www.reddit.com/r/FractalPorn/comments/1i4gdy8/visualization_of_a_double_pendulum_pixel_x_and_y/
-
-  The idea is to run a double pendulum simulation for each pixel.  Each pixel is mapped to a pair of angles -- the x coordinate is mapped to the vertical
-  angle of the top rod, and the y coordinate is mapped to the vertical angle of the bottom rod.  These angles are used for thee initial conditions for the
-  double pendulum equations.  We then solve those equations over a time span of 2 seconds using 200 steps of Euler's method.  We dump an image of the final
-  state of the simulation at the end.
-
-  Two ways are provided to map pixels -> angles controlled by the boolean CENTER.  If it's true, then the angles are mapped left to right & top to bottom from
-  0 to 2pi.  If it's false, we map from -pi to pi.  The effect is that when CENTER is true the larger angles are at the center of the image, and they are at
-  the corners otherwise.  
 
 */
 /*******************************************************************************************************************************************************.H.E.**/
@@ -104,3 +126,4 @@ int main(void) {
   return 0;
 }
 /** @endcond */
+
