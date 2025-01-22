@@ -34,11 +34,13 @@
 
   Make Movies:
 
-             ffmpeg -y -framerate 15 -i doublePendulumM_center_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf 30 -b:v 0 -pix_fmt yuv420p doublePendulumM_center_100_crf30.mp4;
-             ffmpeg -y -framerate 15 -i doublePendulumM_center_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf  3 -b:v 0 -pix_fmt yuv420p doublePendulumM_center_100_crf01.mp4;
-             ffmpeg -y -framerate 15 -i doublePendulumM_corner_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf 30 -b:v 0 -pix_fmt yuv420p doublePendulumM_corner_100_crf30.mp4;
-             ffmpeg -y -framerate 15 -i doublePendulumM_corner_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf  3 -b:v 0 -pix_fmt yuv420p doublePendulumM_corner_100_crf01.mp4;
+             ffmpeg -y -framerate 15 -i doublePendulumM_center_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf 30 -b:v 0 -preset veryslow doublePendulumM_center_100_crf30.mp4;
+             ffmpeg -y -framerate 15 -i doublePendulumM_center_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf  3 -b:v 0 -preset veryslow doublePendulumM_center_100_crf03.mp4;
+             ffmpeg -y -framerate 15 -i doublePendulumM_center_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf  0 -b:v 0 -preset veryslow doublePendulumM_center_100_crf00.mp4;
 
+             ffmpeg -y -framerate 15 -i doublePendulumM_corner_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf 30 -b:v 0 -preset veryslow doublePendulumM_corner_100_crf30.mp4;
+             ffmpeg -y -framerate 15 -i doublePendulumM_corner_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf  3 -b:v 0 -preset veryslow doublePendulumM_corner_100_crf03.mp4;
+             ffmpeg -y -framerate 15 -i doublePendulumM_corner_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf  0 -b:v 0 -preset veryslow doublePendulumM_corner_100_crf00.mp4;
 */
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
