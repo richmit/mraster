@@ -37,8 +37,8 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const int    IMXSIZ = 7680/4;
-  const int    IMYSIZ = 7680/4;
+  const int    IMXSIZ = 7680/1;
+  const int    IMYSIZ = 7680/1;
   const int    steps  = 7;
 
   mjr::ramCanvas3c8b theRamCanvas(IMXSIZ, IMYSIZ, -1.7, 1, -1.7, 0.5);
@@ -46,7 +46,7 @@ int main(void) {
 
 # pragma omp parallel for schedule(static,1)
   for(int y=0;y<theRamCanvas.getNumPixY();y++) {
-    if ((y%100)==0)
+    if ((y%500)==0)
       std::cout << y << std::endl;
     for(int x=0;x<theRamCanvas.getNumPixX();x++) {
       double px = theRamCanvas.int2realX(x);
