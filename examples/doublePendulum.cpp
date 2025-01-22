@@ -7,7 +7,7 @@
  @std       C++20
  @copyright
   @parblock
-  Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
+  Copyright (c) 2025, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -31,6 +31,11 @@
   Inspired by a reddit post: 
       https://www.reddit.com/r/FractalPorn/comments/1i4gdy8/visualization_of_a_double_pendulum_pixel_x_and_y/
 
+  The idea is to run a double pendulum simulation for each pixel.  Each pixel is mapped to a pair of angles -- the x coordinate is mapped to the vertical
+  angle of the top rod, and the y coordinate is mapped to the vertical angle of the bottom rod.  These angles are used for thee initial conditions for the
+  double pendulum equations.  We then solve those equations over a time span of 2 seconds using 200 steps of Euler's method.  We dump an image of the final
+  state of the simulation at the end.
+
 */
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
@@ -38,6 +43,7 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 #include "MRMathCPP.hpp"
+
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();

@@ -7,7 +7,7 @@
  @std       C++20
  @copyright
   @parblock
-  Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
+  Copyright (c) 2025, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -31,11 +31,20 @@
   Inspired by a reddit post: 
       https://www.reddit.com/r/FractalPorn/comments/1i4gdy8/visualization_of_a_double_pendulum_pixel_x_and_y/
 
-  Convert everything to png
-    time ls *.tiff | xargs -P 8 -I{} sh -c 'echo {}; magick {} $(echo {} | sed "s/\.tiff$/.png/;")'                                                                                         
+  The idea is to run a double pendulum simulation for each pixel.  Each pixel is mapped to a pair of angles -- the x coordinate is mapped to the vertical
+  angle of the top rod, and the y coordinate is mapped to the vertical angle of the bottom rod.  These angles are used for thee initial conditions for the
+  double pendulum equations.  We then solve those equations over a time span of 10 seconds using 1000 steps of Euler's methjod.  We dump out an image for each
+  step.
+
+  Two ways are provided to map pixels -> angles controlled by the boolean CENTER.  If it's true, then the angles are mapped left to right & top to bottom from
+  0 to 2pi.  If it's false, we map from -pi to pi.  The effect is that when CENTER is true the larger angles are at the center of the image, and they are at
+  the corners otherwise.  I like them at the corners for the movie. :)
+
   Make Movies:
-    ffmpeg -y -framerate 15 -i doublePendulumM_%4d.png -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf 30 -b:v 0 -pix_fmt yuv420p doublePendulumM_100_crf30.mp4
-    ffmpeg -y -framerate 15 -i doublePendulumM_%4d.png -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf  3 -b:v 0 -pix_fmt yuv420p doublePendulumM_100_crf01.mp4
+    ffmpeg -y -framerate 15 -i doublePendulumM_center_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf 30 -b:v 0 -pix_fmt yuv420p doublePendulumM_center_100_crf30.mp4;
+    ffmpeg -y -framerate 15 -i doublePendulumM_center_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf  3 -b:v 0 -pix_fmt yuv420p doublePendulumM_center_100_crf01.mp4;
+    ffmpeg -y -framerate 15 -i doublePendulumM_corner_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf 30 -b:v 0 -pix_fmt yuv420p doublePendulumM_corner_100_crf30.mp4;
+    ffmpeg -y -framerate 15 -i doublePendulumM_corner_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf  3 -b:v 0 -pix_fmt yuv420p doublePendulumM_corner_100_crf01.mp4;
 
 */
 /*******************************************************************************************************************************************************.H.E.**/
@@ -44,9 +53,11 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 #include "MRMathCPP.hpp"
+
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
+  const bool   CENTER = true;
   const int    NUMFRM = 1080;
   const int    IMXSIZ = 7680/8;
   const int    IMYSIZ = 7680/8;
@@ -63,8 +74,11 @@ int main(void) {
   mjr::ramCanvas1c64F theta2canvas(IMXSIZ, IMYSIZ);
   mjr::ramCanvas1c64F omega2canvas(IMXSIZ, IMYSIZ);
 
-  mjr::ramCanvas3c8b pcolorCanvas(IMXSIZ, IMYSIZ, -p, p, -p, p); // Edges
-  //mjr::ramCanvas3c8b pcolorCanvas(IMXSIZ, IMYSIZ, 0, 2*p, 0, 2*p); // Center
+  mjr::ramCanvas3c8b pcolorCanvas(IMXSIZ, IMYSIZ);
+  if (CENTER) 
+    pcolorCanvas.newRealCoords(0, 2*p, 0, 2*p);
+  else
+    pcolorCanvas.newRealCoords(-p, p, -p, p);
   pcolorCanvas.clrCanvasToBlack();
 
   for(int frame=0; frame<NUMFRM; frame++) {
@@ -104,7 +118,7 @@ int main(void) {
         pcolorCanvas.getPxColorRefNC(x, y).setChansRGB_dbl(r, g, b);
       }
     }
-    pcolorCanvas.writeTIFFfile("doublePendulumM_" + mjr::math::str::fmt_int(frame, 4, '0') + ".tiff");
+    pcolorCanvas.writeTIFFfile((CENTER ? "doublePendulumM_center_" : "doublePendulumM_corner_") + mjr::math::str::fmt_int(frame, 4, '0') + ".tiff");
 #   pragma omp critical
     std::cout << "FRAME(" << frame <<  "): " << "DONE" << std::endl;
   }
