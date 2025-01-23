@@ -1,6 +1,6 @@
 ######################################################################################################################################################
 ######################################################################################################################################################
-cmake_minimum_required(VERSION 3.20.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.30.0 FATAL_ERROR)
 
 set(OpenGL_GL_PREFERENCE "GLVND") # Alternative
 set(CMAKE_CXX_EXTENSIONS ON)
@@ -32,102 +32,29 @@ OPTION(O_128_INT "128-bit integer support"                ON )
 # Find tools & libraries used to build primary/secondary/tertiary targets.  Set config include file variables for options.
 
 if(O_DOXYGEN)
-  set(MRASTER_OPT_DOXYGEN "1")
   find_package(Doxygen)
-else()
-  set(MRASTER_OPT_DOXYGEN "0")
 endif()
 
 if(O_TIFF)
-  set(MRASTER_OPT_TIFF "1")
   find_package(TIFF)
-else()
-  set(MRASTER_OPT_TIFF "0")
 endif()
 
 if(O_OPENGL)
-  set(MRASTER_OPT_OPENGL "1")
   find_package(OpenGL)
   find_package(GLUT)
-else()
-  set(MRASTER_OPT_OPENGL "0")
 endif()
 
 if(O_OPENMP)
-  set(MRASTER_OPT_OPENMP "1")
   find_package(OpenMP)
-else()
-  set(MRASTER_OPT_OPENMP "0")
 endif()
 
 if(O_SDL2)
-  set(MRASTER_OPT_SDL2 "1")
   find_package (SDL2)
-else()
-  set(MRASTER_OPT_SDL2 "0")
 endif()
 
 if(O_BTEST)
-  set(MRASTER_OPT_BTEST "1")
   find_package(Boost COMPONENTS unit_test_framework)
-else()
-  set(MRASTER_OPT_BTEST "0")
 endif()
-
-IF(O_128_INT)
-  set(MRASTER_OPT_128_INT "1")
-else()
-  set(MRASTER_OPT_128_INT "0")
-endif()
-
-mark_as_advanced(MRASTER_OPT_128_INT MRASTER_OPT_BTEST MRASTER_OPT_DOXYGEN  MRASTER_OPT_OPENGL MRASTER_OPT_OPENMP MRASTER_OPT_SDL2 MRASTER_OPT_TIFF)
-
-######################################################################################################################################################
-# Setup  config include files variables related to found requirements
-
-if(Doxygen_FOUND)
-  set(MRASTER_FOUND_DOXYGEN "1")
-else()
-  set(MRASTER_FOUND_DOXYGEN "0")
-endif()
-
-if(TIFF_FOUND)
-  set(MRASTER_FOUND_TIFF "1")
-else()
-  set(MRASTER_FOUND_TIFF "0")
-endif()
-
-if(OpenGL_FOUND)
-  set(MRASTER_FOUND_OPENGL "1")
-else()
-  set(MRASTER_FOUND_OPENGL "0")
-endif()
-
-if(GLUT_FOUND)
-  set(MRASTER_FOUND_GLUT "1")
-else()
-  set(MRASTER_FOUND_GLUT "0")
-endif()
-
-if(OpenMP_FOUND)
-  set(MRASTER_FOUND_OPENMP "1")
-else()
-  set(MRASTER_FOUND_OPENMP "0")
-endif()
-
-if(SDL2_FOUND)
-  set(MRASTER_FOUND_SDL2 "1")
-else()
-  set(MRASTER_FOUND_SDL2 "0")
-endif()
-
-if(Boost_FOUND)
-  set(MRASTER_FOUND_BTEST "1")
-else()
-  set(MRASTER_FOUND_BTEST "0")
-endif()
-
-mark_as_advanced(MRASTER_FOUND_DOXYGEN MRASTER_FOUND_TIFF MRASTER_FOUND_OPENGL MRASTER_FOUND_OPENMP MRASTER_FOUND_SDL2 MRASTER_FOUND_BTEST)
 
 ######################################################################################################################################################
 # Find MRMathCPP (MR Math CPP) -- this one is requierd!
@@ -372,11 +299,6 @@ if(EXISTS "c:/Users/richmit/MJR/WWW/site/SS/mraster/doc-examples/")
 endif()
 
 ######################################################################################################################################################
-# Generate an include file with various methdata about the build.
-
-CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/mraster_config.hpp.cmake ${CMAKE_BINARY_DIR}/mraster_config.hpp)
-
-######################################################################################################################################################
 # Add targets for documentation
 
 if(Doxygen_FOUND)
@@ -396,8 +318,7 @@ endif()
 ######################################################################################################################################################
 # Create interface target for the entire project
 
-set(MRASTER_INCLUDES "build/mraster_config.hpp"
-                     "lib/MRcolor.hpp" 
+set(MRASTER_INCLUDES "lib/MRcolor.hpp" 
                      "lib/MRcolorTpl.hpp"
                      "lib/hersheyFont.hpp"
                      "lib/MRpoint2d.hpp"
