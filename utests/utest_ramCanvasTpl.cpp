@@ -31,22 +31,11 @@
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
 
-#define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE Main
-#include <boost/test/unit_test.hpp>
-
-#define BOOST_TEST_DYN_LINK
-#ifdef STAND_ALONE
-#   define BOOST_TEST_MODULE Main
-#endif
-#include <boost/test/unit_test.hpp>
-
+#include <gtest/gtest.h>
 #include "ramCanvas.hpp"
 
-#if 1
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(draw_primatives_int) {
+TEST(draw_primatives_int, Functional) {
 
   // We instantiate every drawing function in ramCanvas so that we can check for compile time errors and do some basic functionality testing.
 
@@ -314,8 +303,8 @@ BOOST_AUTO_TEST_CASE(draw_primatives_int) {
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   aRamCanvas.writeRAWfile("ut-draw_primatives_int.mrw");  
-  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-draw_primatives_int.mrw") == 0);
-  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
+  EXPECT_EQ(RaRamCanvas.readRAWfile("../data/utest/ut-draw_primatives_int.mrw"), 0);
+  EXPECT_TRUE(RaRamCanvas.isEqual(aRamCanvas));
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   aRamCanvas.scaleUpProximal(5);
@@ -323,7 +312,7 @@ BOOST_AUTO_TEST_CASE(draw_primatives_int) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(draw_primatives_flt) {
+TEST(draw_primatives_flt, Functional) {
 
   // We instantiate every drawing function in ramCanvas so that we can check for compile time errors and do some basic functionality testing.
 
@@ -591,8 +580,8 @@ BOOST_AUTO_TEST_CASE(draw_primatives_flt) {
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   aRamCanvas.writeRAWfile("ut-draw_primatives_flt.mrw");
-  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-draw_primatives_flt.mrw") == 0);
-  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
+  EXPECT_EQ(RaRamCanvas.readRAWfile("../data/utest/ut-draw_primatives_flt.mrw"), 0);
+  EXPECT_TRUE(RaRamCanvas.isEqual(aRamCanvas));
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   aRamCanvas.scaleUpProximal(5);
@@ -600,7 +589,7 @@ BOOST_AUTO_TEST_CASE(draw_primatives_flt) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(save_file) {
+TEST(save_file, Functional) {
 
   const int WIDE = 16;
   const int TALL = 8;
@@ -671,69 +660,69 @@ BOOST_AUTO_TEST_CASE(save_file) {
 
   // I checked this file by hand on 2022-08-28. sha256: 94c07f28db463165acc539a88c8a31c13646890204c7548d72ec3b3bda851c9c
   // hexDump.rb -t 0 -c -w 16 -b 3 -p 100 ut-save_file-a.mrw | less -SR
-  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-save_file-a.mrw") == 0);
-  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
+  EXPECT_EQ(RaRamCanvas.readRAWfile("../data/utest/ut-save_file-a.mrw"), 0);
+  EXPECT_TRUE(RaRamCanvas.isEqual(aRamCanvas));
 
   // I checked this file by hand on 2022-08-28. sha256: daeac55ba6fdf084ece356ce86fba5f0b501ba375b0765d3b1e0aed91bde78b5
   // hexDump.rb -t 0 -c -w 16 -b 6 -p 100 ut-save_file-b.mrw | less -RS
-  BOOST_TEST_CHECK(RbRamCanvas.readRAWfile("../data/utest/ut-save_file-b.mrw") == 0);
-  BOOST_TEST_CHECK(RbRamCanvas.isEqual(bRamCanvas) == true);
+  EXPECT_EQ(RbRamCanvas.readRAWfile("../data/utest/ut-save_file-b.mrw"), 0);
+  EXPECT_TRUE(RbRamCanvas.isEqual(bRamCanvas));
 
   // I checked this file qby hand on 2022-08-28. sha256: d29aa9add19842ba1f2cd98e48a5987b645e8357180984b9b88186733ee4b99f
   // hexDump.rb -t 0 -c -w 16 -b 12 -p 100 ut-save_file-c.mrw | less -RS
-  BOOST_TEST_CHECK(RcRamCanvas.readRAWfile("../data/utest/ut-save_file-c.mrw") == 0);
-  BOOST_TEST_CHECK(RcRamCanvas.isEqual(cRamCanvas) == true);
+  EXPECT_EQ(RcRamCanvas.readRAWfile("../data/utest/ut-save_file-c.mrw"), 0);
+  EXPECT_TRUE(RcRamCanvas.isEqual(cRamCanvas));
 
   // I checked this file qby hand on 2022-08-28. sha256: bf987ec465ba232f3339b87bb9a90b52ec282d31f91378821965c06d72cc1720
   // hexDump.rb -t -1 -c -w 16 -b 24 -p 100 ut-save_file-d.mrw | less -RS
-  BOOST_TEST_CHECK(RdRamCanvas.readRAWfile("../data/utest/ut-save_file-d.mrw") == 0);
-  BOOST_TEST_CHECK(RdRamCanvas.isEqual(dRamCanvas) == true);
+  EXPECT_EQ(RdRamCanvas.readRAWfile("../data/utest/ut-save_file-d.mrw"), 0);
+  EXPECT_TRUE(RdRamCanvas.isEqual(dRamCanvas));
 
   // I checked this file qby hand on 2022-08-28. sha256: eb74e602fc69f5755a276c0bcc3c7acc473def2fb7288e324b6463f45d7f8816
   // hexDump.rb -t 0 -c -w 16 -b 12 -p 100 ut-save_file-e.mrw | less -RS
-  BOOST_TEST_CHECK(ReRamCanvas.readRAWfile("../data/utest/ut-save_file-e.mrw") == 0);
-  BOOST_TEST_CHECK(ReRamCanvas.isEqual(eRamCanvas) == true);
+  EXPECT_EQ(ReRamCanvas.readRAWfile("../data/utest/ut-save_file-e.mrw"), 0);
+  EXPECT_TRUE(ReRamCanvas.isEqual(eRamCanvas));
 
   // I checked this file qby hand on 2022-08-28. sha256: 060b545e73ce68ea60f9413ba8611cea1ddf30c986c6ad9384d137939927465d
   // I did the conversion by hand, so I should double check it...
   // hexDump.rb -t -1 -c -w 16 -b 24 -p 100 ut-save_file-f.mrw | less -RS
-  BOOST_TEST_CHECK(RfRamCanvas.readRAWfile("../data/utest/ut-save_file-f.mrw") == 0);
-  BOOST_TEST_CHECK(RfRamCanvas.isEqual(fRamCanvas) == true);
+  EXPECT_EQ(RfRamCanvas.readRAWfile("../data/utest/ut-save_file-f.mrw"), 0);
+  EXPECT_TRUE(RfRamCanvas.isEqual(fRamCanvas));
 
   // I checked this file qby hand on 2022-08-28. sha256: 24c15670cd4776abbad82f9ad3fa6c83c90dca367c6931bb9dce6b7565108a97
   // hexDump.rb -t 0 -c -w 16 -b 1 -p 100 ut-save_file-g.mrw | less -RS
-  BOOST_TEST_CHECK(RgRamCanvas.readRAWfile("../data/utest/ut-save_file-g.mrw") == 0);
-  BOOST_TEST_CHECK(RgRamCanvas.isEqual(gRamCanvas) == true);
+  EXPECT_EQ(RgRamCanvas.readRAWfile("../data/utest/ut-save_file-g.mrw"), 0);
+  EXPECT_TRUE(RgRamCanvas.isEqual(gRamCanvas));
 
   // I checked this file qby hand on 2022-08-28. sha256: a2daf01cd91b48e850b4db7424dc06d689fe557bc777b20f7dda6954c9bd0618
   // hexDump.rb -t 0 -c -w 16 -b 2 -p 100 ut-save_file-h.mrw | less -RS
-  BOOST_TEST_CHECK(RhRamCanvas.readRAWfile("../data/utest/ut-save_file-h.mrw") == 0);
-  BOOST_TEST_CHECK(RhRamCanvas.isEqual(hRamCanvas) == true);
+  EXPECT_EQ(RhRamCanvas.readRAWfile("../data/utest/ut-save_file-h.mrw"), 0);
+  EXPECT_TRUE(RhRamCanvas.isEqual(hRamCanvas));
 
   // I checked this file qby hand on 2022-08-28. sha256: e54e75ae84fe412648121cf55ba39a0c05405474a0a1cd19ac6dfc92ac839be0 *ut-save_file-i.mrw
   // hexDump.rb -t 0 -c -w 16 -b 4 -p 100 ut-save_file-i.mrw | less -RS
-  BOOST_TEST_CHECK(RiRamCanvas.readRAWfile("../data/utest/ut-save_file-i.mrw") == 0);
-  BOOST_TEST_CHECK(RiRamCanvas.isEqual(iRamCanvas) == true);
+  EXPECT_EQ(RiRamCanvas.readRAWfile("../data/utest/ut-save_file-i.mrw"), 0);
+  EXPECT_TRUE(RiRamCanvas.isEqual(iRamCanvas));
 
   // I checked this file qby hand on 2022-08-28. sha256: 3144a77040b5a25c9c089d7cf32d6ee0f832a23b71de1f2d1b3fafab4b82408c
   // hexDump.rb -t 0 -c -w 16 -b 8 -p 100 ut-save_file-j.mrw | less -RS
-  BOOST_TEST_CHECK(RjRamCanvas.readRAWfile("../data/utest/ut-save_file-j.mrw") == 0);
-  BOOST_TEST_CHECK(RjRamCanvas.isEqual(jRamCanvas) == true);
+  EXPECT_EQ(RjRamCanvas.readRAWfile("../data/utest/ut-save_file-j.mrw"), 0);
+  EXPECT_TRUE(RjRamCanvas.isEqual(jRamCanvas));
 
   // I checked this file qby hand on 2022-08-28. sha256: 25ce4b85baca2aa4ea8f4635e82abb4e1aa92e55ec6a9caf9b5558a1d0574a66
   // hexDump.rb -t 0 -c -w 16 -b 4 -p 100 ut-save_file-k.mrw | less -RS
-  BOOST_TEST_CHECK(RkRamCanvas.readRAWfile("../data/utest/ut-save_file-k.mrw") == 0);
-  BOOST_TEST_CHECK(RkRamCanvas.isEqual(kRamCanvas) == true);
+  EXPECT_EQ(RkRamCanvas.readRAWfile("../data/utest/ut-save_file-k.mrw"), 0);
+  EXPECT_TRUE(RkRamCanvas.isEqual(kRamCanvas));
 
   // I checked this file qby hand on 2022-08-28. sha256: 007879b182639b37a54358067f742c86bccb1ec0cb85a67a9f648ebf56c44294
   // I did the conversion by hand, so I should double check it...
   // hexDump.rb -t -1 -c -w 16 -b 8 -p 100 ut-save_file-l.mrw | less -RS
-  BOOST_TEST_CHECK(RlRamCanvas.readRAWfile("../data/utest/ut-save_file-l.mrw") == 0);
-  BOOST_TEST_CHECK(RlRamCanvas.isEqual(lRamCanvas) == true);
+  EXPECT_EQ(RlRamCanvas.readRAWfile("../data/utest/ut-save_file-l.mrw"), 0);
+  EXPECT_TRUE(RlRamCanvas.isEqual(lRamCanvas));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(lines_no_clip) {
+TEST(lines_no_clip, Functional) {
 
 // The line draw algorithm has many cases.  We try to hit them all.
 
@@ -760,8 +749,8 @@ BOOST_AUTO_TEST_CASE(lines_no_clip) {
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   // Compare reference with test
-  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-lines_no_clip.mrw") == 0);
-  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
+  EXPECT_EQ(RaRamCanvas.readRAWfile("../data/utest/ut-lines_no_clip.mrw"), 0);
+  EXPECT_TRUE(RaRamCanvas.isEqual(aRamCanvas));
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   // Save diagnostic images
@@ -771,7 +760,7 @@ BOOST_AUTO_TEST_CASE(lines_no_clip) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(lines_clip) {
+TEST(lines_clip, Functional) {
 
   // The line draw algorithm has many cases.  We try to hit them all.
 
@@ -797,11 +786,11 @@ BOOST_AUTO_TEST_CASE(lines_clip) {
     cRamCanvas.drawLine(19+pts[2], 19+pts[3], 19+pts[0], 19+pts[1], aColor);
   }
 
-  BOOST_CHECK_EQUAL_COLLECTIONS(bRamCanvas.begin(), bRamCanvas.end(), cRamCanvas.begin(), cRamCanvas.end());
+  EXPECT_TRUE(bRamCanvas.isEqual(cRamCanvas));
 
   // Compare reference with test
-  BOOST_TEST_CHECK(RbRamCanvas.readRAWfile("../data/utest/ut-lines_clip-b.mrw") == 0);
-  BOOST_TEST_CHECK(RbRamCanvas.isEqual(bRamCanvas) == true);
+  EXPECT_EQ(RbRamCanvas.readRAWfile("../data/utest/ut-lines_clip-b.mrw"), 0);
+  EXPECT_TRUE(RbRamCanvas.isEqual(bRamCanvas));
 
   // Save diagnostic images
   bRamCanvas.writeRAWfile("ut-lines_clip-b.mrw");
@@ -822,11 +811,11 @@ BOOST_AUTO_TEST_CASE(lines_clip) {
     eRamCanvas.drawLine(7+pts[2], 7+pts[3], 7+pts[0], 7+pts[1], aColor);
   }
 
-  BOOST_CHECK_EQUAL_COLLECTIONS(dRamCanvas.begin(), dRamCanvas.end(), eRamCanvas.begin(), eRamCanvas.end());
+  EXPECT_TRUE(dRamCanvas.isEqual(eRamCanvas));
 
   // Compare reference with test
-  BOOST_TEST_CHECK(RdRamCanvas.readRAWfile("../data/utest/ut-lines_clip-d.mrw") == 0);
-  BOOST_TEST_CHECK(RdRamCanvas.isEqual(dRamCanvas) == true);
+  EXPECT_EQ(RdRamCanvas.readRAWfile("../data/utest/ut-lines_clip-d.mrw"), 0);
+  EXPECT_TRUE(RdRamCanvas.isEqual(dRamCanvas));
 
   // Save diagnostic images
   dRamCanvas.writeRAWfile("ut-lines_clip-d.mrw");
@@ -847,11 +836,11 @@ BOOST_AUTO_TEST_CASE(lines_clip) {
     gRamCanvas.drawLine(17+pts[2], 17+pts[3], 17+pts[0], 17+pts[1], aColor);
   }
 
-  BOOST_CHECK_EQUAL_COLLECTIONS(fRamCanvas.begin(), fRamCanvas.end(), gRamCanvas.begin(), gRamCanvas.end());
+  EXPECT_TRUE(fRamCanvas.isEqual(gRamCanvas));
 
   // Compare reference with test
-  BOOST_TEST_CHECK(RfRamCanvas.readRAWfile("../data/utest/ut-lines_clip-f.mrw") == 0);
-  BOOST_TEST_CHECK(RfRamCanvas.isEqual(fRamCanvas) == true);
+  EXPECT_EQ(RfRamCanvas.readRAWfile("../data/utest/ut-lines_clip-f.mrw"), 0);
+  EXPECT_TRUE(RfRamCanvas.isEqual(fRamCanvas));
 
   // Save diagnostic images
   fRamCanvas.writeRAWfile("ut-lines_clip-f.mrw");
@@ -872,11 +861,11 @@ BOOST_AUTO_TEST_CASE(lines_clip) {
     iRamCanvas.drawLine(7+pts[2], 7+pts[3], 7+pts[0], 7+pts[1], aColor);
   }
 
-  BOOST_CHECK_EQUAL_COLLECTIONS(hRamCanvas.begin(), hRamCanvas.end(), iRamCanvas.begin(), iRamCanvas.end());
+  EXPECT_TRUE(hRamCanvas.isEqual(iRamCanvas));
 
   // Compare reference with test
-  BOOST_TEST_CHECK(RhRamCanvas.readRAWfile("../data/utest/ut-lines_clip-h.mrw") == 0);
-  BOOST_TEST_CHECK(RhRamCanvas.isEqual(hRamCanvas) == true);
+  EXPECT_EQ(RhRamCanvas.readRAWfile("../data/utest/ut-lines_clip-h.mrw"), 0);
+  EXPECT_TRUE(RhRamCanvas.isEqual(hRamCanvas));
 
   // Save diagnostic images
   hRamCanvas.writeRAWfile("ut-lines_clip-h.mrw");
@@ -889,7 +878,7 @@ BOOST_AUTO_TEST_CASE(lines_clip) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(triangles) {
+TEST(triangles, Functional) {
 
   // Try to hit many of the special cases for triangle rendering. For filled triangles, that includes the cases cA-cS in ramCanvasTpl::drawFillTriangleUtl.
   // It also means trying to get some good coverage of the special cases in ramCanvasTpl::triangleEdger as well.  One critical care about is that the edges of
@@ -1040,32 +1029,32 @@ BOOST_AUTO_TEST_CASE(triangles) {
     }
   }
 
-  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), bRamCanvas.begin(), bRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), cRamCanvas.begin(), cRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), dRamCanvas.begin(), dRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), eRamCanvas.begin(), eRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(aRamCanvas.begin(), aRamCanvas.end(), fRamCanvas.begin(), fRamCanvas.end());
+  EXPECT_TRUE(aRamCanvas.isEqual(bRamCanvas));
+  EXPECT_TRUE(aRamCanvas.isEqual(cRamCanvas));
+  EXPECT_TRUE(aRamCanvas.isEqual(dRamCanvas));
+  EXPECT_TRUE(aRamCanvas.isEqual(eRamCanvas));
+  EXPECT_TRUE(aRamCanvas.isEqual(fRamCanvas));
 
-  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-triangles-a.mrw") == 0);
-  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
+  EXPECT_EQ(RaRamCanvas.readRAWfile("../data/utest/ut-triangles-a.mrw"), 0);
+  EXPECT_TRUE(RaRamCanvas.isEqual(aRamCanvas));
 
-  BOOST_CHECK_EQUAL_COLLECTIONS(gRamCanvas.begin(), gRamCanvas.end(), hRamCanvas.begin(), hRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(gRamCanvas.begin(), gRamCanvas.end(), iRamCanvas.begin(), iRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(gRamCanvas.begin(), gRamCanvas.end(), jRamCanvas.begin(), jRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(gRamCanvas.begin(), gRamCanvas.end(), kRamCanvas.begin(), kRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(gRamCanvas.begin(), gRamCanvas.end(), lRamCanvas.begin(), lRamCanvas.end());
+  EXPECT_TRUE(gRamCanvas.isEqual(hRamCanvas));
+  EXPECT_TRUE(gRamCanvas.isEqual(iRamCanvas));
+  EXPECT_TRUE(gRamCanvas.isEqual(jRamCanvas));
+  EXPECT_TRUE(gRamCanvas.isEqual(kRamCanvas));
+  EXPECT_TRUE(gRamCanvas.isEqual(lRamCanvas));
 
-  BOOST_TEST_CHECK(RgRamCanvas.readRAWfile("../data/utest/ut-triangles-g.mrw") == 0);
-  BOOST_TEST_CHECK(RgRamCanvas.isEqual(gRamCanvas) == true);
+  EXPECT_EQ(RgRamCanvas.readRAWfile("../data/utest/ut-triangles-g.mrw"), 0);
+  EXPECT_TRUE(RgRamCanvas.isEqual(gRamCanvas));
 
-  BOOST_CHECK_EQUAL_COLLECTIONS(mRamCanvas.begin(), mRamCanvas.end(), nRamCanvas.begin(), nRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(mRamCanvas.begin(), mRamCanvas.end(), oRamCanvas.begin(), oRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(mRamCanvas.begin(), mRamCanvas.end(), pRamCanvas.begin(), pRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(mRamCanvas.begin(), mRamCanvas.end(), qRamCanvas.begin(), qRamCanvas.end());
-  BOOST_CHECK_EQUAL_COLLECTIONS(mRamCanvas.begin(), mRamCanvas.end(), rRamCanvas.begin(), rRamCanvas.end());
+  EXPECT_TRUE(mRamCanvas.isEqual(nRamCanvas));
+  EXPECT_TRUE(mRamCanvas.isEqual(oRamCanvas));
+  EXPECT_TRUE(mRamCanvas.isEqual(pRamCanvas));
+  EXPECT_TRUE(mRamCanvas.isEqual(qRamCanvas));
+  EXPECT_TRUE(mRamCanvas.isEqual(rRamCanvas));
 
-  BOOST_TEST_CHECK(RmRamCanvas.readRAWfile("../data/utest/ut-triangles-m.mrw") == 0);
-  BOOST_TEST_CHECK(RmRamCanvas.isEqual(mRamCanvas) == true);
+  EXPECT_EQ(RmRamCanvas.readRAWfile("../data/utest/ut-triangles-m.mrw"), 0);
+  EXPECT_TRUE(RmRamCanvas.isEqual(mRamCanvas));
 
   aRamCanvas.writeRAWfile("ut-triangles-a.mrw");
   bRamCanvas.writeRAWfile("ut-triangles-b.mrw");
@@ -1132,7 +1121,7 @@ BOOST_AUTO_TEST_CASE(triangles) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(circles) {
+TEST(circles, Functional) {
 
   mjr::color1c8b aColor(mjr::color1c8b::cornerColorEnum::WHITE);
   mjr::color1c8b bColor(mjr::color1c8b::cornerColorEnum::BLACK);
@@ -1140,37 +1129,37 @@ BOOST_AUTO_TEST_CASE(circles) {
   mjr::ramCanvas1c8b aRamCanvas(63, 63);  mjr::ramCanvas1c8b RaRamCanvas(63, 63);
   for(int i=2; i<32; i+=2)
     aRamCanvas.drawCircle(31, 31, i, aColor);
-  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-circles-a.mrw") == 0);
-  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
+  EXPECT_EQ(RaRamCanvas.readRAWfile("../data/utest/ut-circles-a.mrw"), 0);
+  EXPECT_TRUE(RaRamCanvas.isEqual(aRamCanvas));
 
   mjr::ramCanvas1c8b bRamCanvas(63, 63);  mjr::ramCanvas1c8b RbRamCanvas(63, 63);
   bRamCanvas.drawFillCircle(31, 31, 30, aColor);
-  BOOST_TEST_CHECK(RbRamCanvas.readRAWfile("../data/utest/ut-circles-b.mrw") == 0);
-  BOOST_TEST_CHECK(RbRamCanvas.isEqual(bRamCanvas) == true);
+  EXPECT_EQ(RbRamCanvas.readRAWfile("../data/utest/ut-circles-b.mrw"), 0);
+  EXPECT_TRUE(RbRamCanvas.isEqual(bRamCanvas));
 
   mjr::ramCanvas1c8b cRamCanvas(32, 32);  mjr::ramCanvas1c8b RcRamCanvas(32, 32);
   cRamCanvas.drawCircle(31, 31, 16, aColor);
   cRamCanvas.drawCircle(16, -5, 15, aColor);
   cRamCanvas.drawCircle(5,  20, 8, aColor);
-  BOOST_TEST_CHECK(RcRamCanvas.readRAWfile("../data/utest/ut-circles-c.mrw") == 0);
-  BOOST_TEST_CHECK(RcRamCanvas.isEqual(cRamCanvas) == true);
+  EXPECT_EQ(RcRamCanvas.readRAWfile("../data/utest/ut-circles-c.mrw"), 0);
+  EXPECT_TRUE(RcRamCanvas.isEqual(cRamCanvas));
 
   mjr::ramCanvas1c8b dRamCanvas(32, 32);  mjr::ramCanvas1c8b RdRamCanvas(32, 32);
   dRamCanvas.drawFillCircle(31, 31, 16, aColor);
   dRamCanvas.drawFillCircle(16, -5, 15, aColor);
   dRamCanvas.drawFillCircle(5,  20, 8, aColor);
-  BOOST_TEST_CHECK(RdRamCanvas.readRAWfile("../data/utest/ut-circles-d.mrw") == 0);
-  BOOST_TEST_CHECK(RdRamCanvas.isEqual(dRamCanvas) == true);
+  EXPECT_EQ(RdRamCanvas.readRAWfile("../data/utest/ut-circles-d.mrw"), 0);
+  EXPECT_TRUE(RdRamCanvas.isEqual(dRamCanvas));
 
   mjr::ramCanvas1c8b eRamCanvas(32, 32);  mjr::ramCanvas1c8b ReRamCanvas(32, 32);
   eRamCanvas.drawFillCircle(16, 16, 17, aColor);
-  BOOST_TEST_CHECK(ReRamCanvas.readRAWfile("../data/utest/ut-circles-e.mrw") == 0);
-  BOOST_TEST_CHECK(ReRamCanvas.isEqual(eRamCanvas) == true);
+  EXPECT_EQ(ReRamCanvas.readRAWfile("../data/utest/ut-circles-e.mrw"), 0);
+  EXPECT_TRUE(ReRamCanvas.isEqual(eRamCanvas));
 
   mjr::ramCanvas1c8b fRamCanvas(32, 32);  mjr::ramCanvas1c8b RfRamCanvas(32, 32);
   fRamCanvas.drawFillCircle(16, 16, 50, aColor);
-  BOOST_TEST_CHECK(RfRamCanvas.readRAWfile("../data/utest/ut-circles-f.mrw") == 0);
-  BOOST_TEST_CHECK(RfRamCanvas.isEqual(fRamCanvas) == true);
+  EXPECT_EQ(RfRamCanvas.readRAWfile("../data/utest/ut-circles-f.mrw"), 0);
+  EXPECT_TRUE(RfRamCanvas.isEqual(fRamCanvas));
 
   aRamCanvas.writeRAWfile("ut-circles-a.mrw");
   aRamCanvas.scaleUpProximal(8);
@@ -1198,7 +1187,7 @@ BOOST_AUTO_TEST_CASE(circles) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(rectanglesO) {
+TEST(rectanglesO, Functional) {
 
   // The drawRectangle method is pretty simple, but has several edge cases around clipping.  It is also weird about how it uses it's arguments.
 
@@ -1207,31 +1196,31 @@ BOOST_AUTO_TEST_CASE(rectanglesO) {
   // open: The args are used not points (x1, y1) & (x2, y2), but rather as x and y ranges.
   mjr::ramCanvas1c8b aRamCanvas(9, 9);  mjr::ramCanvas1c8b RaRamCanvas(9, 9);
   aRamCanvas.drawRectangle(1, 1, 7, 7, aColor);
-  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-rectanglesO-a.mrw") == 0);
-  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
+  EXPECT_EQ(RaRamCanvas.readRAWfile("../data/utest/ut-rectanglesO-a.mrw"), 0);
+  EXPECT_TRUE(RaRamCanvas.isEqual(aRamCanvas));
 
   mjr::ramCanvas1c8b bRamCanvas(9, 9);
   bRamCanvas.clrCanvasToBlack();
   bRamCanvas.drawRectangle(1, 1, 7, 7, aColor);
-  BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
+  EXPECT_TRUE(aRamCanvas.isEqual(bRamCanvas));
 
   bRamCanvas.clrCanvasToBlack();
   bRamCanvas.drawRectangle(7, 1, 1, 7, aColor);
-  BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
+  EXPECT_TRUE(aRamCanvas.isEqual(bRamCanvas));
 
   bRamCanvas.clrCanvasToBlack();
   bRamCanvas.drawRectangle(1, 7, 7, 1, aColor);
-  BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
+  EXPECT_TRUE(aRamCanvas.isEqual(bRamCanvas));
 
   bRamCanvas.clrCanvasToBlack();
   bRamCanvas.drawRectangle(7, 7, 1, 1, aColor);
-  BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
+  EXPECT_TRUE(aRamCanvas.isEqual(bRamCanvas));
 
   // open: clip ALL corner (canvas inside rectangle)
   mjr::ramCanvas1c8b cRamCanvas(9, 9);  mjr::ramCanvas1c8b RcRamCanvas(9, 9);
   cRamCanvas.drawRectangle(-4, -2, 25,  12, aColor);
-  BOOST_TEST_CHECK(RcRamCanvas.readRAWfile("../data/utest/ut-rectanglesO-c.mrw") == 0);
-  BOOST_TEST_CHECK(RcRamCanvas.isEqual(cRamCanvas) == true);
+  EXPECT_EQ(RcRamCanvas.readRAWfile("../data/utest/ut-rectanglesO-c.mrw"), 0);
+  EXPECT_TRUE(RcRamCanvas.isEqual(cRamCanvas));
 
   // open: clip ALL corner (canvas inside rectangle)
   mjr::ramCanvas1c8b dRamCanvas(9, 9);  mjr::ramCanvas1c8b RdRamCanvas(9, 9);
@@ -1241,8 +1230,8 @@ BOOST_AUTO_TEST_CASE(rectanglesO) {
   dRamCanvas.drawRectangle( 2, -17, 7, -10, aColor); // to bot
   dRamCanvas.drawRectangle(-9, -15, -4, -7, aColor); // to left below
   dRamCanvas.drawRectangle(10,  15, 14, 17, aColor); // to right up
-  BOOST_TEST_CHECK(RdRamCanvas.readRAWfile("../data/utest/ut-rectanglesO-d.mrw") == 0);
-  BOOST_TEST_CHECK(RdRamCanvas.isEqual(dRamCanvas) == true);
+  EXPECT_EQ(RdRamCanvas.readRAWfile("../data/utest/ut-rectanglesO-d.mrw"), 0);
+  EXPECT_TRUE(RdRamCanvas.isEqual(dRamCanvas));
 
   // open: clip one corner
   mjr::ramCanvas1c8b eRamCanvas(9, 9);  mjr::ramCanvas1c8b ReRamCanvas(9, 9);
@@ -1250,8 +1239,8 @@ BOOST_AUTO_TEST_CASE(rectanglesO) {
   eRamCanvas.drawRectangle( 6,  2, 12, -12, aColor);
   eRamCanvas.drawRectangle(-6,  6,  2,  16, aColor);
   eRamCanvas.drawRectangle(-6, -6,  2,   2, aColor);
-  BOOST_TEST_CHECK(ReRamCanvas.readRAWfile("../data/utest/ut-rectanglesO-e.mrw") == 0);
-  BOOST_TEST_CHECK(ReRamCanvas.isEqual(eRamCanvas) == true);
+  EXPECT_EQ(ReRamCanvas.readRAWfile("../data/utest/ut-rectanglesO-e.mrw"), 0);
+  EXPECT_TRUE(ReRamCanvas.isEqual(eRamCanvas));
 
   // open: clip one side
   mjr::ramCanvas1c8b fRamCanvas(9, 9);  mjr::ramCanvas1c8b RfRamCanvas(9, 9);
@@ -1259,22 +1248,22 @@ BOOST_AUTO_TEST_CASE(rectanglesO) {
   fRamCanvas.drawRectangle( 7,   2, 20,  6, aColor); // right
   fRamCanvas.drawRectangle(-6,   2,  1,  6, aColor);  // left
   fRamCanvas.drawRectangle( 2, -27,  6,  1, aColor); // bot
-  BOOST_TEST_CHECK(RfRamCanvas.readRAWfile("../data/utest/ut-rectanglesO-f.mrw") == 0);
-  BOOST_TEST_CHECK(RfRamCanvas.isEqual(fRamCanvas) == true);
+  EXPECT_EQ(RfRamCanvas.readRAWfile("../data/utest/ut-rectanglesO-f.mrw"), 0);
+  EXPECT_TRUE(RfRamCanvas.isEqual(fRamCanvas));
 
   // open: clip one side (T/B)
   mjr::ramCanvas1c8b gRamCanvas(9, 9);  mjr::ramCanvas1c8b RgRamCanvas(9, 9);
   gRamCanvas.drawRectangle(-3,   7, 26, 12, aColor); // top
   gRamCanvas.drawRectangle(-4, -27, 30,  1, aColor); // bot
-  BOOST_TEST_CHECK(RgRamCanvas.readRAWfile("../data/utest/ut-rectanglesO-g.mrw") == 0);
-  BOOST_TEST_CHECK(RgRamCanvas.isEqual(gRamCanvas) == true);
+  EXPECT_EQ(RgRamCanvas.readRAWfile("../data/utest/ut-rectanglesO-g.mrw"), 0);
+  EXPECT_TRUE(RgRamCanvas.isEqual(gRamCanvas));
 
   // open: clip one side (L/R)
   mjr::ramCanvas1c8b hRamCanvas(9, 9);  mjr::ramCanvas1c8b RhRamCanvas(9, 9);
   hRamCanvas.drawRectangle( 7,  -2, 20, 36, aColor); // right
   hRamCanvas.drawRectangle(-6,  -5,  1, 16, aColor);  // left
-  BOOST_TEST_CHECK(RhRamCanvas.readRAWfile("../data/utest/ut-rectanglesO-h.mrw") == 0);
-  BOOST_TEST_CHECK(RhRamCanvas.isEqual(hRamCanvas) == true);
+  EXPECT_EQ(RhRamCanvas.readRAWfile("../data/utest/ut-rectanglesO-h.mrw"), 0);
+  EXPECT_TRUE(RhRamCanvas.isEqual(hRamCanvas));
 
   aRamCanvas.writeRAWfile("ut-rectanglesO-a.mrw");
   aRamCanvas.scaleUpProximal(20);
@@ -1307,7 +1296,7 @@ BOOST_AUTO_TEST_CASE(rectanglesO) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(rectanglesF) {
+TEST(rectanglesF, Functional) {
 
   // The drawFillRectangle method is pretty simple, but has several edge cases around clipping.  It is also weird about how it uses it's arguments.
 
@@ -1316,31 +1305,31 @@ BOOST_AUTO_TEST_CASE(rectanglesF) {
   // open: The args are used not points (x1, y1) & (x2, y2), but rather as x and y ranges.
   mjr::ramCanvas1c8b aRamCanvas(9, 9);  mjr::ramCanvas1c8b RaRamCanvas(9, 9);
   aRamCanvas.drawFillRectangle(1, 1, 7, 7, aColor);
-  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-rectanglesF-a.mrw") == 0);
-  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
+  EXPECT_EQ(RaRamCanvas.readRAWfile("../data/utest/ut-rectanglesF-a.mrw"), 0);
+  EXPECT_TRUE(RaRamCanvas.isEqual(aRamCanvas));
 
   mjr::ramCanvas1c8b bRamCanvas(9, 9);
   bRamCanvas.clrCanvasToBlack();
   bRamCanvas.drawFillRectangle(1, 1, 7, 7, aColor);
-  BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
+  EXPECT_TRUE(aRamCanvas.isEqual(bRamCanvas));
 
   bRamCanvas.clrCanvasToBlack();
   bRamCanvas.drawFillRectangle(7, 1, 1, 7, aColor);
-  BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
+  EXPECT_TRUE(aRamCanvas.isEqual(bRamCanvas));
 
   bRamCanvas.clrCanvasToBlack();
   bRamCanvas.drawFillRectangle(1, 7, 7, 1, aColor);
-  BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
+  EXPECT_TRUE(aRamCanvas.isEqual(bRamCanvas));
 
   bRamCanvas.clrCanvasToBlack();
   bRamCanvas.drawFillRectangle(7, 7, 1, 1, aColor);
-  BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
+  EXPECT_TRUE(aRamCanvas.isEqual(bRamCanvas));
 
   // open: clip ALL corner (canvas inside rectangle)
   mjr::ramCanvas1c8b cRamCanvas(9, 9);  mjr::ramCanvas1c8b RcRamCanvas(9, 9);
   cRamCanvas.drawFillRectangle(-4, -2, 25,  12, aColor);
-  BOOST_TEST_CHECK(RcRamCanvas.readRAWfile("../data/utest/ut-rectanglesF-c.mrw") == 0);
-  BOOST_TEST_CHECK(RcRamCanvas.isEqual(cRamCanvas) == true);
+  EXPECT_EQ(RcRamCanvas.readRAWfile("../data/utest/ut-rectanglesF-c.mrw"), 0);
+  EXPECT_TRUE(RcRamCanvas.isEqual(cRamCanvas));
 
   // open: clip ALL corner (canvas inside rectangle)
   mjr::ramCanvas1c8b dRamCanvas(9, 9);  mjr::ramCanvas1c8b RdRamCanvas(9, 9);
@@ -1350,8 +1339,8 @@ BOOST_AUTO_TEST_CASE(rectanglesF) {
   dRamCanvas.drawFillRectangle( 2, -17, 7, -10, aColor); // to bot
   dRamCanvas.drawFillRectangle(-9, -15, -4, -7, aColor); // to left below
   dRamCanvas.drawFillRectangle(10,  15, 14, 17, aColor); // to right up
-  BOOST_TEST_CHECK(RdRamCanvas.readRAWfile("../data/utest/ut-rectanglesF-d.mrw") == 0);
-  BOOST_TEST_CHECK(RdRamCanvas.isEqual(dRamCanvas) == true);
+  EXPECT_EQ(RdRamCanvas.readRAWfile("../data/utest/ut-rectanglesF-d.mrw"), 0);
+  EXPECT_TRUE(RdRamCanvas.isEqual(dRamCanvas));
 
   // open: clip one corner
   mjr::ramCanvas1c8b eRamCanvas(9, 9);  mjr::ramCanvas1c8b ReRamCanvas(9, 9);
@@ -1359,8 +1348,8 @@ BOOST_AUTO_TEST_CASE(rectanglesF) {
   eRamCanvas.drawFillRectangle( 6,  2, 12, -12, aColor);
   eRamCanvas.drawFillRectangle(-6,  6,  2,  16, aColor);
   eRamCanvas.drawFillRectangle(-6, -6,  2,   2, aColor);
-  BOOST_TEST_CHECK(ReRamCanvas.readRAWfile("../data/utest/ut-rectanglesF-e.mrw") == 0);
-  BOOST_TEST_CHECK(ReRamCanvas.isEqual(eRamCanvas) == true);
+  EXPECT_EQ(ReRamCanvas.readRAWfile("../data/utest/ut-rectanglesF-e.mrw"), 0);
+  EXPECT_TRUE(ReRamCanvas.isEqual(eRamCanvas));
 
   // open: clip one side
   mjr::ramCanvas1c8b fRamCanvas(9, 9);  mjr::ramCanvas1c8b RfRamCanvas(9, 9);
@@ -1368,22 +1357,22 @@ BOOST_AUTO_TEST_CASE(rectanglesF) {
   fRamCanvas.drawFillRectangle( 7,   2, 20,  6, aColor); // right
   fRamCanvas.drawFillRectangle(-6,   2,  1,  6, aColor);  // left
   fRamCanvas.drawFillRectangle( 2, -27,  6,  1, aColor); // bot
-  BOOST_TEST_CHECK(RfRamCanvas.readRAWfile("../data/utest/ut-rectanglesF-f.mrw") == 0);
-  BOOST_TEST_CHECK(RfRamCanvas.isEqual(fRamCanvas) == true);
+  EXPECT_EQ(RfRamCanvas.readRAWfile("../data/utest/ut-rectanglesF-f.mrw"), 0);
+  EXPECT_TRUE(RfRamCanvas.isEqual(fRamCanvas));
 
   // open: clip one side (T/B)
   mjr::ramCanvas1c8b gRamCanvas(9, 9);  mjr::ramCanvas1c8b RgRamCanvas(9, 9);
   gRamCanvas.drawFillRectangle(-3,   7, 26, 12, aColor); // top
   gRamCanvas.drawFillRectangle(-4, -27, 30,  1, aColor); // bot
-  BOOST_TEST_CHECK(RgRamCanvas.readRAWfile("../data/utest/ut-rectanglesF-g.mrw") == 0);
-  BOOST_TEST_CHECK(RgRamCanvas.isEqual(gRamCanvas) == true);
+  EXPECT_EQ(RgRamCanvas.readRAWfile("../data/utest/ut-rectanglesF-g.mrw"), 0);
+  EXPECT_TRUE(RgRamCanvas.isEqual(gRamCanvas));
 
   // open: clip one side (L/R)
   mjr::ramCanvas1c8b hRamCanvas(9, 9);  mjr::ramCanvas1c8b RhRamCanvas(9, 9);
   hRamCanvas.drawFillRectangle( 7,  -2, 20, 36, aColor); // right
   hRamCanvas.drawFillRectangle(-6,  -5,  1, 16, aColor);  // left
-  BOOST_TEST_CHECK(RhRamCanvas.readRAWfile("../data/utest/ut-rectanglesF-h.mrw") == 0);
-  BOOST_TEST_CHECK(RhRamCanvas.isEqual(hRamCanvas) == true);
+  EXPECT_EQ(RhRamCanvas.readRAWfile("../data/utest/ut-rectanglesF-h.mrw"), 0);
+  EXPECT_TRUE(RhRamCanvas.isEqual(hRamCanvas));
 
   aRamCanvas.writeRAWfile("ut-rectanglesF-a.mrw");
   aRamCanvas.scaleUpProximal(20);
@@ -1415,7 +1404,7 @@ BOOST_AUTO_TEST_CASE(rectanglesF) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(draw_point) {
+TEST(draw_point, Functional) {
 
   mjr::ramCanvasRGB8b aRamCanvas(20, 20, 0.0, 19.0, 0.0, 19.0);  mjr::ramCanvasRGB8b RaRamCanvas(20, 20, 0.0, 19.0, 0.0, 19.0);
   aRamCanvas.setRealAxOrientationY(mjr::ramCanvasRGB8b::realAxisOrientation::INVERTED);
@@ -1458,8 +1447,8 @@ BOOST_AUTO_TEST_CASE(draw_point) {
   aRamCanvas.drawPoint(std::vector<double>({6, 4}),      dColor);                                // vector<double>
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
-  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-points-a.mrw") == 0);
-  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
+  EXPECT_EQ(RaRamCanvas.readRAWfile("../data/utest/ut-points-a.mrw"), 0);
+  EXPECT_TRUE(RaRamCanvas.isEqual(aRamCanvas));
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   aRamCanvas.writeRAWfile("ut-points-a.mrw");
@@ -1468,7 +1457,7 @@ BOOST_AUTO_TEST_CASE(draw_point) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(lines_ep_swap) {
+TEST(lines_ep_swap, Functional) {
 
 // Make sure we get the same result regardless of point order in drawLine call
 
@@ -1486,7 +1475,7 @@ BOOST_AUTO_TEST_CASE(lines_ep_swap) {
     aRamCanvas.drawLine(x1, y1, x2, y2, aColor);
     bRamCanvas.clrCanvasToBlack();
     bRamCanvas.drawLine(x2, y2, x1, y1, aColor);
-    BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
+    EXPECT_TRUE(aRamCanvas.isEqual(bRamCanvas));
     y1 = 0;
     x1 = i;
     y2 = 15;
@@ -1495,7 +1484,7 @@ BOOST_AUTO_TEST_CASE(lines_ep_swap) {
     aRamCanvas.drawLine(x1, y1, x2, y2, aColor);
     bRamCanvas.clrCanvasToBlack();
     bRamCanvas.drawLine(x2, y2, x1, y1, aColor);
-    BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
+    EXPECT_TRUE(aRamCanvas.isEqual(bRamCanvas));
     // Clip on right
     y1 = i;
     x1 = 0;
@@ -1505,7 +1494,7 @@ BOOST_AUTO_TEST_CASE(lines_ep_swap) {
     aRamCanvas.drawLine(x1, y1, x2, y2, aColor);
     bRamCanvas.clrCanvasToBlack();
     bRamCanvas.drawLine(x2, y2, x1, y1, aColor);
-    BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
+    EXPECT_TRUE(aRamCanvas.isEqual(bRamCanvas));
     // Clip on top
     y1 = 0;
     x1 = i;
@@ -1515,7 +1504,7 @@ BOOST_AUTO_TEST_CASE(lines_ep_swap) {
     aRamCanvas.drawLine(x1, y1, x2, y2, aColor);
     bRamCanvas.clrCanvasToBlack();
     bRamCanvas.drawLine(x2, y2, x1, y1, aColor);
-    BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
+    EXPECT_TRUE(aRamCanvas.isEqual(bRamCanvas));
     // Clip on left
     y1 = i;
     x1 = -5;
@@ -1525,7 +1514,7 @@ BOOST_AUTO_TEST_CASE(lines_ep_swap) {
     aRamCanvas.drawLine(x1, y1, x2, y2, aColor);
     bRamCanvas.clrCanvasToBlack();
     bRamCanvas.drawLine(x2, y2, x1, y1, aColor);
-    BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
+    EXPECT_TRUE(aRamCanvas.isEqual(bRamCanvas));
     // Clip on bot
     y1 = -10;
     x1 = i;
@@ -1535,12 +1524,12 @@ BOOST_AUTO_TEST_CASE(lines_ep_swap) {
     aRamCanvas.drawLine(x1, y1, x2, y2, aColor);
     bRamCanvas.clrCanvasToBlack();
     bRamCanvas.drawLine(x2, y2, x1, y1, aColor);
-    BOOST_TEST_CHECK(aRamCanvas.isEqual(bRamCanvas) == true);
+    EXPECT_TRUE(aRamCanvas.isEqual(bRamCanvas));
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(btriangle) {
+TEST(btriangle, Functional) {
 
   mjr::ramCanvas3c8b aRamCanvas(153, 83);  mjr::ramCanvas3c8b RaRamCanvas(153, 83);
 
@@ -1550,8 +1539,8 @@ BOOST_AUTO_TEST_CASE(btriangle) {
   aRamCanvas.drawFillTriangle(71, 1, 151, 31, 121, 81, "red",   "green", "blue");
   aRamCanvas.drawTriangle    (71, 1, 151, 31, 121, 81, "white");
 
-  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-btriangle-a.mrw") == 0);
-  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
+  EXPECT_EQ(RaRamCanvas.readRAWfile("../data/utest/ut-btriangle-a.mrw"), 0);
+  EXPECT_TRUE(RaRamCanvas.isEqual(aRamCanvas));
   
   aRamCanvas.writeRAWfile("ut-btriangle-a.mrw");
   aRamCanvas.scaleUpProximal(20);
@@ -1559,11 +1548,11 @@ BOOST_AUTO_TEST_CASE(btriangle) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(glyph_axis) {
+TEST(glyph_axis, Functional) {
 
   // Make sure glyphs render right side up and forward.  The images in RAM will differ, but the *FILES* should be identical.
 
-  mjr::ramCanvas3c8b aRamCanvas(127, 127);
+  mjr::ramCanvas3c8b aRamCanvas(127, 127); mjr::ramCanvas3c8b R1aRamCanvas(127, 127); mjr::ramCanvas3c8b R2aRamCanvas(127, 127);
   aRamCanvas.drawLine(0, 63, 127, 63, "blue");
   aRamCanvas.drawLine(63, 0, 63, 127, "blue");
   aRamCanvas.setIntAxOrientationX(mjr::ramCanvas3c8b::intAxisOrientation::NATURAL);
@@ -1576,7 +1565,7 @@ BOOST_AUTO_TEST_CASE(glyph_axis) {
   aRamCanvas.scaleUpProximal(4);
   aRamCanvas.writeTIFFfile("ut-glyph_axis-a.tiff");
 
-  mjr::ramCanvas3c8b bRamCanvas(127, 127);
+  mjr::ramCanvas3c8b bRamCanvas(127, 127); mjr::ramCanvas3c8b R1bRamCanvas(127, 127); mjr::ramCanvas3c8b R2bRamCanvas(127, 127);
   bRamCanvas.drawLine(0, 63, 127, 63, "blue");
   bRamCanvas.drawLine(63, 0, 63, 127, "blue");
   bRamCanvas.setIntAxOrientationX(mjr::ramCanvas3c8b::intAxisOrientation::NATURAL);
@@ -1589,7 +1578,7 @@ BOOST_AUTO_TEST_CASE(glyph_axis) {
   bRamCanvas.scaleUpProximal(4);
   bRamCanvas.writeTIFFfile("ut-glyph_axis-b.tiff");
 
-  mjr::ramCanvas3c8b cRamCanvas(127, 127);
+  mjr::ramCanvas3c8b cRamCanvas(127, 127); mjr::ramCanvas3c8b R1cRamCanvas(127, 127); mjr::ramCanvas3c8b R2cRamCanvas(127, 127);
   cRamCanvas.drawLine(0, 63, 127, 63, "blue");
   cRamCanvas.drawLine(63, 0, 63, 127, "blue");
   cRamCanvas.setIntAxOrientationX(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
@@ -1602,7 +1591,7 @@ BOOST_AUTO_TEST_CASE(glyph_axis) {
   cRamCanvas.scaleUpProximal(4);
   cRamCanvas.writeTIFFfile("ut-glyph_axis-c.tiff");
 
-  mjr::ramCanvas3c8b dRamCanvas(127, 127);
+  mjr::ramCanvas3c8b dRamCanvas(127, 127); mjr::ramCanvas3c8b R1dRamCanvas(127, 127); mjr::ramCanvas3c8b R2dRamCanvas(127, 127);
   dRamCanvas.drawLine(0, 63, 127, 63, "blue");
   dRamCanvas.drawLine(63, 0, 63, 127, "blue");
   dRamCanvas.setIntAxOrientationX(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
@@ -1615,33 +1604,27 @@ BOOST_AUTO_TEST_CASE(glyph_axis) {
   dRamCanvas.scaleUpProximal(4);
   dRamCanvas.writeTIFFfile("ut-glyph_axis-d.tiff");
   
-  std::ifstream ifsag("ut-glyph_axis-a.mrw");
-  std::ifstream ifsaar("../data/utest/ut-glyph_axis-a.mrw");
-  std::istream_iterator<char> bag(ifsag), eag;
-  std::istream_iterator<char> baar(ifsaar), eaar;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bag, eag, baar, eaar);
+  // All of them should come out with the E right side up and drawn correctly.
 
-  std::ifstream ifsbg("ut-glyph_axis-b.mrw");
-  std::ifstream ifsabr("../data/utest/ut-glyph_axis-a.mrw");
-  std::istream_iterator<char> bbg(ifsbg), ebg;
-  std::istream_iterator<char> babr(ifsabr), eabr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bbg, ebg, babr, eabr);
+  EXPECT_EQ(R1aRamCanvas.readRAWfile("../data/utest/ut-glyph_axis-a.mrw"), 0);
+  EXPECT_EQ(R2aRamCanvas.readRAWfile("ut-glyph_axis-a.mrw"), 0);
+  EXPECT_TRUE(R1aRamCanvas.isEqual(R2aRamCanvas));
 
-  std::ifstream ifscg("ut-glyph_axis-c.mrw");
-  std::ifstream ifsacr("../data/utest/ut-glyph_axis-a.mrw");
-  std::istream_iterator<char> bcg(ifscg), ecg;
-  std::istream_iterator<char> bacr(ifsacr), eacr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bcg, ecg, bacr, eacr);
+  EXPECT_EQ(R1bRamCanvas.readRAWfile("../data/utest/ut-glyph_axis-a.mrw"), 0);
+  EXPECT_EQ(R2bRamCanvas.readRAWfile("ut-glyph_axis-b.mrw"), 0);
+  EXPECT_TRUE(R1bRamCanvas.isEqual(R2bRamCanvas));
 
-  std::ifstream ifsdg("ut-glyph_axis-d.mrw");
-  std::ifstream ifsadr("../data/utest/ut-glyph_axis-a.mrw");
-  std::istream_iterator<char> bdg(ifsdg), edg;
-  std::istream_iterator<char> badr(ifsadr), eadr;
-  BOOST_CHECK_EQUAL_COLLECTIONS(bdg, edg, badr, eadr);
+  EXPECT_EQ(R1cRamCanvas.readRAWfile("../data/utest/ut-glyph_axis-a.mrw"), 0);
+  EXPECT_EQ(R2cRamCanvas.readRAWfile("ut-glyph_axis-c.mrw"), 0);
+  EXPECT_TRUE(R1cRamCanvas.isEqual(R2cRamCanvas));
+
+  EXPECT_EQ(R1dRamCanvas.readRAWfile("../data/utest/ut-glyph_axis-a.mrw"), 0);
+  EXPECT_EQ(R2dRamCanvas.readRAWfile("ut-glyph_axis-d.mrw"), 0);
+  EXPECT_TRUE(R1dRamCanvas.isEqual(R2dRamCanvas));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(strings) {
+TEST(strings, Functional) {
 
   mjr::ramCanvas3c8b aRamCanvas(450, 100);  mjr::ramCanvas3c8b RaRamCanvas(450, 100);
   int y;
@@ -1655,8 +1638,8 @@ BOOST_AUTO_TEST_CASE(strings) {
   aRamCanvas.drawLine(0, y,   1024, y, "blue");
   aRamCanvas.drawString("Hello, World!", mjr::hershey::font::ROMAN_SL_SANSERIF, 50, y, "red",  2, 15);
 
-  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-strings-a.mrw") == 0);
-  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
+  EXPECT_EQ(RaRamCanvas.readRAWfile("../data/utest/ut-strings-a.mrw"), 0);
+  EXPECT_TRUE(RaRamCanvas.isEqual(aRamCanvas));
 
   mjr::ramCanvas3c8b bRamCanvas(450, 100);  mjr::ramCanvas3c8b RbRamCanvas(450, 100);
   bRamCanvas.setIntAxOrientationY(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED);
@@ -1669,8 +1652,8 @@ BOOST_AUTO_TEST_CASE(strings) {
   bRamCanvas.drawLine(0, y,   1024, y, "blue");
   bRamCanvas.drawLine(50, 0,  50, 512, "blue");
   
-  BOOST_TEST_CHECK(RbRamCanvas.readRAWfile("../data/utest/ut-strings-b.mrw") == 0);
-  BOOST_TEST_CHECK(RbRamCanvas.isEqual(bRamCanvas) == true);
+  EXPECT_EQ(RbRamCanvas.readRAWfile("../data/utest/ut-strings-b.mrw"), 0);
+  EXPECT_TRUE(RbRamCanvas.isEqual(bRamCanvas));
 
   aRamCanvas.writeRAWfile("ut-strings-a.mrw");
   aRamCanvas.scaleUpProximal(4);
@@ -1682,73 +1665,73 @@ BOOST_AUTO_TEST_CASE(strings) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(geom_tfrm) {
+TEST(geom_tfrm, Functional) {
 
   mjr::ramCanvas1c8b aRamCanvas(8, 8); mjr::ramCanvas1c8b RaRamCanvas(8, 8);
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   aRamCanvas.drawLine(0, 0, 3, 0, "white");
   aRamCanvas.drawLine(3, 7, 7, 7, "white");
-  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-a.mrw") == 0);
-  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
+  EXPECT_EQ(RaRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-a.mrw"), 0);
+  EXPECT_TRUE(RaRamCanvas.isEqual(aRamCanvas));
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   mjr::ramCanvas1c8b bRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RbRamCanvas(8, 8);
   bRamCanvas.flipHorz();
-  BOOST_TEST_CHECK(RbRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-b.mrw") == 0);
-  BOOST_TEST_CHECK(RbRamCanvas.isEqual(bRamCanvas) == true);
+  EXPECT_EQ(RbRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-b.mrw"), 0);
+  EXPECT_TRUE(RbRamCanvas.isEqual(bRamCanvas));
   RbRamCanvas.flipHorz();
-  BOOST_TEST_CHECK(RbRamCanvas.isEqual(aRamCanvas) == true);
+  EXPECT_TRUE(RbRamCanvas.isEqual(aRamCanvas));
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   mjr::ramCanvas1c8b cRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RcRamCanvas(8, 8);
   cRamCanvas.flipVert();
-  BOOST_TEST_CHECK(RcRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-c.mrw") == 0);
-  BOOST_TEST_CHECK(RcRamCanvas.isEqual(cRamCanvas) == true);
+  EXPECT_EQ(RcRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-c.mrw"), 0);
+  EXPECT_TRUE(RcRamCanvas.isEqual(cRamCanvas));
   RcRamCanvas.flipVert();
-  BOOST_TEST_CHECK(RcRamCanvas.isEqual(aRamCanvas) == true);
+  EXPECT_TRUE(RcRamCanvas.isEqual(aRamCanvas));
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   mjr::ramCanvas1c8b dRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RdRamCanvas(8, 8);
   dRamCanvas.flipTranspose();
-  BOOST_TEST_CHECK(RdRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-d.mrw") == 0);
-  BOOST_TEST_CHECK(RdRamCanvas.isEqual(dRamCanvas) == true);
+  EXPECT_EQ(RdRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-d.mrw"), 0);
+  EXPECT_TRUE(RdRamCanvas.isEqual(dRamCanvas));
   RdRamCanvas.flipTranspose();
-  BOOST_TEST_CHECK(RdRamCanvas.isEqual(aRamCanvas) == true);
+  EXPECT_TRUE(RdRamCanvas.isEqual(aRamCanvas));
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   mjr::ramCanvas1c8b eRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b ReRamCanvas(8, 8);
   eRamCanvas.rotate90CW();
-  BOOST_TEST_CHECK(ReRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-e.mrw") == 0);
-  BOOST_TEST_CHECK(ReRamCanvas.isEqual(eRamCanvas) == true);
+  EXPECT_EQ(ReRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-e.mrw"), 0);
+  EXPECT_TRUE(ReRamCanvas.isEqual(eRamCanvas));
   eRamCanvas.rotate90CCW();
-  BOOST_TEST_CHECK(eRamCanvas.isEqual(aRamCanvas) == true);
+  EXPECT_TRUE(eRamCanvas.isEqual(aRamCanvas));
   eRamCanvas.rotate90CW();
   eRamCanvas.rotate90CW();
   eRamCanvas.rotate90CW();
   eRamCanvas.rotate90CW();
-  BOOST_TEST_CHECK(eRamCanvas.isEqual(aRamCanvas) == true);
+  EXPECT_TRUE(eRamCanvas.isEqual(aRamCanvas));
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   mjr::ramCanvas1c8b fRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RfRamCanvas(8, 8);
   fRamCanvas.rotate90CCW();
-  BOOST_TEST_CHECK(RfRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-f.mrw") == 0);
-  BOOST_TEST_CHECK(RfRamCanvas.isEqual(fRamCanvas) == true);
+  EXPECT_EQ(RfRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-f.mrw"), 0);
+  EXPECT_TRUE(RfRamCanvas.isEqual(fRamCanvas));
   fRamCanvas.rotate90CW();
-  BOOST_TEST_CHECK(fRamCanvas.isEqual(aRamCanvas) == true);
+  EXPECT_TRUE(fRamCanvas.isEqual(aRamCanvas));
   fRamCanvas.rotate90CCW();
   fRamCanvas.rotate90CCW();
   fRamCanvas.rotate90CCW();
   fRamCanvas.rotate90CCW();
-  BOOST_TEST_CHECK(fRamCanvas.isEqual(aRamCanvas) == true);
+  EXPECT_TRUE(fRamCanvas.isEqual(aRamCanvas));
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   mjr::ramCanvas1c8b gRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RgRamCanvas(8, 8);
   gRamCanvas.rotate180();
-  BOOST_TEST_CHECK(RgRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-g.mrw") == 0);
-  BOOST_TEST_CHECK(RgRamCanvas.isEqual(gRamCanvas) == true);
+  EXPECT_EQ(RgRamCanvas.readRAWfile("../data/utest/ut-geom_tfrm-g.mrw"), 0);
+  EXPECT_TRUE(RgRamCanvas.isEqual(gRamCanvas));
   gRamCanvas.rotate180();
-  BOOST_TEST_CHECK(gRamCanvas.isEqual(aRamCanvas) == true);
+  EXPECT_TRUE(gRamCanvas.isEqual(aRamCanvas));
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   aRamCanvas.writeRAWfile("ut-geom_tfrm-a.mrw");
@@ -1781,7 +1764,7 @@ BOOST_AUTO_TEST_CASE(geom_tfrm) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(p_scale) {
+TEST(p_scale, Functional) {
 
   mjr::ramCanvas1c8b aRamCanvas(4, 4); mjr::ramCanvas1c8b RaRamCanvas(8, 8);
 
@@ -1795,32 +1778,32 @@ BOOST_AUTO_TEST_CASE(p_scale) {
   aRamCanvas.drawLine(0, 2, 4, 2, "black");
   aRamCanvas.drawLine(0, 3, 4, 4, "white");
 
-  BOOST_TEST_CHECK(RaRamCanvas.readRAWfile("../data/utest/ut-p_scale-a.mrw") == 0);
-  BOOST_TEST_CHECK(RaRamCanvas.isEqual(aRamCanvas) == true);
+  EXPECT_EQ(RaRamCanvas.readRAWfile("../data/utest/ut-p_scale-a.mrw"), 0);
+  EXPECT_TRUE(RaRamCanvas.isEqual(aRamCanvas));
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   mjr::ramCanvas1c8b bRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RbRamCanvas(8, 8);
   bRamCanvas.scaleDown1pt(2);
-  BOOST_TEST_CHECK(RbRamCanvas.readRAWfile("../data/utest/ut-p_scale-b.mrw") == 0);
-  BOOST_TEST_CHECK(RbRamCanvas.isEqual(bRamCanvas) == true);
+  EXPECT_EQ(RbRamCanvas.readRAWfile("../data/utest/ut-p_scale-b.mrw"), 0);
+  EXPECT_TRUE(RbRamCanvas.isEqual(bRamCanvas));
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   mjr::ramCanvas1c8b cRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RcRamCanvas(8, 8);
   cRamCanvas.scaleDownMax(2);
-  BOOST_TEST_CHECK(RcRamCanvas.readRAWfile("../data/utest/ut-p_scale-c.mrw") == 0);
-  BOOST_TEST_CHECK(RcRamCanvas.isEqual(cRamCanvas) == true);
+  EXPECT_EQ(RcRamCanvas.readRAWfile("../data/utest/ut-p_scale-c.mrw"), 0);
+  EXPECT_TRUE(RcRamCanvas.isEqual(cRamCanvas));
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   mjr::ramCanvas1c8b dRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RdRamCanvas(8, 8);
   dRamCanvas.scaleDownMean(2);
-  BOOST_TEST_CHECK(RdRamCanvas.readRAWfile("../data/utest/ut-p_scale-d.mrw") == 0);
-  BOOST_TEST_CHECK(RdRamCanvas.isEqual(dRamCanvas) == true);
+  EXPECT_EQ(RdRamCanvas.readRAWfile("../data/utest/ut-p_scale-d.mrw"), 0);
+  EXPECT_TRUE(RdRamCanvas.isEqual(dRamCanvas));
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   mjr::ramCanvas1c8b eRamCanvas(dRamCanvas);  mjr::ramCanvas1c8b ReRamCanvas(8, 8);
   eRamCanvas.scaleUpProximal(2);
-  BOOST_TEST_CHECK(ReRamCanvas.readRAWfile("../data/utest/ut-p_scale-e.mrw") == 0);
-  BOOST_TEST_CHECK(ReRamCanvas.isEqual(eRamCanvas) == true);
+  EXPECT_EQ(ReRamCanvas.readRAWfile("../data/utest/ut-p_scale-e.mrw"), 0);
+  EXPECT_TRUE(ReRamCanvas.isEqual(eRamCanvas));
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   aRamCanvas.writeRAWfile("ut-p_scale-a.mrw");
@@ -1845,7 +1828,7 @@ BOOST_AUTO_TEST_CASE(p_scale) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(adjoin) {
+TEST(adjoin, Functional) {
 
   mjr::ramCanvas1c8b aRamCanvas(8, 8);
   aRamCanvas.drawRectangle(0, 0, 7, 7, "white");
@@ -1857,23 +1840,23 @@ BOOST_AUTO_TEST_CASE(adjoin) {
 
   mjr::ramCanvas1c8b cRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RcRamCanvas(8, 8);
   cRamCanvas.adjoinCanvasRight(bRamCanvas);
-  BOOST_TEST_CHECK(RcRamCanvas.readRAWfile("../data/utest/ut-adjoin-c.mrw") == 0);
-  BOOST_TEST_CHECK(RcRamCanvas.isEqual(cRamCanvas) == true);
+  EXPECT_EQ(RcRamCanvas.readRAWfile("../data/utest/ut-adjoin-c.mrw"), 0);
+  EXPECT_TRUE(RcRamCanvas.isEqual(cRamCanvas));
 
   mjr::ramCanvas1c8b dRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RdRamCanvas(8, 8);
   dRamCanvas.adjoinCanvasLeft(bRamCanvas);
-  BOOST_TEST_CHECK(RdRamCanvas.readRAWfile("../data/utest/ut-adjoin-d.mrw") == 0);
-  BOOST_TEST_CHECK(RdRamCanvas.isEqual(dRamCanvas) == true);
+  EXPECT_EQ(RdRamCanvas.readRAWfile("../data/utest/ut-adjoin-d.mrw"), 0);
+  EXPECT_TRUE(RdRamCanvas.isEqual(dRamCanvas));
 
   mjr::ramCanvas1c8b eRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b ReRamCanvas(8, 8);
   eRamCanvas.adjoinCanvasBottom(bRamCanvas);
-  BOOST_TEST_CHECK(ReRamCanvas.readRAWfile("../data/utest/ut-adjoin-e.mrw") == 0);
-  BOOST_TEST_CHECK(ReRamCanvas.isEqual(eRamCanvas) == true);
+  EXPECT_EQ(ReRamCanvas.readRAWfile("../data/utest/ut-adjoin-e.mrw"), 0);
+  EXPECT_TRUE(ReRamCanvas.isEqual(eRamCanvas));
 
   mjr::ramCanvas1c8b fRamCanvas(aRamCanvas);  mjr::ramCanvas1c8b RfRamCanvas(8, 8);
   fRamCanvas.adjoinCanvasTop(bRamCanvas);
-  BOOST_TEST_CHECK(RfRamCanvas.readRAWfile("../data/utest/ut-adjoin-f.mrw") == 0);
-  BOOST_TEST_CHECK(RfRamCanvas.isEqual(fRamCanvas) == true);
+  EXPECT_EQ(RfRamCanvas.readRAWfile("../data/utest/ut-adjoin-f.mrw"), 0);
+  EXPECT_TRUE(RfRamCanvas.isEqual(fRamCanvas));
 
   //------------------------------------------------------------------------------------------------------------------------------------------------------------
   aRamCanvas.writeRAWfile("ut-adjoin-a.mrw");
@@ -1905,19 +1888,5 @@ BOOST_AUTO_TEST_CASE(adjoin) {
   fRamCanvas.scaleUpProximal(32);
   fRamCanvas.writeTIFFfile("ut-adjoin-f.tiff");
 }
-
-#endif
-
-
-
-  // XRamCanvas.writeRAWfile("ut-strings-X.mrw");
-  // XRamCanvas.scaleUpProximal(20);
-  // XRamCanvas.writeTIFFfile("ut-strings-X.tiff");
-  //
-  // std::ifstream ifsXg("ut-strings-X.mrw");
-  // std::ifstream ifsXr("../data/utest/ut-strings-X.mrw");
-  // std::istream_iterator<char> bXg(ifsXg), eXg;
-  // std::istream_iterator<char> bXr(ifsXr), eXr;
-  // BOOST_CHECK_EQUAL_COLLECTIONS(bXg, eXg, bXr, eXr);
 
 /** @endcond */

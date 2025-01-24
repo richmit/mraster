@@ -18,10 +18,14 @@ set(MRASTER_VERSION_DATE  2024-08-20)
 mark_as_advanced(MRASTER_VERSION_DATE)
 
 ######################################################################################################################################################
+# Include ctest
+include(CTest)
+
+######################################################################################################################################################
 # Here are the options we use to modify the build -- these options are passed to cmake like so: cmake -DO_OPENSSL=YES or -DO_OPENSSL=NO
 
 OPTION(O_DOXYGEN "Doxygen support (documentation)"        ON )
-OPTION(O_BTEST   "boost.test support (unit tests)"        ON )
+OPTION(O_GTEST   "Include support for Google Test"        ON  )
 OPTION(O_TIFF    "libTIFF support (Advanced TIFF writer)" ON )
 OPTION(O_OPENGL  "OpenGL & GLUT support"                  ON )
 OPTION(O_OPENMP  "OpenMP support"                         ON )
@@ -52,8 +56,8 @@ if(O_SDL2)
   find_package (SDL2)
 endif()
 
-if(O_BTEST)
-  find_package(Boost COMPONENTS unit_test_framework)
+if(O_GTEST)
+  find_package(GTest)
 endif()
 
 find_file(MRMathCPP_PATH "MRMathCPPLib.cmake" PATHS "MRMathCPP/build"  "../MRMathCPP/build")
@@ -120,11 +124,11 @@ set(TARGETS_USE_OPENMP "mandelbrot_bm_cplx_openmp" "mandelbrot_precomp" "mandelb
                        "newton_half" "newton_vs" "newton_z6" "newton_modified" "newton_min_root" "newton_3updown" "newton_roter" "attracting_torus_shadowM"
                        "laguerre_3updown" "laguerre_simple" "kalisetJ" "kalisetM1" "kalisetM2" "phoenix" "phoenixI" "phoenixD" "phoenixM" "phoenixM2"
                        "doublePendulum" "doublePendulumM" "wakOrb01" "wakOrb02" "wakOrb03")
-set(TARGETS_REQ_BTEST  "utest_colorTpl_ia64nGCC" "utest_colorTpl" "utest_ramCanvasTpl")
+set(TARGETS_REQ_GTEST  "utest_colorTpl_ia64nGCC" "utest_colorTpl" "utest_ramCanvasTpl")
 set(TARGETS_REQ_SDL2   "displayImageSDL2")
 
 # Construct list of targets we can build
-set(EXAMPLE_TARGETS ${TARGETS_REQ_NONE} ${TARGETS_REQ_TIFF} ${TARGETS_USE_OPENMP} ${TARGETS_REQ_BTEST} ${TARGETS_REQ_OPENGL} ${TARGETS_REQ_SDL2})
+set(EXAMPLE_TARGETS ${TARGETS_REQ_NONE} ${TARGETS_REQ_TIFF} ${TARGETS_USE_OPENMP} ${TARGETS_REQ_GTEST} ${TARGETS_REQ_OPENGL} ${TARGETS_REQ_SDL2})
 
 if(((NOT OpenGL_FOUND) OR (NOT GLUT_FOUND)) AND TARGETS_REQ_OPENGL)
   list(REMOVE_ITEM EXAMPLE_TARGETS ${TARGETS_REQ_OPENGL})
@@ -137,8 +141,8 @@ if((NOT TIFF_FOUND) AND TARGETS_REQ_TIFF)
   list(REMOVE_ITEM EXAMPLE_TARGETS ${TARGETS_REQ_TIFF})
   message(WARNING "Example programs requiring TIFF will NOT be built!")
 endif()
-if((NOT Boost_FOUND) AND TARGETS_REQ_BTEST)
-  list(REMOVE_ITEM EXAMPLE_TARGETS ${TARGETS_REQ_BTEST})
+if((NOT GTest_FOUND) AND TARGETS_REQ_GTEST)
+  list(REMOVE_ITEM EXAMPLE_TARGETS ${TARGETS_REQ_GTEST})
   message(WARNING "Unit tests will NOT be built!")
 endif()
 if((NOT SDL2_FOUND) AND TARGETS_REQ_SDL2)
@@ -186,7 +190,24 @@ endif()
 
 # Add a target for each example we can build
 foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
-  add_executable(${CURTGT} EXCLUDE_FROM_ALL "examples/${CURTGT}.cpp")
+  if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/examples/${CURTGT}.cpp")
+    add_executable(${CURTGT} EXCLUDE_FROM_ALL "examples/${CURTGT}.cpp")
+    list(APPEND TARGETS_EXAMPLES ${CURTGT})
+  elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/ftests/${CURTGT}.cpp")
+    add_executable(${CURTGT} EXCLUDE_FROM_ALL "ftests/${CURTGT}.cpp")
+    list(APPEND TARGETS_FTEST ${CURTGT})
+  elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/utests/${CURTGT}.cpp")
+    if(NOT GTest_FOUND)
+      message(NOTICE "Target ${CURTGT} will not be built (no GTest support)")
+      continue()
+    endif()
+    add_executable(${CURTGT} EXCLUDE_FROM_ALL "utests/${CURTGT}.cpp")
+    list(APPEND TARGETS_UTEST ${CURTGT})
+  else()
+    message("Warning: Unable to find source for target ${CURTGT}!")
+    continue()
+  endif()
+
   target_compile_features(${CURTGT} PUBLIC cxx_std_20)
 
   IF(O_128_INT)
@@ -219,12 +240,13 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
     #message("Warning: MSVC support is currently experimental")
   endif()
 
+  # MJR TODO NOTE <2025-01-24T16:35:47-0600> CMakeLists.txt: Consider lib require instead to include tiff stuff too
   target_include_directories(${CURTGT} PRIVATE ${MRaster_INCLUDE})
 
-  # Add build requirements for examples using Boost Test
-  list (FIND TARGETS_REQ_BTEST ${CURTGT} TMPR)
-  if((Boost_FOUND) AND (${TMPR} GREATER -1))
-    target_link_libraries(${CURTGT} PRIVATE ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+  # Add build requirements for unit tests
+  list (FIND TARGETS_REQ_GTEST ${CURTGT} TMPR)
+  if((GTest_FOUND) AND (${TMPR} GREATER -1))
+    target_link_libraries(${CURTGT} PRIVATE GTest::gtest_main)
   endif()
 
   # Add build requirements for examples using OpenGL

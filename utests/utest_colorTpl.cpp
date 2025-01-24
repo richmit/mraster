@@ -32,15 +32,7 @@
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
 
-#define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE Main
-#include <boost/test/unit_test.hpp>
-
-#define BOOST_TEST_DYN_LINK
-#ifdef STAND_ALONE
-#   define BOOST_TEST_MODULE Main
-#endif
-#include <boost/test/unit_test.hpp>
+#include <gtest/gtest.h>
 
 #include "ramCanvas.hpp"
 
@@ -410,822 +402,826 @@
 // | DIRECT   | setRGBfromWavelengthLA(double wavelength);                                                                   |
 // |----------+--------------------------------------------------------------------------------------------------------------|
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(set_chan_dbl_8) {
+TEST(TYP_color4c8b, SetChanDbl) {
 
   mjr::color4c8b aColor;
+  decltype(aColor)::channelType mxcv = 255;
+  decltype(aColor)::channelType hlcv = 255/2;
+  decltype(aColor)::channelType mncv =   0;
+  double                        hldb = 127.0/mxcv;
 
-  BOOST_TEST_CHECK(mjr::color4c8b::maxChanVal  == 255);
-  BOOST_TEST_CHECK(mjr::color4c8b::minChanVal  == 0);
+  EXPECT_EQ(decltype(aColor)::maxChanVal,   mxcv);
+  EXPECT_EQ(decltype(aColor)::minChanVal,   mncv);
 
   aColor.setToBlack();
   aColor.setChan_dbl(0, 1.0);
   aColor.setChan_dbl(2, 1.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c8b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c8b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c8b::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       mxcv);
+  EXPECT_EQ(aColor.getChan(1),       mncv);
+  EXPECT_EQ(aColor.getChan(2),       mxcv);
+  EXPECT_EQ(aColor.getChan(3),       mncv);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0);
+  EXPECT_EQ(aColor.getChan_byte(0),  255);
+  EXPECT_EQ(aColor.getChan_byte(1),  0);
+  EXPECT_EQ(aColor.getChan_byte(2),  255);
+  EXPECT_EQ(aColor.getChan_byte(3),  0);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 0.0);
+  EXPECT_NEAR(aColor.getChan_dbl(0),   1.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   0.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   1.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   0.0, 0.000001);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 
   aColor.setChan_dbl(0, 0.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c8b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c8b::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       mncv);
+  EXPECT_EQ(aColor.getChan(1),       mncv);
+  EXPECT_EQ(aColor.getChan(2),       mxcv);
+  EXPECT_EQ(aColor.getChan(3),       mncv);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0);
+  EXPECT_EQ(aColor.getChan_byte(0),  0);
+  EXPECT_EQ(aColor.getChan_byte(1),  0);
+  EXPECT_EQ(aColor.getChan_byte(2),  255);
+  EXPECT_EQ(aColor.getChan_byte(3),  0);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 0.0);
+  EXPECT_NEAR(aColor.getChan_dbl(0),   0.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   0.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   1.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   0.0, 0.000001);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 
   aColor.setChansRGB_dbl(1.0, 1.0, 0.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c8b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c8b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c8b::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       mxcv);
+  EXPECT_EQ(aColor.getChan(1),       mxcv);
+  EXPECT_EQ(aColor.getChan(2),       mncv);
+  EXPECT_EQ(aColor.getChan(3),       mncv);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0);
+  EXPECT_EQ(aColor.getChan_byte(0),  255);
+  EXPECT_EQ(aColor.getChan_byte(1),  255);
+  EXPECT_EQ(aColor.getChan_byte(2),  0);
+  EXPECT_EQ(aColor.getChan_byte(3),  0);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 0.0);
+  EXPECT_NEAR(aColor.getChan_dbl(0),   1.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   1.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   0.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   0.0, 0.000001);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 
   aColor.setChan_dbl(1, 0.5);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c8b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 127);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c8b::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       mxcv);
+  EXPECT_EQ(aColor.getChan(1),       hlcv);
+  EXPECT_EQ(aColor.getChan(2),       mncv);
+  EXPECT_EQ(aColor.getChan(3),       mncv);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 127);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0);
+  EXPECT_EQ(aColor.getChan_byte(0),  255);
+  EXPECT_EQ(aColor.getChan_byte(1),  127);
+  EXPECT_EQ(aColor.getChan_byte(2),  0);
+  EXPECT_EQ(aColor.getChan_byte(3),  0);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 127.0/mjr::color4c8b::maxChanVal, boost::test_tools::tolerance(0.005));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 0.0);
+  EXPECT_NEAR(aColor.getChan_dbl(0),   1.0,  0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   hldb, 0.005);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   0.0,  0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   0.0,  0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 
   aColor.setChansRGB_dbl(0.0, 0.0, 0.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c8b::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       mncv);
+  EXPECT_EQ(aColor.getChan(1),       mncv);
+  EXPECT_EQ(aColor.getChan(2),       mncv);
+  EXPECT_EQ(aColor.getChan(3),       mncv);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0);
+  EXPECT_EQ(aColor.getChan_byte(0),  0);
+  EXPECT_EQ(aColor.getChan_byte(1),  0);
+  EXPECT_EQ(aColor.getChan_byte(2),  0);
+  EXPECT_EQ(aColor.getChan_byte(3),  0);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 0.0);
+  EXPECT_NEAR(aColor.getChan_dbl(0),   0.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   0.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   0.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   0.0, 0.000001);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 
   aColor.setChans_dbl(1.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c8b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c8b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c8b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c8b::maxChanVal);
+  EXPECT_EQ(aColor.getChan(0),       mxcv);
+  EXPECT_EQ(aColor.getChan(1),       mxcv);
+  EXPECT_EQ(aColor.getChan(2),       mxcv);
+  EXPECT_EQ(aColor.getChan(3),       mxcv);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 255);
+  EXPECT_EQ(aColor.getChan_byte(0),  255);
+  EXPECT_EQ(aColor.getChan_byte(1),  255);
+  EXPECT_EQ(aColor.getChan_byte(2),  255);
+  EXPECT_EQ(aColor.getChan_byte(3),  255);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 1.0);
+  EXPECT_NEAR(aColor.getChan_dbl(0),   1.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   1.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   1.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   1.0, 0.000001);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 
   aColor.setChansRGBA_dbl(1.0, 0.0, 0.5, 0.5);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c8b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 127);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 127);
+  EXPECT_EQ(aColor.getChan(0),       mxcv);
+  EXPECT_EQ(aColor.getChan(1),       mncv);
+  EXPECT_EQ(aColor.getChan(2),       hlcv);
+  EXPECT_EQ(aColor.getChan(3),       hlcv);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 127);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 127);
+  EXPECT_EQ(aColor.getChan_byte(0),  255);
+  EXPECT_EQ(aColor.getChan_byte(1),  0);
+  EXPECT_EQ(aColor.getChan_byte(2),  127);
+  EXPECT_EQ(aColor.getChan_byte(3),  127);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 127.0/mjr::color4c8b::maxChanVal, boost::test_tools::tolerance(0.005));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 127.0/mjr::color4c8b::maxChanVal, boost::test_tools::tolerance(0.005));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   1.0,  0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   0.0,  0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   hldb, 0.005);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   hldb, 0.005);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 
   aColor.setC0_dbl(0.0);
   aColor.setC1_dbl(1.0);
   aColor.setC2_dbl(1.0);
   aColor.setC3_dbl(0.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c8b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c8b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c8b::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       mncv);
+  EXPECT_EQ(aColor.getChan(1),       mxcv);
+  EXPECT_EQ(aColor.getChan(2),       mxcv);
+  EXPECT_EQ(aColor.getChan(3),       mncv);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0);
+  EXPECT_EQ(aColor.getChan_byte(0),  0);
+  EXPECT_EQ(aColor.getChan_byte(1),  255);
+  EXPECT_EQ(aColor.getChan_byte(2),  255);
+  EXPECT_EQ(aColor.getChan_byte(3),  0);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 0.0);
+  EXPECT_NEAR(aColor.getChan_dbl(0),   0.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   1.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   1.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   0.0, 0.000001);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
-
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(set_chan_dbl_16, * boost::unit_test::tolerance(0.001)) {
-
+TEST(TYP_color4c16b, SetChanDbl) {
   mjr::color4c16b aColor;
 
-  BOOST_TEST_CHECK(mjr::color4c16b::maxChanVal  == 65535);
-  BOOST_TEST_CHECK(mjr::color4c16b::minChanVal  == 0);
+  decltype(aColor)::channelType mxcv = 65535;
+  decltype(aColor)::channelType hlcv = 32767; // 
+  decltype(aColor)::channelType mncv =   0;
+  double                        hldb = 32767.0/mxcv;
+
+  EXPECT_EQ(decltype(aColor)::maxChanVal,   mxcv);
+  EXPECT_EQ(decltype(aColor)::minChanVal,   mncv);
 
   aColor.setToBlack();
   aColor.setChan_dbl(0, 1.0);
   aColor.setChan_dbl(2, 1.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c16b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c16b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c16b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c16b::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       mxcv);
+  EXPECT_EQ(aColor.getChan(1),       mncv);
+  EXPECT_EQ(aColor.getChan(2),       mxcv);
+  EXPECT_EQ(aColor.getChan(3),       mncv);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0);
+  EXPECT_EQ(aColor.getChan_byte(0),  255);
+  EXPECT_EQ(aColor.getChan_byte(1),  0);
+  EXPECT_EQ(aColor.getChan_byte(2),  255);
+  EXPECT_EQ(aColor.getChan_byte(3),  0);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 0.0);
+  EXPECT_NEAR(aColor.getChan_dbl(0),   1.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   0.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   1.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   0.0, 0.000001);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 
   aColor.setChan_dbl(0, 0.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c16b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c16b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c16b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c16b::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       mncv);
+  EXPECT_EQ(aColor.getChan(1),       mncv);
+  EXPECT_EQ(aColor.getChan(2),       mxcv);
+  EXPECT_EQ(aColor.getChan(3),       mncv);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0);
+  EXPECT_EQ(aColor.getChan_byte(0),  0);
+  EXPECT_EQ(aColor.getChan_byte(1),  0);
+  EXPECT_EQ(aColor.getChan_byte(2),  255);
+  EXPECT_EQ(aColor.getChan_byte(3),  0);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 0.0);
+  EXPECT_NEAR(aColor.getChan_dbl(0),   0.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   0.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   1.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   0.0, 0.000001);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 
   aColor.setChansRGB_dbl(1.0, 1.0, 0.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c16b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c16b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c16b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c16b::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       mxcv);
+  EXPECT_EQ(aColor.getChan(1),       mxcv);
+  EXPECT_EQ(aColor.getChan(2),       mncv);
+  EXPECT_EQ(aColor.getChan(3),       mncv);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0);
+  EXPECT_EQ(aColor.getChan_byte(0),  255);
+  EXPECT_EQ(aColor.getChan_byte(1),  255);
+  EXPECT_EQ(aColor.getChan_byte(2),  0);
+  EXPECT_EQ(aColor.getChan_byte(3),  0);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 0.0);
+  EXPECT_NEAR(aColor.getChan_dbl(0),   1.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   1.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   0.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   0.0, 0.000001);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 
   aColor.setChan_dbl(1, 0.5);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c16b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 32767);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c16b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c16b::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       mxcv);
+  EXPECT_EQ(aColor.getChan(1),       hlcv);
+  EXPECT_EQ(aColor.getChan(2),       mncv);
+  EXPECT_EQ(aColor.getChan(3),       mncv);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 127);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0);
+  EXPECT_EQ(aColor.getChan_byte(0),  255);
+  EXPECT_EQ(aColor.getChan_byte(1),  127);
+  EXPECT_EQ(aColor.getChan_byte(2),  0);
+  EXPECT_EQ(aColor.getChan_byte(3),  0);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 32767.0/mjr::color4c16b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 0.0);
+  EXPECT_NEAR(aColor.getChan_dbl(0),   1.0,  0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   hldb, 0.005);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   0.0,  0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   0.0,  0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 
   aColor.setChansRGB_dbl(0.0, 0.0, 0.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c16b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c16b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c16b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c16b::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       mncv);
+  EXPECT_EQ(aColor.getChan(1),       mncv);
+  EXPECT_EQ(aColor.getChan(2),       mncv);
+  EXPECT_EQ(aColor.getChan(3),       mncv);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0);
+  EXPECT_EQ(aColor.getChan_byte(0),  0);
+  EXPECT_EQ(aColor.getChan_byte(1),  0);
+  EXPECT_EQ(aColor.getChan_byte(2),  0);
+  EXPECT_EQ(aColor.getChan_byte(3),  0);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 0.0);
+  EXPECT_NEAR(aColor.getChan_dbl(0),   0.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   0.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   0.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   0.0, 0.000001);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 
   aColor.setChans_dbl(1.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c16b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c16b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c16b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c16b::maxChanVal);
+  EXPECT_EQ(aColor.getChan(0),       mxcv);
+  EXPECT_EQ(aColor.getChan(1),       mxcv);
+  EXPECT_EQ(aColor.getChan(2),       mxcv);
+  EXPECT_EQ(aColor.getChan(3),       mxcv);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 255);
+  EXPECT_EQ(aColor.getChan_byte(0),  255);
+  EXPECT_EQ(aColor.getChan_byte(1),  255);
+  EXPECT_EQ(aColor.getChan_byte(2),  255);
+  EXPECT_EQ(aColor.getChan_byte(3),  255);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 1.0);
+  EXPECT_NEAR(aColor.getChan_dbl(0),   1.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   1.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   1.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   1.0, 0.000001);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 
   aColor.setChansRGBA_dbl(1.0, 0.0, 0.5, 0.5);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c16b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c16b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 32767);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 32767);
+  EXPECT_EQ(aColor.getChan(0),       mxcv);
+  EXPECT_EQ(aColor.getChan(1),       mncv);
+  EXPECT_EQ(aColor.getChan(2),       hlcv);
+  EXPECT_EQ(aColor.getChan(3),       hlcv);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 127);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 127);
+  EXPECT_EQ(aColor.getChan_byte(0),  255);
+  EXPECT_EQ(aColor.getChan_byte(1),  0);
+  EXPECT_EQ(aColor.getChan_byte(2),  127);
+  EXPECT_EQ(aColor.getChan_byte(3),  127);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 32767.0/mjr::color4c16b::maxChanVal, boost::test_tools::tolerance(0.005));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 32767.0/mjr::color4c16b::maxChanVal, boost::test_tools::tolerance(0.005));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   1.0,  0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   0.0,  0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   hldb, 0.005);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   hldb, 0.005);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 
   aColor.setC0_dbl(0.0);
   aColor.setC1_dbl(1.0);
   aColor.setC2_dbl(1.0);
   aColor.setC3_dbl(0.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c16b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c16b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c16b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c16b::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       mncv);
+  EXPECT_EQ(aColor.getChan(1),       mxcv);
+  EXPECT_EQ(aColor.getChan(2),       mxcv);
+  EXPECT_EQ(aColor.getChan(3),       mncv);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0);
+  EXPECT_EQ(aColor.getChan_byte(0),  0);
+  EXPECT_EQ(aColor.getChan_byte(1),  255);
+  EXPECT_EQ(aColor.getChan_byte(2),  255);
+  EXPECT_EQ(aColor.getChan_byte(3),  0);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 0.0);
+  EXPECT_NEAR(aColor.getChan_dbl(0),   0.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   1.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   1.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   0.0, 0.000001);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
-
-}
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
+ }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(set_chan_dbl_64F, * boost::unit_test::tolerance(0.00001)) {
+TEST(TYP_color4c64F, SetChanDbl) {
 
   mjr::color4c64F aColor;
 
-  BOOST_TEST_CHECK(mjr::color4c64F::maxChanVal  == 1.0);
-  BOOST_TEST_CHECK(mjr::color4c64F::minChanVal  == 0.0);
+  EXPECT_NEAR(mjr::color4c64F::maxChanVal,   1.0, 0.00001);
+  EXPECT_NEAR(mjr::color4c64F::minChanVal,   0.0, 0.00001);
 
   aColor.setToBlack();
   aColor.setChan_dbl(0, 1.0);
   aColor.setChan_dbl(2, 1.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c64F::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c64F::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c64F::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c64F::minChanVal);
+  EXPECT_NEAR(aColor.getChan(0),       mjr::color4c64F::maxChanVal, 0.00001);
+  EXPECT_NEAR(aColor.getChan(1),       mjr::color4c64F::minChanVal, 0.00001);
+  EXPECT_NEAR(aColor.getChan(2),       mjr::color4c64F::maxChanVal, 0.00001);
+  EXPECT_NEAR(aColor.getChan(3),       mjr::color4c64F::minChanVal, 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_NEAR(aColor.getChan(0),       aColor.getC0(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(1),       aColor.getC1(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(2),       aColor.getC2(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(3),       aColor.getC3(), 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0);
+  EXPECT_EQ(aColor.getChan_byte(0),  255);
+  EXPECT_EQ(aColor.getChan_byte(1),  0);
+  EXPECT_EQ(aColor.getChan_byte(2),  255);
+  EXPECT_EQ(aColor.getChan_byte(3),  0);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 0.0);
+  EXPECT_NEAR(aColor.getChan_dbl(0),   1.0, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   0.0, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   1.0, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   0.0, 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 
   aColor.setChan_dbl(0, 0.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c64F::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c64F::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c64F::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c64F::minChanVal);
+  EXPECT_NEAR(aColor.getChan(0),       mjr::color4c64F::minChanVal, 0.00001);
+  EXPECT_NEAR(aColor.getChan(1),       mjr::color4c64F::minChanVal, 0.00001);
+  EXPECT_NEAR(aColor.getChan(2),       mjr::color4c64F::maxChanVal, 0.00001);
+  EXPECT_NEAR(aColor.getChan(3),       mjr::color4c64F::minChanVal, 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_NEAR(aColor.getChan(0),       aColor.getC0(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(1),       aColor.getC1(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(2),       aColor.getC2(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(3),       aColor.getC3(), 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0);
+  EXPECT_EQ(aColor.getChan_byte(0),  0);
+  EXPECT_EQ(aColor.getChan_byte(1),  0);
+  EXPECT_EQ(aColor.getChan_byte(2),  255);
+  EXPECT_EQ(aColor.getChan_byte(3),  0);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 0.0);
+  EXPECT_NEAR(aColor.getChan_dbl(0),   0.0, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   0.0, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   1.0, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   0.0, 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 
   aColor.setChansRGB_dbl(1.0, 1.0, 0.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c64F::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c64F::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c64F::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c64F::minChanVal);
+  EXPECT_NEAR(aColor.getChan(0),       mjr::color4c64F::maxChanVal, 0.00001);
+  EXPECT_NEAR(aColor.getChan(1),       mjr::color4c64F::maxChanVal, 0.00001);
+  EXPECT_NEAR(aColor.getChan(2),       mjr::color4c64F::minChanVal, 0.00001);
+  EXPECT_NEAR(aColor.getChan(3),       mjr::color4c64F::minChanVal, 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_NEAR(aColor.getChan(0),       aColor.getC0(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(1),       aColor.getC1(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(2),       aColor.getC2(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(3),       aColor.getC3(), 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0);
+  EXPECT_EQ(aColor.getChan_byte(0),  255);
+  EXPECT_EQ(aColor.getChan_byte(1),  255);
+  EXPECT_EQ(aColor.getChan_byte(2),  0);
+  EXPECT_EQ(aColor.getChan_byte(3),  0);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 0.0);
+  EXPECT_NEAR(aColor.getChan_dbl(0),   1.0, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   1.0, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   0.0, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   0.0, 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 
   aColor.setChan_dbl(1, 0.5);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c64F::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0.5);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c64F::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c64F::minChanVal);
+  EXPECT_NEAR(aColor.getChan(0),       mjr::color4c64F::maxChanVal, 0.00001);
+  EXPECT_NEAR(aColor.getChan(1),       0.5,                         0.00001);
+  EXPECT_NEAR(aColor.getChan(2),       mjr::color4c64F::minChanVal, 0.00001);
+  EXPECT_NEAR(aColor.getChan(3),       mjr::color4c64F::minChanVal, 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_NEAR(aColor.getChan(0),       aColor.getC0(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(1),       aColor.getC1(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(2),       aColor.getC2(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(3),       aColor.getC3(), 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 127);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0);
+  EXPECT_EQ(aColor.getChan_byte(0),  255);
+  EXPECT_EQ(aColor.getChan_byte(1),  127);
+  EXPECT_EQ(aColor.getChan_byte(2),  0);
+  EXPECT_EQ(aColor.getChan_byte(3),  0);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 0.5);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 0.0);
+  EXPECT_NEAR(aColor.getChan_dbl(0),   1.0, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   0.5, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   0.0, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   0.0, 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 
   aColor.setChansRGB_dbl(0.0, 0.0, 0.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c64F::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c64F::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c64F::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c64F::minChanVal);
+  EXPECT_NEAR(aColor.getChan(0),       mjr::color4c64F::minChanVal, 0.00001);
+  EXPECT_NEAR(aColor.getChan(1),       mjr::color4c64F::minChanVal, 0.00001);
+  EXPECT_NEAR(aColor.getChan(2),       mjr::color4c64F::minChanVal, 0.00001);
+  EXPECT_NEAR(aColor.getChan(3),       mjr::color4c64F::minChanVal, 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_NEAR(aColor.getChan(0),       aColor.getC0(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(1),       aColor.getC1(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(2),       aColor.getC2(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(3),       aColor.getC3(), 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0);
+  EXPECT_EQ(aColor.getChan_byte(0),  0);
+  EXPECT_EQ(aColor.getChan_byte(1),  0);
+  EXPECT_EQ(aColor.getChan_byte(2),  0);
+  EXPECT_EQ(aColor.getChan_byte(3),  0);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 0.0);
+  EXPECT_NEAR(aColor.getChan_dbl(0),   0.0, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   0.0, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   0.0, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   0.0, 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 
   aColor.setChans_dbl(1.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c64F::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c64F::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c64F::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c64F::maxChanVal);
+  EXPECT_NEAR(aColor.getChan(0),       mjr::color4c64F::maxChanVal, 0.00001);
+  EXPECT_NEAR(aColor.getChan(1),       mjr::color4c64F::maxChanVal, 0.00001);
+  EXPECT_NEAR(aColor.getChan(2),       mjr::color4c64F::maxChanVal, 0.00001);
+  EXPECT_NEAR(aColor.getChan(3),       mjr::color4c64F::maxChanVal, 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_NEAR(aColor.getChan(0),       aColor.getC0(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(1),       aColor.getC1(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(2),       aColor.getC2(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(3),       aColor.getC3(), 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 255);
+  EXPECT_EQ(aColor.getChan_byte(0),  255);
+  EXPECT_EQ(aColor.getChan_byte(1),  255);
+  EXPECT_EQ(aColor.getChan_byte(2),  255);
+  EXPECT_EQ(aColor.getChan_byte(3),  255);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 1.0);
+  EXPECT_NEAR(aColor.getChan_dbl(0),   1.0, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   1.0, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   1.0, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   1.0, 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 
   aColor.setChansRGBA_dbl(1.0, 0.0, 0.5, 0.5);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c64F::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c64F::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 0.5);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0.5);
+  EXPECT_NEAR(aColor.getChan(0),       mjr::color4c64F::maxChanVal, 0.00001);
+  EXPECT_NEAR(aColor.getChan(1),       mjr::color4c64F::minChanVal, 0.00001);
+  EXPECT_NEAR(aColor.getChan(2),       0.5, 0.00001);
+  EXPECT_NEAR(aColor.getChan(3),       0.5, 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_NEAR(aColor.getChan(0),       aColor.getC0(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(1),       aColor.getC1(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(2),       aColor.getC2(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(3),       aColor.getC3(), 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 127);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 127);
+  EXPECT_EQ(aColor.getChan_byte(0),  255);
+  EXPECT_EQ(aColor.getChan_byte(1),  0);
+  EXPECT_EQ(aColor.getChan_byte(2),  127);
+  EXPECT_EQ(aColor.getChan_byte(3),  127);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 0.5);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 0.5);
+  EXPECT_NEAR(aColor.getChan_dbl(0),   1.0, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   0.0, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   0.5, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   0.5, 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 
   aColor.setC0_dbl(0.0);
   aColor.setC1_dbl(1.0);
   aColor.setC2_dbl(1.0);
   aColor.setC3_dbl(0.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c64F::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c64F::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c64F::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c64F::minChanVal);
+  EXPECT_NEAR(aColor.getChan(0),       mjr::color4c64F::minChanVal, 0.00001);
+  EXPECT_NEAR(aColor.getChan(1),       mjr::color4c64F::maxChanVal, 0.00001);
+  EXPECT_NEAR(aColor.getChan(2),       mjr::color4c64F::maxChanVal, 0.00001);
+  EXPECT_NEAR(aColor.getChan(3),       mjr::color4c64F::minChanVal, 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_NEAR(aColor.getChan(0),       aColor.getC0(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(1),       aColor.getC1(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(2),       aColor.getC2(), 0.00001);
+  EXPECT_NEAR(aColor.getChan(3),       aColor.getC3(), 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0);
+  EXPECT_EQ(aColor.getChan_byte(0),  0);
+  EXPECT_EQ(aColor.getChan_byte(1),  255);
+  EXPECT_EQ(aColor.getChan_byte(2),  255);
+  EXPECT_EQ(aColor.getChan_byte(3),  0);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == 0.0);
+  EXPECT_NEAR(aColor.getChan_dbl(0),   0.0, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   1.0, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   1.0, 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   0.0, 0.00001);
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0)  == aColor.getC0_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(1)  == aColor.getC1_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(2)  == aColor.getC2_dbl(), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getChan_dbl(3)  == aColor.getC3_dbl(), boost::test_tools::tolerance(0.00001));
-
+  EXPECT_NEAR(aColor.getChan_dbl(0),   aColor.getC0_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(1),   aColor.getC1_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(2),   aColor.getC2_dbl(), 0.00001);
+  EXPECT_NEAR(aColor.getChan_dbl(3),   aColor.getC3_dbl(), 0.00001);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(set_chan_byte_8) {
+TEST(TYP_color4c8b, SetChanByte) {
 
   mjr::color4c8b aColor;
 
@@ -1235,129 +1231,129 @@ BOOST_AUTO_TEST_CASE(set_chan_byte_8) {
   aColor.setChan_byte(2, 33);
   aColor.setChan_byte(3, 44);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 11);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 22);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 33);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 44);
+  EXPECT_EQ(aColor.getChan(0)      , 11);
+  EXPECT_EQ(aColor.getChan(1)      , 22);
+  EXPECT_EQ(aColor.getChan(2)      , 33);
+  EXPECT_EQ(aColor.getChan(3)      , 44);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0)      , aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1)      , aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2)      , aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3)      , aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 11);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 22);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 33);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 44);
+  EXPECT_EQ(aColor.getChan_byte(0) , 11);
+  EXPECT_EQ(aColor.getChan_byte(1) , 22);
+  EXPECT_EQ(aColor.getChan_byte(2) , 33);
+  EXPECT_EQ(aColor.getChan_byte(3) , 44);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0) , aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1) , aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2) , aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3) , aColor.getC3_byte());
 
   aColor.setC0_byte(55);
   aColor.setC1_byte(66);
   aColor.setC2_byte(77);
   aColor.setC3_byte(88);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 55);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 66);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 77);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 88);
+  EXPECT_EQ(aColor.getChan(0)      , 55);
+  EXPECT_EQ(aColor.getChan(1)      , 66);
+  EXPECT_EQ(aColor.getChan(2)      , 77);
+  EXPECT_EQ(aColor.getChan(3)      , 88);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0)      , aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1)      , aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2)      , aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3)      , aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 55);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 66);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 77);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 88);
+  EXPECT_EQ(aColor.getChan_byte(0) , 55);
+  EXPECT_EQ(aColor.getChan_byte(1) , 66);
+  EXPECT_EQ(aColor.getChan_byte(2) , 77);
+  EXPECT_EQ(aColor.getChan_byte(3) , 88);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0) , aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1) , aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2) , aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3) , aColor.getC3_byte());
 
   aColor.setChans_byte(99);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 99);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 99);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 99);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 99);
+  EXPECT_EQ(aColor.getChan(0)      , 99);
+  EXPECT_EQ(aColor.getChan(1)      , 99);
+  EXPECT_EQ(aColor.getChan(2)      , 99);
+  EXPECT_EQ(aColor.getChan(3)      , 99);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0)      , aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1)      , aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2)      , aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3)      , aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 99);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 99);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 99);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 99);
+  EXPECT_EQ(aColor.getChan_byte(0) , 99);
+  EXPECT_EQ(aColor.getChan_byte(1) , 99);
+  EXPECT_EQ(aColor.getChan_byte(2) , 99);
+  EXPECT_EQ(aColor.getChan_byte(3) , 99);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0) , aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1) , aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2) , aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3) , aColor.getC3_byte());
 
   aColor.setChansRGB_byte(33, 44, 55);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 33);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 44);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 55);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 99);
+  EXPECT_EQ(aColor.getChan(0)      , 33);
+  EXPECT_EQ(aColor.getChan(1)      , 44);
+  EXPECT_EQ(aColor.getChan(2)      , 55);
+  EXPECT_EQ(aColor.getChan(3)      , 99);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0)      , aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1)      , aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2)      , aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3)      , aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 33);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 44);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 55);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 99);
+  EXPECT_EQ(aColor.getChan_byte(0) , 33);
+  EXPECT_EQ(aColor.getChan_byte(1) , 44);
+  EXPECT_EQ(aColor.getChan_byte(2) , 55);
+  EXPECT_EQ(aColor.getChan_byte(3) , 99);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0) , aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1) , aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2) , aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3) , aColor.getC3_byte());
 
   aColor.setChansRGBA_byte(11, 22, 33, 44);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 11);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 22);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 33);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 44);
+  EXPECT_EQ(aColor.getChan(0)      , 11);
+  EXPECT_EQ(aColor.getChan(1)      , 22);
+  EXPECT_EQ(aColor.getChan(2)      , 33);
+  EXPECT_EQ(aColor.getChan(3)      , 44);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0)      , aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1)      , aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2)      , aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3)      , aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 11);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 22);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 33);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 44);
+  EXPECT_EQ(aColor.getChan_byte(0) , 11);
+  EXPECT_EQ(aColor.getChan_byte(1) , 22);
+  EXPECT_EQ(aColor.getChan_byte(2) , 33);
+  EXPECT_EQ(aColor.getChan_byte(3) , 44);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0) , aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1) , aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2) , aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3) , aColor.getC3_byte());
 
   // Test that max & min are hit
   aColor.setChansRGBA_byte(0, 255, 0, 255);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c8b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c8b::maxChanVal);
+  EXPECT_EQ(aColor.getChan(0)      , mjr::color4c8b::minChanVal);
+  EXPECT_EQ(aColor.getChan(1)      , mjr::color4c8b::maxChanVal);
+  EXPECT_EQ(aColor.getChan(2)      , mjr::color4c8b::minChanVal);
+  EXPECT_EQ(aColor.getChan(3)      , mjr::color4c8b::maxChanVal);
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(set_chan_byte_16) {
+TEST(TYP_color4c16b, setChanByte) {
 
   mjr::color4c16b aColor;
 
@@ -1367,129 +1363,128 @@ BOOST_AUTO_TEST_CASE(set_chan_byte_16) {
   aColor.setChan_byte(2, 33);
   aColor.setChan_byte(3, 44);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0xB0B);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0x1616);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 0x2121);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0x2C2C);
+  EXPECT_EQ(aColor.getChan(0),       0xB0B);
+  EXPECT_EQ(aColor.getChan(1),       0x1616);
+  EXPECT_EQ(aColor.getChan(2),       0x2121);
+  EXPECT_EQ(aColor.getChan(3),       0x2C2C);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 11);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 22);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 33);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 44);
+  EXPECT_EQ(aColor.getChan_byte(0),  11);
+  EXPECT_EQ(aColor.getChan_byte(1),  22);
+  EXPECT_EQ(aColor.getChan_byte(2),  33);
+  EXPECT_EQ(aColor.getChan_byte(3),  44);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
   aColor.setC0_byte(55);
   aColor.setC1_byte(66);
   aColor.setC2_byte(77);
   aColor.setC3_byte(88);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 14135);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 16962);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 19789);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 22616);
+  EXPECT_EQ(aColor.getChan(0),       14135);
+  EXPECT_EQ(aColor.getChan(1),       16962);
+  EXPECT_EQ(aColor.getChan(2),       19789);
+  EXPECT_EQ(aColor.getChan(3),       22616);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 55);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 66);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 77);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 88);
+  EXPECT_EQ(aColor.getChan_byte(0),  55);
+  EXPECT_EQ(aColor.getChan_byte(1),  66);
+  EXPECT_EQ(aColor.getChan_byte(2),  77);
+  EXPECT_EQ(aColor.getChan_byte(3),  88);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
   aColor.setChans_byte(99);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 25443);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 25443);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 25443);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 25443);
+  EXPECT_EQ(aColor.getChan(0),       25443);
+  EXPECT_EQ(aColor.getChan(1),       25443);
+  EXPECT_EQ(aColor.getChan(2),       25443);
+  EXPECT_EQ(aColor.getChan(3),       25443);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 99);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 99);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 99);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 99);
+  EXPECT_EQ(aColor.getChan_byte(0),  99);
+  EXPECT_EQ(aColor.getChan_byte(1),  99);
+  EXPECT_EQ(aColor.getChan_byte(2),  99);
+  EXPECT_EQ(aColor.getChan_byte(3),  99);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
   aColor.setChansRGB_byte(33, 44, 55);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 8481);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 11308);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 14135);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 25443);
+  EXPECT_EQ(aColor.getChan(0),       8481);
+  EXPECT_EQ(aColor.getChan(1),       11308);
+  EXPECT_EQ(aColor.getChan(2),       14135);
+  EXPECT_EQ(aColor.getChan(3),       25443);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 33);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 44);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 55);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 99);
+  EXPECT_EQ(aColor.getChan_byte(0),  33);
+  EXPECT_EQ(aColor.getChan_byte(1),  44);
+  EXPECT_EQ(aColor.getChan_byte(2),  55);
+  EXPECT_EQ(aColor.getChan_byte(3),  99);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
   aColor.setChansRGBA_byte(11, 22, 33, 44);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 2827);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 5654);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 8481);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 11308);
+  EXPECT_EQ(aColor.getChan(0),       2827);
+  EXPECT_EQ(aColor.getChan(1),       5654);
+  EXPECT_EQ(aColor.getChan(2),       8481);
+  EXPECT_EQ(aColor.getChan(3),       11308);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 11);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 22);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 33);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 44);
+  EXPECT_EQ(aColor.getChan_byte(0),  11);
+  EXPECT_EQ(aColor.getChan_byte(1),  22);
+  EXPECT_EQ(aColor.getChan_byte(2),  33);
+  EXPECT_EQ(aColor.getChan_byte(3),  44);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
   // Test that max & min are hit
   aColor.setChansRGBA_byte(0, 255, 0, 255);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c16b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c16b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c16b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c16b::maxChanVal);
-
+  EXPECT_EQ(aColor.getChan(0),       mjr::color4c16b::minChanVal);
+  EXPECT_EQ(aColor.getChan(1),       mjr::color4c16b::maxChanVal);
+  EXPECT_EQ(aColor.getChan(2),       mjr::color4c16b::minChanVal);
+  EXPECT_EQ(aColor.getChan(3),       mjr::color4c16b::maxChanVal);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(set_chan_byte_64F, * boost::unit_test::tolerance(0.0001)) {
+TEST(TYP_color4c64F, setChanByte) {
 
   mjr::color4c64F aColor;
 
@@ -1499,128 +1494,128 @@ BOOST_AUTO_TEST_CASE(set_chan_byte_64F, * boost::unit_test::tolerance(0.0001)) {
   aColor.setChan_byte(2, 34); // 33 has a rounding error :)
   aColor.setChan_byte(3, 44);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0.043137254902);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0.0862745098039);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 0.133333333333);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0.172549019608);
+  EXPECT_NEAR(aColor.getChan(0),       0.043137254902, 0.0001);
+  EXPECT_NEAR(aColor.getChan(1),       0.0862745098039, 0.0001);
+  EXPECT_NEAR(aColor.getChan(2),       0.133333333333, 0.0001);
+  EXPECT_NEAR(aColor.getChan(3),       0.172549019608, 0.0001);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_NEAR(aColor.getChan(0),       aColor.getC0(), 0.0001);
+  EXPECT_NEAR(aColor.getChan(1),       aColor.getC1(), 0.0001);
+  EXPECT_NEAR(aColor.getChan(2),       aColor.getC2(), 0.0001);
+  EXPECT_NEAR(aColor.getChan(3),       aColor.getC3(), 0.0001);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 11);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 22);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 34);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 44);
+  EXPECT_EQ(aColor.getChan_byte(0),  11);
+  EXPECT_EQ(aColor.getChan_byte(1),  22);
+  EXPECT_EQ(aColor.getChan_byte(2),  34);
+  EXPECT_EQ(aColor.getChan_byte(3),  44);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
   aColor.setC0_byte(55);
   aColor.setC1_byte(65); // 66 has rounding error :)
   aColor.setC2_byte(77);
   aColor.setC3_byte(88);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0.21568627450980393);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0.254901960784);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 0.30196078431372547);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0.34509803921568627);
+  EXPECT_NEAR(aColor.getChan(0),       0.21568627450980393, 0.0001);
+  EXPECT_NEAR(aColor.getChan(1),       0.254901960784, 0.0001);
+  EXPECT_NEAR(aColor.getChan(2),       0.30196078431372547, 0.0001);
+  EXPECT_NEAR(aColor.getChan(3),       0.34509803921568627, 0.0001);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_NEAR(aColor.getChan(0),       aColor.getC0(), 0.0001);
+  EXPECT_NEAR(aColor.getChan(1),       aColor.getC1(), 0.0001);
+  EXPECT_NEAR(aColor.getChan(2),       aColor.getC2(), 0.0001);
+  EXPECT_NEAR(aColor.getChan(3),       aColor.getC3(), 0.0001);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 55);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 65);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 77);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 88);
+  EXPECT_EQ(aColor.getChan_byte(0),  55);
+  EXPECT_EQ(aColor.getChan_byte(1),  65);
+  EXPECT_EQ(aColor.getChan_byte(2),  77);
+  EXPECT_EQ(aColor.getChan_byte(3),  88);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
   aColor.setChans_byte(99);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0.38823529411764707);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0.38823529411764707);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 0.38823529411764707);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0.38823529411764707);
+  EXPECT_NEAR(aColor.getChan(0),       0.38823529411764707, 0.0001);
+  EXPECT_NEAR(aColor.getChan(1),       0.38823529411764707, 0.0001);
+  EXPECT_NEAR(aColor.getChan(2),       0.38823529411764707, 0.0001);
+  EXPECT_NEAR(aColor.getChan(3),       0.38823529411764707, 0.0001);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_NEAR(aColor.getChan(0),       aColor.getC0(), 0.0001);
+  EXPECT_NEAR(aColor.getChan(1),       aColor.getC1(), 0.0001);
+  EXPECT_NEAR(aColor.getChan(2),       aColor.getC2(), 0.0001);
+  EXPECT_NEAR(aColor.getChan(3),       aColor.getC3(), 0.0001);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 99);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 99);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 99);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 99);
+  EXPECT_EQ(aColor.getChan_byte(0),  99);
+  EXPECT_EQ(aColor.getChan_byte(1),  99);
+  EXPECT_EQ(aColor.getChan_byte(2),  99);
+  EXPECT_EQ(aColor.getChan_byte(3),  99);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
   aColor.setChansRGB_byte(34, 44, 55);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0.133333333333);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0.17254901960784313);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 0.21568627450980393);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0.38823529411764707);
+  EXPECT_NEAR(aColor.getChan(0),       0.133333333333, 0.0001);
+  EXPECT_NEAR(aColor.getChan(1),       0.17254901960784313, 0.0001);
+  EXPECT_NEAR(aColor.getChan(2),       0.21568627450980393, 0.0001);
+  EXPECT_NEAR(aColor.getChan(3),       0.38823529411764707, 0.0001);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_NEAR(aColor.getChan(0),       aColor.getC0(), 0.0001);
+  EXPECT_NEAR(aColor.getChan(1),       aColor.getC1(), 0.0001);
+  EXPECT_NEAR(aColor.getChan(2),       aColor.getC2(), 0.0001);
+  EXPECT_NEAR(aColor.getChan(3),       aColor.getC3(), 0.0001);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 34);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 44);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 55);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 99);
+  EXPECT_EQ(aColor.getChan_byte(0),  34);
+  EXPECT_EQ(aColor.getChan_byte(1),  44);
+  EXPECT_EQ(aColor.getChan_byte(2),  55);
+  EXPECT_EQ(aColor.getChan_byte(3),  99);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
   aColor.setChansRGBA_byte(11, 22, 34, 44);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0.043137254902);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0.08627450980392157);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 0.133333333333);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0.17254901960784313);
+  EXPECT_NEAR(aColor.getChan(0),       0.043137254902, 0.0001);
+  EXPECT_NEAR(aColor.getChan(1),       0.08627450980392157, 0.0001);
+  EXPECT_NEAR(aColor.getChan(2),       0.133333333333, 0.0001);
+  EXPECT_NEAR(aColor.getChan(3),       0.17254901960784313, 0.0001);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_NEAR(aColor.getChan(0),       aColor.getC0(), 0.0001);
+  EXPECT_NEAR(aColor.getChan(1),       aColor.getC1(), 0.0001);
+  EXPECT_NEAR(aColor.getChan(2),       aColor.getC2(), 0.0001);
+  EXPECT_NEAR(aColor.getChan(3),       aColor.getC3(), 0.0001);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 11);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 22);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 34);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 44);
+  EXPECT_EQ(aColor.getChan_byte(0),  11);
+  EXPECT_EQ(aColor.getChan_byte(1),  22);
+  EXPECT_EQ(aColor.getChan_byte(2),  34);
+  EXPECT_EQ(aColor.getChan_byte(3),  44);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
   // Test that max & min are hit
   aColor.setChansRGBA_byte(0, 255, 0, 255);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == mjr::color4c64F::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == mjr::color4c64F::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == mjr::color4c64F::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == mjr::color4c64F::maxChanVal);
+  EXPECT_NEAR(aColor.getChan(0),       mjr::color4c64F::minChanVal, 0.0001);
+  EXPECT_NEAR(aColor.getChan(1),       mjr::color4c64F::maxChanVal, 0.0001);
+  EXPECT_NEAR(aColor.getChan(2),       mjr::color4c64F::minChanVal, 0.0001);
+  EXPECT_NEAR(aColor.getChan(3),       mjr::color4c64F::maxChanVal, 0.0001);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(set_chan_8) {
+TEST(TYP_color4c8b, SetChan) {
 
   mjr::color4c8b aColor;
 
@@ -1630,121 +1625,120 @@ BOOST_AUTO_TEST_CASE(set_chan_8) {
   aColor.setChan(2, 33);
   aColor.setChan(3, 44);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 11);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 22);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 33);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 44);
+  EXPECT_EQ(aColor.getChan(0),       11);
+  EXPECT_EQ(aColor.getChan(1),       22);
+  EXPECT_EQ(aColor.getChan(2),       33);
+  EXPECT_EQ(aColor.getChan(3),       44);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 11);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 22);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 33);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 44);
+  EXPECT_EQ(aColor.getChan_byte(0),  11);
+  EXPECT_EQ(aColor.getChan_byte(1),  22);
+  EXPECT_EQ(aColor.getChan_byte(2),  33);
+  EXPECT_EQ(aColor.getChan_byte(3),  44);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
   aColor.setC0(55);
   aColor.setC1(66);
   aColor.setC2(77);
   aColor.setC3(88);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 55);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 66);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 77);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 88);
+  EXPECT_EQ(aColor.getChan(0),       55);
+  EXPECT_EQ(aColor.getChan(1),       66);
+  EXPECT_EQ(aColor.getChan(2),       77);
+  EXPECT_EQ(aColor.getChan(3),       88);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 55);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 66);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 77);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 88);
+  EXPECT_EQ(aColor.getChan_byte(0),  55);
+  EXPECT_EQ(aColor.getChan_byte(1),  66);
+  EXPECT_EQ(aColor.getChan_byte(2),  77);
+  EXPECT_EQ(aColor.getChan_byte(3),  88);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
   aColor.setChans(99);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 99);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 99);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 99);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 99);
+  EXPECT_EQ(aColor.getChan(0),       99);
+  EXPECT_EQ(aColor.getChan(1),       99);
+  EXPECT_EQ(aColor.getChan(2),       99);
+  EXPECT_EQ(aColor.getChan(3),       99);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 99);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 99);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 99);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 99);
+  EXPECT_EQ(aColor.getChan_byte(0),  99);
+  EXPECT_EQ(aColor.getChan_byte(1),  99);
+  EXPECT_EQ(aColor.getChan_byte(2),  99);
+  EXPECT_EQ(aColor.getChan_byte(3),  99);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
   aColor.setChansRGB(33, 44, 55);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 33);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 44);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 55);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 99);
+  EXPECT_EQ(aColor.getChan(0),       33);
+  EXPECT_EQ(aColor.getChan(1),       44);
+  EXPECT_EQ(aColor.getChan(2),       55);
+  EXPECT_EQ(aColor.getChan(3),       99);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 33);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 44);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 55);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 99);
+  EXPECT_EQ(aColor.getChan_byte(0),  33);
+  EXPECT_EQ(aColor.getChan_byte(1),  44);
+  EXPECT_EQ(aColor.getChan_byte(2),  55);
+  EXPECT_EQ(aColor.getChan_byte(3),  99);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
   aColor.setChansRGBA(11, 22, 33, 44);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 11);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 22);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 33);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 44);
+  EXPECT_EQ(aColor.getChan(0),       11);
+  EXPECT_EQ(aColor.getChan(1),       22);
+  EXPECT_EQ(aColor.getChan(2),       33);
+  EXPECT_EQ(aColor.getChan(3),       44);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 11);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 22);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 33);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 44);
+  EXPECT_EQ(aColor.getChan_byte(0),  11);
+  EXPECT_EQ(aColor.getChan_byte(1),  22);
+  EXPECT_EQ(aColor.getChan_byte(2),  33);
+  EXPECT_EQ(aColor.getChan_byte(3),  44);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(set_chan_16) {
-
+TEST(TYP_color4c16b, SetChan) {
   mjr::color4c16b aColor;
 
   aColor.setToBlack();
@@ -1753,144 +1747,143 @@ BOOST_AUTO_TEST_CASE(set_chan_16) {
   aColor.setChan(2, 4096);
   aColor.setChan(3, 8192);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 1024);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 2048);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 4096);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 8192);
+  EXPECT_EQ(aColor.getChan(0),       1024);
+  EXPECT_EQ(aColor.getChan(1),       2048);
+  EXPECT_EQ(aColor.getChan(2),       4096);
+  EXPECT_EQ(aColor.getChan(3),       8192);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 0x03);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 0x07);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 0x0f);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0x1f);
+  EXPECT_EQ(aColor.getChan_byte(0),  0x03);
+  EXPECT_EQ(aColor.getChan_byte(1),  0x07);
+  EXPECT_EQ(aColor.getChan_byte(2),  0x0f);
+  EXPECT_EQ(aColor.getChan_byte(3),  0x1f);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
   aColor.setC0(8192);
   aColor.setC1(4096);
   aColor.setC2(2048);
   aColor.setC3(1024);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 8192);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 4096);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 2048);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 1024);
+  EXPECT_EQ(aColor.getChan(0),       8192);
+  EXPECT_EQ(aColor.getChan(1),       4096);
+  EXPECT_EQ(aColor.getChan(2),       2048);
+  EXPECT_EQ(aColor.getChan(3),       1024);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 0x1f);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 0x0f);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 0x07);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0x03);
+  EXPECT_EQ(aColor.getChan_byte(0),  0x1f);
+  EXPECT_EQ(aColor.getChan_byte(1),  0x0f);
+  EXPECT_EQ(aColor.getChan_byte(2),  0x07);
+  EXPECT_EQ(aColor.getChan_byte(3),  0x03);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
    aColor.setChans(32768);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 32768);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 32768);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 32768);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 32768);
+  EXPECT_EQ(aColor.getChan(0),       32768);
+  EXPECT_EQ(aColor.getChan(1),       32768);
+  EXPECT_EQ(aColor.getChan(2),       32768);
+  EXPECT_EQ(aColor.getChan(3),       32768);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 0x7f);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 0x7f);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 0x7f);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0x7f);
+  EXPECT_EQ(aColor.getChan_byte(0),  0x7f);
+  EXPECT_EQ(aColor.getChan_byte(1),  0x7f);
+  EXPECT_EQ(aColor.getChan_byte(2),  0x7f);
+  EXPECT_EQ(aColor.getChan_byte(3),  0x7f);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
   aColor.setChansRGB(4096, 8192, 16384);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 4096);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 8192);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 16384);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 32768);
+  EXPECT_EQ(aColor.getChan(0),       4096);
+  EXPECT_EQ(aColor.getChan(1),       8192);
+  EXPECT_EQ(aColor.getChan(2),       16384);
+  EXPECT_EQ(aColor.getChan(3),       32768);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 0x0f);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 0x1f);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 0x3f);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0x7f);
+  EXPECT_EQ(aColor.getChan_byte(0),  0x0f);
+  EXPECT_EQ(aColor.getChan_byte(1),  0x1f);
+  EXPECT_EQ(aColor.getChan_byte(2),  0x3f);
+  EXPECT_EQ(aColor.getChan_byte(3),  0x7f);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
   aColor.setChansRGBA(1024, 2048, 4096, 8192);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 1024);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 2048);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 4096);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 8192);
+  EXPECT_EQ(aColor.getChan(0),       1024);
+  EXPECT_EQ(aColor.getChan(1),       2048);
+  EXPECT_EQ(aColor.getChan(2),       4096);
+  EXPECT_EQ(aColor.getChan(3),       8192);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
+  EXPECT_EQ(aColor.getChan(1),       aColor.getC1());
+  EXPECT_EQ(aColor.getChan(2),       aColor.getC2());
+  EXPECT_EQ(aColor.getChan(3),       aColor.getC3());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 0x03);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 0x07);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 0x0f);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0x1f);
+  EXPECT_EQ(aColor.getChan_byte(0),  0x03);
+  EXPECT_EQ(aColor.getChan_byte(1),  0x07);
+  EXPECT_EQ(aColor.getChan_byte(2),  0x0f);
+  EXPECT_EQ(aColor.getChan_byte(3),  0x1f);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
   //Corners
   aColor.setChans(0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0);
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
+  EXPECT_EQ(aColor.getChan(0),       0);
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC0());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  0);
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0) == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0) == aColor.getC0_dbl());
+  EXPECT_EQ(aColor.getChan_dbl(0),  0.0);
+  EXPECT_EQ(aColor.getChan_dbl(0),  aColor.getC0_dbl());
 
   aColor.setChans(65535);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 65535);
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC1());
+  EXPECT_EQ(aColor.getChan(0),       65535);
+  EXPECT_EQ(aColor.getChan(0),       aColor.getC1());
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  255);
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC1_byte());
 
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0) == 1.0);
-  BOOST_TEST_CHECK(aColor.getChan_dbl(0) == aColor.getC1_dbl());
-
+  EXPECT_EQ(aColor.getChan_dbl(0),  1.0);
+  EXPECT_EQ(aColor.getChan_dbl(0),  aColor.getC1_dbl());
  }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(set_chan_64F) {
+TEST(TYP_color4c64F, SetChan) {
 
   mjr::color4c64F aColor;
 
@@ -1900,144 +1893,144 @@ BOOST_AUTO_TEST_CASE(set_chan_64F) {
   aColor.setChan(2, 0.75);
   aColor.setChan(3, 1.00);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0.25);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0.50);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 0.75);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 1.00);
+  EXPECT_NEAR(aColor.getChan(0),       0.25, 0.000001);
+  EXPECT_NEAR(aColor.getChan(1),       0.50, 0.000001);
+  EXPECT_NEAR(aColor.getChan(2),       0.75, 0.000001);
+  EXPECT_NEAR(aColor.getChan(3),       1.00, 0.000001);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_NEAR(aColor.getChan(0),       aColor.getC0(), 0.000001);
+  EXPECT_NEAR(aColor.getChan(1),       aColor.getC1(), 0.000001);
+  EXPECT_NEAR(aColor.getChan(2),       aColor.getC2(), 0.000001);
+  EXPECT_NEAR(aColor.getChan(3),       aColor.getC3(), 0.000001);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) ==  63);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 127);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 191);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 255);
+  EXPECT_EQ(aColor.getChan_byte(0),   63);
+  EXPECT_EQ(aColor.getChan_byte(1),  127);
+  EXPECT_EQ(aColor.getChan_byte(2),  191);
+  EXPECT_EQ(aColor.getChan_byte(3),  255);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
   aColor.setC0(1.00);
   aColor.setC1(0.75);
   aColor.setC2(0.50);
   aColor.setC3(0.25);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 1.00);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0.75);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 0.50);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0.25);
+  EXPECT_NEAR(aColor.getChan(0),       1.00, 0.000001);
+  EXPECT_NEAR(aColor.getChan(1),       0.75, 0.000001);
+  EXPECT_NEAR(aColor.getChan(2),       0.50, 0.000001);
+  EXPECT_NEAR(aColor.getChan(3),       0.25, 0.000001);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_NEAR(aColor.getChan(0),       aColor.getC0(), 0.000001);
+  EXPECT_NEAR(aColor.getChan(1),       aColor.getC1(), 0.000001);
+  EXPECT_NEAR(aColor.getChan(2),       aColor.getC2(), 0.000001);
+  EXPECT_NEAR(aColor.getChan(3),       aColor.getC3(), 0.000001);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 191);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 127);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 63);
+  EXPECT_EQ(aColor.getChan_byte(0),  255);
+  EXPECT_EQ(aColor.getChan_byte(1),  191);
+  EXPECT_EQ(aColor.getChan_byte(2),  127);
+  EXPECT_EQ(aColor.getChan_byte(3),  63);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
    aColor.setChans(0.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 0.0);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0.0);
+  EXPECT_NEAR(aColor.getChan(0),       0.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan(1),       0.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan(2),       0.0, 0.000001);
+  EXPECT_NEAR(aColor.getChan(3),       0.0, 0.000001);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_NEAR(aColor.getChan(0),       aColor.getC0(), 0.000001);
+  EXPECT_NEAR(aColor.getChan(1),       aColor.getC1(), 0.000001);
+  EXPECT_NEAR(aColor.getChan(2),       aColor.getC2(), 0.000001);
+  EXPECT_NEAR(aColor.getChan(3),       aColor.getC3(), 0.000001);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 0);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0);
+  EXPECT_EQ(aColor.getChan_byte(0),  0);
+  EXPECT_EQ(aColor.getChan_byte(1),  0);
+  EXPECT_EQ(aColor.getChan_byte(2),  0);
+  EXPECT_EQ(aColor.getChan_byte(3),  0);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
   aColor.setChansRGB(0.75, 0.50, 1.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0.75);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0.50);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 1.00);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0.00);
+  EXPECT_NEAR(aColor.getChan(0),       0.75, 0.000001);
+  EXPECT_NEAR(aColor.getChan(1),       0.50, 0.000001);
+  EXPECT_NEAR(aColor.getChan(2),       1.00, 0.000001);
+  EXPECT_NEAR(aColor.getChan(3),       0.00, 0.000001);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_NEAR(aColor.getChan(0),       aColor.getC0(), 0.000001);
+  EXPECT_NEAR(aColor.getChan(1),       aColor.getC1(), 0.000001);
+  EXPECT_NEAR(aColor.getChan(2),       aColor.getC2(), 0.000001);
+  EXPECT_NEAR(aColor.getChan(3),       aColor.getC3(), 0.000001);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == 191);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 127);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 255);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 0);
+  EXPECT_EQ(aColor.getChan_byte(0),  191);
+  EXPECT_EQ(aColor.getChan_byte(1),  127);
+  EXPECT_EQ(aColor.getChan_byte(2),  255);
+  EXPECT_EQ(aColor.getChan_byte(3),  0);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
 
   aColor.setChansRGBA(0.25, 0.50, 0.75, 1.00);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0.25);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0.50);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 0.75);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 1.00);
+  EXPECT_NEAR(aColor.getChan(0),       0.25, 0.000001);
+  EXPECT_NEAR(aColor.getChan(1),       0.50, 0.000001);
+  EXPECT_NEAR(aColor.getChan(2),       0.75, 0.000001);
+  EXPECT_NEAR(aColor.getChan(3),       1.00, 0.000001);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == aColor.getC0());
-  BOOST_TEST_CHECK(aColor.getChan(1)      == aColor.getC1());
-  BOOST_TEST_CHECK(aColor.getChan(2)      == aColor.getC2());
-  BOOST_TEST_CHECK(aColor.getChan(3)      == aColor.getC3());
+  EXPECT_NEAR(aColor.getChan(0),       aColor.getC0(), 0.000001);
+  EXPECT_NEAR(aColor.getChan(1),       aColor.getC1(), 0.000001);
+  EXPECT_NEAR(aColor.getChan(2),       aColor.getC2(), 0.000001);
+  EXPECT_NEAR(aColor.getChan(3),       aColor.getC3(), 0.000001);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) ==  63);
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == 127);
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == 191);
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == 255);
+  EXPECT_EQ(aColor.getChan_byte(0),   63);
+  EXPECT_EQ(aColor.getChan_byte(1),  127);
+  EXPECT_EQ(aColor.getChan_byte(2),  191);
+  EXPECT_EQ(aColor.getChan_byte(3),  255);
 
-  BOOST_TEST_CHECK(aColor.getChan_byte(0) == aColor.getC0_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(1) == aColor.getC1_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(2) == aColor.getC2_byte());
-  BOOST_TEST_CHECK(aColor.getChan_byte(3) == aColor.getC3_byte());
- }
+  EXPECT_EQ(aColor.getChan_byte(0),  aColor.getC0_byte());
+  EXPECT_EQ(aColor.getChan_byte(1),  aColor.getC1_byte());
+  EXPECT_EQ(aColor.getChan_byte(2),  aColor.getC2_byte());
+  EXPECT_EQ(aColor.getChan_byte(3),  aColor.getC3_byte());
+  }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(constr_64F) {
+TEST(TYP_color4c64F, SetChanConst) {
 
   mjr::color4c64F aColor(0.25);
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0.25);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0.25);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 0.25);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0.25);
+  EXPECT_NEAR(aColor.getChan(0),       0.25, 0.000001);
+  EXPECT_NEAR(aColor.getChan(1),       0.25, 0.000001);
+  EXPECT_NEAR(aColor.getChan(2),       0.25, 0.000001);
+  EXPECT_NEAR(aColor.getChan(3),       0.25, 0.000001);
 
   mjr::color4c64F cColor(0.25, 0.50, 0.75);
-  BOOST_TEST_CHECK(cColor.getChan(0)      == 0.25);
-  BOOST_TEST_CHECK(cColor.getChan(1)      == 0.50);
-  BOOST_TEST_CHECK(cColor.getChan(2)      == 0.75);
-  BOOST_TEST_CHECK(cColor.getChan(3)      == 0.00);
+  EXPECT_NEAR(cColor.getChan(0),       0.25, 0.000001);
+  EXPECT_NEAR(cColor.getChan(1),       0.50, 0.000001);
+  EXPECT_NEAR(cColor.getChan(2),       0.75, 0.000001);
+  EXPECT_NEAR(cColor.getChan(3),       0.00, 0.000001);
 
   mjr::color4c64F dColor(1.00, 0.75, 0.50, 0.25);
-  BOOST_TEST_CHECK(dColor.getChan(0)      == 1.00);
-  BOOST_TEST_CHECK(dColor.getChan(1)      == 0.75);
-  BOOST_TEST_CHECK(dColor.getChan(2)      == 0.50);
-  BOOST_TEST_CHECK(dColor.getChan(3)      == 0.25);
+  EXPECT_NEAR(dColor.getChan(0),       1.00, 0.000001);
+  EXPECT_NEAR(dColor.getChan(1),       0.75, 0.000001);
+  EXPECT_NEAR(dColor.getChan(2),       0.50, 0.000001);
+  EXPECT_NEAR(dColor.getChan(3),       0.25, 0.000001);
 
   mjr::color4c64F eColor(dColor);
-  BOOST_TEST_CHECK(eColor.getChan(0)      == 1.00);
-  BOOST_TEST_CHECK(eColor.getChan(1)      == 0.75);
-  BOOST_TEST_CHECK(eColor.getChan(2)      == 0.50);
-  BOOST_TEST_CHECK(eColor.getChan(3)      == 0.25);
+  EXPECT_NEAR(eColor.getChan(0),       1.00, 0.000001);
+  EXPECT_NEAR(eColor.getChan(1),       0.75, 0.000001);
+  EXPECT_NEAR(eColor.getChan(2),       0.50, 0.000001);
+  EXPECT_NEAR(eColor.getChan(3),       0.25, 0.000001);
 
   mjr::color4c64F f0Color(mjr::color4c64F::cornerColorEnum::BLACK);
   mjr::color4c64F fRColor(mjr::color4c64F::cornerColorEnum::RED);
@@ -2048,41 +2041,41 @@ BOOST_AUTO_TEST_CASE(constr_64F) {
   mjr::color4c64F fMColor(mjr::color4c64F::cornerColorEnum::MAGENTA);
   mjr::color4c64F f1Color(mjr::color4c64F::cornerColorEnum::WHITE);
 
-  BOOST_TEST_CHECK(f0Color.getC0() == 0.0);
-  BOOST_TEST_CHECK(fRColor.getC0() == 1.0);
-  BOOST_TEST_CHECK(fGColor.getC0() == 0.0);
-  BOOST_TEST_CHECK(fBColor.getC0() == 0.0);
-  BOOST_TEST_CHECK(fYColor.getC0() == 1.0);
-  BOOST_TEST_CHECK(fCColor.getC0() == 0.0);
-  BOOST_TEST_CHECK(fMColor.getC0() == 1.0);
-  BOOST_TEST_CHECK(f1Color.getC0() == 1.0);
+  EXPECT_NEAR(f0Color.getC0(),  0.0, 0.000001);
+  EXPECT_NEAR(fRColor.getC0(),  1.0, 0.000001);
+  EXPECT_NEAR(fGColor.getC0(),  0.0, 0.000001);
+  EXPECT_NEAR(fBColor.getC0(),  0.0, 0.000001);
+  EXPECT_NEAR(fYColor.getC0(),  1.0, 0.000001);
+  EXPECT_NEAR(fCColor.getC0(),  0.0, 0.000001);
+  EXPECT_NEAR(fMColor.getC0(),  1.0, 0.000001);
+  EXPECT_NEAR(f1Color.getC0(),  1.0, 0.000001);
 
-  BOOST_TEST_CHECK(f0Color.getC1() == 0.0);
-  BOOST_TEST_CHECK(fRColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(fGColor.getC1() == 1.0);
-  BOOST_TEST_CHECK(fBColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(fYColor.getC1() == 1.0);
-  BOOST_TEST_CHECK(fCColor.getC1() == 1.0);
-  BOOST_TEST_CHECK(fMColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(f1Color.getC1() == 1.0);
+  EXPECT_NEAR(f0Color.getC1(),  0.0, 0.000001);
+  EXPECT_NEAR(fRColor.getC1(),  0.0, 0.000001);
+  EXPECT_NEAR(fGColor.getC1(),  1.0, 0.000001);
+  EXPECT_NEAR(fBColor.getC1(),  0.0, 0.000001);
+  EXPECT_NEAR(fYColor.getC1(),  1.0, 0.000001);
+  EXPECT_NEAR(fCColor.getC1(),  1.0, 0.000001);
+  EXPECT_NEAR(fMColor.getC1(),  0.0, 0.000001);
+  EXPECT_NEAR(f1Color.getC1(),  1.0, 0.000001);
 
-  BOOST_TEST_CHECK(f0Color.getC2() == 0.0);
-  BOOST_TEST_CHECK(fRColor.getC2() == 0.0);
-  BOOST_TEST_CHECK(fGColor.getC2() == 0.0);
-  BOOST_TEST_CHECK(fBColor.getC2() == 1.0);
-  BOOST_TEST_CHECK(fYColor.getC2() == 0.0);
-  BOOST_TEST_CHECK(fCColor.getC2() == 1.0);
-  BOOST_TEST_CHECK(fMColor.getC2() == 1.0);
-  BOOST_TEST_CHECK(f1Color.getC2() == 1.0);
+  EXPECT_NEAR(f0Color.getC2(),  0.0, 0.000001);
+  EXPECT_NEAR(fRColor.getC2(),  0.0, 0.000001);
+  EXPECT_NEAR(fGColor.getC2(),  0.0, 0.000001);
+  EXPECT_NEAR(fBColor.getC2(),  1.0, 0.000001);
+  EXPECT_NEAR(fYColor.getC2(),  0.0, 0.000001);
+  EXPECT_NEAR(fCColor.getC2(),  1.0, 0.000001);
+  EXPECT_NEAR(fMColor.getC2(),  1.0, 0.000001);
+  EXPECT_NEAR(f1Color.getC2(),  1.0, 0.000001);
 
-  BOOST_TEST_CHECK(f0Color.getC3() == 0.0);
-  BOOST_TEST_CHECK(fRColor.getC3() == 0.0); // primary
-  BOOST_TEST_CHECK(fGColor.getC3() == 0.0); // primary
-  BOOST_TEST_CHECK(fBColor.getC3() == 0.0); // primary
-  BOOST_TEST_CHECK(fYColor.getC3() == 1.0); // secondary
-  BOOST_TEST_CHECK(fCColor.getC3() == 1.0); // secondary
-  BOOST_TEST_CHECK(fMColor.getC3() == 1.0); // secondary
-  BOOST_TEST_CHECK(f1Color.getC3() == 1.0);
+  EXPECT_NEAR(f0Color.getC3(),  0.0, 0.000001);
+  EXPECT_NEAR(fRColor.getC3(),  0.0, 0.000001); // primary
+  EXPECT_NEAR(fGColor.getC3(),  0.0, 0.000001); // primary
+  EXPECT_NEAR(fBColor.getC3(),  0.0, 0.000001); // primary
+  EXPECT_NEAR(fYColor.getC3(),  1.0, 0.000001); // secondary
+  EXPECT_NEAR(fCColor.getC3(),  1.0, 0.000001); // secondary
+  EXPECT_NEAR(fMColor.getC3(),  1.0, 0.000001); // secondary
+  EXPECT_NEAR(f1Color.getC3(),  1.0, 0.000001);
 
   // magic string -- corner with single character.
 
@@ -2095,41 +2088,41 @@ BOOST_AUTO_TEST_CASE(constr_64F) {
   mjr::color4c64F gMColor("M");
   mjr::color4c64F g1Color("W");
 
-  BOOST_TEST_CHECK(g0Color.getC0() == 0.0);
-  BOOST_TEST_CHECK(gRColor.getC0() == 1.0);
-  BOOST_TEST_CHECK(gGColor.getC0() == 0.0);
-  BOOST_TEST_CHECK(gBColor.getC0() == 0.0);
-  BOOST_TEST_CHECK(gYColor.getC0() == 1.0);
-  BOOST_TEST_CHECK(gCColor.getC0() == 0.0);
-  BOOST_TEST_CHECK(gMColor.getC0() == 1.0);
-  BOOST_TEST_CHECK(g1Color.getC0() == 1.0);
+  EXPECT_NEAR(g0Color.getC0(),  0.0, 0.000001);
+  EXPECT_NEAR(gRColor.getC0(),  1.0, 0.000001);
+  EXPECT_NEAR(gGColor.getC0(),  0.0, 0.000001);
+  EXPECT_NEAR(gBColor.getC0(),  0.0, 0.000001);
+  EXPECT_NEAR(gYColor.getC0(),  1.0, 0.000001);
+  EXPECT_NEAR(gCColor.getC0(),  0.0, 0.000001);
+  EXPECT_NEAR(gMColor.getC0(),  1.0, 0.000001);
+  EXPECT_NEAR(g1Color.getC0(),  1.0, 0.000001);
 
-  BOOST_TEST_CHECK(g0Color.getC1() == 0.0);
-  BOOST_TEST_CHECK(gRColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(gGColor.getC1() == 1.0);
-  BOOST_TEST_CHECK(gBColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(gYColor.getC1() == 1.0);
-  BOOST_TEST_CHECK(gCColor.getC1() == 1.0);
-  BOOST_TEST_CHECK(gMColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(g1Color.getC1() == 1.0);
+  EXPECT_NEAR(g0Color.getC1(),  0.0, 0.000001);
+  EXPECT_NEAR(gRColor.getC1(),  0.0, 0.000001);
+  EXPECT_NEAR(gGColor.getC1(),  1.0, 0.000001);
+  EXPECT_NEAR(gBColor.getC1(),  0.0, 0.000001);
+  EXPECT_NEAR(gYColor.getC1(),  1.0, 0.000001);
+  EXPECT_NEAR(gCColor.getC1(),  1.0, 0.000001);
+  EXPECT_NEAR(gMColor.getC1(),  0.0, 0.000001);
+  EXPECT_NEAR(g1Color.getC1(),  1.0, 0.000001);
 
-  BOOST_TEST_CHECK(g0Color.getC2() == 0.0);
-  BOOST_TEST_CHECK(gRColor.getC2() == 0.0);
-  BOOST_TEST_CHECK(gGColor.getC2() == 0.0);
-  BOOST_TEST_CHECK(gBColor.getC2() == 1.0);
-  BOOST_TEST_CHECK(gYColor.getC2() == 0.0);
-  BOOST_TEST_CHECK(gCColor.getC2() == 1.0);
-  BOOST_TEST_CHECK(gMColor.getC2() == 1.0);
-  BOOST_TEST_CHECK(g1Color.getC2() == 1.0);
+  EXPECT_NEAR(g0Color.getC2(),  0.0, 0.000001);
+  EXPECT_NEAR(gRColor.getC2(),  0.0, 0.000001);
+  EXPECT_NEAR(gGColor.getC2(),  0.0, 0.000001);
+  EXPECT_NEAR(gBColor.getC2(),  1.0, 0.000001);
+  EXPECT_NEAR(gYColor.getC2(),  0.0, 0.000001);
+  EXPECT_NEAR(gCColor.getC2(),  1.0, 0.000001);
+  EXPECT_NEAR(gMColor.getC2(),  1.0, 0.000001);
+  EXPECT_NEAR(g1Color.getC2(),  1.0, 0.000001);
 
-  BOOST_TEST_CHECK(g0Color.getC3() == 0.0);
-  BOOST_TEST_CHECK(gRColor.getC3() == 0.0); // primary
-  BOOST_TEST_CHECK(gGColor.getC3() == 0.0); // primary
-  BOOST_TEST_CHECK(gBColor.getC3() == 0.0); // primary
-  BOOST_TEST_CHECK(gYColor.getC3() == 1.0); // secondary
-  BOOST_TEST_CHECK(gCColor.getC3() == 1.0); // secondary
-  BOOST_TEST_CHECK(gMColor.getC3() == 1.0); // secondary
-  BOOST_TEST_CHECK(g1Color.getC3() == 1.0);
+  EXPECT_NEAR(g0Color.getC3(),  0.0, 0.000001);
+  EXPECT_NEAR(gRColor.getC3(),  0.0, 0.000001); // primary
+  EXPECT_NEAR(gGColor.getC3(),  0.0, 0.000001); // primary
+  EXPECT_NEAR(gBColor.getC3(),  0.0, 0.000001); // primary
+  EXPECT_NEAR(gYColor.getC3(),  1.0, 0.000001); // secondary
+  EXPECT_NEAR(gCColor.getC3(),  1.0, 0.000001); // secondary
+  EXPECT_NEAR(gMColor.getC3(),  1.0, 0.000001); // secondary
+  EXPECT_NEAR(g1Color.getC3(),  1.0, 0.000001);
 
   // magic string -- corner with full name
 
@@ -2142,103 +2135,103 @@ BOOST_AUTO_TEST_CASE(constr_64F) {
   mjr::color4c64F hMColor("MAGENTA");
   mjr::color4c64F h1Color("White");
 
-  BOOST_TEST_CHECK(h0Color.getC0() == 0.0);
-  BOOST_TEST_CHECK(hRColor.getC0() == 1.0);
-  BOOST_TEST_CHECK(hGColor.getC0() == 0.0);
-  BOOST_TEST_CHECK(hBColor.getC0() == 0.0);
-  BOOST_TEST_CHECK(hYColor.getC0() == 1.0);
-  BOOST_TEST_CHECK(hCColor.getC0() == 0.0);
-  BOOST_TEST_CHECK(hMColor.getC0() == 1.0);
-  BOOST_TEST_CHECK(h1Color.getC0() == 1.0);
+  EXPECT_NEAR(h0Color.getC0(),  0.0, 0.000001);
+  EXPECT_NEAR(hRColor.getC0(),  1.0, 0.000001);
+  EXPECT_NEAR(hGColor.getC0(),  0.0, 0.000001);
+  EXPECT_NEAR(hBColor.getC0(),  0.0, 0.000001);
+  EXPECT_NEAR(hYColor.getC0(),  1.0, 0.000001);
+  EXPECT_NEAR(hCColor.getC0(),  0.0, 0.000001);
+  EXPECT_NEAR(hMColor.getC0(),  1.0, 0.000001);
+  EXPECT_NEAR(h1Color.getC0(),  1.0, 0.000001);
 
-  BOOST_TEST_CHECK(h0Color.getC1() == 0.0);
-  BOOST_TEST_CHECK(hRColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(hGColor.getC1() == 1.0);
-  BOOST_TEST_CHECK(hBColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(hYColor.getC1() == 1.0);
-  BOOST_TEST_CHECK(hCColor.getC1() == 1.0);
-  BOOST_TEST_CHECK(hMColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(h1Color.getC1() == 1.0);
+  EXPECT_NEAR(h0Color.getC1(),  0.0, 0.000001);
+  EXPECT_NEAR(hRColor.getC1(),  0.0, 0.000001);
+  EXPECT_NEAR(hGColor.getC1(),  1.0, 0.000001);
+  EXPECT_NEAR(hBColor.getC1(),  0.0, 0.000001);
+  EXPECT_NEAR(hYColor.getC1(),  1.0, 0.000001);
+  EXPECT_NEAR(hCColor.getC1(),  1.0, 0.000001);
+  EXPECT_NEAR(hMColor.getC1(),  0.0, 0.000001);
+  EXPECT_NEAR(h1Color.getC1(),  1.0, 0.000001);
 
-  BOOST_TEST_CHECK(h0Color.getC2() == 0.0);
-  BOOST_TEST_CHECK(hRColor.getC2() == 0.0);
-  BOOST_TEST_CHECK(hGColor.getC2() == 0.0);
-  BOOST_TEST_CHECK(hBColor.getC2() == 1.0);
-  BOOST_TEST_CHECK(hYColor.getC2() == 0.0);
-  BOOST_TEST_CHECK(hCColor.getC2() == 1.0);
-  BOOST_TEST_CHECK(hMColor.getC2() == 1.0);
-  BOOST_TEST_CHECK(h1Color.getC2() == 1.0);
+  EXPECT_NEAR(h0Color.getC2(),  0.0, 0.000001);
+  EXPECT_NEAR(hRColor.getC2(),  0.0, 0.000001);
+  EXPECT_NEAR(hGColor.getC2(),  0.0, 0.000001);
+  EXPECT_NEAR(hBColor.getC2(),  1.0, 0.000001);
+  EXPECT_NEAR(hYColor.getC2(),  0.0, 0.000001);
+  EXPECT_NEAR(hCColor.getC2(),  1.0, 0.000001);
+  EXPECT_NEAR(hMColor.getC2(),  1.0, 0.000001);
+  EXPECT_NEAR(h1Color.getC2(),  1.0, 0.000001);
 
-  BOOST_TEST_CHECK(h0Color.getC3() == 0.0);
-  BOOST_TEST_CHECK(hRColor.getC3() == 0.0); // primary
-  BOOST_TEST_CHECK(hGColor.getC3() == 0.0); // primary
-  BOOST_TEST_CHECK(hBColor.getC3() == 0.0); // primary
-  BOOST_TEST_CHECK(hYColor.getC3() == 1.0); // secondary
-  BOOST_TEST_CHECK(hCColor.getC3() == 1.0); // secondary
-  BOOST_TEST_CHECK(hMColor.getC3() == 1.0); // secondary
-  BOOST_TEST_CHECK(h1Color.getC3() == 1.0);
+  EXPECT_NEAR(h0Color.getC3(),  0.0, 0.000001);
+  EXPECT_NEAR(hRColor.getC3(),  0.0, 0.000001); // primary
+  EXPECT_NEAR(hGColor.getC3(),  0.0, 0.000001); // primary
+  EXPECT_NEAR(hBColor.getC3(),  0.0, 0.000001); // primary
+  EXPECT_NEAR(hYColor.getC3(),  1.0, 0.000001); // secondary
+  EXPECT_NEAR(hCColor.getC3(),  1.0, 0.000001); // secondary
+  EXPECT_NEAR(hMColor.getC3(),  1.0, 0.000001); // secondary
+  EXPECT_NEAR(h1Color.getC3(),  1.0, 0.000001);
 
   mjr::color4c64F iColor("zoogo");   // unknown color => black
-  BOOST_TEST_CHECK(iColor.getC0() == 0.0);
-  BOOST_TEST_CHECK(iColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(iColor.getC2() == 0.0);
-  BOOST_TEST_CHECK(iColor.getC3() == 0.0);
+  EXPECT_NEAR(iColor.getC0(),  0.0, 0.000001);
+  EXPECT_NEAR(iColor.getC1(),  0.0, 0.000001);
+  EXPECT_NEAR(iColor.getC2(),  0.0, 0.000001);
+  EXPECT_NEAR(iColor.getC3(),  0.0, 0.000001);
 
   mjr::color4c64F jColor("z");   // unknown color => black
-  BOOST_TEST_CHECK(jColor.getC0() == 0.0);
-  BOOST_TEST_CHECK(jColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(jColor.getC2() == 0.0);
-  BOOST_TEST_CHECK(jColor.getC3() == 0.0);
+  EXPECT_NEAR(jColor.getC0(),  0.0, 0.000001);
+  EXPECT_NEAR(jColor.getC1(),  0.0, 0.000001);
+  EXPECT_NEAR(jColor.getC2(),  0.0, 0.000001);
+  EXPECT_NEAR(jColor.getC3(),  0.0, 0.000001);
 
   // magic string -- hex color string
 
   mjr::color4c64F kColor("#aaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbccccccccccccccccdddddddddddddddd");
-  BOOST_TEST_CHECK(kColor.getC0() == 0.66666666666, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(kColor.getC1() == 0.73333333333, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(kColor.getC2() == 0.80000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(kColor.getC3() == 0.86666666666, boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(kColor.getC0(),  0.66666666666, 0.000001);
+  EXPECT_NEAR(kColor.getC1(),  0.73333333333, 0.000001);
+  EXPECT_NEAR(kColor.getC2(),  0.80000000000, 0.000001);
+  EXPECT_NEAR(kColor.getC3(),  0.86666666666, 0.000001);
 
   // Init List
 
   mjr::color4c64F oColor({1, 2, 3, 4});
-  BOOST_TEST_CHECK(oColor.getChan(0) == 1);
-  BOOST_TEST_CHECK(oColor.getChan(1) == 2);
-  BOOST_TEST_CHECK(oColor.getChan(2) == 3);
-  BOOST_TEST_CHECK(oColor.getChan(3) == 4);
+  EXPECT_NEAR(oColor.getChan(0),  1, 0.000001);
+  EXPECT_NEAR(oColor.getChan(1),  2, 0.000001);
+  EXPECT_NEAR(oColor.getChan(2),  3, 0.000001);
+  EXPECT_NEAR(oColor.getChan(3),  4, 0.000001);
 
   mjr::color4c64F pColor({1, 2, 3});              // size mismatch -> all chans to zero
-  BOOST_TEST_CHECK(pColor.getChan(0) == 1);
-  BOOST_TEST_CHECK(pColor.getChan(1) == 2);
-  BOOST_TEST_CHECK(pColor.getChan(2) == 3);
-  BOOST_TEST_CHECK(pColor.getChan(3) == 0);
+  EXPECT_NEAR(pColor.getChan(0),  1, 0.000001);
+  EXPECT_NEAR(pColor.getChan(1),  2, 0.000001);
+  EXPECT_NEAR(pColor.getChan(2),  3, 0.000001);
+  EXPECT_NEAR(pColor.getChan(3),  0, 0.000001);
  }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(constr_8b) {
+TEST(TYP_color4c8b, SetChanConst) {
 
   mjr::color4c8b aColor(123);
-  BOOST_TEST_CHECK(aColor.getChan(0) == 123);
-  BOOST_TEST_CHECK(aColor.getChan(1) == 123);
-  BOOST_TEST_CHECK(aColor.getChan(2) == 123);
-  BOOST_TEST_CHECK(aColor.getChan(3) == 123);
+  EXPECT_EQ(aColor.getChan(0),  123);
+  EXPECT_EQ(aColor.getChan(1),  123);
+  EXPECT_EQ(aColor.getChan(2),  123);
+  EXPECT_EQ(aColor.getChan(3),  123);
 
   mjr::color4c8b cColor(33, 44, 55);
-  BOOST_TEST_CHECK(cColor.getChan(0) == 33);
-  BOOST_TEST_CHECK(cColor.getChan(1) == 44);
-  BOOST_TEST_CHECK(cColor.getChan(2) == 55);
-  BOOST_TEST_CHECK(cColor.getChan(3) == 0);
+  EXPECT_EQ(cColor.getChan(0),  33);
+  EXPECT_EQ(cColor.getChan(1),  44);
+  EXPECT_EQ(cColor.getChan(2),  55);
+  EXPECT_EQ(cColor.getChan(3),  0);
 
   mjr::color4c8b dColor(66, 77, 88, 99);
-  BOOST_TEST_CHECK(dColor.getChan(0) == 66);
-  BOOST_TEST_CHECK(dColor.getChan(1) == 77);
-  BOOST_TEST_CHECK(dColor.getChan(2) == 88);
-  BOOST_TEST_CHECK(dColor.getChan(3) == 99);
+  EXPECT_EQ(dColor.getChan(0),  66);
+  EXPECT_EQ(dColor.getChan(1),  77);
+  EXPECT_EQ(dColor.getChan(2),  88);
+  EXPECT_EQ(dColor.getChan(3),  99);
 
   mjr::color4c8b eColor(dColor);
-  BOOST_TEST_CHECK(eColor.getChan(0) == 66);
-  BOOST_TEST_CHECK(eColor.getChan(1) == 77);
-  BOOST_TEST_CHECK(eColor.getChan(2) == 88);
-  BOOST_TEST_CHECK(eColor.getChan(3) == 99);
+  EXPECT_EQ(eColor.getChan(0),  66);
+  EXPECT_EQ(eColor.getChan(1),  77);
+  EXPECT_EQ(eColor.getChan(2),  88);
+  EXPECT_EQ(eColor.getChan(3),  99);
 
   mjr::color4c8b f0Color(mjr::color4c8b::cornerColorEnum::BLACK);
   mjr::color4c8b fRColor(mjr::color4c8b::cornerColorEnum::RED);
@@ -2249,41 +2242,41 @@ BOOST_AUTO_TEST_CASE(constr_8b) {
   mjr::color4c8b fMColor(mjr::color4c8b::cornerColorEnum::MAGENTA);
   mjr::color4c8b f1Color(mjr::color4c8b::cornerColorEnum::WHITE);
 
-  BOOST_TEST_CHECK(f0Color.getC0()   == 0);
-  BOOST_TEST_CHECK(fRColor.getC0()   == 255);
-  BOOST_TEST_CHECK(fGColor.getC0()   == 0);
-  BOOST_TEST_CHECK(fBColor.getC0()   == 0);
-  BOOST_TEST_CHECK(fYColor.getC0()   == 255);
-  BOOST_TEST_CHECK(fCColor.getC0()   == 0);
-  BOOST_TEST_CHECK(fMColor.getC0()   == 255);
-  BOOST_TEST_CHECK(f1Color.getC0()   == 255);
+  EXPECT_EQ(f0Color.getC0(),    0);
+  EXPECT_EQ(fRColor.getC0(),    255);
+  EXPECT_EQ(fGColor.getC0(),    0);
+  EXPECT_EQ(fBColor.getC0(),    0);
+  EXPECT_EQ(fYColor.getC0(),    255);
+  EXPECT_EQ(fCColor.getC0(),    0);
+  EXPECT_EQ(fMColor.getC0(),    255);
+  EXPECT_EQ(f1Color.getC0(),    255);
 
-  BOOST_TEST_CHECK(f0Color.getC1()   == 0);
-  BOOST_TEST_CHECK(fRColor.getC1()   == 0);
-  BOOST_TEST_CHECK(fGColor.getC1()   == 255);
-  BOOST_TEST_CHECK(fBColor.getC1()   == 0);
-  BOOST_TEST_CHECK(fYColor.getC1()   == 255);
-  BOOST_TEST_CHECK(fCColor.getC1()   == 255);
-  BOOST_TEST_CHECK(fMColor.getC1()   == 0);
-  BOOST_TEST_CHECK(f1Color.getC1()   == 255);
+  EXPECT_EQ(f0Color.getC1(),    0);
+  EXPECT_EQ(fRColor.getC1(),    0);
+  EXPECT_EQ(fGColor.getC1(),    255);
+  EXPECT_EQ(fBColor.getC1(),    0);
+  EXPECT_EQ(fYColor.getC1(),    255);
+  EXPECT_EQ(fCColor.getC1(),    255);
+  EXPECT_EQ(fMColor.getC1(),    0);
+  EXPECT_EQ(f1Color.getC1(),    255);
 
-  BOOST_TEST_CHECK(f0Color.getC2()   == 0);
-  BOOST_TEST_CHECK(fRColor.getC2()   == 0);
-  BOOST_TEST_CHECK(fGColor.getC2()   == 0);
-  BOOST_TEST_CHECK(fBColor.getC2()   == 255);
-  BOOST_TEST_CHECK(fYColor.getC2()   == 0);
-  BOOST_TEST_CHECK(fCColor.getC2()   == 255);
-  BOOST_TEST_CHECK(fMColor.getC2()   == 255);
-  BOOST_TEST_CHECK(f1Color.getC2()   == 255);
+  EXPECT_EQ(f0Color.getC2(),    0);
+  EXPECT_EQ(fRColor.getC2(),    0);
+  EXPECT_EQ(fGColor.getC2(),    0);
+  EXPECT_EQ(fBColor.getC2(),    255);
+  EXPECT_EQ(fYColor.getC2(),    0);
+  EXPECT_EQ(fCColor.getC2(),    255);
+  EXPECT_EQ(fMColor.getC2(),    255);
+  EXPECT_EQ(f1Color.getC2(),    255);
 
-  BOOST_TEST_CHECK(f0Color.getC3()   == 0);
-  BOOST_TEST_CHECK(fRColor.getC3()   == 0); // primary
-  BOOST_TEST_CHECK(fGColor.getC3()   == 0); // primary
-  BOOST_TEST_CHECK(fBColor.getC3()   == 0); // primary
-  BOOST_TEST_CHECK(fYColor.getC3()   == 255); // secondary
-  BOOST_TEST_CHECK(fCColor.getC3()   == 255); // secondary
-  BOOST_TEST_CHECK(fMColor.getC3()   == 255); // secondary
-  BOOST_TEST_CHECK(f1Color.getC3()   == 255);
+  EXPECT_EQ(f0Color.getC3(),    0);
+  EXPECT_EQ(fRColor.getC3(),    0); // primary
+  EXPECT_EQ(fGColor.getC3(),    0); // primary
+  EXPECT_EQ(fBColor.getC3(),    0); // primary
+  EXPECT_EQ(fYColor.getC3(),    255); // secondary
+  EXPECT_EQ(fCColor.getC3(),    255); // secondary
+  EXPECT_EQ(fMColor.getC3(),    255); // secondary
+  EXPECT_EQ(f1Color.getC3(),    255);
 
   // magic string -- corner with single character.
 
@@ -2296,41 +2289,41 @@ BOOST_AUTO_TEST_CASE(constr_8b) {
   mjr::color4c8b gMColor("M");
   mjr::color4c8b g1Color("W");
 
-  BOOST_TEST_CHECK(g0Color.getC0()   == 0);
-  BOOST_TEST_CHECK(gRColor.getC0()   == 255);
-  BOOST_TEST_CHECK(gGColor.getC0()   == 0);
-  BOOST_TEST_CHECK(gBColor.getC0()   == 0);
-  BOOST_TEST_CHECK(gYColor.getC0()   == 255);
-  BOOST_TEST_CHECK(gCColor.getC0()   == 0);
-  BOOST_TEST_CHECK(gMColor.getC0()   == 255);
-  BOOST_TEST_CHECK(g1Color.getC0()   == 255);
+  EXPECT_EQ(g0Color.getC0(),    0);
+  EXPECT_EQ(gRColor.getC0(),    255);
+  EXPECT_EQ(gGColor.getC0(),    0);
+  EXPECT_EQ(gBColor.getC0(),    0);
+  EXPECT_EQ(gYColor.getC0(),    255);
+  EXPECT_EQ(gCColor.getC0(),    0);
+  EXPECT_EQ(gMColor.getC0(),    255);
+  EXPECT_EQ(g1Color.getC0(),    255);
 
-  BOOST_TEST_CHECK(g0Color.getC1()   == 0);
-  BOOST_TEST_CHECK(gRColor.getC1()   == 0);
-  BOOST_TEST_CHECK(gGColor.getC1()   == 255);
-  BOOST_TEST_CHECK(gBColor.getC1()   == 0);
-  BOOST_TEST_CHECK(gYColor.getC1()   == 255);
-  BOOST_TEST_CHECK(gCColor.getC1()   == 255);
-  BOOST_TEST_CHECK(gMColor.getC1()   == 0);
-  BOOST_TEST_CHECK(g1Color.getC1()   == 255);
+  EXPECT_EQ(g0Color.getC1(),    0);
+  EXPECT_EQ(gRColor.getC1(),    0);
+  EXPECT_EQ(gGColor.getC1(),    255);
+  EXPECT_EQ(gBColor.getC1(),    0);
+  EXPECT_EQ(gYColor.getC1(),    255);
+  EXPECT_EQ(gCColor.getC1(),    255);
+  EXPECT_EQ(gMColor.getC1(),    0);
+  EXPECT_EQ(g1Color.getC1(),    255);
 
-  BOOST_TEST_CHECK(g0Color.getC2()   == 0);
-  BOOST_TEST_CHECK(gRColor.getC2()   == 0);
-  BOOST_TEST_CHECK(gGColor.getC2()   == 0);
-  BOOST_TEST_CHECK(gBColor.getC2()   == 255);
-  BOOST_TEST_CHECK(gYColor.getC2()   == 0);
-  BOOST_TEST_CHECK(gCColor.getC2()   == 255);
-  BOOST_TEST_CHECK(gMColor.getC2()   == 255);
-  BOOST_TEST_CHECK(g1Color.getC2()   == 255);
+  EXPECT_EQ(g0Color.getC2(),    0);
+  EXPECT_EQ(gRColor.getC2(),    0);
+  EXPECT_EQ(gGColor.getC2(),    0);
+  EXPECT_EQ(gBColor.getC2(),    255);
+  EXPECT_EQ(gYColor.getC2(),    0);
+  EXPECT_EQ(gCColor.getC2(),    255);
+  EXPECT_EQ(gMColor.getC2(),    255);
+  EXPECT_EQ(g1Color.getC2(),    255);
 
-  BOOST_TEST_CHECK(g0Color.getC3()   == 0);
-  BOOST_TEST_CHECK(gRColor.getC3()   == 0); // primary
-  BOOST_TEST_CHECK(gGColor.getC3()   == 0); // primary
-  BOOST_TEST_CHECK(gBColor.getC3()   == 0); // primary
-  BOOST_TEST_CHECK(gYColor.getC3()   == 255); // secondary
-  BOOST_TEST_CHECK(gCColor.getC3()   == 255); // secondary
-  BOOST_TEST_CHECK(gMColor.getC3()   == 255); // secondary
-  BOOST_TEST_CHECK(g1Color.getC3()   == 255);
+  EXPECT_EQ(g0Color.getC3(),    0);
+  EXPECT_EQ(gRColor.getC3(),    0); // primary
+  EXPECT_EQ(gGColor.getC3(),    0); // primary
+  EXPECT_EQ(gBColor.getC3(),    0); // primary
+  EXPECT_EQ(gYColor.getC3(),    255); // secondary
+  EXPECT_EQ(gCColor.getC3(),    255); // secondary
+  EXPECT_EQ(gMColor.getC3(),    255); // secondary
+  EXPECT_EQ(g1Color.getC3(),    255);
 
   // magic string -- corner with full name
 
@@ -2343,133 +2336,133 @@ BOOST_AUTO_TEST_CASE(constr_8b) {
   mjr::color4c8b hMColor("MAGENTA");
   mjr::color4c8b h1Color("White");
 
-  BOOST_TEST_CHECK(h0Color.getC0()   == 0);
-  BOOST_TEST_CHECK(hRColor.getC0()   == 255);
-  BOOST_TEST_CHECK(hGColor.getC0()   == 0);
-  BOOST_TEST_CHECK(hBColor.getC0()   == 0);
-  BOOST_TEST_CHECK(hYColor.getC0()   == 255);
-  BOOST_TEST_CHECK(hCColor.getC0()   == 0);
-  BOOST_TEST_CHECK(hMColor.getC0()   == 255);
-  BOOST_TEST_CHECK(h1Color.getC0()   == 255);
+  EXPECT_EQ(h0Color.getC0(),    0);
+  EXPECT_EQ(hRColor.getC0(),    255);
+  EXPECT_EQ(hGColor.getC0(),    0);
+  EXPECT_EQ(hBColor.getC0(),    0);
+  EXPECT_EQ(hYColor.getC0(),    255);
+  EXPECT_EQ(hCColor.getC0(),    0);
+  EXPECT_EQ(hMColor.getC0(),    255);
+  EXPECT_EQ(h1Color.getC0(),    255);
 
-  BOOST_TEST_CHECK(h0Color.getC1()   == 0);
-  BOOST_TEST_CHECK(hRColor.getC1()   == 0);
-  BOOST_TEST_CHECK(hGColor.getC1()   == 255);
-  BOOST_TEST_CHECK(hBColor.getC1()   == 0);
-  BOOST_TEST_CHECK(hYColor.getC1()   == 255);
-  BOOST_TEST_CHECK(hCColor.getC1()   == 255);
-  BOOST_TEST_CHECK(hMColor.getC1()   == 0);
-  BOOST_TEST_CHECK(h1Color.getC1()   == 255);
+  EXPECT_EQ(h0Color.getC1(),    0);
+  EXPECT_EQ(hRColor.getC1(),    0);
+  EXPECT_EQ(hGColor.getC1(),    255);
+  EXPECT_EQ(hBColor.getC1(),    0);
+  EXPECT_EQ(hYColor.getC1(),    255);
+  EXPECT_EQ(hCColor.getC1(),    255);
+  EXPECT_EQ(hMColor.getC1(),    0);
+  EXPECT_EQ(h1Color.getC1(),    255);
 
-  BOOST_TEST_CHECK(h0Color.getC2()   == 0);
-  BOOST_TEST_CHECK(hRColor.getC2()   == 0);
-  BOOST_TEST_CHECK(hGColor.getC2()   == 0);
-  BOOST_TEST_CHECK(hBColor.getC2()   == 255);
-  BOOST_TEST_CHECK(hYColor.getC2()   == 0);
-  BOOST_TEST_CHECK(hCColor.getC2()   == 255);
-  BOOST_TEST_CHECK(hMColor.getC2()   == 255);
-  BOOST_TEST_CHECK(h1Color.getC2()   == 255);
+  EXPECT_EQ(h0Color.getC2(),    0);
+  EXPECT_EQ(hRColor.getC2(),    0);
+  EXPECT_EQ(hGColor.getC2(),    0);
+  EXPECT_EQ(hBColor.getC2(),    255);
+  EXPECT_EQ(hYColor.getC2(),    0);
+  EXPECT_EQ(hCColor.getC2(),    255);
+  EXPECT_EQ(hMColor.getC2(),    255);
+  EXPECT_EQ(h1Color.getC2(),    255);
 
-  BOOST_TEST_CHECK(h0Color.getC3()   == 0);
-  BOOST_TEST_CHECK(hRColor.getC3()   == 0); // primary
-  BOOST_TEST_CHECK(hGColor.getC3()   == 0); // primary
-  BOOST_TEST_CHECK(hBColor.getC3()   == 0); // primary
-  BOOST_TEST_CHECK(hYColor.getC3()   == 255); // secondary
-  BOOST_TEST_CHECK(hCColor.getC3()   == 255); // secondary
-  BOOST_TEST_CHECK(hMColor.getC3()   == 255); // secondary
-  BOOST_TEST_CHECK(h1Color.getC3()   == 255);
+  EXPECT_EQ(h0Color.getC3(),    0);
+  EXPECT_EQ(hRColor.getC3(),    0); // primary
+  EXPECT_EQ(hGColor.getC3(),    0); // primary
+  EXPECT_EQ(hBColor.getC3(),    0); // primary
+  EXPECT_EQ(hYColor.getC3(),    255); // secondary
+  EXPECT_EQ(hCColor.getC3(),    255); // secondary
+  EXPECT_EQ(hMColor.getC3(),    255); // secondary
+  EXPECT_EQ(h1Color.getC3(),    255);
 
   mjr::color4c8b iColor("zoogo");   // unknown color => black
-  BOOST_TEST_CHECK(iColor.getC0()    == 0);
-  BOOST_TEST_CHECK(iColor.getC1()    == 0);
-  BOOST_TEST_CHECK(iColor.getC2()    == 0);
-  BOOST_TEST_CHECK(iColor.getC3()    == 0);
+  EXPECT_EQ(iColor.getC0(),     0);
+  EXPECT_EQ(iColor.getC1(),     0);
+  EXPECT_EQ(iColor.getC2(),     0);
+  EXPECT_EQ(iColor.getC3(),     0);
 
   mjr::color4c8b jColor("z");   // unknown color => black
-  BOOST_TEST_CHECK(jColor.getC0()    == 0);
-  BOOST_TEST_CHECK(jColor.getC1()    == 0);
-  BOOST_TEST_CHECK(jColor.getC2()    == 0);
-  BOOST_TEST_CHECK(jColor.getC3()    == 0);
+  EXPECT_EQ(jColor.getC0(),     0);
+  EXPECT_EQ(jColor.getC1(),     0);
+  EXPECT_EQ(jColor.getC2(),     0);
+  EXPECT_EQ(jColor.getC3(),     0);
 
   // magic string -- hex color strings
 
   mjr::color4c8b kColor("#aabbccdd");
-  BOOST_TEST_CHECK(kColor.getC0()    == 0xAA);
-  BOOST_TEST_CHECK(kColor.getC1()    == 0xBB);
-  BOOST_TEST_CHECK(kColor.getC2()    == 0xCC);
-  BOOST_TEST_CHECK(kColor.getC3()    == 0xDD);
+  EXPECT_EQ(kColor.getC0(),     0xAA);
+  EXPECT_EQ(kColor.getC1(),     0xBB);
+  EXPECT_EQ(kColor.getC2(),     0xCC);
+  EXPECT_EQ(kColor.getC3(),     0xDD);
 
   mjr::color4c8b lColor("#bbccdd");
-  BOOST_TEST_CHECK(lColor.getC0()    == 0xBB);
-  BOOST_TEST_CHECK(lColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(lColor.getC2()    == 0xDD);
-  BOOST_TEST_CHECK(lColor.getC3()    == 0x0);
+  EXPECT_EQ(lColor.getC0(),     0xBB);
+  EXPECT_EQ(lColor.getC1(),     0xCC);
+  EXPECT_EQ(lColor.getC2(),     0xDD);
+  EXPECT_EQ(lColor.getC3(),     0x0);
 
   mjr::color4c8b mColor("#aa");
-  BOOST_TEST_CHECK(mColor.getC0()    == 0xAA);
-  BOOST_TEST_CHECK(mColor.getC1()    == 0x0);
-  BOOST_TEST_CHECK(mColor.getC2()    == 0x0);
-  BOOST_TEST_CHECK(mColor.getC3()    == 0x0);
+  EXPECT_EQ(mColor.getC0(),     0xAA);
+  EXPECT_EQ(mColor.getC1(),     0x0);
+  EXPECT_EQ(mColor.getC2(),     0x0);
+  EXPECT_EQ(mColor.getC3(),     0x0);
 
   mjr::color4c8b nColor("#a");
-  BOOST_TEST_CHECK(nColor.getC0()    == 0x0);
-  BOOST_TEST_CHECK(nColor.getC1()    == 0x0);
-  BOOST_TEST_CHECK(nColor.getC2()    == 0x0);
-  BOOST_TEST_CHECK(nColor.getC3()    == 0x0);
+  EXPECT_EQ(nColor.getC0(),     0x0);
+  EXPECT_EQ(nColor.getC1(),     0x0);
+  EXPECT_EQ(nColor.getC2(),     0x0);
+  EXPECT_EQ(nColor.getC3(),     0x0);
 
   // Init List
 
   mjr::color4c8b oColor({1, 2, 3, 4});
-  BOOST_TEST_CHECK(oColor.getChan(0) == 1);
-  BOOST_TEST_CHECK(oColor.getChan(1) == 2);
-  BOOST_TEST_CHECK(oColor.getChan(2) == 3);
-  BOOST_TEST_CHECK(oColor.getChan(3) == 4);
+  EXPECT_EQ(oColor.getChan(0),  1);
+  EXPECT_EQ(oColor.getChan(1),  2);
+  EXPECT_EQ(oColor.getChan(2),  3);
+  EXPECT_EQ(oColor.getChan(3),  4);
 
   mjr::color4c8b pColor({1, 2, 3});
-  BOOST_TEST_CHECK(pColor.getChan(0) == 1);
-  BOOST_TEST_CHECK(pColor.getChan(1) == 2);
-  BOOST_TEST_CHECK(pColor.getChan(2) == 3);
-  BOOST_TEST_CHECK(pColor.getChan(3) == 0); // unsp -> zero
+  EXPECT_EQ(pColor.getChan(0),  1);
+  EXPECT_EQ(pColor.getChan(1),  2);
+  EXPECT_EQ(pColor.getChan(2),  3);
+  EXPECT_EQ(pColor.getChan(3),  0); // unsp -> zero
 
   mjr::color4c8b qColor({1});
-  BOOST_TEST_CHECK(qColor.getChan(0) == 1);
-  BOOST_TEST_CHECK(qColor.getChan(1) == 0); // unsp -> zero
-  BOOST_TEST_CHECK(qColor.getChan(2) == 0); // unsp -> zero
-  BOOST_TEST_CHECK(qColor.getChan(3) == 0); // unsp -> zero
+  EXPECT_EQ(qColor.getChan(0),  1);
+  EXPECT_EQ(qColor.getChan(1),  0); // unsp -> zero
+  EXPECT_EQ(qColor.getChan(2),  0); // unsp -> zero
+  EXPECT_EQ(qColor.getChan(3),  0); // unsp -> zero
 
   mjr::color4c8b rColor({1, 2, 3, 4, 5, 6});
-  BOOST_TEST_CHECK(rColor.getChan(0) == 1);
-  BOOST_TEST_CHECK(rColor.getChan(1) == 2);
-  BOOST_TEST_CHECK(rColor.getChan(2) == 3);
-  BOOST_TEST_CHECK(rColor.getChan(3) == 4);
+  EXPECT_EQ(rColor.getChan(0),  1);
+  EXPECT_EQ(rColor.getChan(1),  2);
+  EXPECT_EQ(rColor.getChan(2),  3);
+  EXPECT_EQ(rColor.getChan(3),  4);
  }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(constr_16b) {
+TEST(TYP_color4c16b, SetChanConst) {
 
   mjr::color4c16b aColor(123);
-  BOOST_TEST_CHECK(aColor.getChan(0) == 123);
-  BOOST_TEST_CHECK(aColor.getChan(1) == 123);
-  BOOST_TEST_CHECK(aColor.getChan(2) == 123);
-  BOOST_TEST_CHECK(aColor.getChan(3) == 123);
+  EXPECT_EQ(aColor.getChan(0),  123);
+  EXPECT_EQ(aColor.getChan(1),  123);
+  EXPECT_EQ(aColor.getChan(2),  123);
+  EXPECT_EQ(aColor.getChan(3),  123);
 
   mjr::color4c16b cColor(33, 44, 55);
-  BOOST_TEST_CHECK(cColor.getChan(0) == 33);
-  BOOST_TEST_CHECK(cColor.getChan(1) == 44);
-  BOOST_TEST_CHECK(cColor.getChan(2) == 55);
-  BOOST_TEST_CHECK(cColor.getChan(3) == 0);
+  EXPECT_EQ(cColor.getChan(0),  33);
+  EXPECT_EQ(cColor.getChan(1),  44);
+  EXPECT_EQ(cColor.getChan(2),  55);
+  EXPECT_EQ(cColor.getChan(3),  0);
 
   mjr::color4c16b dColor(66, 77, 88, 99);
-  BOOST_TEST_CHECK(dColor.getChan(0) == 66);
-  BOOST_TEST_CHECK(dColor.getChan(1) == 77);
-  BOOST_TEST_CHECK(dColor.getChan(2) == 88);
-  BOOST_TEST_CHECK(dColor.getChan(3) == 99);
+  EXPECT_EQ(dColor.getChan(0),  66);
+  EXPECT_EQ(dColor.getChan(1),  77);
+  EXPECT_EQ(dColor.getChan(2),  88);
+  EXPECT_EQ(dColor.getChan(3),  99);
 
   mjr::color4c16b eColor(dColor);
-  BOOST_TEST_CHECK(eColor.getChan(0) == 66);
-  BOOST_TEST_CHECK(eColor.getChan(1) == 77);
-  BOOST_TEST_CHECK(eColor.getChan(2) == 88);
-  BOOST_TEST_CHECK(eColor.getChan(3) == 99);
+  EXPECT_EQ(eColor.getChan(0),  66);
+  EXPECT_EQ(eColor.getChan(1),  77);
+  EXPECT_EQ(eColor.getChan(2),  88);
+  EXPECT_EQ(eColor.getChan(3),  99);
 
   mjr::color4c16b f0Color(mjr::color4c16b::cornerColorEnum::BLACK);
   mjr::color4c16b fRColor(mjr::color4c16b::cornerColorEnum::RED);
@@ -2480,41 +2473,41 @@ BOOST_AUTO_TEST_CASE(constr_16b) {
   mjr::color4c16b fMColor(mjr::color4c16b::cornerColorEnum::MAGENTA);
   mjr::color4c16b f1Color(mjr::color4c16b::cornerColorEnum::WHITE);
 
-  BOOST_TEST_CHECK(f0Color.getC0()   == 0);
-  BOOST_TEST_CHECK(fRColor.getC0()   == 65535);
-  BOOST_TEST_CHECK(fGColor.getC0()   == 0);
-  BOOST_TEST_CHECK(fBColor.getC0()   == 0);
-  BOOST_TEST_CHECK(fYColor.getC0()   == 65535);
-  BOOST_TEST_CHECK(fCColor.getC0()   == 0);
-  BOOST_TEST_CHECK(fMColor.getC0()   == 65535);
-  BOOST_TEST_CHECK(f1Color.getC0()   == 65535);
+  EXPECT_EQ(f0Color.getC0(),    0);
+  EXPECT_EQ(fRColor.getC0(),    65535);
+  EXPECT_EQ(fGColor.getC0(),    0);
+  EXPECT_EQ(fBColor.getC0(),    0);
+  EXPECT_EQ(fYColor.getC0(),    65535);
+  EXPECT_EQ(fCColor.getC0(),    0);
+  EXPECT_EQ(fMColor.getC0(),    65535);
+  EXPECT_EQ(f1Color.getC0(),    65535);
 
-  BOOST_TEST_CHECK(f0Color.getC1()   == 0);
-  BOOST_TEST_CHECK(fRColor.getC1()   == 0);
-  BOOST_TEST_CHECK(fGColor.getC1()   == 65535);
-  BOOST_TEST_CHECK(fBColor.getC1()   == 0);
-  BOOST_TEST_CHECK(fYColor.getC1()   == 65535);
-  BOOST_TEST_CHECK(fCColor.getC1()   == 65535);
-  BOOST_TEST_CHECK(fMColor.getC1()   == 0);
-  BOOST_TEST_CHECK(f1Color.getC1()   == 65535);
+  EXPECT_EQ(f0Color.getC1(),    0);
+  EXPECT_EQ(fRColor.getC1(),    0);
+  EXPECT_EQ(fGColor.getC1(),    65535);
+  EXPECT_EQ(fBColor.getC1(),    0);
+  EXPECT_EQ(fYColor.getC1(),    65535);
+  EXPECT_EQ(fCColor.getC1(),    65535);
+  EXPECT_EQ(fMColor.getC1(),    0);
+  EXPECT_EQ(f1Color.getC1(),    65535);
 
-  BOOST_TEST_CHECK(f0Color.getC2()   == 0);
-  BOOST_TEST_CHECK(fRColor.getC2()   == 0);
-  BOOST_TEST_CHECK(fGColor.getC2()   == 0);
-  BOOST_TEST_CHECK(fBColor.getC2()   == 65535);
-  BOOST_TEST_CHECK(fYColor.getC2()   == 0);
-  BOOST_TEST_CHECK(fCColor.getC2()   == 65535);
-  BOOST_TEST_CHECK(fMColor.getC2()   == 65535);
-  BOOST_TEST_CHECK(f1Color.getC2()   == 65535);
+  EXPECT_EQ(f0Color.getC2(),    0);
+  EXPECT_EQ(fRColor.getC2(),    0);
+  EXPECT_EQ(fGColor.getC2(),    0);
+  EXPECT_EQ(fBColor.getC2(),    65535);
+  EXPECT_EQ(fYColor.getC2(),    0);
+  EXPECT_EQ(fCColor.getC2(),    65535);
+  EXPECT_EQ(fMColor.getC2(),    65535);
+  EXPECT_EQ(f1Color.getC2(),    65535);
 
-  BOOST_TEST_CHECK(f0Color.getC3()   == 0);
-  BOOST_TEST_CHECK(fRColor.getC3()   == 0); // primary
-  BOOST_TEST_CHECK(fGColor.getC3()   == 0); // primary
-  BOOST_TEST_CHECK(fBColor.getC3()   == 0); // primary
-  BOOST_TEST_CHECK(fYColor.getC3()   == 65535); // secondary
-  BOOST_TEST_CHECK(fCColor.getC3()   == 65535); // secondary
-  BOOST_TEST_CHECK(fMColor.getC3()   == 65535); // secondary
-  BOOST_TEST_CHECK(f1Color.getC3()   == 65535);
+  EXPECT_EQ(f0Color.getC3(),    0);
+  EXPECT_EQ(fRColor.getC3(),    0); // primary
+  EXPECT_EQ(fGColor.getC3(),    0); // primary
+  EXPECT_EQ(fBColor.getC3(),    0); // primary
+  EXPECT_EQ(fYColor.getC3(),    65535); // secondary
+  EXPECT_EQ(fCColor.getC3(),    65535); // secondary
+  EXPECT_EQ(fMColor.getC3(),    65535); // secondary
+  EXPECT_EQ(f1Color.getC3(),    65535);
 
   // magic string -- corner with single character.
 
@@ -2527,41 +2520,41 @@ BOOST_AUTO_TEST_CASE(constr_16b) {
   mjr::color4c16b gMColor("M");
   mjr::color4c16b g1Color("W");
 
-  BOOST_TEST_CHECK(g0Color.getC0()   == 0);
-  BOOST_TEST_CHECK(gRColor.getC0()   == 65535);
-  BOOST_TEST_CHECK(gGColor.getC0()   == 0);
-  BOOST_TEST_CHECK(gBColor.getC0()   == 0);
-  BOOST_TEST_CHECK(gYColor.getC0()   == 65535);
-  BOOST_TEST_CHECK(gCColor.getC0()   == 0);
-  BOOST_TEST_CHECK(gMColor.getC0()   == 65535);
-  BOOST_TEST_CHECK(g1Color.getC0()   == 65535);
+  EXPECT_EQ(g0Color.getC0(),    0);
+  EXPECT_EQ(gRColor.getC0(),    65535);
+  EXPECT_EQ(gGColor.getC0(),    0);
+  EXPECT_EQ(gBColor.getC0(),    0);
+  EXPECT_EQ(gYColor.getC0(),    65535);
+  EXPECT_EQ(gCColor.getC0(),    0);
+  EXPECT_EQ(gMColor.getC0(),    65535);
+  EXPECT_EQ(g1Color.getC0(),    65535);
 
-  BOOST_TEST_CHECK(g0Color.getC1()   == 0);
-  BOOST_TEST_CHECK(gRColor.getC1()   == 0);
-  BOOST_TEST_CHECK(gGColor.getC1()   == 65535);
-  BOOST_TEST_CHECK(gBColor.getC1()   == 0);
-  BOOST_TEST_CHECK(gYColor.getC1()   == 65535);
-  BOOST_TEST_CHECK(gCColor.getC1()   == 65535);
-  BOOST_TEST_CHECK(gMColor.getC1()   == 0);
-  BOOST_TEST_CHECK(g1Color.getC1()   == 65535);
+  EXPECT_EQ(g0Color.getC1(),    0);
+  EXPECT_EQ(gRColor.getC1(),    0);
+  EXPECT_EQ(gGColor.getC1(),    65535);
+  EXPECT_EQ(gBColor.getC1(),    0);
+  EXPECT_EQ(gYColor.getC1(),    65535);
+  EXPECT_EQ(gCColor.getC1(),    65535);
+  EXPECT_EQ(gMColor.getC1(),    0);
+  EXPECT_EQ(g1Color.getC1(),    65535);
 
-  BOOST_TEST_CHECK(g0Color.getC2()   == 0);
-  BOOST_TEST_CHECK(gRColor.getC2()   == 0);
-  BOOST_TEST_CHECK(gGColor.getC2()   == 0);
-  BOOST_TEST_CHECK(gBColor.getC2()   == 65535);
-  BOOST_TEST_CHECK(gYColor.getC2()   == 0);
-  BOOST_TEST_CHECK(gCColor.getC2()   == 65535);
-  BOOST_TEST_CHECK(gMColor.getC2()   == 65535);
-  BOOST_TEST_CHECK(g1Color.getC2()   == 65535);
+  EXPECT_EQ(g0Color.getC2(),    0);
+  EXPECT_EQ(gRColor.getC2(),    0);
+  EXPECT_EQ(gGColor.getC2(),    0);
+  EXPECT_EQ(gBColor.getC2(),    65535);
+  EXPECT_EQ(gYColor.getC2(),    0);
+  EXPECT_EQ(gCColor.getC2(),    65535);
+  EXPECT_EQ(gMColor.getC2(),    65535);
+  EXPECT_EQ(g1Color.getC2(),    65535);
 
-  BOOST_TEST_CHECK(g0Color.getC3()   == 0);
-  BOOST_TEST_CHECK(gRColor.getC3()   == 0); // primary
-  BOOST_TEST_CHECK(gGColor.getC3()   == 0); // primary
-  BOOST_TEST_CHECK(gBColor.getC3()   == 0); // primary
-  BOOST_TEST_CHECK(gYColor.getC3()   == 65535); // secondary
-  BOOST_TEST_CHECK(gCColor.getC3()   == 65535); // secondary
-  BOOST_TEST_CHECK(gMColor.getC3()   == 65535); // secondary
-  BOOST_TEST_CHECK(g1Color.getC3()   == 65535);
+  EXPECT_EQ(g0Color.getC3(),    0);
+  EXPECT_EQ(gRColor.getC3(),    0); // primary
+  EXPECT_EQ(gGColor.getC3(),    0); // primary
+  EXPECT_EQ(gBColor.getC3(),    0); // primary
+  EXPECT_EQ(gYColor.getC3(),    65535); // secondary
+  EXPECT_EQ(gCColor.getC3(),    65535); // secondary
+  EXPECT_EQ(gMColor.getC3(),    65535); // secondary
+  EXPECT_EQ(g1Color.getC3(),    65535);
 
   // magic string -- corner with full name
 
@@ -2574,267 +2567,266 @@ BOOST_AUTO_TEST_CASE(constr_16b) {
   mjr::color4c16b hMColor("MAGENTA");
   mjr::color4c16b h1Color("White");
 
-  BOOST_TEST_CHECK(h0Color.getC0()   == 0);
-  BOOST_TEST_CHECK(hRColor.getC0()   == 65535);
-  BOOST_TEST_CHECK(hGColor.getC0()   == 0);
-  BOOST_TEST_CHECK(hBColor.getC0()   == 0);
-  BOOST_TEST_CHECK(hYColor.getC0()   == 65535);
-  BOOST_TEST_CHECK(hCColor.getC0()   == 0);
-  BOOST_TEST_CHECK(hMColor.getC0()   == 65535);
-  BOOST_TEST_CHECK(h1Color.getC0()   == 65535);
+  EXPECT_EQ(h0Color.getC0(),    0);
+  EXPECT_EQ(hRColor.getC0(),    65535);
+  EXPECT_EQ(hGColor.getC0(),    0);
+  EXPECT_EQ(hBColor.getC0(),    0);
+  EXPECT_EQ(hYColor.getC0(),    65535);
+  EXPECT_EQ(hCColor.getC0(),    0);
+  EXPECT_EQ(hMColor.getC0(),    65535);
+  EXPECT_EQ(h1Color.getC0(),    65535);
 
-  BOOST_TEST_CHECK(h0Color.getC1()   == 0);
-  BOOST_TEST_CHECK(hRColor.getC1()   == 0);
-  BOOST_TEST_CHECK(hGColor.getC1()   == 65535);
-  BOOST_TEST_CHECK(hBColor.getC1()   == 0);
-  BOOST_TEST_CHECK(hYColor.getC1()   == 65535);
-  BOOST_TEST_CHECK(hCColor.getC1()   == 65535);
-  BOOST_TEST_CHECK(hMColor.getC1()   == 0);
-  BOOST_TEST_CHECK(h1Color.getC1()   == 65535);
+  EXPECT_EQ(h0Color.getC1(),    0);
+  EXPECT_EQ(hRColor.getC1(),    0);
+  EXPECT_EQ(hGColor.getC1(),    65535);
+  EXPECT_EQ(hBColor.getC1(),    0);
+  EXPECT_EQ(hYColor.getC1(),    65535);
+  EXPECT_EQ(hCColor.getC1(),    65535);
+  EXPECT_EQ(hMColor.getC1(),    0);
+  EXPECT_EQ(h1Color.getC1(),    65535);
 
-  BOOST_TEST_CHECK(h0Color.getC2()   == 0);
-  BOOST_TEST_CHECK(hRColor.getC2()   == 0);
-  BOOST_TEST_CHECK(hGColor.getC2()   == 0);
-  BOOST_TEST_CHECK(hBColor.getC2()   == 65535);
-  BOOST_TEST_CHECK(hYColor.getC2()   == 0);
-  BOOST_TEST_CHECK(hCColor.getC2()   == 65535);
-  BOOST_TEST_CHECK(hMColor.getC2()   == 65535);
-  BOOST_TEST_CHECK(h1Color.getC2()   == 65535);
+  EXPECT_EQ(h0Color.getC2(),    0);
+  EXPECT_EQ(hRColor.getC2(),    0);
+  EXPECT_EQ(hGColor.getC2(),    0);
+  EXPECT_EQ(hBColor.getC2(),    65535);
+  EXPECT_EQ(hYColor.getC2(),    0);
+  EXPECT_EQ(hCColor.getC2(),    65535);
+  EXPECT_EQ(hMColor.getC2(),    65535);
+  EXPECT_EQ(h1Color.getC2(),    65535);
 
-  BOOST_TEST_CHECK(h0Color.getC3()   == 0);
-  BOOST_TEST_CHECK(hRColor.getC3()   == 0); // primary
-  BOOST_TEST_CHECK(hGColor.getC3()   == 0); // primary
-  BOOST_TEST_CHECK(hBColor.getC3()   == 0); // primary
-  BOOST_TEST_CHECK(hYColor.getC3()   == 65535); // secondary
-  BOOST_TEST_CHECK(hCColor.getC3()   == 65535); // secondary
-  BOOST_TEST_CHECK(hMColor.getC3()   == 65535); // secondary
-  BOOST_TEST_CHECK(h1Color.getC3()   == 65535);
+  EXPECT_EQ(h0Color.getC3(),    0);
+  EXPECT_EQ(hRColor.getC3(),    0); // primary
+  EXPECT_EQ(hGColor.getC3(),    0); // primary
+  EXPECT_EQ(hBColor.getC3(),    0); // primary
+  EXPECT_EQ(hYColor.getC3(),    65535); // secondary
+  EXPECT_EQ(hCColor.getC3(),    65535); // secondary
+  EXPECT_EQ(hMColor.getC3(),    65535); // secondary
+  EXPECT_EQ(h1Color.getC3(),    65535);
 
   mjr::color4c16b iColor("zoogo");   // unknown color => black
-  BOOST_TEST_CHECK(iColor.getC0()    == 0);
-  BOOST_TEST_CHECK(iColor.getC1()    == 0);
-  BOOST_TEST_CHECK(iColor.getC2()    == 0);
-  BOOST_TEST_CHECK(iColor.getC3()    == 0);
+  EXPECT_EQ(iColor.getC0(),     0);
+  EXPECT_EQ(iColor.getC1(),     0);
+  EXPECT_EQ(iColor.getC2(),     0);
+  EXPECT_EQ(iColor.getC3(),     0);
 
   mjr::color4c16b jColor("z");   // unknown color => black
-  BOOST_TEST_CHECK(jColor.getC0()    == 0);
-  BOOST_TEST_CHECK(jColor.getC1()    == 0);
-  BOOST_TEST_CHECK(jColor.getC2()    == 0);
-  BOOST_TEST_CHECK(jColor.getC3()    == 0);
+  EXPECT_EQ(jColor.getC0(),     0);
+  EXPECT_EQ(jColor.getC1(),     0);
+  EXPECT_EQ(jColor.getC2(),     0);
+  EXPECT_EQ(jColor.getC3(),     0);
 
   // magic string -- hex color string
 
   mjr::color4c16b kColor("#aaaabbbbccccdddd");
-  BOOST_TEST_CHECK(kColor.getC0()    == 0xAAAA);
-  BOOST_TEST_CHECK(kColor.getC1()    == 0xBBBB);
-  BOOST_TEST_CHECK(kColor.getC2()    == 0xCCCC);
-  BOOST_TEST_CHECK(kColor.getC3()    == 0xDDDD);
+  EXPECT_EQ(kColor.getC0(),     0xAAAA);
+  EXPECT_EQ(kColor.getC1(),     0xBBBB);
+  EXPECT_EQ(kColor.getC2(),     0xCCCC);
+  EXPECT_EQ(kColor.getC3(),     0xDDDD);
 
   mjr::color4c16b lColor("#bbbbccccdddd");
-  BOOST_TEST_CHECK(lColor.getC0()    == 0xBBBB);
-  BOOST_TEST_CHECK(lColor.getC1()    == 0xCCCC);
-  BOOST_TEST_CHECK(lColor.getC2()    == 0xDDDD);
-  BOOST_TEST_CHECK(lColor.getC3()    == 0x0);
+  EXPECT_EQ(lColor.getC0(),     0xBBBB);
+  EXPECT_EQ(lColor.getC1(),     0xCCCC);
+  EXPECT_EQ(lColor.getC2(),     0xDDDD);
+  EXPECT_EQ(lColor.getC3(),     0x0);
 
   mjr::color4c16b mColor("#aaaa");
-  BOOST_TEST_CHECK(mColor.getC0()    == 0xAAAA);
-  BOOST_TEST_CHECK(mColor.getC1()    == 0x0);
-  BOOST_TEST_CHECK(mColor.getC2()    == 0x0);
-  BOOST_TEST_CHECK(mColor.getC3()    == 0x0);
+  EXPECT_EQ(mColor.getC0(),     0xAAAA);
+  EXPECT_EQ(mColor.getC1(),     0x0);
+  EXPECT_EQ(mColor.getC2(),     0x0);
+  EXPECT_EQ(mColor.getC3(),     0x0);
 
   mjr::color4c16b nColor("#aaa");
-  BOOST_TEST_CHECK(nColor.getC0()    == 0x0);
-  BOOST_TEST_CHECK(nColor.getC1()    == 0x0);
-  BOOST_TEST_CHECK(nColor.getC2()    == 0x0);
-  BOOST_TEST_CHECK(nColor.getC3()    == 0x0);
+  EXPECT_EQ(nColor.getC0(),     0x0);
+  EXPECT_EQ(nColor.getC1(),     0x0);
+  EXPECT_EQ(nColor.getC2(),     0x0);
+  EXPECT_EQ(nColor.getC3(),     0x0);
 
   // Init List
 
   mjr::color4c16b oColor({1, 2, 3, 4});
-  BOOST_TEST_CHECK(oColor.getChan(0) == 1);
-  BOOST_TEST_CHECK(oColor.getChan(1) == 2);
-  BOOST_TEST_CHECK(oColor.getChan(2) == 3);
-  BOOST_TEST_CHECK(oColor.getChan(3) == 4);
+  EXPECT_EQ(oColor.getChan(0),  1);
+  EXPECT_EQ(oColor.getChan(1),  2);
+  EXPECT_EQ(oColor.getChan(2),  3);
+  EXPECT_EQ(oColor.getChan(3),  4);
 
   mjr::color4c16b pColor({1, 2, 3});              // size mismatch -> all chans to zero
-  BOOST_TEST_CHECK(pColor.getChan(0) == 1);
-  BOOST_TEST_CHECK(pColor.getChan(1) == 2);
-  BOOST_TEST_CHECK(pColor.getChan(2) == 3);
-  BOOST_TEST_CHECK(pColor.getChan(3) == 0);
+  EXPECT_EQ(pColor.getChan(0),  1);
+  EXPECT_EQ(pColor.getChan(1),  2);
+  EXPECT_EQ(pColor.getChan(2),  3);
+  EXPECT_EQ(pColor.getChan(3),  0);
  }
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(set_chans_hex_8b) {
+TEST(TYP_color4c16b, SetChanHex) {
 
   mjr::color4c8b aColor("0");
   aColor.setToWhite();
   aColor.setChans("#aabbccdd");
-  BOOST_TEST_CHECK(aColor.getC0() == 0xAA);
-  BOOST_TEST_CHECK(aColor.getC1() == 0xBB);
-  BOOST_TEST_CHECK(aColor.getC2() == 0xCC);
-  BOOST_TEST_CHECK(aColor.getC3() == 0xDD);
+  EXPECT_EQ(aColor.getC0(),  0xAA);
+  EXPECT_EQ(aColor.getC1(),  0xBB);
+  EXPECT_EQ(aColor.getC2(),  0xCC);
+  EXPECT_EQ(aColor.getC3(),  0xDD);
 
   // undefined chans left alown
   aColor.setToWhite();
   aColor.setChans("#bbccdd");
-  BOOST_TEST_CHECK(aColor.getC0() == 0xBB);
-  BOOST_TEST_CHECK(aColor.getC1() == 0xCC);
-  BOOST_TEST_CHECK(aColor.getC2() == 0xDD);
-  BOOST_TEST_CHECK(aColor.getC3() == 0xFF);
+  EXPECT_EQ(aColor.getC0(),  0xBB);
+  EXPECT_EQ(aColor.getC1(),  0xCC);
+  EXPECT_EQ(aColor.getC2(),  0xDD);
+  EXPECT_EQ(aColor.getC3(),  0xFF);
 
   aColor.setToWhite();
   aColor.setChans("#aa");
-  BOOST_TEST_CHECK(aColor.getC0() == 0xAA);
-  BOOST_TEST_CHECK(aColor.getC1() == 0xFF);
-  BOOST_TEST_CHECK(aColor.getC2() == 0xFF);
-  BOOST_TEST_CHECK(aColor.getC3() == 0xFF);
+  EXPECT_EQ(aColor.getC0(),  0xAA);
+  EXPECT_EQ(aColor.getC1(),  0xFF);
+  EXPECT_EQ(aColor.getC2(),  0xFF);
+  EXPECT_EQ(aColor.getC3(),  0xFF);
 
   aColor.setToWhite();
   aColor.setChans("#aaa");
-  BOOST_TEST_CHECK(aColor.getC0() == 0xFF);
-  BOOST_TEST_CHECK(aColor.getC1() == 0xFF);
-  BOOST_TEST_CHECK(aColor.getC2() == 0xFF);
-  BOOST_TEST_CHECK(aColor.getC3() == 0xFF);
+  EXPECT_EQ(aColor.getC0(),  0xFF);
+  EXPECT_EQ(aColor.getC1(),  0xFF);
+  EXPECT_EQ(aColor.getC2(),  0xFF);
+  EXPECT_EQ(aColor.getC3(),  0xFF);
 
   // undefined chans set to min
   aColor.setToWhite();
   aColor.setChans("#bbccdd", true);
-  BOOST_TEST_CHECK(aColor.getC0() == 0xBB);
-  BOOST_TEST_CHECK(aColor.getC1() == 0xCC);
-  BOOST_TEST_CHECK(aColor.getC2() == 0xDD);
-  BOOST_TEST_CHECK(aColor.getC3() == 0x0000);
+  EXPECT_EQ(aColor.getC0(),  0xBB);
+  EXPECT_EQ(aColor.getC1(),  0xCC);
+  EXPECT_EQ(aColor.getC2(),  0xDD);
+  EXPECT_EQ(aColor.getC3(),  0x0000);
 
   aColor.setToWhite();
   aColor.setChans("#aa", true);
-  BOOST_TEST_CHECK(aColor.getC0() == 0xAA);
-  BOOST_TEST_CHECK(aColor.getC1() == 0x0000);
-  BOOST_TEST_CHECK(aColor.getC2() == 0x0000);
-  BOOST_TEST_CHECK(aColor.getC3() == 0x0000);
+  EXPECT_EQ(aColor.getC0(),  0xAA);
+  EXPECT_EQ(aColor.getC1(),  0x0000);
+  EXPECT_EQ(aColor.getC2(),  0x0000);
+  EXPECT_EQ(aColor.getC3(),  0x0000);
 
   aColor.setToWhite();
   aColor.setChans("#a", true);
-  BOOST_TEST_CHECK(aColor.getC0() == 0x0000);
-  BOOST_TEST_CHECK(aColor.getC1() == 0x0000);
-  BOOST_TEST_CHECK(aColor.getC2() == 0x0000);
-  BOOST_TEST_CHECK(aColor.getC3() == 0x0000);
+  EXPECT_EQ(aColor.getC0(),  0x0000);
+  EXPECT_EQ(aColor.getC1(),  0x0000);
+  EXPECT_EQ(aColor.getC2(),  0x0000);
+  EXPECT_EQ(aColor.getC3(),  0x0000);
  }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(set_chans_hex_16b) {
+TEST(TYP_color4c16b, setChanHex) {
 
   mjr::color4c16b aColor("0");
   aColor.setToWhite();
   aColor.setChans("#aaaabbbbccccdddd");
-  BOOST_TEST_CHECK(aColor.getC0() == 0xAAAA);
-  BOOST_TEST_CHECK(aColor.getC1() == 0xBBBB);
-  BOOST_TEST_CHECK(aColor.getC2() == 0xCCCC);
-  BOOST_TEST_CHECK(aColor.getC3() == 0xDDDD);
+  EXPECT_EQ(aColor.getC0(),  0xAAAA);
+  EXPECT_EQ(aColor.getC1(),  0xBBBB);
+  EXPECT_EQ(aColor.getC2(),  0xCCCC);
+  EXPECT_EQ(aColor.getC3(),  0xDDDD);
 
   // undefined chans left alown
   aColor.setToWhite();
   aColor.setChans("#bbbbccccdddd");
-  BOOST_TEST_CHECK(aColor.getC0() == 0xBBBB);
-  BOOST_TEST_CHECK(aColor.getC1() == 0xCCCC);
-  BOOST_TEST_CHECK(aColor.getC2() == 0xDDDD);
-  BOOST_TEST_CHECK(aColor.getC3() == 0xFFFF);
+  EXPECT_EQ(aColor.getC0(),  0xBBBB);
+  EXPECT_EQ(aColor.getC1(),  0xCCCC);
+  EXPECT_EQ(aColor.getC2(),  0xDDDD);
+  EXPECT_EQ(aColor.getC3(),  0xFFFF);
 
   aColor.setToWhite();
   aColor.setChans("#aaaa");
-  BOOST_TEST_CHECK(aColor.getC0() == 0xAAAA);
-  BOOST_TEST_CHECK(aColor.getC1() == 0xFFFF);
-  BOOST_TEST_CHECK(aColor.getC2() == 0xFFFF);
-  BOOST_TEST_CHECK(aColor.getC3() == 0xFFFF);
+  EXPECT_EQ(aColor.getC0(),  0xAAAA);
+  EXPECT_EQ(aColor.getC1(),  0xFFFF);
+  EXPECT_EQ(aColor.getC2(),  0xFFFF);
+  EXPECT_EQ(aColor.getC3(),  0xFFFF);
 
   aColor.setToWhite();
   aColor.setChans("#aaa");
-  BOOST_TEST_CHECK(aColor.getC0() == 0xFFFF);
-  BOOST_TEST_CHECK(aColor.getC1() == 0xFFFF);
-  BOOST_TEST_CHECK(aColor.getC2() == 0xFFFF);
-  BOOST_TEST_CHECK(aColor.getC3() == 0xFFFF);
+  EXPECT_EQ(aColor.getC0(),  0xFFFF);
+  EXPECT_EQ(aColor.getC1(),  0xFFFF);
+  EXPECT_EQ(aColor.getC2(),  0xFFFF);
+  EXPECT_EQ(aColor.getC3(),  0xFFFF);
 
   // undefined chans set to min
   aColor.setToWhite();
   aColor.setChans("#bbbbccccdddd", true);
-  BOOST_TEST_CHECK(aColor.getC0() == 0xBBBB);
-  BOOST_TEST_CHECK(aColor.getC1() == 0xCCCC);
-  BOOST_TEST_CHECK(aColor.getC2() == 0xDDDD);
-  BOOST_TEST_CHECK(aColor.getC3() == 0x0000);
+  EXPECT_EQ(aColor.getC0(),  0xBBBB);
+  EXPECT_EQ(aColor.getC1(),  0xCCCC);
+  EXPECT_EQ(aColor.getC2(),  0xDDDD);
+  EXPECT_EQ(aColor.getC3(),  0x0000);
 
   aColor.setToWhite();
   aColor.setChans("#aaaa", true);
-  BOOST_TEST_CHECK(aColor.getC0() == 0xAAAA);
-  BOOST_TEST_CHECK(aColor.getC1() == 0x0000);
-  BOOST_TEST_CHECK(aColor.getC2() == 0x0000);
-  BOOST_TEST_CHECK(aColor.getC3() == 0x0000);
+  EXPECT_EQ(aColor.getC0(),  0xAAAA);
+  EXPECT_EQ(aColor.getC1(),  0x0000);
+  EXPECT_EQ(aColor.getC2(),  0x0000);
+  EXPECT_EQ(aColor.getC3(),  0x0000);
 
   aColor.setToWhite();
   aColor.setChans("#aaa", true);
-  BOOST_TEST_CHECK(aColor.getC0() == 0x0000);
-  BOOST_TEST_CHECK(aColor.getC1() == 0x0000);
-  BOOST_TEST_CHECK(aColor.getC2() == 0x0000);
-  BOOST_TEST_CHECK(aColor.getC3() == 0x0000);
+  EXPECT_EQ(aColor.getC0(),  0x0000);
+  EXPECT_EQ(aColor.getC1(),  0x0000);
+  EXPECT_EQ(aColor.getC2(),  0x0000);
+  EXPECT_EQ(aColor.getC3(),  0x0000);
  }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(set_chans_hex_64F) {
+TEST(TYP_color4c64F, setChanHex) {
 
   mjr::color4c64F aColor("0");
   aColor.setToWhite();
   aColor.setChans("#aaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbccccccccccccccccdddddddddddddddd");
-  BOOST_TEST_CHECK(aColor.getC0() == 0.66666666666, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getC1() == 0.73333333333, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getC2() == 0.80000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getC3() == 0.86666666666, boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getC0(),  0.66666666666, 0.00001);
+  EXPECT_NEAR(aColor.getC1(),  0.73333333333, 0.00001);
+  EXPECT_NEAR(aColor.getC2(),  0.80000000000, 0.00001);
+  EXPECT_NEAR(aColor.getC3(),  0.86666666666, 0.00001);
 
   // undefined chans left alown
   aColor.setToWhite();
   aColor.setChans("#bbbbbbbbbbbbbbbbccccccccccccccccdddddddddddddddd");
-  BOOST_TEST_CHECK(aColor.getC0() == 0.73333333333, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getC1() == 0.80000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getC2() == 0.86666666666, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getC3() == 1.00000000000, boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getC0(),  0.73333333333, 0.00001);
+  EXPECT_NEAR(aColor.getC1(),  0.80000000000, 0.00001);
+  EXPECT_NEAR(aColor.getC2(),  0.86666666666, 0.00001);
+  EXPECT_NEAR(aColor.getC3(),  1.00000000000, 0.00001);
 
   aColor.setToWhite();
   aColor.setChans("#aaaaaaaaaaaaaaaa");
-  BOOST_TEST_CHECK(aColor.getC0() == 0.66666666666, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getC1() == 1.00000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getC2() == 1.00000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getC3() == 1.00000000000, boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getC0(),  0.66666666666, 0.00001);
+  EXPECT_NEAR(aColor.getC1(),  1.00000000000, 0.00001);
+  EXPECT_NEAR(aColor.getC2(),  1.00000000000, 0.00001);
+  EXPECT_NEAR(aColor.getC3(),  1.00000000000, 0.00001);
 
   aColor.setToWhite();
   aColor.setChans("#aaa");
-  BOOST_TEST_CHECK(aColor.getC0() == 1.00000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getC1() == 1.00000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getC2() == 1.00000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getC3() == 1.00000000000, boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getC0(),  1.00000000000, 0.00001);
+  EXPECT_NEAR(aColor.getC1(),  1.00000000000, 0.00001);
+  EXPECT_NEAR(aColor.getC2(),  1.00000000000, 0.00001);
+  EXPECT_NEAR(aColor.getC3(),  1.00000000000, 0.00001);
 
   // undefined chans set to min
   aColor.setToWhite();
   aColor.setChans("#bbbbbbbbbbbbbbbbccccccccccccccccdddddddddddddddd", true);
-  BOOST_TEST_CHECK(aColor.getC0() == 0.73333333333, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getC1() == 0.80000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getC2() == 0.86666666666, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getC3() == 0.00000000000, boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getC0(),  0.73333333333, 0.00001);
+  EXPECT_NEAR(aColor.getC1(),  0.80000000000, 0.00001);
+  EXPECT_NEAR(aColor.getC2(),  0.86666666666, 0.00001);
+  EXPECT_NEAR(aColor.getC3(),  0.00000000000, 0.00001);
 
   aColor.setToWhite();
   aColor.setChans("#aaaaaaaaaaaaaaaa", true);
-  BOOST_TEST_CHECK(aColor.getC0() == 0.66666666666, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getC1() == 0.00000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getC2() == 0.00000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getC3() == 0.00000000000, boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getC0(),  0.66666666666, 0.00001);
+  EXPECT_NEAR(aColor.getC1(),  0.00000000000, 0.00001);
+  EXPECT_NEAR(aColor.getC2(),  0.00000000000, 0.00001);
+  EXPECT_NEAR(aColor.getC3(),  0.00000000000, 0.00001);
 
   aColor.setToWhite();
   aColor.setChans("#aaa", true);
-  BOOST_TEST_CHECK(aColor.getC0() == 0.00000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getC1() == 0.00000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getC2() == 0.00000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.getC3() == 0.00000000000, boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(aColor.getC0(),  0.00000000000, 0.00001);
+  EXPECT_NEAR(aColor.getC1(),  0.00000000000, 0.00001);
+  EXPECT_NEAR(aColor.getC2(),  0.00000000000, 0.00001);
+  EXPECT_NEAR(aColor.getC3(),  0.00000000000, 0.00001);
 
  }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(set_chan_8_RGB) {
+TEST(TYP_colorARGB8, setChan) {
 
   // For these tests we are mostly concerned with R, G, B, & A being
   // put in the right places.  Conversions between double/byte and
@@ -2846,375 +2838,375 @@ BOOST_AUTO_TEST_CASE(set_chan_8_RGB) {
   aColor.setToBlack();
   aColor.setRed(colorARGB8::maxChanVal);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB8::maxChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB8::minChanVal);
 
   aColor.setToBlack();
   aColor.setGreen(colorARGB8::maxChanVal);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB8::maxChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB8::minChanVal);
 
   aColor.setToBlack();
   aColor.setBlue(colorARGB8::maxChanVal);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::maxChanVal);
+  EXPECT_EQ(aColor.getChan(0),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB8::maxChanVal);
 
   aColor.setToBlack();
   aColor.setAlpha(colorARGB8::maxChanVal);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       colorARGB8::maxChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB8::minChanVal);
 
 //////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   aColor.setRed_byte(255);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB8::maxChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB8::minChanVal);
 
   aColor.setToBlack();
   aColor.setGreen_byte(255);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB8::maxChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB8::minChanVal);
 
   aColor.setToBlack();
   aColor.setBlue_byte(255);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::maxChanVal);
+  EXPECT_EQ(aColor.getChan(0),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB8::maxChanVal);
 
   aColor.setToBlack();
   aColor.setAlpha_byte(255);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       colorARGB8::maxChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB8::minChanVal);
 
 //////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   aColor.setRed_dbl(1.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB8::maxChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB8::minChanVal);
 
   aColor.setToBlack();
   aColor.setGreen_dbl(1.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB8::maxChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB8::minChanVal);
 
   aColor.setToBlack();
   aColor.setBlue_dbl(1.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::maxChanVal);
+  EXPECT_EQ(aColor.getChan(0),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB8::maxChanVal);
 
   aColor.setToBlack();
   aColor.setAlpha_dbl(1.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       colorARGB8::maxChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB8::minChanVal);
 
 //////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   aColor.setChansRGBA(1, 2, 3, 4);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 4);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 1);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 2);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 3);
+  EXPECT_EQ(aColor.getChan(0),       4);
+  EXPECT_EQ(aColor.getChan(1),       1);
+  EXPECT_EQ(aColor.getChan(2),       2);
+  EXPECT_EQ(aColor.getChan(3),       3);
 
 //////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   aColor.setChansRGB(1, 2, 3);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 1);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 2);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 3);
+  EXPECT_EQ(aColor.getChan(0),       0);
+  EXPECT_EQ(aColor.getChan(1),       1);
+  EXPECT_EQ(aColor.getChan(2),       2);
+  EXPECT_EQ(aColor.getChan(3),       3);
 
 //////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   aColor.setChansRGBA_byte(1, 2, 3, 4);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 4);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 1);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 2);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 3);
+  EXPECT_EQ(aColor.getChan(0),       4);
+  EXPECT_EQ(aColor.getChan(1),       1);
+  EXPECT_EQ(aColor.getChan(2),       2);
+  EXPECT_EQ(aColor.getChan(3),       3);
 
 //////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   aColor.setChansRGB_byte(1, 2, 3);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 1);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 2);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 3);
+  EXPECT_EQ(aColor.getChan(0),       0);
+  EXPECT_EQ(aColor.getChan(1),       1);
+  EXPECT_EQ(aColor.getChan(2),       2);
+  EXPECT_EQ(aColor.getChan(3),       3);
 
 //////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   aColor.setChansRGBA_dbl(0.25, 0.50, 0.75, 1.00);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0xFF);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0x3F);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 0x7F);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0xBF);
+  EXPECT_EQ(aColor.getChan(0),       0xFF);
+  EXPECT_EQ(aColor.getChan(1),       0x3F);
+  EXPECT_EQ(aColor.getChan(2),       0x7F);
+  EXPECT_EQ(aColor.getChan(3),       0xBF);
 
 //////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   aColor.setChansRGB_dbl(1.00, 0.25, 0.50);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0x00);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0xFF);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 0x3F);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0x7F);
+  EXPECT_EQ(aColor.getChan(0),       0x00);
+  EXPECT_EQ(aColor.getChan(1),       0xFF);
+  EXPECT_EQ(aColor.getChan(2),       0x3F);
+  EXPECT_EQ(aColor.getChan(3),       0x7F);
 
 //////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   aColor.setChansRGBA(colorARGB8::clrChanTup4(1, 2, 3, 4));
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 4);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 1);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 2);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 3);
+  EXPECT_EQ(aColor.getChan(0),       4);
+  EXPECT_EQ(aColor.getChan(1),       1);
+  EXPECT_EQ(aColor.getChan(2),       2);
+  EXPECT_EQ(aColor.getChan(3),       3);
 
 //////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   aColor.setChansRGB(colorARGB8::clrChanTup3(1, 2, 3));
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 1);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 2);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 3);
+  EXPECT_EQ(aColor.getChan(0),       0);
+  EXPECT_EQ(aColor.getChan(1),       1);
+  EXPECT_EQ(aColor.getChan(2),       2);
+  EXPECT_EQ(aColor.getChan(3),       3);
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(set_chan_16_RGB) {
+TEST(TYP_colorARGB16, setChan) {
 
-  typedef mjr::colorTpl<mjr::colChanI16, 4, 1, 2, 3, 0> colorARGB8;
-  colorARGB8 aColor;
-
-  aColor.setToBlack();
-  aColor.setRed(colorARGB8::maxChanVal);
-
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::minChanVal);
+  typedef mjr::colorTpl<mjr::colChanI16, 4, 1, 2, 3, 0> colorARGB16;
+  colorARGB16 aColor;
 
   aColor.setToBlack();
-  aColor.setGreen(colorARGB8::maxChanVal);
+  aColor.setRed(colorARGB16::maxChanVal);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::minChanVal);
-
-  aColor.setToBlack();
-  aColor.setBlue(colorARGB8::maxChanVal);
-
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::maxChanVal);
+  EXPECT_EQ(aColor.getChan(0),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB16::maxChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB16::minChanVal);
 
   aColor.setToBlack();
-  aColor.setAlpha(colorARGB8::maxChanVal);
+  aColor.setGreen(colorARGB16::maxChanVal);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB16::maxChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB16::minChanVal);
+
+  aColor.setToBlack();
+  aColor.setBlue(colorARGB16::maxChanVal);
+
+  EXPECT_EQ(aColor.getChan(0),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB16::maxChanVal);
+
+  aColor.setToBlack();
+  aColor.setAlpha(colorARGB16::maxChanVal);
+
+  EXPECT_EQ(aColor.getChan(0),       colorARGB16::maxChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB16::minChanVal);
 
 //////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   aColor.setRed_byte(255);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB16::maxChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB16::minChanVal);
 
   aColor.setToBlack();
   aColor.setGreen_byte(255);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB16::maxChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB16::minChanVal);
 
   aColor.setToBlack();
   aColor.setBlue_byte(255);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::maxChanVal);
+  EXPECT_EQ(aColor.getChan(0),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB16::maxChanVal);
 
   aColor.setToBlack();
   aColor.setAlpha_byte(255);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       colorARGB16::maxChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB16::minChanVal);
 
 //////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   aColor.setRed_dbl(1.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB16::maxChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB16::minChanVal);
 
   aColor.setToBlack();
   aColor.setGreen_dbl(1.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB16::maxChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB16::minChanVal);
 
   aColor.setToBlack();
   aColor.setBlue_dbl(1.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::maxChanVal);
+  EXPECT_EQ(aColor.getChan(0),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB16::maxChanVal);
 
   aColor.setToBlack();
   aColor.setAlpha_dbl(1.0);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == colorARGB8::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == colorARGB8::minChanVal);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == colorARGB8::minChanVal);
+  EXPECT_EQ(aColor.getChan(0),       colorARGB16::maxChanVal);
+  EXPECT_EQ(aColor.getChan(1),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(2),       colorARGB16::minChanVal);
+  EXPECT_EQ(aColor.getChan(3),       colorARGB16::minChanVal);
 
 //////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   aColor.setChansRGBA(1, 2, 3, 4);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 4);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 1);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 2);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 3);
+  EXPECT_EQ(aColor.getChan(0),       4);
+  EXPECT_EQ(aColor.getChan(1),       1);
+  EXPECT_EQ(aColor.getChan(2),       2);
+  EXPECT_EQ(aColor.getChan(3),       3);
 
 //////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   aColor.setChansRGB(1, 2, 3);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 1);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 2);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 3);
+  EXPECT_EQ(aColor.getChan(0),       0);
+  EXPECT_EQ(aColor.getChan(1),       1);
+  EXPECT_EQ(aColor.getChan(2),       2);
+  EXPECT_EQ(aColor.getChan(3),       3);
 
 //////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   aColor.setChansRGBA_byte(1, 2, 3, 4);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 1028);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 257);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 514);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 771);
+  EXPECT_EQ(aColor.getChan(0),       1028);
+  EXPECT_EQ(aColor.getChan(1),       257);
+  EXPECT_EQ(aColor.getChan(2),       514);
+  EXPECT_EQ(aColor.getChan(3),       771);
 
 //////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   aColor.setChansRGB_byte(1, 2, 3);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 257);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 514);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 771);
+  EXPECT_EQ(aColor.getChan(0),       0);
+  EXPECT_EQ(aColor.getChan(1),       257);
+  EXPECT_EQ(aColor.getChan(2),       514);
+  EXPECT_EQ(aColor.getChan(3),       771);
 
 //////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   aColor.setChansRGBA_dbl(0.25, 0.50, 0.75, 1.00);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0xFFFF);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0x3FFF);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 0x7FFF);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0xBFFF);
+  EXPECT_EQ(aColor.getChan(0),       0xFFFF);
+  EXPECT_EQ(aColor.getChan(1),       0x3FFF);
+  EXPECT_EQ(aColor.getChan(2),       0x7FFF);
+  EXPECT_EQ(aColor.getChan(3),       0xBFFF);
 
 //////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   aColor.setChansRGB_dbl(1.00, 0.25, 0.50);
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0x0000);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 0xFFFF);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 0x3FFF);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 0x7FFF);
+  EXPECT_EQ(aColor.getChan(0),       0x0000);
+  EXPECT_EQ(aColor.getChan(1),       0xFFFF);
+  EXPECT_EQ(aColor.getChan(2),       0x3FFF);
+  EXPECT_EQ(aColor.getChan(3),       0x7FFF);
 
 //////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
-  aColor.setChansRGBA(colorARGB8::clrChanTup4(1, 2, 3, 4));
+  aColor.setChansRGBA(colorARGB16::clrChanTup4(1, 2, 3, 4));
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 4);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 1);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 2);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 3);
+  EXPECT_EQ(aColor.getChan(0),       4);
+  EXPECT_EQ(aColor.getChan(1),       1);
+  EXPECT_EQ(aColor.getChan(2),       2);
+  EXPECT_EQ(aColor.getChan(3),       3);
 
 //////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
-  aColor.setChansRGB(colorARGB8::clrChanTup3(1, 2, 3));
+  aColor.setChansRGB(colorARGB16::clrChanTup3(1, 2, 3));
 
-  BOOST_TEST_CHECK(aColor.getChan(0)      == 0);
-  BOOST_TEST_CHECK(aColor.getChan(1)      == 1);
-  BOOST_TEST_CHECK(aColor.getChan(2)      == 2);
-  BOOST_TEST_CHECK(aColor.getChan(3)      == 3);
+  EXPECT_EQ(aColor.getChan(0),       0);
+  EXPECT_EQ(aColor.getChan(1),       1);
+  EXPECT_EQ(aColor.getChan(2),       2);
+  EXPECT_EQ(aColor.getChan(3),       3);
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(set8_fromLogPackIntARGB) {
+TEST(FUN_fromLogPackIntARGB, bit8) {
 
   mjr::colorARGB8b aColor;
   mjr::colorRGBA8b bColor;
@@ -3226,123 +3218,123 @@ BOOST_AUTO_TEST_CASE(set8_fromLogPackIntARGB) {
 
   aColor.setRGBAfromLogPackIntARGB(0xAABBCCDD);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xBB);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0xDD);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0xAA);
+  EXPECT_EQ(aColor.getRed(),    0xBB);
+  EXPECT_EQ(aColor.getGreen(),  0xCC);
+  EXPECT_EQ(aColor.getBlue(),   0xDD);
+  EXPECT_EQ(aColor.getAlpha(),  0xAA);
 
-  BOOST_TEST_CHECK(aColor.getC1()    == 0xBB);
-  BOOST_TEST_CHECK(aColor.getC2()    == 0xCC);
-  BOOST_TEST_CHECK(aColor.getC3()    == 0xDD);
-  BOOST_TEST_CHECK(aColor.getC0()    == 0xAA);
+  EXPECT_EQ(aColor.getC1(),     0xBB);
+  EXPECT_EQ(aColor.getC2(),     0xCC);
+  EXPECT_EQ(aColor.getC3(),     0xDD);
+  EXPECT_EQ(aColor.getC0(),     0xAA);
 
   aColor.setRGBfromLogPackIntARGB(0x00DDCCBB);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0xBB);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0xAA); // From before
+  EXPECT_EQ(aColor.getRed(),    0xDD);
+  EXPECT_EQ(aColor.getGreen(),  0xCC);
+  EXPECT_EQ(aColor.getBlue(),   0xBB);
+  EXPECT_EQ(aColor.getAlpha(),  0xAA); // From before
 
-  BOOST_TEST_CHECK(aColor.getC1()    == 0xDD);
-  BOOST_TEST_CHECK(aColor.getC2()    == 0xCC);
-  BOOST_TEST_CHECK(aColor.getC3()    == 0xBB);
-  BOOST_TEST_CHECK(aColor.getC0()    == 0xAA); // From before
+  EXPECT_EQ(aColor.getC1(),     0xDD);
+  EXPECT_EQ(aColor.getC2(),     0xCC);
+  EXPECT_EQ(aColor.getC3(),     0xBB);
+  EXPECT_EQ(aColor.getC0(),     0xAA); // From before
 
   eColor.setRGBfromLogPackIntARGB(0x00DDCCBB);
 
-  BOOST_TEST_CHECK(eColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(eColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(eColor.getBlue()  == 0xBB);
+  EXPECT_EQ(eColor.getRed(),    0xDD);
+  EXPECT_EQ(eColor.getGreen(),  0xCC);
+  EXPECT_EQ(eColor.getBlue(),   0xBB);
 
-  BOOST_TEST_CHECK(eColor.getC0()    == 0xDD);
-  BOOST_TEST_CHECK(eColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(eColor.getC2()    == 0xBB);
+  EXPECT_EQ(eColor.getC0(),     0xDD);
+  EXPECT_EQ(eColor.getC1(),     0xCC);
+  EXPECT_EQ(eColor.getC2(),     0xBB);
 
   bColor.setRGBAfromLogPackIntARGB(0xAABBCCDD);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0xBB);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0xDD);
-  BOOST_TEST_CHECK(bColor.getAlpha() == 0xAA);
+  EXPECT_EQ(bColor.getRed(),    0xBB);
+  EXPECT_EQ(bColor.getGreen(),  0xCC);
+  EXPECT_EQ(bColor.getBlue(),   0xDD);
+  EXPECT_EQ(bColor.getAlpha(),  0xAA);
 
-  BOOST_TEST_CHECK(bColor.getC0()    == 0xBB);
-  BOOST_TEST_CHECK(bColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0xDD);
-  BOOST_TEST_CHECK(bColor.getC3()    == 0xAA);
+  EXPECT_EQ(bColor.getC0(),     0xBB);
+  EXPECT_EQ(bColor.getC1(),     0xCC);
+  EXPECT_EQ(bColor.getC2(),     0xDD);
+  EXPECT_EQ(bColor.getC3(),     0xAA);
 
   bColor.setRGBfromLogPackIntARGB(0x00DDCCBB);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0xBB);
-  BOOST_TEST_CHECK(bColor.getAlpha() == 0xAA); // From before
+  EXPECT_EQ(bColor.getRed(),    0xDD);
+  EXPECT_EQ(bColor.getGreen(),  0xCC);
+  EXPECT_EQ(bColor.getBlue(),   0xBB);
+  EXPECT_EQ(bColor.getAlpha(),  0xAA); // From before
 
-  BOOST_TEST_CHECK(bColor.getC0()    == 0xDD);
-  BOOST_TEST_CHECK(bColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0xBB);
-  BOOST_TEST_CHECK(bColor.getC3()    == 0xAA); // From before
+  EXPECT_EQ(bColor.getC0(),     0xDD);
+  EXPECT_EQ(bColor.getC1(),     0xCC);
+  EXPECT_EQ(bColor.getC2(),     0xBB);
+  EXPECT_EQ(bColor.getC3(),     0xAA); // From before
 
   fColor.setRGBfromLogPackIntARGB(0x00DDCCBB);
 
-  BOOST_TEST_CHECK(fColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(fColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(fColor.getBlue()  == 0xBB);
+  EXPECT_EQ(fColor.getRed(),    0xDD);
+  EXPECT_EQ(fColor.getGreen(),  0xCC);
+  EXPECT_EQ(fColor.getBlue(),   0xBB);
 
-  BOOST_TEST_CHECK(fColor.getC2()    == 0xDD);
-  BOOST_TEST_CHECK(fColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(fColor.getC0()    == 0xBB);
+  EXPECT_EQ(fColor.getC2(),     0xDD);
+  EXPECT_EQ(fColor.getC1(),     0xCC);
+  EXPECT_EQ(fColor.getC0(),     0xBB);
 
   cColor.setRGBAfromLogPackIntARGB(0xAABBCCDD);
 
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xBB);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0xDD);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0xAA);
+  EXPECT_EQ(cColor.getRed(),    0xBB);
+  EXPECT_EQ(cColor.getGreen(),  0xCC);
+  EXPECT_EQ(cColor.getBlue(),   0xDD);
+  EXPECT_EQ(cColor.getAlpha(),  0xAA);
 
-  BOOST_TEST_CHECK(cColor.getC2()    == 0xBB);
-  BOOST_TEST_CHECK(cColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(cColor.getC0()    == 0xDD);
-  BOOST_TEST_CHECK(cColor.getC3()    == 0xAA);
+  EXPECT_EQ(cColor.getC2(),     0xBB);
+  EXPECT_EQ(cColor.getC1(),     0xCC);
+  EXPECT_EQ(cColor.getC0(),     0xDD);
+  EXPECT_EQ(cColor.getC3(),     0xAA);
 
   cColor.setRGBfromLogPackIntARGB(0x00DDCCBB);
 
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0xBB);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0xAA); // From before
+  EXPECT_EQ(cColor.getRed(),    0xDD);
+  EXPECT_EQ(cColor.getGreen(),  0xCC);
+  EXPECT_EQ(cColor.getBlue(),   0xBB);
+  EXPECT_EQ(cColor.getAlpha(),  0xAA); // From before
 
-  BOOST_TEST_CHECK(cColor.getC2()    == 0xDD);
-  BOOST_TEST_CHECK(cColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(cColor.getC0()    == 0xBB);
-  BOOST_TEST_CHECK(cColor.getC3()    == 0xAA); // From before
+  EXPECT_EQ(cColor.getC2(),     0xDD);
+  EXPECT_EQ(cColor.getC1(),     0xCC);
+  EXPECT_EQ(cColor.getC0(),     0xBB);
+  EXPECT_EQ(cColor.getC3(),     0xAA); // From before
 
   dColor.setRGBAfromLogPackIntARGB(0xAABBCCDD);
 
-  BOOST_TEST_CHECK(dColor.getRed()   == 0xBB);
-  BOOST_TEST_CHECK(dColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(dColor.getBlue()  == 0xDD);
-  BOOST_TEST_CHECK(dColor.getAlpha() == 0xAA);
+  EXPECT_EQ(dColor.getRed(),    0xBB);
+  EXPECT_EQ(dColor.getGreen(),  0xCC);
+  EXPECT_EQ(dColor.getBlue(),   0xDD);
+  EXPECT_EQ(dColor.getAlpha(),  0xAA);
 
-  BOOST_TEST_CHECK(dColor.getC3()    == 0xBB);
-  BOOST_TEST_CHECK(dColor.getC2()    == 0xCC);
-  BOOST_TEST_CHECK(dColor.getC1()    == 0xDD);
-  BOOST_TEST_CHECK(dColor.getC0()    == 0xAA);
+  EXPECT_EQ(dColor.getC3(),     0xBB);
+  EXPECT_EQ(dColor.getC2(),     0xCC);
+  EXPECT_EQ(dColor.getC1(),     0xDD);
+  EXPECT_EQ(dColor.getC0(),     0xAA);
 
   dColor.setRGBfromLogPackIntARGB(0x00DDCCBB);
 
-  BOOST_TEST_CHECK(dColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(dColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(dColor.getBlue()  == 0xBB);
-  BOOST_TEST_CHECK(dColor.getAlpha() == 0xAA); // From before
+  EXPECT_EQ(dColor.getRed(),    0xDD);
+  EXPECT_EQ(dColor.getGreen(),  0xCC);
+  EXPECT_EQ(dColor.getBlue(),   0xBB);
+  EXPECT_EQ(dColor.getAlpha(),  0xAA); // From before
 
-  BOOST_TEST_CHECK(dColor.getC3()    == 0xDD);
-  BOOST_TEST_CHECK(dColor.getC2()    == 0xCC);
-  BOOST_TEST_CHECK(dColor.getC1()    == 0xBB);
-  BOOST_TEST_CHECK(dColor.getC0()    == 0xAA); // From before
+  EXPECT_EQ(dColor.getC3(),     0xDD);
+  EXPECT_EQ(dColor.getC2(),     0xCC);
+  EXPECT_EQ(dColor.getC1(),     0xBB);
+  EXPECT_EQ(dColor.getC0(),     0xAA); // From before
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(set8_fromLogPackIntRGBA) {
+TEST(FUN_fromLogPackIntRGBA, bit8) {
 
   mjr::colorARGB8b aColor;
   mjr::colorRGBA8b bColor;
@@ -3354,123 +3346,123 @@ BOOST_AUTO_TEST_CASE(set8_fromLogPackIntRGBA) {
 
   aColor.setRGBAfromLogPackIntRGBA(0xBBCCDDAA);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xBB);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0xDD);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0xAA);
+  EXPECT_EQ(aColor.getRed(),    0xBB);
+  EXPECT_EQ(aColor.getGreen(),  0xCC);
+  EXPECT_EQ(aColor.getBlue(),   0xDD);
+  EXPECT_EQ(aColor.getAlpha(),  0xAA);
 
-  BOOST_TEST_CHECK(aColor.getC1()    == 0xBB);
-  BOOST_TEST_CHECK(aColor.getC2()    == 0xCC);
-  BOOST_TEST_CHECK(aColor.getC3()    == 0xDD);
-  BOOST_TEST_CHECK(aColor.getC0()    == 0xAA);
+  EXPECT_EQ(aColor.getC1(),     0xBB);
+  EXPECT_EQ(aColor.getC2(),     0xCC);
+  EXPECT_EQ(aColor.getC3(),     0xDD);
+  EXPECT_EQ(aColor.getC0(),     0xAA);
 
   aColor.setRGBfromLogPackIntRGBA(0xDDCCBB00);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0xBB);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0xAA); // From before
+  EXPECT_EQ(aColor.getRed(),    0xDD);
+  EXPECT_EQ(aColor.getGreen(),  0xCC);
+  EXPECT_EQ(aColor.getBlue(),   0xBB);
+  EXPECT_EQ(aColor.getAlpha(),  0xAA); // From before
 
-  BOOST_TEST_CHECK(aColor.getC1()    == 0xDD);
-  BOOST_TEST_CHECK(aColor.getC2()    == 0xCC);
-  BOOST_TEST_CHECK(aColor.getC3()    == 0xBB);
-  BOOST_TEST_CHECK(aColor.getC0()    == 0xAA); // From before
+  EXPECT_EQ(aColor.getC1(),     0xDD);
+  EXPECT_EQ(aColor.getC2(),     0xCC);
+  EXPECT_EQ(aColor.getC3(),     0xBB);
+  EXPECT_EQ(aColor.getC0(),     0xAA); // From before
 
   eColor.setRGBfromLogPackIntRGBA(0xDDCCBB00);
 
-  BOOST_TEST_CHECK(eColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(eColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(eColor.getBlue()  == 0xBB);
+  EXPECT_EQ(eColor.getRed(),    0xDD);
+  EXPECT_EQ(eColor.getGreen(),  0xCC);
+  EXPECT_EQ(eColor.getBlue(),   0xBB);
 
-  BOOST_TEST_CHECK(eColor.getC0()    == 0xDD);
-  BOOST_TEST_CHECK(eColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(eColor.getC2()    == 0xBB);
+  EXPECT_EQ(eColor.getC0(),     0xDD);
+  EXPECT_EQ(eColor.getC1(),     0xCC);
+  EXPECT_EQ(eColor.getC2(),     0xBB);
 
   bColor.setRGBAfromLogPackIntRGBA(0xBBCCDDAA);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0xBB);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0xDD);
-  BOOST_TEST_CHECK(bColor.getAlpha() == 0xAA);
+  EXPECT_EQ(bColor.getRed(),    0xBB);
+  EXPECT_EQ(bColor.getGreen(),  0xCC);
+  EXPECT_EQ(bColor.getBlue(),   0xDD);
+  EXPECT_EQ(bColor.getAlpha(),  0xAA);
 
-  BOOST_TEST_CHECK(bColor.getC0()    == 0xBB);
-  BOOST_TEST_CHECK(bColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0xDD);
-  BOOST_TEST_CHECK(bColor.getC3()    == 0xAA);
+  EXPECT_EQ(bColor.getC0(),     0xBB);
+  EXPECT_EQ(bColor.getC1(),     0xCC);
+  EXPECT_EQ(bColor.getC2(),     0xDD);
+  EXPECT_EQ(bColor.getC3(),     0xAA);
 
   bColor.setRGBfromLogPackIntRGBA(0xDDCCBB00);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0xBB);
-  BOOST_TEST_CHECK(bColor.getAlpha() == 0xAA); // From before
+  EXPECT_EQ(bColor.getRed(),    0xDD);
+  EXPECT_EQ(bColor.getGreen(),  0xCC);
+  EXPECT_EQ(bColor.getBlue(),   0xBB);
+  EXPECT_EQ(bColor.getAlpha(),  0xAA); // From before
 
-  BOOST_TEST_CHECK(bColor.getC0()    == 0xDD);
-  BOOST_TEST_CHECK(bColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0xBB);
-  BOOST_TEST_CHECK(bColor.getC3()    == 0xAA); // From before
+  EXPECT_EQ(bColor.getC0(),     0xDD);
+  EXPECT_EQ(bColor.getC1(),     0xCC);
+  EXPECT_EQ(bColor.getC2(),     0xBB);
+  EXPECT_EQ(bColor.getC3(),     0xAA); // From before
 
   fColor.setRGBfromLogPackIntRGBA(0xDDCCBB00);
 
-  BOOST_TEST_CHECK(fColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(fColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(fColor.getBlue()  == 0xBB);
+  EXPECT_EQ(fColor.getRed(),    0xDD);
+  EXPECT_EQ(fColor.getGreen(),  0xCC);
+  EXPECT_EQ(fColor.getBlue(),   0xBB);
 
-  BOOST_TEST_CHECK(fColor.getC2()    == 0xDD);
-  BOOST_TEST_CHECK(fColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(fColor.getC0()    == 0xBB);
+  EXPECT_EQ(fColor.getC2(),     0xDD);
+  EXPECT_EQ(fColor.getC1(),     0xCC);
+  EXPECT_EQ(fColor.getC0(),     0xBB);
 
   cColor.setRGBAfromLogPackIntRGBA(0xBBCCDDAA);
 
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xBB);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0xDD);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0xAA);
+  EXPECT_EQ(cColor.getRed(),    0xBB);
+  EXPECT_EQ(cColor.getGreen(),  0xCC);
+  EXPECT_EQ(cColor.getBlue(),   0xDD);
+  EXPECT_EQ(cColor.getAlpha(),  0xAA);
 
-  BOOST_TEST_CHECK(cColor.getC2()    == 0xBB);
-  BOOST_TEST_CHECK(cColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(cColor.getC0()    == 0xDD);
-  BOOST_TEST_CHECK(cColor.getC3()    == 0xAA);
+  EXPECT_EQ(cColor.getC2(),     0xBB);
+  EXPECT_EQ(cColor.getC1(),     0xCC);
+  EXPECT_EQ(cColor.getC0(),     0xDD);
+  EXPECT_EQ(cColor.getC3(),     0xAA);
 
   cColor.setRGBfromLogPackIntRGBA(0xDDCCBB00);
 
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0xBB);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0xAA); // From before
+  EXPECT_EQ(cColor.getRed(),    0xDD);
+  EXPECT_EQ(cColor.getGreen(),  0xCC);
+  EXPECT_EQ(cColor.getBlue(),   0xBB);
+  EXPECT_EQ(cColor.getAlpha(),  0xAA); // From before
 
-  BOOST_TEST_CHECK(cColor.getC2()    == 0xDD);
-  BOOST_TEST_CHECK(cColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(cColor.getC0()    == 0xBB);
-  BOOST_TEST_CHECK(cColor.getC3()    == 0xAA); // From before
+  EXPECT_EQ(cColor.getC2(),     0xDD);
+  EXPECT_EQ(cColor.getC1(),     0xCC);
+  EXPECT_EQ(cColor.getC0(),     0xBB);
+  EXPECT_EQ(cColor.getC3(),     0xAA); // From before
 
   dColor.setRGBAfromLogPackIntRGBA(0xBBCCDDAA);
 
-  BOOST_TEST_CHECK(dColor.getRed()   == 0xBB);
-  BOOST_TEST_CHECK(dColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(dColor.getBlue()  == 0xDD);
-  BOOST_TEST_CHECK(dColor.getAlpha() == 0xAA);
+  EXPECT_EQ(dColor.getRed(),    0xBB);
+  EXPECT_EQ(dColor.getGreen(),  0xCC);
+  EXPECT_EQ(dColor.getBlue(),   0xDD);
+  EXPECT_EQ(dColor.getAlpha(),  0xAA);
 
-  BOOST_TEST_CHECK(dColor.getC3()    == 0xBB);
-  BOOST_TEST_CHECK(dColor.getC2()    == 0xCC);
-  BOOST_TEST_CHECK(dColor.getC1()    == 0xDD);
-  BOOST_TEST_CHECK(dColor.getC0()    == 0xAA);
+  EXPECT_EQ(dColor.getC3(),     0xBB);
+  EXPECT_EQ(dColor.getC2(),     0xCC);
+  EXPECT_EQ(dColor.getC1(),     0xDD);
+  EXPECT_EQ(dColor.getC0(),     0xAA);
 
   dColor.setRGBfromLogPackIntRGBA(0xDDCCBB00);
 
-  BOOST_TEST_CHECK(dColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(dColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(dColor.getBlue()  == 0xBB);
-  BOOST_TEST_CHECK(dColor.getAlpha() == 0xAA); // From before
+  EXPECT_EQ(dColor.getRed(),    0xDD);
+  EXPECT_EQ(dColor.getGreen(),  0xCC);
+  EXPECT_EQ(dColor.getBlue(),   0xBB);
+  EXPECT_EQ(dColor.getAlpha(),  0xAA); // From before
 
-  BOOST_TEST_CHECK(dColor.getC3()    == 0xDD);
-  BOOST_TEST_CHECK(dColor.getC2()    == 0xCC);
-  BOOST_TEST_CHECK(dColor.getC1()    == 0xBB);
-  BOOST_TEST_CHECK(dColor.getC0()    == 0xAA); // From before
+  EXPECT_EQ(dColor.getC3(),     0xDD);
+  EXPECT_EQ(dColor.getC2(),     0xCC);
+  EXPECT_EQ(dColor.getC1(),     0xBB);
+  EXPECT_EQ(dColor.getC0(),     0xAA); // From before
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(set8_fromLogPackIntABGR) {
+TEST(FUN_fromLogPackIntABGR, bit8) {
 
   mjr::colorARGB8b aColor;
   mjr::colorRGBA8b bColor;
@@ -3482,123 +3474,123 @@ BOOST_AUTO_TEST_CASE(set8_fromLogPackIntABGR) {
 
   aColor.setRGBAfromLogPackIntABGR(0xAADDCCBB);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xBB);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0xDD);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0xAA);
+  EXPECT_EQ(aColor.getRed(),    0xBB);
+  EXPECT_EQ(aColor.getGreen(),  0xCC);
+  EXPECT_EQ(aColor.getBlue(),   0xDD);
+  EXPECT_EQ(aColor.getAlpha(),  0xAA);
 
-  BOOST_TEST_CHECK(aColor.getC1()    == 0xBB);
-  BOOST_TEST_CHECK(aColor.getC2()    == 0xCC);
-  BOOST_TEST_CHECK(aColor.getC3()    == 0xDD);
-  BOOST_TEST_CHECK(aColor.getC0()    == 0xAA);
+  EXPECT_EQ(aColor.getC1(),     0xBB);
+  EXPECT_EQ(aColor.getC2(),     0xCC);
+  EXPECT_EQ(aColor.getC3(),     0xDD);
+  EXPECT_EQ(aColor.getC0(),     0xAA);
 
   aColor.setRGBfromLogPackIntABGR(0x00BBCCDD);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0xBB);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0xAA); // From before
+  EXPECT_EQ(aColor.getRed(),    0xDD);
+  EXPECT_EQ(aColor.getGreen(),  0xCC);
+  EXPECT_EQ(aColor.getBlue(),   0xBB);
+  EXPECT_EQ(aColor.getAlpha(),  0xAA); // From before
 
-  BOOST_TEST_CHECK(aColor.getC1()    == 0xDD);
-  BOOST_TEST_CHECK(aColor.getC2()    == 0xCC);
-  BOOST_TEST_CHECK(aColor.getC3()    == 0xBB);
-  BOOST_TEST_CHECK(aColor.getC0()    == 0xAA); // From before
+  EXPECT_EQ(aColor.getC1(),     0xDD);
+  EXPECT_EQ(aColor.getC2(),     0xCC);
+  EXPECT_EQ(aColor.getC3(),     0xBB);
+  EXPECT_EQ(aColor.getC0(),     0xAA); // From before
 
   eColor.setRGBfromLogPackIntABGR(0x00BBCCDD);
 
-  BOOST_TEST_CHECK(eColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(eColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(eColor.getBlue()  == 0xBB);
+  EXPECT_EQ(eColor.getRed(),    0xDD);
+  EXPECT_EQ(eColor.getGreen(),  0xCC);
+  EXPECT_EQ(eColor.getBlue(),   0xBB);
 
-  BOOST_TEST_CHECK(eColor.getC0()    == 0xDD);
-  BOOST_TEST_CHECK(eColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(eColor.getC2()    == 0xBB);
+  EXPECT_EQ(eColor.getC0(),     0xDD);
+  EXPECT_EQ(eColor.getC1(),     0xCC);
+  EXPECT_EQ(eColor.getC2(),     0xBB);
 
   bColor.setRGBAfromLogPackIntABGR(0xAADDCCBB);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0xBB);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0xDD);
-  BOOST_TEST_CHECK(bColor.getAlpha() == 0xAA);
+  EXPECT_EQ(bColor.getRed(),    0xBB);
+  EXPECT_EQ(bColor.getGreen(),  0xCC);
+  EXPECT_EQ(bColor.getBlue(),   0xDD);
+  EXPECT_EQ(bColor.getAlpha(),  0xAA);
 
-  BOOST_TEST_CHECK(bColor.getC0()    == 0xBB);
-  BOOST_TEST_CHECK(bColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0xDD);
-  BOOST_TEST_CHECK(bColor.getC3()    == 0xAA);
+  EXPECT_EQ(bColor.getC0(),     0xBB);
+  EXPECT_EQ(bColor.getC1(),     0xCC);
+  EXPECT_EQ(bColor.getC2(),     0xDD);
+  EXPECT_EQ(bColor.getC3(),     0xAA);
 
   bColor.setRGBfromLogPackIntABGR(0x00BBCCDD);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0xBB);
-  BOOST_TEST_CHECK(bColor.getAlpha() == 0xAA); // From before
+  EXPECT_EQ(bColor.getRed(),    0xDD);
+  EXPECT_EQ(bColor.getGreen(),  0xCC);
+  EXPECT_EQ(bColor.getBlue(),   0xBB);
+  EXPECT_EQ(bColor.getAlpha(),  0xAA); // From before
 
-  BOOST_TEST_CHECK(bColor.getC0()    == 0xDD);
-  BOOST_TEST_CHECK(bColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0xBB);
-  BOOST_TEST_CHECK(bColor.getC3()    == 0xAA); // From before
+  EXPECT_EQ(bColor.getC0(),     0xDD);
+  EXPECT_EQ(bColor.getC1(),     0xCC);
+  EXPECT_EQ(bColor.getC2(),     0xBB);
+  EXPECT_EQ(bColor.getC3(),     0xAA); // From before
 
   fColor.setRGBfromLogPackIntABGR(0x00BBCCDD);
 
-  BOOST_TEST_CHECK(fColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(fColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(fColor.getBlue()  == 0xBB);
+  EXPECT_EQ(fColor.getRed(),    0xDD);
+  EXPECT_EQ(fColor.getGreen(),  0xCC);
+  EXPECT_EQ(fColor.getBlue(),   0xBB);
 
-  BOOST_TEST_CHECK(fColor.getC2()    == 0xDD);
-  BOOST_TEST_CHECK(fColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(fColor.getC0()    == 0xBB);
+  EXPECT_EQ(fColor.getC2(),     0xDD);
+  EXPECT_EQ(fColor.getC1(),     0xCC);
+  EXPECT_EQ(fColor.getC0(),     0xBB);
 
   cColor.setRGBAfromLogPackIntABGR(0xAADDCCBB);
 
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xBB);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0xDD);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0xAA);
+  EXPECT_EQ(cColor.getRed(),    0xBB);
+  EXPECT_EQ(cColor.getGreen(),  0xCC);
+  EXPECT_EQ(cColor.getBlue(),   0xDD);
+  EXPECT_EQ(cColor.getAlpha(),  0xAA);
 
-  BOOST_TEST_CHECK(cColor.getC2()    == 0xBB);
-  BOOST_TEST_CHECK(cColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(cColor.getC0()    == 0xDD);
-  BOOST_TEST_CHECK(cColor.getC3()    == 0xAA);
+  EXPECT_EQ(cColor.getC2(),     0xBB);
+  EXPECT_EQ(cColor.getC1(),     0xCC);
+  EXPECT_EQ(cColor.getC0(),     0xDD);
+  EXPECT_EQ(cColor.getC3(),     0xAA);
 
   cColor.setRGBfromLogPackIntABGR(0x00BBCCDD);
 
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0xBB);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0xAA); // From before
+  EXPECT_EQ(cColor.getRed(),    0xDD);
+  EXPECT_EQ(cColor.getGreen(),  0xCC);
+  EXPECT_EQ(cColor.getBlue(),   0xBB);
+  EXPECT_EQ(cColor.getAlpha(),  0xAA); // From before
 
-  BOOST_TEST_CHECK(cColor.getC2()    == 0xDD);
-  BOOST_TEST_CHECK(cColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(cColor.getC0()    == 0xBB);
-  BOOST_TEST_CHECK(cColor.getC3()    == 0xAA); // From before
+  EXPECT_EQ(cColor.getC2(),     0xDD);
+  EXPECT_EQ(cColor.getC1(),     0xCC);
+  EXPECT_EQ(cColor.getC0(),     0xBB);
+  EXPECT_EQ(cColor.getC3(),     0xAA); // From before
 
   dColor.setRGBAfromLogPackIntABGR(0xAADDCCBB);
 
-  BOOST_TEST_CHECK(dColor.getRed()   == 0xBB);
-  BOOST_TEST_CHECK(dColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(dColor.getBlue()  == 0xDD);
-  BOOST_TEST_CHECK(dColor.getAlpha() == 0xAA);
+  EXPECT_EQ(dColor.getRed(),    0xBB);
+  EXPECT_EQ(dColor.getGreen(),  0xCC);
+  EXPECT_EQ(dColor.getBlue(),   0xDD);
+  EXPECT_EQ(dColor.getAlpha(),  0xAA);
 
-  BOOST_TEST_CHECK(dColor.getC3()    == 0xBB);
-  BOOST_TEST_CHECK(dColor.getC2()    == 0xCC);
-  BOOST_TEST_CHECK(dColor.getC1()    == 0xDD);
-  BOOST_TEST_CHECK(dColor.getC0()    == 0xAA);
+  EXPECT_EQ(dColor.getC3(),     0xBB);
+  EXPECT_EQ(dColor.getC2(),     0xCC);
+  EXPECT_EQ(dColor.getC1(),     0xDD);
+  EXPECT_EQ(dColor.getC0(),     0xAA);
 
   dColor.setRGBfromLogPackIntABGR(0x00BBCCDD);
 
-  BOOST_TEST_CHECK(dColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(dColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(dColor.getBlue()  == 0xBB);
-  BOOST_TEST_CHECK(dColor.getAlpha() == 0xAA); // From before
+  EXPECT_EQ(dColor.getRed(),    0xDD);
+  EXPECT_EQ(dColor.getGreen(),  0xCC);
+  EXPECT_EQ(dColor.getBlue(),   0xBB);
+  EXPECT_EQ(dColor.getAlpha(),  0xAA); // From before
 
-  BOOST_TEST_CHECK(dColor.getC3()    == 0xDD);
-  BOOST_TEST_CHECK(dColor.getC2()    == 0xCC);
-  BOOST_TEST_CHECK(dColor.getC1()    == 0xBB);
-  BOOST_TEST_CHECK(dColor.getC0()    == 0xAA); // From before
+  EXPECT_EQ(dColor.getC3(),     0xDD);
+  EXPECT_EQ(dColor.getC2(),     0xCC);
+  EXPECT_EQ(dColor.getC1(),     0xBB);
+  EXPECT_EQ(dColor.getC0(),     0xAA); // From before
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(set8_fromLogPackIntABRG) {
+TEST(FUN_fromLogPackIntABRG, bit8) {
 
   mjr::colorARGB8b aColor;
   mjr::colorRGBA8b bColor;
@@ -3610,123 +3602,123 @@ BOOST_AUTO_TEST_CASE(set8_fromLogPackIntABRG) {
 
   aColor.setRGBAfromLogPackIntABRG(0xAADDBBCC);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xBB);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0xDD);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0xAA);
+  EXPECT_EQ(aColor.getRed(),    0xBB);
+  EXPECT_EQ(aColor.getGreen(),  0xCC);
+  EXPECT_EQ(aColor.getBlue(),   0xDD);
+  EXPECT_EQ(aColor.getAlpha(),  0xAA);
 
-  BOOST_TEST_CHECK(aColor.getC1()    == 0xBB);
-  BOOST_TEST_CHECK(aColor.getC2()    == 0xCC);
-  BOOST_TEST_CHECK(aColor.getC3()    == 0xDD);
-  BOOST_TEST_CHECK(aColor.getC0()    == 0xAA);
+  EXPECT_EQ(aColor.getC1(),     0xBB);
+  EXPECT_EQ(aColor.getC2(),     0xCC);
+  EXPECT_EQ(aColor.getC3(),     0xDD);
+  EXPECT_EQ(aColor.getC0(),     0xAA);
 
   aColor.setRGBfromLogPackIntABRG(0x00BBDDCC);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0xBB);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0xAA); // From before
+  EXPECT_EQ(aColor.getRed(),    0xDD);
+  EXPECT_EQ(aColor.getGreen(),  0xCC);
+  EXPECT_EQ(aColor.getBlue(),   0xBB);
+  EXPECT_EQ(aColor.getAlpha(),  0xAA); // From before
 
-  BOOST_TEST_CHECK(aColor.getC1()    == 0xDD);
-  BOOST_TEST_CHECK(aColor.getC2()    == 0xCC);
-  BOOST_TEST_CHECK(aColor.getC3()    == 0xBB);
-  BOOST_TEST_CHECK(aColor.getC0()    == 0xAA); // From before
+  EXPECT_EQ(aColor.getC1(),     0xDD);
+  EXPECT_EQ(aColor.getC2(),     0xCC);
+  EXPECT_EQ(aColor.getC3(),     0xBB);
+  EXPECT_EQ(aColor.getC0(),     0xAA); // From before
 
   eColor.setRGBfromLogPackIntABRG(0x00BBDDCC);
 
-  BOOST_TEST_CHECK(eColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(eColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(eColor.getBlue()  == 0xBB);
+  EXPECT_EQ(eColor.getRed(),    0xDD);
+  EXPECT_EQ(eColor.getGreen(),  0xCC);
+  EXPECT_EQ(eColor.getBlue(),   0xBB);
 
-  BOOST_TEST_CHECK(eColor.getC0()    == 0xDD);
-  BOOST_TEST_CHECK(eColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(eColor.getC2()    == 0xBB);
+  EXPECT_EQ(eColor.getC0(),     0xDD);
+  EXPECT_EQ(eColor.getC1(),     0xCC);
+  EXPECT_EQ(eColor.getC2(),     0xBB);
 
   bColor.setRGBAfromLogPackIntABRG(0xAADDBBCC);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0xBB);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0xDD);
-  BOOST_TEST_CHECK(bColor.getAlpha() == 0xAA);
+  EXPECT_EQ(bColor.getRed(),    0xBB);
+  EXPECT_EQ(bColor.getGreen(),  0xCC);
+  EXPECT_EQ(bColor.getBlue(),   0xDD);
+  EXPECT_EQ(bColor.getAlpha(),  0xAA);
 
-  BOOST_TEST_CHECK(bColor.getC0()    == 0xBB);
-  BOOST_TEST_CHECK(bColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0xDD);
-  BOOST_TEST_CHECK(bColor.getC3()    == 0xAA);
+  EXPECT_EQ(bColor.getC0(),     0xBB);
+  EXPECT_EQ(bColor.getC1(),     0xCC);
+  EXPECT_EQ(bColor.getC2(),     0xDD);
+  EXPECT_EQ(bColor.getC3(),     0xAA);
 
   bColor.setRGBfromLogPackIntABRG(0x00BBDDCC);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0xBB);
-  BOOST_TEST_CHECK(bColor.getAlpha() == 0xAA); // From before
+  EXPECT_EQ(bColor.getRed(),    0xDD);
+  EXPECT_EQ(bColor.getGreen(),  0xCC);
+  EXPECT_EQ(bColor.getBlue(),   0xBB);
+  EXPECT_EQ(bColor.getAlpha(),  0xAA); // From before
 
-  BOOST_TEST_CHECK(bColor.getC0()    == 0xDD);
-  BOOST_TEST_CHECK(bColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0xBB);
-  BOOST_TEST_CHECK(bColor.getC3()    == 0xAA); // From before
+  EXPECT_EQ(bColor.getC0(),     0xDD);
+  EXPECT_EQ(bColor.getC1(),     0xCC);
+  EXPECT_EQ(bColor.getC2(),     0xBB);
+  EXPECT_EQ(bColor.getC3(),     0xAA); // From before
 
   fColor.setRGBfromLogPackIntABRG(0x00BBDDCC);
 
-  BOOST_TEST_CHECK(fColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(fColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(fColor.getBlue()  == 0xBB);
+  EXPECT_EQ(fColor.getRed(),    0xDD);
+  EXPECT_EQ(fColor.getGreen(),  0xCC);
+  EXPECT_EQ(fColor.getBlue(),   0xBB);
 
-  BOOST_TEST_CHECK(fColor.getC2()    == 0xDD);
-  BOOST_TEST_CHECK(fColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(fColor.getC0()    == 0xBB);
+  EXPECT_EQ(fColor.getC2(),     0xDD);
+  EXPECT_EQ(fColor.getC1(),     0xCC);
+  EXPECT_EQ(fColor.getC0(),     0xBB);
 
   cColor.setRGBAfromLogPackIntABRG(0xAADDBBCC);
 
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xBB);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0xDD);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0xAA);
+  EXPECT_EQ(cColor.getRed(),    0xBB);
+  EXPECT_EQ(cColor.getGreen(),  0xCC);
+  EXPECT_EQ(cColor.getBlue(),   0xDD);
+  EXPECT_EQ(cColor.getAlpha(),  0xAA);
 
-  BOOST_TEST_CHECK(cColor.getC2()    == 0xBB);
-  BOOST_TEST_CHECK(cColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(cColor.getC0()    == 0xDD);
-  BOOST_TEST_CHECK(cColor.getC3()    == 0xAA);
+  EXPECT_EQ(cColor.getC2(),     0xBB);
+  EXPECT_EQ(cColor.getC1(),     0xCC);
+  EXPECT_EQ(cColor.getC0(),     0xDD);
+  EXPECT_EQ(cColor.getC3(),     0xAA);
 
   cColor.setRGBfromLogPackIntABRG(0x00BBDDCC);
 
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0xBB);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0xAA); // From before
+  EXPECT_EQ(cColor.getRed(),    0xDD);
+  EXPECT_EQ(cColor.getGreen(),  0xCC);
+  EXPECT_EQ(cColor.getBlue(),   0xBB);
+  EXPECT_EQ(cColor.getAlpha(),  0xAA); // From before
 
-  BOOST_TEST_CHECK(cColor.getC2()    == 0xDD);
-  BOOST_TEST_CHECK(cColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(cColor.getC0()    == 0xBB);
-  BOOST_TEST_CHECK(cColor.getC3()    == 0xAA); // From before
+  EXPECT_EQ(cColor.getC2(),     0xDD);
+  EXPECT_EQ(cColor.getC1(),     0xCC);
+  EXPECT_EQ(cColor.getC0(),     0xBB);
+  EXPECT_EQ(cColor.getC3(),     0xAA); // From before
 
   dColor.setRGBAfromLogPackIntABRG(0xAADDBBCC);
 
-  BOOST_TEST_CHECK(dColor.getRed()   == 0xBB);
-  BOOST_TEST_CHECK(dColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(dColor.getBlue()  == 0xDD);
-  BOOST_TEST_CHECK(dColor.getAlpha() == 0xAA);
+  EXPECT_EQ(dColor.getRed(),    0xBB);
+  EXPECT_EQ(dColor.getGreen(),  0xCC);
+  EXPECT_EQ(dColor.getBlue(),   0xDD);
+  EXPECT_EQ(dColor.getAlpha(),  0xAA);
 
-  BOOST_TEST_CHECK(dColor.getC3()    == 0xBB);
-  BOOST_TEST_CHECK(dColor.getC2()    == 0xCC);
-  BOOST_TEST_CHECK(dColor.getC1()    == 0xDD);
-  BOOST_TEST_CHECK(dColor.getC0()    == 0xAA);
+  EXPECT_EQ(dColor.getC3(),     0xBB);
+  EXPECT_EQ(dColor.getC2(),     0xCC);
+  EXPECT_EQ(dColor.getC1(),     0xDD);
+  EXPECT_EQ(dColor.getC0(),     0xAA);
 
   dColor.setRGBfromLogPackIntABRG(0x00BBDDCC);
 
-  BOOST_TEST_CHECK(dColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(dColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(dColor.getBlue()  == 0xBB);
-  BOOST_TEST_CHECK(dColor.getAlpha() == 0xAA); // From before
+  EXPECT_EQ(dColor.getRed(),    0xDD);
+  EXPECT_EQ(dColor.getGreen(),  0xCC);
+  EXPECT_EQ(dColor.getBlue(),   0xBB);
+  EXPECT_EQ(dColor.getAlpha(),  0xAA); // From before
 
-  BOOST_TEST_CHECK(dColor.getC3()    == 0xDD);
-  BOOST_TEST_CHECK(dColor.getC2()    == 0xCC);
-  BOOST_TEST_CHECK(dColor.getC1()    == 0xBB);
-  BOOST_TEST_CHECK(dColor.getC0()    == 0xAA); // From before
+  EXPECT_EQ(dColor.getC3(),     0xDD);
+  EXPECT_EQ(dColor.getC2(),     0xCC);
+  EXPECT_EQ(dColor.getC1(),     0xBB);
+  EXPECT_EQ(dColor.getC0(),     0xAA); // From before
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(set8_fromLogPackIntBGRA) {
+TEST(FUN_fromLogPackIntBGRA, bit8) {
 
   mjr::colorARGB8b aColor;
   mjr::colorRGBA8b bColor;
@@ -3738,123 +3730,123 @@ BOOST_AUTO_TEST_CASE(set8_fromLogPackIntBGRA) {
 
   aColor.setRGBAfromLogPackIntBGRA(0xDDCCBBAA);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xBB);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0xDD);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0xAA);
+  EXPECT_EQ(aColor.getRed(),    0xBB);
+  EXPECT_EQ(aColor.getGreen(),  0xCC);
+  EXPECT_EQ(aColor.getBlue(),   0xDD);
+  EXPECT_EQ(aColor.getAlpha(),  0xAA);
 
-  BOOST_TEST_CHECK(aColor.getC1()    == 0xBB);
-  BOOST_TEST_CHECK(aColor.getC2()    == 0xCC);
-  BOOST_TEST_CHECK(aColor.getC3()    == 0xDD);
-  BOOST_TEST_CHECK(aColor.getC0()    == 0xAA);
+  EXPECT_EQ(aColor.getC1(),     0xBB);
+  EXPECT_EQ(aColor.getC2(),     0xCC);
+  EXPECT_EQ(aColor.getC3(),     0xDD);
+  EXPECT_EQ(aColor.getC0(),     0xAA);
 
   aColor.setRGBfromLogPackIntBGRA(0xBBCCDD00);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0xBB);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0xAA); // From before
+  EXPECT_EQ(aColor.getRed(),    0xDD);
+  EXPECT_EQ(aColor.getGreen(),  0xCC);
+  EXPECT_EQ(aColor.getBlue(),   0xBB);
+  EXPECT_EQ(aColor.getAlpha(),  0xAA); // From before
 
-  BOOST_TEST_CHECK(aColor.getC1()    == 0xDD);
-  BOOST_TEST_CHECK(aColor.getC2()    == 0xCC);
-  BOOST_TEST_CHECK(aColor.getC3()    == 0xBB);
-  BOOST_TEST_CHECK(aColor.getC0()    == 0xAA); // From before
+  EXPECT_EQ(aColor.getC1(),     0xDD);
+  EXPECT_EQ(aColor.getC2(),     0xCC);
+  EXPECT_EQ(aColor.getC3(),     0xBB);
+  EXPECT_EQ(aColor.getC0(),     0xAA); // From before
 
   eColor.setRGBfromLogPackIntBGRA(0xBBCCDD00);
 
-  BOOST_TEST_CHECK(eColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(eColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(eColor.getBlue()  == 0xBB);
+  EXPECT_EQ(eColor.getRed(),    0xDD);
+  EXPECT_EQ(eColor.getGreen(),  0xCC);
+  EXPECT_EQ(eColor.getBlue(),   0xBB);
 
-  BOOST_TEST_CHECK(eColor.getC0()    == 0xDD);
-  BOOST_TEST_CHECK(eColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(eColor.getC2()    == 0xBB);
+  EXPECT_EQ(eColor.getC0(),     0xDD);
+  EXPECT_EQ(eColor.getC1(),     0xCC);
+  EXPECT_EQ(eColor.getC2(),     0xBB);
 
   bColor.setRGBAfromLogPackIntBGRA(0xDDCCBBAA);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0xBB);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0xDD);
-  BOOST_TEST_CHECK(bColor.getAlpha() == 0xAA);
+  EXPECT_EQ(bColor.getRed(),    0xBB);
+  EXPECT_EQ(bColor.getGreen(),  0xCC);
+  EXPECT_EQ(bColor.getBlue(),   0xDD);
+  EXPECT_EQ(bColor.getAlpha(),  0xAA);
 
-  BOOST_TEST_CHECK(bColor.getC0()    == 0xBB);
-  BOOST_TEST_CHECK(bColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0xDD);
-  BOOST_TEST_CHECK(bColor.getC3()    == 0xAA);
+  EXPECT_EQ(bColor.getC0(),     0xBB);
+  EXPECT_EQ(bColor.getC1(),     0xCC);
+  EXPECT_EQ(bColor.getC2(),     0xDD);
+  EXPECT_EQ(bColor.getC3(),     0xAA);
 
   bColor.setRGBfromLogPackIntBGRA(0xBBCCDD00);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0xBB);
-  BOOST_TEST_CHECK(bColor.getAlpha() == 0xAA); // From before
+  EXPECT_EQ(bColor.getRed(),    0xDD);
+  EXPECT_EQ(bColor.getGreen(),  0xCC);
+  EXPECT_EQ(bColor.getBlue(),   0xBB);
+  EXPECT_EQ(bColor.getAlpha(),  0xAA); // From before
 
-  BOOST_TEST_CHECK(bColor.getC0()    == 0xDD);
-  BOOST_TEST_CHECK(bColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0xBB);
-  BOOST_TEST_CHECK(bColor.getC3()    == 0xAA); // From before
+  EXPECT_EQ(bColor.getC0(),     0xDD);
+  EXPECT_EQ(bColor.getC1(),     0xCC);
+  EXPECT_EQ(bColor.getC2(),     0xBB);
+  EXPECT_EQ(bColor.getC3(),     0xAA); // From before
 
   fColor.setRGBfromLogPackIntBGRA(0xBBCCDD00);
 
-  BOOST_TEST_CHECK(fColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(fColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(fColor.getBlue()  == 0xBB);
+  EXPECT_EQ(fColor.getRed(),    0xDD);
+  EXPECT_EQ(fColor.getGreen(),  0xCC);
+  EXPECT_EQ(fColor.getBlue(),   0xBB);
 
-  BOOST_TEST_CHECK(fColor.getC2()    == 0xDD);
-  BOOST_TEST_CHECK(fColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(fColor.getC0()    == 0xBB);
+  EXPECT_EQ(fColor.getC2(),     0xDD);
+  EXPECT_EQ(fColor.getC1(),     0xCC);
+  EXPECT_EQ(fColor.getC0(),     0xBB);
 
   cColor.setRGBAfromLogPackIntBGRA(0xDDCCBBAA);
 
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xBB);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0xDD);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0xAA);
+  EXPECT_EQ(cColor.getRed(),    0xBB);
+  EXPECT_EQ(cColor.getGreen(),  0xCC);
+  EXPECT_EQ(cColor.getBlue(),   0xDD);
+  EXPECT_EQ(cColor.getAlpha(),  0xAA);
 
-  BOOST_TEST_CHECK(cColor.getC2()    == 0xBB);
-  BOOST_TEST_CHECK(cColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(cColor.getC0()    == 0xDD);
-  BOOST_TEST_CHECK(cColor.getC3()    == 0xAA);
+  EXPECT_EQ(cColor.getC2(),     0xBB);
+  EXPECT_EQ(cColor.getC1(),     0xCC);
+  EXPECT_EQ(cColor.getC0(),     0xDD);
+  EXPECT_EQ(cColor.getC3(),     0xAA);
 
   cColor.setRGBfromLogPackIntBGRA(0xBBCCDD00);
 
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0xBB);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0xAA); // From before
+  EXPECT_EQ(cColor.getRed(),    0xDD);
+  EXPECT_EQ(cColor.getGreen(),  0xCC);
+  EXPECT_EQ(cColor.getBlue(),   0xBB);
+  EXPECT_EQ(cColor.getAlpha(),  0xAA); // From before
 
-  BOOST_TEST_CHECK(cColor.getC2()    == 0xDD);
-  BOOST_TEST_CHECK(cColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(cColor.getC0()    == 0xBB);
-  BOOST_TEST_CHECK(cColor.getC3()    == 0xAA); // From before
+  EXPECT_EQ(cColor.getC2(),     0xDD);
+  EXPECT_EQ(cColor.getC1(),     0xCC);
+  EXPECT_EQ(cColor.getC0(),     0xBB);
+  EXPECT_EQ(cColor.getC3(),     0xAA); // From before
 
   dColor.setRGBAfromLogPackIntBGRA(0xDDCCBBAA);
 
-  BOOST_TEST_CHECK(dColor.getRed()   == 0xBB);
-  BOOST_TEST_CHECK(dColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(dColor.getBlue()  == 0xDD);
-  BOOST_TEST_CHECK(dColor.getAlpha() == 0xAA);
+  EXPECT_EQ(dColor.getRed(),    0xBB);
+  EXPECT_EQ(dColor.getGreen(),  0xCC);
+  EXPECT_EQ(dColor.getBlue(),   0xDD);
+  EXPECT_EQ(dColor.getAlpha(),  0xAA);
 
-  BOOST_TEST_CHECK(dColor.getC2()    == 0xBB);
-  BOOST_TEST_CHECK(dColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(dColor.getC0()    == 0xDD);
-  BOOST_TEST_CHECK(dColor.getC3()    == 0xAA);
+  EXPECT_EQ(dColor.getC2(),     0xBB);
+  EXPECT_EQ(dColor.getC1(),     0xCC);
+  EXPECT_EQ(dColor.getC0(),     0xDD);
+  EXPECT_EQ(dColor.getC3(),     0xAA);
 
   dColor.setRGBfromLogPackIntBGRA(0xBBCCDD00);
 
-  BOOST_TEST_CHECK(dColor.getRed()   == 0xDD);
-  BOOST_TEST_CHECK(dColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(dColor.getBlue()  == 0xBB);
-  BOOST_TEST_CHECK(dColor.getAlpha() == 0xAA); // From before
+  EXPECT_EQ(dColor.getRed(),    0xDD);
+  EXPECT_EQ(dColor.getGreen(),  0xCC);
+  EXPECT_EQ(dColor.getBlue(),   0xBB);
+  EXPECT_EQ(dColor.getAlpha(),  0xAA); // From before
 
-  BOOST_TEST_CHECK(dColor.getC2()    == 0xDD);
-  BOOST_TEST_CHECK(dColor.getC1()    == 0xCC);
-  BOOST_TEST_CHECK(dColor.getC0()    == 0xBB);
-  BOOST_TEST_CHECK(dColor.getC3()    == 0xAA); // From before
+  EXPECT_EQ(dColor.getC2(),     0xDD);
+  EXPECT_EQ(dColor.getC1(),     0xCC);
+  EXPECT_EQ(dColor.getC0(),     0xBB);
+  EXPECT_EQ(dColor.getC3(),     0xAA); // From before
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(set16_fromLogPackIntARGB) {
+TEST(FUN_fromLogPackIntARGB, bit16) {
 
   // We really just need to make sure the scale works for 16bit -- i.e. that the bytes of the integer are truely inturprted by set*_byte() members.
 
@@ -3863,41 +3855,41 @@ BOOST_AUTO_TEST_CASE(set16_fromLogPackIntARGB) {
 
   bColor.setRGBAfromLogPackIntARGB(0xFF00FF80);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == mjr::colorRGBA16b::minChanVal);
-  BOOST_TEST_CHECK(bColor.getGreen() == mjr::colorRGBA16b::maxChanVal);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0x8080);
-  BOOST_TEST_CHECK(bColor.getAlpha() == mjr::colorRGBA16b::maxChanVal);
+  EXPECT_EQ(bColor.getRed(),    mjr::colorRGBA16b::minChanVal);
+  EXPECT_EQ(bColor.getGreen(),  mjr::colorRGBA16b::maxChanVal);
+  EXPECT_EQ(bColor.getBlue(),   0x8080);
+  EXPECT_EQ(bColor.getAlpha(),  mjr::colorRGBA16b::maxChanVal);
 
-  BOOST_TEST_CHECK(bColor.getC0()    == mjr::colorRGBA16b::minChanVal);
-  BOOST_TEST_CHECK(bColor.getC1()    == mjr::colorRGBA16b::maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0x8080);
-  BOOST_TEST_CHECK(bColor.getC3()    == mjr::colorRGBA16b::maxChanVal);
+  EXPECT_EQ(bColor.getC0(),     mjr::colorRGBA16b::minChanVal);
+  EXPECT_EQ(bColor.getC1(),     mjr::colorRGBA16b::maxChanVal);
+  EXPECT_EQ(bColor.getC2(),     0x8080);
+  EXPECT_EQ(bColor.getC3(),     mjr::colorRGBA16b::maxChanVal);
 
   bColor.setRGBfromLogPackIntARGB(0x00FF00FF);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == mjr::colorRGBA16b::maxChanVal);
-  BOOST_TEST_CHECK(bColor.getGreen() == mjr::colorRGBA16b::minChanVal);
-  BOOST_TEST_CHECK(bColor.getBlue()  == mjr::colorRGBA16b::maxChanVal);
-  BOOST_TEST_CHECK(bColor.getAlpha() == mjr::colorRGBA16b::maxChanVal); // From before
+  EXPECT_EQ(bColor.getRed(),    mjr::colorRGBA16b::maxChanVal);
+  EXPECT_EQ(bColor.getGreen(),  mjr::colorRGBA16b::minChanVal);
+  EXPECT_EQ(bColor.getBlue(),   mjr::colorRGBA16b::maxChanVal);
+  EXPECT_EQ(bColor.getAlpha(),  mjr::colorRGBA16b::maxChanVal); // From before
 
-  BOOST_TEST_CHECK(bColor.getC0()    == mjr::colorRGBA16b::maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC1()    == mjr::colorRGBA16b::minChanVal);
-  BOOST_TEST_CHECK(bColor.getC2()    == mjr::colorRGBA16b::maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC3()    == mjr::colorRGBA16b::maxChanVal); // From before
+  EXPECT_EQ(bColor.getC0(),     mjr::colorRGBA16b::maxChanVal);
+  EXPECT_EQ(bColor.getC1(),     mjr::colorRGBA16b::minChanVal);
+  EXPECT_EQ(bColor.getC2(),     mjr::colorRGBA16b::maxChanVal);
+  EXPECT_EQ(bColor.getC3(),     mjr::colorRGBA16b::maxChanVal); // From before
 
   eColor.setRGBfromLogPackIntARGB(0x00FF00FF);
 
-  BOOST_TEST_CHECK(eColor.getRed()   == mjr::colorRGBA16b::maxChanVal);
-  BOOST_TEST_CHECK(eColor.getGreen() == mjr::colorRGBA16b::minChanVal);
-  BOOST_TEST_CHECK(eColor.getBlue()  == mjr::colorRGBA16b::maxChanVal);
+  EXPECT_EQ(eColor.getRed(),    mjr::colorRGBA16b::maxChanVal);
+  EXPECT_EQ(eColor.getGreen(),  mjr::colorRGBA16b::minChanVal);
+  EXPECT_EQ(eColor.getBlue(),   mjr::colorRGBA16b::maxChanVal);
 
-  BOOST_TEST_CHECK(eColor.getC0()    == mjr::colorRGBA16b::maxChanVal);
-  BOOST_TEST_CHECK(eColor.getC1()    == mjr::colorRGBA16b::minChanVal);
-  BOOST_TEST_CHECK(eColor.getC2()    == mjr::colorRGBA16b::maxChanVal);
+  EXPECT_EQ(eColor.getC0(),     mjr::colorRGBA16b::maxChanVal);
+  EXPECT_EQ(eColor.getC1(),     mjr::colorRGBA16b::minChanVal);
+  EXPECT_EQ(eColor.getC2(),     mjr::colorRGBA16b::maxChanVal);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(set8_saved_fromLogPackIntARGB) {
+TEST(FUN_saved_fromLogPackIntARGB, bit8) {
 
   // Make sure channels that should not be changed are not.
 
@@ -3907,40 +3899,40 @@ BOOST_AUTO_TEST_CASE(set8_saved_fromLogPackIntARGB) {
   bColor.setToWhite();
   bColor.setRGBfromLogPackIntARGB(0x00000000);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == mjr::colorRGBA8b::minChanVal);
-  BOOST_TEST_CHECK(bColor.getGreen() == mjr::colorRGBA8b::minChanVal);
-  BOOST_TEST_CHECK(bColor.getBlue()  == mjr::colorRGBA8b::minChanVal);
-  BOOST_TEST_CHECK(bColor.getAlpha() == mjr::colorRGBA8b::maxChanVal);
+  EXPECT_EQ(bColor.getRed(),    mjr::colorRGBA8b::minChanVal);
+  EXPECT_EQ(bColor.getGreen(),  mjr::colorRGBA8b::minChanVal);
+  EXPECT_EQ(bColor.getBlue(),   mjr::colorRGBA8b::minChanVal);
+  EXPECT_EQ(bColor.getAlpha(),  mjr::colorRGBA8b::maxChanVal);
 
   bColor.setToBlack();
   bColor.setRGBfromLogPackIntARGB(0xFFFFFFFF);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == mjr::colorRGBA8b::maxChanVal);
-  BOOST_TEST_CHECK(bColor.getGreen() == mjr::colorRGBA8b::maxChanVal);
-  BOOST_TEST_CHECK(bColor.getBlue()  == mjr::colorRGBA8b::maxChanVal);
-  BOOST_TEST_CHECK(bColor.getAlpha() == mjr::colorRGBA8b::minChanVal);
+  EXPECT_EQ(bColor.getRed(),    mjr::colorRGBA8b::maxChanVal);
+  EXPECT_EQ(bColor.getGreen(),  mjr::colorRGBA8b::maxChanVal);
+  EXPECT_EQ(bColor.getBlue(),   mjr::colorRGBA8b::maxChanVal);
+  EXPECT_EQ(bColor.getAlpha(),  mjr::colorRGBA8b::minChanVal);
 
   cColor.setToWhite();
   cColor.setRGBAfromLogPackIntARGB(0x00000000);
 
-  BOOST_TEST_CHECK(cColor.getRed()   == mjr::colorRGBA8b::minChanVal);
-  BOOST_TEST_CHECK(cColor.getGreen() == mjr::colorRGBA8b::minChanVal);
-  BOOST_TEST_CHECK(cColor.getBlue()  == mjr::colorRGBA8b::minChanVal);
-  BOOST_TEST_CHECK(cColor.getAlpha() == mjr::colorRGBA8b::minChanVal);
-  BOOST_TEST_CHECK(cColor.getChan(4) == mjr::colorRGBA8b::maxChanVal);
+  EXPECT_EQ(cColor.getRed(),    mjr::colorRGBA8b::minChanVal);
+  EXPECT_EQ(cColor.getGreen(),  mjr::colorRGBA8b::minChanVal);
+  EXPECT_EQ(cColor.getBlue(),   mjr::colorRGBA8b::minChanVal);
+  EXPECT_EQ(cColor.getAlpha(),  mjr::colorRGBA8b::minChanVal);
+  EXPECT_EQ(cColor.getChan(4),  mjr::colorRGBA8b::maxChanVal);
 
   cColor.setToBlack();
   cColor.setRGBAfromLogPackIntARGB(0xFFFFFFFF);
 
-  BOOST_TEST_CHECK(cColor.getRed()   == mjr::colorRGBA8b::maxChanVal);
-  BOOST_TEST_CHECK(cColor.getGreen() == mjr::colorRGBA8b::maxChanVal);
-  BOOST_TEST_CHECK(cColor.getBlue()  == mjr::colorRGBA8b::maxChanVal);
-  BOOST_TEST_CHECK(cColor.getAlpha() == mjr::colorRGBA8b::maxChanVal);
-  BOOST_TEST_CHECK(cColor.getChan(4) == mjr::colorRGBA8b::minChanVal);
+  EXPECT_EQ(cColor.getRed(),    mjr::colorRGBA8b::maxChanVal);
+  EXPECT_EQ(cColor.getGreen(),  mjr::colorRGBA8b::maxChanVal);
+  EXPECT_EQ(cColor.getBlue(),   mjr::colorRGBA8b::maxChanVal);
+  EXPECT_EQ(cColor.getAlpha(),  mjr::colorRGBA8b::maxChanVal);
+  EXPECT_EQ(cColor.getChan(4),  mjr::colorRGBA8b::minChanVal);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(setRGBcmpGreyTGA16bit) {
+TEST(FUN_setRGBcmpGreyTGA16bit, bit8) {
 
   mjr::colorRGBA8b aColor;
   mjr::colorRGB8b  bColor;
@@ -3948,153 +3940,153 @@ BOOST_AUTO_TEST_CASE(setRGBcmpGreyTGA16bit) {
   bColor.setToBlack();
   bColor.setRGBcmpGreyTGA16bit(0x0000);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0x00);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0x00);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0x00);
+  EXPECT_EQ(bColor.getRed(),    0x00);
+  EXPECT_EQ(bColor.getGreen(),  0x00);
+  EXPECT_EQ(bColor.getBlue(),   0x00);
 
-  BOOST_TEST_CHECK(bColor.getC0()    == 0x00);
-  BOOST_TEST_CHECK(bColor.getC1()    == 0x00);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0x00);
+  EXPECT_EQ(bColor.getC0(),     0x00);
+  EXPECT_EQ(bColor.getC1(),     0x00);
+  EXPECT_EQ(bColor.getC2(),     0x00);
 
   bColor.setToBlack();
   bColor.setRGBcmpGreyTGA16bit(0xFFFF);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0xFF);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0xFF);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0x00);
+  EXPECT_EQ(bColor.getRed(),    0xFF);
+  EXPECT_EQ(bColor.getGreen(),  0xFF);
+  EXPECT_EQ(bColor.getBlue(),   0x00);
 
-  BOOST_TEST_CHECK(bColor.getC0()    == 0xFF);
-  BOOST_TEST_CHECK(bColor.getC1()    == 0xFF);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0x00);
+  EXPECT_EQ(bColor.getC0(),     0xFF);
+  EXPECT_EQ(bColor.getC1(),     0xFF);
+  EXPECT_EQ(bColor.getC2(),     0x00);
 
   bColor.setToBlack();
   bColor.setRGBcmpGreyTGA16bit(0xAABB);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0xAA);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0xBB);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0x00);
+  EXPECT_EQ(bColor.getRed(),    0xAA);
+  EXPECT_EQ(bColor.getGreen(),  0xBB);
+  EXPECT_EQ(bColor.getBlue(),   0x00);
 
-  BOOST_TEST_CHECK(bColor.getC0()    == 0xAA);
-  BOOST_TEST_CHECK(bColor.getC1()    == 0xBB);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0x00);
+  EXPECT_EQ(bColor.getC0(),     0xAA);
+  EXPECT_EQ(bColor.getC1(),     0xBB);
+  EXPECT_EQ(bColor.getC2(),     0x00);
 
   bColor.setToWhite();
   bColor.setRGBcmpGreyTGA16bit(0x0000);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0x00);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0x00);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0x00);
+  EXPECT_EQ(bColor.getRed(),    0x00);
+  EXPECT_EQ(bColor.getGreen(),  0x00);
+  EXPECT_EQ(bColor.getBlue(),   0x00);
 
-  BOOST_TEST_CHECK(bColor.getC0()    == 0x00);
-  BOOST_TEST_CHECK(bColor.getC1()    == 0x00);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0x00);
+  EXPECT_EQ(bColor.getC0(),     0x00);
+  EXPECT_EQ(bColor.getC1(),     0x00);
+  EXPECT_EQ(bColor.getC2(),     0x00);
 
   bColor.setToWhite();
   bColor.setRGBcmpGreyTGA16bit(0xFFFF);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0xFF);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0xFF);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0x00);
+  EXPECT_EQ(bColor.getRed(),    0xFF);
+  EXPECT_EQ(bColor.getGreen(),  0xFF);
+  EXPECT_EQ(bColor.getBlue(),   0x00);
 
-  BOOST_TEST_CHECK(bColor.getC0()    == 0xFF);
-  BOOST_TEST_CHECK(bColor.getC1()    == 0xFF);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0x00);
+  EXPECT_EQ(bColor.getC0(),     0xFF);
+  EXPECT_EQ(bColor.getC1(),     0xFF);
+  EXPECT_EQ(bColor.getC2(),     0x00);
 
   bColor.setToWhite();
   bColor.setRGBcmpGreyTGA16bit(0xAABB);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0xAA);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0xBB);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0x00);
+  EXPECT_EQ(bColor.getRed(),    0xAA);
+  EXPECT_EQ(bColor.getGreen(),  0xBB);
+  EXPECT_EQ(bColor.getBlue(),   0x00);
 
-  BOOST_TEST_CHECK(bColor.getC0()    == 0xAA);
-  BOOST_TEST_CHECK(bColor.getC1()    == 0xBB);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0x00);
+  EXPECT_EQ(bColor.getC0(),     0xAA);
+  EXPECT_EQ(bColor.getC1(),     0xBB);
+  EXPECT_EQ(bColor.getC2(),     0x00);
 
 ////////////////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   aColor.setRGBcmpGreyTGA16bit(0x0000);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0x00);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0x00);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0x00);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0x00);
+  EXPECT_EQ(aColor.getRed(),    0x00);
+  EXPECT_EQ(aColor.getGreen(),  0x00);
+  EXPECT_EQ(aColor.getBlue(),   0x00);
+  EXPECT_EQ(aColor.getAlpha(),  0x00);
 
-  BOOST_TEST_CHECK(aColor.getC0()    == 0x00);
-  BOOST_TEST_CHECK(aColor.getC1()    == 0x00);
-  BOOST_TEST_CHECK(aColor.getC2()    == 0x00);
-  BOOST_TEST_CHECK(aColor.getC3()    == 0x00);
+  EXPECT_EQ(aColor.getC0(),     0x00);
+  EXPECT_EQ(aColor.getC1(),     0x00);
+  EXPECT_EQ(aColor.getC2(),     0x00);
+  EXPECT_EQ(aColor.getC3(),     0x00);
 
   aColor.setToBlack();
   aColor.setRGBcmpGreyTGA16bit(0xFFFF);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xFF);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0xFF);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0x00);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0x00);
+  EXPECT_EQ(aColor.getRed(),    0xFF);
+  EXPECT_EQ(aColor.getGreen(),  0xFF);
+  EXPECT_EQ(aColor.getBlue(),   0x00);
+  EXPECT_EQ(aColor.getAlpha(),  0x00);
 
-  BOOST_TEST_CHECK(aColor.getC0()    == 0xFF);
-  BOOST_TEST_CHECK(aColor.getC1()    == 0xFF);
-  BOOST_TEST_CHECK(aColor.getC2()    == 0x00);
-  BOOST_TEST_CHECK(aColor.getC3()    == 0x00);
+  EXPECT_EQ(aColor.getC0(),     0xFF);
+  EXPECT_EQ(aColor.getC1(),     0xFF);
+  EXPECT_EQ(aColor.getC2(),     0x00);
+  EXPECT_EQ(aColor.getC3(),     0x00);
 
   aColor.setToBlack();
   aColor.setRGBcmpGreyTGA16bit(0xAABB);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xAA);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0xBB);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0x00);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0x00);
+  EXPECT_EQ(aColor.getRed(),    0xAA);
+  EXPECT_EQ(aColor.getGreen(),  0xBB);
+  EXPECT_EQ(aColor.getBlue(),   0x00);
+  EXPECT_EQ(aColor.getAlpha(),  0x00);
 
-  BOOST_TEST_CHECK(aColor.getC0()    == 0xAA);
-  BOOST_TEST_CHECK(aColor.getC1()    == 0xBB);
-  BOOST_TEST_CHECK(aColor.getC2()    == 0x00);
-  BOOST_TEST_CHECK(aColor.getC3()    == 0x00);
+  EXPECT_EQ(aColor.getC0(),     0xAA);
+  EXPECT_EQ(aColor.getC1(),     0xBB);
+  EXPECT_EQ(aColor.getC2(),     0x00);
+  EXPECT_EQ(aColor.getC3(),     0x00);
 
   aColor.setToWhite();
   aColor.setRGBcmpGreyTGA16bit(0x0000);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0x00);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0x00);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0x00);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0xFF);
+  EXPECT_EQ(aColor.getRed(),    0x00);
+  EXPECT_EQ(aColor.getGreen(),  0x00);
+  EXPECT_EQ(aColor.getBlue(),   0x00);
+  EXPECT_EQ(aColor.getAlpha(),  0xFF);
 
-  BOOST_TEST_CHECK(aColor.getC0()    == 0x00);
-  BOOST_TEST_CHECK(aColor.getC1()    == 0x00);
-  BOOST_TEST_CHECK(aColor.getC2()    == 0x00);
-  BOOST_TEST_CHECK(aColor.getC3()    == 0xFF);
+  EXPECT_EQ(aColor.getC0(),     0x00);
+  EXPECT_EQ(aColor.getC1(),     0x00);
+  EXPECT_EQ(aColor.getC2(),     0x00);
+  EXPECT_EQ(aColor.getC3(),     0xFF);
 
   aColor.setToWhite();
   aColor.setRGBcmpGreyTGA16bit(0xFFFF);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xFF);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0xFF);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0x00);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0xFF);
+  EXPECT_EQ(aColor.getRed(),    0xFF);
+  EXPECT_EQ(aColor.getGreen(),  0xFF);
+  EXPECT_EQ(aColor.getBlue(),   0x00);
+  EXPECT_EQ(aColor.getAlpha(),  0xFF);
 
-  BOOST_TEST_CHECK(aColor.getC0()    == 0xFF);
-  BOOST_TEST_CHECK(aColor.getC1()    == 0xFF);
-  BOOST_TEST_CHECK(aColor.getC2()    == 0x00);
-  BOOST_TEST_CHECK(aColor.getC3()    == 0xFF);
+  EXPECT_EQ(aColor.getC0(),     0xFF);
+  EXPECT_EQ(aColor.getC1(),     0xFF);
+  EXPECT_EQ(aColor.getC2(),     0x00);
+  EXPECT_EQ(aColor.getC3(),     0xFF);
 
   aColor.setToWhite();
   aColor.setRGBcmpGreyTGA16bit(0xAABB);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xAA);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0xBB);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0x00);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0xFF);
+  EXPECT_EQ(aColor.getRed(),    0xAA);
+  EXPECT_EQ(aColor.getGreen(),  0xBB);
+  EXPECT_EQ(aColor.getBlue(),   0x00);
+  EXPECT_EQ(aColor.getAlpha(),  0xFF);
 
-  BOOST_TEST_CHECK(aColor.getC0()    == 0xAA);
-  BOOST_TEST_CHECK(aColor.getC1()    == 0xBB);
-  BOOST_TEST_CHECK(aColor.getC2()    == 0x00);
-  BOOST_TEST_CHECK(aColor.getC3()    == 0xFF);
+  EXPECT_EQ(aColor.getC0(),     0xAA);
+  EXPECT_EQ(aColor.getC1(),     0xBB);
+  EXPECT_EQ(aColor.getC2(),     0x00);
+  EXPECT_EQ(aColor.getC3(),     0xFF);
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(setRGBcmpGreyTGA24bit) {
+TEST(FUN_setRGBcmpGreyTGA24bit, bit8) {
 
   mjr::colorRGBA8b aColor;
   mjr::colorRGB8b  bColor;
@@ -4102,152 +4094,152 @@ BOOST_AUTO_TEST_CASE(setRGBcmpGreyTGA24bit) {
   bColor.setToBlack();
   bColor.setRGBcmpGreyTGA24bit(0x00000000);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0x00);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0x00);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0x00);
+  EXPECT_EQ(bColor.getRed(),    0x00);
+  EXPECT_EQ(bColor.getGreen(),  0x00);
+  EXPECT_EQ(bColor.getBlue(),   0x00);
 
-  BOOST_TEST_CHECK(bColor.getC0()    == 0x00);
-  BOOST_TEST_CHECK(bColor.getC1()    == 0x00);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0x00);
+  EXPECT_EQ(bColor.getC0(),     0x00);
+  EXPECT_EQ(bColor.getC1(),     0x00);
+  EXPECT_EQ(bColor.getC2(),     0x00);
 
   bColor.setToBlack();
   bColor.setRGBcmpGreyTGA24bit(0x00FFFFFF);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0xFF);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0xFF);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0xFF);
+  EXPECT_EQ(bColor.getRed(),    0xFF);
+  EXPECT_EQ(bColor.getGreen(),  0xFF);
+  EXPECT_EQ(bColor.getBlue(),   0xFF);
 
-  BOOST_TEST_CHECK(bColor.getC0()    == 0xFF);
-  BOOST_TEST_CHECK(bColor.getC1()    == 0xFF);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0xFF);
+  EXPECT_EQ(bColor.getC0(),     0xFF);
+  EXPECT_EQ(bColor.getC1(),     0xFF);
+  EXPECT_EQ(bColor.getC2(),     0xFF);
 
   bColor.setToBlack();
   bColor.setRGBcmpGreyTGA24bit(0x00CCAABB);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0xAA);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0xBB);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0xCC);
+  EXPECT_EQ(bColor.getRed(),    0xAA);
+  EXPECT_EQ(bColor.getGreen(),  0xBB);
+  EXPECT_EQ(bColor.getBlue(),   0xCC);
 
-  BOOST_TEST_CHECK(bColor.getC0()    == 0xAA);
-  BOOST_TEST_CHECK(bColor.getC1()    == 0xBB);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0xCC);
+  EXPECT_EQ(bColor.getC0(),     0xAA);
+  EXPECT_EQ(bColor.getC1(),     0xBB);
+  EXPECT_EQ(bColor.getC2(),     0xCC);
 
   bColor.setToWhite();
   bColor.setRGBcmpGreyTGA24bit(0x00000000);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0x00);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0x00);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0x00);
+  EXPECT_EQ(bColor.getRed(),    0x00);
+  EXPECT_EQ(bColor.getGreen(),  0x00);
+  EXPECT_EQ(bColor.getBlue(),   0x00);
 
-  BOOST_TEST_CHECK(bColor.getC0()    == 0x00);
-  BOOST_TEST_CHECK(bColor.getC1()    == 0x00);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0x00);
+  EXPECT_EQ(bColor.getC0(),     0x00);
+  EXPECT_EQ(bColor.getC1(),     0x00);
+  EXPECT_EQ(bColor.getC2(),     0x00);
 
   bColor.setToWhite();
   bColor.setRGBcmpGreyTGA24bit(0x00FFFFFF);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0xFF);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0xFF);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0xFF);
+  EXPECT_EQ(bColor.getRed(),    0xFF);
+  EXPECT_EQ(bColor.getGreen(),  0xFF);
+  EXPECT_EQ(bColor.getBlue(),   0xFF);
 
-  BOOST_TEST_CHECK(bColor.getC0()    == 0xFF);
-  BOOST_TEST_CHECK(bColor.getC1()    == 0xFF);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0xFF);
+  EXPECT_EQ(bColor.getC0(),     0xFF);
+  EXPECT_EQ(bColor.getC1(),     0xFF);
+  EXPECT_EQ(bColor.getC2(),     0xFF);
 
   bColor.setToWhite();
   bColor.setRGBcmpGreyTGA24bit(0x00CCAABB);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0xAA);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0xBB);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0xCC);
+  EXPECT_EQ(bColor.getRed(),    0xAA);
+  EXPECT_EQ(bColor.getGreen(),  0xBB);
+  EXPECT_EQ(bColor.getBlue(),   0xCC);
 
-  BOOST_TEST_CHECK(bColor.getC0()    == 0xAA);
-  BOOST_TEST_CHECK(bColor.getC1()    == 0xBB);
-  BOOST_TEST_CHECK(bColor.getC2()    == 0xCC);
+  EXPECT_EQ(bColor.getC0(),     0xAA);
+  EXPECT_EQ(bColor.getC1(),     0xBB);
+  EXPECT_EQ(bColor.getC2(),     0xCC);
 
 ////////////////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   aColor.setRGBcmpGreyTGA24bit(0x00000000);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0x00);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0x00);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0x00);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0x00);
+  EXPECT_EQ(aColor.getRed(),    0x00);
+  EXPECT_EQ(aColor.getGreen(),  0x00);
+  EXPECT_EQ(aColor.getBlue(),   0x00);
+  EXPECT_EQ(aColor.getAlpha(),  0x00);
 
-  BOOST_TEST_CHECK(aColor.getC0()    == 0x00);
-  BOOST_TEST_CHECK(aColor.getC1()    == 0x00);
-  BOOST_TEST_CHECK(aColor.getC2()    == 0x00);
-  BOOST_TEST_CHECK(aColor.getC3()    == 0x00);
+  EXPECT_EQ(aColor.getC0(),     0x00);
+  EXPECT_EQ(aColor.getC1(),     0x00);
+  EXPECT_EQ(aColor.getC2(),     0x00);
+  EXPECT_EQ(aColor.getC3(),     0x00);
 
   aColor.setToBlack();
   aColor.setRGBcmpGreyTGA24bit(0x00FFFFFF);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xFF);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0xFF);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0xFF);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0x00);
+  EXPECT_EQ(aColor.getRed(),    0xFF);
+  EXPECT_EQ(aColor.getGreen(),  0xFF);
+  EXPECT_EQ(aColor.getBlue(),   0xFF);
+  EXPECT_EQ(aColor.getAlpha(),  0x00);
 
-  BOOST_TEST_CHECK(aColor.getC0()    == 0xFF);
-  BOOST_TEST_CHECK(aColor.getC1()    == 0xFF);
-  BOOST_TEST_CHECK(aColor.getC2()    == 0xFF);
-  BOOST_TEST_CHECK(aColor.getC3()    == 0x00);
+  EXPECT_EQ(aColor.getC0(),     0xFF);
+  EXPECT_EQ(aColor.getC1(),     0xFF);
+  EXPECT_EQ(aColor.getC2(),     0xFF);
+  EXPECT_EQ(aColor.getC3(),     0x00);
 
   aColor.setToBlack();
   aColor.setRGBcmpGreyTGA24bit(0x00CCAABB);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xAA);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0xBB);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0xCC);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0x00);
+  EXPECT_EQ(aColor.getRed(),    0xAA);
+  EXPECT_EQ(aColor.getGreen(),  0xBB);
+  EXPECT_EQ(aColor.getBlue(),   0xCC);
+  EXPECT_EQ(aColor.getAlpha(),  0x00);
 
-  BOOST_TEST_CHECK(aColor.getC0()    == 0xAA);
-  BOOST_TEST_CHECK(aColor.getC1()    == 0xBB);
-  BOOST_TEST_CHECK(aColor.getC2()    == 0xCC);
-  BOOST_TEST_CHECK(aColor.getC3()    == 0x00);
+  EXPECT_EQ(aColor.getC0(),     0xAA);
+  EXPECT_EQ(aColor.getC1(),     0xBB);
+  EXPECT_EQ(aColor.getC2(),     0xCC);
+  EXPECT_EQ(aColor.getC3(),     0x00);
 
   aColor.setToWhite();
   aColor.setRGBcmpGreyTGA24bit(0x00000000);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0x00);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0x00);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0x00);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0xFF);
+  EXPECT_EQ(aColor.getRed(),    0x00);
+  EXPECT_EQ(aColor.getGreen(),  0x00);
+  EXPECT_EQ(aColor.getBlue(),   0x00);
+  EXPECT_EQ(aColor.getAlpha(),  0xFF);
 
-  BOOST_TEST_CHECK(aColor.getC0()    == 0x00);
-  BOOST_TEST_CHECK(aColor.getC1()    == 0x00);
-  BOOST_TEST_CHECK(aColor.getC2()    == 0x00);
-  BOOST_TEST_CHECK(aColor.getC3()    == 0xFF);
+  EXPECT_EQ(aColor.getC0(),     0x00);
+  EXPECT_EQ(aColor.getC1(),     0x00);
+  EXPECT_EQ(aColor.getC2(),     0x00);
+  EXPECT_EQ(aColor.getC3(),     0xFF);
 
   aColor.setToWhite();
   aColor.setRGBcmpGreyTGA24bit(0x00FFFFFF);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xFF);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0xFF);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0xFF);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0xFF);
+  EXPECT_EQ(aColor.getRed(),    0xFF);
+  EXPECT_EQ(aColor.getGreen(),  0xFF);
+  EXPECT_EQ(aColor.getBlue(),   0xFF);
+  EXPECT_EQ(aColor.getAlpha(),  0xFF);
 
-  BOOST_TEST_CHECK(aColor.getC0()    == 0xFF);
-  BOOST_TEST_CHECK(aColor.getC1()    == 0xFF);
-  BOOST_TEST_CHECK(aColor.getC2()    == 0xFF);
-  BOOST_TEST_CHECK(aColor.getC3()    == 0xFF);
+  EXPECT_EQ(aColor.getC0(),     0xFF);
+  EXPECT_EQ(aColor.getC1(),     0xFF);
+  EXPECT_EQ(aColor.getC2(),     0xFF);
+  EXPECT_EQ(aColor.getC3(),     0xFF);
 
   aColor.setToWhite();
   aColor.setRGBcmpGreyTGA24bit(0x00CCAABB);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xAA);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0xBB);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0xCC);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0xFF);
+  EXPECT_EQ(aColor.getRed(),    0xAA);
+  EXPECT_EQ(aColor.getGreen(),  0xBB);
+  EXPECT_EQ(aColor.getBlue(),   0xCC);
+  EXPECT_EQ(aColor.getAlpha(),  0xFF);
 
-  BOOST_TEST_CHECK(aColor.getC0()    == 0xAA);
-  BOOST_TEST_CHECK(aColor.getC1()    == 0xBB);
-  BOOST_TEST_CHECK(aColor.getC2()    == 0xCC);
-  BOOST_TEST_CHECK(aColor.getC3()    == 0xFF);
+  EXPECT_EQ(aColor.getC0(),     0xAA);
+  EXPECT_EQ(aColor.getC1(),     0xBB);
+  EXPECT_EQ(aColor.getC2(),     0xCC);
+  EXPECT_EQ(aColor.getC3(),     0xFF);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(tfrm_logic_cover) {
+TEST(tfrm_logic_cover, Comprehensive) {
 
   mjr::colorRGBA8b aColor;
   mjr::colorRGBA8b bColor;
@@ -4256,71 +4248,71 @@ BOOST_AUTO_TEST_CASE(tfrm_logic_cover) {
   aColor.setRGBAfromLogPackIntRGBA(0xAABBCCDD);
   bColor.setRGBAfromLogPackIntRGBA(0x11223344);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xAA);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0xBB);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0xCC);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0xDD);
+  EXPECT_EQ(aColor.getRed(),    0xAA);
+  EXPECT_EQ(aColor.getGreen(),  0xBB);
+  EXPECT_EQ(aColor.getBlue(),   0xCC);
+  EXPECT_EQ(aColor.getAlpha(),  0xDD);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0x11);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0x22);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0x33);
-  BOOST_TEST_CHECK(bColor.getAlpha() == 0x44);
+  EXPECT_EQ(bColor.getRed(),    0x11);
+  EXPECT_EQ(bColor.getGreen(),  0x22);
+  EXPECT_EQ(bColor.getBlue(),   0x33);
+  EXPECT_EQ(bColor.getAlpha(),  0x44);
 
   cColor = aColor;
   cColor.tfrmNot();
-  BOOST_TEST_CHECK(cColor.getRed()   == 0x55);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0x44);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0x33);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0x22);
+  EXPECT_EQ(cColor.getRed(),    0x55);
+  EXPECT_EQ(cColor.getGreen(),  0x44);
+  EXPECT_EQ(cColor.getBlue(),   0x33);
+  EXPECT_EQ(cColor.getAlpha(),  0x22);
 
   cColor = aColor;
   cColor.tfrmOr(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xBB);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0xBB);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0xFF);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0xDD);
+  EXPECT_EQ(cColor.getRed(),    0xBB);
+  EXPECT_EQ(cColor.getGreen(),  0xBB);
+  EXPECT_EQ(cColor.getBlue(),   0xFF);
+  EXPECT_EQ(cColor.getAlpha(),  0xDD);
 
   cColor = aColor;
   cColor.tfrmNor(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0x44);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0x44);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0x00);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0x22);
+  EXPECT_EQ(cColor.getRed(),    0x44);
+  EXPECT_EQ(cColor.getGreen(),  0x44);
+  EXPECT_EQ(cColor.getBlue(),   0x00);
+  EXPECT_EQ(cColor.getAlpha(),  0x22);
 
   cColor = aColor;
   cColor.tfrmAnd(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0x00);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0x22);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0x00);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0x44);
+  EXPECT_EQ(cColor.getRed(),    0x00);
+  EXPECT_EQ(cColor.getGreen(),  0x22);
+  EXPECT_EQ(cColor.getBlue(),   0x00);
+  EXPECT_EQ(cColor.getAlpha(),  0x44);
 
   cColor = aColor;
   cColor.tfrmNand(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xFF);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0xDD);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0xFF);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0xBB);
+  EXPECT_EQ(cColor.getRed(),    0xFF);
+  EXPECT_EQ(cColor.getGreen(),  0xDD);
+  EXPECT_EQ(cColor.getBlue(),   0xFF);
+  EXPECT_EQ(cColor.getAlpha(),  0xBB);
 
   cColor = aColor;
   cColor.tfrmXor(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xBB);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0x99);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0xFF);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0x99);
+  EXPECT_EQ(cColor.getRed(),    0xBB);
+  EXPECT_EQ(cColor.getGreen(),  0x99);
+  EXPECT_EQ(cColor.getBlue(),   0xFF);
+  EXPECT_EQ(cColor.getAlpha(),  0x99);
 
   cColor = aColor;
   cColor.tfrmNxor(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0x44);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0x66);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0x00);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0x66);
+  EXPECT_EQ(cColor.getRed(),    0x44);
+  EXPECT_EQ(cColor.getGreen(),  0x66);
+  EXPECT_EQ(cColor.getBlue(),   0x00);
+  EXPECT_EQ(cColor.getAlpha(),  0x66);
 
-//  MJR TODO NOTE BOOST_AUTO_TEST_CASE: Add tfrmShiftL & tfrmShiftR
+//  MJR TODO NOTE  Add tfrmShiftL & tfrmShiftR
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(tfrm_logic_noCover) {
+TEST(tfrm_logic_noCover, Comprehensive) {
 
   mjr::colorRGBA64b aColor;
   mjr::colorRGBA64b bColor;
@@ -4329,71 +4321,71 @@ BOOST_AUTO_TEST_CASE(tfrm_logic_noCover) {
   aColor.setChansRGBA(0xAAAAAAAAAAAAAAAAu, 0xBBBBBBBBBBBBBBBBu, 0xCCCCCCCCCCCCCCCCu, 0xDDDDDDDDDDDDDDDDu);
   bColor.setChansRGBA(0x1111111111111111u, 0x2222222222222222u, 0x3333333333333333u, 0x4444444444444444u);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xAAAAAAAAAAAAAAAAu);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0xBBBBBBBBBBBBBBBBu);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0xCCCCCCCCCCCCCCCCu);
-  BOOST_TEST_CHECK(aColor.getAlpha() == 0xDDDDDDDDDDDDDDDDu);
+  EXPECT_EQ(aColor.getRed(),    0xAAAAAAAAAAAAAAAAu);
+  EXPECT_EQ(aColor.getGreen(),  0xBBBBBBBBBBBBBBBBu);
+  EXPECT_EQ(aColor.getBlue(),   0xCCCCCCCCCCCCCCCCu);
+  EXPECT_EQ(aColor.getAlpha(),  0xDDDDDDDDDDDDDDDDu);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0x1111111111111111u);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0x2222222222222222u);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0x3333333333333333u);
-  BOOST_TEST_CHECK(bColor.getAlpha() == 0x4444444444444444u);
+  EXPECT_EQ(bColor.getRed(),    0x1111111111111111u);
+  EXPECT_EQ(bColor.getGreen(),  0x2222222222222222u);
+  EXPECT_EQ(bColor.getBlue(),   0x3333333333333333u);
+  EXPECT_EQ(bColor.getAlpha(),  0x4444444444444444u);
 
   cColor = aColor;
   cColor.tfrmNot();
-  BOOST_TEST_CHECK(cColor.getRed()   == 0x5555555555555555u);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0x4444444444444444u);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0x3333333333333333u);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0x2222222222222222u);
+  EXPECT_EQ(cColor.getRed(),    0x5555555555555555u);
+  EXPECT_EQ(cColor.getGreen(),  0x4444444444444444u);
+  EXPECT_EQ(cColor.getBlue(),   0x3333333333333333u);
+  EXPECT_EQ(cColor.getAlpha(),  0x2222222222222222u);
 
   cColor = aColor;
   cColor.tfrmOr(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xBBBBBBBBBBBBBBBBu);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0xBBBBBBBBBBBBBBBBu);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0xFFFFFFFFFFFFFFFFu);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0xDDDDDDDDDDDDDDDDu);
+  EXPECT_EQ(cColor.getRed(),    0xBBBBBBBBBBBBBBBBu);
+  EXPECT_EQ(cColor.getGreen(),  0xBBBBBBBBBBBBBBBBu);
+  EXPECT_EQ(cColor.getBlue(),   0xFFFFFFFFFFFFFFFFu);
+  EXPECT_EQ(cColor.getAlpha(),  0xDDDDDDDDDDDDDDDDu);
 
   cColor = aColor;
   cColor.tfrmNor(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0x4444444444444444u);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0x4444444444444444u);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0x0000000000000000u);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0x2222222222222222u);
+  EXPECT_EQ(cColor.getRed(),    0x4444444444444444u);
+  EXPECT_EQ(cColor.getGreen(),  0x4444444444444444u);
+  EXPECT_EQ(cColor.getBlue(),   0x0000000000000000u);
+  EXPECT_EQ(cColor.getAlpha(),  0x2222222222222222u);
 
   cColor = aColor;
   cColor.tfrmAnd(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0x0000000000000000u);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0x2222222222222222u);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0x0000000000000000u);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0x4444444444444444u);
+  EXPECT_EQ(cColor.getRed(),    0x0000000000000000u);
+  EXPECT_EQ(cColor.getGreen(),  0x2222222222222222u);
+  EXPECT_EQ(cColor.getBlue(),   0x0000000000000000u);
+  EXPECT_EQ(cColor.getAlpha(),  0x4444444444444444u);
 
   cColor = aColor;
   cColor.tfrmNand(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xFFFFFFFFFFFFFFFFu);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0xDDDDDDDDDDDDDDDDu);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0xFFFFFFFFFFFFFFFFu);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0xBBBBBBBBBBBBBBBBu);
+  EXPECT_EQ(cColor.getRed(),    0xFFFFFFFFFFFFFFFFu);
+  EXPECT_EQ(cColor.getGreen(),  0xDDDDDDDDDDDDDDDDu);
+  EXPECT_EQ(cColor.getBlue(),   0xFFFFFFFFFFFFFFFFu);
+  EXPECT_EQ(cColor.getAlpha(),  0xBBBBBBBBBBBBBBBBu);
 
   cColor = aColor;
   cColor.tfrmXor(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xBBBBBBBBBBBBBBBBu);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0x9999999999999999u);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0xFFFFFFFFFFFFFFFFu);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0x9999999999999999u);
+  EXPECT_EQ(cColor.getRed(),    0xBBBBBBBBBBBBBBBBu);
+  EXPECT_EQ(cColor.getGreen(),  0x9999999999999999u);
+  EXPECT_EQ(cColor.getBlue(),   0xFFFFFFFFFFFFFFFFu);
+  EXPECT_EQ(cColor.getAlpha(),  0x9999999999999999u);
 
   cColor = aColor;
   cColor.tfrmNxor(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0x4444444444444444u);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0x6666666666666666u);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0x0000000000000000u);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0x6666666666666666u);
+  EXPECT_EQ(cColor.getRed(),    0x4444444444444444u);
+  EXPECT_EQ(cColor.getGreen(),  0x6666666666666666u);
+  EXPECT_EQ(cColor.getBlue(),   0x0000000000000000u);
+  EXPECT_EQ(cColor.getAlpha(),  0x6666666666666666u);
 
 
-//  MJR TODO NOTE BOOST_AUTO_TEST_CASE: Add tfrmShiftL & tfrmShiftR
+//  MJR TODO NOTE  Add tfrmShiftL & tfrmShiftR
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(tfrm_arith) {
+TEST(FUN_tfrm_arith, bit8) {
 
   mjr::colorRGB8b aColor;
   mjr::colorRGB8b bColor;
@@ -4404,123 +4396,123 @@ BOOST_AUTO_TEST_CASE(tfrm_arith) {
   bColor.setRGBfromLogPackIntARGB(0x00FFFF);
   dColor.setRGBfromLogPackIntARGB(0x0100FF);
 
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xFF);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0x00);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0xFF);
+  EXPECT_EQ(aColor.getRed(),    0xFF);
+  EXPECT_EQ(aColor.getGreen(),  0x00);
+  EXPECT_EQ(aColor.getBlue(),   0xFF);
 
-  BOOST_TEST_CHECK(bColor.getRed()   == 0x00);
-  BOOST_TEST_CHECK(bColor.getGreen() == 0xFF);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0xFF);
+  EXPECT_EQ(bColor.getRed(),    0x00);
+  EXPECT_EQ(bColor.getGreen(),  0xFF);
+  EXPECT_EQ(bColor.getBlue(),   0xFF);
 
-  BOOST_TEST_CHECK(dColor.getRed()   == 0x01);
-  BOOST_TEST_CHECK(dColor.getGreen() == 0x00);
-  BOOST_TEST_CHECK(dColor.getBlue()  == 0xFF);
+  EXPECT_EQ(dColor.getRed(),    0x01);
+  EXPECT_EQ(dColor.getGreen(),  0x00);
+  EXPECT_EQ(dColor.getBlue(),   0xFF);
 
   cColor=aColor;
   cColor.tfrmMix(0.0, bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 0xFF);
-  BOOST_TEST_CHECK(cColor.getC1() == 0x00);
-  BOOST_TEST_CHECK(cColor.getC2() == 0xFF);
+  EXPECT_EQ(cColor.getC0(),  0xFF);
+  EXPECT_EQ(cColor.getC1(),  0x00);
+  EXPECT_EQ(cColor.getC2(),  0xFF);
 
   cColor=aColor;
   cColor.tfrmMix(0.5, bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 0x7F);
-  BOOST_TEST_CHECK(cColor.getC1() == 0x7F);
-  BOOST_TEST_CHECK(cColor.getC2() == 0xFF);
+  EXPECT_EQ(cColor.getC0(),  0x7F);
+  EXPECT_EQ(cColor.getC1(),  0x7F);
+  EXPECT_EQ(cColor.getC2(),  0xFF);
 
   cColor=aColor;
   cColor.tfrmMix(1.0, bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 0x00);
-  BOOST_TEST_CHECK(cColor.getC1() == 0xFF);
-  BOOST_TEST_CHECK(cColor.getC2() == 0xFF);
+  EXPECT_EQ(cColor.getC0(),  0x00);
+  EXPECT_EQ(cColor.getC1(),  0xFF);
+  EXPECT_EQ(cColor.getC2(),  0xFF);
 
   cColor = aColor;
   cColor.tfrmInvert();
-  BOOST_TEST_CHECK(cColor.getRed()   == 0x00);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0xFF);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0x00);
+  EXPECT_EQ(cColor.getRed(),    0x00);
+  EXPECT_EQ(cColor.getGreen(),  0xFF);
+  EXPECT_EQ(cColor.getBlue(),   0x00);
 
   cColor = aColor;
   cColor.tfrmAdd(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xFF);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0xFF);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0xFE); // Overflow wrap
+  EXPECT_EQ(cColor.getRed(),    0xFF);
+  EXPECT_EQ(cColor.getGreen(),  0xFF);
+  EXPECT_EQ(cColor.getBlue(),   0xFE); // Overflow wrap
 
   cColor = aColor;
   cColor.tfrmAddClamp(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xFF);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0xFF);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0xFF); // Overflow clamp
+  EXPECT_EQ(cColor.getRed(),    0xFF);
+  EXPECT_EQ(cColor.getGreen(),  0xFF);
+  EXPECT_EQ(cColor.getBlue(),   0xFF); // Overflow clamp
 
   cColor = aColor;
   cColor.tfrmMult(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0x00);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0x00);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0x01); // Overflow wrap
+  EXPECT_EQ(cColor.getRed(),    0x00);
+  EXPECT_EQ(cColor.getGreen(),  0x00);
+  EXPECT_EQ(cColor.getBlue(),   0x01); // Overflow wrap
 
   cColor = aColor;
   cColor.tfrmMultClamp(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0x00);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0x00);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0xFF); // Overflow clamp
+  EXPECT_EQ(cColor.getRed(),    0x00);
+  EXPECT_EQ(cColor.getGreen(),  0x00);
+  EXPECT_EQ(cColor.getBlue(),   0xFF); // Overflow clamp
 
   cColor = aColor;
   cColor.tfrmDiv(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xFF); // NOOP as bot=0
-  BOOST_TEST_CHECK(cColor.getGreen() == 0x00);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0x01);
+  EXPECT_EQ(cColor.getRed(),    0xFF); // NOOP as bot=0
+  EXPECT_EQ(cColor.getGreen(),  0x00);
+  EXPECT_EQ(cColor.getBlue(),   0x01);
 
   cColor = aColor;
   cColor.tfrmMod(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xFF); // NOOP as bot=0
-  BOOST_TEST_CHECK(cColor.getGreen() == 0x00);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0x00);
+  EXPECT_EQ(cColor.getRed(),    0xFF); // NOOP as bot=0
+  EXPECT_EQ(cColor.getGreen(),  0x00);
+  EXPECT_EQ(cColor.getBlue(),   0x00);
 
   cColor = aColor;
   cColor.tfrmDiff(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xFF);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0x01); // Underflow wrap
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0x00);
+  EXPECT_EQ(cColor.getRed(),    0xFF);
+  EXPECT_EQ(cColor.getGreen(),  0x01); // Underflow wrap
+  EXPECT_EQ(cColor.getBlue(),   0x00);
 
   cColor = aColor;
   cColor.tfrmDiffClamp(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xFF);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0x00); // Overflow clamp
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0x00);
+  EXPECT_EQ(cColor.getRed(),    0xFF);
+  EXPECT_EQ(cColor.getGreen(),  0x00); // Overflow clamp
+  EXPECT_EQ(cColor.getBlue(),   0x00);
 
   cColor = aColor;
   cColor.tfrmAbsDiff(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xFF);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0xFF);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0x00);
+  EXPECT_EQ(cColor.getRed(),    0xFF);
+  EXPECT_EQ(cColor.getGreen(),  0xFF);
+  EXPECT_EQ(cColor.getBlue(),   0x00);
 
   cColor = aColor;
   cColor.tfrmSqDiff(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0x01); // Overflow wrap
-  BOOST_TEST_CHECK(cColor.getGreen() == 0x01); // Overflow wrap
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0x00);
+  EXPECT_EQ(cColor.getRed(),    0x01); // Overflow wrap
+  EXPECT_EQ(cColor.getGreen(),  0x01); // Overflow wrap
+  EXPECT_EQ(cColor.getBlue(),   0x00);
 
   cColor = aColor;
   cColor.tfrmNegDiffClamp(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0x00); // Overflow clamp
-  BOOST_TEST_CHECK(cColor.getGreen() == 0xFF);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0x00);
+  EXPECT_EQ(cColor.getRed(),    0x00); // Overflow clamp
+  EXPECT_EQ(cColor.getGreen(),  0xFF);
+  EXPECT_EQ(cColor.getBlue(),   0x00);
 
   cColor = aColor;
   cColor.tfrmAddDivClamp(bColor, dColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xFF);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0x00);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0x02);
+  EXPECT_EQ(cColor.getRed(),    0xFF);
+  EXPECT_EQ(cColor.getGreen(),  0x00);
+  EXPECT_EQ(cColor.getBlue(),   0x02);
 
   cColor = aColor;
   cColor.tfrmSignDiff(bColor);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0xFF);
-  BOOST_TEST_CHECK(cColor.getGreen() == 0x00);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0x7F);
+  EXPECT_EQ(cColor.getRed(),    0xFF);
+  EXPECT_EQ(cColor.getGreen(),  0x00);
+  EXPECT_EQ(cColor.getBlue(),   0x7F);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(tfrm_arith_FLT) {
+TEST(FUN_tfrm_arith, float) {
 
   mjr::colorRGB32F aColor;
   mjr::colorRGB32F bColor;
@@ -4533,109 +4525,109 @@ BOOST_AUTO_TEST_CASE(tfrm_arith_FLT) {
 
   cColor=aColor;
   cColor.tfrmMix(0.0, bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 2.0);
-  BOOST_TEST_CHECK(cColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 2.0);
+  EXPECT_NEAR(cColor.getC0(),  2.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  0.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  2.0, 0.00001);
 
   cColor=aColor;
   cColor.tfrmMix(0.5, bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 1.0);
-  BOOST_TEST_CHECK(cColor.getC1() == 1.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 2.0);
+  EXPECT_NEAR(cColor.getC0(),  1.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  1.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  2.0, 0.00001);
 
   cColor=aColor;
   cColor.tfrmMix(1.0, bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 0.0);
-  BOOST_TEST_CHECK(cColor.getC1() == 2.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 2.0);
+  EXPECT_NEAR(cColor.getC0(),  0.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  2.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  2.0, 0.00001);
 
   cColor = aColor;
   cColor.tfrmInvert();
-  BOOST_TEST_CHECK(cColor.getC0() == -1.0);
-  BOOST_TEST_CHECK(cColor.getC1() ==  1.0);
-  BOOST_TEST_CHECK(cColor.getC2() == -1.0);
+  EXPECT_NEAR(cColor.getC0(),  -1.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),   1.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  -1.0, 0.00001);
 
   cColor = aColor;
   cColor.tfrmAdd(bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 2.0);
-  BOOST_TEST_CHECK(cColor.getC1() == 2.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 4.0);
+  EXPECT_NEAR(cColor.getC0(),  2.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  2.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  4.0, 0.00001);
 
   cColor = aColor;
   cColor.tfrmAddClamp(bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 1.0); // clamped to maxChanVal
-  BOOST_TEST_CHECK(cColor.getC1() == 1.0); // clamped to maxChanVal
-  BOOST_TEST_CHECK(cColor.getC2() == 1.0); // clamped to maxChanVal
+  EXPECT_NEAR(cColor.getC0(),  1.0, 0.00001); // clamped to maxChanVal
+  EXPECT_NEAR(cColor.getC1(),  1.0, 0.00001); // clamped to maxChanVal
+  EXPECT_NEAR(cColor.getC2(),  1.0, 0.00001); // clamped to maxChanVal
 
   cColor = aColor;
   cColor.tfrmMult(bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 0.0);
-  BOOST_TEST_CHECK(cColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 4.0);
+  EXPECT_NEAR(cColor.getC0(),  0.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  0.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  4.0, 0.00001);
 
   cColor = aColor;
   cColor.tfrmMultClamp(bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 0.0);
-  BOOST_TEST_CHECK(cColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 1.0); // clamped to maxChanVal
+  EXPECT_NEAR(cColor.getC0(),  0.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  0.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  1.0, 0.00001); // clamped to maxChanVal
 
   cColor = aColor;
   cColor.tfrmDiv(bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 2.0); // NOOP as bot=0
-  BOOST_TEST_CHECK(cColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 1.0);
+  EXPECT_NEAR(cColor.getC0(),  2.0, 0.00001); // NOOP as bot=0
+  EXPECT_NEAR(cColor.getC1(),  0.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  1.0, 0.00001);
 
   cColor = aColor;
   cColor.tfrmMod(bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 2.0); // NOOP as bot=0
-  BOOST_TEST_CHECK(cColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 0.0);
+  EXPECT_NEAR(cColor.getC0(),  2.0, 0.00001); // NOOP as bot=0
+  EXPECT_NEAR(cColor.getC1(),  0.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  0.0, 0.00001);
 
   cColor = aColor;
   cColor.tfrmDiff(bColor);
-  BOOST_TEST_CHECK(cColor.getC0() ==  2.0);
-  BOOST_TEST_CHECK(cColor.getC1() == -2.0);
-  BOOST_TEST_CHECK(cColor.getC2() ==  0.0);
+  EXPECT_NEAR(cColor.getC0(),   2.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  -2.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),   0.0, 0.00001);
 
   cColor = aColor;
   cColor.tfrmDiffClamp(bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 2.0); // Clamp on bottom only
-  BOOST_TEST_CHECK(cColor.getC1() == 0.0); //clamped to minChanVal
-  BOOST_TEST_CHECK(cColor.getC2() == 0.0);
+  EXPECT_NEAR(cColor.getC0(),  2.0, 0.00001); // Clamp on bottom only
+  EXPECT_NEAR(cColor.getC1(),  0.0, 0.00001); //clamped to minChanVal
+  EXPECT_NEAR(cColor.getC2(),  0.0, 0.00001);
 
   cColor = aColor;
   cColor.tfrmAbsDiff(bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 2.0);
-  BOOST_TEST_CHECK(cColor.getC1() == 2.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 0.0);
+  EXPECT_NEAR(cColor.getC0(),  2.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  2.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  0.0, 0.00001);
 
   cColor = aColor;
   cColor.tfrmSqDiff(bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 4.0);
-  BOOST_TEST_CHECK(cColor.getC1() == 4.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 0.0);
+  EXPECT_NEAR(cColor.getC0(),  4.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  4.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  0.0, 0.00001);
 
   cColor = aColor;
   cColor.tfrmNegDiffClamp(bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 0.0); // Underflow clamp bottom
-  BOOST_TEST_CHECK(cColor.getC1() == 2.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 0.0);
+  EXPECT_NEAR(cColor.getC0(),  0.0, 0.00001); // Underflow clamp bottom
+  EXPECT_NEAR(cColor.getC1(),  2.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  0.0, 0.00001);
 
   cColor = aColor;
   cColor.tfrmAddDivClamp(bColor, dColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 2.0); // NOOP bot=0
-  BOOST_TEST_CHECK(cColor.getC1() == 1.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 1.0); // Overflow clamp at top
+  EXPECT_NEAR(cColor.getC0(),  2.0, 0.00001); // NOOP bot=0
+  EXPECT_NEAR(cColor.getC1(),  1.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  1.0, 0.00001); // Overflow clamp at top
 
   cColor = aColor;
   cColor.tfrmSignDiff(bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 1.0);
-  BOOST_TEST_CHECK(cColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 0.5);
+  EXPECT_NEAR(cColor.getC0(),  1.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  0.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  0.5, 0.00001);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(isBlack_and_isBlackRGB) {
+TEST(FUN_isBlack_and_isBlackRGB, Comprehensive)  {
 
   mjr::colorRGB8b   aColor; // integer color with imperfect mask
   mjr::colorRGBA8b  bColor; // integer color with perfect mask
@@ -4651,19 +4643,19 @@ BOOST_AUTO_TEST_CASE(isBlack_and_isBlackRGB) {
   fColor.setToBlack();
   gColor.setToBlack();
 
-  BOOST_TEST_CHECK(aColor.isBlack()  == true);
-  BOOST_TEST_CHECK(bColor.isBlack()  == true);
-  BOOST_TEST_CHECK(cColor.isBlack()  == true);
-  BOOST_TEST_CHECK(dColor.isBlack()  == true);
-  BOOST_TEST_CHECK(fColor.isBlack()  == true);
-  BOOST_TEST_CHECK(gColor.isBlack()  == true);
+  EXPECT_TRUE(aColor.isBlackRGB());
+  EXPECT_TRUE(bColor.isBlackRGB());
+  EXPECT_TRUE(cColor.isBlackRGB());
+  EXPECT_TRUE(dColor.isBlackRGB());
+  EXPECT_TRUE(fColor.isBlackRGB());
+  EXPECT_TRUE(gColor.isBlackRGB());
 
-  BOOST_TEST_CHECK(aColor.isBlackRGB()  == true);
-  BOOST_TEST_CHECK(bColor.isBlackRGB()  == true);
-  BOOST_TEST_CHECK(cColor.isBlackRGB()  == true);
-  BOOST_TEST_CHECK(dColor.isBlackRGB()  == true);
-  BOOST_TEST_CHECK(fColor.isBlackRGB()  == true);
-  BOOST_TEST_CHECK(gColor.isBlackRGB()  == true);
+  EXPECT_TRUE(aColor.isBlack());
+  EXPECT_TRUE(bColor.isBlack());
+  EXPECT_TRUE(cColor.isBlack());
+  EXPECT_TRUE(dColor.isBlack());
+  EXPECT_TRUE(fColor.isBlack());
+  EXPECT_TRUE(gColor.isBlack());
 
   aColor.setChanToMax(0);
   bColor.setChanToMax(0);
@@ -4672,19 +4664,19 @@ BOOST_AUTO_TEST_CASE(isBlack_and_isBlackRGB) {
   fColor.setChanToMax(0);
   gColor.setChanToMax(0);
 
-  BOOST_TEST_CHECK(aColor.isBlack()  == false);
-  BOOST_TEST_CHECK(bColor.isBlack()  == false);
-  BOOST_TEST_CHECK(cColor.isBlack()  == false);
-  BOOST_TEST_CHECK(dColor.isBlack()  == false);
-  BOOST_TEST_CHECK(fColor.isBlack()  == false);
-  BOOST_TEST_CHECK(gColor.isBlack()  == false);
+  EXPECT_FALSE(aColor.isBlackRGB());
+  EXPECT_FALSE(bColor.isBlackRGB());
+  EXPECT_FALSE(cColor.isBlackRGB());
+  EXPECT_FALSE(dColor.isBlackRGB());
+  EXPECT_FALSE(fColor.isBlackRGB());
+  EXPECT_FALSE(gColor.isBlackRGB());
 
-  BOOST_TEST_CHECK(aColor.isBlackRGB()  == false);
-  BOOST_TEST_CHECK(bColor.isBlackRGB()  == false);
-  BOOST_TEST_CHECK(cColor.isBlackRGB()  == false);
-  BOOST_TEST_CHECK(dColor.isBlackRGB()  == false);
-  BOOST_TEST_CHECK(fColor.isBlackRGB()  == false);
-  BOOST_TEST_CHECK(gColor.isBlackRGB()  == false);
+  EXPECT_FALSE(aColor.isBlack());
+  EXPECT_FALSE(bColor.isBlack());
+  EXPECT_FALSE(cColor.isBlack());
+  EXPECT_FALSE(dColor.isBlack());
+  EXPECT_FALSE(fColor.isBlack());
+  EXPECT_FALSE(gColor.isBlack());
 
   aColor.setToWhite();
   bColor.setToWhite();
@@ -4693,32 +4685,32 @@ BOOST_AUTO_TEST_CASE(isBlack_and_isBlackRGB) {
   fColor.setToWhite();
   gColor.setToWhite();
 
-  BOOST_TEST_CHECK(aColor.isBlack()  == false);
-  BOOST_TEST_CHECK(bColor.isBlack()  == false);
-  BOOST_TEST_CHECK(cColor.isBlack()  == false);
-  BOOST_TEST_CHECK(dColor.isBlack()  == false);
-  BOOST_TEST_CHECK(fColor.isBlack()  == false);
-  BOOST_TEST_CHECK(gColor.isBlack()  == false);
+  EXPECT_FALSE(aColor.isBlackRGB());
+  EXPECT_FALSE(bColor.isBlackRGB());
+  EXPECT_FALSE(cColor.isBlackRGB());
+  EXPECT_FALSE(dColor.isBlackRGB());
+  EXPECT_FALSE(fColor.isBlackRGB());
+  EXPECT_FALSE(gColor.isBlackRGB());
 
-  BOOST_TEST_CHECK(aColor.isBlackRGB()  == false);
-  BOOST_TEST_CHECK(bColor.isBlackRGB()  == false);
-  BOOST_TEST_CHECK(cColor.isBlackRGB()  == false);
-  BOOST_TEST_CHECK(dColor.isBlackRGB()  == false);
-  BOOST_TEST_CHECK(fColor.isBlackRGB()  == false);
-  BOOST_TEST_CHECK(gColor.isBlackRGB()  == false);
+  EXPECT_FALSE(aColor.isBlack());
+  EXPECT_FALSE(bColor.isBlack());
+  EXPECT_FALSE(cColor.isBlack());
+  EXPECT_FALSE(dColor.isBlack());
+  EXPECT_FALSE(fColor.isBlack());
+  EXPECT_FALSE(gColor.isBlack());
 
   bColor.setChansRGBA(0, 0, 0, 1);
   fColor.setChansRGBA(0, 0, 0, 1);
 
-  BOOST_TEST_CHECK(bColor.isBlack()  == false);
-  BOOST_TEST_CHECK(fColor.isBlack()  == false);
+  EXPECT_TRUE(bColor.isBlackRGB());
+  EXPECT_TRUE(fColor.isBlackRGB());
 
-  BOOST_TEST_CHECK(bColor.isBlackRGB()  == true);
-  BOOST_TEST_CHECK(fColor.isBlackRGB()  == true);
+  EXPECT_FALSE(bColor.isBlack());
+  EXPECT_FALSE(fColor.isBlack());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(isEqual_and_isEqualRGB_and_isNotEqual) {
+TEST(FUN_isEqual_and_isEqualRGB_and_isNotEqual, Comprehensive) {
 
   mjr::colorRGB8b   aLcolor; // integer color with imperfect mask
   mjr::colorRGBA8b  bLcolor; // integer color with perfect mask
@@ -4748,26 +4740,26 @@ BOOST_AUTO_TEST_CASE(isEqual_and_isEqualRGB_and_isNotEqual) {
   fRcolor.setToBlack();
   gRcolor.setToBlack();
 
-  BOOST_TEST_CHECK(aLcolor.isEqual(aRcolor)  == true);
-  BOOST_TEST_CHECK(bLcolor.isEqual(bRcolor)  == true);
-  BOOST_TEST_CHECK(cLcolor.isEqual(cRcolor)  == true);
-  BOOST_TEST_CHECK(dLcolor.isEqual(dRcolor)  == true);
-  BOOST_TEST_CHECK(fLcolor.isEqual(fRcolor)  == true);
-  BOOST_TEST_CHECK(gLcolor.isEqual(gRcolor)  == true);
+  EXPECT_TRUE(aLcolor.isEqual(aRcolor));
+  EXPECT_TRUE(bLcolor.isEqual(bRcolor));
+  EXPECT_TRUE(cLcolor.isEqual(cRcolor));
+  EXPECT_TRUE(dLcolor.isEqual(dRcolor));
+  EXPECT_TRUE(fLcolor.isEqual(fRcolor));
+  EXPECT_TRUE(gLcolor.isEqual(gRcolor));
 
-  BOOST_TEST_CHECK(aLcolor.isNotEqual(aRcolor)  == false);
-  BOOST_TEST_CHECK(bLcolor.isNotEqual(bRcolor)  == false);
-  BOOST_TEST_CHECK(cLcolor.isNotEqual(cRcolor)  == false);
-  BOOST_TEST_CHECK(dLcolor.isNotEqual(dRcolor)  == false);
-  BOOST_TEST_CHECK(fLcolor.isNotEqual(fRcolor)  == false);
-  BOOST_TEST_CHECK(gLcolor.isNotEqual(gRcolor)  == false);
+  EXPECT_FALSE(aLcolor.isNotEqual(aRcolor));
+  EXPECT_FALSE(bLcolor.isNotEqual(bRcolor));
+  EXPECT_FALSE(cLcolor.isNotEqual(cRcolor));
+  EXPECT_FALSE(dLcolor.isNotEqual(dRcolor));
+  EXPECT_FALSE(fLcolor.isNotEqual(fRcolor));
+  EXPECT_FALSE(gLcolor.isNotEqual(gRcolor));
 
-  BOOST_TEST_CHECK(aLcolor.isEqualRGB(aRcolor)  == true);
-  BOOST_TEST_CHECK(bLcolor.isEqualRGB(bRcolor)  == true);
-  BOOST_TEST_CHECK(cLcolor.isEqualRGB(cRcolor)  == true);
-  BOOST_TEST_CHECK(dLcolor.isEqualRGB(dRcolor)  == true);
-  BOOST_TEST_CHECK(fLcolor.isEqualRGB(fRcolor)  == true);
-  BOOST_TEST_CHECK(gLcolor.isEqualRGB(gRcolor)  == true);
+  EXPECT_TRUE(aLcolor.isEqualRGB(aRcolor));
+  EXPECT_TRUE(bLcolor.isEqualRGB(bRcolor));
+  EXPECT_TRUE(cLcolor.isEqualRGB(cRcolor));
+  EXPECT_TRUE(dLcolor.isEqualRGB(dRcolor));
+  EXPECT_TRUE(fLcolor.isEqualRGB(fRcolor));
+  EXPECT_TRUE(gLcolor.isEqualRGB(gRcolor));
 
   aLcolor.setChanToMax(0);
   bLcolor.setChanToMax(0);
@@ -4776,26 +4768,26 @@ BOOST_AUTO_TEST_CASE(isEqual_and_isEqualRGB_and_isNotEqual) {
   fLcolor.setChanToMax(0);
   gLcolor.setChanToMax(0);
 
-  BOOST_TEST_CHECK(aLcolor.isEqual(aRcolor)  == false);
-  BOOST_TEST_CHECK(bLcolor.isEqual(bRcolor)  == false);
-  BOOST_TEST_CHECK(cLcolor.isEqual(cRcolor)  == false);
-  BOOST_TEST_CHECK(dLcolor.isEqual(dRcolor)  == false);
-  BOOST_TEST_CHECK(fLcolor.isEqual(fRcolor)  == false);
-  BOOST_TEST_CHECK(gLcolor.isEqual(gRcolor)  == false);
+  EXPECT_FALSE(aLcolor.isEqual(aRcolor));
+  EXPECT_FALSE(bLcolor.isEqual(bRcolor));
+  EXPECT_FALSE(cLcolor.isEqual(cRcolor));
+  EXPECT_FALSE(dLcolor.isEqual(dRcolor));
+  EXPECT_FALSE(fLcolor.isEqual(fRcolor));
+  EXPECT_FALSE(gLcolor.isEqual(gRcolor));
 
-  BOOST_TEST_CHECK(aLcolor.isNotEqual(aRcolor)  == true);
-  BOOST_TEST_CHECK(bLcolor.isNotEqual(bRcolor)  == true);
-  BOOST_TEST_CHECK(cLcolor.isNotEqual(cRcolor)  == true);
-  BOOST_TEST_CHECK(dLcolor.isNotEqual(dRcolor)  == true);
-  BOOST_TEST_CHECK(fLcolor.isNotEqual(fRcolor)  == true);
-  BOOST_TEST_CHECK(gLcolor.isNotEqual(gRcolor)  == true);
+  EXPECT_TRUE(aLcolor.isNotEqual(aRcolor));
+  EXPECT_TRUE(bLcolor.isNotEqual(bRcolor));
+  EXPECT_TRUE(cLcolor.isNotEqual(cRcolor));
+  EXPECT_TRUE(dLcolor.isNotEqual(dRcolor));
+  EXPECT_TRUE(fLcolor.isNotEqual(fRcolor));
+  EXPECT_TRUE(gLcolor.isNotEqual(gRcolor));
 
-  BOOST_TEST_CHECK(aLcolor.isEqualRGB(aRcolor)  == false);
-  BOOST_TEST_CHECK(bLcolor.isEqualRGB(bRcolor)  == false);
-  BOOST_TEST_CHECK(cLcolor.isEqualRGB(cRcolor)  == false);
-  BOOST_TEST_CHECK(dLcolor.isEqualRGB(dRcolor)  == false);
-  BOOST_TEST_CHECK(fLcolor.isEqualRGB(fRcolor)  == false);
-  BOOST_TEST_CHECK(gLcolor.isEqualRGB(gRcolor)  == false);
+  EXPECT_FALSE(aLcolor.isEqualRGB(aRcolor));
+  EXPECT_FALSE(bLcolor.isEqualRGB(bRcolor));
+  EXPECT_FALSE(cLcolor.isEqualRGB(cRcolor));
+  EXPECT_FALSE(dLcolor.isEqualRGB(dRcolor));
+  EXPECT_FALSE(fLcolor.isEqualRGB(fRcolor));
+  EXPECT_FALSE(gLcolor.isEqualRGB(gRcolor));
 
   aRcolor.setChanToMax(0);
   bRcolor.setChanToMax(0);
@@ -4804,26 +4796,26 @@ BOOST_AUTO_TEST_CASE(isEqual_and_isEqualRGB_and_isNotEqual) {
   fRcolor.setChanToMax(0);
   gRcolor.setChanToMax(0);
 
-  BOOST_TEST_CHECK(aLcolor.isEqual(aRcolor)  == true);
-  BOOST_TEST_CHECK(bLcolor.isEqual(bRcolor)  == true);
-  BOOST_TEST_CHECK(cLcolor.isEqual(cRcolor)  == true);
-  BOOST_TEST_CHECK(dLcolor.isEqual(dRcolor)  == true);
-  BOOST_TEST_CHECK(fLcolor.isEqual(fRcolor)  == true);
-  BOOST_TEST_CHECK(gLcolor.isEqual(gRcolor)  == true);
+  EXPECT_TRUE(aLcolor.isEqual(aRcolor));
+  EXPECT_TRUE(bLcolor.isEqual(bRcolor));
+  EXPECT_TRUE(cLcolor.isEqual(cRcolor));
+  EXPECT_TRUE(dLcolor.isEqual(dRcolor));
+  EXPECT_TRUE(fLcolor.isEqual(fRcolor));
+  EXPECT_TRUE(gLcolor.isEqual(gRcolor));
 
-  BOOST_TEST_CHECK(aLcolor.isNotEqual(aRcolor)  == false);
-  BOOST_TEST_CHECK(bLcolor.isNotEqual(bRcolor)  == false);
-  BOOST_TEST_CHECK(cLcolor.isNotEqual(cRcolor)  == false);
-  BOOST_TEST_CHECK(dLcolor.isNotEqual(dRcolor)  == false);
-  BOOST_TEST_CHECK(fLcolor.isNotEqual(fRcolor)  == false);
-  BOOST_TEST_CHECK(gLcolor.isNotEqual(gRcolor)  == false);
+  EXPECT_FALSE(aLcolor.isNotEqual(aRcolor));
+  EXPECT_FALSE(bLcolor.isNotEqual(bRcolor));
+  EXPECT_FALSE(cLcolor.isNotEqual(cRcolor));
+  EXPECT_FALSE(dLcolor.isNotEqual(dRcolor));
+  EXPECT_FALSE(fLcolor.isNotEqual(fRcolor));
+  EXPECT_FALSE(gLcolor.isNotEqual(gRcolor));
 
-  BOOST_TEST_CHECK(aLcolor.isEqualRGB(aRcolor)  == true);
-  BOOST_TEST_CHECK(bLcolor.isEqualRGB(bRcolor)  == true);
-  BOOST_TEST_CHECK(cLcolor.isEqualRGB(cRcolor)  == true);
-  BOOST_TEST_CHECK(dLcolor.isEqualRGB(dRcolor)  == true);
-  BOOST_TEST_CHECK(fLcolor.isEqualRGB(fRcolor)  == true);
-  BOOST_TEST_CHECK(gLcolor.isEqualRGB(gRcolor)  == true);
+  EXPECT_TRUE(aLcolor.isEqualRGB(aRcolor));
+  EXPECT_TRUE(bLcolor.isEqualRGB(bRcolor));
+  EXPECT_TRUE(cLcolor.isEqualRGB(cRcolor));
+  EXPECT_TRUE(dLcolor.isEqualRGB(dRcolor));
+  EXPECT_TRUE(fLcolor.isEqualRGB(fRcolor));
+  EXPECT_TRUE(gLcolor.isEqualRGB(gRcolor));
 
   aLcolor.setToWhite();
   bLcolor.setToWhite();
@@ -4832,26 +4824,26 @@ BOOST_AUTO_TEST_CASE(isEqual_and_isEqualRGB_and_isNotEqual) {
   fLcolor.setToWhite();
   gLcolor.setToWhite();
 
-  BOOST_TEST_CHECK(aLcolor.isEqual(aRcolor)  == false);
-  BOOST_TEST_CHECK(bLcolor.isEqual(bRcolor)  == false);
-  BOOST_TEST_CHECK(cLcolor.isEqual(cRcolor)  == false);
-  BOOST_TEST_CHECK(dLcolor.isEqual(dRcolor)  == false);
-  BOOST_TEST_CHECK(fLcolor.isEqual(fRcolor)  == false);
-  BOOST_TEST_CHECK(gLcolor.isEqual(gRcolor)  == false);
+  EXPECT_FALSE(aLcolor.isEqual(aRcolor));
+  EXPECT_FALSE(bLcolor.isEqual(bRcolor));
+  EXPECT_FALSE(cLcolor.isEqual(cRcolor));
+  EXPECT_FALSE(dLcolor.isEqual(dRcolor));
+  EXPECT_FALSE(fLcolor.isEqual(fRcolor));
+  EXPECT_FALSE(gLcolor.isEqual(gRcolor));
 
-  BOOST_TEST_CHECK(aLcolor.isNotEqual(aRcolor)  == true);
-  BOOST_TEST_CHECK(bLcolor.isNotEqual(bRcolor)  == true);
-  BOOST_TEST_CHECK(cLcolor.isNotEqual(cRcolor)  == true);
-  BOOST_TEST_CHECK(dLcolor.isNotEqual(dRcolor)  == true);
-  BOOST_TEST_CHECK(fLcolor.isNotEqual(fRcolor)  == true);
-  BOOST_TEST_CHECK(gLcolor.isNotEqual(gRcolor)  == true);
+  EXPECT_TRUE(aLcolor.isNotEqual(aRcolor));
+  EXPECT_TRUE(bLcolor.isNotEqual(bRcolor));
+  EXPECT_TRUE(cLcolor.isNotEqual(cRcolor));
+  EXPECT_TRUE(dLcolor.isNotEqual(dRcolor));
+  EXPECT_TRUE(fLcolor.isNotEqual(fRcolor));
+  EXPECT_TRUE(gLcolor.isNotEqual(gRcolor));
 
-  BOOST_TEST_CHECK(aLcolor.isEqualRGB(aRcolor)  == false);
-  BOOST_TEST_CHECK(bLcolor.isEqualRGB(bRcolor)  == false);
-  BOOST_TEST_CHECK(cLcolor.isEqualRGB(cRcolor)  == false);
-  BOOST_TEST_CHECK(dLcolor.isEqualRGB(dRcolor)  == false);
-  BOOST_TEST_CHECK(fLcolor.isEqualRGB(fRcolor)  == false);
-  BOOST_TEST_CHECK(gLcolor.isEqualRGB(gRcolor)  == false);
+  EXPECT_FALSE(aLcolor.isEqualRGB(aRcolor));
+  EXPECT_FALSE(bLcolor.isEqualRGB(bRcolor));
+  EXPECT_FALSE(cLcolor.isEqualRGB(cRcolor));
+  EXPECT_FALSE(dLcolor.isEqualRGB(dRcolor));
+  EXPECT_FALSE(fLcolor.isEqualRGB(fRcolor));
+  EXPECT_FALSE(gLcolor.isEqualRGB(gRcolor));
 
   bLcolor.setChansRGBA(1, 2, 3, 4);
   fLcolor.setChansRGBA(1, 2, 3, 4);
@@ -4859,15 +4851,15 @@ BOOST_AUTO_TEST_CASE(isEqual_and_isEqualRGB_and_isNotEqual) {
   bRcolor.setChansRGBA(1, 2, 3, 5);
   fRcolor.setChansRGBA(1, 2, 3, 5);
 
-  BOOST_TEST_CHECK(bLcolor.isEqual(bRcolor)  == false);
-  BOOST_TEST_CHECK(fLcolor.isEqual(fRcolor)  == false);
+  EXPECT_FALSE(bLcolor.isEqual(bRcolor));
+  EXPECT_FALSE(fLcolor.isEqual(fRcolor));
 
-  BOOST_TEST_CHECK(bLcolor.isEqualRGB(bRcolor)  == true);
-  BOOST_TEST_CHECK(fLcolor.isEqualRGB(fRcolor)  == true);
+  EXPECT_TRUE(bLcolor.isEqualRGB(bRcolor));
+  EXPECT_TRUE(fLcolor.isEqualRGB(fRcolor));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(dist_int) {
+TEST(distHypot_and_distSumAbs_and_distMaxAbs, Integer) {
 
   mjr::colorRGBA8b   aColor;
   mjr::colorRGBA8b   bColor;
@@ -4876,41 +4868,41 @@ BOOST_AUTO_TEST_CASE(dist_int) {
   aColor.setToWhite();
   bColor.setToBlack();
 
-  BOOST_TEST_CHECK(aColor.distHypot( bColor) == std::sqrt(mjr::colorRGBA8b::maxChanVal*mjr::colorRGBA8b::maxChanVal*4));
-  BOOST_TEST_CHECK(aColor.distSumAbs(bColor) == mjr::colorRGBA8b::maxChanVal*4);
-  BOOST_TEST_CHECK(aColor.distMaxAbs(bColor) == mjr::colorRGBA8b::maxChanVal);
+  EXPECT_NEAR(aColor.distHypot( bColor),  std::sqrt(mjr::colorRGBA8b::maxChanVal*mjr::colorRGBA8b::maxChanVal*4), 0.00001);
+  EXPECT_EQ(aColor.distSumAbs(bColor),  mjr::colorRGBA8b::maxChanVal*4);
+  EXPECT_EQ(aColor.distMaxAbs(bColor),  mjr::colorRGBA8b::maxChanVal);
 
-  BOOST_TEST_CHECK(bColor.distHypot( aColor) == std::sqrt(mjr::colorRGBA8b::maxChanVal*mjr::colorRGBA8b::maxChanVal*4));
-  BOOST_TEST_CHECK(bColor.distSumAbs(aColor) == mjr::colorRGBA8b::maxChanVal*4);
-  BOOST_TEST_CHECK(bColor.distMaxAbs(aColor) == mjr::colorRGBA8b::maxChanVal);
+  EXPECT_NEAR(bColor.distHypot( aColor),  std::sqrt(mjr::colorRGBA8b::maxChanVal*mjr::colorRGBA8b::maxChanVal*4), 0.00001);
+  EXPECT_EQ(bColor.distSumAbs(aColor),  mjr::colorRGBA8b::maxChanVal*4);
+  EXPECT_EQ(bColor.distMaxAbs(aColor),  mjr::colorRGBA8b::maxChanVal);
 
   ////////////////////////////////////////////////////////////////////////////////
   aColor.setToWhite();
   bColor.setToWhite();
 
-  BOOST_TEST_CHECK(aColor.distHypot( bColor) == 0);
-  BOOST_TEST_CHECK(aColor.distSumAbs(bColor) == 0);
-  BOOST_TEST_CHECK(aColor.distMaxAbs(bColor) == 0);
+  EXPECT_NEAR(aColor.distHypot( bColor),  0, 0.00001);
+  EXPECT_EQ(aColor.distSumAbs(bColor),  0);
+  EXPECT_EQ(aColor.distMaxAbs(bColor),  0);
 
-  BOOST_TEST_CHECK(bColor.distHypot( aColor) == 0);
-  BOOST_TEST_CHECK(bColor.distSumAbs(aColor) == 0);
-  BOOST_TEST_CHECK(bColor.distMaxAbs(aColor) == 0);
+  EXPECT_NEAR(bColor.distHypot( aColor),  0, 0.00001);
+  EXPECT_EQ(bColor.distSumAbs(aColor),  0);
+  EXPECT_EQ(bColor.distMaxAbs(aColor),  0);
 
   ////////////////////////////////////////////////////////////////////////////////
   aColor.setToCyan();
   bColor.setToBlack();
 
-  BOOST_TEST_CHECK(aColor.distHypot( bColor) == std::sqrt(mjr::colorRGBA8b::maxChanVal*mjr::colorRGBA8b::maxChanVal*3), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.distSumAbs(bColor) == mjr::colorRGBA8b::maxChanVal*3);
-  BOOST_TEST_CHECK(aColor.distMaxAbs(bColor) == mjr::colorRGBA8b::maxChanVal);
+  EXPECT_NEAR(aColor.distHypot( bColor),  std::sqrt(mjr::colorRGBA8b::maxChanVal*mjr::colorRGBA8b::maxChanVal*3), 0.0001);
+  EXPECT_EQ(aColor.distSumAbs(bColor),  mjr::colorRGBA8b::maxChanVal*3);
+  EXPECT_EQ(aColor.distMaxAbs(bColor),  mjr::colorRGBA8b::maxChanVal);
 
-  BOOST_TEST_CHECK(bColor.distHypot( aColor) == std::sqrt(mjr::colorRGBA8b::maxChanVal*mjr::colorRGBA8b::maxChanVal*3), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(bColor.distSumAbs(aColor) == mjr::colorRGBA8b::maxChanVal*3);
-  BOOST_TEST_CHECK(bColor.distMaxAbs(aColor) == mjr::colorRGBA8b::maxChanVal);
+  EXPECT_NEAR(bColor.distHypot( aColor),  std::sqrt(mjr::colorRGBA8b::maxChanVal*mjr::colorRGBA8b::maxChanVal*3), 0.0001);
+  EXPECT_EQ(bColor.distSumAbs(aColor),  mjr::colorRGBA8b::maxChanVal*3);
+  EXPECT_EQ(bColor.distMaxAbs(aColor),  mjr::colorRGBA8b::maxChanVal);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(dist_flt) {
+TEST(distHypot_and_distSumAbs_and_distMaxAbs, FLoat) {
 
   mjr::colorRGBA32F   aColor;
   mjr::colorRGBA32F   bColor;
@@ -4919,318 +4911,321 @@ BOOST_AUTO_TEST_CASE(dist_flt) {
   aColor.setToWhite();
   bColor.setToBlack();
 
-  BOOST_TEST_CHECK(aColor.distHypot( bColor) == std::sqrt(mjr::colorRGBA32F::maxChanVal*mjr::colorRGBA32F::maxChanVal*4), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.distSumAbs(bColor) == mjr::colorRGBA32F::maxChanVal*4);
-  BOOST_TEST_CHECK(aColor.distMaxAbs(bColor) == mjr::colorRGBA32F::maxChanVal);
+  EXPECT_NEAR(aColor.distHypot( bColor),  std::sqrt(mjr::colorRGBA32F::maxChanVal*mjr::colorRGBA32F::maxChanVal*4), 0.00001);
+  EXPECT_NEAR(aColor.distSumAbs(bColor),  mjr::colorRGBA32F::maxChanVal*4, 0.00001);
+  EXPECT_NEAR(aColor.distMaxAbs(bColor),  mjr::colorRGBA32F::maxChanVal, 0.00001);
 
-  BOOST_TEST_CHECK(bColor.distHypot( aColor) == std::sqrt(mjr::colorRGBA32F::maxChanVal*mjr::colorRGBA32F::maxChanVal*4), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(bColor.distSumAbs(aColor) == mjr::colorRGBA32F::maxChanVal*4);
-  BOOST_TEST_CHECK(bColor.distMaxAbs(aColor) == mjr::colorRGBA32F::maxChanVal);
+  EXPECT_NEAR(bColor.distHypot( aColor),  std::sqrt(mjr::colorRGBA32F::maxChanVal*mjr::colorRGBA32F::maxChanVal*4), 0.00001);
+  EXPECT_NEAR(bColor.distSumAbs(aColor),  mjr::colorRGBA32F::maxChanVal*4, 0.00001);
+  EXPECT_NEAR(bColor.distMaxAbs(aColor),  mjr::colorRGBA32F::maxChanVal, 0.00001);
 
   ////////////////////////////////////////////////////////////////////////////////
   aColor.setToWhite();
   bColor.setToWhite();
 
-  BOOST_TEST_CHECK(aColor.distHypot( bColor) == 0);
-  BOOST_TEST_CHECK(aColor.distSumAbs(bColor) == 0);
-  BOOST_TEST_CHECK(aColor.distMaxAbs(bColor) == 0);
+  EXPECT_NEAR(aColor.distHypot( bColor),  0, 0.00001);
+  EXPECT_NEAR(aColor.distSumAbs(bColor),  0, 0.00001);
+  EXPECT_NEAR(aColor.distMaxAbs(bColor),  0, 0.00001);
 
-  BOOST_TEST_CHECK(bColor.distHypot( aColor) == 0);
-  BOOST_TEST_CHECK(bColor.distSumAbs(aColor) == 0);
-  BOOST_TEST_CHECK(bColor.distMaxAbs(aColor) == 0);
+  EXPECT_NEAR(bColor.distHypot( aColor),  0, 0.00001);
+  EXPECT_NEAR(bColor.distSumAbs(aColor),  0, 0.00001);
+  EXPECT_NEAR(bColor.distMaxAbs(aColor),  0, 0.00001);
 
   ////////////////////////////////////////////////////////////////////////////////
   aColor.setToCyan();
   bColor.setToBlack();
 
-  BOOST_TEST_CHECK(aColor.distHypot( bColor) == std::sqrt(mjr::colorRGBA32F::maxChanVal*mjr::colorRGBA32F::maxChanVal*3), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.distSumAbs(bColor) == mjr::colorRGBA32F::maxChanVal*3);
-  BOOST_TEST_CHECK(aColor.distMaxAbs(bColor) == mjr::colorRGBA32F::maxChanVal);
+  EXPECT_NEAR(aColor.distHypot( bColor),  std::sqrt(mjr::colorRGBA32F::maxChanVal*mjr::colorRGBA32F::maxChanVal*3), 0.00001);
+  EXPECT_NEAR(aColor.distSumAbs(bColor),  mjr::colorRGBA32F::maxChanVal*3, 0.00001);
+  EXPECT_NEAR(aColor.distMaxAbs(bColor),  mjr::colorRGBA32F::maxChanVal, 0.00001);
 
-  BOOST_TEST_CHECK(bColor.distHypot( aColor) == std::sqrt(mjr::colorRGBA32F::maxChanVal*mjr::colorRGBA32F::maxChanVal*3), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(bColor.distSumAbs(aColor) == mjr::colorRGBA32F::maxChanVal*3);
-  BOOST_TEST_CHECK(bColor.distMaxAbs(aColor) == mjr::colorRGBA32F::maxChanVal);
+  EXPECT_NEAR(bColor.distHypot( aColor),  std::sqrt(mjr::colorRGBA32F::maxChanVal*mjr::colorRGBA32F::maxChanVal*3), 0.00001);
+  EXPECT_NEAR(bColor.distSumAbs(aColor),  mjr::colorRGBA32F::maxChanVal*3, 0.00001);
+  EXPECT_NEAR(bColor.distMaxAbs(aColor),  mjr::colorRGBA32F::maxChanVal, 0.00001);
 
   ////////////////////////////////////////////////////////////////////////////////
   aColor.setChansRGBA(0.5, 0.5, 0.5, 0.5);
   bColor.setToBlack();
 
-  BOOST_TEST_CHECK(aColor.distHypot( bColor) == std::sqrt(0.5*0.5*4), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(aColor.distSumAbs(bColor) == 0.5*4);
-  BOOST_TEST_CHECK(aColor.distMaxAbs(bColor) == 0.5);
+  EXPECT_NEAR(aColor.distHypot( bColor),  std::sqrt(0.5*0.5*4), 0.00001);
+  EXPECT_NEAR(aColor.distSumAbs(bColor),  0.5*4, 0.00001);
+  EXPECT_NEAR(aColor.distMaxAbs(bColor),  0.5, 0.00001);
 
-  BOOST_TEST_CHECK(bColor.distHypot( aColor) == std::sqrt(0.5*0.5*4), boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(bColor.distSumAbs(aColor) == 0.5*4);
-  BOOST_TEST_CHECK(bColor.distMaxAbs(aColor) == 0.5);
+  EXPECT_NEAR(bColor.distHypot( aColor),  std::sqrt(0.5*0.5*4), 0.00001);
+  EXPECT_NEAR(bColor.distSumAbs(aColor),  0.5*4, 0.00001);
+  EXPECT_NEAR(bColor.distMaxAbs(aColor),  0.5, 0.00001);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(lum_int) {
+TEST(luminanceRGB_and_intensity_and_intensityScaledRGB_and_intensityScaled_and_rgb2GreyDotProd, Comprehensive) {
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).rgb2GreyDotProd(13, 17, 23)          == 272);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).rgb2GreyDotProd(13, 17, 23)          == 272);
+  EXPECT_EQ(mjr::colorRGBA8b( 2, 5, 7, 11).rgb2GreyDotProd(13, 17, 23),           272);
+  EXPECT_EQ(mjr::colorRGBA32F(2, 5, 7, 11).rgb2GreyDotProd(13, 17, 23),           272);
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b(255, 255, 255, 255).rgb2GreyDotProd(255, 255, 255) == 195075); // Too big for an arith SP type...
+  EXPECT_EQ(mjr::colorRGBA8b(255, 255, 255, 255).rgb2GreyDotProd(255, 255, 255),  195075); // Too big for an arith SP type...
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).luminanceRGB()                       == 0.0176729411765, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).luminanceRGB()                       == 4.5066,          boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(mjr::colorRGBA8b( 2, 5, 7, 11).luminanceRGB(),                      0.0176729411765, 0.00001);
+  EXPECT_NEAR(mjr::colorRGBA32F(2, 5, 7, 11).luminanceRGB(),                      4.5066,          0.00001);
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).intensityRGB()                       == 14);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).intensityRGB()                       == 14);
+  EXPECT_EQ(mjr::colorRGBA8b( 2, 5, 7, 11).intensityRGB(),                        14);
+  EXPECT_NEAR(mjr::colorRGBA32F(2, 5, 7, 11).intensityRGB(),                      14,              0.00001);
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).intensity()                          == 25);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).intensity()                          == 25);
+  EXPECT_EQ(mjr::colorRGBA8b( 2, 5, 7, 11).intensity(),                           25);
+  EXPECT_NEAR(mjr::colorRGBA32F(2, 5, 7, 11).intensity(),                         25,              0.00001);
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).intensityScaledRGB()                 == 0.0183006562, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).intensityScaledRGB()                 == 4.66666698,   boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(mjr::colorRGBA8b( 2, 5, 7, 11).intensityScaledRGB(),                0.0183006562,    0.00001);
+  EXPECT_NEAR(mjr::colorRGBA32F(2, 5, 7, 11).intensityScaledRGB(),                4.66666698,      0.00001);
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b( 2, 5, 7, 11).intensityScaled()                    == 0.0245098039216, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).intensityScaled()                    == 6.25,            boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(mjr::colorRGBA8b( 2, 5, 7, 11).intensityScaled(),                   0.0245098039216, 0.00001);
+  EXPECT_NEAR(mjr::colorRGBA32F(2, 5, 7, 11).intensityScaled(),                   6.25,            0.00001);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(dotProd_getMax_getMin) {
+TEST(dotProd_and_getMaxC_and_getMinC_and_getMinRGB_and_getMaxRGB, Comprehensive) {
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b(2, 5, 7, 11).dotProd(mjr::colorRGBA8b(13, 17, 23, 27))  == 569);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).dotProd(mjr::colorRGBA32F(13, 17, 23, 27)) == 569);
+  EXPECT_EQ(mjr::colorRGBA8b(2, 5, 7, 11).dotProd(mjr::colorRGBA8b(13, 17, 23, 27)),             569);
+  EXPECT_NEAR(mjr::colorRGBA32F(2, 5, 7, 11).dotProd(mjr::colorRGBA32F(13, 17, 23, 27)),         569, 0.000001);
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b(255, 255, 255, 255).dotProd(mjr::colorRGBA8b(255, 255, 255, 255))  == 260100); // Too big for an arith SP type...
+  EXPECT_EQ(mjr::colorRGBA8b(255, 255, 255, 255).dotProd(mjr::colorRGBA8b(255, 255, 255, 255)),  260100); // Too big for an arith SP type...
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b(2, 5, 7, 11).getMaxC()    == 11);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b(2, 5, 7, 11).getMaxRGB()  == 7);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).getMaxC()   == 11);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 11).getMaxRGB() == 7);
+  EXPECT_EQ(mjr::colorRGBA8b(2, 5, 7, 11).getMaxC(),                                             11);
+  EXPECT_EQ(mjr::colorRGBA8b(2, 5, 7, 11).getMaxRGB(),                                           7);
+  EXPECT_NEAR(mjr::colorRGBA32F(2, 5, 7, 11).getMaxC(),                                          11, 0.000001);
+  EXPECT_NEAR(mjr::colorRGBA32F(2, 5, 7, 11).getMaxRGB(),                                        7, 0.000001);
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b(2, 5, 7, 1).getMinC()     == 1);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b(2, 5, 7, 1).getMinRGB()   == 2);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 1).getMinC()    == 1);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F(2, 5, 7, 1).getMinRGB()  == 2);
+  EXPECT_EQ(mjr::colorRGBA8b(2, 5, 7, 1).getMinC(),                                              1);
+  EXPECT_EQ(mjr::colorRGBA8b(2, 5, 7, 1).getMinRGB(),                                            2);
+  EXPECT_NEAR(mjr::colorRGBA32F(2, 5, 7, 1).getMinC(),                                           1, 0.000001);
+  EXPECT_NEAR(mjr::colorRGBA32F(2, 5, 7, 1).getMinRGB(),                                         2, 0.000001);
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b(2, 5, 7).getMaxC()         == 7);
-  BOOST_TEST_CHECK(mjr::colorRGB32F(2, 5, 7).getMaxC()        == 7);
+  EXPECT_EQ(mjr::colorRGB8b(2, 5, 7).getMaxC(),                                                  7);
+  EXPECT_EQ(mjr::colorRGB32F(2, 5, 7).getMaxC(),                                                 7);
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b(2, 5, 7).getMinC()         == 2);
-  BOOST_TEST_CHECK(mjr::colorRGB32F(2, 5, 7).getMinC()        == 2);
+  EXPECT_EQ(mjr::colorRGB8b(2, 5, 7).getMinC(),                                                  2);
+  EXPECT_EQ(mjr::colorRGB32F(2, 5, 7).getMinC(),                                                 2);
 
   mjr::color2c8b aColor; aColor.setC0(5); aColor.setC1(2);
   mjr::color2c8b bColor; bColor.setC0(5); bColor.setC1(2);
 
-  BOOST_TEST_CHECK(aColor.getMaxC()                           == 5);
-  BOOST_TEST_CHECK(bColor.getMaxC()                           == 5);
+  EXPECT_EQ(aColor.getMaxC(),                                                                    5);
+  EXPECT_EQ(bColor.getMaxC(),                                                                    5);
 
-  BOOST_TEST_CHECK(aColor.getMinC()                           == 2);
-  BOOST_TEST_CHECK(bColor.getMinC()                           == 2);
+  EXPECT_EQ(aColor.getMinC(),                                                                    2);
+  EXPECT_EQ(bColor.getMinC(),                                                                    2);
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b(2).getMaxC()              == 2);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F(2).getMaxC()             == 2);
+  EXPECT_EQ(mjr::colorRGBA8b(2).getMaxC(),                                                       2);
+  EXPECT_NEAR(mjr::colorRGBA32F(2).getMaxC(),                                                    2, 0.000001);
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b(2).getMinC()              == 2);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F(2).getMinC()             == 2);
+  EXPECT_EQ(mjr::colorRGBA8b(2).getMinC(),                                                       2);
+  EXPECT_NEAR(mjr::colorRGBA32F(2).getMinC(),                                                    2, 0.000001);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(WavelengthCM) {
+TEST(FUN_WavelengthCM, Integer) {
 
   mjr::colorRGBA8b  aColor;
   mjr::colorRGBA8b  bColor;
 
-  mjr::colorRGBA32F cColor;
-  mjr::colorRGBA32F dColor;
-
   aColor.setToBlack();
   aColor.setRGBfromWavelengthCM(570);
-  BOOST_TEST_CHECK(aColor.getRed()   == 173);
-  BOOST_TEST_CHECK(aColor.getGreen() == 189);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 2);
-  BOOST_TEST_CHECK(aColor.getAlpha() == aColor.minChanVal);
+  EXPECT_EQ(aColor.getRed(),    173);
+  EXPECT_EQ(aColor.getGreen(),  189);
+  EXPECT_EQ(aColor.getBlue(),   2);
+  EXPECT_EQ(aColor.getAlpha(),  aColor.minChanVal);
 
   aColor.setToWhite();
   aColor.setRGBfromWavelengthCM(570);
-  BOOST_TEST_CHECK(aColor.getRed()   == 173);
-  BOOST_TEST_CHECK(aColor.getGreen() == 189);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 2);
-  BOOST_TEST_CHECK(aColor.getAlpha() == aColor.maxChanVal);
+  EXPECT_EQ(aColor.getRed(),    173);
+  EXPECT_EQ(aColor.getGreen(),  189);
+  EXPECT_EQ(aColor.getBlue(),   2);
+  EXPECT_EQ(aColor.getAlpha(),  aColor.maxChanVal);
 
   aColor.setRGBfromWavelengthCM(571, mjr::colorRGBA8b::cmfInterpolationEnum::FLOOR);
   bColor.setRGBfromWavelengthCM(570);
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromWavelengthCM(571, mjr::colorRGBA8b::cmfInterpolationEnum::CEILING);
   bColor.setRGBfromWavelengthCM(575);
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromWavelengthCM(571, mjr::colorRGBA8b::cmfInterpolationEnum::NEAREST);
   bColor.setRGBfromWavelengthCM(570);
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromWavelengthCM(574, mjr::colorRGBA8b::cmfInterpolationEnum::NEAREST);
   bColor.setRGBfromWavelengthCM(575);
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromWavelengthCM(572, mjr::colorRGBA8b::cmfInterpolationEnum::LINEAR);
-  BOOST_TEST_CHECK(aColor.getRed()   == 182);
-  BOOST_TEST_CHECK(aColor.getGreen() == 181);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0);
+  EXPECT_EQ(aColor.getRed(),    182);
+  EXPECT_EQ(aColor.getGreen(),  181);
+  EXPECT_EQ(aColor.getBlue(),   0);
 
   aColor.setRGBfromWavelengthCM(572, mjr::colorRGBA8b::cmfInterpolationEnum::BUMP);
-  BOOST_TEST_CHECK(aColor.getRed()   == 167);
-  BOOST_TEST_CHECK(aColor.getGreen() == 169);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0);
-
-////////////////////////////////////////////////////////////////////////////////
-
-  cColor.setToBlack();
-  cColor.setRGBfromWavelengthCM(570);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0.679159,      boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(cColor.getGreen() == 0.743843,      boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0.00798483,    boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(cColor.getAlpha() == cColor.minChanVal);
-
-  cColor.setToWhite();
-  cColor.setRGBfromWavelengthCM(570);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0.679159,      boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(cColor.getGreen() == 0.743843,      boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0.00798483,    boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(cColor.getAlpha() == cColor.maxChanVal);
-
-  cColor.setRGBfromWavelengthCM(571, mjr::colorRGBA32F::cmfInterpolationEnum::FLOOR);
-  dColor.setRGBfromWavelengthCM(570);
-  BOOST_TEST_CHECK(cColor.getRed()   == dColor.getRed());
-  BOOST_TEST_CHECK(cColor.getGreen() == dColor.getGreen());
-  BOOST_TEST_CHECK(cColor.getBlue()  == dColor.getBlue());
-
-  cColor.setRGBfromWavelengthCM(571, mjr::colorRGBA32F::cmfInterpolationEnum::CEILING);
-  dColor.setRGBfromWavelengthCM(575);
-  BOOST_TEST_CHECK(cColor.getRed()   == dColor.getRed());
-  BOOST_TEST_CHECK(cColor.getGreen() == dColor.getGreen());
-  BOOST_TEST_CHECK(cColor.getBlue()  == dColor.getBlue());
-
-  cColor.setRGBfromWavelengthCM(571, mjr::colorRGBA32F::cmfInterpolationEnum::NEAREST);
-  dColor.setRGBfromWavelengthCM(570);
-  BOOST_TEST_CHECK(cColor.getRed()   == dColor.getRed());
-  BOOST_TEST_CHECK(cColor.getGreen() == dColor.getGreen());
-  BOOST_TEST_CHECK(cColor.getBlue()  == dColor.getBlue());
-
-  cColor.setRGBfromWavelengthCM(574, mjr::colorRGBA32F::cmfInterpolationEnum::NEAREST);
-  dColor.setRGBfromWavelengthCM(575);
-  BOOST_TEST_CHECK(cColor.getRed()   == dColor.getRed());
-  BOOST_TEST_CHECK(cColor.getGreen() == dColor.getGreen());
-  BOOST_TEST_CHECK(cColor.getBlue()  == dColor.getBlue());
-
-  cColor.setRGBfromWavelengthCM(572, mjr::colorRGBA32F::cmfInterpolationEnum::LINEAR);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0.713749886,   boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(cColor.getGreen() == 0.710754037,   boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0.00187643478, boost::test_tools::tolerance(0.00001));
-
-  cColor.setRGBfromWavelengthCM(572, mjr::colorRGBA32F::cmfInterpolationEnum::BUMP);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0.654946387,   boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(cColor.getGreen() == 0.662842572,   boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(cColor.getBlue()  == 3.4287558e-07, boost::test_tools::tolerance(0.00001));
-
+  EXPECT_EQ(aColor.getRed(),    167);
+  EXPECT_EQ(aColor.getGreen(),  169);
+  EXPECT_EQ(aColor.getBlue(),   0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(WavelengthLA) {
-
-  mjr::colorRGBA8b  aColor;
-  mjr::colorRGBA8b  bColor;
+TEST(FUN_WavelengthCM, FLoat) {
 
   mjr::colorRGBA32F cColor;
   mjr::colorRGBA32F dColor;
 
+  cColor.setToBlack();
+  cColor.setRGBfromWavelengthCM(570);
+  EXPECT_NEAR(cColor.getRed(),    0.679159,          0.00001);
+  EXPECT_NEAR(cColor.getGreen(),  0.743843,          0.00001);
+  EXPECT_NEAR(cColor.getBlue(),   0.00798483,        0.00001);
+  EXPECT_NEAR(cColor.getAlpha(),  cColor.minChanVal, 0.00001);
+
+  cColor.setToWhite();
+  cColor.setRGBfromWavelengthCM(570);
+  EXPECT_NEAR(cColor.getRed(),    0.679159,          0.00001);
+  EXPECT_NEAR(cColor.getGreen(),  0.743843,          0.00001);
+  EXPECT_NEAR(cColor.getBlue(),   0.00798483,        0.00001);
+  EXPECT_NEAR(cColor.getAlpha(),  cColor.maxChanVal, 0.00001);
+
+  cColor.setRGBfromWavelengthCM(571, mjr::colorRGBA32F::cmfInterpolationEnum::FLOOR);
+  dColor.setRGBfromWavelengthCM(570);
+  EXPECT_NEAR(cColor.getRed(),    dColor.getRed(),   0.00001);
+  EXPECT_NEAR(cColor.getGreen(),  dColor.getGreen(), 0.00001);
+  EXPECT_NEAR(cColor.getBlue(),   dColor.getBlue(),  0.00001);
+
+  cColor.setRGBfromWavelengthCM(571, mjr::colorRGBA32F::cmfInterpolationEnum::CEILING);
+  dColor.setRGBfromWavelengthCM(575);
+  EXPECT_NEAR(cColor.getRed(),    dColor.getRed(),   0.00001);
+  EXPECT_NEAR(cColor.getGreen(),  dColor.getGreen(), 0.00001);
+  EXPECT_NEAR(cColor.getBlue(),   dColor.getBlue(),  0.00001);
+
+  cColor.setRGBfromWavelengthCM(571, mjr::colorRGBA32F::cmfInterpolationEnum::NEAREST);
+  dColor.setRGBfromWavelengthCM(570);
+  EXPECT_NEAR(cColor.getRed(),    dColor.getRed(),   0.00001);
+  EXPECT_NEAR(cColor.getGreen(),  dColor.getGreen(), 0.00001);
+  EXPECT_NEAR(cColor.getBlue(),   dColor.getBlue(),  0.00001);
+
+  cColor.setRGBfromWavelengthCM(574, mjr::colorRGBA32F::cmfInterpolationEnum::NEAREST);
+  dColor.setRGBfromWavelengthCM(575);
+  EXPECT_NEAR(cColor.getRed(),    dColor.getRed(),   0.00001);
+  EXPECT_NEAR(cColor.getGreen(),  dColor.getGreen(), 0.00001);
+  EXPECT_NEAR(cColor.getBlue(),   dColor.getBlue(),  0.00001);
+
+  cColor.setRGBfromWavelengthCM(572, mjr::colorRGBA32F::cmfInterpolationEnum::LINEAR);
+  EXPECT_NEAR(cColor.getRed(),    0.713749886,       0.00001);
+  EXPECT_NEAR(cColor.getGreen(),  0.710754037,       0.00001);
+  EXPECT_NEAR(cColor.getBlue(),   0.00187643478,     0.00001);
+
+  cColor.setRGBfromWavelengthCM(572, mjr::colorRGBA32F::cmfInterpolationEnum::BUMP);
+  EXPECT_NEAR(cColor.getRed(),    0.654946387,       0.00001);
+  EXPECT_NEAR(cColor.getGreen(),  0.662842572,       0.00001);
+  EXPECT_NEAR(cColor.getBlue(),   3.4287558e-07,     0.00001);
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+TEST(FUN_WavelengthLA, Integer) {
+
+  mjr::colorRGBA8b  aColor;
+
   aColor.setToBlack();
   aColor.setRGBfromWavelengthLA(570);
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xda);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0xff);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0x00);
-  BOOST_TEST_CHECK(aColor.getAlpha() == aColor.minChanVal);
+  EXPECT_EQ(aColor.getRed(),    0xda);
+  EXPECT_EQ(aColor.getGreen(),  0xff);
+  EXPECT_EQ(aColor.getBlue(),   0x00);
+  EXPECT_EQ(aColor.getAlpha(),  aColor.minChanVal);
 
   aColor.setToWhite();
   aColor.setRGBfromWavelengthLA(570);
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xda);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0xff);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0x00);
-  BOOST_TEST_CHECK(aColor.getAlpha() == aColor.maxChanVal);
+  EXPECT_EQ(aColor.getRed(),    0xda);
+  EXPECT_EQ(aColor.getGreen(),  0xff);
+  EXPECT_EQ(aColor.getBlue(),   0x00);
+  EXPECT_EQ(aColor.getAlpha(),  aColor.maxChanVal);
 
-////////////////////////////////////////////////////////////////////////////////
+}
 
-  cColor.setToBlack();
-  cColor.setRGBfromWavelengthLA(570);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0.857142866,    boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(cColor.getGreen() == 1.000000000,    boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0.000000000,    boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(cColor.getAlpha() == cColor.minChanVal);
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+TEST(FUN_WavelengthLA, Float) {
 
-  cColor.setToWhite();
-  cColor.setRGBfromWavelengthLA(570);
-  BOOST_TEST_CHECK(cColor.getRed()   == 0.857142866,    boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(cColor.getGreen() == 1.000000000,    boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0.000000000,    boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(cColor.getAlpha() == cColor.maxChanVal);
+  mjr::colorRGBA32F aColor;
+
+  aColor.setToBlack();
+  aColor.setRGBfromWavelengthLA(570);
+  EXPECT_NEAR(aColor.getRed(),    0.857142866,       0.00001);
+  EXPECT_NEAR(aColor.getGreen(),  1.000000000,       0.00001);
+  EXPECT_NEAR(aColor.getBlue(),   0.000000000,       0.00001);
+  EXPECT_NEAR(aColor.getAlpha(),  aColor.minChanVal, 0.00001);
+
+  aColor.setToWhite();
+  aColor.setRGBfromWavelengthLA(570);
+  EXPECT_NEAR(aColor.getRed(),    0.857142866,       0.00001);
+  EXPECT_NEAR(aColor.getGreen(),  1.000000000,       0.00001);
+  EXPECT_NEAR(aColor.getBlue(),   0.000000000,       0.00001);
+  EXPECT_NEAR(aColor.getAlpha(),  aColor.maxChanVal, 0.00001);
 
 }
 
 #if !(MISSING_P1907R1)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(csCubeHelix_tpl, * boost::unit_test::tolerance(0.01)) {
+TEST(FUN_csCubeHelix_tpl, Float) {
 
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHstd::c(0.25).getC0() == 0.085);
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHstd::c(0.25).getC1() == 0.325);
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHstd::c(0.25).getC2() == 0.298);
+  EXPECT_NEAR(mjr::color3c64F::csCHstd::c(0.25).getC0(),  0.085,    0.01);
+  EXPECT_NEAR(mjr::color3c64F::csCHstd::c(0.25).getC1(),  0.325,    0.01);
+  EXPECT_NEAR(mjr::color3c64F::csCHstd::c(0.25).getC2(),  0.298,    0.01);
 
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHstd::c(0.50).getC0() == 0.628);
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHstd::c(0.50).getC1() == 0.475);
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHstd::c(0.50).getC2() == 0.286);
+  EXPECT_NEAR(mjr::color3c64F::csCHstd::c(0.50).getC0(),  0.628,    0.01);
+  EXPECT_NEAR(mjr::color3c64F::csCHstd::c(0.50).getC1(),  0.475,    0.01);
+  EXPECT_NEAR(mjr::color3c64F::csCHstd::c(0.50).getC2(),  0.286,    0.01);
 
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHstd::c(0.75).getC0() == 0.780);
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHstd::c(0.75).getC1() == 0.702);
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHstd::c(0.75).getC2() == 0.929);
-
-
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHblu::c(0.25).getC0() == 0.280);
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHblu::c(0.25).getC1() == 0.202);
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHblu::c(0.25).getC2() == 0.429);
-
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHblu::c(0.50).getC0() == 0.372);
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHblu::c(0.50).getC1() == 0.525);
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHblu::c(0.50).getC2() == 0.714);
-
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHblu::c(0.75).getC0() == 0.585);
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHblu::c(0.75).getC1() == 0.825);
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHblu::c(0.75).getC2() == 0.798);
+  EXPECT_NEAR(mjr::color3c64F::csCHstd::c(0.75).getC0(),  0.780,    0.01);
+  EXPECT_NEAR(mjr::color3c64F::csCHstd::c(0.75).getC1(),  0.702,    0.01);
+  EXPECT_NEAR(mjr::color3c64F::csCHstd::c(0.75).getC2(),  0.929,    0.01);
 
 
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHvio::c(0.25).getC0() == 0.388);
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHvio::c(0.25).getC1() == 0.163);
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHvio::c(0.25).getC2() == 0.342);
+  EXPECT_NEAR(mjr::color3c64F::csCHblu::c(0.25).getC0(),  0.280,    0.01);
+  EXPECT_NEAR(mjr::color3c64F::csCHblu::c(0.25).getC1(),  0.202,    0.01);
+  EXPECT_NEAR(mjr::color3c64F::csCHblu::c(0.25).getC2(),  0.429,    0.01);
 
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHvio::c(0.50).getC0() == 0.684);
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHvio::c(0.50).getC1() == 0.384);
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHvio::c(0.50).getC2() == 0.623);
+  EXPECT_NEAR(mjr::color3c64F::csCHblu::c(0.50).getC0(),  0.372,    0.01);
+  EXPECT_NEAR(mjr::color3c64F::csCHblu::c(0.50).getC1(),  0.525,    0.01);
+  EXPECT_NEAR(mjr::color3c64F::csCHblu::c(0.50).getC2(),  0.714,    0.01);
 
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHvio::c(0.75).getC0() == 0.888);
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHvio::c(0.75).getC1() == 0.663);
-  BOOST_TEST_CHECK(mjr::color3c64F::csCHvio::c(0.75).getC2() == 0.842);
+  EXPECT_NEAR(mjr::color3c64F::csCHblu::c(0.75).getC0(),  0.585,    0.01);
+  EXPECT_NEAR(mjr::color3c64F::csCHblu::c(0.75).getC1(),  0.825,    0.01);
+  EXPECT_NEAR(mjr::color3c64F::csCHblu::c(0.75).getC2(),  0.798,    0.01);
+
+
+  EXPECT_NEAR(mjr::color3c64F::csCHvio::c(0.25).getC0(),  0.388,    0.01);
+  EXPECT_NEAR(mjr::color3c64F::csCHvio::c(0.25).getC1(),  0.163,    0.01);
+  EXPECT_NEAR(mjr::color3c64F::csCHvio::c(0.25).getC2(),  0.342,    0.01);
+
+  EXPECT_NEAR(mjr::color3c64F::csCHvio::c(0.50).getC0(),  0.684,    0.01);
+  EXPECT_NEAR(mjr::color3c64F::csCHvio::c(0.50).getC1(),  0.384,    0.01);
+  EXPECT_NEAR(mjr::color3c64F::csCHvio::c(0.50).getC2(),  0.623,    0.01);
+
+  EXPECT_NEAR(mjr::color3c64F::csCHvio::c(0.75).getC0(),  0.888,    0.01);
+  EXPECT_NEAR(mjr::color3c64F::csCHvio::c(0.75).getC1(),  0.663,    0.01);
+  EXPECT_NEAR(mjr::color3c64F::csCHvio::c(0.75).getC2(),  0.842,    0.01);
 
   typedef mjr::colorTpl<double, 3, 2, 1, 0> permcolor3c64F;
 
-  BOOST_TEST_CHECK(permcolor3c64F::csCHstd::c(0.25).getC2() == 0.085);
-  BOOST_TEST_CHECK(permcolor3c64F::csCHstd::c(0.25).getC1() == 0.325);
-  BOOST_TEST_CHECK(permcolor3c64F::csCHstd::c(0.25).getC0() == 0.298);
+  EXPECT_NEAR(permcolor3c64F::csCHstd::c(0.25).getC2(),  0.085,    0.01);
+  EXPECT_NEAR(permcolor3c64F::csCHstd::c(0.25).getC1(),  0.325,    0.01);
+  EXPECT_NEAR(permcolor3c64F::csCHstd::c(0.25).getC0(),  0.298,    0.01);
 
 }
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(tfrm_misc) {
+TEST(MISC_various_tfrm, Integer) {
 
   mjr::colorRGB8b aColor;
   mjr::colorRGB8b bColor;
@@ -5241,113 +5236,112 @@ BOOST_AUTO_TEST_CASE(tfrm_misc) {
   bColor.setRGBfromLogPackIntARGB(0x00FFFF);
   dColor.setRGBfromLogPackIntARGB(0x0100FF);
 
-
   cColor.setToBlack();
   cColor.tfrmCopy(aColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 0xFF);
-  BOOST_TEST_CHECK(cColor.getC1() == 0x00);
-  BOOST_TEST_CHECK(cColor.getC2() == 0xFF);
+  EXPECT_EQ(cColor.getC0(),  0xFF);
+  EXPECT_EQ(cColor.getC1(),  0x00);
+  EXPECT_EQ(cColor.getC2(),  0xFF);
 
   cColor=aColor;
   cColor.tfrmMaxI(bColor); // Intensity equal, NOOP
-  BOOST_TEST_CHECK(cColor.getC0() == 0xFF);
-  BOOST_TEST_CHECK(cColor.getC1() == 0x00);
-  BOOST_TEST_CHECK(cColor.getC2() == 0xFF);
+  EXPECT_EQ(cColor.getC0(),  0xFF);
+  EXPECT_EQ(cColor.getC1(),  0x00);
+  EXPECT_EQ(cColor.getC2(),  0xFF);
 
   cColor=aColor;
   cColor.tfrmMinI(bColor); // Intensity equal, NOOP
-  BOOST_TEST_CHECK(cColor.getC0() == 0xFF);
-  BOOST_TEST_CHECK(cColor.getC1() == 0x00);
-  BOOST_TEST_CHECK(cColor.getC2() == 0xFF);
+  EXPECT_EQ(cColor.getC0(),  0xFF);
+  EXPECT_EQ(cColor.getC1(),  0x00);
+  EXPECT_EQ(cColor.getC2(),  0xFF);
 
   cColor=dColor;
   cColor.tfrmMaxI(aColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 0xFF);
-  BOOST_TEST_CHECK(cColor.getC1() == 0x00);
-  BOOST_TEST_CHECK(cColor.getC2() == 0xFF);
+  EXPECT_EQ(cColor.getC0(),  0xFF);
+  EXPECT_EQ(cColor.getC1(),  0x00);
+  EXPECT_EQ(cColor.getC2(),  0xFF);
 
   cColor=dColor;
   cColor.tfrmMaxI(aColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 0xFF);
-  BOOST_TEST_CHECK(cColor.getC1() == 0x00);
-  BOOST_TEST_CHECK(cColor.getC2() == 0xFF);
+  EXPECT_EQ(cColor.getC0(),  0xFF);
+  EXPECT_EQ(cColor.getC1(),  0x00);
+  EXPECT_EQ(cColor.getC2(),  0xFF);
 
   cColor=aColor;
   cColor.tfrmMax(bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 0xFF);
-  BOOST_TEST_CHECK(cColor.getC1() == 0xFF);
-  BOOST_TEST_CHECK(cColor.getC2() == 0xFF);
+  EXPECT_EQ(cColor.getC0(),  0xFF);
+  EXPECT_EQ(cColor.getC1(),  0xFF);
+  EXPECT_EQ(cColor.getC2(),  0xFF);
 
   cColor=aColor;
   cColor.tfrmMin(bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 0x00);
-  BOOST_TEST_CHECK(cColor.getC1() == 0x00);
-  BOOST_TEST_CHECK(cColor.getC2() == 0xFF);
+  EXPECT_EQ(cColor.getC0(),  0x00);
+  EXPECT_EQ(cColor.getC1(),  0x00);
+  EXPECT_EQ(cColor.getC2(),  0xFF);
 
   cColor=dColor;
   cColor.tfrmSaw(mjr::colorRGB8b().setRGBfromLogPackIntARGB(0x00000100), mjr::colorRGB8b().setRGBfromLogPackIntARGB(0x00FFFFFF));
-  BOOST_TEST_CHECK(cColor.getC0() == 0x01);
-  BOOST_TEST_CHECK(cColor.getC1() == 0x00);
-  BOOST_TEST_CHECK(cColor.getC2() == 0xFF);
+  EXPECT_EQ(cColor.getC0(),  0x01);
+  EXPECT_EQ(cColor.getC1(),  0x00);
+  EXPECT_EQ(cColor.getC2(),  0xFF);
 
   cColor=dColor;
   cColor.tfrmStep(mjr::colorRGB8b().setRGBfromLogPackIntARGB(0x00000100), mjr::colorRGB8b().setRGBfromLogPackIntARGB(0x00FFFFFF));
-  BOOST_TEST_CHECK(cColor.getC0() == 0xFF);
-  BOOST_TEST_CHECK(cColor.getC1() == 0x00);
-  BOOST_TEST_CHECK(cColor.getC2() == 0xFF);
+  EXPECT_EQ(cColor.getC0(),  0xFF);
+  EXPECT_EQ(cColor.getC1(),  0x00);
+  EXPECT_EQ(cColor.getC2(),  0xFF);
 
   cColor=aColor;
   cColor.tfrmDirac(bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 0x00);
-  BOOST_TEST_CHECK(cColor.getC1() == 0x00);
-  BOOST_TEST_CHECK(cColor.getC2() == 0xFF);
+  EXPECT_EQ(cColor.getC0(),  0x00);
+  EXPECT_EQ(cColor.getC1(),  0x00);
+  EXPECT_EQ(cColor.getC2(),  0xFF);
 
   cColor=aColor;
   cColor.tfrmDiracTot(bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 0x00);
-  BOOST_TEST_CHECK(cColor.getC1() == 0x00);
-  BOOST_TEST_CHECK(cColor.getC2() == 0x00);
+  EXPECT_EQ(cColor.getC0(),  0x00);
+  EXPECT_EQ(cColor.getC1(),  0x00);
+  EXPECT_EQ(cColor.getC2(),  0x00);
 
   cColor=aColor;
   cColor.tfrmDiracTot(aColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 0xFF);
-  BOOST_TEST_CHECK(cColor.getC1() == 0xFF);
-  BOOST_TEST_CHECK(cColor.getC2() == 0xFF);
+  EXPECT_EQ(cColor.getC0(),  0xFF);
+  EXPECT_EQ(cColor.getC1(),  0xFF);
+  EXPECT_EQ(cColor.getC2(),  0xFF);
 
   cColor=aColor;
   cColor.tfrmFuzzyDirac(mjr::colorRGB8b().setRGBfromLogPackIntARGB(0x00FE01F0), mjr::colorRGB8b().setRGBfromLogPackIntARGB(0x00010101));
-  BOOST_TEST_CHECK(cColor.getC0() == 0xFF);
-  BOOST_TEST_CHECK(cColor.getC1() == 0xFF);
-  BOOST_TEST_CHECK(cColor.getC2() == 0x00);
+  EXPECT_EQ(cColor.getC0(),  0xFF);
+  EXPECT_EQ(cColor.getC1(),  0xFF);
+  EXPECT_EQ(cColor.getC2(),  0x00);
 
   cColor=aColor;
   cColor.tfrmMean(bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 0x7f);
-  BOOST_TEST_CHECK(cColor.getC1() == 0x7f);
-  BOOST_TEST_CHECK(cColor.getC2() == 0xFF);
+  EXPECT_EQ(cColor.getC0(),  0x7f);
+  EXPECT_EQ(cColor.getC1(),  0x7f);
+  EXPECT_EQ(cColor.getC2(),  0xFF);
 
   cColor=dColor;
   cColor.tfrmGmean(mjr::colorRGB8b().setRGBfromLogPackIntARGB(0x00030102));
-  BOOST_TEST_CHECK(cColor.getC0() == 0x01);
-  BOOST_TEST_CHECK(cColor.getC1() == 0x00);
-  BOOST_TEST_CHECK(cColor.getC2() == 0x16);
+  EXPECT_EQ(cColor.getC0(),  0x01);
+  EXPECT_EQ(cColor.getC1(),  0x00);
+  EXPECT_EQ(cColor.getC2(),  0x16);
 
   cColor=aColor;
   cColor.tfrmGreyScaleRGB();
-  BOOST_TEST_CHECK(cColor.getC0() == 0x48);
-  BOOST_TEST_CHECK(cColor.getC1() == 0x48);
-  BOOST_TEST_CHECK(cColor.getC2() == 0x48);
+  EXPECT_EQ(cColor.getC0(),  0x48);
+  EXPECT_EQ(cColor.getC1(),  0x48);
+  EXPECT_EQ(cColor.getC2(),  0x48);
 
   cColor=bColor;
   cColor.tfrmGreyScaleRGB();
-  BOOST_TEST_CHECK(cColor.getC0() == 0xC8);
-  BOOST_TEST_CHECK(cColor.getC1() == 0xC8);
-  BOOST_TEST_CHECK(cColor.getC2() == 0xC8);
+  EXPECT_EQ(cColor.getC0(),  0xC8);
+  EXPECT_EQ(cColor.getC1(),  0xC8);
+  EXPECT_EQ(cColor.getC2(),  0xC8);
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(tfrm_misc_FLT, * boost::unit_test::tolerance(0.00001)) {
+TEST(MISC_various_tfrm, FLoat) {
 
   mjr::colorRGB32F aColor;
   mjr::colorRGB32F bColor;
@@ -5360,110 +5354,110 @@ BOOST_AUTO_TEST_CASE(tfrm_misc_FLT, * boost::unit_test::tolerance(0.00001)) {
 
   cColor.setToBlack();
   cColor.tfrmCopy(aColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 2.0);
-  BOOST_TEST_CHECK(cColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 2.0);
+  EXPECT_NEAR(cColor.getC0(),  2.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  0.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  2.0, 0.00001);
 
   cColor=aColor;
   cColor.tfrmMaxI(bColor); // Intensity equal, NOOP
-  BOOST_TEST_CHECK(cColor.getC0() == 2.0);
-  BOOST_TEST_CHECK(cColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 2.0);
+  EXPECT_NEAR(cColor.getC0(),  2.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  0.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  2.0, 0.00001);
 
   cColor=aColor;
   cColor.tfrmMinI(bColor); // Intensity equal, NOOP
-  BOOST_TEST_CHECK(cColor.getC0() == 2.0);
-  BOOST_TEST_CHECK(cColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 2.0);
+  EXPECT_NEAR(cColor.getC0(),  2.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  0.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  2.0, 0.00001);
 
   cColor=dColor;
   cColor.tfrmMaxI(aColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 2.0);
-  BOOST_TEST_CHECK(cColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 2.0);
+  EXPECT_NEAR(cColor.getC0(),  2.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  0.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  2.0, 0.00001);
 
   cColor=dColor;
   cColor.tfrmMaxI(aColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 2.0);
-  BOOST_TEST_CHECK(cColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 2.0);
+  EXPECT_NEAR(cColor.getC0(),  2.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  0.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  2.0, 0.00001);
 
   cColor=aColor;
   cColor.tfrmMax(bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 2.0);
-  BOOST_TEST_CHECK(cColor.getC1() == 2.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 2.0);
+  EXPECT_NEAR(cColor.getC0(),  2.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  2.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  2.0, 0.00001);
 
   cColor=aColor;
   cColor.tfrmMin(bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 0.0);
-  BOOST_TEST_CHECK(cColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 2.0);
+  EXPECT_NEAR(cColor.getC0(),  0.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  0.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  2.0, 0.00001);
 
   // cColor=dColor;
   // cColor.tfrmSaw(mjr::colorRGB32F().setRGBfromLogPackIntARGB(0.0000100), mjr::colorRGB32F().setRGBfromLogPackIntARGB(0.0FFFFFF));
-  // BOOST_TEST_CHECK(cColor.getC0() == 0x01);
-  // BOOST_TEST_CHECK(cColor.getC1() == 0.0);
-  // BOOST_TEST_CHECK(cColor.getC2() == 2.0);
+  // EXPECT_NEAR(cColor.getC0(),  0x01, 0.00001);
+  // EXPECT_NEAR(cColor.getC1(),  0.0, 0.00001);
+  // EXPECT_NEAR(cColor.getC2(),  2.0, 0.00001);
 
   // cColor=dColor;
   // cColor.tfrmStep(mjr::colorRGB32F().setRGBfromLogPackIntARGB(0.0000100), mjr::colorRGB32F().setRGBfromLogPackIntARGB(0.0FFFFFF));
-  // BOOST_TEST_CHECK(cColor.getC0() == 2.0);
-  // BOOST_TEST_CHECK(cColor.getC1() == 0.0);
-  // BOOST_TEST_CHECK(cColor.getC2() == 2.0);
+  // EXPECT_NEAR(cColor.getC0(),  2.0, 0.00001);
+  // EXPECT_NEAR(cColor.getC1(),  0.0, 0.00001);
+  // EXPECT_NEAR(cColor.getC2(),  2.0, 0.00001);
 
   cColor=aColor;
   cColor.tfrmDirac(bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 0.0);
-  BOOST_TEST_CHECK(cColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 1.0);
+  EXPECT_NEAR(cColor.getC0(),  0.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  0.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  1.0, 0.00001);
 
   cColor=aColor;
   cColor.tfrmDiracTot(bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 0.0);
-  BOOST_TEST_CHECK(cColor.getC1() == 0.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 0.0);
+  EXPECT_NEAR(cColor.getC0(),  0.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  0.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  0.0, 0.00001);
 
   cColor=aColor;
   cColor.tfrmDiracTot(aColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 1.0);
-  BOOST_TEST_CHECK(cColor.getC1() == 1.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 1.0);
+  EXPECT_NEAR(cColor.getC0(),  1.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  1.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  1.0, 0.00001);
 
   // cColor=aColor;
   // cColor.tfrmFuzzyDirac(mjr::colorRGB32F().setRGBfromLogPackIntARGB(0.0FE01F0), mjr::colorRGB32F().setRGBfromLogPackIntARGB(0.0010101));
-  // BOOST_TEST_CHECK(cColor.getC0() == 2.0);
-  // BOOST_TEST_CHECK(cColor.getC1() == 2.0);
-  // BOOST_TEST_CHECK(cColor.getC2() == 0.0);
+  // EXPECT_NEAR(cColor.getC0(),  2.0, 0.00001);
+  // EXPECT_NEAR(cColor.getC1(),  2.0, 0.00001);
+  // EXPECT_NEAR(cColor.getC2(),  0.0, 0.00001);
 
   cColor=aColor;
   cColor.tfrmMean(bColor);
-  BOOST_TEST_CHECK(cColor.getC0() == 1.0);
-  BOOST_TEST_CHECK(cColor.getC1() == 1.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 2.0);
+  EXPECT_NEAR(cColor.getC0(),  1.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  1.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  2.0, 0.00001);
 
   cColor=dColor;
   cColor.tfrmGmean(mjr::colorRGB32F().setChansRGB(8.0, 25.0, 2.0));
-  BOOST_TEST_CHECK(cColor.getC0() == 0.0);
-  BOOST_TEST_CHECK(cColor.getC1() == 5.0);
-  BOOST_TEST_CHECK(cColor.getC2() == 2.0);
+  EXPECT_NEAR(cColor.getC0(),  0.0, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  5.0, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  2.0, 0.00001);
 
   cColor=aColor;
   cColor.tfrmGreyScaleRGB();
-  BOOST_TEST_CHECK(cColor.getC0() == 0.569599986);
-  BOOST_TEST_CHECK(cColor.getC1() == 0.569599986);
-  BOOST_TEST_CHECK(cColor.getC2() == 0.569599986);
+  EXPECT_NEAR(cColor.getC0(),  0.569599986, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  0.569599986, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  0.569599986, 0.00001);
 
   cColor=bColor;
   cColor.tfrmGreyScaleRGB();
-  BOOST_TEST_CHECK(cColor.getC0() == 1.57480001);
-  BOOST_TEST_CHECK(cColor.getC1() == 1.57480001);
-  BOOST_TEST_CHECK(cColor.getC2() == 1.57480001);
+  EXPECT_NEAR(cColor.getC0(),  1.57480001, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  1.57480001, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  1.57480001, 0.00001);
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(tfrm_websafe) {
+TEST(FUN_tfrm_websafe, Comprehensive) {
 
   mjr::colorRGB8b  aColor;
   mjr::colorRGB8b  bColor;
@@ -5473,236 +5467,265 @@ BOOST_AUTO_TEST_CASE(tfrm_websafe) {
   aColor.setChansRGB(0x00, 0x33, 0x66);
   bColor.setChansRGB(0x00, 0x33, 0x66);
   aColor.tfrmWebSafeRGB();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setChansRGB(0x99, 0xCC, 0xFF);
   bColor.setChansRGB(0x99, 0xCC, 0xFF);
   aColor.tfrmWebSafeRGB();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setChansRGB(0x01, 0x34, 0x67);
   bColor.setChansRGB(0x00, 0x33, 0x66);
   aColor.tfrmWebSafeRGB();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setChansRGB(0x98, 0xCB, 0xFE);
   bColor.setChansRGB(0x99, 0xCC, 0xFF);
   aColor.tfrmWebSafeRGB();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   cColor.setChansRGB(0.05F, 0.15F, 0.35F);
   cColor.tfrmWebSafeRGB();
-  BOOST_TEST_CHECK(cColor.getRed()   == 0.0,    boost::test_tools::tolerance(0.0001));
-  BOOST_TEST_CHECK(cColor.getGreen() == 0.2,    boost::test_tools::tolerance(0.0001));
-  BOOST_TEST_CHECK(cColor.getBlue()  == 0.4,    boost::test_tools::tolerance(0.0001));
+  EXPECT_NEAR(cColor.getRed(),    0.0,    0.0001);
+  EXPECT_NEAR(cColor.getGreen(),  0.2,    0.0001);
+  EXPECT_NEAR(cColor.getBlue(),   0.4,    0.0001);
 
   cColor.setChansRGB(0.55F, 0.75F, 0.95F);
   cColor.tfrmWebSafeRGB();
-  BOOST_TEST_CHECK(cColor.getRed()   == 0.6,    boost::test_tools::tolerance(0.0001));
-  BOOST_TEST_CHECK(cColor.getGreen() == 0.8,    boost::test_tools::tolerance(0.0001));
-  BOOST_TEST_CHECK(cColor.getBlue()  == 1.0,    boost::test_tools::tolerance(0.0001));
+  EXPECT_NEAR(cColor.getRed(),    0.6,    0.0001);
+  EXPECT_NEAR(cColor.getGreen(),  0.8,    0.0001);
+  EXPECT_NEAR(cColor.getBlue(),   1.0,    0.0001);
 
   dColor.setChans(0xCB);
   dColor.tfrmWebSafeRGB();
-  BOOST_TEST_CHECK(dColor.getRed()   == 0xCC);
-  BOOST_TEST_CHECK(dColor.getGreen() == 0xCC);
-  BOOST_TEST_CHECK(dColor.getBlue()  == 0xCC);
-  BOOST_TEST_CHECK(dColor.getAlpha() == 0xCB);
+  EXPECT_EQ(dColor.getRed(),    0xCC);
+  EXPECT_EQ(dColor.getGreen(),  0xCC);
+  EXPECT_EQ(dColor.getBlue(),   0xCC);
+  EXPECT_EQ(dColor.getAlpha(),  0xCB);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(tfrm_PowPow_int) {
-
+TEST(FUN_tfrm_PowPow, Integer) {
   mjr::colorRGB8b  aColor;
   mjr::colorRGBA8b bColor;
 
-  aColor.setChansRGB(0, 50, 100);
+  aColor.setChansRGB(0, 50, 148);
+  aColor.tfrmLn(5.0);
+  EXPECT_EQ(aColor.getRed(),    0); // No op zero
+  EXPECT_EQ(aColor.getGreen(),  19);
+  EXPECT_EQ(aColor.getBlue(),   24);
+
+  aColor.setChansRGB(0, 50, 148);
+  aColor.tfrmLn(1.0);
+  EXPECT_EQ(aColor.getRed(),    0); // No op zero
+  EXPECT_EQ(aColor.getGreen(),  3);
+  EXPECT_EQ(aColor.getBlue(),   4);
+
+  aColor.setChansRGB(0, 50, 148);
   aColor.tfrmLn1();
-  BOOST_TEST_CHECK(aColor.getRed()   == 0);
-  BOOST_TEST_CHECK(aColor.getGreen() == 3);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 4);
+  EXPECT_EQ(aColor.getRed(),    0);
+  EXPECT_EQ(aColor.getGreen(),  3);
+  EXPECT_EQ(aColor.getBlue(),   5);
 
   aColor.setChansRGB(0, 50, 100);
   aColor.tfrmStdPowSqr();
-  BOOST_TEST_CHECK(aColor.getRed()   == 0);
-  BOOST_TEST_CHECK(aColor.getGreen() == 9);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 39);
+  EXPECT_EQ(aColor.getRed(),    0);
+  EXPECT_EQ(aColor.getGreen(),  9);
+  EXPECT_EQ(aColor.getBlue(),   39);
 
   aColor.setChansRGB(0, 50, 100);
   aColor.tfrmStdPowSqrt();
-  BOOST_TEST_CHECK(aColor.getRed()   == 0);
-  BOOST_TEST_CHECK(aColor.getGreen() == 112);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 159);
+  EXPECT_EQ(aColor.getRed(),    0);
+  EXPECT_EQ(aColor.getGreen(),  112);
+  EXPECT_EQ(aColor.getBlue(),   159);
 
   aColor.setChansRGB(0, 50, 100);
   aColor.tfrmStdPow(2.0);
-  BOOST_TEST_CHECK(aColor.getRed()   == 0);
-  BOOST_TEST_CHECK(aColor.getGreen() == 9);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 39);
+  EXPECT_EQ(aColor.getRed(),    0);
+  EXPECT_EQ(aColor.getGreen(),  9);
+  EXPECT_EQ(aColor.getBlue(),   39);
 
   aColor.setChansRGB(0, 50, 100);
   aColor.tfrmStdPow(0.5);
-  BOOST_TEST_CHECK(aColor.getRed()   == 0);
-  BOOST_TEST_CHECK(aColor.getGreen() == 112);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 159);
+  EXPECT_EQ(aColor.getRed(),    0);
+  EXPECT_EQ(aColor.getGreen(),  112);
+  EXPECT_EQ(aColor.getBlue(),   159);
 
   aColor.setChansRGB(0, 50, 100);
   aColor.tfrmStdPowRGB(1, 2.0, 0.5);
-  BOOST_TEST_CHECK(aColor.getRed()   == 0);
-  BOOST_TEST_CHECK(aColor.getGreen() == 9);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 159);
+  EXPECT_EQ(aColor.getRed(),    0);
+  EXPECT_EQ(aColor.getGreen(),  9);
+  EXPECT_EQ(aColor.getBlue(),   159);
 
   bColor.setToWhite();
   bColor.setChansRGB(0, 50, 100);
   bColor.tfrmStdPowRGB(1, 2.0, 0.5);
-  BOOST_TEST_CHECK(bColor.getRed()   == 0);
-  BOOST_TEST_CHECK(bColor.getGreen() == 9);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 159);
-  BOOST_TEST_CHECK(bColor.getAlpha() == 0xff);
+  EXPECT_EQ(bColor.getRed(),    0);
+  EXPECT_EQ(bColor.getGreen(),  9);
+  EXPECT_EQ(bColor.getBlue(),   159);
+  EXPECT_EQ(bColor.getAlpha(),  0xff);
 
   bColor.setToBlack();
   bColor.setChansRGB(0, 50, 100);
   bColor.tfrmStdPowRGB(1, 2.0, 0.5);
-  BOOST_TEST_CHECK(bColor.getRed()   == 0);
-  BOOST_TEST_CHECK(bColor.getGreen() == 9);
-  BOOST_TEST_CHECK(bColor.getBlue()  == 159);
-  BOOST_TEST_CHECK(bColor.getAlpha() == 0x00);
+  EXPECT_EQ(bColor.getRed(),    0);
+  EXPECT_EQ(bColor.getGreen(),  9);
+  EXPECT_EQ(bColor.getBlue(),   159);
+  EXPECT_EQ(bColor.getAlpha(),  0x00);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(tfrm_PowPow_flt, * boost::unit_test::tolerance(0.00001)) {
+TEST(FUN_tfrm_PowPow, Float) {
 
   mjr::colorRGB32F aColor;
 
+  aColor.setChansRGB(0, 50, 148);
+  aColor.tfrmLn(5.0);
+  EXPECT_NEAR(aColor.getRed(),    0,             0.00001); // No op zero
+  EXPECT_NEAR(aColor.getGreen(),  19.5601150272, 0.00001);
+  EXPECT_NEAR(aColor.getBlue(),   24.9860613688, 0.00001);
+
+  aColor.setChansRGB(0, -1, 148);
+  aColor.tfrmLn(1.0);
+  EXPECT_NEAR(aColor.getRed(),    0,             0.00001); // No op zero
+  EXPECT_NEAR(aColor.getGreen(),  -1,            0.00001); // No op negative
+  EXPECT_NEAR(aColor.getBlue(),   4.99721227376, 0.00001);
+
   aColor.setChansRGB(0, 50, 100);
   aColor.tfrmLn1();
-  BOOST_TEST_CHECK(aColor.getRed()   == 0);
-  BOOST_TEST_CHECK(aColor.getGreen() == 3.93182563272);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 4.61512051684);
+  EXPECT_NEAR(aColor.getRed(),    0,             0.00001);
+  EXPECT_NEAR(aColor.getGreen(),  3.93182563272, 0.00001);
+  EXPECT_NEAR(aColor.getBlue(),   4.61512051684, 0.00001);
+
+  aColor.setChansRGB(0, -2, 100);
+  aColor.tfrmLn1();
+  EXPECT_NEAR(aColor.getRed(),    0,             0.00001); // No op zero
+  EXPECT_NEAR(aColor.getGreen(), -2.0,           0.00001); // No op negative
+  EXPECT_NEAR(aColor.getBlue(),   4.61512051684, 0.00001);
 
   aColor.setChansRGB(0, 50, 100);
   aColor.tfrmStdPowSqr();
-  BOOST_TEST_CHECK(aColor.getRed()   == 0);
-  BOOST_TEST_CHECK(aColor.getGreen() == 2500);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 10000);
+  EXPECT_NEAR(aColor.getRed(),    0,             0.00001);
+  EXPECT_NEAR(aColor.getGreen(),  2500,          0.00001);
+  EXPECT_NEAR(aColor.getBlue(),   10000,         0.00001);
 
   aColor.setChansRGB(0, 50, 100);
   aColor.tfrmStdPowSqrt();
-  BOOST_TEST_CHECK(aColor.getRed()   == 0);
-  BOOST_TEST_CHECK(aColor.getGreen() == 7.07106781);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 10);
+  EXPECT_NEAR(aColor.getRed(),    0,             0.00001);
+  EXPECT_NEAR(aColor.getGreen(),  7.07106781,    0.00001);
+  EXPECT_NEAR(aColor.getBlue(),   10,            0.00001);
 
   aColor.setChansRGB(0, 50, 100);
   aColor.tfrmStdPow(2.0);
-  BOOST_TEST_CHECK(aColor.getRed()   == 0);
-  BOOST_TEST_CHECK(aColor.getGreen() == 2500);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 10000);
+  EXPECT_NEAR(aColor.getRed(),    0,             0.00001);
+  EXPECT_NEAR(aColor.getGreen(),  2500,          0.00001);
+  EXPECT_NEAR(aColor.getBlue(),   10000,         0.00001);
 
   aColor.setChansRGB(0, 50, 100);
   aColor.tfrmStdPow(0.5);
-  BOOST_TEST_CHECK(aColor.getRed()   == 0);
-  BOOST_TEST_CHECK(aColor.getGreen() == 7.07106781);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 10);
+  EXPECT_NEAR(aColor.getRed(),    0,             0.00001);
+  EXPECT_NEAR(aColor.getGreen(),  7.07106781,    0.00001);
+  EXPECT_NEAR(aColor.getBlue(),   10,            0.00001);
 
   aColor.setChansRGB(0, 50, 100);
   aColor.tfrmStdPowRGB(1, 2.0, 0.5);
-  BOOST_TEST_CHECK(aColor.getRed()   == 0);
-  BOOST_TEST_CHECK(aColor.getGreen() == 2500);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 10);
+  EXPECT_NEAR(aColor.getRed(),    0,             0.00001);
+  EXPECT_NEAR(aColor.getGreen(),  2500,          0.00001);
+  EXPECT_NEAR(aColor.getBlue(),   10,            0.00001);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(tfrm_GryLevScl_int) {
+TEST(FUN_tfrm_GryLevScl, Integer) {
 
   mjr::colorRGB8b  aColor;
   mjr::colorRGBA8b cColor;
 
   aColor.setChansRGB(10, 20, 25);
   aColor.tfrmLinearGreyLevelScale(2, 4);
-  BOOST_TEST_CHECK(aColor.getRed()   == 24);
-  BOOST_TEST_CHECK(aColor.getGreen() == 44);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 54);
+  EXPECT_EQ(aColor.getRed(),    24);
+  EXPECT_EQ(aColor.getGreen(),  44);
+  EXPECT_EQ(aColor.getBlue(),   54);
 
   aColor.setChansRGB(10, 20, 25);
   aColor.tfrmLinearGreyLevelScale(2.5, 4);
-  BOOST_TEST_CHECK(aColor.getRed()   == 29);
-  BOOST_TEST_CHECK(aColor.getGreen() == 54);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 66);
+  EXPECT_EQ(aColor.getRed(),    29);
+  EXPECT_EQ(aColor.getGreen(),  54);
+  EXPECT_EQ(aColor.getBlue(),   66);
 
   aColor.setChansRGB(10, 20, 25);
   aColor.tfrmLinearGreyLevelScaleRGB(2, 4, 2.5, 4, 3, 2);
-  BOOST_TEST_CHECK(aColor.getRed()   == 24);
-  BOOST_TEST_CHECK(aColor.getGreen() == 54);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 77);
+  EXPECT_EQ(aColor.getRed(),    24);
+  EXPECT_EQ(aColor.getGreen(),  54);
+  EXPECT_EQ(aColor.getBlue(),   77);
 
   cColor.setToWhite();
   cColor.setChansRGB(10, 20, 25);
   cColor.tfrmLinearGreyLevelScaleRGB(2, 4, 2.5, 4, 3, 2);
-  BOOST_TEST_CHECK(cColor.getRed()   == 24);
-  BOOST_TEST_CHECK(cColor.getGreen() == 54);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 77);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0xff);
+  EXPECT_EQ(cColor.getRed(),    24);
+  EXPECT_EQ(cColor.getGreen(),  54);
+  EXPECT_EQ(cColor.getBlue(),   77);
+  EXPECT_EQ(cColor.getAlpha(),  0xff);
 
   cColor.setToBlack();
   cColor.setChansRGB(10, 20, 25);
   cColor.tfrmLinearGreyLevelScaleRGB(2, 4, 2.5, 4, 3, 2);
-  BOOST_TEST_CHECK(cColor.getRed()   == 24);
-  BOOST_TEST_CHECK(cColor.getGreen() == 54);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 77);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0x00);
+  EXPECT_EQ(cColor.getRed(),    24);
+  EXPECT_EQ(cColor.getGreen(),  54);
+  EXPECT_EQ(cColor.getBlue(),   77);
+  EXPECT_EQ(cColor.getAlpha(),  0x00);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(tfrm_GryLevSclflt, * boost::unit_test::tolerance(0.00001)) {
+TEST(FUN_tfrm_GryLevSclflt, Float) {
 
   mjr::colorRGB32F  aColor;
   mjr::colorRGBA32F cColor;
 
   aColor.setChansRGB(10, 20, 25);
   aColor.tfrmLinearGreyLevelScale(2, 4);
-  BOOST_TEST_CHECK(aColor.getRed()   == 24.0);
-  BOOST_TEST_CHECK(aColor.getGreen() == 44.0);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 54.0);
+  EXPECT_NEAR(aColor.getRed(),    24.0, 0.00001);
+  EXPECT_NEAR(aColor.getGreen(),  44.0, 0.00001);
+  EXPECT_NEAR(aColor.getBlue(),   54.0, 0.00001);
 
   aColor.setChansRGB(10, 20, 25);
   aColor.tfrmLinearGreyLevelScale(2.5, 4);
-  BOOST_TEST_CHECK(aColor.getRed()   == 29.0);
-  BOOST_TEST_CHECK(aColor.getGreen() == 54.0);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 66.5);
+  EXPECT_NEAR(aColor.getRed(),    29.0, 0.00001);
+  EXPECT_NEAR(aColor.getGreen(),  54.0, 0.00001);
+  EXPECT_NEAR(aColor.getBlue(),   66.5, 0.00001);
 
   aColor.setChansRGB(10, 20, 25);
   aColor.tfrmLinearGreyLevelScaleRGB(2, 4, 2.5, 4, 3, 2);
-  BOOST_TEST_CHECK(aColor.getRed()   == 24.0);
-  BOOST_TEST_CHECK(aColor.getGreen() == 54.0);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 77.0);
+  EXPECT_NEAR(aColor.getRed(),    24.0, 0.00001);
+  EXPECT_NEAR(aColor.getGreen(),  54.0, 0.00001);
+  EXPECT_NEAR(aColor.getBlue(),   77.0, 0.00001);
 
   cColor.setToWhite();
   cColor.setChansRGB(10, 20, 25);
   cColor.tfrmLinearGreyLevelScaleRGB(2, 4, 2.5, 4, 3, 2);
-  BOOST_TEST_CHECK(cColor.getRed()   == 24.0);
-  BOOST_TEST_CHECK(cColor.getGreen() == 54.0);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 77.0);
-  BOOST_TEST_CHECK(cColor.getAlpha() ==  1.0);
+  EXPECT_NEAR(cColor.getRed(),    24.0, 0.00001);
+  EXPECT_NEAR(cColor.getGreen(),  54.0, 0.00001);
+  EXPECT_NEAR(cColor.getBlue(),   77.0, 0.00001);
+  EXPECT_NEAR(cColor.getAlpha(),   1.0, 0.00001);
 
   cColor.setToBlack();
   cColor.setChansRGB(10, 20, 25);
   cColor.tfrmLinearGreyLevelScaleRGB(2, 4, 2.5, 4, 3, 2);
-  BOOST_TEST_CHECK(cColor.getRed()   == 24.0);
-  BOOST_TEST_CHECK(cColor.getGreen() == 54.0);
-  BOOST_TEST_CHECK(cColor.getBlue()  == 77.0);
-  BOOST_TEST_CHECK(cColor.getAlpha() ==  0.0);
+  EXPECT_NEAR(cColor.getRed(),    24.0, 0.00001);
+  EXPECT_NEAR(cColor.getGreen(),  54.0, 0.00001);
+  EXPECT_NEAR(cColor.getBlue(),   77.0, 0.00001);
+  EXPECT_NEAR(cColor.getAlpha(),   0.0, 0.00001);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(wmean, * boost::unit_test::tolerance(0.01)) {
+TEST(FUN_wMean_and_linearInterpolate, Integer) {
 
   mjr::colorRGBA8b a1Color(10, 20, 30, 40);
   mjr::colorRGBA8b a2Color(10, 30, 20, 40);
@@ -5712,786 +5735,785 @@ BOOST_AUTO_TEST_CASE(wmean, * boost::unit_test::tolerance(0.01)) {
   mjr::colorRGBA8b aColor;
   mjr::colorRGBA8b cColor;
 
+ ////////////////////////////////////////////////////////////////////////////////
+
+ aColor.wMean(1.0F, 1.0F, a1Color, a2Color);
+ EXPECT_EQ(aColor.getC0(),  20);
+ EXPECT_EQ(aColor.getC1(),  50);
+ EXPECT_EQ(aColor.getC2(),  50);
+ EXPECT_EQ(aColor.getC3(),  80);
+
+ aColor.wMean(1.0F, 1.0F, 1.0F, a1Color, a2Color, a3Color);
+ EXPECT_EQ(aColor.getC0(),  60);
+ EXPECT_EQ(aColor.getC1(),  70);
+ EXPECT_EQ(aColor.getC2(),  80);
+ EXPECT_EQ(aColor.getC3(),  90);
+
+ aColor.wMean(1.0F, 1.0F, 1.0F, 1.0F, a1Color, a2Color, a3Color, a4Color);
+ EXPECT_EQ(aColor.getC0(),  150);
+ EXPECT_EQ(aColor.getC1(),  140);
+ EXPECT_EQ(aColor.getC2(),   90);
+ EXPECT_EQ(aColor.getC3(),  110);
+
+ aColor.wMean(0.1F, 1.0F, a1Color, a2Color);
+ EXPECT_EQ(aColor.getC0(),  11);
+ EXPECT_EQ(aColor.getC1(),  32);
+ EXPECT_EQ(aColor.getC2(),  23);
+ EXPECT_EQ(aColor.getC3(),  44);
+
+ aColor.wMean(0.1F, 1.0F, 1.0F, a1Color, a2Color, a3Color);
+ EXPECT_EQ(aColor.getC0(),  51);
+ EXPECT_EQ(aColor.getC1(),  52);
+ EXPECT_EQ(aColor.getC2(),  53);
+ EXPECT_EQ(aColor.getC3(),  54);
+
+ aColor.wMean(0.1F, 1.0F, 1.0F, 1.0F, a1Color, a2Color, a3Color, a4Color);
+ EXPECT_EQ(aColor.getC0(),  141);
+ EXPECT_EQ(aColor.getC1(),  122);
+ EXPECT_EQ(aColor.getC2(),   63);
+ EXPECT_EQ(aColor.getC3(),   74);
+
+ ////////////////////////////////////////////////////////////////////////////////
+
+ aColor.linearInterpolate(0.0, a1Color, a2Color);
+ EXPECT_EQ(aColor.getC0(),  a1Color.getC0());
+ EXPECT_EQ(aColor.getC1(),  a1Color.getC1());
+ EXPECT_EQ(aColor.getC2(),  a1Color.getC2());
+ EXPECT_EQ(aColor.getC3(),  a1Color.getC3());
+
+ aColor.linearInterpolate(1.0, a1Color, a2Color);
+ EXPECT_EQ(aColor.getC0(),  a2Color.getC0());
+ EXPECT_EQ(aColor.getC1(),  a2Color.getC1());
+ EXPECT_EQ(aColor.getC2(),  a2Color.getC2());
+ EXPECT_EQ(aColor.getC3(),  a2Color.getC3());
+
+ aColor.linearInterpolate(0.5, a1Color, a2Color);
+ cColor.uMean(0.5F, a1Color, a2Color);
+ EXPECT_EQ(aColor.getC0(),  cColor.getC0());
+ EXPECT_EQ(aColor.getC1(),  cColor.getC1());
+ EXPECT_EQ(aColor.getC2(),  cColor.getC2());
+ EXPECT_EQ(aColor.getC3(),  cColor.getC3());
+
+ aColor.linearInterpolate(0.25, a1Color, a2Color);
+ cColor.uMean(0.75F, a1Color, a2Color);
+ EXPECT_EQ(aColor.getC0(),  cColor.getC0());
+ EXPECT_EQ(aColor.getC1(),  cColor.getC1());
+ EXPECT_EQ(aColor.getC2(),  cColor.getC2());
+ EXPECT_EQ(aColor.getC3(),  cColor.getC3());
+
+ aColor.linearInterpolate(0.75, a1Color, a2Color);
+ cColor.uMean(0.25F, a1Color, a2Color);
+ EXPECT_EQ(aColor.getC0(),  cColor.getC0());
+ EXPECT_EQ(aColor.getC1(),  cColor.getC1());
+ EXPECT_EQ(aColor.getC2(),  cColor.getC2());
+ EXPECT_EQ(aColor.getC3(),  cColor.getC3());
+
+ ////////////////////////////////////////////////////////////////////////////////
+ aColor.uMean(0.2F, a1Color, a2Color);
+ EXPECT_EQ(aColor.getC0(),  .2*10+.8*10);
+ EXPECT_EQ(aColor.getC1(),  .2*20+.8*30);
+ EXPECT_EQ(aColor.getC2(),  .2*30+.8*20);
+ EXPECT_EQ(aColor.getC3(),  .2*40+.8*40);
+
+ aColor.uMean(0.1F, 0.3F, a1Color, a2Color, a3Color);
+ EXPECT_EQ(aColor.getC0(),  .1*10+.3*10+0.6*40);
+ EXPECT_EQ(aColor.getC1(),  .1*20+.3*30+0.6*20);
+ EXPECT_EQ(aColor.getC2(),  .1*30+.3*20+0.6*30);
+ EXPECT_EQ(aColor.getC3(),  .1*40+.3*40+0.6*10);
+
+ aColor.uMean(0.1F, 0.3F, 0.4F, a1Color, a2Color, a3Color, a4Color);
+ EXPECT_EQ(aColor.getC0(),  .1*10+.3*10+0.4*40+0.2*90);
+ EXPECT_EQ(aColor.getC1(),  .1*20+.3*30+0.4*20+0.2*70);
+ EXPECT_EQ(aColor.getC2(),  .1*30+.3*20+0.4*30+0.2*10);
+ EXPECT_EQ(aColor.getC3(),  .1*40+.3*40+0.4*10+0.2*20);
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+TEST(FUN_wMean, Float) {
+
+  mjr::colorRGBA32F bColor;
   mjr::colorRGBA32F b1Color(10, 20, 30, 40);
   mjr::colorRGBA32F b2Color(10, 30, 20, 40);
   mjr::colorRGBA32F b3Color(40, 20, 30, 10);
   mjr::colorRGBA32F b4Color(90, 70, 10, 20);
 
-  mjr::colorRGBA32F bColor;
-
- ////////////////////////////////////////////////////////////////////////////////
-
- aColor.wMean(1.0F, 1.0F, a1Color, a2Color);
- BOOST_TEST_CHECK(aColor.getC0() == 20);
- BOOST_TEST_CHECK(aColor.getC1() == 50);
- BOOST_TEST_CHECK(aColor.getC2() == 50);
- BOOST_TEST_CHECK(aColor.getC3() == 80);
-
- aColor.wMean(1.0F, 1.0F, 1.0F, a1Color, a2Color, a3Color);
- BOOST_TEST_CHECK(aColor.getC0() == 60);
- BOOST_TEST_CHECK(aColor.getC1() == 70);
- BOOST_TEST_CHECK(aColor.getC2() == 80);
- BOOST_TEST_CHECK(aColor.getC3() == 90);
-
- aColor.wMean(1.0F, 1.0F, 1.0F, 1.0F, a1Color, a2Color, a3Color, a4Color);
- BOOST_TEST_CHECK(aColor.getC0() == 150);
- BOOST_TEST_CHECK(aColor.getC1() == 140);
- BOOST_TEST_CHECK(aColor.getC2() ==  90);
- BOOST_TEST_CHECK(aColor.getC3() == 110);
-
- aColor.wMean(0.1F, 1.0F, a1Color, a2Color);
- BOOST_TEST_CHECK(aColor.getC0() == 11);
- BOOST_TEST_CHECK(aColor.getC1() == 32);
- BOOST_TEST_CHECK(aColor.getC2() == 23);
- BOOST_TEST_CHECK(aColor.getC3() == 44);
-
- aColor.wMean(0.1F, 1.0F, 1.0F, a1Color, a2Color, a3Color);
- BOOST_TEST_CHECK(aColor.getC0() == 51);
- BOOST_TEST_CHECK(aColor.getC1() == 52);
- BOOST_TEST_CHECK(aColor.getC2() == 53);
- BOOST_TEST_CHECK(aColor.getC3() == 54);
-
- aColor.wMean(0.1F, 1.0F, 1.0F, 1.0F, a1Color, a2Color, a3Color, a4Color);
- BOOST_TEST_CHECK(aColor.getC0() == 141);
- BOOST_TEST_CHECK(aColor.getC1() == 122);
- BOOST_TEST_CHECK(aColor.getC2() ==  63);
- BOOST_TEST_CHECK(aColor.getC3() ==  74);
-
- ////////////////////////////////////////////////////////////////////////////////
-
  bColor.wMean(1.0F, 1.0F, b1Color, b2Color);
- BOOST_TEST_CHECK(bColor.getC0() == 20);
- BOOST_TEST_CHECK(bColor.getC1() == 50);
- BOOST_TEST_CHECK(bColor.getC2() == 50);
- BOOST_TEST_CHECK(bColor.getC3() == 80);
+ EXPECT_NEAR(bColor.getC0(),  20, 0.00001);
+ EXPECT_NEAR(bColor.getC1(),  50, 0.00001);
+ EXPECT_NEAR(bColor.getC2(),  50, 0.00001);
+ EXPECT_NEAR(bColor.getC3(),  80, 0.00001);
 
  bColor.wMean(1.0F, 1.0F, 1.0F, b1Color, b2Color, b3Color);
- BOOST_TEST_CHECK(bColor.getC0() == 60);
- BOOST_TEST_CHECK(bColor.getC1() == 70);
- BOOST_TEST_CHECK(bColor.getC2() == 80);
- BOOST_TEST_CHECK(bColor.getC3() == 90);
+ EXPECT_NEAR(bColor.getC0(),  60, 0.00001);
+ EXPECT_NEAR(bColor.getC1(),  70, 0.00001);
+ EXPECT_NEAR(bColor.getC2(),  80, 0.00001);
+ EXPECT_NEAR(bColor.getC3(),  90, 0.00001);
 
  bColor.wMean(1.0F, 1.0F, 1.0F, 1.0F, b1Color, b2Color, b3Color, b4Color);
- BOOST_TEST_CHECK(bColor.getC0() == 150);
- BOOST_TEST_CHECK(bColor.getC1() == 140);
- BOOST_TEST_CHECK(bColor.getC2() ==  90);
- BOOST_TEST_CHECK(bColor.getC3() == 110);
+ EXPECT_NEAR(bColor.getC0(),  150, 0.00001);
+ EXPECT_NEAR(bColor.getC1(),  140, 0.00001);
+ EXPECT_NEAR(bColor.getC2(),   90, 0.00001);
+ EXPECT_NEAR(bColor.getC3(),  110, 0.00001);
 
  bColor.wMean(0.1F, 1.0F, b1Color, b2Color);
- BOOST_TEST_CHECK(bColor.getC0() == 11);
- BOOST_TEST_CHECK(bColor.getC1() == 32);
- BOOST_TEST_CHECK(bColor.getC2() == 23);
- BOOST_TEST_CHECK(bColor.getC3() == 44);
+ EXPECT_NEAR(bColor.getC0(),  11, 0.00001);
+ EXPECT_NEAR(bColor.getC1(),  32, 0.00001);
+ EXPECT_NEAR(bColor.getC2(),  23, 0.00001);
+ EXPECT_NEAR(bColor.getC3(),  44, 0.00001);
 
  bColor.wMean(0.1F, 1.0F, 1.0F, b1Color, b2Color, b3Color);
- BOOST_TEST_CHECK(bColor.getC0() == 51);
- BOOST_TEST_CHECK(bColor.getC1() == 52);
- BOOST_TEST_CHECK(bColor.getC2() == 53);
- BOOST_TEST_CHECK(bColor.getC3() == 54);
+ EXPECT_NEAR(bColor.getC0(),  51, 0.00001);
+ EXPECT_NEAR(bColor.getC1(),  52, 0.00001);
+ EXPECT_NEAR(bColor.getC2(),  53, 0.00001);
+ EXPECT_NEAR(bColor.getC3(),  54, 0.00001);
 
  bColor.wMean(0.1F, 1.0F, 1.0F, 1.0F, b1Color, b2Color, b3Color, b4Color);
- BOOST_TEST_CHECK(bColor.getC0() == 141);
- BOOST_TEST_CHECK(bColor.getC1() == 122);
- BOOST_TEST_CHECK(bColor.getC2() ==  63);
- BOOST_TEST_CHECK(bColor.getC3() ==  74);
-
-
- ////////////////////////////////////////////////////////////////////////////////
-
- aColor.linearInterpolate(0.0, a1Color, a2Color);
- BOOST_TEST_CHECK(aColor.getC0() == a1Color.getC0());
- BOOST_TEST_CHECK(aColor.getC1() == a1Color.getC1());
- BOOST_TEST_CHECK(aColor.getC2() == a1Color.getC2());
- BOOST_TEST_CHECK(aColor.getC3() == a1Color.getC3());
-
- aColor.linearInterpolate(1.0, a1Color, a2Color);
- BOOST_TEST_CHECK(aColor.getC0() == a2Color.getC0());
- BOOST_TEST_CHECK(aColor.getC1() == a2Color.getC1());
- BOOST_TEST_CHECK(aColor.getC2() == a2Color.getC2());
- BOOST_TEST_CHECK(aColor.getC3() == a2Color.getC3());
-
- aColor.linearInterpolate(0.5, a1Color, a2Color);
- cColor.uMean(0.5F, a1Color, a2Color);
- BOOST_TEST_CHECK(aColor.getC0() == cColor.getC0());
- BOOST_TEST_CHECK(aColor.getC1() == cColor.getC1());
- BOOST_TEST_CHECK(aColor.getC2() == cColor.getC2());
- BOOST_TEST_CHECK(aColor.getC3() == cColor.getC3());
-
- aColor.linearInterpolate(0.25, a1Color, a2Color);
- cColor.uMean(0.75F, a1Color, a2Color);
- BOOST_TEST_CHECK(aColor.getC0() == cColor.getC0());
- BOOST_TEST_CHECK(aColor.getC1() == cColor.getC1());
- BOOST_TEST_CHECK(aColor.getC2() == cColor.getC2());
- BOOST_TEST_CHECK(aColor.getC3() == cColor.getC3());
-
- aColor.linearInterpolate(0.75, a1Color, a2Color);
- cColor.uMean(0.25F, a1Color, a2Color);
- BOOST_TEST_CHECK(aColor.getC0() == cColor.getC0());
- BOOST_TEST_CHECK(aColor.getC1() == cColor.getC1());
- BOOST_TEST_CHECK(aColor.getC2() == cColor.getC2());
- BOOST_TEST_CHECK(aColor.getC3() == cColor.getC3());
-
- ////////////////////////////////////////////////////////////////////////////////
- aColor.uMean(0.2F, a1Color, a2Color);
- BOOST_TEST_CHECK(aColor.getC0() == .2*10+.8*10);
- BOOST_TEST_CHECK(aColor.getC1() == .2*20+.8*30);
- BOOST_TEST_CHECK(aColor.getC2() == .2*30+.8*20);
- BOOST_TEST_CHECK(aColor.getC3() == .2*40+.8*40);
-
- aColor.uMean(0.1F, 0.3F, a1Color, a2Color, a3Color);
- BOOST_TEST_CHECK(aColor.getC0() == .1*10+.3*10+0.6*40);
- BOOST_TEST_CHECK(aColor.getC1() == .1*20+.3*30+0.6*20);
- BOOST_TEST_CHECK(aColor.getC2() == .1*30+.3*20+0.6*30);
- BOOST_TEST_CHECK(aColor.getC3() == .1*40+.3*40+0.6*10);
-
- aColor.uMean(0.1F, 0.3F, 0.4F, a1Color, a2Color, a3Color, a4Color);
- BOOST_TEST_CHECK(aColor.getC0() == .1*10+.3*10+0.4*40+0.2*90);
- BOOST_TEST_CHECK(aColor.getC1() == .1*20+.3*30+0.4*20+0.2*70);
- BOOST_TEST_CHECK(aColor.getC2() == .1*30+.3*20+0.4*30+0.2*10);
- BOOST_TEST_CHECK(aColor.getC3() == .1*40+.3*40+0.4*10+0.2*20);
-
- ////////////////////////////////////////////////////////////////////////////////
+ EXPECT_NEAR(bColor.getC0(),  141, 0.00001);
+ EXPECT_NEAR(bColor.getC1(),  122, 0.00001);
+ EXPECT_NEAR(bColor.getC2(),   63, 0.00001);
+ EXPECT_NEAR(bColor.getC3(),   74, 0.00001);
 
  bColor.uMean(0.2F, b1Color, b2Color);
- BOOST_TEST_CHECK(bColor.getC0() == .2*10+.8*10);
- BOOST_TEST_CHECK(bColor.getC1() == .2*20+.8*30);
- BOOST_TEST_CHECK(bColor.getC2() == .2*30+.8*20);
- BOOST_TEST_CHECK(bColor.getC3() == .2*40+.8*40);
+ EXPECT_NEAR(bColor.getC0(),  .2*10+.8*10, 0.00001);
+ EXPECT_NEAR(bColor.getC1(),  .2*20+.8*30, 0.00001);
+ EXPECT_NEAR(bColor.getC2(),  .2*30+.8*20, 0.00001);
+ EXPECT_NEAR(bColor.getC3(),  .2*40+.8*40, 0.00001);
 
  bColor.uMean(0.1F, 0.3F, b1Color, b2Color, b3Color);
- BOOST_TEST_CHECK(bColor.getC0() == .1*10+.3*10+0.6*40);
- BOOST_TEST_CHECK(bColor.getC1() == .1*20+.3*30+0.6*20);
- BOOST_TEST_CHECK(bColor.getC2() == .1*30+.3*20+0.6*30);
- BOOST_TEST_CHECK(bColor.getC3() == .1*40+.3*40+0.6*10);
+ EXPECT_NEAR(bColor.getC0(),  .1*10+.3*10+0.6*40, 0.00001);
+ EXPECT_NEAR(bColor.getC1(),  .1*20+.3*30+0.6*20, 0.00001);
+ EXPECT_NEAR(bColor.getC2(),  .1*30+.3*20+0.6*30, 0.00001);
+ EXPECT_NEAR(bColor.getC3(),  .1*40+.3*40+0.6*10, 0.00001);
 
  bColor.uMean(0.1F, 0.3F, 0.4F, b1Color, b2Color, b3Color, b4Color);
- BOOST_TEST_CHECK(bColor.getC0() == .1*10+.3*10+0.4*40+0.2*90);
- BOOST_TEST_CHECK(bColor.getC1() == .1*20+.3*30+0.4*20+0.2*70);
- BOOST_TEST_CHECK(bColor.getC2() == .1*30+.3*20+0.4*30+0.2*10);
- BOOST_TEST_CHECK(bColor.getC3() == .1*40+.3*40+0.4*10+0.2*20);
+ EXPECT_NEAR(bColor.getC0(),  .1*10+.3*10+0.4*40+0.2*90, 0.00001);
+ EXPECT_NEAR(bColor.getC1(),  .1*20+.3*30+0.4*20+0.2*70, 0.00001);
+ EXPECT_NEAR(bColor.getC2(),  .1*30+.3*20+0.4*30+0.2*10, 0.00001);
+ EXPECT_NEAR(bColor.getC3(),  .1*40+.3*40+0.4*10+0.2*20, 0.00001);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(hsl_hsv_int) {
+TEST(FUN_setRGBfromUnitHSL_and_setRGBfromUnitHSV, Integer) {
 
   mjr::colorRGB8b aColor;
   mjr::colorRGB8b bColor;
 
   aColor.setRGBfromUnitHSL(  0/360.0, 1, 0.5);
   bColor.setToRed();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromUnitHSL( 60/360.0, 1, 0.5);
   bColor.setToYellow();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromUnitHSL(120/360.0, 1, 0.5);
   bColor.setToGreen();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromUnitHSL(180/360.0, 1, 0.5);
   bColor.setToCyan();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromUnitHSL(240/360.0, 1, 0.5);
   bColor.setToBlue();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromUnitHSL(300/360.0, 1, 0.5);
   bColor.setToMagenta();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
 ////////////////////////////////////////////////////////////////////////////////
 
   aColor.setRGBfromUnitHSV(  0/360.0, 1, 1.0);
   bColor.setToRed();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromUnitHSV( 60/360.0, 1, 1.0);
   bColor.setToYellow();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromUnitHSV( 420/360.0, 1, 1.0);
   bColor.setToYellow();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromUnitHSV(120/360.0, 1, 1.0);
   bColor.setToGreen();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromUnitHSV(180/360.0, 1, 1.0);
   bColor.setToCyan();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromUnitHSV(240/360.0, 1, 1.0);
   bColor.setToBlue();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromUnitHSV(300/360.0, 1, 1.0);
   bColor.setToMagenta();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
 ////////////////////////////////////////////////////////////////////////////////
 
   aColor.setRGBfromUnitHSL(  0/360.0, 1, 0);
   bColor.setToBlack();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromUnitHSL(180/360.0, 1, 0);
   bColor.setToBlack();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromUnitHSL(  0/360.0, 1, 1);
   bColor.setToWhite();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromUnitHSL(180/360.0, 1, 1);
   bColor.setToWhite();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
 ////////////////////////////////////////////////////////////////////////////////
 
   aColor.setRGBfromUnitHSV(  0/360.0, 0, 1);
   bColor.setToWhite();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromUnitHSV(180/360.0, 0, 1);
   bColor.setToWhite();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromUnitHSV(  0/360.0, 0, 0);
   bColor.setToBlack();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromUnitHSV(180/360.0, 0, 0);
   bColor.setToBlack();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromUnitHSV(  0/360.0, 1, 0);
   bColor.setToBlack();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 
   aColor.setRGBfromUnitHSV(180/360.0, 1, 0);
   bColor.setToBlack();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_EQ(aColor.getRed(),    bColor.getRed());
+  EXPECT_EQ(aColor.getGreen(),  bColor.getGreen());
+  EXPECT_EQ(aColor.getBlue(),   bColor.getBlue());
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(hsl_hsv_flt, * boost::unit_test::tolerance(0.01)) {
+TEST(FUN_setRGBfromUnitHSL_and_setRGBfromUnitHSV, FLoat) {
 
   mjr::colorRGB32F aColor;
   mjr::colorRGB32F bColor;
 
   aColor.setRGBfromUnitHSL(  0/360.0, 1, 0.5);
   bColor.setToRed();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 
   aColor.setRGBfromUnitHSL( 60/360.0, 1, 0.5);
   bColor.setToYellow();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 
   aColor.setRGBfromUnitHSL( 420/360.0, 1, 0.5);
   bColor.setToYellow();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 
   aColor.setRGBfromUnitHSL(120/360.0, 1, 0.5);
   bColor.setToGreen();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 
   aColor.setRGBfromUnitHSL(180/360.0, 1, 0.5);
   bColor.setToCyan();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 
   aColor.setRGBfromUnitHSL(240/360.0, 1, 0.5);
   bColor.setToBlue();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 
   aColor.setRGBfromUnitHSL(300/360.0, 1, 0.5);
   bColor.setToMagenta();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 
 ////////////////////////////////////////////////////////////////////////////////
 
   aColor.setRGBfromUnitHSV(  0/360.0, 1, 1.0);
   bColor.setToRed();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 
   aColor.setRGBfromUnitHSV( 60/360.0, 1, 1.0);
   bColor.setToYellow();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 
   aColor.setRGBfromUnitHSV(120/360.0, 1, 1.0);
   bColor.setToGreen();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 
   aColor.setRGBfromUnitHSV(180/360.0, 1, 1.0);
   bColor.setToCyan();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 
   aColor.setRGBfromUnitHSV(240/360.0, 1, 1.0);
   bColor.setToBlue();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 
   aColor.setRGBfromUnitHSV(300/360.0, 1, 1.0);
   bColor.setToMagenta();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 
 ////////////////////////////////////////////////////////////////////////////////
 
   aColor.setRGBfromUnitHSL(  0/360.0, 1, 0);
   bColor.setToBlack();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 
   aColor.setRGBfromUnitHSL(180/360.0, 1, 0);
   bColor.setToBlack();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 
   aColor.setRGBfromUnitHSL(  0/360.0, 1, 1);
   bColor.setToWhite();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 
   aColor.setRGBfromUnitHSL(180/360.0, 1, 1);
   bColor.setToWhite();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 
 ////////////////////////////////////////////////////////////////////////////////
 
   aColor.setRGBfromUnitHSV(  0/360.0, 0, 1);
   bColor.setToWhite();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 
   aColor.setRGBfromUnitHSV(180/360.0, 0, 1);
   bColor.setToWhite();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 
   aColor.setRGBfromUnitHSV(  0/360.0, 0, 0);
   bColor.setToBlack();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 
   aColor.setRGBfromUnitHSV(180/360.0, 0, 0);
   bColor.setToBlack();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 
   aColor.setRGBfromUnitHSV(  0/360.0, 1, 0);
   bColor.setToBlack();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 
   aColor.setRGBfromUnitHSV(180/360.0, 1, 0);
   bColor.setToBlack();
-  BOOST_TEST_CHECK(aColor.getRed()   == bColor.getRed());
-  BOOST_TEST_CHECK(aColor.getGreen() == bColor.getGreen());
-  BOOST_TEST_CHECK(aColor.getBlue()  == bColor.getBlue());
+  EXPECT_NEAR(aColor.getRed(),    bColor.getRed(),   0.0001);
+  EXPECT_NEAR(aColor.getGreen(),  bColor.getGreen(), 0.0001);
+  EXPECT_NEAR(aColor.getBlue(),   bColor.getBlue(),  0.0001);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(csCBSpectral_int) {
+TEST(FUN_csCBSpectral, IntInComprehensive) {
 
   mjr::colorRGBA8b  aColor;
   mjr::colorRGBA32F bColor;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 0,  3).isEqualRGB(aColor.setChansRGB(252, 141,  89))); // smallest
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 1,  3).isEqualRGB(aColor.setChansRGB(255, 255, 191)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 2,  3).isEqualRGB(aColor.setChansRGB(153, 213, 148)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 0,  3).isEqualRGB(aColor.setChansRGB(252, 141,  89))); // smallest
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 1,  3).isEqualRGB(aColor.setChansRGB(255, 255, 191)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 2,  3).isEqualRGB(aColor.setChansRGB(153, 213, 148)));
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 0, 11).isEqualRGB(aColor.setChansRGB(158,   1,  66))); // biggest
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 1, 11).isEqualRGB(aColor.setChansRGB(213,  62,  79)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 2, 11).isEqualRGB(aColor.setChansRGB(244, 109,  67)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 3, 11).isEqualRGB(aColor.setChansRGB(253, 174,  97)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 4, 11).isEqualRGB(aColor.setChansRGB(254, 224, 139)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 5, 11).isEqualRGB(aColor.setChansRGB(255, 255, 191)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 6, 11).isEqualRGB(aColor.setChansRGB(230, 245, 152)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 7, 11).isEqualRGB(aColor.setChansRGB(171, 221, 164)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 8, 11).isEqualRGB(aColor.setChansRGB(102, 194, 165)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 9, 11).isEqualRGB(aColor.setChansRGB( 50, 136, 189)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(10, 11).isEqualRGB(aColor.setChansRGB( 94,  79, 162)));
-
-////////////////////////////////////////////////////////////////////////////////
-
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 3,  3).isEqualRGB(aColor.setChansRGB(252, 141,  89))); // wrap index
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 4,  3).isEqualRGB(aColor.setChansRGB(255, 255, 191)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 5,  3).isEqualRGB(aColor.setChansRGB(153, 213, 148)));
-
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(11, 11).isEqualRGB(aColor.setChansRGB(158,   1,  66))); // wrap index
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(12, 11).isEqualRGB(aColor.setChansRGB(213,  62,  79)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(13, 11).isEqualRGB(aColor.setChansRGB(244, 109,  67)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(14, 11).isEqualRGB(aColor.setChansRGB(253, 174,  97)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(15, 11).isEqualRGB(aColor.setChansRGB(254, 224, 139)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(16, 11).isEqualRGB(aColor.setChansRGB(255, 255, 191)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(17, 11).isEqualRGB(aColor.setChansRGB(230, 245, 152)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(18, 11).isEqualRGB(aColor.setChansRGB(171, 221, 164)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(19, 11).isEqualRGB(aColor.setChansRGB(102, 194, 165)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(20, 11).isEqualRGB(aColor.setChansRGB( 50, 136, 189)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(21, 11).isEqualRGB(aColor.setChansRGB( 94,  79, 162)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 0, 11).isEqualRGB(aColor.setChansRGB(158,   1,  66))); // biggest
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 1, 11).isEqualRGB(aColor.setChansRGB(213,  62,  79)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 2, 11).isEqualRGB(aColor.setChansRGB(244, 109,  67)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 3, 11).isEqualRGB(aColor.setChansRGB(253, 174,  97)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 4, 11).isEqualRGB(aColor.setChansRGB(254, 224, 139)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 5, 11).isEqualRGB(aColor.setChansRGB(255, 255, 191)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 6, 11).isEqualRGB(aColor.setChansRGB(230, 245, 152)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 7, 11).isEqualRGB(aColor.setChansRGB(171, 221, 164)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 8, 11).isEqualRGB(aColor.setChansRGB(102, 194, 165)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 9, 11).isEqualRGB(aColor.setChansRGB( 50, 136, 189)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(10, 11).isEqualRGB(aColor.setChansRGB( 94,  79, 162)));
 
 ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 0    ).isEqualRGB(aColor.setChansRGB(158,   1,  66)));  // missing -> 11
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 1    ).isEqualRGB(aColor.setChansRGB(213,  62,  79)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 2    ).isEqualRGB(aColor.setChansRGB(244, 109,  67)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 3    ).isEqualRGB(aColor.setChansRGB(253, 174,  97)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 4    ).isEqualRGB(aColor.setChansRGB(254, 224, 139)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 5    ).isEqualRGB(aColor.setChansRGB(255, 255, 191)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 6    ).isEqualRGB(aColor.setChansRGB(230, 245, 152)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 7    ).isEqualRGB(aColor.setChansRGB(171, 221, 164)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 8    ).isEqualRGB(aColor.setChansRGB(102, 194, 165)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 9    ).isEqualRGB(aColor.setChansRGB( 50, 136, 189)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(10    ).isEqualRGB(aColor.setChansRGB( 94,  79, 162)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 3,  3).isEqualRGB(aColor.setChansRGB(252, 141,  89))); // wrap index
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 4,  3).isEqualRGB(aColor.setChansRGB(255, 255, 191)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 5,  3).isEqualRGB(aColor.setChansRGB(153, 213, 148)));
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 0,  1).isEqualRGB(aColor.setChansRGB(252, 141,  89)));  // too small -> 3
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 1,  1).isEqualRGB(aColor.setChansRGB(255, 255, 191)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 2,  1).isEqualRGB(aColor.setChansRGB(153, 213, 148)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(11, 11).isEqualRGB(aColor.setChansRGB(158,   1,  66))); // wrap index
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(12, 11).isEqualRGB(aColor.setChansRGB(213,  62,  79)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(13, 11).isEqualRGB(aColor.setChansRGB(244, 109,  67)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(14, 11).isEqualRGB(aColor.setChansRGB(253, 174,  97)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(15, 11).isEqualRGB(aColor.setChansRGB(254, 224, 139)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(16, 11).isEqualRGB(aColor.setChansRGB(255, 255, 191)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(17, 11).isEqualRGB(aColor.setChansRGB(230, 245, 152)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(18, 11).isEqualRGB(aColor.setChansRGB(171, 221, 164)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(19, 11).isEqualRGB(aColor.setChansRGB(102, 194, 165)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(20, 11).isEqualRGB(aColor.setChansRGB( 50, 136, 189)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(21, 11).isEqualRGB(aColor.setChansRGB( 94,  79, 162)));
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 0, 50).isEqualRGB(aColor.setChansRGB(158,   1,  66)));  // too big -> 11
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 1, 50).isEqualRGB(aColor.setChansRGB(213,  62,  79)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 2, 50).isEqualRGB(aColor.setChansRGB(244, 109,  67)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 3, 50).isEqualRGB(aColor.setChansRGB(253, 174,  97)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 4, 50).isEqualRGB(aColor.setChansRGB(254, 224, 139)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 5, 50).isEqualRGB(aColor.setChansRGB(255, 255, 191)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 6, 50).isEqualRGB(aColor.setChansRGB(230, 245, 152)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 7, 50).isEqualRGB(aColor.setChansRGB(171, 221, 164)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 8, 50).isEqualRGB(aColor.setChansRGB(102, 194, 165)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 9, 50).isEqualRGB(aColor.setChansRGB( 50, 136, 189)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(10, 50).isEqualRGB(aColor.setChansRGB( 94,  79, 162)));
+////////////////////////////////////////////////////////////////////////////////
+
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 0    ).isEqualRGB(aColor.setChansRGB(158,   1,  66)));  // missing -> 11
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 1    ).isEqualRGB(aColor.setChansRGB(213,  62,  79)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 2    ).isEqualRGB(aColor.setChansRGB(244, 109,  67)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 3    ).isEqualRGB(aColor.setChansRGB(253, 174,  97)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 4    ).isEqualRGB(aColor.setChansRGB(254, 224, 139)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 5    ).isEqualRGB(aColor.setChansRGB(255, 255, 191)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 6    ).isEqualRGB(aColor.setChansRGB(230, 245, 152)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 7    ).isEqualRGB(aColor.setChansRGB(171, 221, 164)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 8    ).isEqualRGB(aColor.setChansRGB(102, 194, 165)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 9    ).isEqualRGB(aColor.setChansRGB( 50, 136, 189)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(10    ).isEqualRGB(aColor.setChansRGB( 94,  79, 162)));
+
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 0,  1).isEqualRGB(aColor.setChansRGB(252, 141,  89)));  // too small -> 3
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 1,  1).isEqualRGB(aColor.setChansRGB(255, 255, 191)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 2,  1).isEqualRGB(aColor.setChansRGB(153, 213, 148)));
+
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 0, 50).isEqualRGB(aColor.setChansRGB(158,   1,  66)));  // too big -> 11
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 1, 50).isEqualRGB(aColor.setChansRGB(213,  62,  79)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 2, 50).isEqualRGB(aColor.setChansRGB(244, 109,  67)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 3, 50).isEqualRGB(aColor.setChansRGB(253, 174,  97)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 4, 50).isEqualRGB(aColor.setChansRGB(254, 224, 139)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 5, 50).isEqualRGB(aColor.setChansRGB(255, 255, 191)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 6, 50).isEqualRGB(aColor.setChansRGB(230, 245, 152)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 7, 50).isEqualRGB(aColor.setChansRGB(171, 221, 164)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 8, 50).isEqualRGB(aColor.setChansRGB(102, 194, 165)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 9, 50).isEqualRGB(aColor.setChansRGB( 50, 136, 189)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(10, 50).isEqualRGB(aColor.setChansRGB( 94,  79, 162)));
 
 ////////////////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   mjr::colorRGBA8b::csCBSpectral::c(aColor, 0, 3);
-  BOOST_TEST_CHECK(aColor.getRed()   == 252);
-  BOOST_TEST_CHECK(aColor.getGreen() == 141);
-  BOOST_TEST_CHECK(aColor.getBlue()  ==  89);
-  BOOST_TEST_CHECK(aColor.getAlpha() ==   mjr::colorRGBA8b::minChanVal); // Not set!
+  EXPECT_EQ(aColor.getRed(),    252);
+  EXPECT_EQ(aColor.getGreen(),  141);
+  EXPECT_EQ(aColor.getBlue(),    89);
+  EXPECT_EQ(aColor.getAlpha(),    mjr::colorRGBA8b::minChanVal); // Not set!
 
   aColor.setToWhite();
   mjr::colorRGBA8b::csCBSpectral::c(aColor, 0, 3);
-  BOOST_TEST_CHECK(aColor.getRed()   ==  252);
-  BOOST_TEST_CHECK(aColor.getGreen() ==  141);
-  BOOST_TEST_CHECK(aColor.getBlue()  ==   89);
-  BOOST_TEST_CHECK(aColor.getAlpha() == mjr::colorRGBA8b::maxChanVal); // Not set!
+  EXPECT_EQ(aColor.getRed(),     252);
+  EXPECT_EQ(aColor.getGreen(),   141);
+  EXPECT_EQ(aColor.getBlue(),     89);
+  EXPECT_EQ(aColor.getAlpha(),  mjr::colorRGBA8b::maxChanVal); // Not set!
 
 ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 0,  3).isCloseRGB(bColor.setChansRGB(252/255.0F, 141/255.0F,  89/255.0F), 0.00001F)); // smallest
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 1,  3).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 2,  3).isCloseRGB(bColor.setChansRGB(153/255.0F, 213/255.0F, 148/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 0,  3).isCloseRGB(bColor.setChansRGB(252/255.0F, 141/255.0F,  89/255.0F), 0.00001F)); // smallest
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 1,  3).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 2,  3).isCloseRGB(bColor.setChansRGB(153/255.0F, 213/255.0F, 148/255.0F), 0.00001F));
 
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 0, 11).isCloseRGB(bColor.setChansRGB(158/255.0F,   1/255.0F,  66/255.0F), 0.00001F)); // biggest
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 1, 11).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 2, 11).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 3, 11).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 4, 11).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 5, 11).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 6, 11).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 7, 11).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 8, 11).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 9, 11).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(10, 11).isCloseRGB(bColor.setChansRGB( 94/255.0F,  79/255.0F, 162/255.0F), 0.00001F));
-
-////////////////////////////////////////////////////////////////////////////////
-
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 3,  3).isCloseRGB(bColor.setChansRGB(252/255.0F, 141/255.0F,  89/255.0F), 0.00001F)); // wrap index
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 4,  3).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 5,  3).isCloseRGB(bColor.setChansRGB(153/255.0F, 213/255.0F, 148/255.0F), 0.00001F));
-
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(11, 11).isCloseRGB(bColor.setChansRGB(158/255.0F,   1/255.0F,  66/255.0F), 0.00001F)); // wrap index
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(12, 11).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(13, 11).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(14, 11).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(15, 11).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(16, 11).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(17, 11).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(18, 11).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(19, 11).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(20, 11).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(21, 11).isCloseRGB(bColor.setChansRGB( 94/255.0F,  79/255.0F, 162/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 0, 11).isCloseRGB(bColor.setChansRGB(158/255.0F,   1/255.0F,  66/255.0F), 0.00001F)); // biggest
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 1, 11).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 2, 11).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 3, 11).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 4, 11).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 5, 11).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 6, 11).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 7, 11).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 8, 11).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 9, 11).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(10, 11).isCloseRGB(bColor.setChansRGB( 94/255.0F,  79/255.0F, 162/255.0F), 0.00001F));
 
 ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 0    ).isCloseRGB(bColor.setChansRGB(158/255.0F,   1/255.0F,  66/255.0F), 0.00001F));  // missing -> 11
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 1    ).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 2    ).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 3    ).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 4    ).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 5    ).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 6    ).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 7    ).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 8    ).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 9    ).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(10    ).isCloseRGB(bColor.setChansRGB( 94/255.0F,  79/255.0F, 162/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 3,  3).isCloseRGB(bColor.setChansRGB(252/255.0F, 141/255.0F,  89/255.0F), 0.00001F)); // wrap index
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 4,  3).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 5,  3).isCloseRGB(bColor.setChansRGB(153/255.0F, 213/255.0F, 148/255.0F), 0.00001F));
 
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 0,  1).isCloseRGB(bColor.setChansRGB(252/255.0F, 141/255.0F,  89/255.0F), 0.00001F));  // too small -> 3
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 1,  1).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 2,  1).isCloseRGB(bColor.setChansRGB(153/255.0F, 213/255.0F, 148/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(11, 11).isCloseRGB(bColor.setChansRGB(158/255.0F,   1/255.0F,  66/255.0F), 0.00001F)); // wrap index
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(12, 11).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(13, 11).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(14, 11).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(15, 11).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(16, 11).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(17, 11).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(18, 11).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(19, 11).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(20, 11).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(21, 11).isCloseRGB(bColor.setChansRGB( 94/255.0F,  79/255.0F, 162/255.0F), 0.00001F));
 
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 0, 50).isCloseRGB(bColor.setChansRGB(158/255.0F,   1/255.0F,  66/255.0F), 0.00001F));  // too big -> 11
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 1, 50).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 2, 50).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 3, 50).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 4, 50).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 5, 50).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 6, 50).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 7, 50).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 8, 50).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 9, 50).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(10, 50).isCloseRGB(bColor.setChansRGB( 94/255.0F,  79/255.0F, 162/255.0F), 0.00001F));
+////////////////////////////////////////////////////////////////////////////////
+
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 0    ).isCloseRGB(bColor.setChansRGB(158/255.0F,   1/255.0F,  66/255.0F), 0.00001F));  // missing -> 11
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 1    ).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 2    ).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 3    ).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 4    ).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 5    ).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 6    ).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 7    ).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 8    ).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 9    ).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(10    ).isCloseRGB(bColor.setChansRGB( 94/255.0F,  79/255.0F, 162/255.0F), 0.00001F));
+
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 0,  1).isCloseRGB(bColor.setChansRGB(252/255.0F, 141/255.0F,  89/255.0F), 0.00001F));  // too small -> 3
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 1,  1).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 2,  1).isCloseRGB(bColor.setChansRGB(153/255.0F, 213/255.0F, 148/255.0F), 0.00001F));
+
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 0, 50).isCloseRGB(bColor.setChansRGB(158/255.0F,   1/255.0F,  66/255.0F), 0.00001F));  // too big -> 11
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 1, 50).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 2, 50).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 3, 50).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 4, 50).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 5, 50).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 6, 50).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 7, 50).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 8, 50).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 9, 50).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(10, 50).isCloseRGB(bColor.setChansRGB( 94/255.0F,  79/255.0F, 162/255.0F), 0.00001F));
 
 ////////////////////////////////////////////////////////////////////////////////
 
   bColor.setToBlack();
   mjr::colorRGBA32F::csCBSpectral::c(bColor, 0, 3);
-  BOOST_TEST_CHECK(bColor.getAlpha() ==   mjr::colorRGBA32F::minChanVal); // Not set!
+  EXPECT_EQ(bColor.getAlpha(),    mjr::colorRGBA32F::minChanVal); // Not set!
 
   bColor.setToWhite();
   mjr::colorRGBA32F::csCBSpectral::c(bColor, 0, 3);
-  BOOST_TEST_CHECK(bColor.getAlpha() == mjr::colorRGBA32F::maxChanVal); // Not set!
+  EXPECT_EQ(bColor.getAlpha(),  mjr::colorRGBA32F::maxChanVal); // Not set!
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(csCBSpectral_flt) {
+TEST(FUN_csCBSpectral, FltInComprehensive) {
 
   mjr::colorRGBA8b  aColor;
   mjr::colorRGBA32F bColor;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(  0/2.0F,  3).isCloseRGB(aColor.setChansRGB(252, 141,  89), 2)); // smallest
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(  1/2.0F,  3).isCloseRGB(aColor.setChansRGB(255, 255, 191), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(  2/2.0F,  3).isCloseRGB(aColor.setChansRGB(153, 213, 148), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(  0/2.0F,  3).isCloseRGB(aColor.setChansRGB(252, 141,  89), 2)); // smallest
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(  1/2.0F,  3).isCloseRGB(aColor.setChansRGB(255, 255, 191), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(  2/2.0F,  3).isCloseRGB(aColor.setChansRGB(153, 213, 148), 2));
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 0/10.0F, 11).isCloseRGB(aColor.setChansRGB(158,   1,  66), 2)); // biggest
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 1/10.0F, 11).isCloseRGB(aColor.setChansRGB(213,  62,  79), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 2/10.0F, 11).isCloseRGB(aColor.setChansRGB(244, 109,  67), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 3/10.0F, 11).isCloseRGB(aColor.setChansRGB(253, 174,  97), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 4/10.0F, 11).isCloseRGB(aColor.setChansRGB(254, 224, 139), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 5/10.0F, 11).isCloseRGB(aColor.setChansRGB(255, 255, 191), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 6/10.0F, 11).isCloseRGB(aColor.setChansRGB(230, 245, 152), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 7/10.0F, 11).isCloseRGB(aColor.setChansRGB(171, 221, 164), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 8/10.0F, 11).isCloseRGB(aColor.setChansRGB(102, 194, 165), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 9/10.0F, 11).isCloseRGB(aColor.setChansRGB( 50, 136, 189), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(10/10.0F, 11).isCloseRGB(aColor.setChansRGB( 94,  79, 162), 2));
-
-////////////////////////////////////////////////////////////////////////////////
-
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(  3/2.0F,  3).isCloseRGB(aColor.setChansRGB(255, 255, 191), 2)); // wrap index
-
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(1+ 1/10.0F, 11).isCloseRGB(aColor.setChansRGB(213,  62,  79), 2)); // wrap index
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(1+ 2/10.0F, 11).isCloseRGB(aColor.setChansRGB(244, 109,  67), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(1+ 3/10.0F, 11).isCloseRGB(aColor.setChansRGB(253, 174,  97), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(1+ 4/10.0F, 11).isCloseRGB(aColor.setChansRGB(254, 224, 139), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(1+ 5/10.0F, 11).isCloseRGB(aColor.setChansRGB(255, 255, 191), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(1+ 6/10.0F, 11).isCloseRGB(aColor.setChansRGB(230, 245, 152), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(1+ 7/10.0F, 11).isCloseRGB(aColor.setChansRGB(171, 221, 164), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(1+ 8/10.0F, 11).isCloseRGB(aColor.setChansRGB(102, 194, 165), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(1+ 9/10.0F, 11).isCloseRGB(aColor.setChansRGB( 50, 136, 189), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 0/10.0F, 11).isCloseRGB(aColor.setChansRGB(158,   1,  66), 2)); // biggest
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 1/10.0F, 11).isCloseRGB(aColor.setChansRGB(213,  62,  79), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 2/10.0F, 11).isCloseRGB(aColor.setChansRGB(244, 109,  67), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 3/10.0F, 11).isCloseRGB(aColor.setChansRGB(253, 174,  97), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 4/10.0F, 11).isCloseRGB(aColor.setChansRGB(254, 224, 139), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 5/10.0F, 11).isCloseRGB(aColor.setChansRGB(255, 255, 191), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 6/10.0F, 11).isCloseRGB(aColor.setChansRGB(230, 245, 152), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 7/10.0F, 11).isCloseRGB(aColor.setChansRGB(171, 221, 164), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 8/10.0F, 11).isCloseRGB(aColor.setChansRGB(102, 194, 165), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 9/10.0F, 11).isCloseRGB(aColor.setChansRGB( 50, 136, 189), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(10/10.0F, 11).isCloseRGB(aColor.setChansRGB( 94,  79, 162), 2));
 
 ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 0/10.0F    ).isCloseRGB(aColor.setChansRGB(158,   1,  66), 2));  // missing -> 11
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 1/10.0F    ).isCloseRGB(aColor.setChansRGB(213,  62,  79), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 2/10.0F    ).isCloseRGB(aColor.setChansRGB(244, 109,  67), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 3/10.0F    ).isCloseRGB(aColor.setChansRGB(253, 174,  97), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 4/10.0F    ).isCloseRGB(aColor.setChansRGB(254, 224, 139), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 5/10.0F    ).isCloseRGB(aColor.setChansRGB(255, 255, 191), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 6/10.0F    ).isCloseRGB(aColor.setChansRGB(230, 245, 152), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 7/10.0F    ).isCloseRGB(aColor.setChansRGB(171, 221, 164), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 8/10.0F    ).isCloseRGB(aColor.setChansRGB(102, 194, 165), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 9/10.0F    ).isCloseRGB(aColor.setChansRGB( 50, 136, 189), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(10/10.0F    ).isCloseRGB(aColor.setChansRGB( 94,  79, 162), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(  3/2.0F,  3).isCloseRGB(aColor.setChansRGB(255, 255, 191), 2)); // wrap index
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(  0/2.0F,  1).isCloseRGB(aColor.setChansRGB(252, 141,  89), 2));  // too small -> 3
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(  1/2.0F,  1).isCloseRGB(aColor.setChansRGB(255, 255, 191), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(  2/2.0F,  1).isCloseRGB(aColor.setChansRGB(153, 213, 148), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(1+ 1/10.0F, 11).isCloseRGB(aColor.setChansRGB(213,  62,  79), 2)); // wrap index
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(1+ 2/10.0F, 11).isCloseRGB(aColor.setChansRGB(244, 109,  67), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(1+ 3/10.0F, 11).isCloseRGB(aColor.setChansRGB(253, 174,  97), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(1+ 4/10.0F, 11).isCloseRGB(aColor.setChansRGB(254, 224, 139), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(1+ 5/10.0F, 11).isCloseRGB(aColor.setChansRGB(255, 255, 191), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(1+ 6/10.0F, 11).isCloseRGB(aColor.setChansRGB(230, 245, 152), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(1+ 7/10.0F, 11).isCloseRGB(aColor.setChansRGB(171, 221, 164), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(1+ 8/10.0F, 11).isCloseRGB(aColor.setChansRGB(102, 194, 165), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(1+ 9/10.0F, 11).isCloseRGB(aColor.setChansRGB( 50, 136, 189), 2));
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 0/10.0F, 50).isCloseRGB(aColor.setChansRGB(158,   1,  66), 2));  // too big -> 11
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 1/10.0F, 50).isCloseRGB(aColor.setChansRGB(213,  62,  79), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 2/10.0F, 50).isCloseRGB(aColor.setChansRGB(244, 109,  67), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 3/10.0F, 50).isCloseRGB(aColor.setChansRGB(253, 174,  97), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 4/10.0F, 50).isCloseRGB(aColor.setChansRGB(254, 224, 139), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 5/10.0F, 50).isCloseRGB(aColor.setChansRGB(255, 255, 191), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 6/10.0F, 50).isCloseRGB(aColor.setChansRGB(230, 245, 152), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 7/10.0F, 50).isCloseRGB(aColor.setChansRGB(171, 221, 164), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 8/10.0F, 50).isCloseRGB(aColor.setChansRGB(102, 194, 165), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c( 9/10.0F, 50).isCloseRGB(aColor.setChansRGB( 50, 136, 189), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCBSpectral::c(10/10.0F, 50).isCloseRGB(aColor.setChansRGB( 94,  79, 162), 2));
+////////////////////////////////////////////////////////////////////////////////
+
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 0/10.0F    ).isCloseRGB(aColor.setChansRGB(158,   1,  66), 2));  // missing -> 11
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 1/10.0F    ).isCloseRGB(aColor.setChansRGB(213,  62,  79), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 2/10.0F    ).isCloseRGB(aColor.setChansRGB(244, 109,  67), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 3/10.0F    ).isCloseRGB(aColor.setChansRGB(253, 174,  97), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 4/10.0F    ).isCloseRGB(aColor.setChansRGB(254, 224, 139), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 5/10.0F    ).isCloseRGB(aColor.setChansRGB(255, 255, 191), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 6/10.0F    ).isCloseRGB(aColor.setChansRGB(230, 245, 152), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 7/10.0F    ).isCloseRGB(aColor.setChansRGB(171, 221, 164), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 8/10.0F    ).isCloseRGB(aColor.setChansRGB(102, 194, 165), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 9/10.0F    ).isCloseRGB(aColor.setChansRGB( 50, 136, 189), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(10/10.0F    ).isCloseRGB(aColor.setChansRGB( 94,  79, 162), 2));
+
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(  0/2.0F,  1).isCloseRGB(aColor.setChansRGB(252, 141,  89), 2));  // too small -> 3
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(  1/2.0F,  1).isCloseRGB(aColor.setChansRGB(255, 255, 191), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(  2/2.0F,  1).isCloseRGB(aColor.setChansRGB(153, 213, 148), 2));
+
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 0/10.0F, 50).isCloseRGB(aColor.setChansRGB(158,   1,  66), 2));  // too big -> 11
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 1/10.0F, 50).isCloseRGB(aColor.setChansRGB(213,  62,  79), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 2/10.0F, 50).isCloseRGB(aColor.setChansRGB(244, 109,  67), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 3/10.0F, 50).isCloseRGB(aColor.setChansRGB(253, 174,  97), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 4/10.0F, 50).isCloseRGB(aColor.setChansRGB(254, 224, 139), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 5/10.0F, 50).isCloseRGB(aColor.setChansRGB(255, 255, 191), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 6/10.0F, 50).isCloseRGB(aColor.setChansRGB(230, 245, 152), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 7/10.0F, 50).isCloseRGB(aColor.setChansRGB(171, 221, 164), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 8/10.0F, 50).isCloseRGB(aColor.setChansRGB(102, 194, 165), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c( 9/10.0F, 50).isCloseRGB(aColor.setChansRGB( 50, 136, 189), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCBSpectral::c(10/10.0F, 50).isCloseRGB(aColor.setChansRGB( 94,  79, 162), 2));
 
 ////////////////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   mjr::colorRGBA8b::csCBSpectral::c(aColor, 0/2.0F, 3);
-  BOOST_TEST_CHECK(aColor.getAlpha() ==   mjr::colorRGBA8b::minChanVal); // Not set!
+  EXPECT_EQ(aColor.getAlpha(),    mjr::colorRGBA8b::minChanVal); // Not set!
 
   aColor.setToWhite();
   mjr::colorRGBA8b::csCBSpectral::c(aColor, 0/2.0F, 3);
-  BOOST_TEST_CHECK(aColor.getAlpha() == mjr::colorRGBA8b::maxChanVal); // Not set!
+  EXPECT_EQ(aColor.getAlpha(),  mjr::colorRGBA8b::maxChanVal); // Not set!
 
 ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 0/2.0F,  3).isCloseRGB(bColor.setChansRGB(252/255.0F, 141/255.0F,  89/255.0F), 0.00001F)); // smallest
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 1/2.0F,  3).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 2/2.0F,  3).isCloseRGB(bColor.setChansRGB(153/255.0F, 213/255.0F, 148/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 0/2.0F,  3).isCloseRGB(bColor.setChansRGB(252/255.0F, 141/255.0F,  89/255.0F), 0.00001F)); // smallest
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 1/2.0F,  3).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 2/2.0F,  3).isCloseRGB(bColor.setChansRGB(153/255.0F, 213/255.0F, 148/255.0F), 0.00001F));
 
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 0/10.0F, 11).isCloseRGB(bColor.setChansRGB(158/255.0F,   1/255.0F,  66/255.0F), 0.00001F)); // biggest
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 1/10.0F, 11).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 2/10.0F, 11).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 3/10.0F, 11).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 4/10.0F, 11).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 5/10.0F, 11).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 6/10.0F, 11).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 7/10.0F, 11).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 8/10.0F, 11).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 9/10.0F, 11).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(10/10.0F, 11).isCloseRGB(bColor.setChansRGB( 94/255.0F,  79/255.0F, 162/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 0/10.0F, 11).isCloseRGB(bColor.setChansRGB(158/255.0F,   1/255.0F,  66/255.0F), 0.00001F)); // biggest
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 1/10.0F, 11).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 2/10.0F, 11).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 3/10.0F, 11).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 4/10.0F, 11).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 5/10.0F, 11).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 6/10.0F, 11).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 7/10.0F, 11).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 8/10.0F, 11).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 9/10.0F, 11).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(10/10.0F, 11).isCloseRGB(bColor.setChansRGB( 94/255.0F,  79/255.0F, 162/255.0F), 0.00001F));
 
 ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 3/2.0F,  3).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 3/2.0F,  3).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
 
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(1+1/10.0F, 11).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(1+2/10.0F, 11).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(1+3/10.0F, 11).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(1+4/10.0F, 11).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(1+5/10.0F, 11).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(1+6/10.0F, 11).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(1+7/10.0F, 11).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(1+8/10.0F, 11).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(1+9/10.0F, 11).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(1+1/10.0F, 11).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(1+2/10.0F, 11).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(1+3/10.0F, 11).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(1+4/10.0F, 11).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(1+5/10.0F, 11).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(1+6/10.0F, 11).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(1+7/10.0F, 11).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(1+8/10.0F, 11).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(1+9/10.0F, 11).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
 
 // ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 0/10.0F    ).isCloseRGB(bColor.setChansRGB(158/255.0F,   1/255.0F,  66/255.0F), 0.00001F));  // missing -> 11
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 1/10.0F    ).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 2/10.0F    ).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 3/10.0F    ).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 4/10.0F    ).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 5/10.0F    ).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 6/10.0F    ).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 7/10.0F    ).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 8/10.0F    ).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 9/10.0F    ).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(10/10.0F    ).isCloseRGB(bColor.setChansRGB( 94/255.0F,  79/255.0F, 162/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 0/10.0F    ).isCloseRGB(bColor.setChansRGB(158/255.0F,   1/255.0F,  66/255.0F), 0.00001F));  // missing -> 11
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 1/10.0F    ).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 2/10.0F    ).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 3/10.0F    ).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 4/10.0F    ).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 5/10.0F    ).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 6/10.0F    ).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 7/10.0F    ).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 8/10.0F    ).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 9/10.0F    ).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(10/10.0F    ).isCloseRGB(bColor.setChansRGB( 94/255.0F,  79/255.0F, 162/255.0F), 0.00001F));
 
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 0/2.0F,  1).isCloseRGB(bColor.setChansRGB(252/255.0F, 141/255.0F,  89/255.0F), 0.00001F));  // too small -> 3
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 1/2.0F,  1).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 2/2.0F,  1).isCloseRGB(bColor.setChansRGB(153/255.0F, 213/255.0F, 148/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 0/2.0F,  1).isCloseRGB(bColor.setChansRGB(252/255.0F, 141/255.0F,  89/255.0F), 0.00001F));  // too small -> 3
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 1/2.0F,  1).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 2/2.0F,  1).isCloseRGB(bColor.setChansRGB(153/255.0F, 213/255.0F, 148/255.0F), 0.00001F));
 
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 0/10.0F, 50).isCloseRGB(bColor.setChansRGB(158/255.0F,   1/255.0F,  66/255.0F), 0.00001F));  // too big -> 11
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 1/10.0F, 50).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 2/10.0F, 50).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 3/10.0F, 50).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 4/10.0F, 50).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 5/10.0F, 50).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 6/10.0F, 50).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 7/10.0F, 50).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 8/10.0F, 50).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c( 9/10.0F, 50).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCBSpectral::c(10/10.0F, 50).isCloseRGB(bColor.setChansRGB( 94/255.0F,  79/255.0F, 162/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 0/10.0F, 50).isCloseRGB(bColor.setChansRGB(158/255.0F,   1/255.0F,  66/255.0F), 0.00001F));  // too big -> 11
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 1/10.0F, 50).isCloseRGB(bColor.setChansRGB(213/255.0F,  62/255.0F,  79/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 2/10.0F, 50).isCloseRGB(bColor.setChansRGB(244/255.0F, 109/255.0F,  67/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 3/10.0F, 50).isCloseRGB(bColor.setChansRGB(253/255.0F, 174/255.0F,  97/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 4/10.0F, 50).isCloseRGB(bColor.setChansRGB(254/255.0F, 224/255.0F, 139/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 5/10.0F, 50).isCloseRGB(bColor.setChansRGB(255/255.0F, 255/255.0F, 191/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 6/10.0F, 50).isCloseRGB(bColor.setChansRGB(230/255.0F, 245/255.0F, 152/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 7/10.0F, 50).isCloseRGB(bColor.setChansRGB(171/255.0F, 221/255.0F, 164/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 8/10.0F, 50).isCloseRGB(bColor.setChansRGB(102/255.0F, 194/255.0F, 165/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c( 9/10.0F, 50).isCloseRGB(bColor.setChansRGB( 50/255.0F, 136/255.0F, 189/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCBSpectral::c(10/10.0F, 50).isCloseRGB(bColor.setChansRGB( 94/255.0F,  79/255.0F, 162/255.0F), 0.00001F));
 
 ////////////////////////////////////////////////////////////////////////////////
 
   bColor.setToBlack();
   mjr::colorRGBA32F::csCBSpectral::c(bColor, 0/2.0F, 3);
-  BOOST_TEST_CHECK(bColor.getAlpha() ==   mjr::colorRGBA32F::minChanVal); // Not set!
+  EXPECT_EQ(bColor.getAlpha(),    mjr::colorRGBA32F::minChanVal); // Not set!
 
   bColor.setToWhite();
   mjr::colorRGBA32F::csCBSpectral::c(bColor, 0/2.0F, 3);
-  BOOST_TEST_CHECK(bColor.getAlpha() == mjr::colorRGBA32F::maxChanVal); // Not set!
+  EXPECT_EQ(bColor.getAlpha(),  mjr::colorRGBA32F::maxChanVal); // Not set!
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(isClose_and_isCloseRGB) {
+TEST(FUN_isClose_and_isCloseRGB, Comprehensive) {
 
   mjr::colorRGB8b   aLcolor;
   mjr::colorRGBA8b  bLcolor;
@@ -6513,88 +6535,88 @@ BOOST_AUTO_TEST_CASE(isClose_and_isCloseRGB) {
   cRcolor.setToBlack();
   dRcolor.setToBlack();
 
-  BOOST_TEST_CHECK(aLcolor.isClose(aRcolor, 0)  == true);
-  BOOST_TEST_CHECK(bLcolor.isClose(bRcolor, 0)  == true);
-  BOOST_TEST_CHECK(cLcolor.isClose(cRcolor, 0)  == true);
-  BOOST_TEST_CHECK(dLcolor.isClose(dRcolor, 0)  == true);
+  EXPECT_TRUE(aLcolor.isClose(aRcolor, 0));
+  EXPECT_TRUE(bLcolor.isClose(bRcolor, 0));
+  EXPECT_TRUE(cLcolor.isClose(cRcolor, 0));
+  EXPECT_TRUE(dLcolor.isClose(dRcolor, 0));
 
-  BOOST_TEST_CHECK(aLcolor.isCloseRGB(aRcolor, 0)  == true);
-  BOOST_TEST_CHECK(bLcolor.isCloseRGB(bRcolor, 0)  == true);
-  BOOST_TEST_CHECK(cLcolor.isCloseRGB(cRcolor, 0)  == true);
-  BOOST_TEST_CHECK(dLcolor.isCloseRGB(dRcolor, 0)  == true);
+  EXPECT_TRUE(aLcolor.isCloseRGB(aRcolor, 0));
+  EXPECT_TRUE(bLcolor.isCloseRGB(bRcolor, 0));
+  EXPECT_TRUE(cLcolor.isCloseRGB(cRcolor, 0));
+  EXPECT_TRUE(dLcolor.isCloseRGB(dRcolor, 0));
 
   aLcolor.setChanToMax(0);
   bLcolor.setChanToMax(0);
   cLcolor.setChanToMax(0);
   dLcolor.setChanToMax(0);
 
-  BOOST_TEST_CHECK(aLcolor.isClose(aRcolor, 0)  == false);
-  BOOST_TEST_CHECK(bLcolor.isClose(bRcolor, 0)  == false);
-  BOOST_TEST_CHECK(cLcolor.isClose(cRcolor, 0)  == false);
-  BOOST_TEST_CHECK(dLcolor.isClose(dRcolor, 0)  == false);
+  EXPECT_FALSE(aLcolor.isClose(aRcolor, 0));
+  EXPECT_FALSE(bLcolor.isClose(bRcolor, 0));
+  EXPECT_FALSE(cLcolor.isClose(cRcolor, 0));
+  EXPECT_FALSE(dLcolor.isClose(dRcolor, 0));
 
-  BOOST_TEST_CHECK(aLcolor.isCloseRGB(aRcolor, 0)  == false);
-  BOOST_TEST_CHECK(bLcolor.isCloseRGB(bRcolor, 0)  == false);
-  BOOST_TEST_CHECK(cLcolor.isCloseRGB(cRcolor, 0)  == false);
-  BOOST_TEST_CHECK(dLcolor.isCloseRGB(dRcolor, 0)  == false);
+  EXPECT_FALSE(aLcolor.isCloseRGB(aRcolor, 0));
+  EXPECT_FALSE(bLcolor.isCloseRGB(bRcolor, 0));
+  EXPECT_FALSE(cLcolor.isCloseRGB(cRcolor, 0));
+  EXPECT_FALSE(dLcolor.isCloseRGB(dRcolor, 0));
 
   aRcolor.setChanToMax(0);
   bRcolor.setChanToMax(0);
   cRcolor.setChanToMax(0);
   dRcolor.setChanToMax(0);
 
-  BOOST_TEST_CHECK(aLcolor.isClose(aRcolor, 0)  == true);
-  BOOST_TEST_CHECK(bLcolor.isClose(bRcolor, 0)  == true);
-  BOOST_TEST_CHECK(cLcolor.isClose(cRcolor, 0)  == true);
-  BOOST_TEST_CHECK(dLcolor.isClose(dRcolor, 0)  == true);
+  EXPECT_TRUE(aLcolor.isClose(aRcolor, 0));
+  EXPECT_TRUE(bLcolor.isClose(bRcolor, 0));
+  EXPECT_TRUE(cLcolor.isClose(cRcolor, 0));
+  EXPECT_TRUE(dLcolor.isClose(dRcolor, 0));
 
-  BOOST_TEST_CHECK(aLcolor.isCloseRGB(aRcolor, 0)  == true);
-  BOOST_TEST_CHECK(bLcolor.isCloseRGB(bRcolor, 0)  == true);
-  BOOST_TEST_CHECK(cLcolor.isCloseRGB(cRcolor, 0)  == true);
-  BOOST_TEST_CHECK(dLcolor.isCloseRGB(dRcolor, 0)  == true);
+  EXPECT_TRUE(aLcolor.isCloseRGB(aRcolor, 0));
+  EXPECT_TRUE(bLcolor.isCloseRGB(bRcolor, 0));
+  EXPECT_TRUE(cLcolor.isCloseRGB(cRcolor, 0));
+  EXPECT_TRUE(dLcolor.isCloseRGB(dRcolor, 0));
 
   bRcolor.setChanToMax(3);
   dRcolor.setChanToMax(3);
 
-  BOOST_TEST_CHECK(bLcolor.isClose(bRcolor, 0)  == false);
-  BOOST_TEST_CHECK(dLcolor.isClose(dRcolor, 0)  == false);
+  EXPECT_FALSE(bLcolor.isClose(bRcolor, 0));
+  EXPECT_FALSE(dLcolor.isClose(dRcolor, 0));
 
-  BOOST_TEST_CHECK(bLcolor.isCloseRGB(bRcolor, 0)  == true);
-  BOOST_TEST_CHECK(dLcolor.isCloseRGB(dRcolor, 0)  == true);
+  EXPECT_TRUE(bLcolor.isCloseRGB(bRcolor, 0));
+  EXPECT_TRUE(dLcolor.isCloseRGB(dRcolor, 0));
 
   aLcolor.setChansRGB(1, 2, 3);
   aRcolor.setChansRGB(1, 3, 4);
 
-  BOOST_TEST_CHECK(aLcolor.isClose(aRcolor, 0)  == false);
-  BOOST_TEST_CHECK(aRcolor.isClose(aLcolor, 0)  == false);
+  EXPECT_FALSE(aLcolor.isClose(aRcolor, 0));
+  EXPECT_FALSE(aRcolor.isClose(aLcolor, 0));
 
-  BOOST_TEST_CHECK(aLcolor.isClose(aRcolor, 1)  == true);  // false only if a channel delta is GREATER THAN epsilon
-  BOOST_TEST_CHECK(aRcolor.isClose(aLcolor, 1)  == true);
+  EXPECT_TRUE(aLcolor.isClose(aRcolor, 1));  // false only if a channel delta is GREATER THAN epsilon
+  EXPECT_TRUE(aRcolor.isClose(aLcolor, 1));
 
-  BOOST_TEST_CHECK(aLcolor.isClose(aRcolor, 2)  == true);
-  BOOST_TEST_CHECK(aRcolor.isClose(aLcolor, 2)  == true);
+  EXPECT_TRUE(aLcolor.isClose(aRcolor, 2));
+  EXPECT_TRUE(aRcolor.isClose(aLcolor, 2));
 
   cLcolor.setChansRGB(1, 2, 3);
   cRcolor.setChansRGB(1, 3, 4);
 
-  BOOST_TEST_CHECK(cLcolor.isClose(cRcolor, 0.0F)  == false);
-  BOOST_TEST_CHECK(cRcolor.isClose(cLcolor, 0.0F)  == false);
+  EXPECT_FALSE(cLcolor.isClose(cRcolor, 0.0F));
+  EXPECT_FALSE(cRcolor.isClose(cLcolor, 0.0F));
 
-  BOOST_TEST_CHECK(cLcolor.isClose(cRcolor, 0.9999F)  == false);
-  BOOST_TEST_CHECK(cRcolor.isClose(cLcolor, 0.9999F)  == false);
+  EXPECT_FALSE(cLcolor.isClose(cRcolor, 0.9999F));
+  EXPECT_FALSE(cRcolor.isClose(cLcolor, 0.9999F));
 
-  BOOST_TEST_CHECK(cLcolor.isClose(cRcolor, 1.0F)  == true);  // Edge case is ill-defined for FP arithmetic, but OK here as we used numbers that are exactly representable -- might fail on other hardware.
-  BOOST_TEST_CHECK(cRcolor.isClose(cLcolor, 1.0F)  == true);
+  EXPECT_TRUE(cLcolor.isClose(cRcolor, 1.0F));  // Edge case is ill-defined for FP arithmetic, but OK here as we used numbers that are exactly representable -- might fail on other hardware.
+  EXPECT_TRUE(cRcolor.isClose(cLcolor, 1.0F));
 
-  BOOST_TEST_CHECK(cLcolor.isClose(cRcolor, 1.0001F)  == true);
-  BOOST_TEST_CHECK(cRcolor.isClose(cLcolor, 1.0001F)  == true);
+  EXPECT_TRUE(cLcolor.isClose(cRcolor, 1.0001F));
+  EXPECT_TRUE(cRcolor.isClose(cLcolor, 1.0001F));
 
-  BOOST_TEST_CHECK(cLcolor.isClose(cRcolor, 2.0F)  == true);
-  BOOST_TEST_CHECK(cRcolor.isClose(cLcolor, 2.0F)  == true);
+  EXPECT_TRUE(cLcolor.isClose(cRcolor, 2.0F));
+  EXPECT_TRUE(cRcolor.isClose(cLcolor, 2.0F));
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(setRGBfromColorSpace) {
+// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+TEST(FUN_setRGBfromColorSpace, Comprehensive) {
 
   mjr::colorRGB8b  aColor, bColor;
   mjr::colorRGBA8b cColor, dColor;
@@ -6604,38 +6626,38 @@ BOOST_AUTO_TEST_CASE(setRGBfromColorSpace) {
   ////////////////////////////////////////////////////////////////////////////////
 
   aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::RGB, 0, 0.5, 1);
-  BOOST_TEST_CHECK(aColor.getRed()   == mjr::colorRGB8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getGreen() == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(aColor.getBlue()  == mjr::colorRGB8b::maxChanVal);
+  EXPECT_EQ(aColor.getRed(),    mjr::colorRGB8b::minChanVal);
+  EXPECT_EQ(aColor.getGreen(),  mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(aColor.getBlue(),   mjr::colorRGB8b::maxChanVal);
 
   eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::RGB, 0, 0.5, 1);
-  BOOST_TEST_CHECK(eColor.getRed()   == mjr::colorRGB32F::minChanVal);
-  BOOST_TEST_CHECK(eColor.getGreen() == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(eColor.getBlue()  == mjr::colorRGB32F::maxChanVal);
+  EXPECT_EQ(eColor.getRed(),    mjr::colorRGB32F::minChanVal);
+  EXPECT_EQ(eColor.getGreen(),  mjr::colorRGB32F::meanChanVal);
+  EXPECT_EQ(eColor.getBlue(),   mjr::colorRGB32F::maxChanVal);
 
   gColor.setRGBfromColorSpace(mjr::colorRGB16b::colorSpaceEnum::RGB, 0, 0.5, 1);
-  BOOST_TEST_CHECK(gColor.getRed()   == mjr::colorRGB16b::minChanVal);
-  BOOST_TEST_CHECK(gColor.getGreen() == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(gColor.getBlue()  == mjr::colorRGB16b::maxChanVal);
+  EXPECT_EQ(gColor.getRed(),    mjr::colorRGB16b::minChanVal);
+  EXPECT_EQ(gColor.getGreen(),  mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(gColor.getBlue(),   mjr::colorRGB16b::maxChanVal);
 
   cColor.setToWhite();
   cColor.setRGBfromColorSpace(mjr::colorRGBA8b::colorSpaceEnum::RGB, 0, 0.5, 1);
-  BOOST_TEST_CHECK(cColor.getRed()   == mjr::colorRGBA8b::minChanVal);
-  BOOST_TEST_CHECK(cColor.getGreen() == mjr::colorRGBA8b::meanChanVal);
-  BOOST_TEST_CHECK(cColor.getBlue()  == mjr::colorRGBA8b::maxChanVal);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0xFF); // Not set
+  EXPECT_EQ(cColor.getRed(),    mjr::colorRGBA8b::minChanVal);
+  EXPECT_EQ(cColor.getGreen(),  mjr::colorRGBA8b::meanChanVal);
+  EXPECT_EQ(cColor.getBlue(),   mjr::colorRGBA8b::maxChanVal);
+  EXPECT_EQ(cColor.getAlpha(),  0xFF); // Not set
 
   cColor.setToBlack();
   cColor.setRGBfromColorSpace(mjr::colorRGBA8b::colorSpaceEnum::RGB, 0, 0.5, 1);
-  BOOST_TEST_CHECK(cColor.getRed()   == mjr::colorRGBA8b::minChanVal);
-  BOOST_TEST_CHECK(cColor.getGreen() == mjr::colorRGBA8b::meanChanVal);
-  BOOST_TEST_CHECK(cColor.getBlue()  == mjr::colorRGBA8b::maxChanVal);
-  BOOST_TEST_CHECK(cColor.getAlpha() == 0x00); // Not set
+  EXPECT_EQ(cColor.getRed(),    mjr::colorRGBA8b::minChanVal);
+  EXPECT_EQ(cColor.getGreen(),  mjr::colorRGBA8b::meanChanVal);
+  EXPECT_EQ(cColor.getBlue(),   mjr::colorRGBA8b::maxChanVal);
+  EXPECT_EQ(cColor.getAlpha(),  0x00); // Not set
 
   for(double r=0; r<1.0; r=r+0.1)
     for(double g=0; g<1.0; g=g+0.1)
       for(double b=0; b<1.0; b=b+0.1) // BOOST_TEST_CHECK x 1000
-        BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::RGB, r, g, b).isEqualRGB(bColor.setChansRGB_dbl(r, g, b)) == true);
+        EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::RGB, r, g, b).isEqualRGB(bColor.setChansRGB_dbl(r, g, b)));
 
   ////////////////////////////////////////////////////////////////////////////////
 
@@ -6654,27 +6676,27 @@ BOOST_AUTO_TEST_CASE(setRGBfromColorSpace) {
   //  50.0,  -50.0,  -50.0               0.00000000000000, 143.15667349842120, 203.43118280505934
   //  50.0,   50.0,  -50.0             157.75797959913612,  86.69682271747450, 204.99202043092524
 
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LAB,   0.0,    0.0,    0.0).isEqualRGB(bColor.setChansRGB(  0,   0,   0)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LAB,   0.0, -100.0,    0.0).isEqualRGB(bColor.setChansRGB(  0,  42,   0)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LAB,   0.0,  100.0,    0.0).isEqualRGB(bColor.setChansRGB( 96,   0,   6)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LAB,   0.0,    0.0, -100.0).isEqualRGB(bColor.setChansRGB(  0,  28, 148)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LAB,   0.0,    0.0,  100.0).isEqualRGB(bColor.setChansRGB( 52,   0,   0)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LAB, 100.0,    0.0,    0.0).isEqualRGB(bColor.setChansRGB(255, 255, 254)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LAB,  50.0,   50.0,   50.0).isEqualRGB(bColor.setChansRGB(206,  75,  33)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LAB,  50.0,  -50.0,   50.0).isEqualRGB(bColor.setChansRGB( 35, 137,  16)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LAB,  50.0,  -50.0,  -50.0).isEqualRGB(bColor.setChansRGB(  0, 143, 203)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LAB,  50.0,   50.0,  -50.0).isEqualRGB(bColor.setChansRGB(157,  86, 204)) == true);
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LAB,   0.0,    0.0,    0.0).isEqualRGB(bColor.setChansRGB(  0,   0,   0)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LAB,   0.0, -100.0,    0.0).isEqualRGB(bColor.setChansRGB(  0,  42,   0)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LAB,   0.0,  100.0,    0.0).isEqualRGB(bColor.setChansRGB( 96,   0,   6)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LAB,   0.0,    0.0, -100.0).isEqualRGB(bColor.setChansRGB(  0,  28, 148)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LAB,   0.0,    0.0,  100.0).isEqualRGB(bColor.setChansRGB( 52,   0,   0)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LAB, 100.0,    0.0,    0.0).isEqualRGB(bColor.setChansRGB(255, 255, 254)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LAB,  50.0,   50.0,   50.0).isEqualRGB(bColor.setChansRGB(206,  75,  33)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LAB,  50.0,  -50.0,   50.0).isEqualRGB(bColor.setChansRGB( 35, 137,  16)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LAB,  50.0,  -50.0,  -50.0).isEqualRGB(bColor.setChansRGB(  0, 143, 203)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LAB,  50.0,   50.0,  -50.0).isEqualRGB(bColor.setChansRGB(157,  86, 204)));
 
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB,   0.0,    0.0,    0.0).isCloseRGB(fColor.setChansRGB(  0.00000000000000F/255.0F,   0.00000000000000F/255.0F,   0.00000000000000F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB,   0.0, -100.0,    0.0).isCloseRGB(fColor.setChansRGB(  0.00000000000000F/255.0F,  42.50011693400831F/255.0F,   0.00000000000000F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB,   0.0,  100.0,    0.0).isCloseRGB(fColor.setChansRGB( 96.73833014676526F/255.0F,   0.00000000000000F/255.0F,   6.73101465756404F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB,   0.0,    0.0, -100.0).isCloseRGB(fColor.setChansRGB(  0.00000000000000F/255.0F,  28.17831280013103F/255.0F, 148.60141206787873F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB,   0.0,    0.0,  100.0).isCloseRGB(fColor.setChansRGB( 52.41394321977139F/255.0F,   0.00000000000000F/255.0F,   0.00000000000000F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB, 100.0,    0.0,    0.0).isCloseRGB(fColor.setChansRGB(255.00000000000000F/255.0F, 255.00000000000000F/255.0F, 254.98144635564927F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB,  50.0,   50.0,   50.0).isCloseRGB(fColor.setChansRGB(206.61345904246030F/255.0F,  75.47718797538901F/255.0F,  33.52976908891374F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB,  50.0,  -50.0,   50.0).isCloseRGB(fColor.setChansRGB( 35.14702068347071F/255.0F, 137.45770493758675F/255.0F,  16.12671766273848F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB,  50.0,  -50.0,  -50.0).isCloseRGB(fColor.setChansRGB(  0.00000000000000F/255.0F, 143.15667349842120F/255.0F, 203.43118280505934F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB,  50.0,   50.0,  -50.0).isCloseRGB(fColor.setChansRGB(157.75797959913612F/255.0F,  86.69682271747450F/255.0F, 204.99202043092524F/255.0F), 0.00001F) == true);
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB,   0.0,    0.0,    0.0).isCloseRGB(fColor.setChansRGB(  0.00000000000000F/255.0F,   0.00000000000000F/255.0F,   0.00000000000000F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB,   0.0, -100.0,    0.0).isCloseRGB(fColor.setChansRGB(  0.00000000000000F/255.0F,  42.50011693400831F/255.0F,   0.00000000000000F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB,   0.0,  100.0,    0.0).isCloseRGB(fColor.setChansRGB( 96.73833014676526F/255.0F,   0.00000000000000F/255.0F,   6.73101465756404F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB,   0.0,    0.0, -100.0).isCloseRGB(fColor.setChansRGB(  0.00000000000000F/255.0F,  28.17831280013103F/255.0F, 148.60141206787873F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB,   0.0,    0.0,  100.0).isCloseRGB(fColor.setChansRGB( 52.41394321977139F/255.0F,   0.00000000000000F/255.0F,   0.00000000000000F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB, 100.0,    0.0,    0.0).isCloseRGB(fColor.setChansRGB(255.00000000000000F/255.0F, 255.00000000000000F/255.0F, 254.98144635564927F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB,  50.0,   50.0,   50.0).isCloseRGB(fColor.setChansRGB(206.61345904246030F/255.0F,  75.47718797538901F/255.0F,  33.52976908891374F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB,  50.0,  -50.0,   50.0).isCloseRGB(fColor.setChansRGB( 35.14702068347071F/255.0F, 137.45770493758675F/255.0F,  16.12671766273848F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB,  50.0,  -50.0,  -50.0).isCloseRGB(fColor.setChansRGB(  0.00000000000000F/255.0F, 143.15667349842120F/255.0F, 203.43118280505934F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB,  50.0,   50.0,  -50.0).isCloseRGB(fColor.setChansRGB(157.75797959913612F/255.0F,  86.69682271747450F/255.0F, 204.99202043092524F/255.0F), 0.00001F));
 
   ////////////////////////////////////////////////////////////////////////////////
   //   0-1     0-1     0-1
@@ -6686,21 +6708,21 @@ BOOST_AUTO_TEST_CASE(setRGBfromColorSpace) {
   //   1.0,    0.0,    1.0           46.09063114907088,   0.00000000000000,  27.25916547197178
   //   0.0,    1.0,    1.0            0.00000000000000,  37.76511040594671,  22.93126475355600
 
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::XYZ,   0.0,    0.0,    0.0).isEqualRGB(bColor.setChansRGB( 0,   0,   0)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::XYZ,   1.0,    0.0,    0.0).isEqualRGB(bColor.setChansRGB(50,   0,   1)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::XYZ,   0.0,    1.0,    0.0).isEqualRGB(bColor.setChansRGB( 0,  37,   0)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::XYZ,   0.0,    0.0,    1.0).isEqualRGB(bColor.setChansRGB( 0,   1,  26)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::XYZ,   1.0,    1.0,    0.0).isEqualRGB(bColor.setChansRGB(35,  23,   0)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::XYZ,   1.0,    0.0,    1.0).isEqualRGB(bColor.setChansRGB(46,   0,  27)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::XYZ,   0.0,    1.0,    1.0).isEqualRGB(bColor.setChansRGB( 0,  37,  22)) == true);
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::XYZ,   0.0,    0.0,    0.0).isEqualRGB(bColor.setChansRGB( 0,   0,   0)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::XYZ,   1.0,    0.0,    0.0).isEqualRGB(bColor.setChansRGB(50,   0,   1)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::XYZ,   0.0,    1.0,    0.0).isEqualRGB(bColor.setChansRGB( 0,  37,   0)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::XYZ,   0.0,    0.0,    1.0).isEqualRGB(bColor.setChansRGB( 0,   1,  26)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::XYZ,   1.0,    1.0,    0.0).isEqualRGB(bColor.setChansRGB(35,  23,   0)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::XYZ,   1.0,    0.0,    1.0).isEqualRGB(bColor.setChansRGB(46,   0,  27)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::XYZ,   0.0,    1.0,    1.0).isEqualRGB(bColor.setChansRGB( 0,  37,  22)));
 
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::XYZ, 0.0,    0.0,    0.0).isCloseRGB(fColor.setChansRGB( 0.00000000000000F/255.0F,   0.00000000000000F/255.0F,   0.00000000000000F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::XYZ, 1.0,    0.0,    0.0).isCloseRGB(fColor.setChansRGB(50.42455181463890F/255.0F,   0.00000000000000F/255.0F,   1.83509220000000F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::XYZ, 0.0,    1.0,    0.0).isCloseRGB(fColor.setChansRGB( 0.00000000000000F/255.0F,  37.29504496314512F/255.0F,   0.00000000000000F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::XYZ, 0.0,    0.0,    1.0).isCloseRGB(fColor.setChansRGB( 0.00000000000000F/255.0F,   1.36725900000000F/255.0F,  26.38515827433519F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::XYZ, 1.0,    1.0,    0.0).isCloseRGB(fColor.setChansRGB(35.27435545247001F/255.0F,  23.88691519243730F/255.0F,   0.00000000000000F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::XYZ, 1.0,    0.0,    1.0).isCloseRGB(fColor.setChansRGB(46.09063114907088F/255.0F,   0.00000000000000F/255.0F,  27.25916547197178F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::XYZ, 0.0,    1.0,    1.0).isCloseRGB(fColor.setChansRGB( 0.00000000000000F/255.0F,  37.76511040594671F/255.0F,  22.93126475355600F/255.0F), 0.00001F) == true);
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::XYZ, 0.0,    0.0,    0.0).isCloseRGB(fColor.setChansRGB( 0.00000000000000F/255.0F,   0.00000000000000F/255.0F,   0.00000000000000F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::XYZ, 1.0,    0.0,    0.0).isCloseRGB(fColor.setChansRGB(50.42455181463890F/255.0F,   0.00000000000000F/255.0F,   1.83509220000000F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::XYZ, 0.0,    1.0,    0.0).isCloseRGB(fColor.setChansRGB( 0.00000000000000F/255.0F,  37.29504496314512F/255.0F,   0.00000000000000F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::XYZ, 0.0,    0.0,    1.0).isCloseRGB(fColor.setChansRGB( 0.00000000000000F/255.0F,   1.36725900000000F/255.0F,  26.38515827433519F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::XYZ, 1.0,    1.0,    0.0).isCloseRGB(fColor.setChansRGB(35.27435545247001F/255.0F,  23.88691519243730F/255.0F,   0.00000000000000F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::XYZ, 1.0,    0.0,    1.0).isCloseRGB(fColor.setChansRGB(46.09063114907088F/255.0F,   0.00000000000000F/255.0F,  27.25916547197178F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::XYZ, 0.0,    1.0,    1.0).isCloseRGB(fColor.setChansRGB( 0.00000000000000F/255.0F,  37.76511040594671F/255.0F,  22.93126475355600F/255.0F), 0.00001F));
 
   ////////////////////////////////////////////////////////////////////////////////
   //   0-100 0-100   0-360
@@ -6714,213 +6736,212 @@ BOOST_AUTO_TEST_CASE(setRGBfromColorSpace) {
   // 100.0,  100.0,  180.0             0.00000000000000, 255.00000000000000, 252.06306109593692
   // 100.0,  100.0,   60.0           255.00000000000000, 211.98994181103800,  78.02765922273178
 
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LCH,   0.0,    0.0,    0.0).isEqualRGB(bColor.setChansRGB(  0,   0,   0)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LCH,   0.0,  100.0,    0.0).isEqualRGB(bColor.setChansRGB( 96,   0,   6)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LCH,   0.0,   50.0,    0.0).isEqualRGB(bColor.setChansRGB( 57,   0,   2)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LCH,   0.0,    0.0,  180.0).isEqualRGB(bColor.setChansRGB(  0,   0,   0)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LCH,   0.0,   50.0,  180.0).isEqualRGB(bColor.setChansRGB(  0,  28,   0)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LCH,  50.0,   50.0,  180.0).isEqualRGB(bColor.setChansRGB(  0, 139, 117)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LCH, 100.0,  100.0,  360.0).isEqualRGB(bColor.setChansRGB(255, 155, 255)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LCH, 100.0,  100.0,  180.0).isEqualRGB(bColor.setChansRGB(  0, 255, 252)) == true);
-  BOOST_TEST_CHECK(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LCH, 100.0,  100.0,   60.0).isEqualRGB(bColor.setChansRGB(255, 211,  78)) == true);
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LCH,   0.0,    0.0,    0.0).isEqualRGB(bColor.setChansRGB(  0,   0,   0)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LCH,   0.0,  100.0,    0.0).isEqualRGB(bColor.setChansRGB( 96,   0,   6)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LCH,   0.0,   50.0,    0.0).isEqualRGB(bColor.setChansRGB( 57,   0,   2)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LCH,   0.0,    0.0,  180.0).isEqualRGB(bColor.setChansRGB(  0,   0,   0)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LCH,   0.0,   50.0,  180.0).isEqualRGB(bColor.setChansRGB(  0,  28,   0)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LCH,  50.0,   50.0,  180.0).isEqualRGB(bColor.setChansRGB(  0, 139, 117)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LCH, 100.0,  100.0,  360.0).isEqualRGB(bColor.setChansRGB(255, 155, 255)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LCH, 100.0,  100.0,  180.0).isEqualRGB(bColor.setChansRGB(  0, 255, 252)));
+  EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::LCH, 100.0,  100.0,   60.0).isEqualRGB(bColor.setChansRGB(255, 211,  78)));
 
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LCH,   0.0,    0.0,    0.0).isCloseRGB(fColor.setChansRGB(  0.00000000000000F/255.0F,   0.00000000000000F/255.0F,   0.00000000000000F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LCH,   0.0,  100.0,    0.0).isCloseRGB(fColor.setChansRGB( 96.73833014676526F/255.0F,   0.00000000000000F/255.0F,   6.73101465756404F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LCH,   0.0,   50.0,    0.0).isCloseRGB(fColor.setChansRGB( 57.41225747257089F/255.0F,   0.00000000000000F/255.0F,   2.34936006058456F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LCH,   0.0,    0.0,  180.0).isCloseRGB(fColor.setChansRGB(  0.00000000000000F/255.0F,   0.00000000000000F/255.0F,   0.00000000000000F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LCH,   0.0,   50.0,  180.0).isCloseRGB(fColor.setChansRGB(  0.00000000000000F/255.0F,  28.32099136175329F/255.0F,   0.00000000000000F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LCH,  50.0,   50.0,  180.0).isCloseRGB(fColor.setChansRGB(  0.00000000000000F/255.0F, 139.16169169667540F/255.0F, 117.60474230139480F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LCH, 100.0,  100.0,  360.0).isCloseRGB(fColor.setChansRGB(255.00000000000000F/255.0F, 155.40224018978810F/255.0F, 255.00000000000000F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LCH, 100.0,  100.0,  180.0).isCloseRGB(fColor.setChansRGB(  0.00000000000000F/255.0F, 255.00000000000000F/255.0F, 252.06306109593692F/255.0F), 0.00001F) == true);
-  BOOST_TEST_CHECK(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LCH, 100.0,  100.0,   60.0).isCloseRGB(fColor.setChansRGB(255.00000000000000F/255.0F, 211.98994181103800F/255.0F,  78.02765922273178F/255.0F), 0.00001F) == true);
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LCH,   0.0,    0.0,    0.0).isCloseRGB(fColor.setChansRGB(  0.00000000000000F/255.0F,   0.00000000000000F/255.0F,   0.00000000000000F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LCH,   0.0,  100.0,    0.0).isCloseRGB(fColor.setChansRGB( 96.73833014676526F/255.0F,   0.00000000000000F/255.0F,   6.73101465756404F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LCH,   0.0,   50.0,    0.0).isCloseRGB(fColor.setChansRGB( 57.41225747257089F/255.0F,   0.00000000000000F/255.0F,   2.34936006058456F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LCH,   0.0,    0.0,  180.0).isCloseRGB(fColor.setChansRGB(  0.00000000000000F/255.0F,   0.00000000000000F/255.0F,   0.00000000000000F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LCH,   0.0,   50.0,  180.0).isCloseRGB(fColor.setChansRGB(  0.00000000000000F/255.0F,  28.32099136175329F/255.0F,   0.00000000000000F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LCH,  50.0,   50.0,  180.0).isCloseRGB(fColor.setChansRGB(  0.00000000000000F/255.0F, 139.16169169667540F/255.0F, 117.60474230139480F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LCH, 100.0,  100.0,  360.0).isCloseRGB(fColor.setChansRGB(255.00000000000000F/255.0F, 155.40224018978810F/255.0F, 255.00000000000000F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LCH, 100.0,  100.0,  180.0).isCloseRGB(fColor.setChansRGB(  0.00000000000000F/255.0F, 255.00000000000000F/255.0F, 252.06306109593692F/255.0F), 0.00001F));
+  EXPECT_TRUE(eColor.setRGBfromColorSpace(mjr::colorRGB32F::colorSpaceEnum::LCH, 100.0,  100.0,   60.0).isCloseRGB(fColor.setChansRGB(255.00000000000000F/255.0F, 211.98994181103800F/255.0F,  78.02765922273178F/255.0F), 0.00001F));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(csFPcircular12_int) {
+TEST(FUN_csFPcircular12, IntInComprehensive) {
 
   mjr::colorRGBA8b  aColor;
   mjr::colorRGBA32F bColor;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 0).isEqualRGB(aColor.setChansRGB(0xFF, 0x00, 0x00)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 1).isEqualRGB(aColor.setChansRGB(0xFF, 0x7D, 0x00)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 2).isEqualRGB(aColor.setChansRGB(0xFF, 0xFF, 0x00)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 3).isEqualRGB(aColor.setChansRGB(0x7D, 0xFF, 0x00)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 4).isEqualRGB(aColor.setChansRGB(0x66, 0xCC, 0x00)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 5).isEqualRGB(aColor.setChansRGB(0x66, 0xFF, 0xB2)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 6).isEqualRGB(aColor.setChansRGB(0x00, 0xFF, 0xFF)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 7).isEqualRGB(aColor.setChansRGB(0x00, 0x7D, 0xFF)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 8).isEqualRGB(aColor.setChansRGB(0x00, 0x00, 0xFF)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 9).isEqualRGB(aColor.setChansRGB(0x7D, 0x00, 0xFF)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(10).isEqualRGB(aColor.setChansRGB(0xFF, 0x00, 0xFF)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(11).isEqualRGB(aColor.setChansRGB(0xFF, 0x00, 0x7D)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c( 0).isEqualRGB(aColor.setChansRGB(0xFF, 0x00, 0x00)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c( 1).isEqualRGB(aColor.setChansRGB(0xFF, 0x7D, 0x00)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c( 2).isEqualRGB(aColor.setChansRGB(0xFF, 0xFF, 0x00)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c( 3).isEqualRGB(aColor.setChansRGB(0x7D, 0xFF, 0x00)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c( 4).isEqualRGB(aColor.setChansRGB(0x66, 0xCC, 0x00)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c( 5).isEqualRGB(aColor.setChansRGB(0x66, 0xFF, 0xB2)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c( 6).isEqualRGB(aColor.setChansRGB(0x00, 0xFF, 0xFF)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c( 7).isEqualRGB(aColor.setChansRGB(0x00, 0x7D, 0xFF)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c( 8).isEqualRGB(aColor.setChansRGB(0x00, 0x00, 0xFF)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c( 9).isEqualRGB(aColor.setChansRGB(0x7D, 0x00, 0xFF)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(10).isEqualRGB(aColor.setChansRGB(0xFF, 0x00, 0xFF)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(11).isEqualRGB(aColor.setChansRGB(0xFF, 0x00, 0x7D)));
 
 ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(12).isEqualRGB(aColor.setChansRGB(0xFF, 0x00, 0x00))); // wrap
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(13).isEqualRGB(aColor.setChansRGB(0xFF, 0x7D, 0x00)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(14).isEqualRGB(aColor.setChansRGB(0xFF, 0xFF, 0x00)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(15).isEqualRGB(aColor.setChansRGB(0x7D, 0xFF, 0x00)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(16).isEqualRGB(aColor.setChansRGB(0x66, 0xCC, 0x00)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(17).isEqualRGB(aColor.setChansRGB(0x66, 0xFF, 0xB2)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(18).isEqualRGB(aColor.setChansRGB(0x00, 0xFF, 0xFF)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(19).isEqualRGB(aColor.setChansRGB(0x00, 0x7D, 0xFF)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(20).isEqualRGB(aColor.setChansRGB(0x00, 0x00, 0xFF)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(21).isEqualRGB(aColor.setChansRGB(0x7D, 0x00, 0xFF)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(22).isEqualRGB(aColor.setChansRGB(0xFF, 0x00, 0xFF)));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(23).isEqualRGB(aColor.setChansRGB(0xFF, 0x00, 0x7D)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(12).isEqualRGB(aColor.setChansRGB(0xFF, 0x00, 0x00))); // wrap
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(13).isEqualRGB(aColor.setChansRGB(0xFF, 0x7D, 0x00)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(14).isEqualRGB(aColor.setChansRGB(0xFF, 0xFF, 0x00)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(15).isEqualRGB(aColor.setChansRGB(0x7D, 0xFF, 0x00)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(16).isEqualRGB(aColor.setChansRGB(0x66, 0xCC, 0x00)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(17).isEqualRGB(aColor.setChansRGB(0x66, 0xFF, 0xB2)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(18).isEqualRGB(aColor.setChansRGB(0x00, 0xFF, 0xFF)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(19).isEqualRGB(aColor.setChansRGB(0x00, 0x7D, 0xFF)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(20).isEqualRGB(aColor.setChansRGB(0x00, 0x00, 0xFF)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(21).isEqualRGB(aColor.setChansRGB(0x7D, 0x00, 0xFF)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(22).isEqualRGB(aColor.setChansRGB(0xFF, 0x00, 0xFF)));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(23).isEqualRGB(aColor.setChansRGB(0xFF, 0x00, 0x7D)));
 
 ////////////////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   mjr::colorRGBA8b::csFPcircular12::c(aColor, 0);
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xFF);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0x00);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0x00);
-  BOOST_TEST_CHECK(aColor.getAlpha() ==   mjr::colorRGBA8b::minChanVal); // Not set!
+  EXPECT_EQ(aColor.getRed(),    0xFF);
+  EXPECT_EQ(aColor.getGreen(),  0x00);
+  EXPECT_EQ(aColor.getBlue(),   0x00);
+  EXPECT_EQ(aColor.getAlpha(),    mjr::colorRGBA8b::minChanVal); // Not set!
 
   aColor.setToWhite();
   mjr::colorRGBA8b::csFPcircular12::c(aColor, 0);
-  BOOST_TEST_CHECK(aColor.getRed()   ==  0xFF);
-  BOOST_TEST_CHECK(aColor.getGreen() ==  0x00);
-  BOOST_TEST_CHECK(aColor.getBlue()  ==  0x00);
-  BOOST_TEST_CHECK(aColor.getAlpha() == mjr::colorRGBA8b::maxChanVal); // Not set!
+  EXPECT_EQ(aColor.getRed(),     0xFF);
+  EXPECT_EQ(aColor.getGreen(),   0x00);
+  EXPECT_EQ(aColor.getBlue(),    0x00);
+  EXPECT_EQ(aColor.getAlpha(),  mjr::colorRGBA8b::maxChanVal); // Not set!
 
 ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 0).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x00/255.0F, 0x00/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 1).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x7D/255.0F, 0x00/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 2).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0xFF/255.0F, 0x00/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 3).isCloseRGB(bColor.setChansRGB(0x7D/255.0F, 0xFF/255.0F, 0x00/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 4).isCloseRGB(bColor.setChansRGB(0x66/255.0F, 0xCC/255.0F, 0x00/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 5).isCloseRGB(bColor.setChansRGB(0x66/255.0F, 0xFF/255.0F, 0xB2/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 6).isCloseRGB(bColor.setChansRGB(0x00/255.0F, 0xFF/255.0F, 0xFF/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 7).isCloseRGB(bColor.setChansRGB(0x00/255.0F, 0x7D/255.0F, 0xFF/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 8).isCloseRGB(bColor.setChansRGB(0x00/255.0F, 0x00/255.0F, 0xFF/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 9).isCloseRGB(bColor.setChansRGB(0x7D/255.0F, 0x00/255.0F, 0xFF/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c(10).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x00/255.0F, 0xFF/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c(11).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x00/255.0F, 0x7D/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c( 0).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x00/255.0F, 0x00/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c( 1).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x7D/255.0F, 0x00/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c( 2).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0xFF/255.0F, 0x00/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c( 3).isCloseRGB(bColor.setChansRGB(0x7D/255.0F, 0xFF/255.0F, 0x00/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c( 4).isCloseRGB(bColor.setChansRGB(0x66/255.0F, 0xCC/255.0F, 0x00/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c( 5).isCloseRGB(bColor.setChansRGB(0x66/255.0F, 0xFF/255.0F, 0xB2/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c( 6).isCloseRGB(bColor.setChansRGB(0x00/255.0F, 0xFF/255.0F, 0xFF/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c( 7).isCloseRGB(bColor.setChansRGB(0x00/255.0F, 0x7D/255.0F, 0xFF/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c( 8).isCloseRGB(bColor.setChansRGB(0x00/255.0F, 0x00/255.0F, 0xFF/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c( 9).isCloseRGB(bColor.setChansRGB(0x7D/255.0F, 0x00/255.0F, 0xFF/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c(10).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x00/255.0F, 0xFF/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c(11).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x00/255.0F, 0x7D/255.0F), 0.00001F));
 
 ////////////////////////////////////////////////////////////////////////////////
 
   bColor.setToBlack();
   mjr::colorRGBA32F::csCBSpectral::c(bColor, 0);
-  BOOST_TEST_CHECK(bColor.getAlpha() ==   mjr::colorRGBA32F::minChanVal); // Not set!
+  EXPECT_NEAR(bColor.getAlpha(),    mjr::colorRGBA32F::minChanVal, 0.0001); // Not set!
 
   bColor.setToWhite();
   mjr::colorRGBA32F::csCBSpectral::c(bColor, 0);
-  BOOST_TEST_CHECK(bColor.getAlpha() == mjr::colorRGBA32F::maxChanVal); // Not set!
-
+  EXPECT_NEAR(bColor.getAlpha(),  mjr::colorRGBA32F::maxChanVal, 0.0001); // Not set!
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(csFPcircular12_flt) {
+TEST(FUN_csFPcircular12, FltInComprehensive) {
 
   mjr::colorRGBA8b  aColor;
   mjr::colorRGBA32F bColor;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 0/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0x00, 0x00), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 1/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0x7D, 0x00), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 2/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0xFF, 0x00), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 3/11.0F).isCloseRGB(aColor.setChansRGB(0x7D, 0xFF, 0x00), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 4/11.0F).isCloseRGB(aColor.setChansRGB(0x66, 0xCC, 0x00), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 5/11.0F).isCloseRGB(aColor.setChansRGB(0x66, 0xFF, 0xB2), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 6/11.0F).isCloseRGB(aColor.setChansRGB(0x00, 0xFF, 0xFF), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 7/11.0F).isCloseRGB(aColor.setChansRGB(0x00, 0x7D, 0xFF), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 8/11.0F).isCloseRGB(aColor.setChansRGB(0x00, 0x00, 0xFF), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c( 9/11.0F).isCloseRGB(aColor.setChansRGB(0x7D, 0x00, 0xFF), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(10/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0x00, 0xFF), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(11/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0x00, 0x7D), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c( 0/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0x00, 0x00), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c( 1/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0x7D, 0x00), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c( 2/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0xFF, 0x00), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c( 3/11.0F).isCloseRGB(aColor.setChansRGB(0x7D, 0xFF, 0x00), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c( 4/11.0F).isCloseRGB(aColor.setChansRGB(0x66, 0xCC, 0x00), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c( 5/11.0F).isCloseRGB(aColor.setChansRGB(0x66, 0xFF, 0xB2), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c( 6/11.0F).isCloseRGB(aColor.setChansRGB(0x00, 0xFF, 0xFF), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c( 7/11.0F).isCloseRGB(aColor.setChansRGB(0x00, 0x7D, 0xFF), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c( 8/11.0F).isCloseRGB(aColor.setChansRGB(0x00, 0x00, 0xFF), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c( 9/11.0F).isCloseRGB(aColor.setChansRGB(0x7D, 0x00, 0xFF), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(10/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0x00, 0xFF), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(11/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0x00, 0x7D), 2));
 
 ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(1+ 1/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0x7D, 0x00), 2)); // wrap
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(1+ 2/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0xFF, 0x00), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(1+ 3/11.0F).isCloseRGB(aColor.setChansRGB(0x7D, 0xFF, 0x00), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(1+ 4/11.0F).isCloseRGB(aColor.setChansRGB(0x66, 0xCC, 0x00), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(1+ 5/11.0F).isCloseRGB(aColor.setChansRGB(0x66, 0xFF, 0xB2), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(1+ 6/11.0F).isCloseRGB(aColor.setChansRGB(0x00, 0xFF, 0xFF), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(1+ 7/11.0F).isCloseRGB(aColor.setChansRGB(0x00, 0x7D, 0xFF), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(1+ 8/11.0F).isCloseRGB(aColor.setChansRGB(0x00, 0x00, 0xFF), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(1+ 9/11.0F).isCloseRGB(aColor.setChansRGB(0x7D, 0x00, 0xFF), 2));
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csFPcircular12::c(1+10/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0x00, 0xFF), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(1+ 1/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0x7D, 0x00), 2)); // wrap
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(1+ 2/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0xFF, 0x00), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(1+ 3/11.0F).isCloseRGB(aColor.setChansRGB(0x7D, 0xFF, 0x00), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(1+ 4/11.0F).isCloseRGB(aColor.setChansRGB(0x66, 0xCC, 0x00), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(1+ 5/11.0F).isCloseRGB(aColor.setChansRGB(0x66, 0xFF, 0xB2), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(1+ 6/11.0F).isCloseRGB(aColor.setChansRGB(0x00, 0xFF, 0xFF), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(1+ 7/11.0F).isCloseRGB(aColor.setChansRGB(0x00, 0x7D, 0xFF), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(1+ 8/11.0F).isCloseRGB(aColor.setChansRGB(0x00, 0x00, 0xFF), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(1+ 9/11.0F).isCloseRGB(aColor.setChansRGB(0x7D, 0x00, 0xFF), 2));
+  EXPECT_TRUE(mjr::colorRGBA8b::csFPcircular12::c(1+10/11.0F).isCloseRGB(aColor.setChansRGB(0xFF, 0x00, 0xFF), 2));
 
 ////////////////////////////////////////////////////////////////////////////////
 
   aColor.setToBlack();
   mjr::colorRGBA8b::csFPcircular12::c(aColor, 0.0F);
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xFF);
-  BOOST_TEST_CHECK(aColor.getGreen() == 0x00);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0x00);
-  BOOST_TEST_CHECK(aColor.getAlpha() ==   mjr::colorRGBA8b::minChanVal); // Not set!
+  EXPECT_EQ(aColor.getRed(),    0xFF);
+  EXPECT_EQ(aColor.getGreen(),  0x00);
+  EXPECT_EQ(aColor.getBlue(),   0x00);
+  EXPECT_EQ(aColor.getAlpha(),    mjr::colorRGBA8b::minChanVal); // Not set!
 
   aColor.setToWhite();
   mjr::colorRGBA8b::csFPcircular12::c(aColor, 0.0F);
-  BOOST_TEST_CHECK(aColor.getRed()   ==  0xFF);
-  BOOST_TEST_CHECK(aColor.getGreen() ==  0x00);
-  BOOST_TEST_CHECK(aColor.getBlue()  ==  0x00);
-  BOOST_TEST_CHECK(aColor.getAlpha() == mjr::colorRGBA8b::maxChanVal); // Not set!
+  EXPECT_EQ(aColor.getRed(),     0xFF);
+  EXPECT_EQ(aColor.getGreen(),   0x00);
+  EXPECT_EQ(aColor.getBlue(),    0x00);
+  EXPECT_EQ(aColor.getAlpha(),  mjr::colorRGBA8b::maxChanVal); // Not set!
 
 ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 0/11.0F).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x00/255.0F, 0x00/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 1/11.0F).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x7D/255.0F, 0x00/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 2/11.0F).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0xFF/255.0F, 0x00/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 3/11.0F).isCloseRGB(bColor.setChansRGB(0x7D/255.0F, 0xFF/255.0F, 0x00/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 4/11.0F).isCloseRGB(bColor.setChansRGB(0x66/255.0F, 0xCC/255.0F, 0x00/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 5/11.0F).isCloseRGB(bColor.setChansRGB(0x66/255.0F, 0xFF/255.0F, 0xB2/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 6/11.0F).isCloseRGB(bColor.setChansRGB(0x00/255.0F, 0xFF/255.0F, 0xFF/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 7/11.0F).isCloseRGB(bColor.setChansRGB(0x00/255.0F, 0x7D/255.0F, 0xFF/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 8/11.0F).isCloseRGB(bColor.setChansRGB(0x00/255.0F, 0x00/255.0F, 0xFF/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c( 9/11.0F).isCloseRGB(bColor.setChansRGB(0x7D/255.0F, 0x00/255.0F, 0xFF/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c(10/11.0F).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x00/255.0F, 0xFF/255.0F), 0.00001F));
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csFPcircular12::c(11/11.0F).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x00/255.0F, 0x7D/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c( 0/11.0F).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x00/255.0F, 0x00/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c( 1/11.0F).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x7D/255.0F, 0x00/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c( 2/11.0F).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0xFF/255.0F, 0x00/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c( 3/11.0F).isCloseRGB(bColor.setChansRGB(0x7D/255.0F, 0xFF/255.0F, 0x00/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c( 4/11.0F).isCloseRGB(bColor.setChansRGB(0x66/255.0F, 0xCC/255.0F, 0x00/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c( 5/11.0F).isCloseRGB(bColor.setChansRGB(0x66/255.0F, 0xFF/255.0F, 0xB2/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c( 6/11.0F).isCloseRGB(bColor.setChansRGB(0x00/255.0F, 0xFF/255.0F, 0xFF/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c( 7/11.0F).isCloseRGB(bColor.setChansRGB(0x00/255.0F, 0x7D/255.0F, 0xFF/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c( 8/11.0F).isCloseRGB(bColor.setChansRGB(0x00/255.0F, 0x00/255.0F, 0xFF/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c( 9/11.0F).isCloseRGB(bColor.setChansRGB(0x7D/255.0F, 0x00/255.0F, 0xFF/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c(10/11.0F).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x00/255.0F, 0xFF/255.0F), 0.00001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csFPcircular12::c(11/11.0F).isCloseRGB(bColor.setChansRGB(0xFF/255.0F, 0x00/255.0F, 0x7D/255.0F), 0.00001F));
 
 ////////////////////////////////////////////////////////////////////////////////
 
   bColor.setToBlack();
   mjr::colorRGBA32F::csCBSpectral::c(bColor, 0.0F);
-  BOOST_TEST_CHECK(bColor.getAlpha() ==   mjr::colorRGBA32F::minChanVal); // Not set!
+  EXPECT_NEAR(bColor.getAlpha(),    mjr::colorRGBA32F::minChanVal, 0.0001); // Not set!
 
   bColor.setToWhite();
   mjr::colorRGBA32F::csCBSpectral::c(bColor, 0.0F);
-  BOOST_TEST_CHECK(bColor.getAlpha() == mjr::colorRGBA32F::maxChanVal); // Not set!
+  EXPECT_NEAR(bColor.getAlpha(),  mjr::colorRGBA32F::maxChanVal, 0.0001); // Not set!
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(rgb2colorSpace) {
+TEST(FUN_rgb2colorSpace, Comprehensive) {
 
-  mjr::colorRGB8b                aColor;
+  mjr::colorRGB8b              aColor;
   mjr::colorRGB8b::colConDbl3  bColor;
-  mjr::colorRGB32F               cColor;
+  mjr::colorRGB32F             cColor;
   mjr::colorRGB32F::colConDbl3 dColor;
-  mjr::colorRGB16b               eColor;
+  mjr::colorRGB16b             eColor;
   mjr::colorRGB16b::colConDbl3 fColor;
-  mjr::colorRGB32b               gColor;
+  mjr::colorRGB32b             gColor;
   mjr::colorRGB32b::colConDbl3 hColor;
 
   ////////////////////////////////////////////////////////////////////////////////
 
   aColor.setChansRGB(mjr::colorRGB8b::minChanVal, mjr::colorRGB8b::meanChanVal, mjr::colorRGB8b::maxChanVal);
   bColor = aColor.rgb2colorSpace(mjr::colorRGB8b::colorSpaceEnum::RGB);
-  BOOST_TEST_CHECK(bColor.getC0() == 0.0,    boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(bColor.getC1() == 0.5,    boost::test_tools::tolerance(0.01));        // Can't get much accuracy with 8-bit
-  BOOST_TEST_CHECK(bColor.getC2() == 1.0,    boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(bColor.getC0(),  0.0,    0.00001);
+  EXPECT_NEAR(bColor.getC1(),  0.5,    0.01);        // Can't get much accuracy with 8-bit
+  EXPECT_NEAR(bColor.getC2(),  1.0,    0.00001);
 
   eColor.setChansRGB(mjr::colorRGB16b::minChanVal, mjr::colorRGB16b::meanChanVal, mjr::colorRGB16b::maxChanVal);
   fColor = eColor.rgb2colorSpace(mjr::colorRGB16b::colorSpaceEnum::RGB);
-  BOOST_TEST_CHECK(fColor.getC0() == 0.0,    boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(fColor.getC1() == 0.5,    boost::test_tools::tolerance(0.0001));      // A bit more accuracy with 16-bit
-  BOOST_TEST_CHECK(fColor.getC2() == 1.0,    boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(fColor.getC0(),  0.0,    0.00001);
+  EXPECT_NEAR(fColor.getC1(),  0.5,    0.0001);      // A bit more accuracy with 16-bit
+  EXPECT_NEAR(fColor.getC2(),  1.0,    0.00001);
 
   gColor.setChansRGB(mjr::colorRGB32b::minChanVal, mjr::colorRGB32b::meanChanVal, mjr::colorRGB32b::maxChanVal);
   hColor = gColor.rgb2colorSpace(mjr::colorRGB32b::colorSpaceEnum::RGB);
-  BOOST_TEST_CHECK(hColor.getC0() == 0.0,    boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(hColor.getC1() == 0.5,    boost::test_tools::tolerance(0.00001));     // A bit more accuracy with 32-bit
-  BOOST_TEST_CHECK(hColor.getC2() == 1.0,    boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(hColor.getC0(),  0.0,    0.00001);
+  EXPECT_NEAR(hColor.getC1(),  0.5,    0.00001);     // A bit more accuracy with 32-bit
+  EXPECT_NEAR(hColor.getC2(),  1.0,    0.00001);
 
   ////////////////////////////////////////////////////////////////////////////////
 
@@ -6934,34 +6955,34 @@ BOOST_AUTO_TEST_CASE(rgb2colorSpace) {
   cColor.setChansRGB(mjr::colorRGB32F::minChanVal, mjr::colorRGB32F::meanChanVal, mjr::colorRGB32F::maxChanVal);
 
   dColor = cColor.rgb2colorSpace(mjr::colorRGB32F::colorSpaceEnum::RGB);
-  BOOST_TEST_CHECK(dColor.getC0() ==   0.000000000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(dColor.getC1() ==   0.500000000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(dColor.getC2() ==   1.000000000000000, boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(dColor.getC0(),    0.000000000000000, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),    0.500000000000000, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),    1.000000000000000, 0.00001);
 
   dColor = cColor.rgb2colorSpace(mjr::colorRGB32F::colorSpaceEnum::HSL);
-  BOOST_TEST_CHECK(dColor.getC0() == 210.000000000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(dColor.getC1() ==   1.000000000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(dColor.getC2() ==   0.500000000000000, boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(dColor.getC0(),  210.000000000000000, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),    1.000000000000000, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),    0.500000000000000, 0.00001);
 
   dColor = cColor.rgb2colorSpace(mjr::colorRGB32F::colorSpaceEnum::HSV);
-  BOOST_TEST_CHECK(dColor.getC0() == 210.000000000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(dColor.getC1() ==   1.000000000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(dColor.getC2() ==   1.000000000000000, boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(dColor.getC0(),  210.000000000000000, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),    1.000000000000000, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),    1.000000000000000, 0.00001);
 
   dColor = cColor.rgb2colorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB);
-  BOOST_TEST_CHECK(dColor.getC0() ==  54.583029905007749, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(dColor.getC1() ==  19.106431157445371, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(dColor.getC2() == -71.140167945193781, boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(dColor.getC0(),   54.583029905007749, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),   19.106431157445371, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),  -71.140167945193781, 0.00001);
 
   dColor = cColor.rgb2colorSpace(mjr::colorRGB32F::colorSpaceEnum::XYZ);
-  BOOST_TEST_CHECK(dColor.getC0() ==  25.704111183644635, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(dColor.getC1() ==  22.528222367289271, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(dColor.getC2() ==  97.601370394548212, boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(dColor.getC0(),   25.704111183644635, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),   22.528222367289271, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),   97.601370394548212, 0.00001);
 
   dColor = cColor.rgb2colorSpace(mjr::colorRGB32F::colorSpaceEnum::LCH);
-  BOOST_TEST_CHECK(dColor.getC0() ==  54.583029905007749, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(dColor.getC1() ==  73.661246302547553, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(dColor.getC2() == 285.033419356169360, boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(dColor.getC0(),   54.583029905007749, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),   73.661246302547553, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),  285.033419356169360, 0.00001);
 
   ////////////////////////////////////////////////////////////////////////////////
 
@@ -6975,38 +6996,38 @@ BOOST_AUTO_TEST_CASE(rgb2colorSpace) {
   cColor.setChansRGB_dbl(0.4, 0.6, 0.8);
 
   dColor = cColor.rgb2colorSpace(mjr::colorRGB32F::colorSpaceEnum::RGB);
-  BOOST_TEST_CHECK(dColor.getC0() ==    0.400000000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(dColor.getC1() ==   0.6000000000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(dColor.getC2() ==    0.800000000000000, boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(dColor.getC0(),     0.400000000000000, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),    0.6000000000000000, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),     0.800000000000000, 0.00001);
 
   dColor = cColor.rgb2colorSpace(mjr::colorRGB32F::colorSpaceEnum::HSL);
-  BOOST_TEST_CHECK(dColor.getC0() == 209.999996870756100, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(dColor.getC1() ==  0.4999999962747098, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(dColor.getC2() ==   0.600000002980232, boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(dColor.getC0(),  209.999996870756100, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),   0.4999999962747098, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),    0.600000002980232, 0.00001);
 
   dColor = cColor.rgb2colorSpace(mjr::colorRGB32F::colorSpaceEnum::HSV);
-  BOOST_TEST_CHECK(dColor.getC0() == 209.999996870756100, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(dColor.getC1() ==  0.5000000000000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(dColor.getC2() ==   0.800000000000000, boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(dColor.getC0(),  209.999996870756100, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),   0.5000000000000000, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),    0.800000000000000, 0.00001);
 
   dColor = cColor.rgb2colorSpace(mjr::colorRGB32F::colorSpaceEnum::LAB);
-  BOOST_TEST_CHECK(dColor.getC0() ==  61.625634479116870, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(dColor.getC1() == -2.8148222106305076, boost::test_tools::tolerance(0.01));           //  MJR TODO NOTE BOOST_AUTO_TEST_CASE: Why?  Need to check into the inaccuracy here.
-  BOOST_TEST_CHECK(dColor.getC2() == -31.439123763222420, boost::test_tools::tolerance(0.01));           //  MJR TODO NOTE BOOST_AUTO_TEST_CASE: Why?  Need to check into the inaccuracy here.
+  EXPECT_NEAR(dColor.getC0(),   61.625634479116870, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),  -2.8148222106305076, 0.01);           //  MJR TODO NOTE  Why?  Need to check into the inaccuracy here.
+  EXPECT_NEAR(dColor.getC2(),  -31.439123763222420, 0.01);           //  MJR TODO NOTE  Why?  Need to check into the inaccuracy here.
 
   dColor = cColor.rgb2colorSpace(mjr::colorRGB32F::colorSpaceEnum::XYZ);
-  BOOST_TEST_CHECK(dColor.getC0() ==   27.769805832971585, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(dColor.getC1() ==  29.9668794742762760, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(dColor.getC2() ==   61.447302014049825, boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(dColor.getC0(),    27.769805832971585, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),   29.9668794742762760, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),    61.447302014049825, 0.00001);
 
   dColor = cColor.rgb2colorSpace(mjr::colorRGB32F::colorSpaceEnum::LCH);
-  BOOST_TEST_CHECK(dColor.getC0() ==  61.625634479116870, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(dColor.getC1() == 31.5648812302006830, boost::test_tools::tolerance(0.01));           //  MJR TODO NOTE BOOST_AUTO_TEST_CASE: Why?  Need to check into the inaccuracy here.
-  BOOST_TEST_CHECK(dColor.getC2() == 264.883809161551100, boost::test_tools::tolerance(0.01));           //  MJR TODO NOTE BOOST_AUTO_TEST_CASE: Why?  Need to check into the inaccuracy here.
+  EXPECT_NEAR(dColor.getC0(),   61.625634479116870, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),  31.5648812302006830, 0.01);           //  MJR TODO NOTE  Why?  Need to check into the inaccuracy here.
+  EXPECT_NEAR(dColor.getC2(),  264.883809161551100, 0.01);           //  MJR TODO NOTE  Why?  Need to check into the inaccuracy here.
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(csBin) {
+TEST(FUN_csBin, Comprehensive) {
 
   mjr::colorRGB8b   a0Color, a1Color;
   mjr::colorRGB32F  b0Color, b1Color;
@@ -7019,35 +7040,35 @@ BOOST_AUTO_TEST_CASE(csBin) {
 
   ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csBin01::c(0).isEqualRGB(a0Color) == true);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csBin01::c(2).isEqualRGB(a0Color) == true);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csBin01::c(4).isEqualRGB(a0Color) == true);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csBin01::c(6).isEqualRGB(a0Color) == true);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csBin01::c(8).isEqualRGB(a0Color) == true);
+  EXPECT_TRUE(mjr::colorRGB8b::csBin01::c(0).isEqualRGB(a0Color));
+  EXPECT_TRUE(mjr::colorRGB8b::csBin01::c(2).isEqualRGB(a0Color));
+  EXPECT_TRUE(mjr::colorRGB8b::csBin01::c(4).isEqualRGB(a0Color));
+  EXPECT_TRUE(mjr::colorRGB8b::csBin01::c(6).isEqualRGB(a0Color));
+  EXPECT_TRUE(mjr::colorRGB8b::csBin01::c(8).isEqualRGB(a0Color));
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csBin01::c(1).isEqualRGB(a1Color) == true);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csBin01::c(3).isEqualRGB(a1Color) == true);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csBin01::c(5).isEqualRGB(a1Color) == true);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csBin01::c(7).isEqualRGB(a1Color) == true);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csBin01::c(9).isEqualRGB(a1Color) == true);
+  EXPECT_TRUE(mjr::colorRGB8b::csBin01::c(1).isEqualRGB(a1Color));
+  EXPECT_TRUE(mjr::colorRGB8b::csBin01::c(3).isEqualRGB(a1Color));
+  EXPECT_TRUE(mjr::colorRGB8b::csBin01::c(5).isEqualRGB(a1Color));
+  EXPECT_TRUE(mjr::colorRGB8b::csBin01::c(7).isEqualRGB(a1Color));
+  EXPECT_TRUE(mjr::colorRGB8b::csBin01::c(9).isEqualRGB(a1Color));
 
   ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csBin01::c(0).isEqualRGB(b0Color) == true);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csBin01::c(2).isEqualRGB(b0Color) == true);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csBin01::c(4).isEqualRGB(b0Color) == true);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csBin01::c(6).isEqualRGB(b0Color) == true);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csBin01::c(8).isEqualRGB(b0Color) == true);
+  EXPECT_TRUE(mjr::colorRGB32F::csBin01::c(0).isEqualRGB(b0Color));
+  EXPECT_TRUE(mjr::colorRGB32F::csBin01::c(2).isEqualRGB(b0Color));
+  EXPECT_TRUE(mjr::colorRGB32F::csBin01::c(4).isEqualRGB(b0Color));
+  EXPECT_TRUE(mjr::colorRGB32F::csBin01::c(6).isEqualRGB(b0Color));
+  EXPECT_TRUE(mjr::colorRGB32F::csBin01::c(8).isEqualRGB(b0Color));
 
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csBin01::c(1).isEqualRGB(b1Color) == true);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csBin01::c(3).isEqualRGB(b1Color) == true);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csBin01::c(5).isEqualRGB(b1Color) == true);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csBin01::c(7).isEqualRGB(b1Color) == true);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csBin01::c(9).isEqualRGB(b1Color) == true);
+  EXPECT_TRUE(mjr::colorRGB32F::csBin01::c(1).isEqualRGB(b1Color));
+  EXPECT_TRUE(mjr::colorRGB32F::csBin01::c(3).isEqualRGB(b1Color));
+  EXPECT_TRUE(mjr::colorRGB32F::csBin01::c(5).isEqualRGB(b1Color));
+  EXPECT_TRUE(mjr::colorRGB32F::csBin01::c(7).isEqualRGB(b1Color));
+  EXPECT_TRUE(mjr::colorRGB32F::csBin01::c(9).isEqualRGB(b1Color));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(setColorCons) {
+TEST(MISC_setColorCons, Comprehensive) {
 
   mjr::colorRGBA8b   aColor; // integer color with imperfect mask
   mjr::colorRGBA64b  bColor; // integer color without mask
@@ -7057,471 +7078,471 @@ BOOST_AUTO_TEST_CASE(setColorCons) {
   ////////////////////////////////////////////////////////////////////////////////
   aColor.setToWhite();
   aColor.setToBlack();
-  BOOST_TEST_CHECK(aColor.getC0() == aColor.minChanVal);
-  BOOST_TEST_CHECK(aColor.getC1() == aColor.minChanVal);
-  BOOST_TEST_CHECK(aColor.getC2() == aColor.minChanVal);
-  BOOST_TEST_CHECK(aColor.getC3() == aColor.minChanVal);
+  EXPECT_EQ(aColor.getC0(),  aColor.minChanVal);
+  EXPECT_EQ(aColor.getC1(),  aColor.minChanVal);
+  EXPECT_EQ(aColor.getC2(),  aColor.minChanVal);
+  EXPECT_EQ(aColor.getC3(),  aColor.minChanVal);
 
   bColor.setToWhite();
   bColor.setToBlack();
-  BOOST_TEST_CHECK(bColor.getC0() == bColor.minChanVal);
-  BOOST_TEST_CHECK(bColor.getC1() == bColor.minChanVal);
-  BOOST_TEST_CHECK(bColor.getC2() == bColor.minChanVal);
-  BOOST_TEST_CHECK(bColor.getC3() == bColor.minChanVal);
+  EXPECT_EQ(bColor.getC0(),  bColor.minChanVal);
+  EXPECT_EQ(bColor.getC1(),  bColor.minChanVal);
+  EXPECT_EQ(bColor.getC2(),  bColor.minChanVal);
+  EXPECT_EQ(bColor.getC3(),  bColor.minChanVal);
 
   cColor.setToWhite();
   cColor.setToBlack();
-  BOOST_TEST_CHECK(cColor.getC0() == cColor.minChanVal);
-  BOOST_TEST_CHECK(cColor.getC1() == cColor.minChanVal);
-  BOOST_TEST_CHECK(cColor.getC2() == cColor.minChanVal);
-  BOOST_TEST_CHECK(cColor.getC3() == cColor.minChanVal);
+  EXPECT_NEAR(cColor.getC0(),  cColor.minChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  cColor.minChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  cColor.minChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC3(),  cColor.minChanVal, 0.00001);
 
   dColor.setToWhite();
   dColor.setToBlack();
-  BOOST_TEST_CHECK(dColor.getC0() == dColor.minChanVal);
-  BOOST_TEST_CHECK(dColor.getC1() == dColor.minChanVal);
-  BOOST_TEST_CHECK(dColor.getC2() == dColor.minChanVal);
-  BOOST_TEST_CHECK(dColor.getC3() == dColor.minChanVal);
+  EXPECT_NEAR(dColor.getC0(),  dColor.minChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),  dColor.minChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),  dColor.minChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC3(),  dColor.minChanVal, 0.00001);
 
   ////////////////////////////////////////////////////////////////////////////////
   aColor.setToBlack();
   aColor.setToWhite();
-  BOOST_TEST_CHECK(aColor.getC0() == aColor.maxChanVal);
-  BOOST_TEST_CHECK(aColor.getC1() == aColor.maxChanVal);
-  BOOST_TEST_CHECK(aColor.getC2() == aColor.maxChanVal);
-  BOOST_TEST_CHECK(aColor.getC3() == aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC0(),  aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC1(),  aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC2(),  aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC3(),  aColor.maxChanVal);
 
   bColor.setToBlack();
   bColor.setToWhite();
-  BOOST_TEST_CHECK(bColor.getC0() == bColor.maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC1() == bColor.maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC2() == bColor.maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC3() == bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC0(),  bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC1(),  bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC2(),  bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC3(),  bColor.maxChanVal);
 
   cColor.setToBlack();
   cColor.setToWhite();
-  BOOST_TEST_CHECK(cColor.getC0() == cColor.maxChanVal);
-  BOOST_TEST_CHECK(cColor.getC1() == cColor.maxChanVal);
-  BOOST_TEST_CHECK(cColor.getC2() == cColor.maxChanVal);
-  BOOST_TEST_CHECK(cColor.getC3() == cColor.maxChanVal);
+  EXPECT_NEAR(cColor.getC0(),  cColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  cColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  cColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC3(),  cColor.maxChanVal, 0.00001);
 
   dColor.setToBlack();
   dColor.setToWhite();
-  BOOST_TEST_CHECK(dColor.getC0() == dColor.maxChanVal);
-  BOOST_TEST_CHECK(dColor.getC1() == dColor.maxChanVal);
-  BOOST_TEST_CHECK(dColor.getC2() == dColor.maxChanVal);
-  BOOST_TEST_CHECK(dColor.getC3() == dColor.maxChanVal);
+  EXPECT_NEAR(dColor.getC0(),  dColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),  dColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),  dColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC3(),  dColor.maxChanVal, 0.00001);
 
   ////////////////////////////////////////////////////////////////////////////////
   aColor.setToBlack();
   aColor.setToRed();
-  BOOST_TEST_CHECK(aColor.getC0() == aColor.maxChanVal);
-  BOOST_TEST_CHECK(aColor.getC1() == aColor.minChanVal);
-  BOOST_TEST_CHECK(aColor.getC2() == aColor.minChanVal);
-  BOOST_TEST_CHECK(aColor.getC3() == aColor.minChanVal);
+  EXPECT_EQ(aColor.getC0(),  aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC1(),  aColor.minChanVal);
+  EXPECT_EQ(aColor.getC2(),  aColor.minChanVal);
+  EXPECT_EQ(aColor.getC3(),  aColor.minChanVal);
 
   bColor.setToBlack();
   bColor.setToRed();
-  BOOST_TEST_CHECK(bColor.getC0() == bColor.maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC1() == bColor.minChanVal);
-  BOOST_TEST_CHECK(bColor.getC2() == bColor.minChanVal);
-  BOOST_TEST_CHECK(bColor.getC3() == bColor.minChanVal);
+  EXPECT_EQ(bColor.getC0(),  bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC1(),  bColor.minChanVal);
+  EXPECT_EQ(bColor.getC2(),  bColor.minChanVal);
+  EXPECT_EQ(bColor.getC3(),  bColor.minChanVal);
 
   cColor.setToBlack();
   cColor.setToRed();
-  BOOST_TEST_CHECK(cColor.getC0() == cColor.maxChanVal);
-  BOOST_TEST_CHECK(cColor.getC1() == cColor.minChanVal);
-  BOOST_TEST_CHECK(cColor.getC2() == cColor.minChanVal);
-  BOOST_TEST_CHECK(cColor.getC3() == cColor.minChanVal);
+  EXPECT_NEAR(cColor.getC0(),  cColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  cColor.minChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  cColor.minChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC3(),  cColor.minChanVal, 0.00001);
 
   dColor.setToBlack();
   dColor.setToRed();
-  BOOST_TEST_CHECK(dColor.getC0() == dColor.maxChanVal);
-  BOOST_TEST_CHECK(dColor.getC1() == dColor.minChanVal);
-  BOOST_TEST_CHECK(dColor.getC2() == dColor.minChanVal);
-  BOOST_TEST_CHECK(dColor.getC3() == dColor.minChanVal);
+  EXPECT_NEAR(dColor.getC0(),  dColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),  dColor.minChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),  dColor.minChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC3(),  dColor.minChanVal, 0.00001);
 
   ////////////////////////////////////////////////////////////////////////////////
   aColor.setToWhite();
   aColor.setToRed();
-  BOOST_TEST_CHECK(aColor.getC0() == aColor.maxChanVal);
-  BOOST_TEST_CHECK(aColor.getC1() == aColor.minChanVal);
-  BOOST_TEST_CHECK(aColor.getC2() == aColor.minChanVal);
-  BOOST_TEST_CHECK(aColor.getC3() == aColor.minChanVal);
+  EXPECT_EQ(aColor.getC0(),  aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC1(),  aColor.minChanVal);
+  EXPECT_EQ(aColor.getC2(),  aColor.minChanVal);
+  EXPECT_EQ(aColor.getC3(),  aColor.minChanVal);
 
   bColor.setToWhite();
   bColor.setToRed();
-  BOOST_TEST_CHECK(bColor.getC0() == bColor.maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC1() == bColor.minChanVal);
-  BOOST_TEST_CHECK(bColor.getC2() == bColor.minChanVal);
-  BOOST_TEST_CHECK(bColor.getC3() == bColor.minChanVal);
+  EXPECT_EQ(bColor.getC0(),  bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC1(),  bColor.minChanVal);
+  EXPECT_EQ(bColor.getC2(),  bColor.minChanVal);
+  EXPECT_EQ(bColor.getC3(),  bColor.minChanVal);
 
   cColor.setToWhite();
   cColor.setToRed();
-  BOOST_TEST_CHECK(cColor.getC0() == cColor.maxChanVal);
-  BOOST_TEST_CHECK(cColor.getC1() == cColor.minChanVal);
-  BOOST_TEST_CHECK(cColor.getC2() == cColor.minChanVal);
-  BOOST_TEST_CHECK(cColor.getC3() == cColor.minChanVal);
+  EXPECT_NEAR(cColor.getC0(),  cColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  cColor.minChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  cColor.minChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC3(),  cColor.minChanVal, 0.00001);
 
   dColor.setToWhite();
   dColor.setToRed();
-  BOOST_TEST_CHECK(dColor.getC0() == dColor.maxChanVal);
-  BOOST_TEST_CHECK(dColor.getC1() == dColor.minChanVal);
-  BOOST_TEST_CHECK(dColor.getC2() == dColor.minChanVal);
-  BOOST_TEST_CHECK(dColor.getC3() == dColor.minChanVal);
+  EXPECT_NEAR(dColor.getC0(),  dColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),  dColor.minChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),  dColor.minChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC3(),  dColor.minChanVal, 0.00001);
 
   ////////////////////////////////////////////////////////////////////////////////
   aColor.setToBlack();
   aColor.setToGreen();
-  BOOST_TEST_CHECK(aColor.getC0() == aColor.minChanVal);
-  BOOST_TEST_CHECK(aColor.getC1() == aColor.maxChanVal);
-  BOOST_TEST_CHECK(aColor.getC2() == aColor.minChanVal);
-  BOOST_TEST_CHECK(aColor.getC3() == aColor.minChanVal);
+  EXPECT_EQ(aColor.getC0(),  aColor.minChanVal);
+  EXPECT_EQ(aColor.getC1(),  aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC2(),  aColor.minChanVal);
+  EXPECT_EQ(aColor.getC3(),  aColor.minChanVal);
 
   bColor.setToBlack();
   bColor.setToGreen();
-  BOOST_TEST_CHECK(bColor.getC0() == bColor.minChanVal);
-  BOOST_TEST_CHECK(bColor.getC1() == bColor.maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC2() == bColor.minChanVal);
-  BOOST_TEST_CHECK(bColor.getC3() == bColor.minChanVal);
+  EXPECT_EQ(bColor.getC0(),  bColor.minChanVal);
+  EXPECT_EQ(bColor.getC1(),  bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC2(),  bColor.minChanVal);
+  EXPECT_EQ(bColor.getC3(),  bColor.minChanVal);
 
   cColor.setToBlack();
   cColor.setToGreen();
-  BOOST_TEST_CHECK(cColor.getC0() == cColor.minChanVal);
-  BOOST_TEST_CHECK(cColor.getC1() == cColor.maxChanVal);
-  BOOST_TEST_CHECK(cColor.getC2() == cColor.minChanVal);
-  BOOST_TEST_CHECK(cColor.getC3() == cColor.minChanVal);
+  EXPECT_NEAR(cColor.getC0(),  cColor.minChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  cColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  cColor.minChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC3(),  cColor.minChanVal, 0.00001);
 
   dColor.setToBlack();
   dColor.setToGreen();
-  BOOST_TEST_CHECK(dColor.getC0() == dColor.minChanVal);
-  BOOST_TEST_CHECK(dColor.getC1() == dColor.maxChanVal);
-  BOOST_TEST_CHECK(dColor.getC2() == dColor.minChanVal);
-  BOOST_TEST_CHECK(dColor.getC3() == dColor.minChanVal);
+  EXPECT_NEAR(dColor.getC0(),  dColor.minChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),  dColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),  dColor.minChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC3(),  dColor.minChanVal, 0.00001);
 
   ////////////////////////////////////////////////////////////////////////////////
   aColor.setToWhite();
   aColor.setToGreen();
-  BOOST_TEST_CHECK(aColor.getC0() == aColor.minChanVal);
-  BOOST_TEST_CHECK(aColor.getC1() == aColor.maxChanVal);
-  BOOST_TEST_CHECK(aColor.getC2() == aColor.minChanVal);
-  BOOST_TEST_CHECK(aColor.getC3() == aColor.minChanVal);
+  EXPECT_EQ(aColor.getC0(),  aColor.minChanVal);
+  EXPECT_EQ(aColor.getC1(),  aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC2(),  aColor.minChanVal);
+  EXPECT_EQ(aColor.getC3(),  aColor.minChanVal);
 
   bColor.setToWhite();
   bColor.setToGreen();
-  BOOST_TEST_CHECK(bColor.getC0() == bColor.minChanVal);
-  BOOST_TEST_CHECK(bColor.getC1() == bColor.maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC2() == bColor.minChanVal);
-  BOOST_TEST_CHECK(bColor.getC3() == bColor.minChanVal);
+  EXPECT_EQ(bColor.getC0(),  bColor.minChanVal);
+  EXPECT_EQ(bColor.getC1(),  bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC2(),  bColor.minChanVal);
+  EXPECT_EQ(bColor.getC3(),  bColor.minChanVal);
 
   cColor.setToWhite();
   cColor.setToGreen();
-  BOOST_TEST_CHECK(cColor.getC0() == cColor.minChanVal);
-  BOOST_TEST_CHECK(cColor.getC1() == cColor.maxChanVal);
-  BOOST_TEST_CHECK(cColor.getC2() == cColor.minChanVal);
-  BOOST_TEST_CHECK(cColor.getC3() == cColor.minChanVal);
+  EXPECT_NEAR(cColor.getC0(),  cColor.minChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  cColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  cColor.minChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC3(),  cColor.minChanVal, 0.00001);
 
   dColor.setToWhite();
   dColor.setToGreen();
-  BOOST_TEST_CHECK(dColor.getC0() == dColor.minChanVal);
-  BOOST_TEST_CHECK(dColor.getC1() == dColor.maxChanVal);
-  BOOST_TEST_CHECK(dColor.getC2() == dColor.minChanVal);
-  BOOST_TEST_CHECK(dColor.getC3() == dColor.minChanVal);
+  EXPECT_NEAR(dColor.getC0(),  dColor.minChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),  dColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),  dColor.minChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC3(),  dColor.minChanVal, 0.00001);
 
   ////////////////////////////////////////////////////////////////////////////////
   aColor.setToBlack();
   aColor.setToBlue();
-  BOOST_TEST_CHECK(aColor.getC0() == aColor.minChanVal);
-  BOOST_TEST_CHECK(aColor.getC1() == aColor.minChanVal);
-  BOOST_TEST_CHECK(aColor.getC2() == aColor.maxChanVal);
-  BOOST_TEST_CHECK(aColor.getC3() == aColor.minChanVal);
+  EXPECT_EQ(aColor.getC0(),  aColor.minChanVal);
+  EXPECT_EQ(aColor.getC1(),  aColor.minChanVal);
+  EXPECT_EQ(aColor.getC2(),  aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC3(),  aColor.minChanVal);
 
   bColor.setToBlack();
   bColor.setToBlue();
-  BOOST_TEST_CHECK(bColor.getC0() == bColor.minChanVal);
-  BOOST_TEST_CHECK(bColor.getC1() == bColor.minChanVal);
-  BOOST_TEST_CHECK(bColor.getC2() == bColor.maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC3() == bColor.minChanVal);
+  EXPECT_EQ(bColor.getC0(),  bColor.minChanVal);
+  EXPECT_EQ(bColor.getC1(),  bColor.minChanVal);
+  EXPECT_EQ(bColor.getC2(),  bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC3(),  bColor.minChanVal);
 
   cColor.setToBlack();
   cColor.setToBlue();
-  BOOST_TEST_CHECK(cColor.getC0() == cColor.minChanVal);
-  BOOST_TEST_CHECK(cColor.getC1() == cColor.minChanVal);
-  BOOST_TEST_CHECK(cColor.getC2() == cColor.maxChanVal);
-  BOOST_TEST_CHECK(cColor.getC3() == cColor.minChanVal);
+  EXPECT_NEAR(cColor.getC0(),  cColor.minChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  cColor.minChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  cColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC3(),  cColor.minChanVal, 0.00001);
 
   dColor.setToBlack();
   dColor.setToBlue();
-  BOOST_TEST_CHECK(dColor.getC0() == dColor.minChanVal);
-  BOOST_TEST_CHECK(dColor.getC1() == dColor.minChanVal);
-  BOOST_TEST_CHECK(dColor.getC2() == dColor.maxChanVal);
-  BOOST_TEST_CHECK(dColor.getC3() == dColor.minChanVal);
+  EXPECT_NEAR(dColor.getC0(),  dColor.minChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),  dColor.minChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),  dColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC3(),  dColor.minChanVal, 0.00001);
 
   ////////////////////////////////////////////////////////////////////////////////
   aColor.setToWhite();
   aColor.setToBlue();
-  BOOST_TEST_CHECK(aColor.getC0() == aColor.minChanVal);
-  BOOST_TEST_CHECK(aColor.getC1() == aColor.minChanVal);
-  BOOST_TEST_CHECK(aColor.getC2() == aColor.maxChanVal);
-  BOOST_TEST_CHECK(aColor.getC3() == aColor.minChanVal);
+  EXPECT_EQ(aColor.getC0(),  aColor.minChanVal);
+  EXPECT_EQ(aColor.getC1(),  aColor.minChanVal);
+  EXPECT_EQ(aColor.getC2(),  aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC3(),  aColor.minChanVal);
 
   bColor.setToWhite();
   bColor.setToBlue();
-  BOOST_TEST_CHECK(bColor.getC0() == bColor.minChanVal);
-  BOOST_TEST_CHECK(bColor.getC1() == bColor.minChanVal);
-  BOOST_TEST_CHECK(bColor.getC2() == bColor.maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC3() == bColor.minChanVal);
+  EXPECT_EQ(bColor.getC0(),  bColor.minChanVal);
+  EXPECT_EQ(bColor.getC1(),  bColor.minChanVal);
+  EXPECT_EQ(bColor.getC2(),  bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC3(),  bColor.minChanVal);
 
   cColor.setToWhite();
   cColor.setToBlue();
-  BOOST_TEST_CHECK(cColor.getC0() == cColor.minChanVal);
-  BOOST_TEST_CHECK(cColor.getC1() == cColor.minChanVal);
-  BOOST_TEST_CHECK(cColor.getC2() == cColor.maxChanVal);
-  BOOST_TEST_CHECK(cColor.getC3() == cColor.minChanVal);
+  EXPECT_NEAR(cColor.getC0(),  cColor.minChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  cColor.minChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  cColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC3(),  cColor.minChanVal, 0.00001);
 
   dColor.setToWhite();
   dColor.setToBlue();
-  BOOST_TEST_CHECK(dColor.getC0() == dColor.minChanVal);
-  BOOST_TEST_CHECK(dColor.getC1() == dColor.minChanVal);
-  BOOST_TEST_CHECK(dColor.getC2() == dColor.maxChanVal);
-  BOOST_TEST_CHECK(dColor.getC3() == dColor.minChanVal);
+  EXPECT_NEAR(dColor.getC0(),  dColor.minChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),  dColor.minChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),  dColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC3(),  dColor.minChanVal, 0.00001);
 
   ////////////////////////////////////////////////////////////////////////////////
   aColor.setToBlack();
   aColor.setToCyan();
-  BOOST_TEST_CHECK(aColor.getC0() == aColor.minChanVal);
-  BOOST_TEST_CHECK(aColor.getC1() == aColor.maxChanVal);
-  BOOST_TEST_CHECK(aColor.getC2() == aColor.maxChanVal);
-  BOOST_TEST_CHECK(aColor.getC3() == aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC0(),  aColor.minChanVal);
+  EXPECT_EQ(aColor.getC1(),  aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC2(),  aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC3(),  aColor.maxChanVal);
 
   bColor.setToBlack();
   bColor.setToCyan();
-  BOOST_TEST_CHECK(bColor.getC0() == bColor.minChanVal);
-  BOOST_TEST_CHECK(bColor.getC1() == bColor.maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC2() == bColor.maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC3() == bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC0(),  bColor.minChanVal);
+  EXPECT_EQ(bColor.getC1(),  bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC2(),  bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC3(),  bColor.maxChanVal);
 
   cColor.setToBlack();
   cColor.setToCyan();
-  BOOST_TEST_CHECK(cColor.getC0() == cColor.minChanVal);
-  BOOST_TEST_CHECK(cColor.getC1() == cColor.maxChanVal);
-  BOOST_TEST_CHECK(cColor.getC2() == cColor.maxChanVal);
-  BOOST_TEST_CHECK(cColor.getC3() == cColor.maxChanVal);
+  EXPECT_NEAR(cColor.getC0(),  cColor.minChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  cColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  cColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC3(),  cColor.maxChanVal, 0.00001);
 
   dColor.setToBlack();
   dColor.setToCyan();
-  BOOST_TEST_CHECK(dColor.getC0() == dColor.minChanVal);
-  BOOST_TEST_CHECK(dColor.getC1() == dColor.maxChanVal);
-  BOOST_TEST_CHECK(dColor.getC2() == dColor.maxChanVal);
-  BOOST_TEST_CHECK(dColor.getC3() == dColor.maxChanVal);
+  EXPECT_NEAR(dColor.getC0(),  dColor.minChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),  dColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),  dColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC3(),  dColor.maxChanVal, 0.00001);
 
   ////////////////////////////////////////////////////////////////////////////////
   aColor.setToWhite();
   aColor.setToCyan();
-  BOOST_TEST_CHECK(aColor.getC0() == aColor.minChanVal);
-  BOOST_TEST_CHECK(aColor.getC1() == aColor.maxChanVal);
-  BOOST_TEST_CHECK(aColor.getC2() == aColor.maxChanVal);
-  BOOST_TEST_CHECK(aColor.getC3() == aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC0(),  aColor.minChanVal);
+  EXPECT_EQ(aColor.getC1(),  aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC2(),  aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC3(),  aColor.maxChanVal);
 
   bColor.setToWhite();
   bColor.setToCyan();
-  BOOST_TEST_CHECK(bColor.getC0() == bColor.minChanVal);
-  BOOST_TEST_CHECK(bColor.getC1() == bColor.maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC2() == bColor.maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC3() == bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC0(),  bColor.minChanVal);
+  EXPECT_EQ(bColor.getC1(),  bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC2(),  bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC3(),  bColor.maxChanVal);
 
   cColor.setToWhite();
   cColor.setToCyan();
-  BOOST_TEST_CHECK(cColor.getC0() == cColor.minChanVal);
-  BOOST_TEST_CHECK(cColor.getC1() == cColor.maxChanVal);
-  BOOST_TEST_CHECK(cColor.getC2() == cColor.maxChanVal);
-  BOOST_TEST_CHECK(cColor.getC3() == cColor.maxChanVal);
+  EXPECT_NEAR(cColor.getC0(),  cColor.minChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  cColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  cColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC3(),  cColor.maxChanVal, 0.00001);
 
   dColor.setToWhite();
   dColor.setToCyan();
-  BOOST_TEST_CHECK(dColor.getC0() == dColor.minChanVal);
-  BOOST_TEST_CHECK(dColor.getC1() == dColor.maxChanVal);
-  BOOST_TEST_CHECK(dColor.getC2() == dColor.maxChanVal);
-  BOOST_TEST_CHECK(dColor.getC3() == dColor.maxChanVal);
+  EXPECT_NEAR(dColor.getC0(),  dColor.minChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),  dColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),  dColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC3(),  dColor.maxChanVal, 0.00001);
 
   ////////////////////////////////////////////////////////////////////////////////
   aColor.setToBlack();
   aColor.setToMagenta();
-  BOOST_TEST_CHECK(aColor.getC0() == aColor.maxChanVal);
-  BOOST_TEST_CHECK(aColor.getC1() == aColor.minChanVal);
-  BOOST_TEST_CHECK(aColor.getC2() == aColor.maxChanVal);
-  BOOST_TEST_CHECK(aColor.getC3() == aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC0(),  aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC1(),  aColor.minChanVal);
+  EXPECT_EQ(aColor.getC2(),  aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC3(),  aColor.maxChanVal);
 
   bColor.setToBlack();
   bColor.setToMagenta();
-  BOOST_TEST_CHECK(bColor.getC0() == bColor.maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC1() == bColor.minChanVal);
-  BOOST_TEST_CHECK(bColor.getC2() == bColor.maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC3() == bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC0(),  bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC1(),  bColor.minChanVal);
+  EXPECT_EQ(bColor.getC2(),  bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC3(),  bColor.maxChanVal);
 
   cColor.setToBlack();
   cColor.setToMagenta();
-  BOOST_TEST_CHECK(cColor.getC0() == cColor.maxChanVal);
-  BOOST_TEST_CHECK(cColor.getC1() == cColor.minChanVal);
-  BOOST_TEST_CHECK(cColor.getC2() == cColor.maxChanVal);
-  BOOST_TEST_CHECK(cColor.getC3() == cColor.maxChanVal);
+  EXPECT_NEAR(cColor.getC0(),  cColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  cColor.minChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  cColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC3(),  cColor.maxChanVal, 0.00001);
 
   dColor.setToBlack();
   dColor.setToMagenta();
-  BOOST_TEST_CHECK(dColor.getC0() == dColor.maxChanVal);
-  BOOST_TEST_CHECK(dColor.getC1() == dColor.minChanVal);
-  BOOST_TEST_CHECK(dColor.getC2() == dColor.maxChanVal);
-  BOOST_TEST_CHECK(dColor.getC3() == dColor.maxChanVal);
+  EXPECT_NEAR(dColor.getC0(),  dColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),  dColor.minChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),  dColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC3(),  dColor.maxChanVal, 0.00001);
 
   ////////////////////////////////////////////////////////////////////////////////
   aColor.setToWhite();
   aColor.setToMagenta();
-  BOOST_TEST_CHECK(aColor.getC0() == aColor.maxChanVal);
-  BOOST_TEST_CHECK(aColor.getC1() == aColor.minChanVal);
-  BOOST_TEST_CHECK(aColor.getC2() == aColor.maxChanVal);
-  BOOST_TEST_CHECK(aColor.getC3() == aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC0(),  aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC1(),  aColor.minChanVal);
+  EXPECT_EQ(aColor.getC2(),  aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC3(),  aColor.maxChanVal);
 
   bColor.setToWhite();
   bColor.setToMagenta();
-  BOOST_TEST_CHECK(bColor.getC0() == bColor.maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC1() == bColor.minChanVal);
-  BOOST_TEST_CHECK(bColor.getC2() == bColor.maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC3() == bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC0(),  bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC1(),  bColor.minChanVal);
+  EXPECT_EQ(bColor.getC2(),  bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC3(),  bColor.maxChanVal);
 
   cColor.setToWhite();
   cColor.setToMagenta();
-  BOOST_TEST_CHECK(cColor.getC0() == cColor.maxChanVal);
-  BOOST_TEST_CHECK(cColor.getC1() == cColor.minChanVal);
-  BOOST_TEST_CHECK(cColor.getC2() == cColor.maxChanVal);
-  BOOST_TEST_CHECK(cColor.getC3() == cColor.maxChanVal);
+  EXPECT_NEAR(cColor.getC0(),  cColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  cColor.minChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  cColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC3(),  cColor.maxChanVal, 0.00001);
 
   dColor.setToWhite();
   dColor.setToMagenta();
-  BOOST_TEST_CHECK(dColor.getC0() == dColor.maxChanVal);
-  BOOST_TEST_CHECK(dColor.getC1() == dColor.minChanVal);
-  BOOST_TEST_CHECK(dColor.getC2() == dColor.maxChanVal);
-  BOOST_TEST_CHECK(dColor.getC3() == dColor.maxChanVal);
+  EXPECT_NEAR(dColor.getC0(),  dColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),  dColor.minChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),  dColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC3(),  dColor.maxChanVal, 0.00001);
 
   ////////////////////////////////////////////////////////////////////////////////
   aColor.setToBlack();
   aColor.setToYellow();
-  BOOST_TEST_CHECK(aColor.getC0() == aColor.maxChanVal);
-  BOOST_TEST_CHECK(aColor.getC1() == aColor.maxChanVal);
-  BOOST_TEST_CHECK(aColor.getC2() == aColor.minChanVal);
-  BOOST_TEST_CHECK(aColor.getC3() == aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC0(),  aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC1(),  aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC2(),  aColor.minChanVal);
+  EXPECT_EQ(aColor.getC3(),  aColor.maxChanVal);
 
   bColor.setToBlack();
   bColor.setToYellow();
-  BOOST_TEST_CHECK(bColor.getC0() == bColor.maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC1() == bColor.maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC2() == bColor.minChanVal);
-  BOOST_TEST_CHECK(bColor.getC3() == bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC0(),  bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC1(),  bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC2(),  bColor.minChanVal);
+  EXPECT_EQ(bColor.getC3(),  bColor.maxChanVal);
 
   cColor.setToBlack();
   cColor.setToYellow();
-  BOOST_TEST_CHECK(cColor.getC0() == cColor.maxChanVal);
-  BOOST_TEST_CHECK(cColor.getC1() == cColor.maxChanVal);
-  BOOST_TEST_CHECK(cColor.getC2() == cColor.minChanVal);
-  BOOST_TEST_CHECK(cColor.getC3() == cColor.maxChanVal);
+  EXPECT_NEAR(cColor.getC0(),  cColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  cColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  cColor.minChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC3(),  cColor.maxChanVal, 0.00001);
 
   dColor.setToBlack();
   dColor.setToYellow();
-  BOOST_TEST_CHECK(dColor.getC0() == dColor.maxChanVal);
-  BOOST_TEST_CHECK(dColor.getC1() == dColor.maxChanVal);
-  BOOST_TEST_CHECK(dColor.getC2() == dColor.minChanVal);
-  BOOST_TEST_CHECK(dColor.getC3() == dColor.maxChanVal);
+  EXPECT_NEAR(dColor.getC0(),  dColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),  dColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),  dColor.minChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC3(),  dColor.maxChanVal, 0.00001);
 
   ////////////////////////////////////////////////////////////////////////////////
   aColor.setToWhite();
   aColor.setToYellow();
-  BOOST_TEST_CHECK(aColor.getC0() == aColor.maxChanVal);
-  BOOST_TEST_CHECK(aColor.getC1() == aColor.maxChanVal);
-  BOOST_TEST_CHECK(aColor.getC2() == aColor.minChanVal);
-  BOOST_TEST_CHECK(aColor.getC3() == aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC0(),  aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC1(),  aColor.maxChanVal);
+  EXPECT_EQ(aColor.getC2(),  aColor.minChanVal);
+  EXPECT_EQ(aColor.getC3(),  aColor.maxChanVal);
 
   bColor.setToWhite();
   bColor.setToYellow();
-  BOOST_TEST_CHECK(bColor.getC0() == bColor.maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC1() == bColor.maxChanVal);
-  BOOST_TEST_CHECK(bColor.getC2() == bColor.minChanVal);
-  BOOST_TEST_CHECK(bColor.getC3() == bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC0(),  bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC1(),  bColor.maxChanVal);
+  EXPECT_EQ(bColor.getC2(),  bColor.minChanVal);
+  EXPECT_EQ(bColor.getC3(),  bColor.maxChanVal);
 
   cColor.setToWhite();
   cColor.setToYellow();
-  BOOST_TEST_CHECK(cColor.getC0() == cColor.maxChanVal);
-  BOOST_TEST_CHECK(cColor.getC1() == cColor.maxChanVal);
-  BOOST_TEST_CHECK(cColor.getC2() == cColor.minChanVal);
-  BOOST_TEST_CHECK(cColor.getC3() == cColor.maxChanVal);
+  EXPECT_NEAR(cColor.getC0(),  cColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  cColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  cColor.minChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC3(),  cColor.maxChanVal, 0.00001);
 
   dColor.setToWhite();
   dColor.setToYellow();
-  BOOST_TEST_CHECK(dColor.getC0() == dColor.maxChanVal);
-  BOOST_TEST_CHECK(dColor.getC1() == dColor.maxChanVal);
-  BOOST_TEST_CHECK(dColor.getC2() == dColor.minChanVal);
-  BOOST_TEST_CHECK(dColor.getC3() == dColor.maxChanVal);
+  EXPECT_NEAR(dColor.getC0(),  dColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),  dColor.maxChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),  dColor.minChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC3(),  dColor.maxChanVal, 0.00001);
 
   ////////////////////////////////////////////////////////////////////////////////
   aColor.setToBlack();
   aColor.setToHalf();
-  BOOST_TEST_CHECK(aColor.getC0() == aColor.meanChanVal);
-  BOOST_TEST_CHECK(aColor.getC1() == aColor.meanChanVal);
-  BOOST_TEST_CHECK(aColor.getC2() == aColor.meanChanVal);
-  BOOST_TEST_CHECK(aColor.getC3() == aColor.meanChanVal);
+  EXPECT_EQ(aColor.getC0(),  aColor.meanChanVal);
+  EXPECT_EQ(aColor.getC1(),  aColor.meanChanVal);
+  EXPECT_EQ(aColor.getC2(),  aColor.meanChanVal);
+  EXPECT_EQ(aColor.getC3(),  aColor.meanChanVal);
 
   bColor.setToBlack();
   bColor.setToHalf();
-  BOOST_TEST_CHECK(bColor.getC0() == bColor.meanChanVal);
-  BOOST_TEST_CHECK(bColor.getC1() == bColor.meanChanVal);
-  BOOST_TEST_CHECK(bColor.getC2() == bColor.meanChanVal);
-  BOOST_TEST_CHECK(bColor.getC3() == bColor.meanChanVal);
+  EXPECT_EQ(bColor.getC0(),  bColor.meanChanVal);
+  EXPECT_EQ(bColor.getC1(),  bColor.meanChanVal);
+  EXPECT_EQ(bColor.getC2(),  bColor.meanChanVal);
+  EXPECT_EQ(bColor.getC3(),  bColor.meanChanVal);
 
   cColor.setToBlack();
   cColor.setToHalf();
-  BOOST_TEST_CHECK(cColor.getC0() == cColor.meanChanVal);
-  BOOST_TEST_CHECK(cColor.getC1() == cColor.meanChanVal);
-  BOOST_TEST_CHECK(cColor.getC2() == cColor.meanChanVal);
-  BOOST_TEST_CHECK(cColor.getC3() == cColor.meanChanVal);
+  EXPECT_NEAR(cColor.getC0(),  cColor.meanChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  cColor.meanChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  cColor.meanChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC3(),  cColor.meanChanVal, 0.00001);
 
   dColor.setToBlack();
   dColor.setToHalf();
-  BOOST_TEST_CHECK(dColor.getC0() == dColor.meanChanVal);
-  BOOST_TEST_CHECK(dColor.getC1() == dColor.meanChanVal);
-  BOOST_TEST_CHECK(dColor.getC2() == dColor.meanChanVal);
-  BOOST_TEST_CHECK(dColor.getC3() == dColor.meanChanVal);
+  EXPECT_NEAR(dColor.getC0(),  dColor.meanChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),  dColor.meanChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),  dColor.meanChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC3(),  dColor.meanChanVal, 0.00001);
 
   ////////////////////////////////////////////////////////////////////////////////
   aColor.setToWhite();
   aColor.setToHalf();
-  BOOST_TEST_CHECK(aColor.getC0() == aColor.meanChanVal);
-  BOOST_TEST_CHECK(aColor.getC1() == aColor.meanChanVal);
-  BOOST_TEST_CHECK(aColor.getC2() == aColor.meanChanVal);
-  BOOST_TEST_CHECK(aColor.getC3() == aColor.meanChanVal);
+  EXPECT_EQ(aColor.getC0(),  aColor.meanChanVal);
+  EXPECT_EQ(aColor.getC1(),  aColor.meanChanVal);
+  EXPECT_EQ(aColor.getC2(),  aColor.meanChanVal);
+  EXPECT_EQ(aColor.getC3(),  aColor.meanChanVal);
 
   bColor.setToWhite();
   bColor.setToHalf();
-  BOOST_TEST_CHECK(bColor.getC0() == bColor.meanChanVal);
-  BOOST_TEST_CHECK(bColor.getC1() == bColor.meanChanVal);
-  BOOST_TEST_CHECK(bColor.getC2() == bColor.meanChanVal);
-  BOOST_TEST_CHECK(bColor.getC3() == bColor.meanChanVal);
+  EXPECT_EQ(bColor.getC0(),  bColor.meanChanVal);
+  EXPECT_EQ(bColor.getC1(),  bColor.meanChanVal);
+  EXPECT_EQ(bColor.getC2(),  bColor.meanChanVal);
+  EXPECT_EQ(bColor.getC3(),  bColor.meanChanVal);
 
   cColor.setToWhite();
   cColor.setToHalf();
-  BOOST_TEST_CHECK(cColor.getC0() == cColor.meanChanVal);
-  BOOST_TEST_CHECK(cColor.getC1() == cColor.meanChanVal);
-  BOOST_TEST_CHECK(cColor.getC2() == cColor.meanChanVal);
-  BOOST_TEST_CHECK(cColor.getC3() == cColor.meanChanVal);
+  EXPECT_NEAR(cColor.getC0(),  cColor.meanChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC1(),  cColor.meanChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC2(),  cColor.meanChanVal, 0.00001);
+  EXPECT_NEAR(cColor.getC3(),  cColor.meanChanVal, 0.00001);
 
   dColor.setToWhite();
   dColor.setToHalf();
-  BOOST_TEST_CHECK(dColor.getC0() == dColor.meanChanVal);
-  BOOST_TEST_CHECK(dColor.getC1() == dColor.meanChanVal);
-  BOOST_TEST_CHECK(dColor.getC2() == dColor.meanChanVal);
-  BOOST_TEST_CHECK(dColor.getC3() == dColor.meanChanVal);
+  EXPECT_NEAR(dColor.getC0(),  dColor.meanChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC1(),  dColor.meanChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC2(),  dColor.meanChanVal, 0.00001);
+  EXPECT_NEAR(dColor.getC3(),  dColor.meanChanVal, 0.00001);
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(csHSLh) {
+TEST(FUN_csHSLh, Comprehensive) {
 
   ////////////////////////////////////////////////////////////////////////////////
 
@@ -7529,297 +7550,294 @@ BOOST_AUTO_TEST_CASE(csHSLh) {
 
   aColor.setToWhite();
   mjr::colorRGBA8b::csHSLhB::c(aColor, mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(aColor.getAlpha() == mjr::colorRGB8b::maxChanVal); // unchanged
+  EXPECT_EQ(aColor.getAlpha(),  mjr::colorRGB8b::maxChanVal); // unchanged
 
   aColor.setToBlack();
   mjr::colorRGBA8b::csHSLhB::c(aColor, mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(aColor.getAlpha() == mjr::colorRGB8b::minChanVal); // unchanged
+  EXPECT_EQ(aColor.getAlpha(),  mjr::colorRGB8b::minChanVal); // unchanged
 
   ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhB::c(mjr::colorRGB8b::minChanVal).getRed()           == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhB::c(mjr::colorRGB8b::minChanVal).getGreen()         == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhB::c(mjr::colorRGB8b::minChanVal).getBlue()          == mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhB::c(mjr::colorRGB8b::minChanVal).getRed(),            mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhB::c(mjr::colorRGB8b::minChanVal).getGreen(),          mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhB::c(mjr::colorRGB8b::minChanVal).getBlue(),           mjr::colorRGB8b::meanChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhC::c(mjr::colorRGB8b::minChanVal).getRed()           == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhC::c(mjr::colorRGB8b::minChanVal).getGreen()         == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhC::c(mjr::colorRGB8b::minChanVal).getBlue()          == mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhC::c(mjr::colorRGB8b::minChanVal).getRed(),            mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhC::c(mjr::colorRGB8b::minChanVal).getGreen(),          mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhC::c(mjr::colorRGB8b::minChanVal).getBlue(),           mjr::colorRGB8b::meanChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhG::c(mjr::colorRGB8b::minChanVal).getRed()           == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhG::c(mjr::colorRGB8b::minChanVal).getGreen()         == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhG::c(mjr::colorRGB8b::minChanVal).getBlue()          == mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhG::c(mjr::colorRGB8b::minChanVal).getRed(),            mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhG::c(mjr::colorRGB8b::minChanVal).getGreen(),          mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhG::c(mjr::colorRGB8b::minChanVal).getBlue(),           mjr::colorRGB8b::meanChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhM::c(mjr::colorRGB8b::minChanVal).getRed()           == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhM::c(mjr::colorRGB8b::minChanVal).getGreen()         == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhM::c(mjr::colorRGB8b::minChanVal).getBlue()          == mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhM::c(mjr::colorRGB8b::minChanVal).getRed(),            mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhM::c(mjr::colorRGB8b::minChanVal).getGreen(),          mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhM::c(mjr::colorRGB8b::minChanVal).getBlue(),           mjr::colorRGB8b::meanChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhR::c(mjr::colorRGB8b::minChanVal).getRed()           == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhR::c(mjr::colorRGB8b::minChanVal).getGreen()         == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhR::c(mjr::colorRGB8b::minChanVal).getBlue()          == mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhR::c(mjr::colorRGB8b::minChanVal).getRed(),            mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhR::c(mjr::colorRGB8b::minChanVal).getGreen(),          mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhR::c(mjr::colorRGB8b::minChanVal).getBlue(),           mjr::colorRGB8b::meanChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhY::c(mjr::colorRGB8b::minChanVal).getRed()           == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhY::c(mjr::colorRGB8b::minChanVal).getGreen()         == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhY::c(mjr::colorRGB8b::minChanVal).getBlue()          == mjr::colorRGB8b::meanChanVal);
-
-  ////////////////////////////////////////////////////////////////////////////////
-
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhB::c(mjr::colorRGB8b::meanChanVal).getRed()          == mjr::colorRGB8b::minChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhB::c(mjr::colorRGB8b::meanChanVal).getGreen()        == mjr::colorRGB8b::minChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhB::c(mjr::colorRGB8b::meanChanVal).getBlue()         == mjr::colorRGB8b::maxChanVal - 1);
-
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhC::c(mjr::colorRGB8b::meanChanVal).getRed()          == mjr::colorRGB8b::minChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhC::c(mjr::colorRGB8b::meanChanVal).getGreen()        == mjr::colorRGB8b::maxChanVal - 1);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhC::c(mjr::colorRGB8b::meanChanVal).getBlue()         == mjr::colorRGB8b::maxChanVal - 1);
-
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhG::c(mjr::colorRGB8b::meanChanVal).getRed()          == mjr::colorRGB8b::minChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhG::c(mjr::colorRGB8b::meanChanVal).getGreen()        == mjr::colorRGB8b::maxChanVal - 1);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhG::c(mjr::colorRGB8b::meanChanVal).getBlue()         == mjr::colorRGB8b::minChanVal);
-
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhM::c(mjr::colorRGB8b::meanChanVal).getRed()          == mjr::colorRGB8b::maxChanVal - 1);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhM::c(mjr::colorRGB8b::meanChanVal).getGreen()        == mjr::colorRGB8b::minChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhM::c(mjr::colorRGB8b::meanChanVal).getBlue()         == mjr::colorRGB8b::maxChanVal - 1);
-
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhR::c(mjr::colorRGB8b::meanChanVal).getRed()          == mjr::colorRGB8b::maxChanVal - 1);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhR::c(mjr::colorRGB8b::meanChanVal).getGreen()        == mjr::colorRGB8b::minChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhR::c(mjr::colorRGB8b::meanChanVal).getBlue()         == mjr::colorRGB8b::minChanVal);
-
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhY::c(mjr::colorRGB8b::meanChanVal).getRed()          == mjr::colorRGB8b::maxChanVal - 1);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhY::c(mjr::colorRGB8b::meanChanVal).getGreen()        == mjr::colorRGB8b::maxChanVal - 1);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhY::c(mjr::colorRGB8b::meanChanVal).getBlue()         == mjr::colorRGB8b::minChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhY::c(mjr::colorRGB8b::minChanVal).getRed(),            mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhY::c(mjr::colorRGB8b::minChanVal).getGreen(),          mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhY::c(mjr::colorRGB8b::minChanVal).getBlue(),           mjr::colorRGB8b::meanChanVal);
 
   ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhB::c(mjr::colorRGB8b::meanChanVal + 1).getRed()      == mjr::colorRGB8b::meanChanVal);  // wrap
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhB::c(mjr::colorRGB8b::meanChanVal + 1).getGreen()    == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhB::c(mjr::colorRGB8b::meanChanVal + 1).getBlue()     == mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhB::c(mjr::colorRGB8b::meanChanVal).getRed(),           mjr::colorRGB8b::minChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhB::c(mjr::colorRGB8b::meanChanVal).getGreen(),         mjr::colorRGB8b::minChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhB::c(mjr::colorRGB8b::meanChanVal).getBlue(),          mjr::colorRGB8b::maxChanVal - 1);
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhC::c(mjr::colorRGB8b::meanChanVal + 1).getRed()      == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhC::c(mjr::colorRGB8b::meanChanVal + 1).getGreen()    == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhC::c(mjr::colorRGB8b::meanChanVal + 1).getBlue()     == mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhC::c(mjr::colorRGB8b::meanChanVal).getRed(),           mjr::colorRGB8b::minChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhC::c(mjr::colorRGB8b::meanChanVal).getGreen(),         mjr::colorRGB8b::maxChanVal - 1);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhC::c(mjr::colorRGB8b::meanChanVal).getBlue(),          mjr::colorRGB8b::maxChanVal - 1);
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhG::c(mjr::colorRGB8b::meanChanVal + 1).getRed()      == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhG::c(mjr::colorRGB8b::meanChanVal + 1).getGreen()    == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhG::c(mjr::colorRGB8b::meanChanVal + 1).getBlue()     == mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhG::c(mjr::colorRGB8b::meanChanVal).getRed(),           mjr::colorRGB8b::minChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhG::c(mjr::colorRGB8b::meanChanVal).getGreen(),         mjr::colorRGB8b::maxChanVal - 1);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhG::c(mjr::colorRGB8b::meanChanVal).getBlue(),          mjr::colorRGB8b::minChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhM::c(mjr::colorRGB8b::meanChanVal + 1).getRed()      == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhM::c(mjr::colorRGB8b::meanChanVal + 1).getGreen()    == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhM::c(mjr::colorRGB8b::meanChanVal + 1).getBlue()     == mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhM::c(mjr::colorRGB8b::meanChanVal).getRed(),           mjr::colorRGB8b::maxChanVal - 1);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhM::c(mjr::colorRGB8b::meanChanVal).getGreen(),         mjr::colorRGB8b::minChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhM::c(mjr::colorRGB8b::meanChanVal).getBlue(),          mjr::colorRGB8b::maxChanVal - 1);
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhR::c(mjr::colorRGB8b::meanChanVal + 1).getRed()      == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhR::c(mjr::colorRGB8b::meanChanVal + 1).getGreen()    == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhR::c(mjr::colorRGB8b::meanChanVal + 1).getBlue()     == mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhR::c(mjr::colorRGB8b::meanChanVal).getRed(),           mjr::colorRGB8b::maxChanVal - 1);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhR::c(mjr::colorRGB8b::meanChanVal).getGreen(),         mjr::colorRGB8b::minChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhR::c(mjr::colorRGB8b::meanChanVal).getBlue(),          mjr::colorRGB8b::minChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhY::c(mjr::colorRGB8b::meanChanVal + 1).getRed()      == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhY::c(mjr::colorRGB8b::meanChanVal + 1).getGreen()    == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csHSLhY::c(mjr::colorRGB8b::meanChanVal + 1).getBlue()     == mjr::colorRGB8b::meanChanVal);
-
-  ////////////////////////////////////////////////////////////////////////////////
-
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhB::c(mjr::colorRGB16b::minChanVal).getRed()         == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhB::c(mjr::colorRGB16b::minChanVal).getGreen()       == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhB::c(mjr::colorRGB16b::minChanVal).getBlue()        == mjr::colorRGB16b::meanChanVal);
-
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhC::c(mjr::colorRGB16b::minChanVal).getRed()         == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhC::c(mjr::colorRGB16b::minChanVal).getGreen()       == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhC::c(mjr::colorRGB16b::minChanVal).getBlue()        == mjr::colorRGB16b::meanChanVal);
-
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhG::c(mjr::colorRGB16b::minChanVal).getRed()         == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhG::c(mjr::colorRGB16b::minChanVal).getGreen()       == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhG::c(mjr::colorRGB16b::minChanVal).getBlue()        == mjr::colorRGB16b::meanChanVal);
-
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhM::c(mjr::colorRGB16b::minChanVal).getRed()         == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhM::c(mjr::colorRGB16b::minChanVal).getGreen()       == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhM::c(mjr::colorRGB16b::minChanVal).getBlue()        == mjr::colorRGB16b::meanChanVal);
-
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhR::c(mjr::colorRGB16b::minChanVal).getRed()         == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhR::c(mjr::colorRGB16b::minChanVal).getGreen()       == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhR::c(mjr::colorRGB16b::minChanVal).getBlue()        == mjr::colorRGB16b::meanChanVal);
-
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhY::c(mjr::colorRGB16b::minChanVal).getRed()         == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhY::c(mjr::colorRGB16b::minChanVal).getGreen()       == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhY::c(mjr::colorRGB16b::minChanVal).getBlue()        == mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhY::c(mjr::colorRGB8b::meanChanVal).getRed(),           mjr::colorRGB8b::maxChanVal - 1);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhY::c(mjr::colorRGB8b::meanChanVal).getGreen(),         mjr::colorRGB8b::maxChanVal - 1);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhY::c(mjr::colorRGB8b::meanChanVal).getBlue(),          mjr::colorRGB8b::minChanVal);
 
   ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhB::c(mjr::colorRGB16b::meanChanVal).getRed()        == mjr::colorRGB16b::minChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhB::c(mjr::colorRGB16b::meanChanVal).getGreen()      == mjr::colorRGB16b::minChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhB::c(mjr::colorRGB16b::meanChanVal).getBlue()       == mjr::colorRGB16b::maxChanVal - 1);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhB::c(mjr::colorRGB8b::meanChanVal + 1).getRed(),       mjr::colorRGB8b::meanChanVal);  // wrap
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhB::c(mjr::colorRGB8b::meanChanVal + 1).getGreen(),     mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhB::c(mjr::colorRGB8b::meanChanVal + 1).getBlue(),      mjr::colorRGB8b::meanChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhC::c(mjr::colorRGB16b::meanChanVal).getRed()        == mjr::colorRGB16b::minChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhC::c(mjr::colorRGB16b::meanChanVal).getGreen()      == mjr::colorRGB16b::maxChanVal - 1);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhC::c(mjr::colorRGB16b::meanChanVal).getBlue()       == mjr::colorRGB16b::maxChanVal - 1);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhC::c(mjr::colorRGB8b::meanChanVal + 1).getRed(),       mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhC::c(mjr::colorRGB8b::meanChanVal + 1).getGreen(),     mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhC::c(mjr::colorRGB8b::meanChanVal + 1).getBlue(),      mjr::colorRGB8b::meanChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhG::c(mjr::colorRGB16b::meanChanVal).getRed()        == mjr::colorRGB16b::minChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhG::c(mjr::colorRGB16b::meanChanVal).getGreen()      == mjr::colorRGB16b::maxChanVal - 1);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhG::c(mjr::colorRGB16b::meanChanVal).getBlue()       == mjr::colorRGB16b::minChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhG::c(mjr::colorRGB8b::meanChanVal + 1).getRed(),       mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhG::c(mjr::colorRGB8b::meanChanVal + 1).getGreen(),     mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhG::c(mjr::colorRGB8b::meanChanVal + 1).getBlue(),      mjr::colorRGB8b::meanChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhM::c(mjr::colorRGB16b::meanChanVal).getRed()        == mjr::colorRGB16b::maxChanVal - 1);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhM::c(mjr::colorRGB16b::meanChanVal).getGreen()      == mjr::colorRGB16b::minChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhM::c(mjr::colorRGB16b::meanChanVal).getBlue()       == mjr::colorRGB16b::maxChanVal - 1);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhM::c(mjr::colorRGB8b::meanChanVal + 1).getRed(),       mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhM::c(mjr::colorRGB8b::meanChanVal + 1).getGreen(),     mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhM::c(mjr::colorRGB8b::meanChanVal + 1).getBlue(),      mjr::colorRGB8b::meanChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhR::c(mjr::colorRGB16b::meanChanVal).getRed()        == mjr::colorRGB16b::maxChanVal - 1);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhR::c(mjr::colorRGB16b::meanChanVal).getGreen()      == mjr::colorRGB16b::minChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhR::c(mjr::colorRGB16b::meanChanVal).getBlue()       == mjr::colorRGB16b::minChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhR::c(mjr::colorRGB8b::meanChanVal + 1).getRed(),       mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhR::c(mjr::colorRGB8b::meanChanVal + 1).getGreen(),     mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhR::c(mjr::colorRGB8b::meanChanVal + 1).getBlue(),      mjr::colorRGB8b::meanChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhY::c(mjr::colorRGB16b::meanChanVal).getRed()        == mjr::colorRGB16b::maxChanVal - 1);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhY::c(mjr::colorRGB16b::meanChanVal).getGreen()      == mjr::colorRGB16b::maxChanVal - 1);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhY::c(mjr::colorRGB16b::meanChanVal).getBlue()       == mjr::colorRGB16b::minChanVal);
-
-  ////////////////////////////////////////////////////////////////////////////////
-
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhB::c(mjr::colorRGB16b::meanChanVal + 1).getRed()    == mjr::colorRGB16b::meanChanVal);  // wrap
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhB::c(mjr::colorRGB16b::meanChanVal + 1).getGreen()  == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhB::c(mjr::colorRGB16b::meanChanVal + 1).getBlue()   == mjr::colorRGB16b::meanChanVal);
-
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhC::c(mjr::colorRGB16b::meanChanVal + 1).getRed()    == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhC::c(mjr::colorRGB16b::meanChanVal + 1).getGreen()  == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhC::c(mjr::colorRGB16b::meanChanVal + 1).getBlue()   == mjr::colorRGB16b::meanChanVal);
-
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhG::c(mjr::colorRGB16b::meanChanVal + 1).getRed()    == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhG::c(mjr::colorRGB16b::meanChanVal + 1).getGreen()  == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhG::c(mjr::colorRGB16b::meanChanVal + 1).getBlue()   == mjr::colorRGB16b::meanChanVal);
-
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhM::c(mjr::colorRGB16b::meanChanVal + 1).getRed()    == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhM::c(mjr::colorRGB16b::meanChanVal + 1).getGreen()  == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhM::c(mjr::colorRGB16b::meanChanVal + 1).getBlue()   == mjr::colorRGB16b::meanChanVal);
-
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhR::c(mjr::colorRGB16b::meanChanVal + 1).getRed()    == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhR::c(mjr::colorRGB16b::meanChanVal + 1).getGreen()  == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhR::c(mjr::colorRGB16b::meanChanVal + 1).getBlue()   == mjr::colorRGB16b::meanChanVal);
-
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhY::c(mjr::colorRGB16b::meanChanVal + 1).getRed()    == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhY::c(mjr::colorRGB16b::meanChanVal + 1).getGreen()  == mjr::colorRGB16b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB16b::csHSLhY::c(mjr::colorRGB16b::meanChanVal + 1).getBlue()   == mjr::colorRGB16b::meanChanVal);
-
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhY::c(mjr::colorRGB8b::meanChanVal + 1).getRed(),       mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhY::c(mjr::colorRGB8b::meanChanVal + 1).getGreen(),     mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csHSLhY::c(mjr::colorRGB8b::meanChanVal + 1).getBlue(),      mjr::colorRGB8b::meanChanVal);
 
   ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhB::c(0.0).getRed()                                  == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhB::c(0.0).getGreen()                                == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhB::c(0.0).getBlue()                                 == mjr::colorRGB32F::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhB::c(mjr::colorRGB16b::minChanVal).getRed(),          mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhB::c(mjr::colorRGB16b::minChanVal).getGreen(),        mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhB::c(mjr::colorRGB16b::minChanVal).getBlue(),         mjr::colorRGB16b::meanChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhC::c(0.0).getRed()                                  == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhC::c(0.0).getGreen()                                == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhC::c(0.0).getBlue()                                 == mjr::colorRGB32F::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhC::c(mjr::colorRGB16b::minChanVal).getRed(),          mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhC::c(mjr::colorRGB16b::minChanVal).getGreen(),        mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhC::c(mjr::colorRGB16b::minChanVal).getBlue(),         mjr::colorRGB16b::meanChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhG::c(0.0).getRed()                                  == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhG::c(0.0).getGreen()                                == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhG::c(0.0).getBlue()                                 == mjr::colorRGB32F::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhG::c(mjr::colorRGB16b::minChanVal).getRed(),          mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhG::c(mjr::colorRGB16b::minChanVal).getGreen(),        mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhG::c(mjr::colorRGB16b::minChanVal).getBlue(),         mjr::colorRGB16b::meanChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhM::c(0.0).getRed()                                  == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhM::c(0.0).getGreen()                                == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhM::c(0.0).getBlue()                                 == mjr::colorRGB32F::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhM::c(mjr::colorRGB16b::minChanVal).getRed(),          mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhM::c(mjr::colorRGB16b::minChanVal).getGreen(),        mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhM::c(mjr::colorRGB16b::minChanVal).getBlue(),         mjr::colorRGB16b::meanChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhR::c(0.0).getRed()                                  == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhR::c(0.0).getGreen()                                == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhR::c(0.0).getBlue()                                 == mjr::colorRGB32F::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhR::c(mjr::colorRGB16b::minChanVal).getRed(),          mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhR::c(mjr::colorRGB16b::minChanVal).getGreen(),        mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhR::c(mjr::colorRGB16b::minChanVal).getBlue(),         mjr::colorRGB16b::meanChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhY::c(0.0).getRed()                                  == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhY::c(0.0).getGreen()                                == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhY::c(0.0).getBlue()                                 == mjr::colorRGB32F::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhY::c(mjr::colorRGB16b::minChanVal).getRed(),          mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhY::c(mjr::colorRGB16b::minChanVal).getGreen(),        mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhY::c(mjr::colorRGB16b::minChanVal).getBlue(),         mjr::colorRGB16b::meanChanVal);
 
-  // ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhB::c(mjr::colorRGBA32F::meanChanVal).getRed()       == mjr::colorRGB32F::minChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhB::c(mjr::colorRGBA32F::meanChanVal).getGreen()     == mjr::colorRGB32F::minChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhB::c(mjr::colorRGBA32F::meanChanVal).getBlue()      == mjr::colorRGB32F::maxChanVal); // Note for floating point clrChanT, csHSLh_tpl gets to maxChanVal
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhB::c(mjr::colorRGB16b::meanChanVal).getRed(),         mjr::colorRGB16b::minChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhB::c(mjr::colorRGB16b::meanChanVal).getGreen(),       mjr::colorRGB16b::minChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhB::c(mjr::colorRGB16b::meanChanVal).getBlue(),        mjr::colorRGB16b::maxChanVal - 1);
 
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhC::c(mjr::colorRGBA32F::meanChanVal).getRed()       == mjr::colorRGB32F::minChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhC::c(mjr::colorRGBA32F::meanChanVal).getGreen()     == mjr::colorRGB32F::maxChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhC::c(mjr::colorRGBA32F::meanChanVal).getBlue()      == mjr::colorRGB32F::maxChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhC::c(mjr::colorRGB16b::meanChanVal).getRed(),         mjr::colorRGB16b::minChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhC::c(mjr::colorRGB16b::meanChanVal).getGreen(),       mjr::colorRGB16b::maxChanVal - 1);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhC::c(mjr::colorRGB16b::meanChanVal).getBlue(),        mjr::colorRGB16b::maxChanVal - 1);
 
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhG::c(mjr::colorRGBA32F::meanChanVal).getRed()       == mjr::colorRGB32F::minChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhG::c(mjr::colorRGBA32F::meanChanVal).getGreen()     == mjr::colorRGB32F::maxChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhG::c(mjr::colorRGBA32F::meanChanVal).getBlue()      == mjr::colorRGB32F::minChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhG::c(mjr::colorRGB16b::meanChanVal).getRed(),         mjr::colorRGB16b::minChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhG::c(mjr::colorRGB16b::meanChanVal).getGreen(),       mjr::colorRGB16b::maxChanVal - 1);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhG::c(mjr::colorRGB16b::meanChanVal).getBlue(),        mjr::colorRGB16b::minChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhM::c(mjr::colorRGBA32F::meanChanVal).getRed()       == mjr::colorRGB32F::maxChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhM::c(mjr::colorRGBA32F::meanChanVal).getGreen()     == mjr::colorRGB32F::minChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhM::c(mjr::colorRGBA32F::meanChanVal).getBlue()      == mjr::colorRGB32F::maxChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhM::c(mjr::colorRGB16b::meanChanVal).getRed(),         mjr::colorRGB16b::maxChanVal - 1);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhM::c(mjr::colorRGB16b::meanChanVal).getGreen(),       mjr::colorRGB16b::minChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhM::c(mjr::colorRGB16b::meanChanVal).getBlue(),        mjr::colorRGB16b::maxChanVal - 1);
 
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhR::c(mjr::colorRGBA32F::meanChanVal).getRed()       == mjr::colorRGB32F::maxChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhR::c(mjr::colorRGBA32F::meanChanVal).getGreen()     == mjr::colorRGB32F::minChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhR::c(mjr::colorRGBA32F::meanChanVal).getBlue()      == mjr::colorRGB32F::minChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhR::c(mjr::colorRGB16b::meanChanVal).getRed(),         mjr::colorRGB16b::maxChanVal - 1);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhR::c(mjr::colorRGB16b::meanChanVal).getGreen(),       mjr::colorRGB16b::minChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhR::c(mjr::colorRGB16b::meanChanVal).getBlue(),        mjr::colorRGB16b::minChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhY::c(mjr::colorRGBA32F::meanChanVal).getRed()       == mjr::colorRGB32F::maxChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhY::c(mjr::colorRGBA32F::meanChanVal).getGreen()     == mjr::colorRGB32F::maxChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhY::c(mjr::colorRGBA32F::meanChanVal).getBlue()      == mjr::colorRGB32F::minChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhY::c(mjr::colorRGB16b::meanChanVal).getRed(),         mjr::colorRGB16b::maxChanVal - 1);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhY::c(mjr::colorRGB16b::meanChanVal).getGreen(),       mjr::colorRGB16b::maxChanVal - 1);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhY::c(mjr::colorRGB16b::meanChanVal).getBlue(),        mjr::colorRGB16b::minChanVal);
 
-  // ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhB::c(mjr::colorRGBA32F::meanChanVal + 1).getRed()   == mjr::colorRGB32F::meanChanVal);  // wrap to zoeo -- not meanChanVal.  One of the oddities of floating pont wrap.
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhB::c(mjr::colorRGBA32F::meanChanVal + 1).getGreen() == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhB::c(mjr::colorRGBA32F::meanChanVal + 1).getBlue()  == mjr::colorRGB32F::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhB::c(mjr::colorRGB16b::meanChanVal + 1).getRed(),     mjr::colorRGB16b::meanChanVal);  // wrap
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhB::c(mjr::colorRGB16b::meanChanVal + 1).getGreen(),   mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhB::c(mjr::colorRGB16b::meanChanVal + 1).getBlue(),    mjr::colorRGB16b::meanChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhC::c(mjr::colorRGBA32F::meanChanVal + 1).getRed()   == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhC::c(mjr::colorRGBA32F::meanChanVal + 1).getGreen() == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhC::c(mjr::colorRGBA32F::meanChanVal + 1).getBlue()  == mjr::colorRGB32F::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhC::c(mjr::colorRGB16b::meanChanVal + 1).getRed(),     mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhC::c(mjr::colorRGB16b::meanChanVal + 1).getGreen(),   mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhC::c(mjr::colorRGB16b::meanChanVal + 1).getBlue(),    mjr::colorRGB16b::meanChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhG::c(mjr::colorRGBA32F::meanChanVal + 1).getRed()   == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhG::c(mjr::colorRGBA32F::meanChanVal + 1).getGreen() == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhG::c(mjr::colorRGBA32F::meanChanVal + 1).getBlue()  == mjr::colorRGB32F::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhG::c(mjr::colorRGB16b::meanChanVal + 1).getRed(),     mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhG::c(mjr::colorRGB16b::meanChanVal + 1).getGreen(),   mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhG::c(mjr::colorRGB16b::meanChanVal + 1).getBlue(),    mjr::colorRGB16b::meanChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhM::c(mjr::colorRGBA32F::meanChanVal + 1).getRed()   == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhM::c(mjr::colorRGBA32F::meanChanVal + 1).getGreen() == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhM::c(mjr::colorRGBA32F::meanChanVal + 1).getBlue()  == mjr::colorRGB32F::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhM::c(mjr::colorRGB16b::meanChanVal + 1).getRed(),     mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhM::c(mjr::colorRGB16b::meanChanVal + 1).getGreen(),   mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhM::c(mjr::colorRGB16b::meanChanVal + 1).getBlue(),    mjr::colorRGB16b::meanChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhR::c(mjr::colorRGBA32F::meanChanVal + 1).getRed()   == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhR::c(mjr::colorRGBA32F::meanChanVal + 1).getGreen() == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhR::c(mjr::colorRGBA32F::meanChanVal + 1).getBlue()  == mjr::colorRGB32F::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhR::c(mjr::colorRGB16b::meanChanVal + 1).getRed(),     mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhR::c(mjr::colorRGB16b::meanChanVal + 1).getGreen(),   mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhR::c(mjr::colorRGB16b::meanChanVal + 1).getBlue(),    mjr::colorRGB16b::meanChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhY::c(mjr::colorRGBA32F::meanChanVal + 1).getRed()   == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhY::c(mjr::colorRGBA32F::meanChanVal + 1).getGreen() == mjr::colorRGB32F::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB32F::csHSLhY::c(mjr::colorRGBA32F::meanChanVal + 1).getBlue()  == mjr::colorRGB32F::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhY::c(mjr::colorRGB16b::meanChanVal + 1).getRed(),     mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhY::c(mjr::colorRGB16b::meanChanVal + 1).getGreen(),   mjr::colorRGB16b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB16b::csHSLhY::c(mjr::colorRGB16b::meanChanVal + 1).getBlue(),    mjr::colorRGB16b::meanChanVal);
+
+  ////////////////////////////////////////////////////////////////////////////////
+
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhB::c(0.0).getRed(),                                   mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhB::c(0.0).getGreen(),                                 mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhB::c(0.0).getBlue(),                                  mjr::colorRGB32F::meanChanVal, 0.00001);
+
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhC::c(0.0).getRed(),                                   mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhC::c(0.0).getGreen(),                                 mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhC::c(0.0).getBlue(),                                  mjr::colorRGB32F::meanChanVal, 0.00001);
+
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhG::c(0.0).getRed(),                                   mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhG::c(0.0).getGreen(),                                 mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhG::c(0.0).getBlue(),                                  mjr::colorRGB32F::meanChanVal, 0.00001);
+
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhM::c(0.0).getRed(),                                   mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhM::c(0.0).getGreen(),                                 mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhM::c(0.0).getBlue(),                                  mjr::colorRGB32F::meanChanVal, 0.00001);
+
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhR::c(0.0).getRed(),                                   mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhR::c(0.0).getGreen(),                                 mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhR::c(0.0).getBlue(),                                  mjr::colorRGB32F::meanChanVal, 0.00001);
+
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhY::c(0.0).getRed(),                                   mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhY::c(0.0).getGreen(),                                 mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhY::c(0.0).getBlue(),                                  mjr::colorRGB32F::meanChanVal, 0.00001);
+
+  ////////////////////////////////////////////////////////////////////////////////
+
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhB::c(mjr::colorRGBA32F::meanChanVal).getRed(),        mjr::colorRGB32F::minChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhB::c(mjr::colorRGBA32F::meanChanVal).getGreen(),      mjr::colorRGB32F::minChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhB::c(mjr::colorRGBA32F::meanChanVal).getBlue(),       mjr::colorRGB32F::maxChanVal, 0.00001); // Note for floating point clrChanT, csHSLh_tpl gets to maxChanVal
+
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhC::c(mjr::colorRGBA32F::meanChanVal).getRed(),        mjr::colorRGB32F::minChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhC::c(mjr::colorRGBA32F::meanChanVal).getGreen(),      mjr::colorRGB32F::maxChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhC::c(mjr::colorRGBA32F::meanChanVal).getBlue(),       mjr::colorRGB32F::maxChanVal, 0.00001);
+
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhG::c(mjr::colorRGBA32F::meanChanVal).getRed(),        mjr::colorRGB32F::minChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhG::c(mjr::colorRGBA32F::meanChanVal).getGreen(),      mjr::colorRGB32F::maxChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhG::c(mjr::colorRGBA32F::meanChanVal).getBlue(),       mjr::colorRGB32F::minChanVal, 0.00001);
+
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhM::c(mjr::colorRGBA32F::meanChanVal).getRed(),        mjr::colorRGB32F::maxChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhM::c(mjr::colorRGBA32F::meanChanVal).getGreen(),      mjr::colorRGB32F::minChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhM::c(mjr::colorRGBA32F::meanChanVal).getBlue(),       mjr::colorRGB32F::maxChanVal, 0.00001);
+
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhR::c(mjr::colorRGBA32F::meanChanVal).getRed(),        mjr::colorRGB32F::maxChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhR::c(mjr::colorRGBA32F::meanChanVal).getGreen(),      mjr::colorRGB32F::minChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhR::c(mjr::colorRGBA32F::meanChanVal).getBlue(),       mjr::colorRGB32F::minChanVal, 0.00001);
+
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhY::c(mjr::colorRGBA32F::meanChanVal).getRed(),        mjr::colorRGB32F::maxChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhY::c(mjr::colorRGBA32F::meanChanVal).getGreen(),      mjr::colorRGB32F::maxChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhY::c(mjr::colorRGBA32F::meanChanVal).getBlue(),       mjr::colorRGB32F::minChanVal, 0.00001);
+
+  ////////////////////////////////////////////////////////////////////////////////
+
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhB::c(mjr::colorRGBA32F::meanChanVal + 1).getRed(),    mjr::colorRGB32F::meanChanVal, 0.00001);  // wrap to zoeo -- not meanChanVal.  One of the oddities of floating pont wrap.
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhB::c(mjr::colorRGBA32F::meanChanVal + 1).getGreen(),  mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhB::c(mjr::colorRGBA32F::meanChanVal + 1).getBlue(),   mjr::colorRGB32F::meanChanVal, 0.00001);
+
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhC::c(mjr::colorRGBA32F::meanChanVal + 1).getRed(),    mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhC::c(mjr::colorRGBA32F::meanChanVal + 1).getGreen(),  mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhC::c(mjr::colorRGBA32F::meanChanVal + 1).getBlue(),   mjr::colorRGB32F::meanChanVal, 0.00001);
+
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhG::c(mjr::colorRGBA32F::meanChanVal + 1).getRed(),    mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhG::c(mjr::colorRGBA32F::meanChanVal + 1).getGreen(),  mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhG::c(mjr::colorRGBA32F::meanChanVal + 1).getBlue(),   mjr::colorRGB32F::meanChanVal, 0.00001);
+
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhM::c(mjr::colorRGBA32F::meanChanVal + 1).getRed(),    mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhM::c(mjr::colorRGBA32F::meanChanVal + 1).getGreen(),  mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhM::c(mjr::colorRGBA32F::meanChanVal + 1).getBlue(),   mjr::colorRGB32F::meanChanVal, 0.00001);
+
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhR::c(mjr::colorRGBA32F::meanChanVal + 1).getRed(),    mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhR::c(mjr::colorRGBA32F::meanChanVal + 1).getGreen(),  mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhR::c(mjr::colorRGBA32F::meanChanVal + 1).getBlue(),   mjr::colorRGB32F::meanChanVal, 0.00001);
+
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhY::c(mjr::colorRGBA32F::meanChanVal + 1).getRed(),    mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhY::c(mjr::colorRGBA32F::meanChanVal + 1).getGreen(),  mjr::colorRGB32F::meanChanVal, 0.00001);
+  EXPECT_NEAR(mjr::colorRGB32F::csHSLhY::c(mjr::colorRGBA32F::meanChanVal + 1).getBlue(),   mjr::colorRGB32F::meanChanVal, 0.00001);
 }
 
 #if !(MISSING_P1907R1)
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(csPLY) {
-
-  ////////////////////////////////////////////////////////////////////////////////
+TEST(FUN_csPLY, Comprehensive) {
 
   mjr::colorRGBA8b aColor;
 
   aColor.setToWhite();
   mjr::colorRGBA8b::csPLYgrey::c(aColor, 0.0);
-  BOOST_TEST_CHECK(aColor.getRed()   == mjr::colorRGB8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getBlue()  == mjr::colorRGB8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getGreen() == mjr::colorRGB8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getAlpha() == mjr::colorRGB8b::maxChanVal); // unchanged
+  EXPECT_EQ(aColor.getRed(),    mjr::colorRGB8b::minChanVal);
+  EXPECT_EQ(aColor.getBlue(),   mjr::colorRGB8b::minChanVal);
+  EXPECT_EQ(aColor.getGreen(),  mjr::colorRGB8b::minChanVal);
+  EXPECT_EQ(aColor.getAlpha(),  mjr::colorRGB8b::maxChanVal); // unchanged
 
   aColor.setToBlack();
   mjr::colorRGBA8b::csPLYgrey::c(aColor, 0.0);
-  BOOST_TEST_CHECK(aColor.getRed()   == mjr::colorRGB8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getBlue()  == mjr::colorRGB8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getGreen() == mjr::colorRGB8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getAlpha() == mjr::colorRGB8b::minChanVal); // unchanged
+  EXPECT_EQ(aColor.getRed(),    mjr::colorRGB8b::minChanVal);
+  EXPECT_EQ(aColor.getBlue(),   mjr::colorRGB8b::minChanVal);
+  EXPECT_EQ(aColor.getGreen(),  mjr::colorRGB8b::minChanVal);
+  EXPECT_EQ(aColor.getAlpha(),  mjr::colorRGB8b::minChanVal); // unchanged
 
   ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYgrey::c(0.0).getRed()   == mjr::colorRGB8b::minChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYgrey::c(0.0).getGreen() == mjr::colorRGB8b::minChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYgrey::c(0.0).getBlue()  == mjr::colorRGB8b::minChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csPLYgrey::c(0.0).getRed(),    mjr::colorRGB8b::minChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csPLYgrey::c(0.0).getGreen(),  mjr::colorRGB8b::minChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csPLYgrey::c(0.0).getBlue(),   mjr::colorRGB8b::minChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYgrey::c(0.5).getRed()   == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYgrey::c(0.5).getGreen() == mjr::colorRGB8b::meanChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYgrey::c(0.5).getBlue()  == mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csPLYgrey::c(0.5).getRed(),    mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csPLYgrey::c(0.5).getGreen(),  mjr::colorRGB8b::meanChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csPLYgrey::c(0.5).getBlue(),   mjr::colorRGB8b::meanChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYgrey::c(1.0).getRed()   == mjr::colorRGB8b::maxChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYgrey::c(1.0).getGreen() == mjr::colorRGB8b::maxChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYgrey::c(1.0).getBlue()  == mjr::colorRGB8b::maxChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csPLYgrey::c(1.0).getRed(),    mjr::colorRGB8b::maxChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csPLYgrey::c(1.0).getGreen(),  mjr::colorRGB8b::maxChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csPLYgrey::c(1.0).getBlue(),   mjr::colorRGB8b::maxChanVal);
 
   ////////////////////////////////////////////////////////////////////////////////
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYquad::c(0.0).getRed()   == mjr::colorRGB8b::minChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYquad::c(0.0).getGreen() == mjr::colorRGB8b::minChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYquad::c(0.0).getBlue()  == mjr::colorRGB8b::minChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csPLYquad::c(0.0).getRed(),    mjr::colorRGB8b::minChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csPLYquad::c(0.0).getGreen(),  mjr::colorRGB8b::minChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csPLYquad::c(0.0).getBlue(),   mjr::colorRGB8b::minChanVal);
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYquad::c(0.5).getRed()   == 0x3F); // 255 * 0.5 * 0.5 = 63.75
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYquad::c(0.5).getGreen() == 0x3F);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYquad::c(0.5).getBlue()  == 0x3F);
+  EXPECT_EQ(mjr::colorRGB8b::csPLYquad::c(0.5).getRed(),    0x3F); // 255 * 0.5 * 0.5 = 63.75
+  EXPECT_EQ(mjr::colorRGB8b::csPLYquad::c(0.5).getGreen(),  0x3F);
+  EXPECT_EQ(mjr::colorRGB8b::csPLYquad::c(0.5).getBlue(),   0x3F);
 
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYquad::c(1.0).getRed()   == mjr::colorRGB8b::maxChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYquad::c(1.0).getGreen() == mjr::colorRGB8b::maxChanVal);
-  BOOST_TEST_CHECK(mjr::colorRGB8b::csPLYquad::c(1.0).getBlue()  == mjr::colorRGB8b::maxChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csPLYquad::c(1.0).getRed(),    mjr::colorRGB8b::maxChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csPLYquad::c(1.0).getGreen(),  mjr::colorRGB8b::maxChanVal);
+  EXPECT_EQ(mjr::colorRGB8b::csPLYquad::c(1.0).getBlue(),   mjr::colorRGB8b::maxChanVal);
 
   ////////////////////////////////////////////////////////////////////////////////
 
@@ -7827,165 +7845,165 @@ BOOST_AUTO_TEST_CASE(csPLY) {
                                        -9.3333333333333,  13.000000000000, -4.6666666666666, 1.00000000000000,                    // [[0.0, 1.00000], [0.25, 0.500000], [0.50, 0.750000], [1.0, 0.00000]];
                                         4.4117333333333,  -5.902400000000,  1.9936666666666, 0.28480000000000> csPLYfoo;          // [[0.0, 0.28480], [0.25, 0.483250], [0.50, 0.357500], [1.0, 0.78780]]
 
-  BOOST_TEST_CHECK(csPLYfoo::c(0.00).getRed()   == 0.000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(csPLYfoo::c(0.00).getGreen() == 1.000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(csPLYfoo::c(0.00).getBlue()  == 0.284800, boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(csPLYfoo::c(0.00).getRed(),    0.000000, 0.00001);
+  EXPECT_NEAR(csPLYfoo::c(0.00).getGreen(),  1.000000, 0.00001);
+  EXPECT_NEAR(csPLYfoo::c(0.00).getBlue(),   0.284800, 0.00001);
 
-  BOOST_TEST_CHECK(csPLYfoo::c(0.25).getRed()   == 0.750000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(csPLYfoo::c(0.25).getGreen() == 0.500000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(csPLYfoo::c(0.25).getBlue()  == 0.483250, boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(csPLYfoo::c(0.25).getRed(),    0.750000, 0.00001);
+  EXPECT_NEAR(csPLYfoo::c(0.25).getGreen(),  0.500000, 0.00001);
+  EXPECT_NEAR(csPLYfoo::c(0.25).getBlue(),   0.483250, 0.00001);
 
-  BOOST_TEST_CHECK(csPLYfoo::c(0.50).getRed()   == 0.500000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(csPLYfoo::c(0.50).getGreen() == 0.750000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(csPLYfoo::c(0.50).getBlue()  == 0.357500, boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(csPLYfoo::c(0.50).getRed(),    0.500000, 0.00001);
+  EXPECT_NEAR(csPLYfoo::c(0.50).getGreen(),  0.750000, 0.00001);
+  EXPECT_NEAR(csPLYfoo::c(0.50).getBlue(),   0.357500, 0.00001);
 
-  BOOST_TEST_CHECK(csPLYfoo::c(1.00).getRed()   == 1.000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(csPLYfoo::c(1.00).getGreen() == 0.000000, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(csPLYfoo::c(1.00).getBlue()  == 0.787800, boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(csPLYfoo::c(1.00).getRed(),    1.000000, 0.00001);
+  EXPECT_NEAR(csPLYfoo::c(1.00).getGreen(),  0.000000, 0.00001);
+  EXPECT_NEAR(csPLYfoo::c(1.00).getBlue(),   0.787800, 0.00001);
 }
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(csCColdeRainbow_flt) {
+TEST(FUN_csCColdeRainbow, FltInComprehensive) {
 
   mjr::colorRGBA8b  aColor;
   mjr::colorRGBA32F bColor;
 
   aColor.setToWhite();
   mjr::colorRGBA8b::csCColdeRainbow::c(aColor, 0.0);
-  BOOST_TEST_CHECK(aColor.getRed()   == mjr::colorRGBA8b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getGreen() == mjr::colorRGBA8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getBlue()  == mjr::colorRGBA8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getAlpha() == mjr::colorRGBA8b::minChanVal); // Corner colors set ALL channels -- primary colors set them all to minChanVal
+  EXPECT_EQ(aColor.getRed(),    mjr::colorRGBA8b::maxChanVal);
+  EXPECT_EQ(aColor.getGreen(),  mjr::colorRGBA8b::minChanVal);
+  EXPECT_EQ(aColor.getBlue(),   mjr::colorRGBA8b::minChanVal);
+  EXPECT_EQ(aColor.getAlpha(),  mjr::colorRGBA8b::minChanVal); // Corner colors set ALL channels -- primary colors set them all to minChanVal
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(   0/1530.0).isEqualRGB(aColor.setToRed())     == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 255/1530.0).isEqualRGB(aColor.setToYellow())  == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 510/1530.0).isEqualRGB(aColor.setToGreen())   == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 765/1530.0).isEqualRGB(aColor.setToCyan())    == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1020/1530.0).isEqualRGB(aColor.setToBlue())    == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1275/1530.0).isEqualRGB(aColor.setToMagenta()) == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1530/1530.0).isEqualRGB(aColor.setToRed())     == true);
+  EXPECT_TRUE(mjr::colorRGBA8b::csCColdeRainbow::c(   0/1530.0).isEqualRGB(aColor.setToRed()));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCColdeRainbow::c( 255/1530.0).isEqualRGB(aColor.setToYellow()));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCColdeRainbow::c( 510/1530.0).isEqualRGB(aColor.setToGreen()));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCColdeRainbow::c( 765/1530.0).isEqualRGB(aColor.setToCyan()));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCColdeRainbow::c(1020/1530.0).isEqualRGB(aColor.setToBlue()));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCColdeRainbow::c(1275/1530.0).isEqualRGB(aColor.setToMagenta()));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCColdeRainbow::c(1530/1530.0).isEqualRGB(aColor.setToRed()));
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(2.0).isEqualRGB(aColor.setToRed())  == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(3.0).isEqualRGB(aColor.setToRed())  == true);
+  EXPECT_TRUE(mjr::colorRGBA8b::csCColdeRainbow::c(2.0).isEqualRGB(aColor.setToRed()));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCColdeRainbow::c(3.0).isEqualRGB(aColor.setToRed()));
 
-  for(double i=0.0; i<1.0; i=i+0.001) // BOOST_TEST_CHECK x 1000
-    BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(i).isEqualRGB(aColor.cmpRGBcornerCGradiant(i, "RYGCBMR")) == true);
+  for(double i=0.0; i<1.0; i=i+0.001) // EXPECT_EQ x 1000
+    EXPECT_TRUE(mjr::colorRGBA8b::csCColdeRainbow::c(i).isEqualRGB(aColor.cmpRGBcornerCGradiant(i, "RYGCBMR")));
 
   aColor.cmpRGBcornerCGradiant(10/1530.0, "RYGCBMR");
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xff);
-  BOOST_TEST_CHECK(aColor.getGreen() == 10);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0);
+  EXPECT_EQ(aColor.getRed(),    0xff);
+  EXPECT_EQ(aColor.getGreen(),  10);
+  EXPECT_EQ(aColor.getBlue(),   0);
 
-////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
 
   bColor.setToWhite();
   mjr::colorRGBA32F::csCColdeRainbow::c(bColor, 0.0F);
-  BOOST_TEST_CHECK(bColor.getRed()   == mjr::colorRGBA32F::maxChanVal);
-  BOOST_TEST_CHECK(bColor.getGreen() == mjr::colorRGBA32F::minChanVal);
-  BOOST_TEST_CHECK(bColor.getBlue()  == mjr::colorRGBA32F::minChanVal);
-  BOOST_TEST_CHECK(bColor.getAlpha() == mjr::colorRGBA32F::minChanVal); // Corner colors set ALL channels -- primary colors set them all to minChanVal
+  EXPECT_EQ(bColor.getRed(),    mjr::colorRGBA32F::maxChanVal);
+  EXPECT_EQ(bColor.getGreen(),  mjr::colorRGBA32F::minChanVal);
+  EXPECT_EQ(bColor.getBlue(),   mjr::colorRGBA32F::minChanVal);
+  EXPECT_EQ(bColor.getAlpha(),  mjr::colorRGBA32F::minChanVal); // Corner colors set ALL channels -- primary colors set them all to minChanVal
 
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(   0/1530.0).isCloseRGB(bColor.setToRed(),     0.000001F) == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c( 255/1530.0).isCloseRGB(bColor.setToYellow(),  0.000001F) == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c( 510/1530.0).isCloseRGB(bColor.setToGreen(),   0.000001F) == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c( 765/1530.0).isCloseRGB(bColor.setToCyan(),    0.000001F) == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(1020/1530.0).isCloseRGB(bColor.setToBlue(),    0.000001F) == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(1275/1530.0).isCloseRGB(bColor.setToMagenta(), 0.000001F) == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(1530/1530.0).isCloseRGB(bColor.setToRed(),     0.000001F) == true);
+  EXPECT_TRUE(mjr::colorRGBA32F::csCColdeRainbow::c(   0/1530.0).isCloseRGB(bColor.setToRed(),     0.000001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCColdeRainbow::c( 255/1530.0).isCloseRGB(bColor.setToYellow(),  0.000001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCColdeRainbow::c( 510/1530.0).isCloseRGB(bColor.setToGreen(),   0.000001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCColdeRainbow::c( 765/1530.0).isCloseRGB(bColor.setToCyan(),    0.000001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCColdeRainbow::c(1020/1530.0).isCloseRGB(bColor.setToBlue(),    0.000001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCColdeRainbow::c(1275/1530.0).isCloseRGB(bColor.setToMagenta(), 0.000001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCColdeRainbow::c(1530/1530.0).isCloseRGB(bColor.setToRed(),     0.000001F));
 
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(2.0).isCloseRGB(bColor.setToRed(),             0.000001F) == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(3.0).isCloseRGB(bColor.setToRed(),             0.000001F) == true);
+  EXPECT_TRUE(mjr::colorRGBA32F::csCColdeRainbow::c(2.0).isCloseRGB(bColor.setToRed(),             0.000001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCColdeRainbow::c(3.0).isCloseRGB(bColor.setToRed(),             0.000001F));
 
-  for(double i=0.0; i<1.0; i=i+0.001) // BOOST_TEST_CHECK x 1000
-    BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(i).isCloseRGB(bColor.cmpRGBcornerCGradiant(i, "RYGCBMR"), 0.000001F) == true);
+  for(double i=0.0; i<1.0; i=i+0.001) // TEST x 1000
+    EXPECT_TRUE(mjr::colorRGBA32F::csCColdeRainbow::c(i).isCloseRGB(bColor.cmpRGBcornerCGradiant(i, "RYGCBMR"), 0.000001F));
 
   bColor.cmpRGBcornerCGradiant(10/1530.0, "RYGCBMR");
-  BOOST_TEST_CHECK(bColor.getRed()   == 1,               boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(bColor.getGreen() == 0.0392156862745, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0,               boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(bColor.getRed(),    1,               0.00001);
+  EXPECT_NEAR(bColor.getGreen(),  0.0392156862745, 0.00001);
+  EXPECT_NEAR(bColor.getBlue(),   0,               0.00001);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(csCColdeRainbow_int) {
+TEST(FUN_csCColdeRainbow, IntInComprehensive) {
 
   mjr::colorRGBA8b  aColor;
   mjr::colorRGBA32F bColor;
 
   aColor.setToWhite();
   mjr::colorRGBA8b::csCColdeRainbow::c(aColor, 0u);
-  BOOST_TEST_CHECK(aColor.getRed()   == mjr::colorRGBA8b::maxChanVal);
-  BOOST_TEST_CHECK(aColor.getGreen() == mjr::colorRGBA8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getBlue()  == mjr::colorRGBA8b::minChanVal);
-  BOOST_TEST_CHECK(aColor.getAlpha() == mjr::colorRGBA8b::maxChanVal); // unchanged
+  EXPECT_EQ(aColor.getRed(),    mjr::colorRGBA8b::maxChanVal);
+  EXPECT_EQ(aColor.getGreen(),  mjr::colorRGBA8b::minChanVal);
+  EXPECT_EQ(aColor.getBlue(),   mjr::colorRGBA8b::minChanVal);
+  EXPECT_EQ(aColor.getAlpha(),  mjr::colorRGBA8b::maxChanVal); // unchanged
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(   0u).isEqualRGB(aColor.setToRed())     == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 255u).isEqualRGB(aColor.setToYellow())  == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 510u).isEqualRGB(aColor.setToGreen())   == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c( 765u).isEqualRGB(aColor.setToCyan())    == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1020u).isEqualRGB(aColor.setToBlue())    == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1275u).isEqualRGB(aColor.setToMagenta()) == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1530u).isEqualRGB(aColor.setToRed())     == true);
+  EXPECT_TRUE(mjr::colorRGBA8b::csCColdeRainbow::c(   0u).isEqualRGB(aColor.setToRed()));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCColdeRainbow::c( 255u).isEqualRGB(aColor.setToYellow()));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCColdeRainbow::c( 510u).isEqualRGB(aColor.setToGreen()));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCColdeRainbow::c( 765u).isEqualRGB(aColor.setToCyan()));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCColdeRainbow::c(1020u).isEqualRGB(aColor.setToBlue()));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCColdeRainbow::c(1275u).isEqualRGB(aColor.setToMagenta()));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCColdeRainbow::c(1530u).isEqualRGB(aColor.setToRed()));
 
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1531u).isEqualRGB(aColor.setToRed())     == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(1786u).isEqualRGB(aColor.setToYellow())  == true);
+  EXPECT_TRUE(mjr::colorRGBA8b::csCColdeRainbow::c(1531u).isEqualRGB(aColor.setToRed()));
+  EXPECT_TRUE(mjr::colorRGBA8b::csCColdeRainbow::c(1786u).isEqualRGB(aColor.setToYellow()));
 
-  for(unsigned int i=0; i<1531; i++)   // BOOST_TEST_CHECK x 1531
-    BOOST_TEST_CHECK(mjr::colorRGBA8b::csCColdeRainbow::c(i).isEqualRGB(aColor.cmpRGBcornerDGradiant(i, "RYGCBMR")) == true);
+  for(unsigned int i=0; i<1531; i++)   // EXPECT_EQ x 1531
+    EXPECT_TRUE(mjr::colorRGBA8b::csCColdeRainbow::c(i).isEqualRGB(aColor.cmpRGBcornerDGradiant(i, "RYGCBMR")));
 
   aColor.cmpRGBcornerDGradiant(10u, "RYGCBMR");
-  BOOST_TEST_CHECK(aColor.getRed()   == 0xff);
-  BOOST_TEST_CHECK(aColor.getGreen() == 10);
-  BOOST_TEST_CHECK(aColor.getBlue()  == 0);
+  EXPECT_EQ(aColor.getRed(),    0xff);
+  EXPECT_EQ(aColor.getGreen(),  10);
+  EXPECT_EQ(aColor.getBlue(),   0);
 
-////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
 
   bColor.setToWhite();
   mjr::colorRGBA32F::csCColdeRainbow::c(bColor, 0u);
-  BOOST_TEST_CHECK(bColor.getRed()   == mjr::colorRGBA32F::maxChanVal);
-  BOOST_TEST_CHECK(bColor.getGreen() == mjr::colorRGBA32F::minChanVal);
-  BOOST_TEST_CHECK(bColor.getBlue()  == mjr::colorRGBA32F::minChanVal);
-  BOOST_TEST_CHECK(bColor.getAlpha() == mjr::colorRGBA32F::maxChanVal); // unchanged
+  EXPECT_EQ(bColor.getRed(),    mjr::colorRGBA32F::maxChanVal);
+  EXPECT_EQ(bColor.getGreen(),  mjr::colorRGBA32F::minChanVal);
+  EXPECT_EQ(bColor.getBlue(),   mjr::colorRGBA32F::minChanVal);
+  EXPECT_EQ(bColor.getAlpha(),  mjr::colorRGBA32F::maxChanVal); // unchanged
 
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(0*0x100000000ul).isCloseRGB(bColor.setToRed(),      0.000001F) == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(1*0x100000000ul).isCloseRGB(bColor.setToYellow(),   0.000001F) == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(2*0x100000000ul).isCloseRGB(bColor.setToGreen(),    0.000001F) == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(3*0x100000000ul).isCloseRGB(bColor.setToCyan(),     0.000001F) == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(4*0x100000000ul).isCloseRGB(bColor.setToBlue(),     0.000001F) == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(5*0x100000000ul).isCloseRGB(bColor.setToMagenta(),  0.000001F) == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(6*0x100000000ul).isCloseRGB(bColor.setToRed(),      0.000001F) == true);
+  EXPECT_TRUE(mjr::colorRGBA32F::csCColdeRainbow::c(0*0x100000000ul).isCloseRGB(bColor.setToRed(),      0.000001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCColdeRainbow::c(1*0x100000000ul).isCloseRGB(bColor.setToYellow(),   0.000001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCColdeRainbow::c(2*0x100000000ul).isCloseRGB(bColor.setToGreen(),    0.000001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCColdeRainbow::c(3*0x100000000ul).isCloseRGB(bColor.setToCyan(),     0.000001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCColdeRainbow::c(4*0x100000000ul).isCloseRGB(bColor.setToBlue(),     0.000001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCColdeRainbow::c(5*0x100000000ul).isCloseRGB(bColor.setToMagenta(),  0.000001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCColdeRainbow::c(6*0x100000000ul).isCloseRGB(bColor.setToRed(),      0.000001F));
 
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(6*0x100000000ul+1).isCloseRGB(bColor.setToRed(),    0.000001F)  == true);
-  BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(7*0x100000000ul+1).isCloseRGB(bColor.setToYellow(), 0.000001F) == true);
+  EXPECT_TRUE(mjr::colorRGBA32F::csCColdeRainbow::c(6*0x100000000ul+1).isCloseRGB(bColor.setToRed(),    0.000001F));
+  EXPECT_TRUE(mjr::colorRGBA32F::csCColdeRainbow::c(7*0x100000000ul+1).isCloseRGB(bColor.setToYellow(), 0.000001F));
 
-  for(uint64_t i=0; i<0x600000000; i=i+0x600000)  // BOOST_TEST_CHECK x 4096
-    BOOST_TEST_CHECK(mjr::colorRGBA32F::csCColdeRainbow::c(i).isCloseRGB(bColor.cmpRGBcornerDGradiant(i, "RYGCBMR"), 0.000001F) == true);
+  for(uint64_t i=0; i<0x600000000; i=i+0x600000)  // TEST x 4096
+    EXPECT_TRUE(mjr::colorRGBA32F::csCColdeRainbow::c(i).isCloseRGB(bColor.cmpRGBcornerDGradiant(i, "RYGCBMR"), 0.000001F));
 
   bColor.cmpRGBcornerDGradiant(168430090, "RYGCBMR");
-  BOOST_TEST_CHECK(bColor.getRed()   == 1,               boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(bColor.getGreen() == 0.0392156862745, boost::test_tools::tolerance(0.00001));
-  BOOST_TEST_CHECK(bColor.getBlue()  == 0,               boost::test_tools::tolerance(0.00001));
+  EXPECT_NEAR(bColor.getRed(),    1,               0.00001);
+  EXPECT_NEAR(bColor.getGreen(),  0.0392156862745, 0.00001);
+  EXPECT_NEAR(bColor.getBlue(),   0,               0.00001);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(conCol) {
+TEST(FUN_conCol, Comprehensive) {
   // The simplicity of these functions doesn't warrant complex testing.  If the constructors & set/get work on a simple test case, then they probably work.
 
   mjr::color8c16b aColor {mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal};
   mjr::color8c16b bColor {mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal};
 
-  BOOST_TEST_CHECK(aColor.getColConRGB_byte().isEqual( mjr::color8c16b::colConRGBbyte {   0, 255,   0                          }) == true);
-  BOOST_TEST_CHECK(bColor.getColConRGB_byte().isEqual( mjr::color8c16b::colConRGBbyte { 255,   0, 255                          }) == true);
-  BOOST_TEST_CHECK(aColor.getColConRGBA_byte().isEqual(mjr::color8c16b::colConRGBAbyte{   0, 255,   0, 255                     }) == true);
-  BOOST_TEST_CHECK(bColor.getColConRGBA_byte().isEqual(mjr::color8c16b::colConRGBAbyte{ 255,   0, 255,   0                     }) == true);
-  BOOST_TEST_CHECK(aColor.getColConRGB_dbl().isEqual(  mjr::color8c16b::colConRGBdbl  { 0.0, 1.0, 0.0                          }) == true);
-  BOOST_TEST_CHECK(bColor.getColConRGB_dbl().isEqual(  mjr::color8c16b::colConRGBdbl  { 1.0, 0.0, 1.0                          }) == true);
-  BOOST_TEST_CHECK(aColor.getColConRGBA_dbl().isEqual( mjr::color8c16b::colConRGBAdbl { 0.0, 1.0, 0.0, 1.0                     }) == true);
-  BOOST_TEST_CHECK(bColor.getColConRGBA_dbl().isEqual( mjr::color8c16b::colConRGBAdbl { 1.0, 0.0, 1.0, 0.0                     }) == true);
-  BOOST_TEST_CHECK(aColor.getColCon_byte().isEqual(    mjr::color8c16b::colConALLbyte {   0, 255,   0, 255,   0, 255,   0, 255 }) == true);
-  BOOST_TEST_CHECK(bColor.getColCon_byte().isEqual(    mjr::color8c16b::colConALLbyte { 255,   0, 255,   0, 255,   0, 255,   0 }) == true);
-  BOOST_TEST_CHECK(aColor.getColCon_dbl().isEqual(     mjr::color8c16b::colConALLdbl  { 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0 }) == true);
-  BOOST_TEST_CHECK(bColor.getColCon_dbl().isEqual(     mjr::color8c16b::colConALLdbl  { 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0 }) == true);
+  EXPECT_TRUE(aColor.getColConRGB_byte().isEqual( mjr::color8c16b::colConRGBbyte {   0, 255,   0                          }));
+  EXPECT_TRUE(bColor.getColConRGB_byte().isEqual( mjr::color8c16b::colConRGBbyte { 255,   0, 255                          }));
+  EXPECT_TRUE(aColor.getColConRGBA_byte().isEqual(mjr::color8c16b::colConRGBAbyte{   0, 255,   0, 255                     }));
+  EXPECT_TRUE(bColor.getColConRGBA_byte().isEqual(mjr::color8c16b::colConRGBAbyte{ 255,   0, 255,   0                     }));
+  EXPECT_TRUE(aColor.getColConRGB_dbl().isEqual(  mjr::color8c16b::colConRGBdbl  { 0.0, 1.0, 0.0                          }));
+  EXPECT_TRUE(bColor.getColConRGB_dbl().isEqual(  mjr::color8c16b::colConRGBdbl  { 1.0, 0.0, 1.0                          }));
+  EXPECT_TRUE(aColor.getColConRGBA_dbl().isEqual( mjr::color8c16b::colConRGBAdbl { 0.0, 1.0, 0.0, 1.0                     }));
+  EXPECT_TRUE(bColor.getColConRGBA_dbl().isEqual( mjr::color8c16b::colConRGBAdbl { 1.0, 0.0, 1.0, 0.0                     }));
+  EXPECT_TRUE(aColor.getColCon_byte().isEqual(    mjr::color8c16b::colConALLbyte {   0, 255,   0, 255,   0, 255,   0, 255 }));
+  EXPECT_TRUE(bColor.getColCon_byte().isEqual(    mjr::color8c16b::colConALLbyte { 255,   0, 255,   0, 255,   0, 255,   0 }));
+  EXPECT_TRUE(aColor.getColCon_dbl().isEqual(     mjr::color8c16b::colConALLdbl  { 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0 }));
+  EXPECT_TRUE(bColor.getColCon_dbl().isEqual(     mjr::color8c16b::colConALLdbl  { 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0 }));
 
   mjr::color8c16b cColor;
   mjr::color8c16b dColor;
@@ -7996,103 +8014,98 @@ BOOST_AUTO_TEST_CASE(conCol) {
   mjr::color8c16b b4xColor {mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::minChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::maxChanVal, mjr::colorRGBA16b::maxChanVal};
 
   cColor.setToCorner(mjr::color8c16b::cornerColorEnum::BLACK);
-  BOOST_TEST_CHECK(a3nColor.isEqual(cColor.setChansRGB_byte( mjr::color8c16b::colConRGBbyte {   0, 255,   0                          })) == true);
+  EXPECT_TRUE(a3nColor.isEqual(cColor.setChansRGB_byte( mjr::color8c16b::colConRGBbyte {   0, 255,   0                          })));
   dColor.setToCorner(mjr::color8c16b::cornerColorEnum::WHITE);
-  BOOST_TEST_CHECK(b3xColor.isEqual(dColor.setChansRGB_byte( mjr::color8c16b::colConRGBbyte { 255,   0, 255                          })) == true);
+  EXPECT_TRUE(b3xColor.isEqual(dColor.setChansRGB_byte( mjr::color8c16b::colConRGBbyte { 255,   0, 255                          })));
   cColor.setToCorner(mjr::color8c16b::cornerColorEnum::BLACK);
-  BOOST_TEST_CHECK(a4nColor.isEqual(cColor.setChansRGBA_byte(mjr::color8c16b::colConRGBAbyte{   0, 255,   0, 255                     })) == true);
+  EXPECT_TRUE(a4nColor.isEqual(cColor.setChansRGBA_byte(mjr::color8c16b::colConRGBAbyte{   0, 255,   0, 255                     })));
   dColor.setToCorner(mjr::color8c16b::cornerColorEnum::WHITE);
-  BOOST_TEST_CHECK(b4xColor.isEqual(dColor.setChansRGBA_byte(mjr::color8c16b::colConRGBAbyte{ 255,   0, 255,   0                     })) == true);
+  EXPECT_TRUE(b4xColor.isEqual(dColor.setChansRGBA_byte(mjr::color8c16b::colConRGBAbyte{ 255,   0, 255,   0                     })));
   cColor.setToCorner(mjr::color8c16b::cornerColorEnum::BLACK);
-  BOOST_TEST_CHECK(a3nColor.isEqual(cColor.setChansRGB_dbl(  mjr::color8c16b::colConRGBdbl  { 0.0, 1.0, 0.0                          })) == true);
+  EXPECT_TRUE(a3nColor.isEqual(cColor.setChansRGB_dbl(  mjr::color8c16b::colConRGBdbl  { 0.0, 1.0, 0.0                          })));
   dColor.setToCorner(mjr::color8c16b::cornerColorEnum::WHITE);
-  BOOST_TEST_CHECK(b3xColor.isEqual(dColor.setChansRGB_dbl(  mjr::color8c16b::colConRGBdbl  { 1.0, 0.0, 1.0                          })) == true);
+  EXPECT_TRUE(b3xColor.isEqual(dColor.setChansRGB_dbl(  mjr::color8c16b::colConRGBdbl  { 1.0, 0.0, 1.0                          })));
   cColor.setToCorner(mjr::color8c16b::cornerColorEnum::BLACK);
-  BOOST_TEST_CHECK(a4nColor.isEqual(cColor.setChansRGBA_dbl( mjr::color8c16b::colConRGBAdbl { 0.0, 1.0, 0.0, 1.0                     })) == true);
+  EXPECT_TRUE(a4nColor.isEqual(cColor.setChansRGBA_dbl( mjr::color8c16b::colConRGBAdbl { 0.0, 1.0, 0.0, 1.0                     })));
   dColor.setToCorner(mjr::color8c16b::cornerColorEnum::WHITE);
-  BOOST_TEST_CHECK(b4xColor.isEqual(dColor.setChansRGBA_dbl( mjr::color8c16b::colConRGBAdbl { 1.0, 0.0, 1.0, 0.0                     })) == true);
+  EXPECT_TRUE(b4xColor.isEqual(dColor.setChansRGBA_dbl( mjr::color8c16b::colConRGBAdbl { 1.0, 0.0, 1.0, 0.0                     })));
   cColor.setToCorner(mjr::color8c16b::cornerColorEnum::BLACK);
-  BOOST_TEST_CHECK(aColor.isEqual(cColor.setChans_byte(      mjr::color8c16b::colConALLbyte {   0, 255,   0, 255,   0, 255,   0, 255 })) == true);
+  EXPECT_TRUE(aColor.isEqual(cColor.setChans_byte(      mjr::color8c16b::colConALLbyte {   0, 255,   0, 255,   0, 255,   0, 255 })));
   dColor.setToCorner(mjr::color8c16b::cornerColorEnum::WHITE);
-  BOOST_TEST_CHECK(bColor.isEqual(dColor.setChans_byte(      mjr::color8c16b::colConALLbyte { 255,   0, 255,   0, 255,   0, 255,   0 })) == true);
+  EXPECT_TRUE(bColor.isEqual(dColor.setChans_byte(      mjr::color8c16b::colConALLbyte { 255,   0, 255,   0, 255,   0, 255,   0 })));
   cColor.setToCorner(mjr::color8c16b::cornerColorEnum::BLACK);
-  BOOST_TEST_CHECK(aColor.isEqual(cColor.setChans_dbl(       mjr::color8c16b::colConALLdbl  { 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0 })) == true);
+  EXPECT_TRUE(aColor.isEqual(cColor.setChans_dbl(       mjr::color8c16b::colConALLdbl  { 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0 })));
   dColor.setToCorner(mjr::color8c16b::cornerColorEnum::WHITE);
-  BOOST_TEST_CHECK(bColor.isEqual(dColor.setChans_dbl(       mjr::color8c16b::colConALLdbl  { 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0 })) == true);
+  EXPECT_TRUE(bColor.isEqual(dColor.setChans_dbl(       mjr::color8c16b::colConALLdbl  { 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0 })));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(bestNamedChan) {
+TEST(bestRedChan_and_bestBlueChan_and_bestGreenChan_and_bestAlphaChan, Integer) {
   mjr::color1c8b aColor;
   mjr::color2c8b bColor;
   mjr::color3c8b cColor;
   mjr::color4c8b dColor;
   mjr::color8c8b eColor;
 
-  BOOST_TEST_CHECK(aColor.bestRedChan()   ==  0);
-  BOOST_TEST_CHECK(bColor.bestRedChan()   ==  0);
-  BOOST_TEST_CHECK(cColor.bestRedChan()   ==  0);
-  BOOST_TEST_CHECK(dColor.bestRedChan()   ==  0);
-  BOOST_TEST_CHECK(eColor.bestRedChan()   ==  0);
+  EXPECT_EQ(aColor.bestRedChan(),     0);
+  EXPECT_EQ(bColor.bestRedChan(),     0);
+  EXPECT_EQ(cColor.bestRedChan(),     0);
+  EXPECT_EQ(dColor.bestRedChan(),     0);
+  EXPECT_EQ(eColor.bestRedChan(),     0);
 
-  BOOST_TEST_CHECK(aColor.bestGreenChan() ==  0);
-  BOOST_TEST_CHECK(bColor.bestGreenChan() ==  1);
-  BOOST_TEST_CHECK(cColor.bestGreenChan() ==  1);
-  BOOST_TEST_CHECK(dColor.bestGreenChan() ==  1);
-  BOOST_TEST_CHECK(eColor.bestGreenChan() ==  1);
+  EXPECT_EQ(aColor.bestGreenChan(),   0);
+  EXPECT_EQ(bColor.bestGreenChan(),   1);
+  EXPECT_EQ(cColor.bestGreenChan(),   1);
+  EXPECT_EQ(dColor.bestGreenChan(),   1);
+  EXPECT_EQ(eColor.bestGreenChan(),   1);
 
-  BOOST_TEST_CHECK(aColor.bestBlueChan()  ==  0);
-  BOOST_TEST_CHECK(bColor.bestBlueChan()  == -1);
-  BOOST_TEST_CHECK(cColor.bestBlueChan()  ==  2);
-  BOOST_TEST_CHECK(dColor.bestBlueChan()  ==  2);
-  BOOST_TEST_CHECK(eColor.bestBlueChan()  ==  2);
+  EXPECT_EQ(aColor.bestBlueChan(),    0);
+  EXPECT_EQ(bColor.bestBlueChan(),   -1);
+  EXPECT_EQ(cColor.bestBlueChan(),    2);
+  EXPECT_EQ(dColor.bestBlueChan(),    2);
+  EXPECT_EQ(eColor.bestBlueChan(),    2);
 
-  BOOST_TEST_CHECK(aColor.bestAlphaChan() == -1);
-  BOOST_TEST_CHECK(bColor.bestAlphaChan() == -1);
-  BOOST_TEST_CHECK(cColor.bestAlphaChan() == -1);
-  BOOST_TEST_CHECK(dColor.bestAlphaChan() ==  3);
-  BOOST_TEST_CHECK(eColor.bestAlphaChan() ==  3);
+  EXPECT_EQ(aColor.bestAlphaChan(),  -1);
+  EXPECT_EQ(bColor.bestAlphaChan(),  -1);
+  EXPECT_EQ(cColor.bestAlphaChan(),  -1);
+  EXPECT_EQ(dColor.bestAlphaChan(),   3);
+  EXPECT_EQ(eColor.bestAlphaChan(),   3);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOST_AUTO_TEST_CASE(dist_deltaE, * boost::unit_test::tolerance(0.01)) {
+TEST(FUN_distDeltaE1976, bit8) {
 
   mjr::colorRGBA8b   aColor;
   mjr::colorRGBA8b   bColor;
 
-  ////////////////////////////////////////////////////////////////////////////////
   aColor.setToWhite();
   bColor.setToBlack();
-  BOOST_TEST_CHECK(aColor.distDeltaE1976(bColor) == 100.0);
-  BOOST_TEST_CHECK(aColor.distDeltaE1994(bColor) == 100.0);
+  EXPECT_NEAR(aColor.distDeltaE1976(bColor),  100.0, 0.0001);
+  EXPECT_NEAR(aColor.distDeltaE1994(bColor),  100.0, 0.0001);
   aColor.setToWhite();
   bColor.setToWhite();
-  BOOST_TEST_CHECK(aColor.distDeltaE1976(bColor) == 0.0);
-  BOOST_TEST_CHECK(aColor.distDeltaE1994(bColor) == 0.0);
+  EXPECT_NEAR(aColor.distDeltaE1976(bColor),  0.0, 0.0001);
+  EXPECT_NEAR(aColor.distDeltaE1994(bColor),  0.0, 0.0001);
   aColor.setToBlack();
   bColor.setChansRGB(128, 64, 192);
-  BOOST_TEST_CHECK(aColor.distDeltaE1976(bColor) == 87.0379);
-  BOOST_TEST_CHECK(aColor.distDeltaE1994(bColor) == 87.0382);
-  //BOOST_TEST_CHECK(aColor.distDeltaE2000(bColor) == 40.2871);
+  EXPECT_NEAR(aColor.distDeltaE1976(bColor),  87.0379, 0.001);
+  EXPECT_NEAR(aColor.distDeltaE1994(bColor),  87.0382, 0.0001);
+  //EXPECT_NEAR(aColor.distDeltaE2000(bColor),  40.2871, 0.0001);
   aColor.setToBlack();
   bColor.setChansRGB(128, 128, 128);
-  BOOST_TEST_CHECK(aColor.distDeltaE1976(bColor) == 53.585);
-  BOOST_TEST_CHECK(aColor.distDeltaE1994(bColor) == 53.585);
-  //BOOST_TEST_CHECK(aColor.distDeltaE2000(bColor) == 39.9344);
+  EXPECT_NEAR(aColor.distDeltaE1976(bColor),  53.585, 0.0001);
+  EXPECT_NEAR(aColor.distDeltaE1994(bColor),  53.585, 0.0001);
+  //EXPECT_NEAR(aColor.distDeltaE2000(bColor),  39.9344, 0.0001);
   aColor.setToBlack();
   bColor.setChansRGB(32, 64, 128);
-  BOOST_TEST_CHECK(aColor.distDeltaE1976(bColor) == 50.1239);
-  BOOST_TEST_CHECK(aColor.distDeltaE1994(bColor) == 50.1239);
-  //BOOST_TEST_CHECK(aColor.distDeltaE2000(bColor) == 28.4580);
+  EXPECT_NEAR(aColor.distDeltaE1976(bColor),  50.1239, 0.01);
+  EXPECT_NEAR(aColor.distDeltaE1994(bColor),  50.1239, 0.01);
+  //EXPECT_NEAR(aColor.distDeltaE2000(bColor),  28.4580, 0.0001);
   aColor.setToWhite();
   bColor.setChansRGB(32, 64, 128);
-  BOOST_TEST_CHECK(aColor.distDeltaE1976(bColor) == 82.8934);
-  BOOST_TEST_CHECK(aColor.distDeltaE1994(bColor) == 82.8807);
-  //BOOST_TEST_CHECK(aColor.distDeltaE2000(bColor) == 63.5853);
+  EXPECT_NEAR(aColor.distDeltaE1976(bColor),  82.8934, 0.001);
+  EXPECT_NEAR(aColor.distDeltaE1994(bColor),  82.8807, 0.01);
+  //EXPECT_NEAR(aColor.distDeltaE2000(bColor),  63.5853, 0.0001);
 }
 
 /** @endcond */
-
-
-// So far: 4239 hand written test cases
-// So far: 8627 generated test cases

@@ -41,7 +41,11 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
 :CUSTOM_ID: latest_TEMPLATE
 :END:
   - Fixed Bugs
-    - N/A
+    - mjr::colorTpl::tfrmMod Added divide by zero check for floating point channels
+    - mjr::colorTpl::tfrmDiv Better divide by zero check for floating point channels
+    - mjr::colorTpl::tfrmAddDivClamp Better divide by zero check for floating point channels
+    - mjr::colorTpl::tfrmLn1 Added non-positive log check for floating point images
+    - mjr::colorTpl::tfrmLn Added non-positive log check
   - Known Issues
     - N/A
   - API breaking Changes
@@ -54,12 +58,22 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
     - N/A
   - Examples
     - New
-      - N/A
+      - wakOrb01.cpp
+      - wakOrb02.cpp
+      - wakOrb03.cpp
+      - doublePendulum.cpp
+      - doublePendulumM.cpp
     - Updated
       - N/A
   - Miscellaneous
+    - Replaced BOOST Test with GTest
     - Better check.rb
-* Feature & Refactor Release
+    - Streamlined CMake configuration
+      - Better integration with MRMathCPP
+      - Added build directory
+      - Just export cmake file and not a package
+      - Use exported config for builds
+* 21.0.0.0: Feature & Refactor Release
 :PROPERTIES:
 :CUSTOM_ID: v21.0.0.0
 :END:
@@ -67,16 +81,10 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
     - clampAll, clampBot, clampTop: now limited to channel arithmetic types
     - Problem with enabling 128-bit integers on GCC resolved
     - Integer wrap for color schemes better for negative arguments.
-  - Known Issues
-    - N/A
   - API breaking Changes
     - Header removed: mjrmath.hpp
     - This project now depends on the MRMathCPP project.
     - Deprecated headers removed: colorTpl.hpp, color.hpp, & point2d.hpp
-  - Deprecated functionality
-    - N/A
-  - New functionality
-    - N/A
   - Documentation
     - ColorSchemes.html now has images for all CB schemes
     - Updated mathjax configuration for better security
@@ -92,10 +100,6 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
     - Updated
       - color_lut_docs: Now generates images for all CB schemes
       - Several: Updated doxygen markup to use @ instead of backslash
-  - Miscellaneous
-    - Streamlined CMake configuration
-      - Just export cmake file and not a package
-      - Use exported config for builds
 * v20.15.0.0: Feature Release
 :PROPERTIES:
 :CUSTOM_ID: v20.15.0.0

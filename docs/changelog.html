@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-01-23 Thu 23:48 -->
+<!-- 2025-01-24 Fri 15:46 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>Change Log</title>
@@ -230,12 +230,12 @@
 
 <tr>
 <td class="org-right"><b>Updated:</b></td>
-<td class="org-left"><i>2025-01-23 23:48:12</i></td>
+<td class="org-left"><i>2025-01-24 15:39:19</i></td>
 </tr>
 
 <tr>
 <td class="org-right"><b>Generated:</b></td>
-<td class="org-left"><i>2025-01-23 23:48:15</i></td>
+<td class="org-left"><i>2025-01-24 15:46:25</i></td>
 </tr>
 </tbody>
 </table>
@@ -248,7 +248,7 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
 <li><a href="#latest_TEMPLATE">1. Changes On HEAD Since Last Release TEMPLATE</a></li>
-<li><a href="#v21.0.0.0">2. Feature &amp; Refactor Release</a></li>
+<li><a href="#v21.0.0.0">2. 21.0.0.0: Feature &amp; Refactor Release</a></li>
 <li><a href="#v20.15.0.0">3. v20.15.0.0: Feature Release</a></li>
 <li><a href="#v20.12.3">4. v20.12.3: Feature Release</a></li>
 <li><a href="#v20.12.0">5. v20.12.0: Feature Release</a></li>
@@ -282,7 +282,7 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 <ul class="org-ul">
 <li>Fixed Bugs
 <ul class="org-ul">
-<li>N/A</li>
+<li>color tfrmMod /0 for floats</li>
 </ul></li>
 <li>Known Issues
 <ul class="org-ul">
@@ -317,13 +317,19 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 </ul></li>
 <li>Miscellaneous
 <ul class="org-ul">
+<li>Replaced BOOST Test with GTest</li>
 <li>Better check.rb</li>
+<li>Streamlined CMake configuration
+<ul class="org-ul">
+<li>Just export cmake file and not a package</li>
+<li>Use exported config for builds</li>
+</ul></li>
 </ul></li>
 </ul>
 </div>
 </div>
 <div id="outline-container-v21.0.0.0" class="outline-2">
-<h2 id="v21.0.0.0"><span class="section-number-2">2.</span> Feature &amp; Refactor Release</h2>
+<h2 id="v21.0.0.0"><span class="section-number-2">2.</span> 21.0.0.0: Feature &amp; Refactor Release</h2>
 <div class="outline-text-2" id="text-v21.0.0.0">
 <ul class="org-ul">
 <li>Fixed Bugs
@@ -332,23 +338,11 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 <li>Problem with enabling 128-bit integers on GCC resolved</li>
 <li>Integer wrap for color schemes better for negative arguments.</li>
 </ul></li>
-<li>Known Issues
-<ul class="org-ul">
-<li>N/A</li>
-</ul></li>
 <li>API breaking Changes
 <ul class="org-ul">
 <li>Header removed: mjrmath.hpp</li>
 <li>This project now depends on the MRMathCPP project.</li>
 <li>Deprecated headers removed: colorTpl.hpp, color.hpp, &amp; point2d.hpp</li>
-</ul></li>
-<li>Deprecated functionality
-<ul class="org-ul">
-<li>N/A</li>
-</ul></li>
-<li>New functionality
-<ul class="org-ul">
-<li>N/A</li>
 </ul></li>
 <li>Documentation
 <ul class="org-ul">
@@ -371,14 +365,6 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 <ul class="org-ul">
 <li>color_lut_docs: Now generates images for all CB schemes</li>
 <li>Several: Updated doxygen markup to use @ instead of backslash</li>
-</ul></li>
-</ul></li>
-<li>Miscellaneous
-<ul class="org-ul">
-<li>Streamlined CMake configuration
-<ul class="org-ul">
-<li>Just export cmake file and not a package</li>
-<li>Use exported config for builds</li>
 </ul></li>
 </ul></li>
 </ul>

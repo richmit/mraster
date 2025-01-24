@@ -2073,9 +2073,17 @@ namespace mjr {
           If a channel of aCol is zero, then the corresponding channel of the current color object will be left untouched.
           @param aCol The color to use in the computation.
           @return Returns a reference to the current color object.*/
-      inline colorTpl& tfrmDiv(colorArgType aCol) {
+      inline colorTpl& tfrmDiv(colorArgType aCol) requires (std::integral<clrChanT>) {
         for(int i=0; i<numChan; i++)
           if (aCol.getChanNC(i) != 0)
+            setChanNC(i, static_cast<clrChanT>(static_cast<channelArithSPType>(getChanNC(i)) / static_cast<channelArithSPType>(aCol.getChanNC(i))));
+        return *this;
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Template specialization member function differing from the above function only in supported template conditions. */
+      inline colorTpl& tfrmDiv(colorArgType aCol) requires (std::floating_point<clrChanT>) {
+        for(int i=0; i<numChan; i++)
+          if ( !(mjr::math::fc::near_zero(aCol.getChanNC(i), static_cast<clrChanT>(1.0e-8)))) 
             setChanNC(i, static_cast<clrChanT>(static_cast<channelArithSPType>(getChanNC(i)) / static_cast<channelArithSPType>(aCol.getChanNC(i))));
         return *this;
       }
@@ -2156,11 +2164,20 @@ namespace mjr {
           @param aCol The color to use for initial add.
           @param dCol The color to use for final division.
           @return Returns a reference to the current color object.*/
-      inline colorTpl& tfrmAddDivClamp(colorArgType aCol, colorArgType dCol) {
+      inline colorTpl& tfrmAddDivClamp(colorArgType aCol, colorArgType dCol) requires (std::integral<clrChanT>) {
         for(int i=0; i<numChan; i++)
           if (dCol.getChanNC(i) != 0)
             setChanNC(i, clampTop((static_cast<channelArithSPType>(getChanNC(i)) + static_cast<channelArithSPType>(aCol.getChanNC(i))) /
-                                 static_cast<channelArithSPType>(dCol.getChanNC(i))));
+                                  static_cast<channelArithSPType>(dCol.getChanNC(i))));
+        return *this;
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Template specialization member function differing from the above function only in supported template conditions. */
+      inline colorTpl& tfrmAddDivClamp(colorArgType aCol, colorArgType dCol) requires (std::floating_point<clrChanT>) {
+        for(int i=0; i<numChan; i++)
+          if ( !(mjr::math::fc::near_zero(dCol.getChanNC(i), static_cast<clrChanT>(1.0e-8)))) 
+            setChanNC(i, clampTop((static_cast<channelArithSPType>(getChanNC(i)) + static_cast<channelArithSPType>(aCol.getChanNC(i))) /
+                                  static_cast<channelArithSPType>(dCol.getChanNC(i))));
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2179,7 +2196,7 @@ namespace mjr {
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmMod(colorArgType aCol) requires (std::integral<clrChanT>) {
         for(int i=0; i<numChan; i++)
-          if (aCol.getChanNC(i) != 0) //  MJR TODO NOTE tfrmMod: What about floats?
+          if (aCol.getChanNC(i) != 0)
             setChanNC(i, getChanNC(i) % aCol.getChanNC(i));
         return *this;
       }
@@ -2187,7 +2204,8 @@ namespace mjr {
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmMod(colorArgType aCol) requires (std::floating_point<clrChanT>) {
         for(int i=0; i<numChan; i++)
-          setChanNC(i, static_cast<clrChanT>(std::fmod(static_cast<double>(getChanNC(i)), static_cast<double>(aCol.getChanNC(i)))));
+          if ( !(mjr::math::fc::near_zero(aCol.getChanNC(i), static_cast<clrChanT>(1.0e-8)))) 
+            setChanNC(i, static_cast<clrChanT>(std::fmod(static_cast<double>(getChanNC(i)), static_cast<double>(aCol.getChanNC(i)))));
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2205,10 +2223,10 @@ namespace mjr {
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Named Operators */
       //@{
-
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Power: c=maxChanVal*(c/maxChanVal)^p.
           Floating point Numbers are used for intermediate values and the result cast to a colorChanType at the end.
+          Take care when negative values for p -- this can cause undefined behavior!!
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmPow(double p) {
         for(int i=0; i<numChan; i++)
@@ -2218,24 +2236,47 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Adds 1.0 and takes the natural logarithm of each channel.
           Floating point Numbers are used for intermediate values and the result cast to a colorChanType at the end.
+          If a channel value would result in an undefined result, then the value is left untouched.
           @return Returns a reference to the current color object.*/
-      inline colorTpl& tfrmLn1() {
+      inline colorTpl& tfrmLn1() requires (std::integral<clrChanT>) {
         /* Performance: Even if the compiler fails to unroll this loop, the runtime is dominated by the double computations. */
         for(int i=0; i<numChan; i++)
           setChanNC(i, static_cast<clrChanT>(std::log(1.0 + static_cast<double>(getChanNC(i)))));
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Template specialization member function differing from the above function only in supported template conditions. */
+      inline colorTpl& tfrmLn1() requires (std::floating_point<clrChanT>) {
+        /* Performance: Even if the compiler fails to unroll this loop, the runtime is dominated by the double computations. */
+        for(int i=0; i<numChan; i++) {
+          clrChanT cVal = getChanNC(i);
+          if (cVal > static_cast<clrChanT>(-1.0))
+            setChanNC(i, static_cast<clrChanT>(std::log(1.0 + static_cast<double>(cVal))));
+        }
+        return *this;
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Computes ln(c)*scale for each channel value c.  If c==0, then the value is left undisturbed.
-          For floating point images, large negative values will result for channel values <1.  For this reason, tfrmLn1() is normally more appropriate for
-          images with floating point channels.  Floating point Numbers are used for intermediate values and the result cast to a colorChanType at the end.
+          Floating point Numbers are used for intermediate values and the result cast to a colorChanType at the end.
+          If a channel value would result in an undefined result, then the value is left untouched.
           @param scale The scale value to multiply by the final result.
           @return Returns a reference to the current color object.*/
-      inline colorTpl& tfrmLn(double scale) {
+      inline colorTpl& tfrmLn(double scale) requires (std::integral<clrChanT>) {
         /* Performance: Even if the compiler fails to unroll this loop, the runtime is dominated by the double computations. */
         for(int i=0; i<numChan; i++) {
           clrChanT cVal = getChanNC(i);
           if(cVal != 0)
+            setChanNC(i, static_cast<clrChanT>(std::log(static_cast<double>(cVal)) * scale));
+        }          
+        return *this;
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Template specialization member function differing from the above function only in supported template conditions. */
+      inline colorTpl& tfrmLn(double scale) requires (std::floating_point<clrChanT>) {
+        /* Performance: Even if the compiler fails to unroll this loop, the runtime is dominated by the double computations. */
+        for(int i=0; i<numChan; i++) {
+          clrChanT cVal = getChanNC(i);
+          if (cVal > static_cast<clrChanT>(0.0))
             setChanNC(i, static_cast<clrChanT>(std::log(static_cast<double>(cVal)) * scale));
         }          
         return *this;
