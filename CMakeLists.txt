@@ -25,7 +25,7 @@ include(CTest)
 # Here are the options we use to modify the build -- these options are passed to cmake like so: cmake -DO_OPENSSL=YES or -DO_OPENSSL=NO
 
 OPTION(O_DOXYGEN "Doxygen support (documentation)"        ON )
-OPTION(O_GTEST   "Include support for Google Test"        ON  )
+OPTION(O_GTEST   "Include support for Google Test"        ON )
 OPTION(O_TIFF    "libTIFF support (Advanced TIFF writer)" ON )
 OPTION(O_OPENGL  "OpenGL & GLUT support"                  ON )
 OPTION(O_OPENMP  "OpenMP support"                         ON )
