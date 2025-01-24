@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-11-17 Sun 12:11 -->
+<!-- 2025-01-23 Thu 23:54 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster Quick Start</title>
@@ -225,7 +225,7 @@
 </colgroup>
 <tbody>
 <tr>
-<td class="org-left">Copyright &copy; 2024 Mitch Richling. All rights reserved.</td>
+<td class="org-left">Copyright &copy; 2025 Mitch Richling. All rights reserved.</td>
 </tr>
 </tbody>
 </table>
@@ -275,7 +275,7 @@ If you are interested playing around with <b><code>MRaster</code></b> as quickly
 The first step is to download <b><code>MRaster</code></b> and <b><code>MRMathCPP</code></b>.  The easiest way is to clone them with git:
 </p>
 
-<pre class="example" id="orgbfa4887">
+<pre class="example" id="org74ba58d">
 git clone 'https://github.com/richmit/mraster.git'
 git clone 'https://github.com/richmit/MRMathCPP.git'
 </pre>
@@ -327,7 +327,7 @@ Now you can run it, and take a look at the file it created ("<code>hello.tiff</c
 </p>
 
 
-<div id="org3d4df6b" class="figure">
+<div id="org6eff68f" class="figure">
 <p><img src="./pics/quick/hello.png" alt="hello.png" width="800" align="center" />
 </p>
 </div>
@@ -372,17 +372,12 @@ that I've broken the project into two git repositories (one for some generic mat
 
 <div class="org-src-container">
 <pre class="src src-sh">git clone <span style="color: #fa8072;">'https://github.com/richmit/MRMathCPP.git'</span>    <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Download MRMathCPP</span>
-<span style="color: #b0c4de;">cd</span> MRMathCPP                                            <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Change directory to the root of the MRMathCPP git repository</span>
-mkdir build                                             <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Create a 'build' directory</span>
-<span style="color: #b0c4de;">cd</span> build                                                <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Change directory to the build directory</span>
-cmake -G <span style="color: #fa8072;">'MSYS Makefiles'</span> ..                            <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Configure the build system with cmake (NOTE 1)</span>
-cmake --build . -t install                              <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Install the package in the build directory (NOTE 2)</span>
-<span style="color: #b0c4de;">cd</span> ../..                                                <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Change directory back to where you cloned the first repo</span>
+<span style="color: #b0c4de;">cd</span> MRMathCPP/build                                      <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Change directory to 'build'</span>
+cmake ..                                                <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Configure the build system with cmake</span>
+<span style="color: #b0c4de;">cd</span> ../..                                                <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Change directory back to where we started</span>
 git clone <span style="color: #fa8072;">'https://github.com/richmit/mraster.git'</span>      <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Download MRaster</span>
-<span style="color: #b0c4de;">cd</span> mraster                                              <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Change directory to the root of the mraster git repository</span>
-mkdir build                                             <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Create a 'build' directory</span>
-<span style="color: #b0c4de;">cd</span> build                                                <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Change directory to the build directory</span>
-cmake -G <span style="color: #fa8072;">'MSYS Makefiles'</span> ..                            <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Configure the build system with cmake (NOTE 1)</span>
+<span style="color: #b0c4de;">cd</span> mraster/build                                        <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Change directory to 'build'</span>
+cmake ..                                                <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Configure the build system with cmake</span>
 cmake --build . -t examples                             <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Build all the examples</span>
 </pre>
 </div>
@@ -392,15 +387,10 @@ cmake --build . -t examples                             <span style="color: #ffa
 <li>I normally use the "<code>configure.sh</code>" script in the root directory instead of running <code>cmake</code> directly for the configuration step.  I don't suggest it
 above because it won't work for everybody because "<code>configure.sh</code>" is a <code>bash</code> script &#x2013; i.e.  it will only work if you have a working <code>bash</code> envoronmtn
 (i.e. linux, macOS, UNIX, Windows MSYS 2, Windows WSL, etc&#x2026;).</li>
-<li>In the example above we use "<code>MSYS Makefiles</code>" for the "<code>-G</code>" option &#x2013; this value works for Windows 10/11 running MSYS2.</li>
-<li>If you don't know what to use for the "<code>-G</code>" option, then take a look at the "<code>configure.sh</code>" script for ideas.</li>
 </ul></dd>
 <dt>NOTE 2</dt><dd><ul class="org-ul">
-<li>The command will install the <code>cmake</code> package into the build directory within the git repository.  In particular, this step will <b>not</b> install anything on
-your system!  If you <b>do</b> want to install the package someplace, then you can use the standard <code>cmake</code> install arguments to do that.</li>
-<li>This step is not actually necessary.  The <code>cmake</code> configuration in <b><code>MRaster</code></b> will detect a <b><code>MRMathCPP</code></b> repository located at the same level and
-consume the include files even if the package configuration hasn't been generated or installed.  I suggest doing the install because it insures the
-<b><code>MRMathCPP</code></b> can be properly configured on your system, and sets up a proper <code>cmake</code> package to export the library.</li>
+<li>The command will install the <code>cmake</code> export package into the build directory within the git repository.  In particular, this step will <b>not</b> install
+anything on your system!</li>
 </ul></dd>
 </dl>
 </div>

@@ -93,7 +93,9 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
       - color_lut_docs: Now generates images for all CB schemes
       - Several: Updated doxygen markup to use @ instead of backslash
   - Miscellaneous
-    - N/A
+    - Streamlined CMake configuration
+      - Just export cmake file and not a package
+      - Use exported config for builds
 * v20.15.0.0: Feature Release
 :PROPERTIES:
 :CUSTOM_ID: v20.15.0.0

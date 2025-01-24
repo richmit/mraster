@@ -115,17 +115,12 @@ that I've broken the project into two git repositories (one for some generic mat
 
 #+begin_src sh :exports code :eval never
 git clone 'https://github.com/richmit/MRMathCPP.git'    # Download MRMathCPP
-cd MRMathCPP                                            # Change directory to the root of the MRMathCPP git repository
-mkdir build                                             # Create a 'build' directory
-cd build                                                # Change directory to the build directory
-cmake -G 'MSYS Makefiles' ..                            # Configure the build system with cmake (NOTE 1)
-cmake --build . -t install                              # Install the package in the build directory (NOTE 2)
-cd ../..                                                # Change directory back to where you cloned the first repo
+cd MRMathCPP/build                                      # Change directory to 'build'
+cmake ..                                                # Configure the build system with cmake
+cd ../..                                                # Change directory back to where we started
 git clone 'https://github.com/richmit/mraster.git'      # Download MRaster
-cd mraster                                              # Change directory to the root of the mraster git repository
-mkdir build                                             # Create a 'build' directory
-cd build                                                # Change directory to the build directory
-cmake -G 'MSYS Makefiles' ..                            # Configure the build system with cmake (NOTE 1)
+cd mraster/build                                        # Change directory to 'build'
+cmake ..                                                # Configure the build system with cmake
 cmake --build . -t examples                             # Build all the examples
 #+end_src
 
@@ -133,14 +128,9 @@ cmake --build . -t examples                             # Build all the examples
    - I normally use the "=configure.sh=" script in the root directory instead of running =cmake= directly for the configuration step.  I don't suggest it
      above because it won't work for everybody because "=configure.sh=" is a =bash= script -- i.e.  it will only work if you have a working =bash= envoronmtn
      (i.e. linux, macOS, UNIX, Windows MSYS 2, Windows WSL, etc...).
-   - In the example above we use "=MSYS Makefiles=" for the "=-G=" option -- this value works for Windows 10/11 running MSYS2.  
-   - If you don't know what to use for the "=-G=" option, then take a look at the "=configure.sh=" script for ideas.
  - NOTE 2 ::
-   - The command will install the =cmake= package into the build directory within the git repository.  In particular, this step will *not* install anything on
-     your system!  If you *do* want to install the package someplace, then you can use the standard =cmake= install arguments to do that.
-   - This step is not actually necessary.  The =cmake= configuration in *=MRaster=* will detect a *=MRMathCPP=* repository located at the same level and
-     consume the include files even if the package configuration hasn't been generated or installed.  I suggest doing the install because it insures the
-     *=MRMathCPP=* can be properly configured on your system, and sets up a proper =cmake= package to export the library.
+   - The command will install the =cmake= export package into the build directory within the git repository.  In particular, this step will *not* install
+     anything on your system!
 
 * Platform Notes
 :PROPERTIES:
