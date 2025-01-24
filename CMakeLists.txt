@@ -56,37 +56,17 @@ if(O_BTEST)
   find_package(Boost COMPONENTS unit_test_framework)
 endif()
 
-######################################################################################################################################################
-# Find MRMathCPP (MR Math CPP) -- this one is requierd!
-find_package(MRMathCPP QUIET)
-if(MRMathCPP_FOUND)
-  message(STATUS "MRMathCPP Search: Found: System package (i.e. on given cmake path)")
+find_file(MRMathCPP_PATH "MRMathCPPLib.cmake" PATHS "MRMathCPP/build"  "../MRMathCPP/build")
+if(NOT MRMathCPP_PATH STREQUAL "MRMathCPP_PATH-NOTFOUND")
+  message(STATUS "MRMathCPP Found at ${MRMathCPP_PATH}")
+  include("${MRMathCPP_PATH}")
 else()
-  find_package(MRMathCPP QUIET HINTS "./MRMathCPP/build/install/share/cmake/MRMathCPP/" "../MRMathCPP/build/install/share/cmake/MRMathCPP/" )
-  if(MRMathCPP_FOUND)
-    message(STATUS "MRMathCPP Search: Found: Package installed in build tree")
-  else()
-    find_package(MRMathCPP QUIET HINTS "./MRMathCPP/build/" "../MRMathCPP/build/")
-    if(MRMathCPP_FOUND)
-      message(STATUS "MRMathCPP Search: Found: Package in build tree")
-    else()
-      find_file (MRMATHCPP_PATH "CMakeLists.txt" PATHS "MRMathCPP"  "../MRMathCPP")
-      if(NOT MRMATHCPP_PATH STREQUAL "MRMATHCPP_PATH-NOTFOUND")
-        cmake_path(GET MRMATHCPP_PATH PARENT_PATH MRMATHCPP_PATH)
-        if(EXISTS "${MRMATHCPP_PATH}/build/MRMathCPPLib.cmake")
-          message(STATUS "MRMathCPP Search: Found: Exported")
-          include("${MRMATHCPP_PATH}/build/MRMathCPPLib.cmake")
-        elseif(EXISTS "${MRMATHCPP_PATH}/lib/MRMathCPP.hpp")
-          message(STATUS "MRMathCPP Search: Found: Source code (headers)")
-        else()
-          message(ERROR "MRMathCPP Search: Failed: Git repo found, but no include files!!!")
-        endif()
-      else()
-          message(ERROR "MRMathCPP Search: Failed: Found nothing")
-      endif()
-    endif()
-  endif()
+  message(FATAL_ERROR " MRMathCPP Search Failed!\n"
+                      "     The MRMathCPP repository must be located in the same directory as this one, and\n"
+                      "     must be configured -- i.e. a generated MRMathCPPLib.cmake file must exist in the.\n"
+                      "     build directory.\n")
 endif()
+get_target_property(MRMathCPP_INCLUDE MRMathCPP INTERFACE_INCLUDE_DIRECTORIES)
 
 ######################################################################################################################################################
 
@@ -211,11 +191,7 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
     #message("Warning: MSVC support is currently experimental")
   endif()
 
-  if(MRMathCPP_FOUND)
-    target_link_libraries(${CURTGT} PRIVATE MRMathCPP)
-  else()
-    target_include_directories(${CURTGT} PRIVATE "${MRMATHCPP_PATH}/lib")
-  endif()
+  target_include_directories(${CURTGT} PRIVATE ${MRMathCPP_INCLUDE})
 
   # Add build requirements for examples using Boost Test
   list (FIND TARGETS_REQ_BTEST ${CURTGT} TMPR)
@@ -303,7 +279,7 @@ endif()
 
 if(Doxygen_FOUND)
   foreach(DOXINPUT IN ITEMS "lib" "examples")
-    message("Info: Generateing doxygen target for ${DOXINPUT}")
+    message(STATUS "Generateing doxygen target for ${DOXINPUT}")
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/Doxyfile.cmake ${CMAKE_BINARY_DIR}/doc-${DOXINPUT}/Doxyfile)
     add_custom_target(doc-${DOXINPUT}
       COMMAND ${DOXYGEN_EXECUTABLE} > dox.out
@@ -312,7 +288,7 @@ if(Doxygen_FOUND)
       VERBATIM)
   endforeach(DOXINPUT)
 else()
-  message("Warning: Doxygen not found.  No documentation targets!")
+  message(STATUS "Warning: Doxygen not found.  No documentation targets!")
 endif()
 
 ######################################################################################################################################################
@@ -325,51 +301,17 @@ set(MRASTER_INCLUDES "lib/MRcolor.hpp"
                      "lib/ramCanvas.hpp"
                      "lib/ramCanvasTpl.hpp")
 add_library(MRaster INTERFACE ${MRASTER_INCLUDES})
+
+
+target_include_directories(MRaster INTERFACE ${MRMathCPP_INCLUDE})
 if(TIFF_FOUND)
   target_compile_definitions(MRaster INTERFACE MRASTER_FOUND_TIFF=1)
   target_include_directories(MRaster INTERFACE ${TIFF_INCLUDE_DIRS})
   target_link_libraries(MRaster INTERFACE ${TIFF_LIBRARIES})
 endif()
-target_include_directories(MRaster INTERFACE 
-                           "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>"
-                           "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/build>"
-                           "$<INSTALL_INTERFACE:include>")
+target_include_directories(MRaster INTERFACE "${PROJECT_SOURCE_DIR}/lib")
 
 ######################################################################################################################################################
 # Export the library interface cmake file
 
 export(TARGETS MRaster FILE "${CMAKE_BINARY_DIR}/MRasterLib.cmake")
-
-######################################################################################################################################################
-# Create Package Files
-
-include(CMakePackageConfigHelpers)
-
-configure_package_config_file("${CMAKE_CURRENT_SOURCE_DIR}/MRasterConfig.cmake.in"
-                              "${CMAKE_CURRENT_BINARY_DIR}/MRasterConfig.cmake"
-                              INSTALL_DESTINATION $"{CMAKE_INSTALL_LIBDIR}/cmake/MRaster")
-
-write_basic_package_version_file("${CMAKE_CURRENT_BINARY_DIR}/MRasterConfigVersion.cmake"
-                                 COMPATIBILITY AnyNewerVersion)
-
-######################################################################################################################################################
-# Install
-#
-# This configuration "installs" all the stuff required to build things with mraster into the export directory:
-#  - Non-deprecated Header files
-#  - cmake package
-#  - cmake export for library
-
-set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/build/install")
-include(GNUInstallDirs)
-install(FILES ${MRASTER_INCLUDES} TYPE INCLUDE)
-install(TARGETS MRaster EXPORT MRasterLib)
-
-install(EXPORT MRasterLib
-        FILE MRasterLib.cmake
-        DESTINATION "${CMAKE_INSTALL_DATADIR}/cmake/MRaster")
-
-install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/MRasterConfig.cmake"
-        "${CMAKE_CURRENT_BINARY_DIR}/MRasterConfigVersion.cmake"
-        DESTINATION "${CMAKE_INSTALL_DATADIR}/cmake/MRaster")
