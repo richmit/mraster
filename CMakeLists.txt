@@ -98,11 +98,6 @@ target_include_directories(MRaster INTERFACE "${PROJECT_SOURCE_DIR}/lib")
 export(TARGETS MRaster FILE "${CMAKE_BINARY_DIR}/MRasterLib.cmake")
 
 ######################################################################################################################################################
-# Create variable for project includes
-get_target_property(MRaster_INCLUDE MRaster INTERFACE_INCLUDE_DIRECTORIES)
-message(STATUS "Combined Project Includes: ${MRaster_INCLUDE}")
-
-######################################################################################################################################################
 
 set(TARGETS_REQ_NONE "BurningShip" "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "biomorph2" "biomorphMorph" "bmark" "chaos_game" "circles"
                        "collatz" "color_all" "color_interp_hsl_vs_rgb" "color_lut_cubehelix" "color_lut_docs" "color_lut_indexed"
@@ -240,13 +235,13 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
     #message("Warning: MSVC support is currently experimental")
   endif()
 
-  # MJR TODO NOTE <2025-01-24T16:35:47-0600> CMakeLists.txt: Consider lib require instead to include tiff stuff too
-  target_include_directories(${CURTGT} PRIVATE ${MRaster_INCLUDE})
+  target_link_libraries(${CURTGT} PRIVATE MRaster)
 
   # Add build requirements for unit tests
   list (FIND TARGETS_REQ_GTEST ${CURTGT} TMPR)
   if((GTest_FOUND) AND (${TMPR} GREATER -1))
     target_link_libraries(${CURTGT} PRIVATE GTest::gtest_main)
+    add_test(NAME "${CURTGT}" COMMAND "${CURTGT}")
   endif()
 
   # Add build requirements for examples using OpenGL
