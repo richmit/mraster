@@ -36,9 +36,32 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
 
 #+TOC: headlines 5
 
-* Changes On HEAD Since Last Release TEMPLATE                      
+* Changes On HEAD Since Last Release
 :PROPERTIES:
-:CUSTOM_ID: latest_TEMPLATE
+:CUSTOM_ID: latest
+:END:
+  - Fixed Bugs
+    - N/A
+  - Known Issues
+    - N/A
+  - API breaking Changes
+    - N/A
+  - Deprecated functionality
+    - N/A
+  - New functionality
+    - N/A
+  - Documentation
+    - N/A
+  - Examples
+    - New
+      - N/A
+    - Updated
+      - N/A
+  - Miscellaneous
+    - N/A
+* 22.0.0.0: Feature & Refactor Release
+:PROPERTIES:
+:CUSTOM_ID: v22.0.0.0
 :END:
   - Fixed Bugs
     - mjr::colorTpl::tfrmMod Added divide by zero check for floating point channels

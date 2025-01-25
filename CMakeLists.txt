@@ -9,12 +9,12 @@ set(CMAKE_CXX_EXTENSIONS ON)
 # Proejct meta data
 
 project(MRaster
-  VERSION 21.0.0.0
+  VERSION 22.0.0.0
   DESCRIPTION "Image Processing Library"
   HOMEPAGE_URL "https://github.com/richmit/mraster/"
   LANGUAGES CXX)
 
-set(MRASTER_VERSION_DATE  2024-08-20)
+set(MRASTER_VERSION_DATE  2025-01-25)
 mark_as_advanced(MRASTER_VERSION_DATE)
 
 ######################################################################################################################################################
@@ -303,36 +303,26 @@ add_custom_target(clean-images
   COMMENT "Cleaning Image files"
 )
 
-if(EXISTS "c:/Users/richmit/MJR/WWW/site/SS/mraster/doc-lib/")
-  add_custom_target(install-doc-lib
-    DEPENDS doc-lib
-    COMMAND  rsync -rlt --log-format=%f --stats --delete --delete-excluded --modify-window=2 doc-lib/ ~/MJR/WWW/site/SS/mraster/doc-lib
-    COMMENT "Put doc-lib data in web site directory"
-  )
-endif()
-
-if(EXISTS "c:/Users/richmit/MJR/WWW/site/SS/mraster/doc-examples/")
-  add_custom_target(install-doc-examples
-    DEPENDS doc-examples
-    COMMAND  rsync -rlt --log-format=%f --stats --delete --delete-excluded --modify-window=2 doc-examples/ ~/MJR/WWW/site/SS/mraster/doc-examples
-    COMMENT "Put doc-examples data in web site directory"
-  )
-endif()
-
 ######################################################################################################################################################
 # Add targets for documentation
 
 if(Doxygen_FOUND)
   foreach(DOXINPUT IN ITEMS "lib" "examples")
-    message(STATUS "Generateing doxygen target for ${DOXINPUT}")
+    message(STATUS "Generateing doxygen generation target for ${DOXINPUT}")
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/Doxyfile.cmake ${CMAKE_BINARY_DIR}/doc-${DOXINPUT}/Doxyfile)
     add_custom_target(doc-${DOXINPUT}
       COMMAND ${DOXYGEN_EXECUTABLE} > dox.out
       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc-${DOXINPUT}
       COMMENT "Generating ${DOXINPUT} documentation with Doxygen"
       VERBATIM)
+    if(EXISTS "c:/Users/richmit/MJR/WWW/site/SS/mraster/doc-${DOXINPUT}/")
+      message(STATUS "Generateing doxygen publish target for ${DOXINPUT}")
+      add_custom_target("install-doc-${DOXINPUT}"
+        DEPENDS "doc-${DOXINPUT}"
+        COMMAND  rsync -rlt --log-format=%f --stats --delete --delete-excluded --modify-window=2 "doc-${DOXINPUT}/" "/c/Users/richmit/MJR/WWW/site/SS/mraster/doc-${DOXINPUT}"
+        COMMENT "Put ${DOXINPUT} data in web site directory")
+    endif()
   endforeach(DOXINPUT)
 else()
   message(STATUS "Warning: Doxygen not found.  No documentation targets!")
 endif()
-
