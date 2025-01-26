@@ -97,7 +97,7 @@ target_include_directories(MRaster INTERFACE "${PROJECT_SOURCE_DIR}/lib")
 
 export(TARGETS MRaster FILE "${CMAKE_BINARY_DIR}/MRasterLib.cmake")
 
-######################################################################################################################################################
+######################################################################################################################################################    
 
 set(TARGETS_REQ_NONE "BurningShip" "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "biomorph2" "biomorphMorph" "bmark" "chaos_game" "circles"
                        "collatz" "color_all" "color_interp_hsl_vs_rgb" "color_lut_cubehelix" "color_lut_docs" "color_lut_indexed"
@@ -119,15 +119,16 @@ set(TARGETS_USE_OPENMP "mandelbrot_bm_cplx_openmp" "mandelbrot_precomp" "mandelb
                        "newton_half" "newton_vs" "newton_z6" "newton_modified" "newton_min_root" "newton_3updown" "newton_roter" "attracting_torus_shadowM"
                        "laguerre_3updown" "laguerre_simple" "kalisetJ" "kalisetM1" "kalisetM2" "phoenix" "phoenixI" "phoenixD" "phoenixM" "phoenixM2"
                        "doublePendulum" "doublePendulumM" "wakOrb01" "wakOrb02" "wakOrb03")
-set(TARGETS_REQ_GTEST  "utest_colorTpl" "utest_ramCanvasTpl" 
-                       "set_chan_dbl" "set_chan_byte" "set_chan_gen" "set_chan_const" "set_chan_hex" "set_rgba_pack" "set_rgb_tga" "set_rgb_wavelengthCM"
-                       "set_rgb_wavelengthLA" "set_cs_csFPcircular12" "set_cs_csCBSpectral" "set_cs_csBin" "set_cs_csHSLhX" "set_cs_csPLY"
-                       "set_cs_csCColdeRainbow" "comp_distDeltaE1976" "set_rgb_constant" "tfrm_logic" "tfrm_arith" "comp_distX" "set_cs_csCubeHelix"
-                       "tfrm_misc" "tfrm_websafe" "tfrm_PowPow" "bool_isBlack" "bool_isEqual" "comp_luminance" "set_rgb_unitHSx" "bool_isClose"
-                       "set_rgb_ColorSpace" "tfrm_GryLevScl" "comp_dotProd" "comp_MinMax" "comp_linearInterpolate" "comp_wMean" "comp_rgb2colorSpace"
-                       "comp_bestChan" "constructor" "int128_test"
-                       
-                       )
+set(TARGETS_REQ_GTEST  "all_gtests"
+                       "c_set_chan_dbl" "c_set_chan_byte" "c_set_chan_gen" "c_set_chan_const" "c_set_chan_hex" "c_set_rgba_pack" "c_set_rgb_tga"
+                       "c_set_rgb_wavelengthCM" "c_set_rgb_wavelengthLA" "c_set_cs_csFPcircular12" "c_set_cs_csCBSpectral" "c_set_cs_csBin"
+                       "c_set_cs_csHSLhX" "c_set_cs_csPLY" "c_set_cs_csCColdeRainbow" "c_comp_distDeltaE1976" "c_set_rgb_constant" "c_tfrm_logic"
+                       "c_tfrm_arith" "c_comp_distX" "c_set_cs_csCubeHelix" "c_tfrm_misc" "c_tfrm_websafe" "c_tfrm_PowPow" "c_bool_isBlack"
+                       "c_bool_isEqual" "c_comp_luminance" "c_set_rgb_unitHSx" "c_bool_isClose" "c_set_rgb_ColorSpace" "c_tfrm_GryLevScl"
+                       "c_comp_dotProd" "c_comp_MinMax" "c_comp_linearInterpolate" "c_comp_wMean" "c_comp_rgb2colorSpace" "c_comp_bestChan"
+                       "c_constructor" "c_int128_test" "r_draw_circles" "r_draw_point" "r_draw_primatives" "r_draw_lines" "r_draw_rectangles"
+                       "r_draw_rectangles_filled" "r_save_file" "r_draw_triangles" "r_draw_triangles_filled" "r_tfrm_geom" "r_adjoin" "r_p_scale"
+                       "r_draw_string" "r_draw_glyph")
 set(TARGETS_REQ_SDL2   "displayImageSDL2")
 
 # Construct list of targets we can build
