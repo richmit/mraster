@@ -82,15 +82,16 @@ set(MRASTER_INCLUDES "lib/MRcolor.hpp"
                      "lib/ramCanvas.hpp"
                      "lib/ramCanvasTpl.hpp")
 add_library(MRaster INTERFACE ${MRASTER_INCLUDES})
-
-
+target_include_directories(MRaster INTERFACE "${PROJECT_SOURCE_DIR}/lib")
+if(O_128_INT)
+  target_compile_definitions(MRaster INTERFACE DMRASTER_OPT_128_INT=1)
+endif()
 target_include_directories(MRaster INTERFACE ${MRMathCPP_INCLUDE})
 if(TIFF_FOUND)
   target_compile_definitions(MRaster INTERFACE MRASTER_FOUND_TIFF=1)
   target_include_directories(MRaster INTERFACE ${TIFF_INCLUDE_DIRS})
   target_link_libraries(MRaster INTERFACE ${TIFF_LIBRARIES})
 endif()
-target_include_directories(MRaster INTERFACE "${PROJECT_SOURCE_DIR}/lib")
 
 ######################################################################################################################################################
 # Export the library interface cmake file
@@ -213,10 +214,6 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
   endif()
 
   target_compile_features(${CURTGT} PUBLIC cxx_std_20)
-
-  IF(O_128_INT)
-    target_compile_options(${CURTGT} PUBLIC "-DMRASTER_OPT_128_INT=1")
-  endif()
 
   if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     target_compile_options(${CURTGT} PUBLIC -Wstrict-overflow=0)
