@@ -40,17 +40,17 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
   | Coverage | Method                                                                  |
   |----------+-------------------------------------------------------------------------|
   | DIRECT   | colorTpl();                                                             |
-  | DIRECT   | colorTpl(const colorType& aColor);                                      |
-  | DIRECT   | colorTpl(clrChanT c1, clrChanT c2, clrChanT c3, clrChanT c4);           |
-  | DIRECT   | colorTpl(clrChanT c1, clrChanT c2, clrChanT c3);                        |
-  | DIRECT   | colorTpl(clrChanT c1, clrChanT c2);                                     |
-  | DIRECT   | colorTpl(clrChanT cVal);                                                |
-  | DIRECT   | colorTpl(cornerColorEnum cornerColor);                                  |
-  | DIRECT   | colorTpl(std::string colorString);                                      |
-  | DIRECT   | colorTpl(const char* colorCString);                                     |
+  | DIRECT   | colorTpl(const colorType& );                                            |
+  | DIRECT   | colorTpl(clrChanT, clrChanT, clrChanT, clrChanT);                       |
+  | DIRECT   | colorTpl(clrChanT, clrChanT, clrChanT);                                 |
+  | DIRECT   | colorTpl(clrChanT, clrChanT);                                           |
+  | DIRECT   | colorTpl(clrChanT);                                                     |
+  | DIRECT   | colorTpl(cornerColorEnum);                                              |
+  | DIRECT   | colorTpl(std::string);                                                  |
+  | DIRECT   | colorTpl(const char*);                                                  |
   | INDIRECT | ~colorTpl();                                                            |
   |----------+-------------------------------------------------------------------------|
-  | INDIRECT | colorTpl& copy(colorArgType aCol);                                      |
+  | INDIRECT | colorTpl& copy(colorArgType);                                           |
   |----------+-------------------------------------------------------------------------|
   | DIRECT   | getC0() const;                                                          |
   | DIRECT   | getC1() const;                                                          |
@@ -77,8 +77,8 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
   | DIRECT   | getC1_dbl();                                                            |
   | DIRECT   | getC2_dbl();                                                            |
   | DIRECT   | getC3_dbl();                                                            |
-  | DIRECT   | getChan_dbl(int chan);                                                  |
-  | DIRECT   | setChan_dbl(int chan, double cVal);                                     |
+  | DIRECT   | getChan_dbl(int);                                                       |
+  | DIRECT   | setChan_dbl(int, double);                                               |
   | DIRECT   | setC0_dbl(...);                                                         |
   | DIRECT   | setC1_dbl(...);                                                         |
   | DIRECT   | setC2_dbl(...);                                                         |
@@ -401,3 +401,317 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
   | DIRECT   | setRGBfromWavelengthCM(...);                                            |
   | DIRECT   | setRGBfromWavelengthLA(...);                                            |
   |----------+-------------------------------------------------------------------------|
+
+* ramCanvasTpl.hpp
+
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | Coverage | Method                                                                                                                                     |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | ramCanvasTpl();                                                                                                                            |
+  | UNK      | ramCanvasTpl(ramCanvasTpl&);                                                                                                               |
+  | UNK      | ramCanvasTpl(intCrdT, intCrdT, fltCrdT, fltCrdT, fltCrdT, fltCrdT);                                                                        |
+  | UNK      | ramCanvasTpl(ramCanvasTpl&&);                                                                                                              |
+  | UNK      | ramCanvasTpl& operator=(ramCanvasTpl&&);                                                                                                   |
+  | UNK      | ~ramCanvasTpl()                                                                                                                            |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | drawFillTriangleUtl(...);                                                                                                                  |
+  | UNK      | writeUIntToStream(...);                                                                                                                    |
+  | UNK      | platformEndianness();                                                                                                                      |
+  | UNK      | triangleEdger(...);                                                                                                                        |
+  | UNK      | exportRasterData(...);                                                                                                                     |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | updRealCoords();                                                                                                                           |
+  | UNK      | newIntCoordsNC(...);                                                                                                                       |
+  | UNK      | reallocCanvas(...);                                                                                                                        |
+  | UNK      | freeCanvas();                                                                                                                              |
+  | UNK      | rePointPixels(...);                                                                                                                        |
+  | UNK      | newRealCoords(...);                                                                                                                        |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | adjoinCanvasRight(...)                                                                                                                     |
+  | UNK      | adjoinCanvasLeft(...)                                                                                                                      |
+  | UNK      | adjoinCanvasBottom(...)                                                                                                                    |
+  | UNK      | adjoinCanvasTop(...)                                                                                                                       |
+  | UNK      | insertCanvas(...)                                                                                                                          |
+  | UNK      | resizeCanvas(...);                                                                                                                         |
+  | UNK      | expandCanvas(...);                                                                                                                         |
+  | UNK      | cropCanvas(...);                                                                                                                           |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | isSameSize(...)                                                                                                                            |
+  | UNK      | isNotSameSize(...)                                                                                                                         |
+  | UNK      | isClose(...)                                                                                                                               |
+  | UNK      | isEqual(...)                                                                                                                               |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | rotate90CW();                                                                                                                              |
+  | UNK      | rotate90CCW();                                                                                                                             |
+  | UNK      | rotate180();                                                                                                                               |
+  | UNK      | flipHorz();                                                                                                                                |
+  | UNK      | flipVert();                                                                                                                                |
+  | UNK      | flipTranspose();                                                                                                                           |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | scaleUpProximal(...);                                                                                                                      |
+  | UNK      | scaleDown1pt(...);                                                                                                                         |
+  | UNK      | scaleDownMax(...);                                                                                                                         |
+  | UNK      | scaleDownMean(...);                                                                                                                        |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | geomTfrmRevRPoly(...)                                                                                                                      |
+  | UNK      | geomTfrmRevBiPoly(...)                                                                                                                     |
+  | UNK      | geomTfrmRevAff(...)                                                                                                                        |
+  | UNK      | geomTfrmRevArb(...)                                                                                                                        |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | convolution(double*, int, int, double);                                                                                                    |
+  | UNK      | convolution(double*, int, double);                                                                                                         |
+  | UNK      | convolution(double*, int);                                                                                                                 |
+  | UNK      | computeConvolutionMatrixGausian(...);                                                                                                      |
+  | UNK      | computeConvolutionMatrixBox(...);                                                                                                          |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | *begin()                                                                                                                                   |
+  | UNK      | *end()                                                                                                                                     |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | applyHomoPixTfrm(colorT& (colorT::*HPT)());                                                                                                |
+  | UNK      | applyHomoPixTfrm(colorT& (colorT::*HPT)(double),                                          double);                                         |
+  | UNK      | applyHomoPixTfrm(colorT& (colorT::*HPT)(double, double),                                  double, double);                                 |
+  | UNK      | applyHomoPixTfrm(colorT& (colorT::*HPT)(double, double, double),                          double, double, double);                         |
+  | UNK      | applyHomoPixTfrm(colorT& (colorT::*HPT)(double, double, double, double),                  double, double, double, double);                 |
+  | UNK      | applyHomoPixTfrm(colorT& (colorT::*HPT)(double, double, double, double, double),          double, double, double, double, double);         |
+  | UNK      | applyHomoPixTfrm(colorT& (colorT::*HPT)(double, double, double, double, double, double),  double, double, double, double, double, double); |
+  | UNK      | applyHomoPixTfrm(colorT& (colorT::*HPT)(int),                 int);                                                                        |
+  | UNK      | applyHomoPixTfrm(colorT& (colorT::*HPT)(int, int),            int, int);                                                                   |
+  | UNK      | applyHomoPixTfrm(colorT& (colorT::*HPT)(int, int, int),       int, int, int);                                                              |
+  | UNK      | applyHomoPixTfrm(colorT& (colorT::*HPT)(int, int, int, int),  int, int, int, int);                                                         |
+  | UNK      | applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT),                          colorT);                                                         |
+  | UNK      | applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT, colorT),                  colorT, colorT);                                                 |
+  | UNK      | applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT, colorT, colorT),          colorT, colorT, colorT);                                         |
+  | UNK      | applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT, colorT, colorT, colorT),  colorT, colorT, colorT, colorT);                                 |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | autoHistStrech();                                                                                                                          |
+  | UNK      | autoMaxHistStrechRGB();                                                                                                                    |
+  | UNK      | combineRamCanvasBinOp(...);                                                                                                                |
+  | UNK      | combineRamCanvasMean(...);                                                                                                                 |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | clrCanvasToBlack();                                                                                                                        |
+  | UNK      | clrCanvasToWhite();                                                                                                                        |
+  | UNK      | clrCanvasChannelToMin(...);                                                                                                                |
+  | UNK      | clrCanvasChannelToMax(...);                                                                                                                |
+  | UNK      | clrCanvas();                                                                                                                               |
+  | UNK      | clrCanvas(colorArgType);                                                                                                                   |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | moveTo(intCrdT, intCrdT)                                                                                                                   |
+  | UNK      | moveTo(fltCrdT, fltCrdT)                                                                                                                   |
+  | UNK      | moveTo(pointIntType)                                                                                                                       |
+  | UNK      | moveTo(pointFltType)                                                                                                                       |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | setDfltColor(colorArgType)                                                                                                                 |
+  | UNK      | setDfltColor(std::string)                                                                                                                  |
+  | UNK      | setDfltColor(const char*)                                                                                                                  |
+  | UNK      | setDfltColor(colorChanType, colorChanType, colorChanType)                                                                                  |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | drawPoint()                                                                                                                                |
+  | UNK      | drawPoint(colorArgType)                                                                                                                    |
+  | UNK      | drawPoint(fltCrdT, fltCrdT)                                                                                                                |
+  | UNK      | drawPoint(fltCrdT, fltCrdT, colorArgType)                                                                                                  |
+  | UNK      | drawPoint(intCrdT, intCrdT)                                                                                                                |
+  | UNK      | drawPoint(intCrdT, intCrdT, colorArgType)                                                                                                  |
+  | UNK      | drawPoint(pointFltType)                                                                                                                    |
+  | UNK      | drawPoint(pointFltType, colorArgType)                                                                                                      |
+  | UNK      | drawPoint(pointIntType)                                                                                                                    |
+  | UNK      | drawPoint(pointIntType, colorArgType)                                                                                                      |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | drawLine(fltCrdT, fltCrdT)                                                                                                                 |
+  | UNK      | drawLine(fltCrdT, fltCrdT, colorArgType)                                                                                                   |
+  | UNK      | drawLine(fltCrdT, fltCrdT, fltCrdT, fltCrdT)                                                                                               |
+  | UNK      | drawLine(fltCrdT, fltCrdT, fltCrdT, fltCrdT, colorArgType)                                                                                 |
+  | UNK      | drawLine(intCrdT, intCrdT)                                                                                                                 |
+  | UNK      | drawLine(intCrdT, intCrdT, colorArgType)                                                                                                   |
+  | UNK      | drawLine(intCrdT, intCrdT, intCrdT, intCrdT)                                                                                               |
+  | UNK      | drawLine(intCrdT, intCrdT, intCrdT, intCrdT, colorArgType);                                                                                |
+  | UNK      | drawLine(pointFltType)                                                                                                                     |
+  | UNK      | drawLine(pointFltType, colorArgType)                                                                                                       |
+  | UNK      | drawLine(pointFltType, pointFltType)                                                                                                       |
+  | UNK      | drawLine(pointFltType, pointFltType, colorArgType)                                                                                         |
+  | UNK      | drawLine(pointIntType)                                                                                                                     |
+  | UNK      | drawLine(pointIntType, colorArgType)                                                                                                       |
+  | UNK      | drawLine(pointIntType, pointIntType)                                                                                                       |
+  | UNK      | drawLine(pointIntType, pointIntType, colorArgType)                                                                                         |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | drawTriangle(fltCrdT, fltCrdT, fltCrdT, fltCrdT, fltCrdT, fltCrdT)                                                                         |
+  | UNK      | drawTriangle(fltCrdT, fltCrdT, fltCrdT, fltCrdT, fltCrdT, fltCrdT, colorArgType)                                                           |
+  | UNK      | drawTriangle(intCrdT, intCrdT, intCrdT, intCrdT, intCrdT, intCrdT)                                                                         |
+  | UNK      | drawTriangle(intCrdT, intCrdT, intCrdT, intCrdT, intCrdT, intCrdT, colorArgType);                                                          |
+  | UNK      | drawTriangle(pointFltType)                                                                                                                 |
+  | UNK      | drawTriangle(pointFltType, colorArgType)                                                                                                   |
+  | UNK      | drawTriangle(pointFltType, pointFltType, pointFltType)                                                                                     |
+  | UNK      | drawTriangle(pointFltType, pointFltType, pointFltType, colorArgType)                                                                       |
+  | UNK      | drawTriangle(pointIntType)                                                                                                                 |
+  | UNK      | drawTriangle(pointIntType, colorArgType)                                                                                                   |
+  | UNK      | drawTriangle(pointIntType, pointIntType, pointIntType)                                                                                     |
+  | UNK      | drawTriangle(pointIntType, pointIntType, pointIntType, colorArgType)                                                                       |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | drawFillTriangle(fltCrdT, fltCrdT, fltCrdT, fltCrdT, fltCrdT, fltCrdT)                                                                     |
+  | UNK      | drawFillTriangle(fltCrdT, fltCrdT, fltCrdT, fltCrdT, fltCrdT, fltCrdT, colorArgType)                                                       |
+  | UNK      | drawFillTriangle(intCrdT, intCrdT, intCrdT, intCrdT, intCrdT, intCrdT)                                                                     |
+  | UNK      | drawFillTriangle(intCrdT, intCrdT, intCrdT, intCrdT, intCrdT, intCrdT, colorArgType);                                                      |
+  | UNK      | drawFillTriangle(intCrdT, intCrdT, intCrdT, intCrdT, intCrdT, intCrdT, colorArgType, colorArgType, colorArgType);                          |
+  | UNK      | drawFillTriangle(pointFltType)                                                                                                             |
+  | UNK      | drawFillTriangle(pointFltType, colorArgType)                                                                                               |
+  | UNK      | drawFillTriangle(pointFltType, pointFltType, pointFltType)                                                                                 |
+  | UNK      | drawFillTriangle(pointFltType, pointFltType, pointFltType, colorArgType)                                                                   |
+  | UNK      | drawFillTriangle(pointIntType)                                                                                                             |
+  | UNK      | drawFillTriangle(pointIntType, colorArgType)                                                                                               |
+  | UNK      | drawFillTriangle(pointIntType, pointIntType, pointIntType)                                                                                 |
+  | UNK      | drawFillTriangle(pointIntType, pointIntType, pointIntType, colorArgType)                                                                   |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | drawRectangle(fltCrdT, fltCrdT, fltCrdT, fltCrdT)                                                                                          |
+  | UNK      | drawRectangle(fltCrdT, fltCrdT, fltCrdT, fltCrdT, colorArgType)                                                                            |
+  | UNK      | drawRectangle(intCrdT, intCrdT, intCrdT, intCrdT)                                                                                          |
+  | UNK      | drawRectangle(intCrdT, intCrdT, intCrdT, intCrdT, colorArgType);                                                                           |
+  | UNK      | drawRectangle(pointFltType)                                                                                                                |
+  | UNK      | drawRectangle(pointFltType, colorArgType)                                                                                                  |
+  | UNK      | drawRectangle(pointFltType, pointFltType)                                                                                                  |
+  | UNK      | drawRectangle(pointFltType, pointFltType, colorArgType)                                                                                    |
+  | UNK      | drawRectangle(pointIntType)                                                                                                                |
+  | UNK      | drawRectangle(pointIntType, colorArgType)                                                                                                  |
+  | UNK      | drawRectangle(pointIntType, pointIntType)                                                                                                  |
+  | UNK      | drawRectangle(pointIntType, pointIntType, colorArgType)                                                                                    |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | drawFillRectangle(fltCrdT, fltCrdT, fltCrdT, fltCrdT)                                                                                      |
+  | UNK      | drawFillRectangle(fltCrdT, fltCrdT, fltCrdT, fltCrdT, colorArgType)                                                                        |
+  | UNK      | drawFillRectangle(intCrdT, intCrdT, intCrdT, intCrdT)                                                                                      |
+  | UNK      | drawFillRectangle(intCrdT, intCrdT, intCrdT, intCrdT, colorArgType);                                                                       |
+  | UNK      | drawFillRectangle(pointFltType)                                                                                                            |
+  | UNK      | drawFillRectangle(pointFltType, colorArgType)                                                                                              |
+  | UNK      | drawFillRectangle(pointFltType, pointFltType)                                                                                              |
+  | UNK      | drawFillRectangle(pointFltType, pointFltType, colorArgType)                                                                                |
+  | UNK      | drawFillRectangle(pointIntType)                                                                                                            |
+  | UNK      | drawFillRectangle(pointIntType, colorArgType)                                                                                              |
+  | UNK      | drawFillRectangle(pointIntType, pointIntType)                                                                                              |
+  | UNK      | drawFillRectangle(pointIntType, pointIntType, colorArgType)                                                                                |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | drawCircle(fltCrdT, fltCrdT, fltCrdT)                                                                                                      |
+  | UNK      | drawCircle(fltCrdT, fltCrdT, fltCrdT, colorArgType)                                                                                        |
+  | UNK      | drawCircle(fltCrdT)                                                                                                                        |
+  | UNK      | drawCircle(intCrdT, intCrdT, intCrdT)                                                                                                      |
+  | UNK      | drawCircle(intCrdT, intCrdT, intCrdT, colorArgType);                                                                                       |
+  | UNK      | drawCircle(intCrdT)                                                                                                                        |
+  | UNK      | drawCircle(pointFltType, fltCrdT)                                                                                                          |
+  | UNK      | drawCircle(pointFltType, fltCrdT, colorArgType)                                                                                            |
+  | UNK      | drawCircle(pointIntType, intCrdT)                                                                                                          |
+  | UNK      | drawCircle(pointIntType, intCrdT, colorArgType)                                                                                            |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | drawFillCircle(fltCrdT, fltCrdT, fltCrdT)                                                                                                  |
+  | UNK      | drawFillCircle(fltCrdT, fltCrdT, fltCrdT, colorArgType)                                                                                    |
+  | UNK      | drawFillCircle(fltCrdT)                                                                                                                    |
+  | UNK      | drawFillCircle(intCrdT, intCrdT, intCrdT)                                                                                                  |
+  | UNK      | drawFillCircle(intCrdT, intCrdT, intCrdT, colorArgType);                                                                                   |
+  | UNK      | drawFillCircle(intCrdT)                                                                                                                    |
+  | UNK      | drawFillCircle(pointFltType, fltCrdT)                                                                                                      |
+  | UNK      | drawFillCircle(pointFltType, fltCrdT, colorArgType)                                                                                        |
+  | UNK      | drawFillCircle(pointIntType, intCrdT)                                                                                                      |
+  | UNK      | drawFillCircle(pointIntType, intCrdT, colorArgType)                                                                                        |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | drawPLCurve(int, fltCrdT, fltCrdT);                                                                                                        |
+  | UNK      | drawPLCurve(int, fltCrdT, fltCrdT, colorArgType);                                                                                          |
+  | UNK      | drawPLCurve(int, intCrdT, intCrdT);                                                                                                        |
+  | UNK      | drawPLCurve(int, intCrdT, intCrdT, colorArgType);                                                                                          |
+  | UNK      | drawPLCurve(int, pointFltType);                                                                                                            |
+  | UNK      | drawPLCurve(int, pointFltType, colorArgType);                                                                                              |
+  | UNK      | drawPLCurve(int, pointIntType);                                                                                                            |
+  | UNK      | drawPLCurve(int, pointIntType, colorArgType);                                                                                              |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | drawHersheyGlyph(int, intCrdT, intCrdT, double, double, colorArgType);                                                                     |
+  | UNK      | drawHersheyGlyph(int, fltCrdT, fltCrdT, double, double, colorArgType)                                                                      |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | drawString(std::string, mjr::hershey::font, intCrdT, intCrdT, colorArgType, double, intCrdT);                                              |
+  | UNK      | drawString(std::string, mjr::hershey::font, fltCrdT, fltCrdT, colorArgType, double, intCrdT)                                               |
+  | UNK      | drawStringBox(std::string, mjr::hershey::font, intCrdT, intCrdT, colorArgType, colorArgType, double, intCrdT);                             |
+  | UNK      | drawStringBox(std::string, mjr::hershey::font, fltCrdT, fltCrdT, colorArgType, colorArgType, double, intCrdT)                              |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | supportLibTIFF();                                                                                                                          |
+  | UNK      | readTIFFfile(...);                                                                                                                         |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | writeTIFFfile(...);                                                                                                                        |
+  | UNK      | writeTGAfile(...);                                                                                                                         |
+  | UNK      | readRAWfile(...);                                                                                                                          |
+  | UNK      | writeRAWfile(...);                                                                                                                         |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | isCliped(fltCrdT, fltCrdT)                                                                                                                 |
+  | UNK      | isCliped(intCrdT, intCrdT)                                                                                                                 |
+  | UNK      | isOnCanvas(fltCrdT, fltCrdT)                                                                                                               |
+  | UNK      | isOnCanvas(intCrdT, intCrdT)                                                                                                               |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | real2intX(fltCrdT) const;                                                                                                                  |
+  | UNK      | real2intY(fltCrdT) const;                                                                                                                  |
+  | UNK      | int2realX(intCrdT);                                                                                                                        |
+  | UNK      | int2realY(intCrdT);                                                                                                                        |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | int2real(intCrdT, intCrdT)                                                                                                                 |
+  | UNK      | real2int(intCrdT, intCrdT)                                                                                                                 |
+  | UNK      | int2corner(intCrdT, intCrdT, int, int)                                                                                                     |
+  | UNK      | int2corner(intCrdT, intCrdT, int)                                                                                                          |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | realDelta2intX(fltCrdT)                                                                                                                    |
+  | UNK      | realDelta2intY(fltCrdT)                                                                                                                    |
+  | UNK      | intDelta2realX(intCrdT)                                                                                                                    |
+  | UNK      | intDelta2realY(intCrdT)                                                                                                                    |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | getRealAxOrientationX()                                                                                                                    |
+  | UNK      | getRealAxOrientationY()                                                                                                                    |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | setRealAxOrientationY(...)                                                                                                                 |
+  | UNK      | setRealAxisDefaultOrientation()                                                                                                            |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | getDrawMode()                                                                                                                              |
+  | UNK      | setDrawMode(...)                                                                                                                           |
+  | UNK      | setDefaultDrawMode()                                                                                                                       |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | getIntAxOrientationX()                                                                                                                     |
+  | UNK      | isIntAxOrientationNaturalX()                                                                                                               |
+  | UNK      | setIntAxOrientationX(...)                                                                                                                  |
+  | UNK      | isIntAxOrientationNaturalY()                                                                                                               |
+  | UNK      | getIntAxOrientationY()                                                                                                                     |
+  | UNK      | setIntAxOrientationY(...)                                                                                                                  |
+  | UNK      | setIntAxisDefaultOrientation()                                                                                                             |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | getNumPixX()                                                                                                                               |
+  | UNK      | getNumPixY()                                                                                                                               |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | *getPixels()                                                                                                                               |
+  | UNK      | *clonePixels();                                                                                                                            |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | getMinRealX()                                                                                                                              |
+  | UNK      | getMaxRealX()                                                                                                                              |
+  | UNK      | getMinRealY()                                                                                                                              |
+  | UNK      | getMaxRealY()                                                                                                                              |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | getPixWidX()                                                                                                                               |
+  | UNK      | getPixWidY()                                                                                                                               |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | getCanvasWidX()                                                                                                                            |
+  | UNK      | getCanvasWidY()                                                                                                                            |
+  | UNK      | getCanvasWidD()                                                                                                                            |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | getPxColor(intCrdT, intCrdT) const;                                                                                                        |
+  | UNK      | getPxColor(fltCrdT, fltCrdT)                                                                                                               |
+  | UNK      | getPxColor(pointIntType)                                                                                                                   |
+  | UNK      | getPxColor(pointFltType)                                                                                                                   |
+  | UNK      | getPxColorInterpolate(double, double, interpolationType);                                                                                  |
+  | UNK      | getPxColorInterpBLin(double, double);                                                                                                      |
+  | UNK      | getPxColorInterpTrunc(double, double);                                                                                                     |
+  | UNK      | getPxColorInterpNear(double, double);                                                                                                      |
+  | UNK      | getPxColorInterpAvg4(double, double);                                                                                                      |
+  | UNK      | getPxColorInterpAvg9(double, double);                                                                                                      |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | drawPointNC(intCrdT, intCrdT, colorArgType);                                                                                               |
+  | UNK      | getPxColorNC(intCrdT, intCrdT)                                                                                                             |
+  | UNK      | getPxColorRefNC(intCrdT, intCrdT)                                                                                                          |
+  | UNK      | drawHorzLineNC(intCrdT, intCrdT, intCrdT, colorArgType)                                                                                    |
+  | UNK      | drawVertLineNC(intCrdT, intCrdT, intCrdT, colorArgType)                                                                                    |
+  | UNK      | drawPointS(intCrdT, intCrdT, colorArgType)                                                                                                 |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | colorizeFltCanvas(std::function<colorT (fltCrdT, fltCrdT)>);                                                                               |
+  | UNK      | colorizeFltCanvas(std::function<colorT (pointFltType)>);                                                                                   |
+  | UNK      | colorizeIntCanvas(std::function<colorT (intCrdT, intCrdT)>);                                                                               |
+  | UNK      | colorizeIntCanvas(std::function<colorT (pointIntType)>);                                                                                   |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|
+  | UNK      | statNumNonZeroPixels(intCrdT, intCrdT, intCrdT, intCrdT)                                                                                   |
+  | UNK      | statNumNonZeroPixels()                                                                                                                     |
+  |----------+--------------------------------------------------------------------------------------------------------------------------------------------|

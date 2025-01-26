@@ -51,7 +51,7 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
   - New functionality
     - N/A
   - Documentation
-    - N/A
+    - Added test coverage document
   - Examples
     - New
       - N/A

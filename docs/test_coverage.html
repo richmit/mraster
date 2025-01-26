@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-01-26 Sun 00:22 -->
+<!-- 2025-01-26 Sun 12:59 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>Unit Test Coverage</title>
@@ -230,12 +230,12 @@
 
 <tr>
 <td class="org-right"><b>Updated:</b></td>
-<td class="org-left"><i>2025-01-26 00:22:49</i></td>
+<td class="org-left"><i>2025-01-26 12:59:33</i></td>
 </tr>
 
 <tr>
 <td class="org-right"><b>Generated:</b></td>
-<td class="org-left"><i>2025-01-26 00:22:50</i></td>
+<td class="org-left"><i>2025-01-26 12:59:35</i></td>
 </tr>
 </tbody>
 </table>
@@ -243,8 +243,8 @@
 Copyright &copy; 2025 Mitch Richling. All rights reserved.
 </p>
 
-<div id="outline-container-org39b9116" class="outline-2">
-<h2 id="org39b9116"><span class="section-number-2">1.</span> MRcolorTpl.hpp</h2>
+<div id="outline-container-org4997936" class="outline-2">
+<h2 id="org4997936"><span class="section-number-2">1.</span> MRcolorTpl.hpp</h2>
 <div class="outline-text-2" id="text-1">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -268,42 +268,42 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 
 <tr>
 <td class="org-left">DIRECT</td>
-<td class="org-left">colorTpl(const colorType&amp; aColor);</td>
+<td class="org-left">colorTpl(const colorType&amp; );</td>
 </tr>
 
 <tr>
 <td class="org-left">DIRECT</td>
-<td class="org-left">colorTpl(clrChanT c1, clrChanT c2, clrChanT c3, clrChanT c4);</td>
+<td class="org-left">colorTpl(clrChanT, clrChanT, clrChanT, clrChanT);</td>
 </tr>
 
 <tr>
 <td class="org-left">DIRECT</td>
-<td class="org-left">colorTpl(clrChanT c1, clrChanT c2, clrChanT c3);</td>
+<td class="org-left">colorTpl(clrChanT, clrChanT, clrChanT);</td>
 </tr>
 
 <tr>
 <td class="org-left">DIRECT</td>
-<td class="org-left">colorTpl(clrChanT c1, clrChanT c2);</td>
+<td class="org-left">colorTpl(clrChanT, clrChanT);</td>
 </tr>
 
 <tr>
 <td class="org-left">DIRECT</td>
-<td class="org-left">colorTpl(clrChanT cVal);</td>
+<td class="org-left">colorTpl(clrChanT);</td>
 </tr>
 
 <tr>
 <td class="org-left">DIRECT</td>
-<td class="org-left">colorTpl(cornerColorEnum cornerColor);</td>
+<td class="org-left">colorTpl(cornerColorEnum);</td>
 </tr>
 
 <tr>
 <td class="org-left">DIRECT</td>
-<td class="org-left">colorTpl(std::string colorString);</td>
+<td class="org-left">colorTpl(std::string);</td>
 </tr>
 
 <tr>
 <td class="org-left">DIRECT</td>
-<td class="org-left">colorTpl(const char* colorCString);</td>
+<td class="org-left">colorTpl(const char*);</td>
 </tr>
 
 <tr>
@@ -314,7 +314,7 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 <tbody>
 <tr>
 <td class="org-left">INDIRECT</td>
-<td class="org-left">colorTpl&amp; copy(colorArgType aCol);</td>
+<td class="org-left">colorTpl&amp; copy(colorArgType);</td>
 </tr>
 </tbody>
 <tbody>
@@ -441,12 +441,12 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 
 <tr>
 <td class="org-left">DIRECT</td>
-<td class="org-left">getChan_dbl(int chan);</td>
+<td class="org-left">getChan_dbl(int);</td>
 </tr>
 
 <tr>
 <td class="org-left">DIRECT</td>
-<td class="org-left">setChan_dbl(int chan, double cVal);</td>
+<td class="org-left">setChan_dbl(int, double);</td>
 </tr>
 
 <tr>
@@ -1896,6 +1896,1387 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 <tr>
 <td class="org-left">DIRECT</td>
 <td class="org-left">setRGBfromWavelengthLA(&#x2026;);</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org9c05c7f" class="outline-2">
+<h2 id="org9c05c7f"><span class="section-number-2">2.</span> ramCanvasTpl.hpp</h2>
+<div class="outline-text-2" id="text-2">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Coverage</th>
+<th scope="col" class="org-left">Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">ramCanvasTpl();</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">ramCanvasTpl(ramCanvasTpl&amp;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">ramCanvasTpl(intCrdT, intCrdT, fltCrdT, fltCrdT, fltCrdT, fltCrdT);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">ramCanvasTpl(ramCanvasTpl&amp;&amp;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">ramCanvasTpl&amp; operator=(ramCanvasTpl&amp;&amp;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">~ramCanvasTpl()</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillTriangleUtl(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">writeUIntToStream(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">platformEndianness();</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">triangleEdger(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">exportRasterData(&#x2026;);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">updRealCoords();</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">newIntCoordsNC(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">reallocCanvas(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">freeCanvas();</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">rePointPixels(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">newRealCoords(&#x2026;);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">adjoinCanvasRight(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">adjoinCanvasLeft(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">adjoinCanvasBottom(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">adjoinCanvasTop(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">insertCanvas(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">resizeCanvas(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">expandCanvas(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">cropCanvas(&#x2026;);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">isSameSize(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">isNotSameSize(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">isClose(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">isEqual(&#x2026;)</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">rotate90CW();</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">rotate90CCW();</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">rotate180();</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">flipHorz();</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">flipVert();</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">flipTranspose();</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">scaleUpProximal(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">scaleDown1pt(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">scaleDownMax(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">scaleDownMean(&#x2026;);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">geomTfrmRevRPoly(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">geomTfrmRevBiPoly(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">geomTfrmRevAff(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">geomTfrmRevArb(&#x2026;)</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">convolution(double*, int, int, double);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">convolution(double*, int, double);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">convolution(double*, int);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">computeConvolutionMatrixGausian(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">computeConvolutionMatrixBox(&#x2026;);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">*begin()</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">*end()</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">applyHomoPixTfrm(colorT&amp; (colorT::*HPT)());</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">applyHomoPixTfrm(colorT&amp; (colorT::*HPT)(double),                                          double);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">applyHomoPixTfrm(colorT&amp; (colorT::*HPT)(double, double),                                  double, double);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">applyHomoPixTfrm(colorT&amp; (colorT::*HPT)(double, double, double),                          double, double, double);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">applyHomoPixTfrm(colorT&amp; (colorT::*HPT)(double, double, double, double),                  double, double, double, double);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">applyHomoPixTfrm(colorT&amp; (colorT::*HPT)(double, double, double, double, double),          double, double, double, double, double);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">applyHomoPixTfrm(colorT&amp; (colorT::*HPT)(double, double, double, double, double, double),  double, double, double, double, double, double);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">applyHomoPixTfrm(colorT&amp; (colorT::*HPT)(int),                 int);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">applyHomoPixTfrm(colorT&amp; (colorT::*HPT)(int, int),            int, int);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">applyHomoPixTfrm(colorT&amp; (colorT::*HPT)(int, int, int),       int, int, int);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">applyHomoPixTfrm(colorT&amp; (colorT::*HPT)(int, int, int, int),  int, int, int, int);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">applyHomoPixTfrm(colorT&amp; (colorT::*HPT)(colorT),                          colorT);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">applyHomoPixTfrm(colorT&amp; (colorT::*HPT)(colorT, colorT),                  colorT, colorT);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">applyHomoPixTfrm(colorT&amp; (colorT::*HPT)(colorT, colorT, colorT),          colorT, colorT, colorT);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">applyHomoPixTfrm(colorT&amp; (colorT::*HPT)(colorT, colorT, colorT, colorT),  colorT, colorT, colorT, colorT);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">autoHistStrech();</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">autoMaxHistStrechRGB();</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">combineRamCanvasBinOp(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">combineRamCanvasMean(&#x2026;);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">clrCanvasToBlack();</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">clrCanvasToWhite();</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">clrCanvasChannelToMin(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">clrCanvasChannelToMax(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">clrCanvas();</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">clrCanvas(colorArgType);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">moveTo(intCrdT, intCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">moveTo(fltCrdT, fltCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">moveTo(pointIntType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">moveTo(pointFltType)</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">setDfltColor(colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">setDfltColor(std::string)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">setDfltColor(const char*)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">setDfltColor(colorChanType, colorChanType, colorChanType)</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawPoint()</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawPoint(colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawPoint(fltCrdT, fltCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawPoint(fltCrdT, fltCrdT, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawPoint(intCrdT, intCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawPoint(intCrdT, intCrdT, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawPoint(pointFltType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawPoint(pointFltType, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawPoint(pointIntType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawPoint(pointIntType, colorArgType)</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawLine(fltCrdT, fltCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawLine(fltCrdT, fltCrdT, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawLine(fltCrdT, fltCrdT, fltCrdT, fltCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawLine(fltCrdT, fltCrdT, fltCrdT, fltCrdT, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawLine(intCrdT, intCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawLine(intCrdT, intCrdT, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawLine(intCrdT, intCrdT, intCrdT, intCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawLine(intCrdT, intCrdT, intCrdT, intCrdT, colorArgType);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawLine(pointFltType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawLine(pointFltType, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawLine(pointFltType, pointFltType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawLine(pointFltType, pointFltType, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawLine(pointIntType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawLine(pointIntType, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawLine(pointIntType, pointIntType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawLine(pointIntType, pointIntType, colorArgType)</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawTriangle(fltCrdT, fltCrdT, fltCrdT, fltCrdT, fltCrdT, fltCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawTriangle(fltCrdT, fltCrdT, fltCrdT, fltCrdT, fltCrdT, fltCrdT, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawTriangle(intCrdT, intCrdT, intCrdT, intCrdT, intCrdT, intCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawTriangle(intCrdT, intCrdT, intCrdT, intCrdT, intCrdT, intCrdT, colorArgType);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawTriangle(pointFltType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawTriangle(pointFltType, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawTriangle(pointFltType, pointFltType, pointFltType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawTriangle(pointFltType, pointFltType, pointFltType, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawTriangle(pointIntType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawTriangle(pointIntType, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawTriangle(pointIntType, pointIntType, pointIntType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawTriangle(pointIntType, pointIntType, pointIntType, colorArgType)</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillTriangle(fltCrdT, fltCrdT, fltCrdT, fltCrdT, fltCrdT, fltCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillTriangle(fltCrdT, fltCrdT, fltCrdT, fltCrdT, fltCrdT, fltCrdT, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillTriangle(intCrdT, intCrdT, intCrdT, intCrdT, intCrdT, intCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillTriangle(intCrdT, intCrdT, intCrdT, intCrdT, intCrdT, intCrdT, colorArgType);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillTriangle(intCrdT, intCrdT, intCrdT, intCrdT, intCrdT, intCrdT, colorArgType, colorArgType, colorArgType);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillTriangle(pointFltType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillTriangle(pointFltType, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillTriangle(pointFltType, pointFltType, pointFltType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillTriangle(pointFltType, pointFltType, pointFltType, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillTriangle(pointIntType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillTriangle(pointIntType, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillTriangle(pointIntType, pointIntType, pointIntType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillTriangle(pointIntType, pointIntType, pointIntType, colorArgType)</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawRectangle(fltCrdT, fltCrdT, fltCrdT, fltCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawRectangle(fltCrdT, fltCrdT, fltCrdT, fltCrdT, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawRectangle(intCrdT, intCrdT, intCrdT, intCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawRectangle(intCrdT, intCrdT, intCrdT, intCrdT, colorArgType);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawRectangle(pointFltType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawRectangle(pointFltType, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawRectangle(pointFltType, pointFltType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawRectangle(pointFltType, pointFltType, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawRectangle(pointIntType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawRectangle(pointIntType, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawRectangle(pointIntType, pointIntType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawRectangle(pointIntType, pointIntType, colorArgType)</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillRectangle(fltCrdT, fltCrdT, fltCrdT, fltCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillRectangle(fltCrdT, fltCrdT, fltCrdT, fltCrdT, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillRectangle(intCrdT, intCrdT, intCrdT, intCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillRectangle(intCrdT, intCrdT, intCrdT, intCrdT, colorArgType);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillRectangle(pointFltType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillRectangle(pointFltType, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillRectangle(pointFltType, pointFltType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillRectangle(pointFltType, pointFltType, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillRectangle(pointIntType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillRectangle(pointIntType, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillRectangle(pointIntType, pointIntType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillRectangle(pointIntType, pointIntType, colorArgType)</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawCircle(fltCrdT, fltCrdT, fltCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawCircle(fltCrdT, fltCrdT, fltCrdT, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawCircle(fltCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawCircle(intCrdT, intCrdT, intCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawCircle(intCrdT, intCrdT, intCrdT, colorArgType);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawCircle(intCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawCircle(pointFltType, fltCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawCircle(pointFltType, fltCrdT, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawCircle(pointIntType, intCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawCircle(pointIntType, intCrdT, colorArgType)</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillCircle(fltCrdT, fltCrdT, fltCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillCircle(fltCrdT, fltCrdT, fltCrdT, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillCircle(fltCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillCircle(intCrdT, intCrdT, intCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillCircle(intCrdT, intCrdT, intCrdT, colorArgType);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillCircle(intCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillCircle(pointFltType, fltCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillCircle(pointFltType, fltCrdT, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillCircle(pointIntType, intCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawFillCircle(pointIntType, intCrdT, colorArgType)</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawPLCurve(int, fltCrdT, fltCrdT);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawPLCurve(int, fltCrdT, fltCrdT, colorArgType);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawPLCurve(int, intCrdT, intCrdT);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawPLCurve(int, intCrdT, intCrdT, colorArgType);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawPLCurve(int, pointFltType);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawPLCurve(int, pointFltType, colorArgType);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawPLCurve(int, pointIntType);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawPLCurve(int, pointIntType, colorArgType);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawHersheyGlyph(int, intCrdT, intCrdT, double, double, colorArgType);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawHersheyGlyph(int, fltCrdT, fltCrdT, double, double, colorArgType)</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawString(std::string, mjr::hershey::font, intCrdT, intCrdT, colorArgType, double, intCrdT);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawString(std::string, mjr::hershey::font, fltCrdT, fltCrdT, colorArgType, double, intCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawStringBox(std::string, mjr::hershey::font, intCrdT, intCrdT, colorArgType, colorArgType, double, intCrdT);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawStringBox(std::string, mjr::hershey::font, fltCrdT, fltCrdT, colorArgType, colorArgType, double, intCrdT)</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">supportLibTIFF();</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">readTIFFfile(&#x2026;);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">writeTIFFfile(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">writeTGAfile(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">readRAWfile(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">writeRAWfile(&#x2026;);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">isCliped(fltCrdT, fltCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">isCliped(intCrdT, intCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">isOnCanvas(fltCrdT, fltCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">isOnCanvas(intCrdT, intCrdT)</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">real2intX(fltCrdT) const;</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">real2intY(fltCrdT) const;</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">int2realX(intCrdT);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">int2realY(intCrdT);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">int2real(intCrdT, intCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">real2int(intCrdT, intCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">int2corner(intCrdT, intCrdT, int, int)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">int2corner(intCrdT, intCrdT, int)</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">realDelta2intX(fltCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">realDelta2intY(fltCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">intDelta2realX(intCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">intDelta2realY(intCrdT)</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getRealAxOrientationX()</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getRealAxOrientationY()</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">setRealAxOrientationY(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">setRealAxisDefaultOrientation()</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getDrawMode()</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">setDrawMode(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">setDefaultDrawMode()</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getIntAxOrientationX()</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">isIntAxOrientationNaturalX()</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">setIntAxOrientationX(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">isIntAxOrientationNaturalY()</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getIntAxOrientationY()</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">setIntAxOrientationY(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">setIntAxisDefaultOrientation()</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getNumPixX()</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getNumPixY()</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">*getPixels()</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">*clonePixels();</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getMinRealX()</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getMaxRealX()</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getMinRealY()</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getMaxRealY()</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getPixWidX()</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getPixWidY()</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getCanvasWidX()</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getCanvasWidY()</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getCanvasWidD()</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getPxColor(intCrdT, intCrdT) const;</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getPxColor(fltCrdT, fltCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getPxColor(pointIntType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getPxColor(pointFltType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getPxColorInterpolate(double, double, interpolationType);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getPxColorInterpBLin(double, double);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getPxColorInterpTrunc(double, double);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getPxColorInterpNear(double, double);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getPxColorInterpAvg4(double, double);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getPxColorInterpAvg9(double, double);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawPointNC(intCrdT, intCrdT, colorArgType);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getPxColorNC(intCrdT, intCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">getPxColorRefNC(intCrdT, intCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawHorzLineNC(intCrdT, intCrdT, intCrdT, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawVertLineNC(intCrdT, intCrdT, intCrdT, colorArgType)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">drawPointS(intCrdT, intCrdT, colorArgType)</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">colorizeFltCanvas(std::function&lt;colorT (fltCrdT, fltCrdT)&gt;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">colorizeFltCanvas(std::function&lt;colorT (pointFltType)&gt;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">colorizeIntCanvas(std::function&lt;colorT (intCrdT, intCrdT)&gt;);</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">colorizeIntCanvas(std::function&lt;colorT (pointIntType)&gt;);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">statNumNonZeroPixels(intCrdT, intCrdT, intCrdT, intCrdT)</td>
+</tr>
+
+<tr>
+<td class="org-left">UNK</td>
+<td class="org-left">statNumNonZeroPixels()</td>
 </tr>
 </tbody>
 </table>
