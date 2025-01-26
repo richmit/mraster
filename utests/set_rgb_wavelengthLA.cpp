@@ -1,15 +1,15 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      utest_colorTpl.cpp
+ @file      set_rgb_wavelengthLA.cpp
  @author    Mitch Richling http://www.mitchr.me/
- @date      2022-08-11
+ @date      2025-01-25
  @brief     Unit tests for basic color methods.@EOL
  @keywords  boost
  @std       C++20
  @copyright
   @parblock
-  Copyright (c) 2022, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.
+  Copyright (c) 2022-2025, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.
 
   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -33,62 +33,48 @@
 /** @cond exj */
 
 #include <gtest/gtest.h>
+#include "MRcolor.hpp"
 
-#include "ramCanvas.hpp"
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+TEST(set_rgb_wavelengthLA, unsigned8) {
 
-#include "set_chan_dbl.cpp"
-#include "set_chan_byte.cpp"
-#include "set_chan_const.cpp"
-#include "set_chan_gen.cpp"
-#include "set_chan_argb.cpp"
-#include "set_chan_hex.cpp"
-#include "set_rgba_pack.cpp"
-#include "set_rgb_tga.cpp"
+  mjr::colorRGBA8b  aColor;
 
-#include "tfrm_logic.cpp"
-#include "tfrm_arith.cpp"
+  aColor.setToBlack();
+  aColor.setRGBfromWavelengthLA(570);
+  EXPECT_EQ(aColor.getRed(),    0xda);
+  EXPECT_EQ(aColor.getGreen(),  0xff);
+  EXPECT_EQ(aColor.getBlue(),   0x00);
+  EXPECT_EQ(aColor.getAlpha(),  aColor.minChanVal);
 
-#include "bool_isBlack.cpp"
-#include "bool_isEqual.cpp"
+  aColor.setToWhite();
+  aColor.setRGBfromWavelengthLA(570);
+  EXPECT_EQ(aColor.getRed(),    0xda);
+  EXPECT_EQ(aColor.getGreen(),  0xff);
+  EXPECT_EQ(aColor.getBlue(),   0x00);
+  EXPECT_EQ(aColor.getAlpha(),  aColor.maxChanVal);
 
-#include "comp_distX.cpp"
-#include "comp_luminance.cpp"
+  //  MJR TODO NOTE: Add non-int input tests
+}
 
-#include "comp_dotProd.cpp"
-#include "comp_MinMax.cpp"
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+TEST(set_rgb_wavelengthLA, float32) {
 
-#include "set_rgb_wavelengthCM.cpp"
-#include "set_rgb_wavelengthLA.cpp"
-#include "set_cs_csCubeHelix.cpp"
-#include "tfrm_misc.cpp"
-#include "tfrm_websafe.cpp"
-#include "tfrm_PowPow.cpp"
-#include "tfrm_GryLevScl.cpp"
+  mjr::colorRGBA32F aColor;
 
-#include "comp_linearInterpolate.cpp"
-#include "comp_wMean.cpp"
+  aColor.setToBlack();
+  aColor.setRGBfromWavelengthLA(570);
+  EXPECT_NEAR(aColor.getRed(),    0.857142866,       0.00001);
+  EXPECT_NEAR(aColor.getGreen(),  1.000000000,       0.00001);
+  EXPECT_NEAR(aColor.getBlue(),   0.000000000,       0.00001);
+  EXPECT_NEAR(aColor.getAlpha(),  aColor.minChanVal, 0.00001);
 
-#include "set_rgb_unitHSx.cpp"
-#include "bool_isClose.cpp"
-#include "set_rgb_ColorSpace.cpp"
+  aColor.setToWhite();
+  aColor.setRGBfromWavelengthLA(570);
+  EXPECT_NEAR(aColor.getRed(),    0.857142866,       0.00001);
+  EXPECT_NEAR(aColor.getGreen(),  1.000000000,       0.00001);
+  EXPECT_NEAR(aColor.getBlue(),   0.000000000,       0.00001);
+  EXPECT_NEAR(aColor.getAlpha(),  aColor.maxChanVal, 0.00001);
 
-#include "set_cs_csCBSpectral.cpp"
-#include "set_cs_csFPcircular12.cpp"
-
-#include "comp_rgb2colorSpace.cpp"
-
-#include "set_cs_csBin.cpp"
-
-#include "set_rgb_constant.cpp"
-#include "set_cs_csHSLhX.cpp"
-#include "set_cs_csPLY.cpp"
-#include "set_cs_csCColdeRainbow.cpp"
-
-#include "constructor.cpp"
-
-#include "comp_bestChan.cpp"
-#include "comp_distDeltaE1976.cpp"
-
-#include "int128_test.cpp"
-
-/** @endcond */
+  //  MJR TODO NOTE: Add non-int input tests
+}

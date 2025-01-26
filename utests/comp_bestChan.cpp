@@ -1,15 +1,15 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      utest_colorTpl.cpp
+ @file      comp_bestChan.cpp
  @author    Mitch Richling http://www.mitchr.me/
- @date      2022-08-11
+ @date      2025-01-25
  @brief     Unit tests for basic color methods.@EOL
  @keywords  boost
  @std       C++20
  @copyright
   @parblock
-  Copyright (c) 2022, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.
+  Copyright (c) 2022-2025, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.
 
   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -33,62 +33,37 @@
 /** @cond exj */
 
 #include <gtest/gtest.h>
+#include "MRcolor.hpp"
 
-#include "ramCanvas.hpp"
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+TEST(comp_bestChan, unsigned8) {
+  mjr::color1c8b aColor;
+  mjr::color2c8b bColor;
+  mjr::color3c8b cColor;
+  mjr::color4c8b dColor;
+  mjr::color8c8b eColor;
 
-#include "set_chan_dbl.cpp"
-#include "set_chan_byte.cpp"
-#include "set_chan_const.cpp"
-#include "set_chan_gen.cpp"
-#include "set_chan_argb.cpp"
-#include "set_chan_hex.cpp"
-#include "set_rgba_pack.cpp"
-#include "set_rgb_tga.cpp"
+  EXPECT_EQ(aColor.bestRedChan(),     0);
+  EXPECT_EQ(bColor.bestRedChan(),     0);
+  EXPECT_EQ(cColor.bestRedChan(),     0);
+  EXPECT_EQ(dColor.bestRedChan(),     0);
+  EXPECT_EQ(eColor.bestRedChan(),     0);
 
-#include "tfrm_logic.cpp"
-#include "tfrm_arith.cpp"
+  EXPECT_EQ(aColor.bestGreenChan(),   0);
+  EXPECT_EQ(bColor.bestGreenChan(),   1);
+  EXPECT_EQ(cColor.bestGreenChan(),   1);
+  EXPECT_EQ(dColor.bestGreenChan(),   1);
+  EXPECT_EQ(eColor.bestGreenChan(),   1);
 
-#include "bool_isBlack.cpp"
-#include "bool_isEqual.cpp"
+  EXPECT_EQ(aColor.bestBlueChan(),    0);
+  EXPECT_EQ(bColor.bestBlueChan(),   -1);
+  EXPECT_EQ(cColor.bestBlueChan(),    2);
+  EXPECT_EQ(dColor.bestBlueChan(),    2);
+  EXPECT_EQ(eColor.bestBlueChan(),    2);
 
-#include "comp_distX.cpp"
-#include "comp_luminance.cpp"
-
-#include "comp_dotProd.cpp"
-#include "comp_MinMax.cpp"
-
-#include "set_rgb_wavelengthCM.cpp"
-#include "set_rgb_wavelengthLA.cpp"
-#include "set_cs_csCubeHelix.cpp"
-#include "tfrm_misc.cpp"
-#include "tfrm_websafe.cpp"
-#include "tfrm_PowPow.cpp"
-#include "tfrm_GryLevScl.cpp"
-
-#include "comp_linearInterpolate.cpp"
-#include "comp_wMean.cpp"
-
-#include "set_rgb_unitHSx.cpp"
-#include "bool_isClose.cpp"
-#include "set_rgb_ColorSpace.cpp"
-
-#include "set_cs_csCBSpectral.cpp"
-#include "set_cs_csFPcircular12.cpp"
-
-#include "comp_rgb2colorSpace.cpp"
-
-#include "set_cs_csBin.cpp"
-
-#include "set_rgb_constant.cpp"
-#include "set_cs_csHSLhX.cpp"
-#include "set_cs_csPLY.cpp"
-#include "set_cs_csCColdeRainbow.cpp"
-
-#include "constructor.cpp"
-
-#include "comp_bestChan.cpp"
-#include "comp_distDeltaE1976.cpp"
-
-#include "int128_test.cpp"
-
-/** @endcond */
+  EXPECT_EQ(aColor.bestAlphaChan(),  -1);
+  EXPECT_EQ(bColor.bestAlphaChan(),  -1);
+  EXPECT_EQ(cColor.bestAlphaChan(),  -1);
+  EXPECT_EQ(dColor.bestAlphaChan(),   3);
+  EXPECT_EQ(eColor.bestAlphaChan(),   3);
+}

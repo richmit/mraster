@@ -1,15 +1,15 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      utest_colorTpl.cpp
+ @file      comp_linearInterpolate.cpp
  @author    Mitch Richling http://www.mitchr.me/
- @date      2022-08-11
+ @date      2025-01-25
  @brief     Unit tests for basic color methods.@EOL
  @keywords  boost
  @std       C++20
  @copyright
   @parblock
-  Copyright (c) 2022, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.
+  Copyright (c) 2022-2025, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.
 
   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -33,62 +33,51 @@
 /** @cond exj */
 
 #include <gtest/gtest.h>
+#include "MRcolor.hpp"
 
-#include "ramCanvas.hpp"
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+TEST(comp_linearInterpolate, unsigned8) {
 
-#include "set_chan_dbl.cpp"
-#include "set_chan_byte.cpp"
-#include "set_chan_const.cpp"
-#include "set_chan_gen.cpp"
-#include "set_chan_argb.cpp"
-#include "set_chan_hex.cpp"
-#include "set_rgba_pack.cpp"
-#include "set_rgb_tga.cpp"
+  mjr::colorRGBA8b a1Color(10, 20, 30, 40);
+  mjr::colorRGBA8b a2Color(10, 30, 20, 40);
+  mjr::colorRGBA8b a3Color(40, 20, 30, 10);
+  mjr::colorRGBA8b a4Color(90, 70, 10, 20);
 
-#include "tfrm_logic.cpp"
-#include "tfrm_arith.cpp"
+  mjr::colorRGBA8b aColor;
+  mjr::colorRGBA8b cColor;
 
-#include "bool_isBlack.cpp"
-#include "bool_isEqual.cpp"
+ ////////////////////////////////////////////////////////////////////////////////
 
-#include "comp_distX.cpp"
-#include "comp_luminance.cpp"
+ aColor.linearInterpolate(0.0, a1Color, a2Color);
+ EXPECT_EQ(aColor.getC0(),  a1Color.getC0());
+ EXPECT_EQ(aColor.getC1(),  a1Color.getC1());
+ EXPECT_EQ(aColor.getC2(),  a1Color.getC2());
+ EXPECT_EQ(aColor.getC3(),  a1Color.getC3());
 
-#include "comp_dotProd.cpp"
-#include "comp_MinMax.cpp"
+ aColor.linearInterpolate(1.0, a1Color, a2Color);
+ EXPECT_EQ(aColor.getC0(),  a2Color.getC0());
+ EXPECT_EQ(aColor.getC1(),  a2Color.getC1());
+ EXPECT_EQ(aColor.getC2(),  a2Color.getC2());
+ EXPECT_EQ(aColor.getC3(),  a2Color.getC3());
 
-#include "set_rgb_wavelengthCM.cpp"
-#include "set_rgb_wavelengthLA.cpp"
-#include "set_cs_csCubeHelix.cpp"
-#include "tfrm_misc.cpp"
-#include "tfrm_websafe.cpp"
-#include "tfrm_PowPow.cpp"
-#include "tfrm_GryLevScl.cpp"
+ aColor.linearInterpolate(0.5, a1Color, a2Color);
+ cColor.uMean(0.5F, a1Color, a2Color);
+ EXPECT_EQ(aColor.getC0(),  cColor.getC0());
+ EXPECT_EQ(aColor.getC1(),  cColor.getC1());
+ EXPECT_EQ(aColor.getC2(),  cColor.getC2());
+ EXPECT_EQ(aColor.getC3(),  cColor.getC3());
 
-#include "comp_linearInterpolate.cpp"
-#include "comp_wMean.cpp"
+ aColor.linearInterpolate(0.25, a1Color, a2Color);
+ cColor.uMean(0.75F, a1Color, a2Color);
+ EXPECT_EQ(aColor.getC0(),  cColor.getC0());
+ EXPECT_EQ(aColor.getC1(),  cColor.getC1());
+ EXPECT_EQ(aColor.getC2(),  cColor.getC2());
+ EXPECT_EQ(aColor.getC3(),  cColor.getC3());
 
-#include "set_rgb_unitHSx.cpp"
-#include "bool_isClose.cpp"
-#include "set_rgb_ColorSpace.cpp"
-
-#include "set_cs_csCBSpectral.cpp"
-#include "set_cs_csFPcircular12.cpp"
-
-#include "comp_rgb2colorSpace.cpp"
-
-#include "set_cs_csBin.cpp"
-
-#include "set_rgb_constant.cpp"
-#include "set_cs_csHSLhX.cpp"
-#include "set_cs_csPLY.cpp"
-#include "set_cs_csCColdeRainbow.cpp"
-
-#include "constructor.cpp"
-
-#include "comp_bestChan.cpp"
-#include "comp_distDeltaE1976.cpp"
-
-#include "int128_test.cpp"
-
-/** @endcond */
+ aColor.linearInterpolate(0.75, a1Color, a2Color);
+ cColor.uMean(0.25F, a1Color, a2Color);
+ EXPECT_EQ(aColor.getC0(),  cColor.getC0());
+ EXPECT_EQ(aColor.getC1(),  cColor.getC1());
+ EXPECT_EQ(aColor.getC2(),  cColor.getC2());
+ EXPECT_EQ(aColor.getC3(),  cColor.getC3());
+}

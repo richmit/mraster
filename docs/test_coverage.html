@@ -1,0 +1,1913 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2025-01-26 Sun 00:22 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=1024, initial-scale=1" />
+<title>Unit Test Coverage</title>
+<meta name="author" content="Mitch Richling" />
+<meta name="keywords" content="release history changelog" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<style>body { width: 95%; margin: 2% auto; font-size: 18px; line-height: 1.4em; font-family: Georgia, serif; color: black; background-color: white; }</style>
+<style>body { min-width: 500px; max-width: 1024px; }</style>
+<style>h1,h2,h3,h4,h5,h6 { color: #A5573E; line-height: 1em; font-family: Helvetica, sans-serif; }</style>
+<style>h1,h2,h3 { line-height: 1.4em; }</style>
+<style>h1.title { font-size: 3em; }</style>
+<style>.subtitle { font-size: 0.6em; }</style>
+<style>h4,h5,h6 { font-size: 1em; }</style>
+<style>.org-src-container { border: 1px solid #ccc; box-shadow: 3px 3px 3px #eee; font-family: Lucida Console, monospace; font-size: 80%; margin: 0px; padding: 0px 0px; position: relative; }</style>
+<style>.org-src-container>pre { line-height: 1.2em; padding-top: 1.5em; margin: 0.5em; background-color: #404040; color: white; overflow: auto; }</style>
+<style>.org-src-container>pre:before { display: block; position: absolute; background-color: #b3b3b3; top: 0; right: 0; padding: 0 0.2em 0 0.4em; border-bottom-left-radius: 8px; border: 0; color: white; font-size: 100%; font-family: Helvetica, sans-serif;}</style>
+<style>pre.example { white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; font-family: Lucida Console, monospace; font-size: 80%; background: #404040; color: white; display: block; padding: 0em; border: 2px solid black; }</style>
+<style>blockquote { margin-bottom: 0.5em; padding: 0.5em; background-color: #FFF8DC; border-left: 2px solid #A5573E; border-left-color: rgb(255, 228, 102); display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 5em; margin-inline-end: 5em; } </style>
+</head>
+<body>
+<div id="org-div-home-and-up">
+ <a accesskey="h" href="https://richmit.github.io/mraster/index.html"> UP </a>
+ |
+ <a accesskey="H" href="https://www.mitchr.me/"> HOME </a>
+</div><div id="content" class="content">
+<h1 class="title">Unit Test Coverage</h1>
+<table border="2 solid #ccc" cellspacing="0" cellpadding="6" rules="groups" frame="hsides" align="center">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right"><b>Author:</b></td>
+<td class="org-left"><i>Mitch Richling</i></td>
+</tr>
+
+<tr>
+<td class="org-right"><b>Updated:</b></td>
+<td class="org-left"><i>2025-01-26 00:22:49</i></td>
+</tr>
+
+<tr>
+<td class="org-right"><b>Generated:</b></td>
+<td class="org-left"><i>2025-01-26 00:22:50</i></td>
+</tr>
+</tbody>
+</table>
+<p align="center">
+Copyright &copy; 2025 Mitch Richling. All rights reserved.
+</p>
+
+<div id="outline-container-org39b9116" class="outline-2">
+<h2 id="org39b9116"><span class="section-number-2">1.</span> MRcolorTpl.hpp</h2>
+<div class="outline-text-2" id="text-1">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Coverage</th>
+<th scope="col" class="org-left">Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">colorTpl();</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">colorTpl(const colorType&amp; aColor);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">colorTpl(clrChanT c1, clrChanT c2, clrChanT c3, clrChanT c4);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">colorTpl(clrChanT c1, clrChanT c2, clrChanT c3);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">colorTpl(clrChanT c1, clrChanT c2);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">colorTpl(clrChanT cVal);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">colorTpl(cornerColorEnum cornerColor);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">colorTpl(std::string colorString);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">colorTpl(const char* colorCString);</td>
+</tr>
+
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">~colorTpl();</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">colorTpl&amp; copy(colorArgType aCol);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getC0() const;</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getC1() const;</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getC2() const;</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getC3() const;</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getChan(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setC0(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setC1(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setC2(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setC3(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setChan(int, clrChanT);</td>
+</tr>
+
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">setChanToMax(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">setChanToMin(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setChans(clrChanT, clrChanT, clrChanT, clrChanT);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setChans(clrChanT, clrChanT, clrChanT);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setChans(clrChanT, clrChanT);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setChans(clrChanT);</td>
+</tr>
+
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">setChans(std::tuple&lt;clrChanT, clrChanT, clrChanT, clrChanT&gt;);</td>
+</tr>
+
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">setChans(std::tuple&lt;clrChanT, clrChanT, clrChanT&gt;);</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">setChans(std::vector&lt;clrChanT&gt;&amp;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setChans(std::string, bool);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getC0_dbl();</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getC1_dbl();</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getC2_dbl();</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getC3_dbl();</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getChan_dbl(int chan);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setChan_dbl(int chan, double cVal);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setC0_dbl(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setC1_dbl(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setC2_dbl(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setC3_dbl(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setChans_dbl(double, double, double, double);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setChans_dbl(double, double, double);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setChans_dbl(double, double);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setChans_dbl(double);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">bestRedChan()</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">bestGreenChan()</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">bestBlueChan()</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">bestAlphaChan()</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setChans_dbl(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setChans_byte(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setChansRGBA_dbl(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setChansRGB_dbl(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setChansRGBA_byte(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setChansRGB_byte(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getColCon_dbl()</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getColCon_byte()</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getColConRGBA_dbl()</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getColConRGB_dbl()</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getColConRGBA_byte()</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getColConRGB_byte()</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getC0_byte() const;</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getC1_byte() const;</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getC2_byte() const;</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getC3_byte() const;</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getChan_byte(int) const;</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setChan_byte(int, uint8_t);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setC0_byte(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setC1_byte(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setC2_byte(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setC3_byte(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setChans_byte(uint8_t, uint8_t, uint8_t, uint8_t);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setChans_byte(uint8_t, uint8_t, uint8_t);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setChans_byte(uint8_t, uint8_t);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setChans_byte(uint8_t);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setToBlack();</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setToWhite();</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setToRed();</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setToBlue();</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setToGreen();</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setToCyan();</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setToYellow();</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setToMagenta();</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setToCorner(char);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setToCorner(cornerColorEnum);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setToCorner(std::string);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setRGBAfromLogPackIntABGR(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setRGBfromLogPackIntABGR(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setRGBAfromLogPackIntARGB(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setRGBfromLogPackIntARGB(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setRGBAfromLogPackIntRGBA(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setRGBfromLogPackIntRGBA(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setRGBAfromLogPackIntABRG(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setRGBfromLogPackIntABRG(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setRGBAfromLogPackIntBGRA(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setRGBfromLogPackIntBGRA(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">setRGBAfromLogPackIntGen(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">setRGBfromLogPackIntGen(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">setRGBAfromPackIntGen(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">setRGBfromPackIntGen(&#x2026;);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setRGBfromUnitHSV(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setRGBfromUnitHSL(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setRGBfromColorSpace(colorSpaceEnum, double, double, double);</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">setRGBfromColorSpace(colorSpaceEnum, colorTpl&lt;double, 3&gt;);</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">interplColorSpace(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">rgb2colorSpace(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">colorSpaceToString(&#x2026;);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setRGBcmpGreyTGA16bit(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setRGBcmpGreyTGA24bit(&#x2026;);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setRGBfromWavelengthCM(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setRGBfromWavelengthLA(&#x2026;);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">cmpGradiant(csFltType, std::vector&lt;csFltType&gt;, std::vector&lt;colorType&gt;);</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">cmpGradiant(csFltType, std::vector&lt;colorType&gt;);</td>
+</tr>
+
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">cmpGradiant(csFltType, csIntType, const packed4Cint*)</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">cmpRGBcornerDGradiant(csIntType, const char*);</td>
+</tr>
+
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">cmpRGBcornerDGradiant(csIntType, csIntType, const ccT*)</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">cmpRGBcornerCGradiant(csFltType, const char*) {</td>
+</tr>
+
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">cmpRGBcornerCGradiant(csFltType, csIntType, const ccT*)</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">wMean( 8 args</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">wMean( 6 args</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">wMean( 4 args</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">uMean( 7 args</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">uMean( 5 args</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">uMean( 3 args</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">linearInterpolate(double, colorArgType, colorArgType);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmOr(&#x2026;)         No coverage for float clrChanT</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmNor(&#x2026;)        No coverage for float clrChanT</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmAnd(&#x2026;)        No coverage for float clrChanT</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmNand(&#x2026;)       No coverage for float clrChanT</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmXor(&#x2026;)        No coverage for float clrChanT</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmNxor(&#x2026;)       No coverage for float clrChanT</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmNot(void)       No coverage for float clrChanT</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmSqDiff(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmAbsDiff(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmAdd(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmDiv(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmMult(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmMultClamp(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmSignDiff(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmDiffClamp(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmNegDiffClamp(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmAddClamp(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmAddDivClamp(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmDiff(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmMod(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmInvert();</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmMix(&#x2026;);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmCopy(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmMaxI(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmMinI(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmMax(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmMin(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmShiftL(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmShiftR(&#x2026;)</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmSaw(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmStep(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmDiracTot(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmDirac(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmFuzzyDirac(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmMean(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmGmean(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmGmeanClamp(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmGreyScaleRGB(void);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmWebSafeRGB();</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmLinearGreyLevelScale(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmLinearGreyLevelScaleRGB(&#x2026;);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmStdPow(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmStdPowRGB(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmStdPowSqr(void);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmStdPowSqrt(void);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">tfrmLn();</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">rgb2GreyDotProd(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">luminanceRGB(void);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">intensityRGB(void);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">intensity(void);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">intensityScaledRGB(void);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">intensityScaled(void);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getMaxC();</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getMinC();</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getMaxRGB();</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">getMinRGB();</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">dotProd(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">distHypot(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">distSumAbs(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">distMaxAbs(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">distDeltaE1976(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">distDeltaE1994(&#x2026;);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">isEqual(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">isEqualRGB(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">isClose(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">isCloseRGB(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">isNotEqual(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">isBlack();</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">isBlackRGB();</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">clampTop(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">clampBot(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">clampAll(&#x2026;);</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">csBin01</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csBinGB</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csBinRB</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csBinMC</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csBinYC</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csBinRG</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csBinMY</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">csBin_tpl</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBAccent</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBBlues</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBBrBG</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBBuGn</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBBuPu</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBDark2</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBGnBu</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBGreens</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBGreys</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBOrRd</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBOranges</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBPRGn</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBPaired</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBPastel1</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBPastel2</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBPiYG</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBPuBu</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBPuBuGn</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBPuOr</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBPuRd</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBPurples</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBRdBu</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBRdGy</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBRdPu</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBRdYlBu</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBRdYlGn</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBReds</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBSet1</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBSet2</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBSet3</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">csCBSpectral</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBYlGn</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBYlGnBu</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBYlOrBr</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCBYlOrRd</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">csCB_tpl</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">csCC_tpl</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCCconsOne</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCCconsTwo</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCCdiag01</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCCdiagCR</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCCdiagMG</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCCdiagYB</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCColdeColdToHot</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCColdeFireRamp</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCColdeIceToWaterToHot</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">csCColdeRainbow</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCCsumBGR</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCCsumBRG</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCCsumGBR</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCCsumGRB</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCCsumRBG</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCCsumRGB</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCCudBg</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCCudBr</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCCudGb</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCCudGr</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCCudRb</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csCCudRg</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">csCHblu</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">csCHstd</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">csCHvio</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">csCubeHelix_tpl</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">csFP_tpl</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csFPblAqGrYeOrReVi200</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">csFPcircular12</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csFPcircular24</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csFPcmoceanAlgae</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csFPcmoceanAmp</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csFPcmoceanBalance</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csFPcmoceanCurl</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csFPcmoceanDeep</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csFPcmoceanDense</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csFPcmoceanHaline</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csFPcmoceanIce</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csFPcmoceanTempo</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csFPmplBrBG</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csFPmplOcean</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csFPmplOranges</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csFPneoDdivVegetationA</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csFPneoDivVegetationC</td>
+</tr>
+
+<tr>
+<td class="org-left">SIMILAR</td>
+<td class="org-left">csFPneoModisNdvi</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">csWS_tpl</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">csWSnormalVision</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">csWSprotanopia</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">csWSdeutanopia</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">csWStritanoptia</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">csWSprotanopiaAlt</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">csWSdeutanopiaAlt</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">csWStritanoptiaAlt</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">csHSLhB</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">csHSLhC</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">csHSLhG</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">csHSLhM</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">csHSLhR</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">csHSLhY</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">csHSLh_tpl</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">csPGrey3x</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">csPGrey4x</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">csPLY_tpl</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">csPLYcividis</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">csPLYgrey</td>
+</tr>
+
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">csPLYhsvRB</td>
+</tr>
+
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">csPLYinferno</td>
+</tr>
+
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">csPLYmagma</td>
+</tr>
+
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">csPLYparula</td>
+</tr>
+
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">csPLYplasma</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">csPLYquad</td>
+</tr>
+
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">csPLYturbo</td>
+</tr>
+
+<tr>
+<td class="org-left">INDIRECT</td>
+<td class="org-left">csPLYviridis</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">csRainbowCM</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">csRainbowLA</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setRGBfromWavelengthCM(&#x2026;);</td>
+</tr>
+
+<tr>
+<td class="org-left">DIRECT</td>
+<td class="org-left">setRGBfromWavelengthLA(&#x2026;);</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
+</div>
+</body>
+</html>

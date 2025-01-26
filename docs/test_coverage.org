@@ -1,0 +1,403 @@
+# -*- Mode:Org; Coding:utf-8; fill-column:78 -*-
+# ######################################################################################################################################################.H.S.##
+# FILE:        test_coverage.org
+#+TITLE:       Unit Test Coverage
+#+AUTHOR:      Mitch Richling
+#+EMAIL:       http://www.mitchr.me/
+#+DATE:        2024-08-30
+#+KEYWORDS:    release history changelog
+#+LANGUAGE:    en
+#+OPTIONS:     num:t toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t skip:nil d:nil todo:t pri:nil H:5 p:t author:t html-scripts:nil 
+#+SEQ_TODO:    TODO:NEW(t)                         TODO:WORK(w)    TODO:HOLD(h)    | TODO:FUTURE(f)   TODO:DONE(d)    TODO:CANCELED(c)
+#+PROPERTY: header-args :eval never-export
+#+HTML_HEAD: <style>body { width: 95%; margin: 2% auto; font-size: 18px; line-height: 1.4em; font-family: Georgia, serif; color: black; background-color: white; }</style>
+#+HTML_HEAD: <style>body { min-width: 500px; max-width: 1024px; }</style>
+#+HTML_HEAD: <style>h1,h2,h3,h4,h5,h6 { color: #A5573E; line-height: 1em; font-family: Helvetica, sans-serif; }</style>
+#+HTML_HEAD: <style>h1,h2,h3 { line-height: 1.4em; }</style>
+#+HTML_HEAD: <style>h1.title { font-size: 3em; }</style>
+#+HTML_HEAD: <style>.subtitle { font-size: 0.6em; }</style>
+#+HTML_HEAD: <style>h4,h5,h6 { font-size: 1em; }</style>
+#+HTML_HEAD: <style>.org-src-container { border: 1px solid #ccc; box-shadow: 3px 3px 3px #eee; font-family: Lucida Console, monospace; font-size: 80%; margin: 0px; padding: 0px 0px; position: relative; }</style>
+#+HTML_HEAD: <style>.org-src-container>pre { line-height: 1.2em; padding-top: 1.5em; margin: 0.5em; background-color: #404040; color: white; overflow: auto; }</style>
+#+HTML_HEAD: <style>.org-src-container>pre:before { display: block; position: absolute; background-color: #b3b3b3; top: 0; right: 0; padding: 0 0.2em 0 0.4em; border-bottom-left-radius: 8px; border: 0; color: white; font-size: 100%; font-family: Helvetica, sans-serif;}</style>
+#+HTML_HEAD: <style>pre.example { white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; font-family: Lucida Console, monospace; font-size: 80%; background: #404040; color: white; display: block; padding: 0em; border: 2px solid black; }</style>
+#+HTML_HEAD: <style>blockquote { margin-bottom: 0.5em; padding: 0.5em; background-color: #FFF8DC; border-left: 2px solid #A5573E; border-left-color: rgb(255, 228, 102); display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 5em; margin-inline-end: 5em; } </style>
+#+HTML_LINK_HOME: https://www.mitchr.me/
+#+HTML_LINK_UP: https://richmit.github.io/mraster/index.html
+# ######################################################################################################################################################.H.E.##
+
+#+ATTR_HTML: :border 2 solid #ccc :frame hsides :align center
+|          <r> | <l>                                          |
+|    *Author:* | /{{{author}}}/                               |
+|   *Updated:* | /{{{modification-time(%Y-%m-%d %H:%M:%S)}}}/ |
+| *Generated:* | /{{{time(%Y-%m-%d %H:%M:%S)}}}/              |
+#+ATTR_HTML: :align center
+Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
+
+* MRcolorTpl.hpp
+
+  |----------+-------------------------------------------------------------------------|
+  | Coverage | Method                                                                  |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | colorTpl();                                                             |
+  | DIRECT   | colorTpl(const colorType& aColor);                                      |
+  | DIRECT   | colorTpl(clrChanT c1, clrChanT c2, clrChanT c3, clrChanT c4);           |
+  | DIRECT   | colorTpl(clrChanT c1, clrChanT c2, clrChanT c3);                        |
+  | DIRECT   | colorTpl(clrChanT c1, clrChanT c2);                                     |
+  | DIRECT   | colorTpl(clrChanT cVal);                                                |
+  | DIRECT   | colorTpl(cornerColorEnum cornerColor);                                  |
+  | DIRECT   | colorTpl(std::string colorString);                                      |
+  | DIRECT   | colorTpl(const char* colorCString);                                     |
+  | INDIRECT | ~colorTpl();                                                            |
+  |----------+-------------------------------------------------------------------------|
+  | INDIRECT | colorTpl& copy(colorArgType aCol);                                      |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | getC0() const;                                                          |
+  | DIRECT   | getC1() const;                                                          |
+  | DIRECT   | getC2() const;                                                          |
+  | DIRECT   | getC3() const;                                                          |
+  | DIRECT   | getChan(...);                                                           |
+  | DIRECT   | setC0(...);                                                             |
+  | DIRECT   | setC1(...);                                                             |
+  | DIRECT   | setC2(...);                                                             |
+  | DIRECT   | setC3(...);                                                             |
+  | DIRECT   | setChan(int, clrChanT);                                                 |
+  | INDIRECT | setChanToMax(...);                                                      |
+  | INDIRECT | setChanToMin(...);                                                      |
+  | DIRECT   | setChans(clrChanT, clrChanT, clrChanT, clrChanT);                       |
+  | DIRECT   | setChans(clrChanT, clrChanT, clrChanT);                                 |
+  | DIRECT   | setChans(clrChanT, clrChanT);                                           |
+  | DIRECT   | setChans(clrChanT);                                                     |
+  | INDIRECT | setChans(std::tuple<clrChanT, clrChanT, clrChanT, clrChanT>);           |
+  | INDIRECT | setChans(std::tuple<clrChanT, clrChanT, clrChanT>);                     |
+  |          | setChans(std::vector<clrChanT>&);                                       |
+  | DIRECT   | setChans(std::string, bool);                                            |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | getC0_dbl();                                                            |
+  | DIRECT   | getC1_dbl();                                                            |
+  | DIRECT   | getC2_dbl();                                                            |
+  | DIRECT   | getC3_dbl();                                                            |
+  | DIRECT   | getChan_dbl(int chan);                                                  |
+  | DIRECT   | setChan_dbl(int chan, double cVal);                                     |
+  | DIRECT   | setC0_dbl(...);                                                         |
+  | DIRECT   | setC1_dbl(...);                                                         |
+  | DIRECT   | setC2_dbl(...);                                                         |
+  | DIRECT   | setC3_dbl(...);                                                         |
+  | DIRECT   | setChans_dbl(double, double, double, double);                           |
+  | DIRECT   | setChans_dbl(double, double, double);                                   |
+  | DIRECT   | setChans_dbl(double, double);                                           |
+  | DIRECT   | setChans_dbl(double);                                                   |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | bestRedChan()                                                           |
+  | DIRECT   | bestGreenChan()                                                         |
+  | DIRECT   | bestBlueChan()                                                          |
+  | DIRECT   | bestAlphaChan()                                                         |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | setChans_dbl(...)                                                       |
+  | DIRECT   | setChans_byte(...)                                                      |
+  | DIRECT   | setChansRGBA_dbl(...)                                                   |
+  | DIRECT   | setChansRGB_dbl(...)                                                    |
+  | DIRECT   | setChansRGBA_byte(...)                                                  |
+  | DIRECT   | setChansRGB_byte(...)                                                   |
+  | DIRECT   | getColCon_dbl()                                                         |
+  | DIRECT   | getColCon_byte()                                                        |
+  | DIRECT   | getColConRGBA_dbl()                                                     |
+  | DIRECT   | getColConRGB_dbl()                                                      |
+  | DIRECT   | getColConRGBA_byte()                                                    |
+  | DIRECT   | getColConRGB_byte()                                                     |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | getC0_byte() const;                                                     |
+  | DIRECT   | getC1_byte() const;                                                     |
+  | DIRECT   | getC2_byte() const;                                                     |
+  | DIRECT   | getC3_byte() const;                                                     |
+  | DIRECT   | getChan_byte(int) const;                                                |
+  | DIRECT   | setChan_byte(int, uint8_t);                                             |
+  | DIRECT   | setC0_byte(...);                                                        |
+  | DIRECT   | setC1_byte(...);                                                        |
+  | DIRECT   | setC2_byte(...);                                                        |
+  | DIRECT   | setC3_byte(...);                                                        |
+  | DIRECT   | setChans_byte(uint8_t, uint8_t, uint8_t, uint8_t);                      |
+  | DIRECT   | setChans_byte(uint8_t, uint8_t, uint8_t);                               |
+  | DIRECT   | setChans_byte(uint8_t, uint8_t);                                        |
+  | DIRECT   | setChans_byte(uint8_t);                                                 |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | setToBlack();                                                           |
+  | DIRECT   | setToWhite();                                                           |
+  | DIRECT   | setToRed();                                                             |
+  | DIRECT   | setToBlue();                                                            |
+  | DIRECT   | setToGreen();                                                           |
+  | DIRECT   | setToCyan();                                                            |
+  | DIRECT   | setToYellow();                                                          |
+  | DIRECT   | setToMagenta();                                                         |
+  | DIRECT   | setToCorner(char);                                                      |
+  | DIRECT   | setToCorner(cornerColorEnum);                                           |
+  | DIRECT   | setToCorner(std::string);                                               |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | setRGBAfromLogPackIntABGR(...)                                          |
+  | DIRECT   | setRGBfromLogPackIntABGR(...)                                           |
+  | DIRECT   | setRGBAfromLogPackIntARGB(...)                                          |
+  | DIRECT   | setRGBfromLogPackIntARGB(...)                                           |
+  | DIRECT   | setRGBAfromLogPackIntRGBA(...)                                          |
+  | DIRECT   | setRGBfromLogPackIntRGBA(...)                                           |
+  | DIRECT   | setRGBAfromLogPackIntABRG(...)                                          |
+  | DIRECT   | setRGBfromLogPackIntABRG(...)                                           |
+  | DIRECT   | setRGBAfromLogPackIntBGRA(...)                                          |
+  | DIRECT   | setRGBfromLogPackIntBGRA(...)                                           |
+  | INDIRECT | setRGBAfromLogPackIntGen(...);                                          |
+  | INDIRECT | setRGBfromLogPackIntGen(...);                                           |
+  |          | setRGBAfromPackIntGen(...);                                             |
+  |          | setRGBfromPackIntGen(...);                                              |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | setRGBfromUnitHSV(...);                                                 |
+  | DIRECT   | setRGBfromUnitHSL(...);                                                 |
+  | DIRECT   | setRGBfromColorSpace(colorSpaceEnum, double, double, double);           |
+  | SIMILAR  | setRGBfromColorSpace(colorSpaceEnum, colorTpl<double, 3>);              |
+  |          | interplColorSpace(...);                                                 |
+  | DIRECT   | rgb2colorSpace(...);                                                    |
+  |          | colorSpaceToString(...);                                                |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | setRGBcmpGreyTGA16bit(...);                                             |
+  | DIRECT   | setRGBcmpGreyTGA24bit(...);                                             |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | setRGBfromWavelengthCM(...);                                            |
+  | DIRECT   | setRGBfromWavelengthLA(...);                                            |
+  |----------+-------------------------------------------------------------------------|
+  |          | cmpGradiant(csFltType, std::vector<csFltType>, std::vector<colorType>); |
+  |          | cmpGradiant(csFltType, std::vector<colorType>);                         |
+  | INDIRECT | cmpGradiant(csFltType, csIntType, const packed4Cint*)                   |
+  | DIRECT   | cmpRGBcornerDGradiant(csIntType, const char*);                          |
+  | INDIRECT | cmpRGBcornerDGradiant(csIntType, csIntType, const ccT*)                 |
+  | DIRECT   | cmpRGBcornerCGradiant(csFltType, const char*) {                         |
+  | INDIRECT | cmpRGBcornerCGradiant(csFltType, csIntType, const ccT*)                 |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | wMean( 8 args                                                           |
+  | DIRECT   | wMean( 6 args                                                           |
+  | DIRECT   | wMean( 4 args                                                           |
+  | DIRECT   | uMean( 7 args                                                           |
+  | DIRECT   | uMean( 5 args                                                           |
+  | DIRECT   | uMean( 3 args                                                           |
+  | DIRECT   | linearInterpolate(double, colorArgType, colorArgType);                  |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | tfrmOr(...)         No coverage for float clrChanT                      |
+  | DIRECT   | tfrmNor(...)        No coverage for float clrChanT                      |
+  | DIRECT   | tfrmAnd(...)        No coverage for float clrChanT                      |
+  | DIRECT   | tfrmNand(...)       No coverage for float clrChanT                      |
+  | DIRECT   | tfrmXor(...)        No coverage for float clrChanT                      |
+  | DIRECT   | tfrmNxor(...)       No coverage for float clrChanT                      |
+  | DIRECT   | tfrmNot(void)       No coverage for float clrChanT                      |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | tfrmSqDiff(...);                                                        |
+  | DIRECT   | tfrmAbsDiff(...);                                                       |
+  | DIRECT   | tfrmAdd(...);                                                           |
+  | DIRECT   | tfrmDiv(...);                                                           |
+  | DIRECT   | tfrmMult(...);                                                          |
+  | DIRECT   | tfrmMultClamp(...);                                                     |
+  | DIRECT   | tfrmSignDiff(...);                                                      |
+  | DIRECT   | tfrmDiffClamp(...);                                                     |
+  | DIRECT   | tfrmNegDiffClamp(...);                                                  |
+  | DIRECT   | tfrmAddClamp(...);                                                      |
+  | DIRECT   | tfrmAddDivClamp(...);                                                   |
+  | DIRECT   | tfrmDiff(...);                                                          |
+  | DIRECT   | tfrmMod(...)                                                            |
+  | DIRECT   | tfrmInvert();                                                           |
+  | DIRECT   | tfrmMix(...);                                                           |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | tfrmCopy(...);                                                          |
+  | DIRECT   | tfrmMaxI(...);                                                          |
+  | DIRECT   | tfrmMinI(...);                                                          |
+  | DIRECT   | tfrmMax(...);                                                           |
+  | DIRECT   | tfrmMin(...);                                                           |
+  | DIRECT   | tfrmShiftL(...)                                                         |
+  | DIRECT   | tfrmShiftR(...)                                                         |
+  | DIRECT   | tfrmSaw(...);                                                           |
+  | DIRECT   | tfrmStep(...);                                                          |
+  | DIRECT   | tfrmDiracTot(...);                                                      |
+  | DIRECT   | tfrmDirac(...);                                                         |
+  | DIRECT   | tfrmFuzzyDirac(...);                                                    |
+  | DIRECT   | tfrmMean(...);                                                          |
+  | DIRECT   | tfrmGmean(...);                                                         |
+  | DIRECT   | tfrmGmeanClamp(...);                                                    |
+  | DIRECT   | tfrmGreyScaleRGB(void);                                                 |
+  | DIRECT   | tfrmWebSafeRGB();                                                       |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | tfrmLinearGreyLevelScale(...);                                          |
+  | DIRECT   | tfrmLinearGreyLevelScaleRGB(...);                                       |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | tfrmStdPow(...);                                                        |
+  | DIRECT   | tfrmStdPowRGB(...);                                                     |
+  | DIRECT   | tfrmStdPowSqr(void);                                                    |
+  | DIRECT   | tfrmStdPowSqrt(void);                                                   |
+  | DIRECT   | tfrmLn();                                                               |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | rgb2GreyDotProd(...);                                                   |
+  | DIRECT   | luminanceRGB(void);                                                     |
+  | DIRECT   | intensityRGB(void);                                                     |
+  | DIRECT   | intensity(void);                                                        |
+  | DIRECT   | intensityScaledRGB(void);                                               |
+  | DIRECT   | intensityScaled(void);                                                  |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | getMaxC();                                                              |
+  | DIRECT   | getMinC();                                                              |
+  | DIRECT   | getMaxRGB();                                                            |
+  | DIRECT   | getMinRGB();                                                            |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | dotProd(...);                                                           |
+  | DIRECT   | distHypot(...);                                                         |
+  | DIRECT   | distSumAbs(...);                                                        |
+  | DIRECT   | distMaxAbs(...);                                                        |
+  | DIRECT   | distDeltaE1976(...);                                                    |
+  | DIRECT   | distDeltaE1994(...);                                                    |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | isEqual(...);                                                           |
+  | DIRECT   | isEqualRGB(...);                                                        |
+  | DIRECT   | isClose(...);                                                           |
+  | DIRECT   | isCloseRGB(...);                                                        |
+  | DIRECT   | isNotEqual(...);                                                        |
+  | DIRECT   | isBlack();                                                              |
+  | DIRECT   | isBlackRGB();                                                           |
+  |----------+-------------------------------------------------------------------------|
+  | INDIRECT | clampTop(...);                                                          |
+  | INDIRECT | clampBot(...);                                                          |
+  | INDIRECT | clampAll(...);                                                          |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | csBin01                                                                 |
+  | SIMILAR  | csBinGB                                                                 |
+  | SIMILAR  | csBinRB                                                                 |
+  | SIMILAR  | csBinMC                                                                 |
+  | SIMILAR  | csBinYC                                                                 |
+  | SIMILAR  | csBinRG                                                                 |
+  | SIMILAR  | csBinMY                                                                 |
+  |----------+-------------------------------------------------------------------------|
+  | INDIRECT | csBin_tpl                                                               |
+  |----------+-------------------------------------------------------------------------|
+  | SIMILAR  | csCBAccent                                                              |
+  | SIMILAR  | csCBBlues                                                               |
+  | SIMILAR  | csCBBrBG                                                                |
+  | SIMILAR  | csCBBuGn                                                                |
+  | SIMILAR  | csCBBuPu                                                                |
+  | SIMILAR  | csCBDark2                                                               |
+  | SIMILAR  | csCBGnBu                                                                |
+  | SIMILAR  | csCBGreens                                                              |
+  | SIMILAR  | csCBGreys                                                               |
+  | SIMILAR  | csCBOrRd                                                                |
+  | SIMILAR  | csCBOranges                                                             |
+  | SIMILAR  | csCBPRGn                                                                |
+  | SIMILAR  | csCBPaired                                                              |
+  | SIMILAR  | csCBPastel1                                                             |
+  | SIMILAR  | csCBPastel2                                                             |
+  | SIMILAR  | csCBPiYG                                                                |
+  | SIMILAR  | csCBPuBu                                                                |
+  | SIMILAR  | csCBPuBuGn                                                              |
+  | SIMILAR  | csCBPuOr                                                                |
+  | SIMILAR  | csCBPuRd                                                                |
+  | SIMILAR  | csCBPurples                                                             |
+  | SIMILAR  | csCBRdBu                                                                |
+  | SIMILAR  | csCBRdGy                                                                |
+  | SIMILAR  | csCBRdPu                                                                |
+  | SIMILAR  | csCBRdYlBu                                                              |
+  | SIMILAR  | csCBRdYlGn                                                              |
+  | SIMILAR  | csCBReds                                                                |
+  | SIMILAR  | csCBSet1                                                                |
+  | SIMILAR  | csCBSet2                                                                |
+  | SIMILAR  | csCBSet3                                                                |
+  | DIRECT   | csCBSpectral                                                            |
+  | SIMILAR  | csCBYlGn                                                                |
+  | SIMILAR  | csCBYlGnBu                                                              |
+  | SIMILAR  | csCBYlOrBr                                                              |
+  | SIMILAR  | csCBYlOrRd                                                              |
+  |----------+-------------------------------------------------------------------------|
+  | INDIRECT | csCB_tpl                                                                |
+  |----------+-------------------------------------------------------------------------|
+  | INDIRECT | csCC_tpl                                                                |
+  |----------+-------------------------------------------------------------------------|
+  | SIMILAR  | csCCconsOne                                                             |
+  | SIMILAR  | csCCconsTwo                                                             |
+  | SIMILAR  | csCCdiag01                                                              |
+  | SIMILAR  | csCCdiagCR                                                              |
+  | SIMILAR  | csCCdiagMG                                                              |
+  | SIMILAR  | csCCdiagYB                                                              |
+  | SIMILAR  | csCColdeColdToHot                                                       |
+  | SIMILAR  | csCColdeFireRamp                                                        |
+  | SIMILAR  | csCColdeIceToWaterToHot                                                 |
+  | DIRECT   | csCColdeRainbow                                                         |
+  | SIMILAR  | csCCsumBGR                                                              |
+  | SIMILAR  | csCCsumBRG                                                              |
+  | SIMILAR  | csCCsumGBR                                                              |
+  | SIMILAR  | csCCsumGRB                                                              |
+  | SIMILAR  | csCCsumRBG                                                              |
+  | SIMILAR  | csCCsumRGB                                                              |
+  | SIMILAR  | csCCudBg                                                                |
+  | SIMILAR  | csCCudBr                                                                |
+  | SIMILAR  | csCCudGb                                                                |
+  | SIMILAR  | csCCudGr                                                                |
+  | SIMILAR  | csCCudRb                                                                |
+  | SIMILAR  | csCCudRg                                                                |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | csCHblu                                                                 |
+  | DIRECT   | csCHstd                                                                 |
+  | DIRECT   | csCHvio                                                                 |
+  |----------+-------------------------------------------------------------------------|
+  | INDIRECT | csCubeHelix_tpl                                                         |
+  |----------+-------------------------------------------------------------------------|
+  | INDIRECT | csFP_tpl                                                                |
+  |----------+-------------------------------------------------------------------------|
+  | SIMILAR  | csFPblAqGrYeOrReVi200                                                   |
+  | DIRECT   | csFPcircular12                                                          |
+  | SIMILAR  | csFPcircular24                                                          |
+  | SIMILAR  | csFPcmoceanAlgae                                                        |
+  | SIMILAR  | csFPcmoceanAmp                                                          |
+  | SIMILAR  | csFPcmoceanBalance                                                      |
+  | SIMILAR  | csFPcmoceanCurl                                                         |
+  | SIMILAR  | csFPcmoceanDeep                                                         |
+  | SIMILAR  | csFPcmoceanDense                                                        |
+  | SIMILAR  | csFPcmoceanHaline                                                       |
+  | SIMILAR  | csFPcmoceanIce                                                          |
+  | SIMILAR  | csFPcmoceanTempo                                                        |
+  | SIMILAR  | csFPmplBrBG                                                             |
+  | SIMILAR  | csFPmplOcean                                                            |
+  | SIMILAR  | csFPmplOranges                                                          |
+  | SIMILAR  | csFPneoDdivVegetationA                                                  |
+  | SIMILAR  | csFPneoDivVegetationC                                                   |
+  | SIMILAR  | csFPneoModisNdvi                                                        |
+  |----------+-------------------------------------------------------------------------|
+  |          | csWS_tpl                                                                |
+  |----------+-------------------------------------------------------------------------|
+  |          | csWSnormalVision                                                        |
+  |          | csWSprotanopia                                                          |
+  |          | csWSdeutanopia                                                          |
+  |          | csWStritanoptia                                                         |
+  |          | csWSprotanopiaAlt                                                       |
+  |          | csWSdeutanopiaAlt                                                       |
+  |          | csWStritanoptiaAlt                                                      |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | csHSLhB                                                                 |
+  | DIRECT   | csHSLhC                                                                 |
+  | DIRECT   | csHSLhG                                                                 |
+  | DIRECT   | csHSLhM                                                                 |
+  | DIRECT   | csHSLhR                                                                 |
+  | DIRECT   | csHSLhY                                                                 |
+  |----------+-------------------------------------------------------------------------|
+  | INDIRECT | csHSLh_tpl                                                              |
+  |----------+-------------------------------------------------------------------------|
+  |          | csPGrey3x                                                               |
+  |          | csPGrey4x                                                               |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | csPLY_tpl                                                               |
+  |----------+-------------------------------------------------------------------------|
+  | INDIRECT | csPLYcividis                                                            |
+  | DIRECT   | csPLYgrey                                                               |
+  | INDIRECT | csPLYhsvRB                                                              |
+  | INDIRECT | csPLYinferno                                                            |
+  | INDIRECT | csPLYmagma                                                              |
+  | INDIRECT | csPLYparula                                                             |
+  | INDIRECT | csPLYplasma                                                             |
+  | DIRECT   | csPLYquad                                                               |
+  | INDIRECT | csPLYturbo                                                              |
+  | INDIRECT | csPLYviridis                                                            |
+  |----------+-------------------------------------------------------------------------|
+  |          | csRainbowCM                                                             |
+  |          | csRainbowLA                                                             |
+  |----------+-------------------------------------------------------------------------|
+  | DIRECT   | setRGBfromWavelengthCM(...);                                            |
+  | DIRECT   | setRGBfromWavelengthLA(...);                                            |
+  |----------+-------------------------------------------------------------------------|

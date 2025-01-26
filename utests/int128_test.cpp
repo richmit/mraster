@@ -1,15 +1,15 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      utest_colorTpl_ia64nGCC.cpp
+ @file      int128_test.cpp
  @author    Mitch Richling http://www.mitchr.me/
- @date      2022-08-11
+ @date      2025-01-26
  @brief     Unit tests for basic color types on ia64 with GCC.@EOL
  @keywords  boost
  @std       C++20
  @copyright 
   @parblock
-  Copyright (c) 2022, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.
+  Copyright (c) 2022-2025, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.
 
   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -33,11 +33,11 @@
 /** @cond exj */
 
 #include <gtest/gtest.h>
+#include "MRcolor.hpp"
 
-#include "ramCanvas.hpp"
-
+#ifdef MJR_HAVE_128_BIT_TYPES
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-TEST(TYP_color1c8b, Basic) {
+TEST(int128_test, color1c8b) {
   EXPECT_EQ(mjr::color1c8b::bitsPerChan,     8                     );
   EXPECT_EQ(mjr::color1c8b::bitsPerPixel,    8                     );
   EXPECT_EQ(mjr::color1c8b::chanIsInt,       true                  );
@@ -77,7 +77,7 @@ TEST(TYP_color1c8b, Basic) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-TEST(TYP_color2c8b, Basic) {
+TEST(int128_test, color2c8b) {
   EXPECT_EQ(mjr::color2c8b::bitsPerChan,     8                     );
   EXPECT_EQ(mjr::color2c8b::bitsPerPixel,    16                    );
   EXPECT_EQ(mjr::color2c8b::chanIsInt,       true                  );
@@ -117,7 +117,7 @@ TEST(TYP_color2c8b, Basic) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-TEST(TYP_color3c8b, Basic) {
+TEST(int128_test, color3c8b) {
   EXPECT_EQ(mjr::color3c8b::bitsPerChan,     8                     );
   EXPECT_EQ(mjr::color3c8b::bitsPerPixel,    24                    );
   EXPECT_EQ(mjr::color3c8b::chanIsInt,       true                  );
@@ -157,7 +157,7 @@ TEST(TYP_color3c8b, Basic) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-TEST(TYP_color4c8b, Basic) {
+TEST(int128_test, color4c8b) {
   EXPECT_EQ(mjr::color4c8b::bitsPerChan,     8                     );
   EXPECT_EQ(mjr::color4c8b::bitsPerPixel,    32                    );
   EXPECT_EQ(mjr::color4c8b::chanIsInt,       true                  );
@@ -197,7 +197,7 @@ TEST(TYP_color4c8b, Basic) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-TEST(TYP_color5c8b, Basic) {
+TEST(int128_test, color5c8b) {
   EXPECT_EQ(mjr::color5c8b::bitsPerChan,     8                     );
   EXPECT_EQ(mjr::color5c8b::bitsPerPixel,    40                    );
   EXPECT_EQ(mjr::color5c8b::chanIsInt,       true                  );
@@ -237,7 +237,7 @@ TEST(TYP_color5c8b, Basic) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-TEST(TYP_color6c8b, Basic) {
+TEST(int128_test, color6c8b) {
   EXPECT_EQ(mjr::color6c8b::bitsPerChan,     8                     );
   EXPECT_EQ(mjr::color6c8b::bitsPerPixel,    6*8                   );
   EXPECT_EQ(mjr::color6c8b::chanIsInt,       true                  );
@@ -275,7 +275,7 @@ TEST(TYP_color6c8b, Basic) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-TEST(TYP_color8c8b, Basic) {
+TEST(int128_test, color8c8b) {
   EXPECT_EQ(mjr::color8c8b::bitsPerChan,     8                     );
   EXPECT_EQ(mjr::color8c8b::bitsPerPixel,    64                    );
   EXPECT_EQ(mjr::color8c8b::chanIsInt,       true                  );
@@ -315,7 +315,7 @@ TEST(TYP_color8c8b, Basic) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-TEST(TYP_color3c16b, Basic) {
+TEST(int128_test, color3c16b) {
   EXPECT_EQ(mjr::color3c16b::bitsPerChan,     16                   );
   EXPECT_EQ(mjr::color3c16b::bitsPerPixel,    48                   );
   EXPECT_EQ(mjr::color3c16b::chanIsInt,       true                 );
@@ -355,7 +355,7 @@ TEST(TYP_color3c16b, Basic) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-TEST(TYP_color2c32b, Basic) {
+TEST(int128_test, color2c32b) {
   EXPECT_EQ(mjr::color2c32b::bitsPerChan,     32                   );
   EXPECT_EQ(mjr::color2c32b::bitsPerPixel,    64                   );
   EXPECT_EQ(mjr::color2c32b::chanIsInt,       true                 );
@@ -395,7 +395,7 @@ TEST(TYP_color2c32b, Basic) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-TEST(TYP_color3c64F, Basic) {
+TEST(int128_test, color3c64F) {
   EXPECT_EQ(mjr::color3c64F::bitsPerChan,     64                   );
   EXPECT_EQ(mjr::color3c64F::bitsPerPixel,    192                  );
   EXPECT_EQ(mjr::color3c64F::chanIsInt,       false                );
@@ -433,4 +433,5 @@ TEST(TYP_color3c64F, Basic) {
   EXPECT_TRUE((std::is_same<mjr::color3c64F::csNatType,            double                 >::value ));
   EXPECT_TRUE((std::is_same<mjr::color3c64F::colorArgType,         mjr::color3c64F const& >::value ));
 }
+#endif
 /** @endcond */

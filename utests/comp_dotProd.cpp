@@ -1,15 +1,15 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      utest_colorTpl.cpp
+ @file      comp_dotProd.cpp
  @author    Mitch Richling http://www.mitchr.me/
- @date      2022-08-11
+ @date      2025-01-25
  @brief     Unit tests for basic color methods.@EOL
  @keywords  boost
  @std       C++20
  @copyright
   @parblock
-  Copyright (c) 2022, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.
+  Copyright (c) 2022-2025, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.
 
   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -33,62 +33,15 @@
 /** @cond exj */
 
 #include <gtest/gtest.h>
+#include "MRcolor.hpp"
 
-#include "ramCanvas.hpp"
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+TEST(comp_dotProd, unsigned8) {
+  EXPECT_EQ(mjr::colorRGBA8b(2, 5, 7, 11).dotProd(mjr::colorRGBA8b(13, 17, 23, 27)),             569);
+  EXPECT_EQ(mjr::colorRGBA8b(255, 255, 255, 255).dotProd(mjr::colorRGBA8b(255, 255, 255, 255)),  260100); // Too big for an arith SP type...
+}
 
-#include "set_chan_dbl.cpp"
-#include "set_chan_byte.cpp"
-#include "set_chan_const.cpp"
-#include "set_chan_gen.cpp"
-#include "set_chan_argb.cpp"
-#include "set_chan_hex.cpp"
-#include "set_rgba_pack.cpp"
-#include "set_rgb_tga.cpp"
-
-#include "tfrm_logic.cpp"
-#include "tfrm_arith.cpp"
-
-#include "bool_isBlack.cpp"
-#include "bool_isEqual.cpp"
-
-#include "comp_distX.cpp"
-#include "comp_luminance.cpp"
-
-#include "comp_dotProd.cpp"
-#include "comp_MinMax.cpp"
-
-#include "set_rgb_wavelengthCM.cpp"
-#include "set_rgb_wavelengthLA.cpp"
-#include "set_cs_csCubeHelix.cpp"
-#include "tfrm_misc.cpp"
-#include "tfrm_websafe.cpp"
-#include "tfrm_PowPow.cpp"
-#include "tfrm_GryLevScl.cpp"
-
-#include "comp_linearInterpolate.cpp"
-#include "comp_wMean.cpp"
-
-#include "set_rgb_unitHSx.cpp"
-#include "bool_isClose.cpp"
-#include "set_rgb_ColorSpace.cpp"
-
-#include "set_cs_csCBSpectral.cpp"
-#include "set_cs_csFPcircular12.cpp"
-
-#include "comp_rgb2colorSpace.cpp"
-
-#include "set_cs_csBin.cpp"
-
-#include "set_rgb_constant.cpp"
-#include "set_cs_csHSLhX.cpp"
-#include "set_cs_csPLY.cpp"
-#include "set_cs_csCColdeRainbow.cpp"
-
-#include "constructor.cpp"
-
-#include "comp_bestChan.cpp"
-#include "comp_distDeltaE1976.cpp"
-
-#include "int128_test.cpp"
-
-/** @endcond */
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+TEST(comp_dotProd, float32) {
+  EXPECT_NEAR(mjr::colorRGBA32F(2, 5, 7, 11).dotProd(mjr::colorRGBA32F(13, 17, 23, 27)),         569, 0.000001);
+}

@@ -1,15 +1,15 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      utest_colorTpl.cpp
+ @file      comp_distDeltaE1976.cpp
  @author    Mitch Richling http://www.mitchr.me/
- @date      2022-08-11
+ @date      2025-01-25
  @brief     Unit tests for basic color methods.@EOL
  @keywords  boost
  @std       C++20
  @copyright
   @parblock
-  Copyright (c) 2022, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.
+  Copyright (c) 2022-2025, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.
 
   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -33,62 +33,36 @@
 /** @cond exj */
 
 #include <gtest/gtest.h>
+#include "MRcolor.hpp"
 
-#include "ramCanvas.hpp"
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+TEST(comp_distDeltaE1976, unsigned8) {
 
-#include "set_chan_dbl.cpp"
-#include "set_chan_byte.cpp"
-#include "set_chan_const.cpp"
-#include "set_chan_gen.cpp"
-#include "set_chan_argb.cpp"
-#include "set_chan_hex.cpp"
-#include "set_rgba_pack.cpp"
-#include "set_rgb_tga.cpp"
+  mjr::colorRGBA8b   aColor;
+  mjr::colorRGBA8b   bColor;
 
-#include "tfrm_logic.cpp"
-#include "tfrm_arith.cpp"
-
-#include "bool_isBlack.cpp"
-#include "bool_isEqual.cpp"
-
-#include "comp_distX.cpp"
-#include "comp_luminance.cpp"
-
-#include "comp_dotProd.cpp"
-#include "comp_MinMax.cpp"
-
-#include "set_rgb_wavelengthCM.cpp"
-#include "set_rgb_wavelengthLA.cpp"
-#include "set_cs_csCubeHelix.cpp"
-#include "tfrm_misc.cpp"
-#include "tfrm_websafe.cpp"
-#include "tfrm_PowPow.cpp"
-#include "tfrm_GryLevScl.cpp"
-
-#include "comp_linearInterpolate.cpp"
-#include "comp_wMean.cpp"
-
-#include "set_rgb_unitHSx.cpp"
-#include "bool_isClose.cpp"
-#include "set_rgb_ColorSpace.cpp"
-
-#include "set_cs_csCBSpectral.cpp"
-#include "set_cs_csFPcircular12.cpp"
-
-#include "comp_rgb2colorSpace.cpp"
-
-#include "set_cs_csBin.cpp"
-
-#include "set_rgb_constant.cpp"
-#include "set_cs_csHSLhX.cpp"
-#include "set_cs_csPLY.cpp"
-#include "set_cs_csCColdeRainbow.cpp"
-
-#include "constructor.cpp"
-
-#include "comp_bestChan.cpp"
-#include "comp_distDeltaE1976.cpp"
-
-#include "int128_test.cpp"
-
-/** @endcond */
+  aColor.setToWhite();
+  bColor.setToBlack();
+  EXPECT_NEAR(aColor.distDeltaE1976(bColor),  100.0, 0.0001);
+  EXPECT_NEAR(aColor.distDeltaE1994(bColor),  100.0, 0.0001);
+  aColor.setToWhite();
+  bColor.setToWhite();
+  EXPECT_NEAR(aColor.distDeltaE1976(bColor),  0.0, 0.0001);
+  EXPECT_NEAR(aColor.distDeltaE1994(bColor),  0.0, 0.0001);
+  aColor.setToBlack();
+  bColor.setChansRGB(128, 64, 192);
+  EXPECT_NEAR(aColor.distDeltaE1976(bColor),  87.0379, 0.001);
+  EXPECT_NEAR(aColor.distDeltaE1994(bColor),  87.0382, 0.0001);
+  aColor.setToBlack();
+  bColor.setChansRGB(128, 128, 128);
+  EXPECT_NEAR(aColor.distDeltaE1976(bColor),  53.585, 0.0001);
+  EXPECT_NEAR(aColor.distDeltaE1994(bColor),  53.585, 0.0001);
+  aColor.setToBlack();
+  bColor.setChansRGB(32, 64, 128);
+  EXPECT_NEAR(aColor.distDeltaE1976(bColor),  50.1239, 0.01);
+  EXPECT_NEAR(aColor.distDeltaE1994(bColor),  50.1239, 0.01);
+  aColor.setToWhite();
+  bColor.setChansRGB(32, 64, 128);
+  EXPECT_NEAR(aColor.distDeltaE1976(bColor),  82.8934, 0.001);
+  EXPECT_NEAR(aColor.distDeltaE1994(bColor),  82.8807, 0.01);
+}

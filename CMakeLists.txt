@@ -119,7 +119,15 @@ set(TARGETS_USE_OPENMP "mandelbrot_bm_cplx_openmp" "mandelbrot_precomp" "mandelb
                        "newton_half" "newton_vs" "newton_z6" "newton_modified" "newton_min_root" "newton_3updown" "newton_roter" "attracting_torus_shadowM"
                        "laguerre_3updown" "laguerre_simple" "kalisetJ" "kalisetM1" "kalisetM2" "phoenix" "phoenixI" "phoenixD" "phoenixM" "phoenixM2"
                        "doublePendulum" "doublePendulumM" "wakOrb01" "wakOrb02" "wakOrb03")
-set(TARGETS_REQ_GTEST  "utest_colorTpl_ia64nGCC" "utest_colorTpl" "utest_ramCanvasTpl")
+set(TARGETS_REQ_GTEST  "utest_colorTpl" "utest_ramCanvasTpl" 
+                       "set_chan_dbl" "set_chan_byte" "set_chan_gen" "set_chan_const" "set_chan_hex" "set_rgba_pack" "set_rgb_tga" "set_rgb_wavelengthCM"
+                       "set_rgb_wavelengthLA" "set_cs_csFPcircular12" "set_cs_csCBSpectral" "set_cs_csBin" "set_cs_csHSLhX" "set_cs_csPLY"
+                       "set_cs_csCColdeRainbow" "comp_distDeltaE1976" "set_rgb_constant" "tfrm_logic" "tfrm_arith" "comp_distX" "set_cs_csCubeHelix"
+                       "tfrm_misc" "tfrm_websafe" "tfrm_PowPow" "bool_isBlack" "bool_isEqual" "comp_luminance" "set_rgb_unitHSx" "bool_isClose"
+                       "set_rgb_ColorSpace" "tfrm_GryLevScl" "comp_dotProd" "comp_MinMax" "comp_linearInterpolate" "comp_wMean" "comp_rgb2colorSpace"
+                       "comp_bestChan" "constructor" "int128_test"
+                       
+                       )
 set(TARGETS_REQ_SDL2   "displayImageSDL2")
 
 # Construct list of targets we can build
@@ -302,6 +310,18 @@ add_custom_target(clean-images
   COMMAND  rm -f *.tga *.tif *.tiff *.mrw *.bin
   COMMENT "Cleaning Image files"
 )
+
+if(GTest_FOUND)
+  add_custom_target(utests
+    DEPENDS ${TARGETS_UTEST}
+    COMMENT "Building Unit Tests"
+  )
+  add_custom_target(run-utests
+    DEPENDS ${TARGETS_UTEST}
+    COMMENT "Running Unit Tests"
+    COMMAND cmake --build . -t test
+  )
+endif()
 
 ######################################################################################################################################################
 # Add targets for documentation

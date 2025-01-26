@@ -1,15 +1,15 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      utest_colorTpl.cpp
+ @file      comp_luminance.cpp
  @author    Mitch Richling http://www.mitchr.me/
- @date      2022-08-11
+ @date      2025-01-25
  @brief     Unit tests for basic color methods.@EOL
  @keywords  boost
  @std       C++20
  @copyright
   @parblock
-  Copyright (c) 2022, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.
+  Copyright (c) 2022-2025, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.
 
   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -33,62 +33,38 @@
 /** @cond exj */
 
 #include <gtest/gtest.h>
+#include "MRcolor.hpp"
 
-#include "ramCanvas.hpp"
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+TEST(comp_luminance, float32) {
 
-#include "set_chan_dbl.cpp"
-#include "set_chan_byte.cpp"
-#include "set_chan_const.cpp"
-#include "set_chan_gen.cpp"
-#include "set_chan_argb.cpp"
-#include "set_chan_hex.cpp"
-#include "set_rgba_pack.cpp"
-#include "set_rgb_tga.cpp"
+  EXPECT_EQ(mjr::colorRGBA32F(2, 5, 7, 11).rgb2GreyDotProd(13, 17, 23),           272);
 
-#include "tfrm_logic.cpp"
-#include "tfrm_arith.cpp"
+  EXPECT_NEAR(mjr::colorRGBA32F(2, 5, 7, 11).luminanceRGB(),                      4.5066,          0.00001);
 
-#include "bool_isBlack.cpp"
-#include "bool_isEqual.cpp"
+  EXPECT_NEAR(mjr::colorRGBA32F(2, 5, 7, 11).intensityRGB(),                      14,              0.00001);
 
-#include "comp_distX.cpp"
-#include "comp_luminance.cpp"
+  EXPECT_NEAR(mjr::colorRGBA32F(2, 5, 7, 11).intensity(),                         25,              0.00001);
 
-#include "comp_dotProd.cpp"
-#include "comp_MinMax.cpp"
+  EXPECT_NEAR(mjr::colorRGBA32F(2, 5, 7, 11).intensityScaledRGB(),                4.66666698,      0.00001);
 
-#include "set_rgb_wavelengthCM.cpp"
-#include "set_rgb_wavelengthLA.cpp"
-#include "set_cs_csCubeHelix.cpp"
-#include "tfrm_misc.cpp"
-#include "tfrm_websafe.cpp"
-#include "tfrm_PowPow.cpp"
-#include "tfrm_GryLevScl.cpp"
+  EXPECT_NEAR(mjr::colorRGBA32F(2, 5, 7, 11).intensityScaled(),                   6.25,            0.00001);
+}
 
-#include "comp_linearInterpolate.cpp"
-#include "comp_wMean.cpp"
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+TEST(comp_luminance, unsigned8) {
 
-#include "set_rgb_unitHSx.cpp"
-#include "bool_isClose.cpp"
-#include "set_rgb_ColorSpace.cpp"
+  EXPECT_EQ(mjr::colorRGBA8b( 2, 5, 7, 11).rgb2GreyDotProd(13, 17, 23),           272);
 
-#include "set_cs_csCBSpectral.cpp"
-#include "set_cs_csFPcircular12.cpp"
+  EXPECT_EQ(mjr::colorRGBA8b(255, 255, 255, 255).rgb2GreyDotProd(255, 255, 255),  195075); // Too big for an arith SP type...
 
-#include "comp_rgb2colorSpace.cpp"
+  EXPECT_NEAR(mjr::colorRGBA8b( 2, 5, 7, 11).luminanceRGB(),                      0.0176729411765, 0.00001);
 
-#include "set_cs_csBin.cpp"
+  EXPECT_EQ(mjr::colorRGBA8b( 2, 5, 7, 11).intensityRGB(),                        14);
 
-#include "set_rgb_constant.cpp"
-#include "set_cs_csHSLhX.cpp"
-#include "set_cs_csPLY.cpp"
-#include "set_cs_csCColdeRainbow.cpp"
+  EXPECT_EQ(mjr::colorRGBA8b( 2, 5, 7, 11).intensity(),                           25);
 
-#include "constructor.cpp"
+  EXPECT_NEAR(mjr::colorRGBA8b( 2, 5, 7, 11).intensityScaledRGB(),                0.0183006562,    0.00001);
 
-#include "comp_bestChan.cpp"
-#include "comp_distDeltaE1976.cpp"
-
-#include "int128_test.cpp"
-
-/** @endcond */
+  EXPECT_NEAR(mjr::colorRGBA8b( 2, 5, 7, 11).intensityScaled(),                   0.0245098039216, 0.00001);
+}
