@@ -56,16 +56,16 @@ find_file(MRaster_PATH "MRasterLib.cmake" PATHS "mraster/build"  "../mraster/bui
 if(NOT MRaster_PATH STREQUAL "MRaster_PATH-NOTFOUND")
   message(STATUS "Found MRaster: ${MRaster_PATH}")
   include("${MRaster_PATH}")
+  get_target_property(MRaster_INCLUDE MRaster INTERFACE_INCLUDE_DIRECTORIES)
 else()
   message(FATAL_ERROR " MRaster Search Failed!\n"
                       "     The MRaster repository must be located in the same directory as this repository,\n"
                       "     and must be configured with a build directory named 'build' at the root of the \n"
                       "     MRaster repository.  That is to say, do the following in the same directory \n"
                       "     where you cloned this repository: \n"
-                      "        git clone 'https://github.com/richmit/MRaster.git' \n"
+                      "        git clone 'https://github.com/richmit/mraster.git' \n"
                       "        cd mraster/build                                   \n"
                       "        cmake ..                                           \n"
                       "        cd ../..                                           \n"
                       "     Then return to this repository, and try to configure it again.\n")
 endif()
-get_target_property(MRaster_INCLUDE MRaster INTERFACE_INCLUDE_DIRECTORIES)
