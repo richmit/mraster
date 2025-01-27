@@ -31,6 +31,8 @@
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
 
+// for f in *.cpp(:x/all_gtests/) { echo "#include \"$f\"" } > /dev/clip
+
 #include "c_bool_isBlack.cpp"
 #include "c_bool_isClose.cpp"
 #include "c_bool_isEqual.cpp"
@@ -71,19 +73,19 @@
 #include "c_tfrm_logic.cpp"
 #include "c_tfrm_misc.cpp"
 #include "c_tfrm_websafe.cpp"
-#include "r_draw_primatives.cpp"
-#include "r_save_file.cpp"
-#include "r_draw_lines.cpp"
-#include "r_draw_triangles.cpp"
+#include "r_adjoin.cpp"
 #include "r_draw_circles.cpp"
+#include "r_draw_glyph.cpp"
+#include "r_draw_lines.cpp"
+#include "r_draw_point.cpp"
+#include "r_draw_primatives.cpp"
 #include "r_draw_rectangles.cpp"
 #include "r_draw_rectangles_filled.cpp"
-#include "r_draw_point.cpp"
-#include "r_draw_triangles_filled.cpp"
-#include "r_draw_glyph.cpp"
 #include "r_draw_string.cpp"
-#include "r_tfrm_geom.cpp"
+#include "r_draw_triangles.cpp"
+#include "r_draw_triangles_filled.cpp"
 #include "r_p_scale.cpp"
-#include "r_adjoin.cpp"
+#include "r_save_file.cpp"
+#include "r_tfrm_geom.cpp"
 
 /** @endcond */
