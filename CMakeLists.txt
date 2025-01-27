@@ -60,15 +60,22 @@ if(O_GTEST)
   find_package(GTest)
 endif()
 
+# CODE GEN: ~/MJR/core/codeBits/bin/src2orgListing ../MRMathCPP/IncludeMRMathCPPLib.cmake 
 find_file(MRMathCPP_PATH "MRMathCPPLib.cmake" PATHS "MRMathCPP/build"  "../MRMathCPP/build")
 if(NOT MRMathCPP_PATH STREQUAL "MRMathCPP_PATH-NOTFOUND")
   message(STATUS "Found MRMathCPP: ${MRMathCPP_PATH}")
   include("${MRMathCPP_PATH}")
 else()
   message(FATAL_ERROR " MRMathCPP Search Failed!\n"
-                      "     The MRMathCPP repository must be located in the same directory as this one, and\n"
-                      "     must be configured -- i.e. a generated MRMathCPPLib.cmake file must exist in the.\n"
-                      "     build directory.\n")
+                      "     The MRMathCPP repository must be located in the same directory as this repository,\n"
+                      "     and must be configured with a build directory named 'build' at the root of the \n"
+                      "     MRMathCPP repository.  That is to say, do the following in the same directory \n"
+                      "     where you cloned this repository: \n"
+                      "        git clone 'https://github.com/richmit/MRMathCPP.git'\n"
+                      "        cd MRMathCPP/build                                  \n"
+                      "        cmake ..                                            \n"
+                      "        cd ../..                                            \n"
+                      "     Then return to this repository, and try to configure it again.\n")
 endif()
 get_target_property(MRMathCPP_INCLUDE MRMathCPP INTERFACE_INCLUDE_DIRECTORIES)
 
