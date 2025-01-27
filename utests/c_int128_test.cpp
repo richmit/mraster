@@ -5,7 +5,7 @@
  @author    Mitch Richling http://www.mitchr.me/
  @date      2025-01-26
  @brief     Unit tests for basic color types on ia64 with GCC.@EOL
- @keywords  boost
+ @keywords  gtest
  @std       C++20
  @copyright 
   @parblock

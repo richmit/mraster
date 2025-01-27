@@ -5,7 +5,7 @@
  @author    Mitch Richling http://www.mitchr.me/
  @date      2025-01-25
  @brief     Unit tests for basic color methods.@EOL
- @keywords  boost
+ @keywords  gtest
  @std       C++20
  @copyright
   @parblock
@@ -64,7 +64,7 @@ TEST(c_set_rgb_ColorSpace, unsigned8) {
 
   for(double r=0; r<1.0; r=r+0.1)
     for(double g=0; g<1.0; g=g+0.1)
-      for(double b=0; b<1.0; b=b+0.1) // BOOST_TEST_CHECK x 1000
+      for(double b=0; b<1.0; b=b+0.1) // TEST x 1000
         EXPECT_TRUE(aColor.setRGBfromColorSpace(mjr::colorRGB8b::colorSpaceEnum::RGB, r, g, b).isEqualRGB(bColor.setChansRGB_dbl(r, g, b)));
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -162,7 +162,7 @@ TEST(c_set_rgb_ColorSpace, float32) {
 
   for(double r=0; r<1.0; r=r+0.1)
     for(double g=0; g<1.0; g=g+0.1)
-      for(double b=0; b<1.0; b=b+0.1) // BOOST_TEST_CHECK x 1000
+      for(double b=0; b<1.0; b=b+0.1) // TEST x 1000
 
   ////////////////////////////////////////////////////////////////////////////////
 

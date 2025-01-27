@@ -5,7 +5,7 @@
  @author    Mitch Richling http://www.mitchr.me/
  @date      2025-01-25
  @brief     Unit tests for basic color methods.@EOL
- @keywords  boost
+ @keywords  gtest
  @std       C++20
  @copyright
   @parblock
