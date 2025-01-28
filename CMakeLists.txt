@@ -351,9 +351,7 @@ if(TARGETS_UTEST)
   )
 endif()
 
-######################################################################################################################################################
-# Add targets for documentation
-
+# CODE GEN: ~/MJR/core/codeBits/bin/src2orgListing ~/core/codeBits/cmake-template/include_doxygen-targets.cmake | sed 's/PROJECT_NAME/mraster/g; s/SRCP/"lib" "examples"/'
 if(Doxygen_FOUND)
   foreach(DOXINPUT IN ITEMS "lib" "examples")
     message(STATUS "Generateing doxygen generation target for ${DOXINPUT}")
