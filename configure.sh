@@ -4,12 +4,12 @@
 ##
 # @file      configure.sh
 # @author    Mitch Richling http://www.mitchr.me/
-# @date      2024-07-31
+# @date      2025-01-28
 # @brief     Just a little helper for people accustomed to GNU autotools.@EOL
 # @std       bash
 # @copyright 
 #  @parblock
-#  Copyright (c) 2024, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.
+#  Copyright (c) 2024-2025, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 #
