@@ -33,11 +33,11 @@
 /** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-#include "ramCanvas.hpp"
+#include "MRcolor.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-  // typedef mjr::colorRGBA8b   ct; //!< colorTpl: RGBA  (8-bit int/channel) (truecolor)
+   typedef mjr::colorRGBA8b   ct; //!< colorTpl: RGBA  (8-bit int/channel) (truecolor)
   // typedef mjr::colorRGBA16b  ct; //!< colorTpl: RGBA (16-bit int/channel)
   // typedef mjr::colorRGBA32b  ct; //!< colorTpl: RGBA (32-bit int/channel)
   // typedef mjr::colorRGBA64b  ct; //!< colorTpl: RGBA (64-bit int/channel)
