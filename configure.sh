@@ -80,9 +80,9 @@ if [[ "${@}" == *'-h'* ]]; then
        -                               <-- Default for 'Visual Studio 17 2022'
 EOF
 
-  if grep -q '^OPTION(O_' ../CMakeLists.txt; then
+  if grep -Eq '^OPTION\([A-Z0-9_]+' ../CMakeLists.txt; then
      echo '     - Optional features'
-     sed -En 's/^[#O]PTION\(O_([A-Z0-9_]+)( +)"([^"]+)".*(ON|OFF).*$/       - -DO_\1=[ON|OFF] \2 \3 (Default: \4)/p' < ../CMakeLists.txt
+     sed -En 's/^[#O]PTION\(([A-Z0-9_]+)( +)"([^"]+)".*(ON|OFF).*$/       - -DO_\1=[ON|OFF] \2 \3 (Default: \4)/p' < ../CMakeLists.txt
   fi
 
   OPH='     - Search Paths For MR* Components'

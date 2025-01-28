@@ -24,13 +24,14 @@ include(CTest)
 ######################################################################################################################################################
 # Here are the options we use to modify the build -- these options are passed to cmake like so: cmake -DO_OPENSSL=YES or -DO_OPENSSL=NO
 
-OPTION(O_DOXYGEN "Doxygen support (documentation)"        ON )
-OPTION(O_GTEST   "Include support for Google Test"        ON )
-OPTION(O_TIFF    "libTIFF support (Advanced TIFF writer)" ON )
-OPTION(O_OPENGL  "OpenGL & GLUT support"                  ON )
-OPTION(O_OPENMP  "OpenMP support"                         ON )
-OPTION(O_SDL2    "SDL2 support"                           ON )
-OPTION(O_128_INT "128-bit integer support"                ON )
+OPTION(O_DOXYGEN     "Doxygen support (documentation)"         ON  )
+OPTION(O_GTEST       "Include support for Google Test"         ON  )
+OPTION(O_TIFF        "libTIFF support (Advanced TIFF writer)"  ON  )
+OPTION(O_OPENGL      "OpenGL & GLUT support"                   ON  )
+OPTION(O_OPENMP      "OpenMP support"                          ON  )
+OPTION(O_SDL2        "SDL2 support"                            ON  )
+OPTION(O_128_INT     "128-bit integer support"                 ON  )
+OPTION(OWNLOAD_GTEST "Download latest Google Test from Github" OFF )
 
 ######################################################################################################################################################
 # Find tools & libraries used to build primary/secondary/tertiary targets.  Set config include file variables for options.
@@ -56,8 +57,28 @@ if(O_SDL2)
   find_package (SDL2)
 endif()
 
+# CODE GEN: ~/MJR/core/codeBits/bin/src2orgListing ~/core/codeBits/cmake-template/include_gtest.cmake
 if(O_GTEST)
-  find_package(GTest)
+  if(OWNLOAD_GTEST)
+    message(STATUS "GTest: Downloading")
+    include(FetchContent)
+    FetchContent_Declare(
+      googletest
+      URL https://github.com/google/googletest/archive/refs/heads/main.zip
+      DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+    )
+    # For Windows: Prevent overriding the parent project's compiler/linker settings
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+    FetchContent_MakeAvailable(googletest)
+    set(GTest_FOUND "YES") # If FetchContent_MakeAvailable didn't work, then cmake will error out.
+  else()
+    message(STATUS "GTest: Not downloading GTest")
+    find_package(GTest)
+  endif()
+else()
+  if(OWNLOAD_GTEST)
+    message(FATAL_ERROR "-DO_GTEST must be YES if -DOWNLOAD_GTEST is YES!")
+  endif()
 endif()
 
 # CODE GEN: ~/MJR/core/codeBits/bin/src2orgListing ../MRMathCPP/IncludeMRMathCPPLib.cmake 
