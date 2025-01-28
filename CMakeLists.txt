@@ -137,7 +137,7 @@ set(TARGETS_REQ_NONE   "BurningShip" "apollony" "apomorph" "bifurcation_diagram"
                        "attracting_torus_shadow" "mandelbrot_potential" "mandelbrot_real_cfun" "mandelbrot_triangle" "multibrotMovie"
                        "multibrotSnaps" "peterdejong" "barrymartin" "tinkerbell" "tinkerbell_search" "pickoverPopcorn" "sic" "sic_search"
                        "sierpinski_triangle" "sprott2d" "test_draw_fonts" "test_images" "tippets" "tricorn" "tricornMovie" "types" "butterfly"
-                       "LevyCurve")
+                       "LevyCurve" "test_color_con")
 set(TARGETS_REQ_OPENGL "glut_image")
 set(TARGETS_REQ_TIFF   "brownianDiffusion" "displayImageSDL2" "dlaBrownian" "dlaDrift" "img_process" "test_interp_scale" "geomTfrm_LensDistortion"
                        "geomTfrm_Arb"  "geomTfrm_Rotate" "mandelbrot_precomp_p1")
@@ -217,7 +217,9 @@ endif()
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   message("Warning:")
   message("Warning: MSVC support is currently experimental.")
-  message("Warning: clrChanT of double is the same as float!")
+  message("Warning: If running cmake from MSYS2, make sure specifically direct CMake to MSVC!")
+  message("Warning: compatible libraries, or disable them entirely.  For example, trying to")
+  message("Warning: use the MSYS2 version of libTIFF wont' work with MSVC.")
   message("Warning:")
 endif()
 
