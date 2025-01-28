@@ -235,7 +235,9 @@ foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
       continue()
     endif()
     add_executable(${CURTGT} EXCLUDE_FROM_ALL "utests/${CURTGT}.cpp")
-    list(APPEND TARGETS_UTEST ${CURTGT})
+    if(NOT CURTGT STREQUAL "all_gtests")
+      list(APPEND TARGETS_UTEST ${CURTGT})
+    endif()
   else()
     message("Warning: Unable to find source for target ${CURTGT}!")
     continue()
@@ -337,7 +339,7 @@ add_custom_target(clean-images
   COMMENT "Cleaning Image files"
 )
 
-if(GTest_FOUND)
+if(TARGETS_UTEST)
   add_custom_target(utests
     DEPENDS ${TARGETS_UTEST}
     COMMENT "Building Unit Tests"
