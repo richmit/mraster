@@ -97,12 +97,15 @@ namespace mjr {
 
     @par Size efficiency
 
-    While this class supports large channel counts and very deep channels, it is best optimized for colors that take less than 64-bits of RAM.  This is
-    because the library uses an integer to cover color channel array in RAM to make memory operations faster.  With a compiler supporting ISO C++, this object
-    should take no more than the maximum of sizeof(clrChanT)*numChan or the mask used to cover the data. See the next paragraph for details on the "mask".
+    While this class supports large channel counts and very deep channels, it is best optimized for colors that take require no more RAM space than the
+    largest hardware supported integer.  This is because the library uses an integer to cover color channel array in RAM to make memory operations faster.
+    With a compiler supporting ISO C++, this object should take no more than the maximum of sizeof(clrChanT)*numChan or the mask used to cover the data. More
+    detail on the "mask" is provided later in the section "Memory Layout and Performance".
 
-    The most common use cases are 24-bit RGB/RGBA and greyscale up to 64-bits deep.  All of these types are smaller than a 64-bit pointer, so it is
-    almost always better to pass these values around by reference.  That said, some types are quite large -- an RGBA image with 64-bit floating point channels
+    @par Passing colors as function arguments
+
+    The most common use cases are 24-bit RGB, 32-bit RGBA, and greyscale up to 64-bits deep.  All of these types are smaller than a 64-bit pointer, so it is
+    almost always better to pass these values around by value.  That said, some types are quite large -- an RGBA image with 64-bit floating point channels
     requires 256 bits of RAM.  For these larger color objects, it is more efficient to pass them by reference.  Within the library, some care is taken to
     adapt to the size of the color object, and pass objects to functions by the most efficient means (value or const reference).  The class provides a type
     the end user can employ to use this same strategy: colorArgType.
@@ -114,10 +117,12 @@ namespace mjr {
     finding an integer big enough, but not so big it wastes space.  Big enough means it is at least sizeof(clrChanT)*numChan chars long.  The "not too big"
     constraint is more flexible, and I have elected to make a covering mask only if we waste no more than 1/4 of the RAM for the mask value.  Examples:
 
-     - An 8-bit RGBA color is covered by a uint32_t, and so is an 8-bit RGB color -- we waste 1 byte per pixel, or 1/4 of the space.
-     - An 8-bit, 5 channel color is NOT covered by an integer, but a 6 channel one would be covered by a uint64_t.
+     - An RGBA color with 8-bit channels (32-bits total) is covered by a uint32_t with no lost space.
+     - An RGB color with 8-bit canonical (24-bits total) is also covered with a single uint32_t.  One byte per pixel is wasted -- i.e. 25% of the space.
+     - A 5 channel color with 8-bit channels (40-bits total) is *NOT* covered by a uint64_t as it would lead to almost 50% wasted space.
+     - A 6 channel color with 8-bit channels (48-bits total) is would be covered by a uint64_t -- a 25% waste of space.
 
-    When we can't cover the channel array, the mask type will be set to an uint8_t to avoid any alignment issues with the union.
+    When we can't cover the channel array, the mask type will be set to a uint8_t to avoid any alignment issues with the union.
 
     Some common diagrams of common cases might help:
 
@@ -144,10 +149,10 @@ namespace mjr {
     @par Usage
 
     Several methods are provided that access and modify the internal color represented by a color object.  In most cases, methods that modify the color object
-    state return a reference to the object after the change.  This provides, at a performance impact, the ability to use the value returned by such a function
-    in the expression in which it appears.  So, for example, it is not necessary to use two statements to change a color object's value and then use it in a
-    drawing function.  As another example, this provides the ability to do "method chaining" like so: aColor.setToRed().setToBlack() -- which will lead to
-    aColor being black.  That said, it means we must use compiler optimization features to throw away this refrence if it is not used!!
+    state return a reference to the object after the change.  This provides the ability to use the value returned by such a function in the expression in
+    which it appears.  So, for example, it is not necessary to use two statements to change a color object's value and then use it in a drawing function.  As
+    another example, this provides the ability to do "method chaining" like so: aColor.setToRed().setToBlack() -- which will lead to aColor being black.  The
+    obvious potential performance impact of returning unused references is generally optimized away by modern compilers.
 
     Several methods are provided that transform the color object as a whole.  For example, methods are provided to compute component-wise linear histogram
     transformations.  Note that transformation methods are not provided to transform just one component of an object or a range of components.  The philosophy
