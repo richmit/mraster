@@ -126,28 +126,27 @@ endif()
 
 export(TARGETS MRaster FILE "${CMAKE_BINARY_DIR}/MRasterLib.cmake")
 
-######################################################################################################################################################    
+######################################################################################################################################################
 
-set(TARGETS_REQ_NONE "BurningShip" "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "biomorph2" "biomorphMorph" "bmark" "chaos_game" "circles"
-                       "collatz" "color_all" "color_interp_hsl_vs_rgb" "color_lut_cubehelix" "color_lut_docs" "color_lut_indexed"
+set(TARGETS_REQ_NONE   "BurningShip" "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "biomorph2" "biomorphMorph" "bmark" "chaos_game"
+                       "circles" "collatz" "color_all" "color_interp_hsl_vs_rgb" "color_lut_cubehelix" "color_lut_docs" "color_lut_indexed"
                        "color_lut_indexedC" "color_lut_poly" "color_lut_rainbows" "color_lut_ramp_cube" "color_lut_ramp_cubeC" "color_lut_ramp_misc"
-                       "color_web_rectangle" "color_web_triangle" "convertRawToTIFF" "cplxColor" "dlaSeed" "heart2022" "invertedMandelbrot"
-                       "julia" "juliaM" "juliaM2" "level_curves" "lorenz_fuz" "lorenz_multi" "mandelbrot_binary" 
-                       "mandelbrot_biomorph" "mandelbrot_bm_cplx" "mandelbrot_bm_cplx_hyper" "mandelbrot_bm_real"
-                       "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits" "attracting_torus_shadow" 
-                       "mandelbrot_potential" "mandelbrot_real_cfun" "mandelbrot_triangle" "multibrotMovie" "multibrotSnaps"
-                       "peterdejong" "barrymartin" "tinkerbell" "tinkerbell_search"
-                       "pickoverPopcorn" "sic" "sic_search" "sierpinski_triangle" "sprott2d" "test_draw_fonts" "test_images" "tippets" "tricorn"
-                       "tricornMovie" "types" "butterfly" "LevyCurve")
+                       "color_web_rectangle" "color_web_triangle" "convertRawToTIFF" "cplxColor" "dlaSeed" "heart2022" "invertedMandelbrot" "julia"
+                       "juliaM" "juliaM2" "level_curves" "lorenz_fuz" "lorenz_multi" "mandelbrot_binary" "mandelbrot_biomorph" "mandelbrot_bm_cplx"
+                       "mandelbrot_bm_cplx_hyper" "mandelbrot_bm_real" "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits"
+                       "attracting_torus_shadow" "mandelbrot_potential" "mandelbrot_real_cfun" "mandelbrot_triangle" "multibrotMovie"
+                       "multibrotSnaps" "peterdejong" "barrymartin" "tinkerbell" "tinkerbell_search" "pickoverPopcorn" "sic" "sic_search"
+                       "sierpinski_triangle" "sprott2d" "test_draw_fonts" "test_images" "tippets" "tricorn" "tricornMovie" "types" "butterfly"
+                       "LevyCurve")
 set(TARGETS_REQ_OPENGL "glut_image")
 set(TARGETS_REQ_TIFF   "brownianDiffusion" "displayImageSDL2" "dlaBrownian" "dlaDrift" "img_process" "test_interp_scale" "geomTfrm_LensDistortion"
                        "geomTfrm_Arb"  "geomTfrm_Rotate" "mandelbrot_precomp_p1")
-set(TARGETS_USE_OPENMP "mandelbrot_bm_cplx_openmp" "mandelbrot_precomp" "mandelbrot_precomp_p1" "mandelbrot_count_movie"
-                       "mandelbrot_distance" "mandelbrot_wave" "peterdejongM" "newton_orbits" "newton_simple" "newton_max_mod" "mandelbrot_pickover"
-                       "mandelbrot_ltrap" "newton_max_back" "newton_min_angle" "mandelbrot_simple" "newton_min_angle_starfish"
-                       "newton_half" "newton_vs" "newton_z6" "newton_modified" "newton_min_root" "newton_3updown" "newton_roter" "attracting_torus_shadowM"
-                       "laguerre_3updown" "laguerre_simple" "kalisetJ" "kalisetM1" "kalisetM2" "phoenix" "phoenixI" "phoenixD" "phoenixM" "phoenixM2"
-                       "doublePendulum" "doublePendulumM" "wakOrb01" "wakOrb02" "wakOrb03")
+set(TARGETS_USE_OPENMP "mandelbrot_bm_cplx_openmp" "mandelbrot_precomp" "mandelbrot_precomp_p1" "mandelbrot_count_movie" "mandelbrot_distance"
+                       "mandelbrot_wave" "peterdejongM" "newton_orbits" "newton_simple" "newton_max_mod" "mandelbrot_pickover" "mandelbrot_ltrap"
+                       "newton_max_back" "newton_min_angle" "mandelbrot_simple" "newton_min_angle_starfish" "newton_half" "newton_vs" "newton_z6"
+                       "newton_modified" "newton_min_root" "newton_3updown" "newton_roter" "attracting_torus_shadowM" "laguerre_3updown"
+                       "laguerre_simple" "kalisetJ" "kalisetM1" "kalisetM2" "phoenix" "phoenixI" "phoenixD" "phoenixM" "phoenixM2" "doublePendulum"
+                       "doublePendulumM" "wakOrb01" "wakOrb02" "wakOrb03")
 set(TARGETS_REQ_GTEST  "all_gtests"
                        "c_set_chan_dbl" "c_set_chan_byte" "c_set_chan_gen" "c_set_chan_const" "c_set_chan_hex" "c_set_rgba_pack" "c_set_rgb_tga"
                        "c_set_rgb_wavelengthCM" "c_set_rgb_wavelengthLA" "c_set_cs_csFPcircular12" "c_set_cs_csCBSpectral" "c_set_cs_csBin"
@@ -161,29 +160,29 @@ set(TARGETS_REQ_GTEST  "all_gtests"
 set(TARGETS_REQ_SDL2   "displayImageSDL2")
 
 # Construct list of targets we can build
-set(EXAMPLE_TARGETS ${TARGETS_REQ_NONE} ${TARGETS_REQ_TIFF} ${TARGETS_USE_OPENMP} ${TARGETS_REQ_GTEST} ${TARGETS_REQ_OPENGL} ${TARGETS_REQ_SDL2})
+set(COMBINED_TARGETS ${TARGETS_REQ_NONE} ${TARGETS_REQ_TIFF} ${TARGETS_USE_OPENMP} ${TARGETS_REQ_GTEST} ${TARGETS_REQ_OPENGL} ${TARGETS_REQ_SDL2})
 
 if(((NOT OpenGL_FOUND) OR (NOT GLUT_FOUND)) AND TARGETS_REQ_OPENGL)
-  list(REMOVE_ITEM EXAMPLE_TARGETS ${TARGETS_REQ_OPENGL})
+  list(REMOVE_ITEM COMBINED_TARGETS ${TARGETS_REQ_OPENGL})
   message(WARNING "Example programs requiring OpenGL/GLUT will NOT be built!")
 endif()
 if((NOT OpenMP_FOUND) AND TARGETS_USE_OPENMP)
   message(WARNING "Example programs that can use OpenMP, but don't require it, will generally have longer runtimes!")
 endif()
 if((NOT TIFF_FOUND) AND TARGETS_REQ_TIFF)
-  list(REMOVE_ITEM EXAMPLE_TARGETS ${TARGETS_REQ_TIFF})
+  list(REMOVE_ITEM COMBINED_TARGETS ${TARGETS_REQ_TIFF})
   message(WARNING "Example programs requiring TIFF will NOT be built!")
 endif()
 if((NOT GTest_FOUND) AND TARGETS_REQ_GTEST)
-  list(REMOVE_ITEM EXAMPLE_TARGETS ${TARGETS_REQ_GTEST})
+  list(REMOVE_ITEM COMBINED_TARGETS ${TARGETS_REQ_GTEST})
   message(WARNING "Unit tests will NOT be built!")
 endif()
 if((NOT SDL2_FOUND) AND TARGETS_REQ_SDL2)
-  list(REMOVE_ITEM EXAMPLE_TARGETS ${TARGETS_REQ_SDL2})
+  list(REMOVE_ITEM COMBINED_TARGETS ${TARGETS_REQ_SDL2})
   message(WARNING "Example programs requiring SDL2 will NOT be built!")
 endif()
 
-list(REMOVE_DUPLICATES EXAMPLE_TARGETS)
+list(REMOVE_DUPLICATES COMBINED_TARGETS)
 
 if((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "Intel"))
     message("Warning:")
@@ -191,7 +190,7 @@ if((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "
     message("Warning: csPLY_tpl & csCubeHelix_tpl require P1907R1 (floating point template arguments).")
     message("Warning: Examples that can't be built: color_lut_poly.cpp, color_lut_docs.cpp, color_lut_cubehelix.cpp, heart2022.cpp")
     message("Warning:")
-    list(REMOVE_ITEM EXAMPLE_TARGETS "color_lut_poly" "color_lut_docs" "color_lut_cubehelix" "heart2022")                            # missing floating point template parameters
+    list(REMOVE_ITEM COMBINED_TARGETS "color_lut_poly" "color_lut_docs" "color_lut_cubehelix" "heart2022")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
@@ -207,10 +206,11 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     message("Warning:")
     message("Warning: Older GCC verions don't support P0476R2 or P1907R1.")
     message("Warning: csPLY_tpl & csCubeHelix_tpl require P1907R1 (floating point template arguments).")
-    message("Warning: Examples that can't be built: color_lut_poly.cpp, color_lut_docs.cpp, color_lut_cubehelix.cpp, heart2022.cpp")
+    message("Warning: Examples that can't be built: color_lut_poly, color_lut_docs, color_lut_cubehelix, heart2022")
     message("Warning: Logical member functions tfrmOr, tfrmNor, tfrmAnd, tfrmNand, tfrmXor, tfrmNxor, ")
     message("Warning: tfrmNot, tfrmShiftL, & tfrmShiftR will not have floating point channel support! ")
     message("Warning:")
+    list(REMOVE_ITEM COMBINED_TARGETS "color_lut_poly" "color_lut_docs" "color_lut_cubehelix" "heart2022")
   endif()
 endif()
 
@@ -222,7 +222,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 endif()
 
 # Add a target for each example we can build
-foreach(CURTGT IN LISTS EXAMPLE_TARGETS)
+foreach(CURTGT IN LISTS COMBINED_TARGETS)
   if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/examples/${CURTGT}.cpp")
     add_executable(${CURTGT} EXCLUDE_FROM_ALL "examples/${CURTGT}.cpp")
     list(APPEND TARGETS_EXAMPLES ${CURTGT})
@@ -329,15 +329,17 @@ endif()
 
 ######################################################################################################################################################
 
-add_custom_target(examples
-  DEPENDS ${EXAMPLE_TARGETS}
-  COMMENT "Building Examples"
-)
-
 add_custom_target(clean-images
   COMMAND  rm -f *.tga *.tif *.tiff *.mrw *.bin
   COMMENT "Cleaning Image files"
 )
+
+if(TARGETS_EXAMPLES)
+  add_custom_target(examples
+    DEPENDS ${TARGETS_EXAMPLES}
+    COMMENT "Building Examples"
+  )
+endif()
 
 if(TARGETS_UTEST)
   add_custom_target(utests
