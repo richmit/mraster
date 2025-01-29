@@ -45,12 +45,19 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
   - Known Issues
     - N/A
   - API breaking Changes
-    - N/A
+    - mjr::ramCanvasTpl::readTIFFfile now has new exit codes (23 & 24 -- see below).  
   - Deprecated functionality
     - N/A
   - New functionality
+    - MSVC:
+      - With the switch to GTest, the unit tests are simple to run against MSVC.
+      - Removed "experimental" warning when configuring with MSVC.
+      - Added hints about how to use cmake in MSYS2 with MSVC -- not recommended, but it can be done.
+      - Updated wMean tests to avoid integer cases on cast.
     - mjr::ramCanvasTpl::readTIFFfile: Added error 23: Image is tiled.
     - mjr::ramCanvasTpl::readTIFFfile: Added error 24: Image has a palette.
+    - New method colorTpl::channelArithFlt2clrChan
+    - Added warning to wMean method regarding the vulgarities of floating point arithmetic and casts
   - Documentation
     - Added test coverage document
   - Examples
@@ -59,8 +66,10 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
     - Updated
       - N/A
   - Miscellaneous
-    - Broke utest_colorTpl.cpp up into diffrent files
+    - Broke utest_colorTpl.cpp up into different files
     - Added IncludeMRMathCPPLib.cmake code
+    - Updated version of configure.sh
+    - Updated mrw2any.sh & 
 
 * 22.0.0.0: Feature & Refactor Release
 :PROPERTIES:

@@ -85,23 +85,23 @@ TEST(c_comp_wMean, unsigned8) {
  EXPECT_EQ(aColor.getC3(),   74);
 
  ////////////////////////////////////////////////////////////////////////////////
- aColor.uMean(0.2F, a1Color, a2Color);
- EXPECT_EQ(aColor.getC0(),  .2*10+.8*10);
- EXPECT_EQ(aColor.getC1(),  .2*20+.8*30);
- EXPECT_EQ(aColor.getC2(),  .2*30+.8*20);
- EXPECT_EQ(aColor.getC3(),  .2*40+.8*40);
+ aColor.uMean(0.25F, a1Color, a2Color);
+ EXPECT_EQ(aColor.getC0(),  static_cast<int>(.25*10+.75*10));
+ EXPECT_EQ(aColor.getC1(),  static_cast<int>(.25*20+.75*30));
+ EXPECT_EQ(aColor.getC2(),  static_cast<int>(.25*30+.75*20));
+ EXPECT_EQ(aColor.getC3(),  static_cast<int>(.25*40+.75*40));
 
- aColor.uMean(0.1F, 0.3F, a1Color, a2Color, a3Color);
- EXPECT_EQ(aColor.getC0(),  .1*10+.3*10+0.6*40);
- EXPECT_EQ(aColor.getC1(),  .1*20+.3*30+0.6*20);
- EXPECT_EQ(aColor.getC2(),  .1*30+.3*20+0.6*30);
- EXPECT_EQ(aColor.getC3(),  .1*40+.3*40+0.6*10);
+ aColor.uMean(0.15F, 0.25F, a1Color, a2Color, a3Color);
+ EXPECT_EQ(aColor.getC0(),  static_cast<int>(.15F*10+.25F*10+0.6F*40));
+ EXPECT_EQ(aColor.getC1(),  static_cast<int>(.15F*20+.25F*30+0.6F*20));
+ EXPECT_EQ(aColor.getC2(),  static_cast<int>(.15F*30+.25F*20+0.6F*30));
+ EXPECT_EQ(aColor.getC3(),  static_cast<int>(.15F*40+.25F*40+0.6F*10));
 
- aColor.uMean(0.1F, 0.3F, 0.4F, a1Color, a2Color, a3Color, a4Color);
- EXPECT_EQ(aColor.getC0(),  .1*10+.3*10+0.4*40+0.2*90);
- EXPECT_EQ(aColor.getC1(),  .1*20+.3*30+0.4*20+0.2*70);
- EXPECT_EQ(aColor.getC2(),  .1*30+.3*20+0.4*30+0.2*10);
- EXPECT_EQ(aColor.getC3(),  .1*40+.3*40+0.4*10+0.2*20);
+ aColor.uMean(0.15F, 0.25F, 0.35F, a1Color, a2Color, a3Color, a4Color);
+ EXPECT_EQ(aColor.getC0(),  static_cast<int>(.15F*10+.25F*10+0.35*40+0.25F*90));
+ EXPECT_EQ(aColor.getC1(),  static_cast<int>(.15F*20+.25F*30+0.35*20+0.25F*70));
+ EXPECT_EQ(aColor.getC2(),  static_cast<int>(.15F*30+.25F*20+0.35*30+0.25F*10));
+ EXPECT_EQ(aColor.getC3(),  static_cast<int>(.15F*40+.25F*40+0.35*10+0.25F*20));
 
 }
 

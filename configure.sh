@@ -4,7 +4,7 @@
 ##
 # @file      configure.sh
 # @author    Mitch Richling http://www.mitchr.me/
-# @date      2025-01-28
+# @date      2025-01-29
 # @brief     Just a little helper for people accustomed to GNU autotools.@EOL
 # @std       bash
 # @copyright 
@@ -82,7 +82,7 @@ EOF
 
   if grep -Eq '^OPTION\([A-Z0-9_]+' ../CMakeLists.txt; then
      echo '     - Optional features'
-     sed -En 's/^[#O]PTION\(([A-Z0-9_]+)( +)"([^"]+)".*(ON|OFF).*$/       - -DO_\1=[ON|OFF] \2 \3 (Default: \4)/p' < ../CMakeLists.txt
+     sed -En 's/^[#O]PTION\(([A-Z0-9_]+)( +)"([^"]+)".*(ON|OFF).*$/       - -D\1=[ON|OFF] \2 \3 (Default: \4)/p' < ../CMakeLists.txt
   fi
 
   OPH='     - Search Paths For MR* Components'

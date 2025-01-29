@@ -1774,9 +1774,24 @@ namespace mjr {
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Convert a channelArithFltType value into a clrChanT value.
+
+          This function works hard to return the nearest clrChanT value to a channelArithFltType value, but it is quite slow.
+
+          @param flt  Value to convert */
+      inline clrChanT channelArithFlt2clrChan(channelArithFltType flt) {
+        return static_cast<clrChanT>(std::round(flt)+0.1);
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute the weighted mean of the given colors.
 
           @warning In order to keep the result in range, w1,w2,w3,s4 must be in [0,1] and w1+w2+w3_w5=1. See uMean() for a way to do that automatically.
+
+          @warning Floating point arithmetic results vary with hardware, compiler, and even compiler options.  These small differences can have an impact on
+          casts from floating point values to integers when the floating point result is near an whole number.  For example, suppose we have a floating point
+          computation for which the "theoretical" value is exactly 5.  If that computation results in 4.999999, then the a cast will result in 4.  OTOH if the
+          computation resulted in 5.000001, then the cast results in 5.  In short we *expect* the result of this function to vary by as much as 1.  Yes we
+          could "do it right", but this function is intended to be fast.  We are more than happy to have a little slop in the results in exchange for speed.
 
           @param w1   The first weight
           @param w2   The second weight
@@ -1801,10 +1816,11 @@ namespace mjr {
       /** @overload */
       inline colorTpl& wMean(channelArithFltType w1, channelArithFltType w2, channelArithFltType w3,
                              colorArgType      col1, colorArgType      col2, colorArgType      col3) {
-        for(int i=0; i<numChan; i++)
+        for(int i=0; i<numChan; i++) {
           setChanNC(i, static_cast<clrChanT>((static_cast<channelArithFltType>(col1.getChanNC(i)) * w1) +
                                              (static_cast<channelArithFltType>(col2.getChanNC(i)) * w2) +
                                              (static_cast<channelArithFltType>(col3.getChanNC(i)) * w3)));
+        }
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1827,17 +1843,17 @@ namespace mjr {
           @return Returns a reference to the current color object. */
       inline colorTpl& uMean(channelArithFltType w1, channelArithFltType w2, channelArithFltType w3,
                              colorArgType      col1, colorArgType      col2, colorArgType      col3, colorArgType col4) {
-        return wMean(w1, w2, w3, 1-w1-w2-w3, col1, col2, col3, col4);
+        return wMean(w1, w2, w3, static_cast<channelArithFltType>(1)-w1-w2-w3, col1, col2, col3, col4);
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @overload */
       inline colorTpl& uMean(channelArithFltType w1, channelArithFltType w2, colorArgType col1, colorArgType col2, colorArgType col3) {
-        return wMean(w1, w2, 1-w1-w2, col1, col2, col3);
+        return wMean(w1, w2, static_cast<channelArithFltType>(1)-w1-w2, col1, col2, col3);
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @overload */
       inline colorTpl& uMean(channelArithFltType w1, colorArgType col1, colorArgType col2) {
-        return wMean(w1, 1-w1, col1, col2);
+        return wMean(w1, static_cast<channelArithFltType>(1)-w1, col1, col2);
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the current color to a value linearly interpolated between the two given colors.
