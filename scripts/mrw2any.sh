@@ -20,7 +20,7 @@ if [ -e $INFILE ] ; then
   if [ -e $OUTNAM ] ; then
     echo "ERROR: Output file already exists: $OUTNAM"
   else
-    CONCMD=`head -n 2 $INFILE | tail -n 1 | awk '{t[1]="gray"; t[2]="graya"; t[3]="rgb"; t[4]="rgba"; split($0, a, /[a-z]/); print "convert -interlace none -endian " (a[7]~/LTL/?"LSB":"MSB") " -depth " (a[4]+0) " -size " (a[1]+0) "x" (a[2]+0) "+100 " (t[a[3]+0]?t[a[3]+0]:"ERROR") ":"}'`
+    CONCMD=`head -n 2 $INFILE | tail -n 1 | awk '{t[1]="gray"; t[2]="graya"; t[3]="rgb"; t[4]="rgba"; split($0, a, /[a-z]/); print "magick -interlace none -endian " (a[7]~/LTL/?"LSB":"MSB") " -depth " (a[4]+0) " -size " (a[1]+0) "x" (a[2]+0) "+100 " (t[a[3]+0]?t[a[3]+0]:"ERROR") ":"}'`
     if echo "$CONCMD" | grep 'ERROR:' >/dev/null ; then
       echo "ERROR: Couldn't figure out command.  Probably a bad channel count (not 1, 3, or 4)."
       echo "Best we could do: $CONCMD$INFILE $OUTNAM"
