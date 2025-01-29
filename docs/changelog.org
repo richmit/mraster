@@ -49,7 +49,8 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
   - Deprecated functionality
     - N/A
   - New functionality
-    - N/A
+    - mjr::ramCanvasTpl::readTIFFfile: Added error 23: Image is tiled.
+    - mjr::ramCanvasTpl::readTIFFfile: Added error 24: Image has a palette.
   - Documentation
     - Added test coverage document
   - Examples

@@ -1367,6 +1367,8 @@ namespace mjr {
           @retval 20 File and ramCanvas channel depth differ
           @retval 21 File and ramCanvas channel format (int vs float) differ
           @retval 22 Planar configuration is invalid (not 1 or 2)
+          @retval 23 Tiled images are not supported
+          @retval 24 PHOTOMETRIC_PALETTE not supported
           @retval 32 TIFF read support not provided in this compile */
       int readTIFFfile(std::string fileName);
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -4515,6 +4517,9 @@ namespace mjr {
     if( !(tif = TIFFOpen(fileName.c_str(), "r")))
       return 1;
 
+    if(TIFFIsTiled(tif)) 
+      return 23;
+
     // All these tags are required -- bail if any are missing.
     if( 1 != TIFFGetField(tif, TIFFTAG_IMAGEWIDTH,      &wTIFF))
       return 2;
@@ -4533,8 +4538,8 @@ namespace mjr {
     if( 1 != TIFFGetField(tif, TIFFTAG_SAMPLEFORMAT,   &fmtTIFF))
       fmtTIFF = 1;
 
-    //  MJR TODO NOTE We don't know how to deal with pallet images (pmTIFF == PHOTOMETRIC_PALETTE).  Should check for that.
-    //  MJR TODO NOTE We don't know how to deal with tiled images.  Should check for that.
+    if (pmTIFF == PHOTOMETRIC_PALETTE)
+      return 24;
 
     //uint64_t cmTIFF = (1ULL << bpsTIFF) - 1ULL;
 
@@ -4573,6 +4578,7 @@ namespace mjr {
 
     uint16_t sppRC = colorT::channelCount;
 
+    //  MJR TODO NOTE readTIFFfile: We could read what we can instead of exiting.  Check code is in the loop already to do that..
     if(sppTIFF != sppRC)
       return 19;
 

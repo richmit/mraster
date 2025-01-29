@@ -40,7 +40,7 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(int argc, char *argv[]) {
   mjr::ramCanvas3c8b theRamCanvas;
-  theRamCanvas.setIntAxOrientationY(mjr::ramCanvas3c8b::intAxisOrientation::INVERTED); // In SDL2, the 0 row of pixels is at the bottom.
+  theRamCanvas.setIntAxOrientationY(decltype(theRamCanvas)::intAxisOrientation::INVERTED); // In SDL2, the 0 row of pixels is at the bottom.
 
   if (argc < 2) {
     std::cout << "ERROR argument required!" << std::endl;
