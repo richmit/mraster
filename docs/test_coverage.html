@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-01-26 Sun 12:59 -->
+<!-- 2025-01-30 Thu 12:51 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>Unit Test Coverage</title>
@@ -230,12 +230,12 @@
 
 <tr>
 <td class="org-right"><b>Updated:</b></td>
-<td class="org-left"><i>2025-01-26 12:59:33</i></td>
+<td class="org-left"><i>2025-01-30 12:50:56</i></td>
 </tr>
 
 <tr>
 <td class="org-right"><b>Generated:</b></td>
-<td class="org-left"><i>2025-01-26 12:59:35</i></td>
+<td class="org-left"><i>2025-01-30 12:51:29</i></td>
 </tr>
 </tbody>
 </table>
@@ -243,8 +243,8 @@
 Copyright &copy; 2025 Mitch Richling. All rights reserved.
 </p>
 
-<div id="outline-container-org4997936" class="outline-2">
-<h2 id="org4997936"><span class="section-number-2">1.</span> MRcolorTpl.hpp</h2>
+<div id="outline-container-org45e9669" class="outline-2">
+<h2 id="org45e9669"><span class="section-number-2">1.</span> MRcolorTpl.hpp</h2>
 <div class="outline-text-2" id="text-1">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -1902,8 +1902,8 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 </div>
 </div>
 
-<div id="outline-container-org9c05c7f" class="outline-2">
-<h2 id="org9c05c7f"><span class="section-number-2">2.</span> ramCanvasTpl.hpp</h2>
+<div id="outline-container-org2f32a6e" class="outline-2">
+<h2 id="org2f32a6e"><span class="section-number-2">2.</span> ramCanvasTpl.hpp</h2>
 <div class="outline-text-2" id="text-2">
 <table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
 
@@ -3277,6 +3277,429 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 <tr>
 <td class="org-left">UNK</td>
 <td class="org-left">statNumNonZeroPixels()</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgad208d6" class="outline-2">
+<h2 id="orgad208d6"><span class="section-number-2">3.</span> Benchmarks</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+The table below documents relative performance for many of the compilers in
+MRaster's CMakeLists.txt file.  These results have more to do with the
+optimization flags in CMakeLists.txt than the compilers themselves.  In
+particular, I have not yet properly investigated the best options for some of
+them.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-right">Win 11</th>
+<th scope="col" class="org-right">Win 11</th>
+<th scope="col" class="org-right">Win 11</th>
+<th scope="col" class="org-right">Win 11</th>
+<th scope="col" class="org-right">Win 11</th>
+<th scope="col" class="org-right">Win 11</th>
+<th scope="col" class="org-right">Win 11</th>
+</tr>
+
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-right">None</th>
+<th scope="col" class="org-right">MSYS2</th>
+<th scope="col" class="org-right">MSYS2</th>
+<th scope="col" class="org-right">WSL</th>
+<th scope="col" class="org-right">WSL</th>
+<th scope="col" class="org-right">WSL</th>
+<th scope="col" class="org-right">WSL</th>
+</tr>
+
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-right">None</th>
+<th scope="col" class="org-right">mingw64</th>
+<th scope="col" class="org-right">clang64</th>
+<th scope="col" class="org-right">Debian 13</th>
+<th scope="col" class="org-right">Debian 13</th>
+<th scope="col" class="org-right">Debian 13</th>
+<th scope="col" class="org-right">Debian 13</th>
+</tr>
+
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-right">MSVC</th>
+<th scope="col" class="org-right">GCC</th>
+<th scope="col" class="org-right">clang</th>
+<th scope="col" class="org-right">GCC</th>
+<th scope="col" class="org-right">clang</th>
+<th scope="col" class="org-right">Nvidia HPC</th>
+<th scope="col" class="org-right">Intel</th>
+</tr>
+
+<tr>
+<th scope="col" class="org-left">&#xa0;</th>
+<th scope="col" class="org-right">2022</th>
+<th scope="col" class="org-right">14.2</th>
+<th scope="col" class="org-right">19.1.6</th>
+<th scope="col" class="org-right">14.2</th>
+<th scope="col" class="org-right">19.1.6</th>
+<th scope="col" class="org-right">24.11</th>
+<th scope="col" class="org-right">2025.0.4</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">DO_POINT</td>
+<td class="org-right">6.53615</td>
+<td class="org-right">1.16041</td>
+<td class="org-right">3.91633</td>
+<td class="org-right">1.53665</td>
+<td class="org-right">3.96686</td>
+<td class="org-right">4.36704</td>
+<td class="org-right">4.54133</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_RAMP_INT</td>
+<td class="org-right">7.85799</td>
+<td class="org-right">3.50965</td>
+<td class="org-right">4.11095</td>
+<td class="org-right">3.85396</td>
+<td class="org-right">4.1317</td>
+<td class="org-right">3.93723</td>
+<td class="org-right">4.3151</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_RAMP_CON</td>
+<td class="org-right">11.0127</td>
+<td class="org-right">3.66739</td>
+<td class="org-right">4.31167</td>
+<td class="org-right">4.03627</td>
+<td class="org-right">4.4743</td>
+<td class="org-right">3.99623</td>
+<td class="org-right">4.40933</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_RAMP</td>
+<td class="org-right">2.10154</td>
+<td class="org-right">1.50325</td>
+<td class="org-right">1.83407</td>
+<td class="org-right">1.6122</td>
+<td class="org-right">1.75118</td>
+<td class="org-right">1.59943</td>
+<td class="org-right">1.6581</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_POINT_NC</td>
+<td class="org-right">13.4165</td>
+<td class="org-right">2.28155</td>
+<td class="org-right">6.06335</td>
+<td class="org-right">2.77098</td>
+<td class="org-right">5.9332</td>
+<td class="org-right">5.55818</td>
+<td class="org-right">4.34644</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_INVERT</td>
+<td class="org-right">3.3287</td>
+<td class="org-right">1.0142</td>
+<td class="org-right">2.20701</td>
+<td class="org-right">2.86768</td>
+<td class="org-right">2.05454</td>
+<td class="org-right">2.11047</td>
+<td class="org-right">2.15934</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_COL_SETC</td>
+<td class="org-right">3.35453</td>
+<td class="org-right">2.74563</td>
+<td class="org-right">2.8803</td>
+<td class="org-right">2.84977</td>
+<td class="org-right">2.82105</td>
+<td class="org-right">2.83644</td>
+<td class="org-right">2.8007</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_COL_SET</td>
+<td class="org-right">3.28106</td>
+<td class="org-right">2.61673</td>
+<td class="org-right">2.83776</td>
+<td class="org-right">2.81051</td>
+<td class="org-right">2.78699</td>
+<td class="org-right">2.80611</td>
+<td class="org-right">2.81984</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_UNPACK</td>
+<td class="org-right">2.26841</td>
+<td class="org-right">1.07605</td>
+<td class="org-right">0.974374</td>
+<td class="org-right">0.893464</td>
+<td class="org-right">0.973594</td>
+<td class="org-right">0.959723</td>
+<td class="org-right">1.04806</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_MINI</td>
+<td class="org-right">5.26084</td>
+<td class="org-right">1.31318</td>
+<td class="org-right">3.2752</td>
+<td class="org-right">1.31602</td>
+<td class="org-right">2.36521</td>
+<td class="org-right">2.54208</td>
+<td class="org-right">2.50835</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_CLR_BLK</td>
+<td class="org-right">2.15401</td>
+<td class="org-right">0.214339</td>
+<td class="org-right">2.12971</td>
+<td class="org-right">0.179747</td>
+<td class="org-right">2.10512</td>
+<td class="org-right">1.30301</td>
+<td class="org-right">1.99873</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_CLR</td>
+<td class="org-right">2.21498</td>
+<td class="org-right">1.14022</td>
+<td class="org-right">2.13275</td>
+<td class="org-right">1.21307</td>
+<td class="org-right">2.12331</td>
+<td class="org-right">1.73022</td>
+<td class="org-right">1.99392</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_CLIP_LINE</td>
+<td class="org-right">2.05694</td>
+<td class="org-right">1.88974</td>
+<td class="org-right">1.99765</td>
+<td class="org-right">2.02308</td>
+<td class="org-right">2.01453</td>
+<td class="org-right">1.99144</td>
+<td class="org-right">2.04597</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_LINE</td>
+<td class="org-right">2.0468</td>
+<td class="org-right">1.93401</td>
+<td class="org-right">2.06664</td>
+<td class="org-right">2.09723</td>
+<td class="org-right">2.02833</td>
+<td class="org-right">1.97552</td>
+<td class="org-right">2.02574</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_FFBTRI</td>
+<td class="org-right">2.42764</td>
+<td class="org-right">2.41121</td>
+<td class="org-right">3.03131</td>
+<td class="org-right">2.6241</td>
+<td class="org-right">3.02479</td>
+<td class="org-right">1.81501</td>
+<td class="org-right">1.68632</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_FFTRI</td>
+<td class="org-right">0.737072</td>
+<td class="org-right">0.720333</td>
+<td class="org-right">0.684669</td>
+<td class="org-right">0.739511</td>
+<td class="org-right">0.68407</td>
+<td class="org-right">0.805223</td>
+<td class="org-right">0.611703</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_FGBTRI</td>
+<td class="org-right">0.961701</td>
+<td class="org-right">0.932356</td>
+<td class="org-right">1.17904</td>
+<td class="org-right">1.02907</td>
+<td class="org-right">1.16185</td>
+<td class="org-right">0.723988</td>
+<td class="org-right">0.673763</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_FGTRI</td>
+<td class="org-right">1.18724</td>
+<td class="org-right">1.15488</td>
+<td class="org-right">1.07637</td>
+<td class="org-right">1.18384</td>
+<td class="org-right">1.07952</td>
+<td class="org-right">1.26583</td>
+<td class="org-right">0.979763</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_CIRCLE</td>
+<td class="org-right">1.34633</td>
+<td class="org-right">1.26188</td>
+<td class="org-right">1.32544</td>
+<td class="org-right">1.30988</td>
+<td class="org-right">1.34234</td>
+<td class="org-right">1.2894</td>
+<td class="org-right">1.32116</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_RECT</td>
+<td class="org-right">6.24435</td>
+<td class="org-right">3.07024</td>
+<td class="org-right">5.69571</td>
+<td class="org-right">3.28352</td>
+<td class="org-right">5.74606</td>
+<td class="org-right">6.64956</td>
+<td class="org-right">5.15649</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_HLINE_NC</td>
+<td class="org-right">4.67235</td>
+<td class="org-right">2.27476</td>
+<td class="org-right">3.55698</td>
+<td class="org-right">2.43002</td>
+<td class="org-right">3.5683</td>
+<td class="org-right">3.46774</td>
+<td class="org-right">3.73878</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_HLINE</td>
+<td class="org-right">1.13803</td>
+<td class="org-right">1.11777</td>
+<td class="org-right">1.0613</td>
+<td class="org-right">1.18159</td>
+<td class="org-right">1.03872</td>
+<td class="org-right">1.21084</td>
+<td class="org-right">0.950016</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_VLINE</td>
+<td class="org-right">3.2278</td>
+<td class="org-right">3.1484</td>
+<td class="org-right">3.25418</td>
+<td class="org-right">3.21653</td>
+<td class="org-right">3.19222</td>
+<td class="org-right">3.09765</td>
+<td class="org-right">3.25258</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_VLINE_NC</td>
+<td class="org-right">3.23212</td>
+<td class="org-right">3.13704</td>
+<td class="org-right">3.25143</td>
+<td class="org-right">3.23338</td>
+<td class="org-right">3.17418</td>
+<td class="org-right">3.16034</td>
+<td class="org-right">3.1911</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_45LINE</td>
+<td class="org-right">4.34352</td>
+<td class="org-right">4.18626</td>
+<td class="org-right">4.42487</td>
+<td class="org-right">4.44813</td>
+<td class="org-right">4.44067</td>
+<td class="org-right">4.28109</td>
+<td class="org-right">4.40878</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_TRIVLN</td>
+<td class="org-right">0.0734812</td>
+<td class="org-right">0.0604772</td>
+<td class="org-right">0.051004</td>
+<td class="org-right">0.0687492</td>
+<td class="org-right">0.0505404</td>
+<td class="org-right">0.0680999</td>
+<td class="org-right">0.0567434</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_INTRP_AVG9</td>
+<td class="org-right">5.69497</td>
+<td class="org-right">2.14982</td>
+<td class="org-right">3.46422</td>
+<td class="org-right">2.21124</td>
+<td class="org-right">3.24272</td>
+<td class="org-right">3.40699</td>
+<td class="org-right">3.56063</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_INTRP_BILN</td>
+<td class="org-right">2.05904</td>
+<td class="org-right">1.82594</td>
+<td class="org-right">1.47617</td>
+<td class="org-right">1.97975</td>
+<td class="org-right">1.67179</td>
+<td class="org-right">1.32919</td>
+<td class="org-right">1.32933</td>
+</tr>
+
+<tr>
+<td class="org-left">DO_CONV</td>
+<td class="org-right">7.72129</td>
+<td class="org-right">4.02767</td>
+<td class="org-right">4.54388</td>
+<td class="org-right">4.65024</td>
+<td class="org-right">4.58352</td>
+<td class="org-right">4.74323</td>
+<td class="org-right">4.908</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="org-left">Total</td>
+<td class="org-right">112</td>
+<td class="org-right">57.5576</td>
+<td class="org-right">78.8531</td>
+<td class="org-right">63.6691</td>
+<td class="org-right">77.5526</td>
+<td class="org-right">75.0783</td>
+<td class="org-right">74.5258</td>
 </tr>
 </tbody>
 </table>

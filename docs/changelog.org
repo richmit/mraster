@@ -52,12 +52,15 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
     - MSVC:
       - With the switch to GTest, the unit tests are simple to run against MSVC.
       - Removed "experimental" warning when configuring with MSVC.
-      - Added hints about how to use cmake in MSYS2 with MSVC -- not recommended, but it can be done.
+      - Added hints for using MSVC
       - Updated wMean tests to avoid integer cases on cast.
     - mjr::ramCanvasTpl::readTIFFfile: Added error 23: Image is tiled.
     - mjr::ramCanvasTpl::readTIFFfile: Added error 24: Image has a palette.
     - New method colorTpl::channelArithFlt2clrChan
     - Added warning to wMean method regarding the vulgarities of floating point arithmetic and casts
+    - Added more compilers to CMakeLists.txt
+      - NVHPC
+      - IntelLLVM
   - Documentation
     - Added test coverage document
   - Examples

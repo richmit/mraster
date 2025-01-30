@@ -78,6 +78,8 @@ if [[ "${@}" == *'-h'* ]]; then
                                            This code base needs at least GCC-14.
        - -DCMAKE_CXX_COMPILER=g++      <-- Default for 'Unix Makefiles' if /usr/bin/g++-[0-9][0-9] missing
        -                               <-- Default for 'Visual Studio 17 2022'
+       - -DCMAKE_CXX_COMPILER=nvc++    <-- Nvidia Compiler
+       - -DCMAKE_CXX_COMPILER=icpx     <-- Intel Compiler
 EOF
 
   if grep -Eq '^OPTION\([A-Z0-9_]+' ../CMakeLists.txt; then
