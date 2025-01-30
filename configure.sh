@@ -4,7 +4,7 @@
 ##
 # @file      configure.sh
 # @author    Mitch Richling http://www.mitchr.me/
-# @date      2025-01-29
+# @date      2025-01-30
 # @brief     Just a little helper for people accustomed to GNU autotools.@EOL
 # @std       bash
 # @copyright 
@@ -77,9 +77,9 @@ if [[ "${@}" == *'-h'* ]]; then
                                            in which case the highest numbered version is selected.
                                            This code base needs at least GCC-14.
        - -DCMAKE_CXX_COMPILER=g++      <-- Default for 'Unix Makefiles' if /usr/bin/g++-[0-9][0-9] missing
-       -                               <-- Default for 'Visual Studio 17 2022'
-       - -DCMAKE_CXX_COMPILER=nvc++    <-- Nvidia Compiler
-       - -DCMAKE_CXX_COMPILER=icpx     <-- Intel Compiler
+       - -DCMAKE_CXX_COMPILER=cl.exe   <-- Default for 'Visual Studio 17 2022'
+       - -DCMAKE_CXX_COMPILER=nvc++    <-- NVIDIA HPC C++ Compiler
+       - -DCMAKE_CXX_COMPILER=icpx     <-- InteloneAPI DPC++/C++ Compiler
 EOF
 
   if grep -Eq '^OPTION\([A-Z0-9_]+' ../CMakeLists.txt; then
@@ -115,83 +115,81 @@ else
 fi
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------------------
-  if [ "$(basename $(pwd))" == "build" ]; then
-    #
-    # If we need to clean, then CLEAN!!
-    if [ "$CLEAN_DIR" == 'YES' ]; then
-      if [ "$CLEAN_ASK" == 'YES' ]; then
-        ls
-        rm -rI *
-      else
-        rm -rf *
-      fi
-      echo 'This is the build directory.  You should run CMake inside this directory to build project targets.' >> README.md
-    fi
-    #
-    # Figure out target
-    CMAKE_TARGET=''
-    CMAKE_TARGET_SRC='AUTO'
-    for arg in "$@"; do
-      if [ -z "$CMAKE_TARGET" -a "$CMAKE_TARGET_SRC" == 'COMMAND_LINE' ]; then
-        CMAKE_TARGET="$arg"
-      fi
-      if [ "$arg" == "-G" ]; then
-        CMAKE_TARGET_SRC='COMMAND_LINE'
-      fi
-    done
-    if [ "$CMAKE_TARGET" == 'LOOKING' ]; then
-      echo "ERROR(configure.sh): Found -G but no following target argument"
-    fi
-    # No -G, figure out default!
-    if [ -z "$CMAKE_TARGET" ]; then
-      if [ -n "$MSYSTEM" ]; then
-        CMAKE_TARGET='MSYS Makefiles'
-      else
-        CMAKE_TARGET='Unix Makefiles'
-      fi
-    fi
-    #
-    # Figure out the -DCMAKE_CXX_COMPILER argument
-    CMAKE_CARG=''
-    if [[ "$@" != *'-DCMAKE_CXX_COMPILER'* ]]; then
-      if [ "$CMAKE_TARGET" == 'MSYS Makefiles' ]; then
-        CMAKE_CARG='-DCMAKE_CXX_COMPILER=g++.exe'
-      fi
-      if [ "$CMAKE_TARGET" == 'Unix Makefiles' ]; then
-        HIGCC=$(ls /usr/bin/gcc-[0-9][0-9] 2>/dev/null | sort | tail -n 1)
-        if [ -x "$HIGCC" ]; then
-          CMAKE_CARG='-DCMAKE_CXX_COMPILER=g++-14'
-        else
-          CMAKE_CARG='-DCMAKE_CXX_COMPILER=g++'
-        fi
-      fi
-    fi
-    if [ "$DEBUG" == 'DEBUG' ]; then
-      echo $CMAKE_TARGET
-      echo $CMAKE_TARGET_SRC
-      echo $CMAKE_CARG
-    fi
-    #
-    # Run cmake
-    if [ "$CMAKE_TARGET_SRC" == "COMMAND_LINE" ]; then
-      if [ -z "$CMAKE_CARG" ]; then
-        echo AA cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' "$@" ../
-        cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' "$@" ../
-      else
-        echo BB cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' "$CMAKE_CARG" "$@" ../
-        cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' "$CMAKE_CARG" "$@" ../
-      fi
+if [ "$(basename $(pwd))" == "build" ]; then
+  #
+  # If we need to clean, then CLEAN!!
+  if [ "$CLEAN_DIR" == 'YES' ]; then
+    if [ "$CLEAN_ASK" == 'YES' ]; then
+      ls
+      rm -rI *
     else
-      if [ -z "$CMAKE_CARG" ]; then
-        echo CC cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' -G "$CMAKE_TARGET" "$@" ../
-        cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' -G "$CMAKE_TARGET" "$@" ../
+      rm -rf *
+    fi
+    echo 'This is the build directory.  You should run CMake inside this directory to build project targets.' >> README.md
+  fi
+  #
+  # Figure out target
+  CMAKE_TARGET=''
+  CMAKE_TARGET_SRC='AUTO'
+  for arg in "$@"; do
+    if [ -z "$CMAKE_TARGET" -a "$CMAKE_TARGET_SRC" == 'COMMAND_LINE' ]; then
+      CMAKE_TARGET="$arg"
+    fi
+    if [ "$arg" == "-G" ]; then
+      CMAKE_TARGET_SRC='COMMAND_LINE'
+    fi
+  done
+  if [ "$CMAKE_TARGET" == 'LOOKING' ]; then
+    echo "ERROR(configure.sh): Found -G but no following target argument"
+  fi
+  # No -G, figure out default!
+  if [ -z "$CMAKE_TARGET" ]; then
+    if [ -n "$MSYSTEM" ]; then
+      CMAKE_TARGET='MSYS Makefiles'
+    else
+      CMAKE_TARGET='Unix Makefiles'
+    fi
+  fi
+  #
+  # Figure out the -DCMAKE_CXX_COMPILER argument
+  CMAKE_CARG=''
+  if [[ "$@" != *'-DCMAKE_CXX_COMPILER'* ]]; then
+    if [ "$CMAKE_TARGET" == 'MSYS Makefiles' ]; then
+      CMAKE_CARG='-DCMAKE_CXX_COMPILER=g++.exe'
+    fi
+    if [ "$CMAKE_TARGET" == 'Unix Makefiles' ]; then
+      HIGCC=$(ls /usr/bin/gcc-[0-9][0-9] 2>/dev/null | sort | tail -n 1)
+      if [ -x "$HIGCC" ]; then
+        CMAKE_CARG="-DCMAKE_CXX_COMPILER=${HIGCC}"
       else
-        echo DD cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' -G "$CMAKE_TARGET" "$CMAKE_CARG" "$@" ../
-        cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' -G "$CMAKE_TARGET" "$CMAKE_CARG" "$@" ../
+        CMAKE_CARG='-DCMAKE_CXX_COMPILER=g++'
       fi
+    fi
+  fi
+  if [ "$DEBUG" == 'DEBUG' ]; then
+    echo $CMAKE_TARGET
+    echo $CMAKE_TARGET_SRC
+    echo $CMAKE_CARG
+  fi
+  #
+  # Run cmake
+  if [ "$CMAKE_TARGET_SRC" == "COMMAND_LINE" ]; then
+    if [ -z "$CMAKE_CARG" ]; then
+      echo AA cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' "$@" ../
+      cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' "$@" ../
+    else
+      echo BB cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' "$CMAKE_CARG" "$@" ../
+      cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' "$CMAKE_CARG" "$@" ../
     fi
   else
-    echo "ERROR(configure.sh): Must run from build directory"
+    if [ -z "$CMAKE_CARG" ]; then
+      echo CC cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' -G "$CMAKE_TARGET" "$@" ../
+      cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' -G "$CMAKE_TARGET" "$@" ../
+    else
+      echo DD cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' -G "$CMAKE_TARGET" "$CMAKE_CARG" "$@" ../
+      cmake '-DCMAKE_EXPORT_COMPILE_COMMANDS=1' -G "$CMAKE_TARGET" "$CMAKE_CARG" "$@" ../
+    fi
   fi
-
-
+else
+  echo "ERROR(configure.sh): Must run from build directory"
+fi
