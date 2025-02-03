@@ -371,7 +371,13 @@ if(Doxygen_FOUND)
   foreach(DOXINPUT IN ITEMS "lib" "examples")
     message(STATUS "Generateing doxygen generation target for ${DOXINPUT}")
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/Doxyfile.cmake ${CMAKE_BINARY_DIR}/doc-${DOXINPUT}/Doxyfile)
+    set(DOXSRCF "doc-${DOXINPUT}")
+    file(GLOB TMP LIST_DIRECTORIES false "${CMAKE_SOURCE_DIR}/${DOXINPUT}/[a-zA-Z0-9]*.?pp")
+    list(APPEND DOXSRCF ${TMP})
+    file(GLOB TMP LIST_DIRECTORIES false "${CMAKE_SOURCE_DIR}/${DOXINPUT}/[a-zA-Z0-9]*.f90")
+    list(APPEND DOXSRCF ${TMP})
     add_custom_target(doc-${DOXINPUT}
+      DEPENDS ${DOXSRCF}
       COMMAND ${DOXYGEN_EXECUTABLE} > dox.out
       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc-${DOXINPUT}
       COMMENT "Generating ${DOXINPUT} documentation with Doxygen"
@@ -379,7 +385,7 @@ if(Doxygen_FOUND)
     if(EXISTS "c:/Users/richmit/MJR/WWW/site/SS/mraster/doc-${DOXINPUT}/")
       message(STATUS "Generateing doxygen publish target for ${DOXINPUT}")
       add_custom_target("install-doc-${DOXINPUT}"
-        DEPENDS "doc-${DOXINPUT}"
+        DEPENDS ${DOXSRCF}
         COMMAND  rsync -rlt --log-format=%f --stats --delete --delete-excluded --modify-window=2 "doc-${DOXINPUT}/" "/c/Users/richmit/MJR/WWW/site/SS/mraster/doc-${DOXINPUT}"
         COMMENT "Put ${DOXINPUT} data in web site directory")
     endif()
