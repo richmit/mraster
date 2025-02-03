@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
   double Xo      = dRamCanvas.getNumPixX() / 2.0;
   double Yo      = dRamCanvas.getNumPixY() / 2.0;
   double Sr      = std::min(dRamCanvas.getNumPixX(), dRamCanvas.getNumPixY()) / 2.0;
-  double Sout    = 0.9;
+  double Sout    = 1.0;
 
   std::vector<double> poly {A, B, C, D};
 
