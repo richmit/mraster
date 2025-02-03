@@ -42,24 +42,22 @@ In no particular order:
 
  - Homo transforms
    - +Complex abs/arg greyscale transform+ DONE.
- - 2D plane Color Schemes
-   - +Richardson+
-   - thaller HSL
-   - thaller HSV
-   - +Around the cube arg+
+ - +2D plane Color Schemes+ DONE
+   - +Richardson+ DONE
+   - +thaller HSL+ DONE
+   - +thaller HSV+ DONE
+   - +Around the cube arg+ DONE
    - Add them all to the color schemes page!
- - Canvas Compositing
-   - adjoinCanvas(const ramCanvasTpl &theCanvas, side);
+ - +Canvas Compositing+ DONE
+   - +adjoinCanvas(const ramCanvasTpl &theCanvas, side);+ DONE
    - +insertCanvas(const ramCanvasTpl &theCanvas, intCrdT x1 = 0, intCrdT y1 = 0)+ DONE.
- - pixel corner coordinates
-   - Given a pixel, spit out the real corner coordinates
+ - +pixel corner coordinates+ DONE
    - +Given a pixel, get a single corner given by indexes cornerX & cornerY -- cornerX & Y are 0 or 1.+ DONE.
-   - +Given a pixel, get a single corner given by single index cornerIndex -- cornerIndex is 0, 1, 2, or 3.+ DONE.
-   - Signed distance function evaluation on pixel corner -- return list of states.
- - point2d cast operators
+   - +Given a pixel, get a single corner given by single index cornerIndex -- cornerIndex is 0, 1, 2, or 3.+ CANCELED
+ - +point2d cast operators+ DONE
    - +complex+ DONE.
-   - tuple
-   - vector
+   - +tuple+ DONE.
+   - +vector+ DONE.
  - coordinate conversion with point objects
    - +int2real(intCrdT x, intCrdT y)+ DONE.
    - +real2int(intCrdT x, intCrdT y)+ DONE.
@@ -82,21 +80,18 @@ In no particular order:
      - Budabrot for period 1 bulb.
      - Budabrot for period 1 & 2 bulbs with 1 red and 2 blue
      - Budabrot with just the cyclic parts of the orbits for all orbits.  Odd period red, even blue.
- - Add number formatting
+ - +Add number formatting+ DONE
    - +Padded integers -- like we use in image file names & MRW headers+ DONE
    - +Floating point numbers+ CANCELED
- - Add $IC_tC_p$ or ITP color space support
-   - REF: https://en.wikipedia.org/wiki/ICtCp
- - Color difference:
+ - +Add $IC_tC_p$ or ITP color space support+ CANCELED
+   - +REF: https://en.wikipedia.org/wiki/ICtCp+ CANCELED
+ - +Color difference:+ DONE
    - +Add colorTpl::distDeltaE1994+ DONE
    - +Add colorTpl::distDeltaE1976+ DONE
-   - Add colorTpl::distDeltaE2000
-   - Add Rec. ITU-R BT.2124 or \Delta EITP https://en.wikipedia.org/wiki/Color_difference
+   - +Add colorTpl::distDeltaE2000+ CANCELED
+   - +Add Rec. ITU-R BT.2124 or \Delta EITP https://en.wikipedia.org/wiki/Color_difference+ CANCELED
  - FITS
    - Add an example showing how to read a FITS file using FITSIO
- - HDF5
-   - Add an example showing how to read/write a HDF5 file
-   - Integrate HDF5 support into ramCanvasTpl?
  - Set channels
    - From an array (the object)
    - An iterator
@@ -121,7 +116,7 @@ In no particular order:
    - Use an SDL2 or GLUT window.
    - Rate of update should be tuenable.
    - An occasional display artifact due to thread data collision is acceptable.
- - Encode real coordinate information in saved images and use that data in ImageJ for measurements and mouse location
+ - +Encode real coordinate information in saved images and use that data in ImageJ for measurements and mouse location+ CANCELED
    - +Write ImageJ plugin/tool that prints out real coordinates when clicking on an image.+ DONE
  - OpenMP
    - Spread OpenMP use across examples.
@@ -148,7 +143,7 @@ In no particular order:
  - unit tests
    - colorTpl
      - Add tests to make sure constants are correct for ALL types (minChanVal, maxChanVal, meanChanVal, etc....)
-     - Add GCC with 128-bit support tests
+     - +Add GCC with 128-bit support tests+ DONE
    - ramCanvasTpl
      - Instead of comparing files, load files and compare images -- using an endianness aware MRW reader.
      - Test TIFF files in save_file test case -- by reading them in along with a reference MRW, and comparing the images in RAM.

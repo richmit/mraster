@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-01-29 Wed 14:17 -->
+<!-- 2025-02-03 Mon 11:36 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>Change Log</title>
@@ -230,12 +230,12 @@
 
 <tr>
 <td class="org-right"><b>Updated:</b></td>
-<td class="org-left"><i>2025-01-29 14:05:17</i></td>
+<td class="org-left"><i>2025-02-03 11:36:50</i></td>
 </tr>
 
 <tr>
 <td class="org-right"><b>Generated:</b></td>
-<td class="org-left"><i>2025-01-29 14:17:18</i></td>
+<td class="org-left"><i>2025-02-03 11:36:52</i></td>
 </tr>
 </tbody>
 </table>
@@ -292,6 +292,7 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 <li>API breaking Changes
 <ul class="org-ul">
 <li>mjr::ramCanvasTpl::readTIFFfile now has new exit codes (23 &amp; 24 &#x2013; see below).</li>
+<li>Bumped C++ standard up to 23 (from 20) for compatibility with MRMathCPP.</li>
 </ul></li>
 <li>Deprecated functionality
 <ul class="org-ul">
@@ -303,13 +304,24 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 <ul class="org-ul">
 <li>With the switch to GTest, the unit tests are simple to run against MSVC.</li>
 <li>Removed "experimental" warning when configuring with MSVC.</li>
-<li>Added hints about how to use cmake in MSYS2 with MSVC &#x2013; not recommended, but it can be done.</li>
+<li>Added hints for using MSVC</li>
 <li>Updated wMean tests to avoid integer cases on cast.</li>
 </ul></li>
 <li>mjr::ramCanvasTpl::readTIFFfile: Added error 23: Image is tiled.</li>
 <li>mjr::ramCanvasTpl::readTIFFfile: Added error 24: Image has a palette.</li>
 <li>New method colorTpl::channelArithFlt2clrChan</li>
 <li>Added warning to wMean method regarding the vulgarities of floating point arithmetic and casts</li>
+<li>Added more compilers to CMakeLists.txt
+<ul class="org-ul">
+<li>NVHPC</li>
+<li>IntelLLVM</li>
+</ul></li>
+<li>Pixel Corners
+<ul class="org-ul">
+<li>Moved from experimental to production</li>
+<li>Functions: int2realSideX, int2realSideY, int2realCorner</li>
+<li>Example: demo_corners.cpp</li>
+</ul></li>
 </ul></li>
 <li>Documentation
 <ul class="org-ul">
@@ -319,7 +331,7 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 <ul class="org-ul">
 <li>New
 <ul class="org-ul">
-<li>N/A</li>
+<li>demo_corners.cpp</li>
 </ul></li>
 <li>Updated
 <ul class="org-ul">

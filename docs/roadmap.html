@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2024-08-19 Mon 19:54 -->
+<!-- 2025-01-31 Fri 17:02 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster Roadmap</title>
@@ -282,31 +282,29 @@ In no particular order:
 <ul class="org-ul">
 <li><del>Complex abs/arg greyscale transform</del> DONE.</li>
 </ul></li>
-<li>2D plane Color Schemes
+<li><del>2D plane Color Schemes</del> DONE
 <ul class="org-ul">
-<li><del>Richardson</del></li>
-<li>thaller HSL</li>
-<li>thaller HSV</li>
-<li><del>Around the cube arg</del></li>
+<li><del>Richardson</del> DONE</li>
+<li><del>thaller HSL</del> DONE</li>
+<li><del>thaller HSV</del> DONE</li>
+<li><del>Around the cube arg</del> DONE</li>
 <li>Add them all to the color schemes page!</li>
 </ul></li>
-<li>Canvas Compositing
+<li><del>Canvas Compositing</del> DONE
 <ul class="org-ul">
-<li>adjoinCanvas(const ramCanvasTpl &amp;theCanvas, side);</li>
+<li><del>adjoinCanvas(const ramCanvasTpl &amp;theCanvas, side);</del> DONE</li>
 <li><del>insertCanvas(const ramCanvasTpl &amp;theCanvas, intCrdT x1 = 0, intCrdT y1 = 0)</del> DONE.</li>
 </ul></li>
-<li>pixel corner coordinates
+<li><del>pixel corner coordinates</del> DONE
 <ul class="org-ul">
-<li>Given a pixel, spit out the real corner coordinates</li>
 <li><del>Given a pixel, get a single corner given by indexes cornerX &amp; cornerY &#x2013; cornerX &amp; Y are 0 or 1.</del> DONE.</li>
-<li><del>Given a pixel, get a single corner given by single index cornerIndex &#x2013; cornerIndex is 0, 1, 2, or 3.</del> DONE.</li>
-<li>Signed distance function evaluation on pixel corner &#x2013; return list of states.</li>
+<li><del>Given a pixel, get a single corner given by single index cornerIndex &#x2013; cornerIndex is 0, 1, 2, or 3.</del> CANCELED</li>
 </ul></li>
-<li>point2d cast operators
+<li><del>point2d cast operators</del> DONE
 <ul class="org-ul">
 <li><del>complex</del> DONE.</li>
-<li>tuple</li>
-<li>vector</li>
+<li><del>tuple</del> DONE.</li>
+<li><del>vector</del> DONE.</li>
 </ul></li>
 <li>coordinate conversion with point objects
 <ul class="org-ul">
@@ -342,30 +340,25 @@ In no particular order:
 <li>Budabrot with just the cyclic parts of the orbits for all orbits.  Odd period red, even blue.</li>
 </ul></li>
 </ul></li>
-<li>Add number formatting
+<li><del>Add number formatting</del> DONE
 <ul class="org-ul">
 <li><del>Padded integers &#x2013; like we use in image file names &amp; MRW headers</del> DONE</li>
 <li><del>Floating point numbers</del> CANCELED</li>
 </ul></li>
-<li>Add \(IC_tC_p\) or ITP color space support
+<li><del>Add \(IC_tC_p\) or ITP color space support</del> CANCELED
 <ul class="org-ul">
-<li>REF: <a href="https://en.wikipedia.org/wiki/ICtCp">https://en.wikipedia.org/wiki/ICtCp</a></li>
+<li><del>REF: <a href="https://en.wikipedia.org/wiki/ICtCp">https://en.wikipedia.org/wiki/ICtCp</a></del> CANCELED</li>
 </ul></li>
-<li>Color difference:
+<li><del>Color difference:</del> DONE
 <ul class="org-ul">
 <li><del>Add colorTpl::distDeltaE1994</del> DONE</li>
 <li><del>Add colorTpl::distDeltaE1976</del> DONE</li>
-<li>Add colorTpl::distDeltaE2000</li>
-<li>Add Rec. ITU-R BT.2124 or &Delta; EITP <a href="https://en.wikipedia.org/wiki/Color_difference">https://en.wikipedia.org/wiki/Color_difference</a></li>
+<li><del>Add colorTpl::distDeltaE2000</del> CANCELED</li>
+<li><del>Add Rec. ITU-R BT.2124 or &Delta; EITP <a href="https://en.wikipedia.org/wiki/Color_difference">https://en.wikipedia.org/wiki/Color_difference</a></del> CANCELED</li>
 </ul></li>
 <li>FITS
 <ul class="org-ul">
 <li>Add an example showing how to read a FITS file using FITSIO</li>
-</ul></li>
-<li>HDF5
-<ul class="org-ul">
-<li>Add an example showing how to read/write a HDF5 file</li>
-<li>Integrate HDF5 support into ramCanvasTpl?</li>
 </ul></li>
 <li>Set channels
 <ul class="org-ul">
@@ -404,7 +397,7 @@ A good sequences:
 <li>Rate of update should be tuenable.</li>
 <li>An occasional display artifact due to thread data collision is acceptable.</li>
 </ul></li>
-<li>Encode real coordinate information in saved images and use that data in ImageJ for measurements and mouse location
+<li><del>Encode real coordinate information in saved images and use that data in ImageJ for measurements and mouse location</del> CANCELED
 <ul class="org-ul">
 <li><del>Write ImageJ plugin/tool that prints out real coordinates when clicking on an image.</del> DONE</li>
 </ul></li>
@@ -447,7 +440,7 @@ A good sequences:
 <li>colorTpl
 <ul class="org-ul">
 <li>Add tests to make sure constants are correct for ALL types (minChanVal, maxChanVal, meanChanVal, etc&#x2026;.)</li>
-<li>Add GCC with 128-bit support tests</li>
+<li><del>Add GCC with 128-bit support tests</del> DONE</li>
 </ul></li>
 <li>ramCanvasTpl
 <ul class="org-ul">

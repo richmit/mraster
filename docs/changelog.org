@@ -45,7 +45,8 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
   - Known Issues
     - N/A
   - API breaking Changes
-    - mjr::ramCanvasTpl::readTIFFfile now has new exit codes (23 & 24 -- see below).  
+    - mjr::ramCanvasTpl::readTIFFfile now has new exit codes (23 & 24 -- see below).
+    - Bumped C++ standard up to 23 (from 20) for compatibility with MRMathCPP.
   - Deprecated functionality
     - N/A
   - New functionality
@@ -61,11 +62,15 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
     - Added more compilers to CMakeLists.txt
       - NVHPC
       - IntelLLVM
+    - Pixel Corners
+      - Moved from experimental to production
+      - Functions: int2realSideX, int2realSideY, int2realCorner
+      - Example: demo_corners.cpp
   - Documentation
     - Added test coverage document
   - Examples
     - New
-      - N/A
+      - demo_corners.cpp
     - Updated
       - N/A
   - Miscellaneous

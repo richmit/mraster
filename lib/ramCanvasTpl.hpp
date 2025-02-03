@@ -1590,31 +1590,32 @@ namespace mjr {
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Pixel Corner Coordinates.
-
-       @warning These functions are experimental!  Functionality and API are likely to change in the future.
-
       */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Given integer x coordinate, produce real x coordinate for one of the pixel's edge.
+          @param x    The integer x coordinate value to be converted.
+          @param side The integer x coordinate of the corner -- should be 0 (lower) or 1 (upper).
+          @return The real x & y coordinates corresponding to the requested corner */
+      inline fltCrdT int2realSideX(intCrdT x, int side)  { return int2realX(x)+pixWidX/(side ? static_cast<fltCrdT>(2.0) : static_cast<fltCrdT>(-2.0)); }
+      /** Given integer y coordinate, produce real y coordinate for one of the pixel's edge.
+          @param y    The integer y coordinate value to be converted.
+          @param side The integer y coordinate of the corner -- should be 0 (lower) or 1 (upper).
+          @return The real y coordinates corresponding to the requested side */
+      inline fltCrdT int2realSideY(intCrdT y, int side)  { return int2realY(y)+pixWidY/(side ? static_cast<fltCrdT>(2.0) : static_cast<fltCrdT>(-2.0)); }
       /** Given integer x & y coordinates, produce real x & y coordinates for one of the pixel's corners.
-
-          @warning This function is experimental!  Functionality and API are likely to change in the future.
-
           @param x       The integer x coordinate value to be converted.
           @param y       The integer y coordinate value to be converted.
-          @param cornerX The integer x coordinate of the corner -- should be 0 or 1.
-          @param cornerY The integer y coordinate of the corner -- should be 0 or 1.
+          @param cornerX The integer x coordinate of the corner -- should be 0 (lower) or 1 (upper).
+          @param cornerY The integer y coordinate of the corner -- should be 0 (lower) or 1 (upper).
           @return The real x & y coordinates corresponding to the requested corner */
-      inline pointFltType int2corner(intCrdT x, intCrdT y, int cornerX, int cornerY)  { return point2d(int2realX(x+cornerX)-pixWidX/2.0, int2realY(y+cornerY)-pixWidY/2.0); }
+      inline pointFltType int2realCorner(intCrdT x, intCrdT y, int sideX, int sideY)  {return point2d(int2realSideX(x, sideX), int2realSideY(y, sideY)); }
       /** Given integer x & y coordinates and a corner index, produce real x & y coordinates for one of the pixel's corners.
-
-          @warning This function is experimental!  Functionality and API are likely to change in the future.
-
           @param x           The integer x coordinate value to be converted.
           @param y           The integer y coordinate value to be converted.
           @param cornerIndex Corner index. 0 => (0, 0); 1 => (0, 1); 2 => (1, 0); 3 => (1, 1); 
           @return The real x & y coordinates corresponding to the requested corner */
-      inline pointFltType int2corner(intCrdT x, intCrdT y, int cornerIndex)           { return int2corner(x, y, (cornerIndex >> 1), (cornerIndex & 1));                     }
+      inline pointFltType int2realCorner(intCrdT x, intCrdT y, int cornerIndex) { return int2realCorner(x, y, (cornerIndex >> 1), (cornerIndex & 1)); }
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4723,7 +4724,7 @@ namespace mjr {
         double xT = (x - Xo);
         double yT = (y - Yo);
         double rT = std::hypot(xT, yT) / rScale;
-        // TODO: Use mjr::evalUniPoly
+        // double rS = mjr::math::uply::eval(RPoly, rT);
         double rS = RPoly[0];
         for (unsigned int i=1; i<RPoly.size(); i++)
           rS = rS*rT + RPoly[i];
