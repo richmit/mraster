@@ -1604,10 +1604,10 @@ namespace mjr {
           @return The real y coordinates corresponding to the requested side */
       inline fltCrdT int2realSideY(intCrdT y, int side)  { return int2realY(y)+pixWidY/(side ? static_cast<fltCrdT>(2.0) : static_cast<fltCrdT>(-2.0)); }
       /** Given integer x & y coordinates, produce real x & y coordinates for one of the pixel's corners.
-          @param x       The integer x coordinate value to be converted.
-          @param y       The integer y coordinate value to be converted.
-          @param cornerX The integer x coordinate of the corner -- should be 0 (lower) or 1 (upper).
-          @param cornerY The integer y coordinate of the corner -- should be 0 (lower) or 1 (upper).
+          @param x     The integer x coordinate value to be converted.
+          @param y     The integer y coordinate value to be converted.
+          @param sideX The integer x coordinate of the corner -- should be 0 (lower) or 1 (upper).
+          @param sideY The integer y coordinate of the corner -- should be 0 (lower) or 1 (upper).
           @return The real x & y coordinates corresponding to the requested corner */
       inline pointFltType int2realCorner(intCrdT x, intCrdT y, int sideX, int sideY)  {return point2d(int2realSideX(x, sideX), int2realSideY(y, sideY)); }
       /** Given integer x & y coordinates and a corner index, produce real x & y coordinates for one of the pixel's corners.
