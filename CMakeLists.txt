@@ -131,7 +131,7 @@ export(TARGETS MRaster FILE "${CMAKE_BINARY_DIR}/MRasterLib.cmake")
 set(TARGETS_REQ_NONE   "BurningShip" "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "biomorph2" "biomorphMorph" "bmark" "chaos_game"
                        "circles" "collatz" "color_all" "color_interp_hsl_vs_rgb" "color_lut_cubehelix" "color_lut_docs" "color_lut_indexed"
                        "color_lut_indexedC" "color_lut_poly" "color_lut_rainbows" "color_lut_ramp_cube" "color_lut_ramp_cubeC" "color_lut_ramp_misc"
-                       "color_web_rectangle" "color_web_triangle" "convertRawToTIFF" "cplxColor" "dlaSeed" "heart2022" "invertedMandelbrot" "julia"
+                       "color_web_rectangle" "color_web_triangle" "convertRawToTIFF" "cplxColor" "dlaSeed" "heart2022" "heart2025" "invertedMandelbrot" "julia"
                        "juliaM" "juliaM2" "level_curves" "lorenz_fuz" "lorenz_multi" "mandelbrot_binary" "mandelbrot_biomorph" "mandelbrot_bm_cplx"
                        "mandelbrot_bm_cplx_hyper" "mandelbrot_bm_real" "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits"
                        "attracting_torus_shadow" "mandelbrot_potential" "mandelbrot_real_cfun" "mandelbrot_triangle" "multibrotMovie"

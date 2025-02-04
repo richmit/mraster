@@ -1,14 +1,14 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      heart2022.cpp
+ @file      heart2025.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Draw a heart for Valentines Day 2022.@EOL
+ @brief     Draw a heart for Valentines Day 2025.@EOL
  @keywords
  @std       C++20
  @copyright
   @parblock
-  Copyright (c) 1988-2022, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
+  Copyright (c) 2025, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -44,21 +44,27 @@ int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   int x, y;
   double maxH = std::hypot(512, 512);
-  mjr::ramCanvas3c8b theRamCanvas(1024, 1024, -2, 2, -2, 2);
+  int width  = 3440;
+  int height = 1400;
+  double ar  = static_cast<double>(width) / static_cast<double>(height);
+  mjr::ramCanvas3c8b theRamCanvas(width, height, -2*ar, 2*ar, -2, 2);
 
   for(y=0;y<theRamCanvas.getNumPixY();y++)  
     for(x=0;x<theRamCanvas.getNumPixX();x++) {
-      if(f(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y)) > 0)
-        theRamCanvas.drawPoint(x, y, "red");
-      else
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b::csPLYquad::c(mjr::math::linm::gen_map(std::hypot(x-512, y-512), maxH, 0.0, 0.5, 1.0)));
+      double fxy = f(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
+      if (fxy > 0)
+        //theRamCanvas.drawPoint(x, y, mjr::color3c8b::csCCwicR::c(1.0*std::abs(fxy))); // eclipse
+        //theRamCanvas.drawPoint(x, y, mjr::color3c8b::csFPcmoceanAmp::c(0.8*sqrt(1-std::abs(fxy)))); // brick
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b::csCCu0M::c(1-std::abs(fxy))); // purple
+      else 
+        theRamCanvas.drawPoint(x, y, mjr::color3c8b::csPLYquad::c(mjr::math::linm::gen_map(std::hypot(x-width/2, y-height/2), maxH, 0.0, 0.5, 1.0)));
     }
 
-  theRamCanvas.drawString("MWU. M", mjr::hershey::font::ROMAN_SL_SANSERIF, 900, 90, "red",  1, 20); 
-  theRamCanvas.drawString("2022  ", mjr::hershey::font::ROMAN_SL_SANSERIF, 900, 60, "red",  1, 20); 
-  theRamCanvas.drawString("    -m", mjr::hershey::font::ROMAN_SL_SANSERIF, 900, 30, "red",  1, 20); 
+  theRamCanvas.drawString("MWU. M", mjr::hershey::font::ROMAN_SL_SANSERIF, width-130, 200-30, "red",  1, 20); 
+  theRamCanvas.drawString("2025  ", mjr::hershey::font::ROMAN_SL_SANSERIF, width-130, 200-60, "red",  1, 20); 
+  theRamCanvas.drawString("    -m", mjr::hershey::font::ROMAN_SL_SANSERIF, width-130, 200-90, "red",  1, 20); 
 
-  theRamCanvas.writeTIFFfile("heart2022.tiff");
+  theRamCanvas.writeTIFFfile("heart2025.tiff");
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
