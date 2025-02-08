@@ -120,9 +120,8 @@ namespace mjr {
 
       This library supports two sets of coordinates for each image:
 
-      - Integer -- much like traditional computer graphics coordinates
-
-      - Floating Point -- much like mathematical coordinates
+        - Integer -- much like traditional computer graphics coordinates
+        - Floating Point -- much like mathematical coordinates
 
       The integer coordinates are a generalization of the traditional integer coordinates used for computer graphics.  Like the traditional system, they are
       unsigned integers (so the coordinates start at 0), each pixel is one unit from the previous, and the maximum pixel coordinate is one minus the canvas size in
@@ -135,7 +134,7 @@ namespace mjr {
       @tparam intCrdT An integral type used for the integer image coordinates.  Should be signed, and at least  @f$ 4\cdot\log_2(\mathtt{numPixX} \cdot \mathtt{numPixY}) @f$ bits in size
       @tparam colorT  A type for the image pixels (a color)
       @tparam fltCrdT A floating point type used for the floating point image coordinates
-      @tparam enableDrawModes If true, enables drawing modes othe than drawModeType::SET. */
+      @tparam enableDrawModes If true, enables drawing modes other than drawModeType::SET. */
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
   class ramCanvasTpl {
@@ -226,13 +225,14 @@ namespace mjr {
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Typedefs related to template parameters */
       //@{
-      typedef point2d<fltCrdT>      pointFltType; //!< Real coordinate pair type
-      typedef point2d<intCrdT>      pointIntType; //!< Integer coordinate pair type
-      typedef std::complex<fltCrdT> cplxFltType;  //!< Real coordinate complex type (Provided for convince -- not used in ramCanvasTpl)
-      typedef std::complex<intCrdT> cplxIntType;  //!< Integer coordinate complex type (Provided for convince -- not used in ramCanvasTpl)
-      typedef intCrdT               coordIntType; //!< Integer type for coordinates
-      typedef fltCrdT               coordFltType; //!< Real type for coordinates
-      typedef colorT                colorType;    //!< Color type for pixels
+      typedef point2d<fltCrdT>           pointFltType;    //!< Real coordinate pair type
+      typedef point2d<intCrdT>           pointIntType;    //!< Integer coordinate pair type
+      typedef std::vector<pointIntType>  pointIntVecType; //!< Integer coordinate pair type
+      typedef std::complex<fltCrdT>      cplxFltType;     //!< Real coordinate complex type (Provided for convince -- not used in ramCanvasTpl)
+      typedef std::complex<intCrdT>      cplxIntType;     //!< Integer coordinate complex type (Provided for convince -- not used in ramCanvasTpl)
+      typedef intCrdT                    coordIntType;    //!< Integer type for coordinates
+      typedef fltCrdT                    coordFltType;    //!< Real type for coordinates
+      typedef colorT                     colorType;       //!< Color type for pixels
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -436,7 +436,7 @@ namespace mjr {
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Destroy the current pixel memory and reallocate a new pixel space of the given size.
-          This will not clear the canvas.  IT will not reallocate the canvas unless the new size is different from the current size.  It will not allocate a
+          This will not clear the canvas.  It will not reallocate the canvas unless the new size is different from the current size.  It will not allocate a
           new canvas if either argument is zero or less.  Updates coordinates.
           @param numPixX_p The width of the new canvas
           @param numPixY_p The height of the new canvas */
@@ -470,16 +470,15 @@ namespace mjr {
           image would be extracted.  One might extract 24-bit RGB with redChan=0, greenChan=1, and blueChan=2.  Add alphaChan=3, and extract 24-bit RGB with
           alpha -- sometimes called 24-bit RGBA or 32-bit RGBA.  Many systems expect the alpha bit to be first, so one might use alphaChan=0, redChan=1,
           greenChan=2, and blueChan=3 to get ARGB.  As a fine example, TARGA images use BGR -- blueChan=0, greenChan=1, and redChan=2.  In summary:
-          <pre>
-          Examples of how to pack various common raster data formats
-          ..........RGB  RGBA  ARGB   BGR  ABGR  Grey
-          redChan     0     0     1     2     3     0
-          greenChan   1     1     2     1     2    -1
-          blueChan    2     2     3     0     1    -1
-          alphaChan  -1     3     0    -1     0    -1
-          </pre>
-          @param rasterData Unsigned char pointer to image data.
-          If NULL,then data will be allocated for image.
+
+                       Examples of how to pack various common raster data formats
+                       ..........RGB  RGBA  ARGB   BGR  ABGR  Grey
+                       redChan     0     0     1     2     3     0
+                       greenChan   1     1     2     1     2    -1
+                       blueChan    2     2     3     0     1    -1
+                       alphaChan  -1     3     0    -1     0    -1
+
+          @param rasterData Unsigned char pointer to image data.  If NULL,then data will be allocated for image.
           @param x1 First x coordinate first corner of sub-image to extract
           @param x2 First x coordinate second corner of sub-image to extract
           @param y1 First y coordinate first corner of sub-image to extract
@@ -1479,11 +1478,11 @@ namespace mjr {
           data visualization tools -- usually via a feature referred to as a raw importer.  ImageMagick, VisIT, ParaView, and ImageJ all can read this type of
           data. The header is exactly 100 bytes, ASCII, and contains two newlines.  The idea being that one can do a 'head -n 2 FILENAME' on the image file,
           and get a human readable output of basic image info that also happens to be easy to parse.  The first line of the header is the text "MJRRAW".  The
-          second line of the header consists of a sequence of values& value labels and followed by enough zero characters to pad to get to the 100 byte mark.
+          second line of the header consists of a sequence of values & value labels and followed by enough zero characters to pad to get to the 100 byte mark.
           That's 100 bytes for the two lines including the two newline characters.  The values consist of uppercase letters and numbers, and each label is a
-          single lower case letter.  If a value is a number, then it is expressed as a decimal number in ASCII using -- it may be zero padded.  While the code
-          in ramCanvasTpl doesn't make assumptions about the order of the header values, some of the example scripts require them to be in the following
-          order: x, y, c, b, s, t, & i.  The header is followed by the binary image.
+          single lower case letter.  If a value is a number, then it is expressed as a decimal number in ASCII -- possibly zero padded.  While the code in
+          ramCanvasTpl doesn't make assumptions about the order of the header values, some of the example scripts require them to be in the following order:
+          x, y, c, b, s, t, & i.  The header is followed by the binary image.
 
           Labels:
             - x: Number of pixels on X (horizontal axis) expressed as a zero padded, decimal integer
@@ -1756,12 +1755,33 @@ namespace mjr {
       /** @name Pixel Value Accessor Methods */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Returns a copy of the color at the given coordinates */
+      /** Returns a copy of the color at the given coordinates. */
       colorT getPxColor(intCrdT x, intCrdT y) const;
       inline colorT getPxColor(fltCrdT x, fltCrdT y)  const { return getPxColor(real2intX(x), real2intY(y)); }
       inline colorT getPxColor(pointIntType thePoint) const { return getPxColor(thePoint.x, thePoint.y); }
       inline colorT getPxColor(pointFltType thePoint) const { return getPxColor(thePoint.x, thePoint.y); }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Returns a copy of the color at the given coordinates wrapping x & y if out of range. */
+      inline colorT getPxColorWrap(intCrdT x, intCrdT y)  const { return pixels[numPixX * mjr::math::ivl::wrapCO(y, numPixY) + mjr::math::ivl::wrapCO(x, numPixX)]; }
+      inline colorT getPxColorWrap(fltCrdT x, fltCrdT y)  const { return getPxColorWrap(real2intX(x), real2intY(y)); }
+      inline colorT getPxColorWrap(pointIntType thePoint) const { return getPxColorWrap(thePoint.x, thePoint.y); }
+      inline colorT getPxColorWrap(pointFltType thePoint) const { return getPxColorWrap(thePoint.x, thePoint.y); }
       //@}
+
+      // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      //  MJR TODO NOTE <2025-02-08T14:10:40-0600> ramCanvasTpl: Think abou this some more...
+      // /** @name Pixel Stencil  Accessor Methods */
+      // //@{
+      // //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      // /** Returns the channel values on th stencil centered at the given point. */
+      // inline colorT::clrChanVec getStencilWrap(intCrdT cx, intCrdT cy, pointIntVecType stencil, int chan) const { 
+      //   typename colorT::clrChanVec retVec(stencil.size());
+      //   for(int i=0; i<(int)stencil.size(); i++) 
+      //     retVec[i] = getPxColorRefNC(mjr::math::ivl::wrapCO(cx+stencil[i].x, numPixX), mjr::math::ivl::wrapCO(cy+stencil[i].y, numPixY)).getChanNC(chan);
+      //   return retVec;
+      // }
+      // //@}
+
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Pixel Value Accessor with Interpolation Methods */
