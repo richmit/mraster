@@ -67,6 +67,7 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
       - Functions: int2realSideX, int2realSideY, int2realCorner
       - Example: demo_corners.cpp
     - Added mjr::ramCanvasTpl::getPxColorWrap()
+    - Added mjr::ramCanvasTpl::getPxColorChanWrap()
   - Documentation
     - Added test coverage document
   - Examples

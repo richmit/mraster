@@ -1757,31 +1757,53 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns a copy of the color at the given coordinates. */
       colorT getPxColor(intCrdT x, intCrdT y) const;
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @overload */
       inline colorT getPxColor(fltCrdT x, fltCrdT y)  const { return getPxColor(real2intX(x), real2intY(y)); }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @overload */
       inline colorT getPxColor(pointIntType thePoint) const { return getPxColor(thePoint.x, thePoint.y); }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @overload */
       inline colorT getPxColor(pointFltType thePoint) const { return getPxColor(thePoint.x, thePoint.y); }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns a copy of the color at the given coordinates wrapping x & y if out of range. */
-      inline colorT getPxColorWrap(intCrdT x, intCrdT y)  const { return pixels[numPixX * mjr::math::ivl::wrapCO(y, numPixY) + mjr::math::ivl::wrapCO(x, numPixX)]; }
+      inline colorT getPxColorWrap(intCrdT x, intCrdT y)  const { return getPxColorNC(mjr::math::ivl::wrapCO(x, numPixX), mjr::math::ivl::wrapCO(y, numPixY)); }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @overload */
       inline colorT getPxColorWrap(fltCrdT x, fltCrdT y)  const { return getPxColorWrap(real2intX(x), real2intY(y)); }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @overload */
       inline colorT getPxColorWrap(pointIntType thePoint) const { return getPxColorWrap(thePoint.x, thePoint.y); }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @overload */
       inline colorT getPxColorWrap(pointFltType thePoint) const { return getPxColorWrap(thePoint.x, thePoint.y); }
       //@}
 
-      // //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      //  MJR TODO NOTE <2025-02-08T14:10:40-0600> ramCanvasTpl: Think abou this some more...
-      // /** @name Pixel Stencil  Accessor Methods */
-      // //@{
-      // //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      // /** Returns the channel values on th stencil centered at the given point. */
-      // inline colorT::clrChanVec getStencilWrap(intCrdT cx, intCrdT cy, pointIntVecType stencil, int chan) const { 
-      //   typename colorT::clrChanVec retVec(stencil.size());
-      //   for(int i=0; i<(int)stencil.size(); i++) 
-      //     retVec[i] = getPxColorRefNC(mjr::math::ivl::wrapCO(cx+stencil[i].x, numPixX), mjr::math::ivl::wrapCO(cy+stencil[i].y, numPixY)).getChanNC(chan);
-      //   return retVec;
-      // }
-      // //@}
-
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Pixel Channel Value Accessor Methods.*/
+      //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Returns a copy of the color channel value at the given coordinates wrapping x & y if out of range. */
+      template <int chanNum>
+      requires((chanNum >= 0) && (chanNum<colorT::channelCount))
+      inline colorChanType getPxColorChanWrap(intCrdT x, intCrdT y)  const { return getPxColorWrap(x, y).getChanNC(chanNum); }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @overload */
+      template <int chanNum>
+      requires((chanNum >= 0) && (chanNum<colorT::channelCount))
+      inline colorChanType getPxColorChanWrap(fltCrdT x, fltCrdT y)  const { return getPxColorWrap(real2intX(x), real2intY(y)).getChanNC(chanNum); }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @overload */
+      template <int chanNum>
+      requires((chanNum >= 0) && (chanNum<colorT::channelCount))
+      inline colorChanType getPxColorChanWrap(pointIntType thePoint) const { return getPxColorWrap(thePoint.x, thePoint.y).getChanNC(chanNum); }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @overload */
+      template <int chanNum>
+      requires((chanNum >= 0) && (chanNum<colorT::channelCount))
+      inline colorChanType getPxColorChanWrap(pointFltType thePoint) const { return getPxColorWrap(thePoint.x, thePoint.y).getChanNC(chanNum); }
+      //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Pixel Value Accessor with Interpolation Methods */
@@ -1937,7 +1959,7 @@ namespace mjr {
     setDefaultDrawMode();
   }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Copy Constructor
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
@@ -1956,8 +1978,8 @@ namespace mjr {
         getPxColorRefNC(x, y) = theCanvas.getPxColorRefNC(x, y);
   }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Move constructor
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Move constructor
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::ramCanvasTpl(ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>&& theCanvas) {

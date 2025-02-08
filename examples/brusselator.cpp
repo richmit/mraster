@@ -73,8 +73,8 @@ int main(void) {
   std::random_device rd;
   std::minstd_rand0 rEng(rd());
   std::uniform_real_distribution<double> uniform_dist_double(1.0e-5, 1.0);
-  int width  = 7680/2;
-  int height = 4320/2;
+  int width  = 7680/32;
+  int height = 4320/32;
 
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   mjr::ramCanvas3c64F theRamCanvas(width, height);
@@ -112,8 +112,8 @@ int main(void) {
         double u1_sum = 0;
         double u2_sum = 0;
         for(int i=0; i<4; i++) {
-          u1_sum += imgu1[i_in].getPxColorWrap(x+st[i].x, y+st[i].y).getC0();
-          u2_sum += imgu2[i_in].getPxColorWrap(x+st[i].x, y+st[i].y).getC0();
+          u1_sum += imgu1[i_in].getPxColorChanWrap<0>(x+st[i].x, y+st[i].y);
+          u2_sum += imgu2[i_in].getPxColorChanWrap<0>(x+st[i].x, y+st[i].y);
         }
 
         double u1_c = imgu1[i_in].getPxColor(x, y).getC0();
