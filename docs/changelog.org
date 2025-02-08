@@ -41,7 +41,7 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
 :CUSTOM_ID: latest
 :END:
   - Fixed Bugs
-    - N/A
+    - Removed all_gtests from cmake list.
   - Known Issues
     - N/A
   - API breaking Changes

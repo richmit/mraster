@@ -290,7 +290,9 @@ foreach(CURTGT IN LISTS COMBINED_TARGETS)
   list (FIND TARGETS_REQ_GTEST ${CURTGT} TMPR)
   if((GTest_FOUND) AND (${TMPR} GREATER -1))
     target_link_libraries(${CURTGT} PRIVATE GTest::gtest_main)
-    add_test(NAME "${CURTGT}" COMMAND "${CURTGT}")
+    if(NOT CURTGT STREQUAL "all_gtests")
+      add_test(NAME "${CURTGT}" COMMAND "${CURTGT}")
+    endif()
   endif()
 
   # Add build requirements for examples using OpenGL
