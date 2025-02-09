@@ -2246,7 +2246,7 @@ namespace mjr {
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Power: c=maxChanVal*(c/maxChanVal)^p.
-          Floating point Numbers are used for intermediate values and the result cast to a colorChanType at the end.
+          Floating point Numbers are used for intermediate values and the result cast to a colorT at the end.
           Take care when negative values for p -- this can cause undefined behavior!!
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmPow(double p) {
@@ -2256,7 +2256,7 @@ namespace mjr {
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Adds 1.0 and takes the natural logarithm of each channel.
-          Floating point Numbers are used for intermediate values and the result cast to a colorChanType at the end.
+          Floating point Numbers are used for intermediate values and the result cast to a colorT at the end.
           If a channel value would result in an undefined result, then the value is left untouched.
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmLn1() requires (std::integral<clrChanT>) {
@@ -2278,7 +2278,7 @@ namespace mjr {
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Computes ln(c)*scale for each channel value c.  If c==0, then the value is left undisturbed.
-          Floating point Numbers are used for intermediate values and the result cast to a colorChanType at the end.
+          Floating point Numbers are used for intermediate values and the result cast to a colorT at the end.
           If a channel value would result in an undefined result, then the value is left untouched.
           @param scale The scale value to multiply by the final result.
           @return Returns a reference to the current color object.*/
@@ -2469,7 +2469,7 @@ namespace mjr {
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Computes the geometric mean of the given color and the current one.
-          Floating point Numbers re used for intermediate values and the result cast to a colorChanType at the end.
+          Floating point Numbers re used for intermediate values and the result cast to a colorT at the end.
           @param aCol The color to use in the computation.
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmGmean(colorArgType aCol) {
