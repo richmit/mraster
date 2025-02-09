@@ -59,7 +59,7 @@
 
   The code uses four images to store the state of the system at two steps.  At each time step it uses two of the images to update the other two.  This doubles
   the RAM required, but simplifies the code and eliminates the need for swapping data.  At the end of the run the last updated state images are combined into
-  a floating point RGB image.  This image is then histogram stretched, and written to disk as a 24-bit RGB TIFF.
+  a 24-bit RGB image which is written to disk.
 
 */
 /*******************************************************************************************************************************************************.H.E.**/
@@ -77,7 +77,7 @@ int main(void) {
   int height = 4320/8;
 
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  mjr::ramCanvas3c64F theRamCanvas(width, height);
+  mjr::ramCanvas3c8b theRamCanvas(width, height);
 
   std::vector<mjr::ramCanvas1c64F> imgu1{mjr::ramCanvas1c64F(width, height), mjr::ramCanvas1c64F(width, height)};
   std::vector<mjr::ramCanvas1c64F> imgu2{mjr::ramCanvas1c64F(width, height), mjr::ramCanvas1c64F(width, height)};
@@ -144,11 +144,11 @@ int main(void) {
   imgu2[i_ou].autoHistStrech();
   for(int y=0;y<theRamCanvas.getNumPixY();y++)
     for(int x=0;x<theRamCanvas.getNumPixX();x++)
-      theRamCanvas.drawPoint(x, y, mjr::color3c64F(std::abs(imgu1[i_ou].getPxColorNC(x, y).getC0()), 
-                                                   0.0, 
-                                                   std::abs(imgu2[i_ou].getPxColorNC(x, y).getC0())));
-  mjr::ramCanvas1c64F::rcConverterRGBbyte<mjr::ramCanvas3c64F> rcConv(theRamCanvas);
-  theRamCanvas.writeTIFFfile("brusselator.tiff", rcConv, true);
+      theRamCanvas.drawPoint(x, y, 
+                             mjr::color3c8b(static_cast<mjr::color3c8b::channelType>(255*imgu1[i_ou].getPxColorNC(x, y).getC0()),
+                                            0, 
+                                            static_cast<mjr::color3c8b::channelType>(255*imgu2[i_ou].getPxColorNC(x, y).getC0())));
+  theRamCanvas.writeTIFFfile("brusselator.tiff");
 
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
