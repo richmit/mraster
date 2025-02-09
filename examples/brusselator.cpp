@@ -68,16 +68,18 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
+typedef mjr::ramCanvas3c8b rcT;
+
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::random_device rd;
   std::minstd_rand0 rEng(rd());
   std::uniform_real_distribution<double> uniform_dist_double(1.0e-5, 1.0);
-  int width  = 7680/8;
-  int height = 4320/8;
+  int width  = 7680/16;
+  int height = 4320/16;
 
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  mjr::ramCanvas3c8b theRamCanvas(width, height);
+  rcT theRamCanvas(width, height);
 
   std::vector<mjr::ramCanvas1c64F> imgu1{mjr::ramCanvas1c64F(width, height), mjr::ramCanvas1c64F(width, height)};
   std::vector<mjr::ramCanvas1c64F> imgu2{mjr::ramCanvas1c64F(width, height), mjr::ramCanvas1c64F(width, height)};
@@ -91,12 +93,11 @@ int main(void) {
   double b = 9.8;
   double d = 3.0;
 
-  for(int y=0;y<theRamCanvas.getNumPixY();y++) {
-    for(int x=0;x<theRamCanvas.getNumPixX();x++) {
+  for(rcT::coordIntType y=0;y<theRamCanvas.getNumPixY();y++) 
+    for(rcT::coordIntType x=0;x<theRamCanvas.getNumPixX();x++) {
       imgu1[0].drawPoint(x, y, uniform_dist_double(rEng));
       imgu2[0].drawPoint(x, y, uniform_dist_double(rEng));
     }
-  }
 
   int i_in, i_ou;
   double maxv = 0;
@@ -106,8 +107,8 @@ int main(void) {
     if (0==(step%100))
       std::cout << "STEP: " << step << std::endl;
 # pragma omp parallel for schedule(static,1)
-    for(mjr::ramCanvas3c64F::coordIntType y=0;y<theRamCanvas.getNumPixY();y++) {
-      for(mjr::ramCanvas3c64F::coordIntType x=0;x<theRamCanvas.getNumPixX();x++) {
+    for(rcT::coordIntType y=0;y<theRamCanvas.getNumPixY();y++) {
+      for(rcT::coordIntType x=0;x<theRamCanvas.getNumPixX();x++) {
 
         double u1_sum = 0;
         double u2_sum = 0;
@@ -143,11 +144,11 @@ int main(void) {
   imgu1[i_ou].autoHistStrech();
   imgu2[i_ou].autoHistStrech();
   for(int y=0;y<theRamCanvas.getNumPixY();y++)
-    for(int x=0;x<theRamCanvas.getNumPixX();x++)
-      theRamCanvas.drawPoint(x, y, 
-                             mjr::color3c8b(static_cast<mjr::color3c8b::channelType>(255*imgu1[i_ou].getPxColorNC(x, y).getC0()),
-                                            0, 
-                                            static_cast<mjr::color3c8b::channelType>(255*imgu2[i_ou].getPxColorNC(x, y).getC0())));
+    for(int x=0;x<theRamCanvas.getNumPixX();x++) {
+      rcT::colorChanType r = static_cast<rcT::colorChanType>(255*imgu1[i_ou].getPxColorNC(x, y).getC0());
+      rcT::colorChanType b = static_cast<rcT::colorChanType>(255*imgu2[i_ou].getPxColorNC(x, y).getC0());
+      theRamCanvas.drawPoint(x, y, mjr::color3c8b(r, 0, b));
+    }
   theRamCanvas.writeTIFFfile("brusselator.tiff");
 
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
