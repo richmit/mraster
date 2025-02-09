@@ -111,9 +111,9 @@ int main(void) {
 
         double u1_sum = 0;
         double u2_sum = 0;
-        for(int i=0; i<4; i++) {
-          u1_sum += imgu1[i_in].getPxColorChanWrap<0>(x+st[i].x, y+st[i].y);
-          u2_sum += imgu2[i_in].getPxColorChanWrap<0>(x+st[i].x, y+st[i].y);
+        for(auto const &p: st) {
+          u1_sum += imgu1[i_in].getPxColorChanWrap<0>(x+p.x, y+p.y);
+          u2_sum += imgu2[i_in].getPxColorChanWrap<0>(x+p.x, y+p.y);
         }
 
         double u1_c = imgu1[i_in].getPxColor(x, y).getC0();
