@@ -64,7 +64,7 @@
 #include <string>                                                        /* C++ strings             C++11    */
 #include <type_traits>                                                   /* C++ metaprogramming     C++11    */
 #include <utility>                                                       /* STL Misc Utilities      C++11    */
-#include <vector>                                                        /* STL vector              C++11    */ 
+#include <vector>                                                        /* STL vector              C++11    */
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Put everything in the mjr namespace
@@ -202,11 +202,11 @@ namespace mjr {
         public:
           rcConverterColorScheme(inRamCanvasT& aRC) : rcConverterHomoBase<inRamCanvasT>(aRC) {  }
           typedef outColorT colorType;
-          inline colorType getPxColorNC(typename inRamCanvasT::coordIntType x, typename inRamCanvasT::coordIntType y) { 
+          inline colorType getPxColorNC(typename inRamCanvasT::coordIntType x, typename inRamCanvasT::coordIntType y) {
             typename outColorT::csIntType csi = static_cast<typename outColorT::csIntType>(rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).getChan(chan) * factor);
             if (clamp)
               csi = mjr::math::ivl::clamp(csi, colorScheme::numC-1);
-            return colorScheme::c(csi); 
+            return colorScheme::c(csi);
           }
       };
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -216,7 +216,7 @@ namespace mjr {
         public:
           rcConverterMonoIntensity(inRamCanvasT& aRC) : rcConverterHomoBase<inRamCanvasT>(aRC) {  }
           typedef colorTpl<outColorChanT, 1> colorType;
-          inline colorType getPxColorNC(typename inRamCanvasT::coordIntType x, typename inRamCanvasT::coordIntType y) { 
+          inline colorType getPxColorNC(typename inRamCanvasT::coordIntType x, typename inRamCanvasT::coordIntType y) {
             return static_cast<outColorChanT>(rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).intensity());
           }
       };
@@ -538,9 +538,9 @@ namespace mjr {
           @warning This function is experimental!  Functionality and API are likely to change in the future.
 
           @param theCanvas The canvas to adjoin. */
-      void adjoinCanvasRight(const ramCanvasTpl &theCanvas) { 
-        intCrdT origNumPixX = getNumPixX(); 
-        expandCanvas(origNumPixX + theCanvas.getNumPixX(), std::max(getNumPixY(), theCanvas.getNumPixY())); 
+      void adjoinCanvasRight(const ramCanvasTpl &theCanvas) {
+        intCrdT origNumPixX = getNumPixX();
+        expandCanvas(origNumPixX + theCanvas.getNumPixX(), std::max(getNumPixY(), theCanvas.getNumPixY()));
         insertCanvas(theCanvas, origNumPixX);
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -636,23 +636,23 @@ namespace mjr {
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Return true if given canvas and current canvas are the same size. */
-      inline bool isSameSize(ramCanvasTpl const & inRC) const { 
-        if ((numPixY == inRC.getNumPixY()) && (numPixX == inRC.getNumPixX())) 
+      inline bool isSameSize(ramCanvasTpl const & inRC) const {
+        if ((numPixY == inRC.getNumPixY()) && (numPixX == inRC.getNumPixX()))
           return true;
-        else 
+        else
           return false;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Return true if given canvas and current canvas are *NOT* the same size. */
-      inline bool isNotSameSize(ramCanvasTpl const & inRC) const { 
-        if ((numPixY == inRC.getNumPixY()) && (numPixX == inRC.getNumPixX())) 
+      inline bool isNotSameSize(ramCanvasTpl const & inRC) const {
+        if ((numPixY == inRC.getNumPixY()) && (numPixX == inRC.getNumPixX()))
           return false;
-        else 
+        else
           return true;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Return true if corresponding pixels in each canvas are "close" as defined by colorTpl::isClose(). */
-      inline bool isClose(ramCanvasTpl const & inRC, colorChanType epsilon) const { 
+      inline bool isClose(ramCanvasTpl const & inRC, colorChanType epsilon) const {
         if (isNotSameSize(inRC))
           return false;
         for(intCrdT y=0; y<numPixY; y++)
@@ -663,7 +663,7 @@ namespace mjr {
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Return true if corresponding pixels in each canvas are "equal" as defined by colorTpl::isEqual(). */
-      inline bool isEqual(ramCanvasTpl const & inRC) const { 
+      inline bool isEqual(ramCanvasTpl const & inRC) const {
         if (isNotSameSize(inRC))
           return false;
         for(intCrdT y=0; y<numPixY; y++)
@@ -746,7 +746,7 @@ namespace mjr {
 
           @warning This function is experimental!  Functionality and API are likely to change in the future.
 
-          @param RPoly        RPoly is a vector listing the coefficients of a univariate polynomial in lexicographical order -- 
+          @param RPoly        RPoly is a vector listing the coefficients of a univariate polynomial in lexicographical order --
                               i.e. RPoly[0] is the coefficients on the highest power term.
           @param rScale       Scale to apply before the transformation to the *radius*.
           @param Xo           X coordinate for origin translation -- applied before RPoly and reversed after RPoly & scale.
@@ -807,7 +807,7 @@ namespace mjr {
 
           @warning This function is experimental!  Functionality and API are likely to change in the future.
 
-          @param f            The coordinate transformation function 
+          @param f            The coordinate transformation function
           @param Xo           X coordinate for origin translation -- applied before f and reversed after f & scale.
           @param Yo           Y coordinate for origin translation -- applied before f and reversed after f & scale.
           @param oScale       Scale to apply after f and before reverse translation.
@@ -1326,7 +1326,7 @@ namespace mjr {
       /** @name File Reading and Writing Methods */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Is libTIFF supported -- that is: will the readTIFFfile() method do anything? 
+      /** Is libTIFF supported -- that is: will the readTIFFfile() method do anything?
           Note that readTIFFfile() is the only method that needs libTIFF.  In particular, writeTIFFfile() works without libTIFF. */
       bool supportLibTIFF();
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1417,7 +1417,7 @@ namespace mjr {
           why this function exists.  I am a POV-Ray fan, and it uses a specialized TGA format for height maps.  That's really it...  One could use this
           function to dump out regular RGB images, but I suggest writeTIFFfile() for that.
 
-          Note TGA files are 8-bit files, and *_byte functions are used to convert channel values to 8-bit before being written.  
+          Note TGA files are 8-bit files, and *_byte functions are used to convert channel values to 8-bit before being written.
 
           @param fileName The file name name to write data to
           @return Status of I/O
@@ -1496,14 +1496,14 @@ namespace mjr {
               - INT: Integral channels.  DEFAULT VALUE.
               - FLT: Floating point channels
             - i: endianness
-              - BIG: Big endian 
+              - BIG: Big endian
               - LTL: Little endian
-              - UNK: Unknown.  DEFAULT VALUE.  For read we assume file matches system running the code.  
+              - UNK: Unknown.  DEFAULT VALUE.  For read we assume file matches system running the code.
             - Currently reserved, but unused labels
               - p: Pixel format
                 - MXL: Each pixel of the image is written in sequence.  DEFAULT VALUE.
                 - PLN: Each channel of the *image* is written in sequence.
-                - BIT: For bit-masks with 8 bits packed in a byte.  
+                - BIT: For bit-masks with 8 bits packed in a byte.
               - z: Compression
                 - 000: No compression.  DEFAULT VALUE.
                 - ZLB: Zlib.
@@ -1612,7 +1612,7 @@ namespace mjr {
       /** Given integer x & y coordinates and a corner index, produce real x & y coordinates for one of the pixel's corners.
           @param x           The integer x coordinate value to be converted.
           @param y           The integer y coordinate value to be converted.
-          @param cornerIndex Corner index. 0 => (0, 0); 1 => (0, 1); 2 => (1, 0); 3 => (1, 1); 
+          @param cornerIndex Corner index. 0 => (0, 0); 1 => (0, 1); 2 => (1, 0); 3 => (1, 1);
           @return The real x & y coordinates corresponding to the requested corner */
       inline pointFltType int2realCorner(intCrdT x, intCrdT y, int cornerIndex) { return int2realCorner(x, y, (cornerIndex >> 1), (cornerIndex & 1)); }
       //@}
@@ -1781,27 +1781,27 @@ namespace mjr {
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** @name Pixel Channel Value Accessor Methods.*/
+      /** @name Pixel Channel Value Accessor Methods. */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns a copy of the color channel value at the given coordinates wrapping x & y if out of range. */
       template <int chanNum>
-      requires((chanNum >= 0) && (chanNum<colorT::channelCount))
+      requires((chanNum >= 0) && (chanNum < colorT::channelCount))
       inline colorChanType getPxColorChanWrap(intCrdT x, intCrdT y)  const { return getPxColorWrap(x, y).getChanNC(chanNum); }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @overload */
       template <int chanNum>
-      requires((chanNum >= 0) && (chanNum<colorT::channelCount))
+      requires((chanNum >= 0) && (chanNum < colorT::channelCount))
       inline colorChanType getPxColorChanWrap(fltCrdT x, fltCrdT y)  const { return getPxColorWrap(real2intX(x), real2intY(y)).getChanNC(chanNum); }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @overload */
       template <int chanNum>
-      requires((chanNum >= 0) && (chanNum<colorT::channelCount))
+      requires((chanNum >= 0) && (chanNum < colorT::channelCount))
       inline colorChanType getPxColorChanWrap(pointIntType thePoint) const { return getPxColorWrap(thePoint.x, thePoint.y).getChanNC(chanNum); }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @overload */
       template <int chanNum>
-      requires((chanNum >= 0) && (chanNum<colorT::channelCount))
+      requires((chanNum >= 0) && (chanNum < colorT::channelCount))
       inline colorChanType getPxColorChanWrap(pointFltType thePoint) const { return getPxColorWrap(thePoint.x, thePoint.y).getChanNC(chanNum); }
       //@}
 
@@ -1916,7 +1916,6 @@ namespace mjr {
       void colorizeIntCanvas(std::function<colorT (intCrdT, intCrdT)> cFun);
       void colorizeIntCanvas(std::function<colorT (pointIntType)> cFun);
       //@}
-
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Canvas Level Statistical Computation.
@@ -2052,7 +2051,7 @@ namespace mjr {
       numPix  = numPixX_p * numPixY_p;;
       numPixX = numPixX_p;
       numPixY = numPixY_p;
-    } 
+    }
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2883,7 +2882,7 @@ namespace mjr {
     outStream.open(fileName, std::ios::out | std::ios::binary | std::ios::trunc);
     if (outStream.is_open())
       outStream.imbue(std::locale::classic());
-    else 
+    else
       return 1;
 
     if(numPixX < 1)      // too skinny
@@ -2944,9 +2943,9 @@ namespace mjr {
 
     std::ofstream outStream;
     outStream.open(fileName, std::ios::out | std::ios::binary | std::ios::trunc);
-    if (outStream.is_open()) 
+    if (outStream.is_open())
       outStream.imbue(std::locale::classic());
-    else 
+    else
       return 1;
 
     outStream << "MJRRAW\n";                                                                    //  7   7
@@ -2988,7 +2987,7 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-    template <class rcConT> 
+    template <class rcConT>
     inline int
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeTIFFfile(std::string fileName, rcConT rcConverter, bool markAlpha) {
 
@@ -3071,11 +3070,11 @@ namespace mjr {
 
     std::ofstream outStream;
     outStream.open(fileName, std::ios::out | std::ios::binary | std::ios::trunc);
-    if (outStream.is_open()) 
+    if (outStream.is_open())
       outStream.imbue(std::locale::classic());
-    else 
+    else
       return 1;
-    
+
     writeUIntToStream(outStream, fe, 2, endianNum);                                                                                 // Write: little endian magic number
     writeUIntToStream(outStream, fe, 2, 42);                                                                                        // Write: TIFF magic number
     writeUIntToStream(outStream, fe, 4, 8);                                                                                         // Write: IDF offset
@@ -4560,7 +4559,7 @@ namespace mjr {
     if( !(tif = TIFFOpen(fileName.c_str(), "r")))
       return 1;
 
-    if(TIFFIsTiled(tif)) 
+    if(TIFFIsTiled(tif))
       return 23;
 
     // All these tags are required -- bail if any are missing.
@@ -4698,11 +4697,11 @@ namespace mjr {
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::geomTfrmRevArb(mjr::point2d<double> (*f)(double, double), 
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::geomTfrmRevArb(mjr::point2d<double> (*f)(double, double),
                                                                             double Xo,
                                                                             double Yo,
                                                                             double oScale,
-                                                                            colorArgType errorColor, 
+                                                                            colorArgType errorColor,
                                                                             interpolationType interpMethod) {
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes> newRamCanvas(numPixX, numPixY);
     for(intCrdT y=0; y<numPixY; y++) {
@@ -4726,11 +4725,11 @@ namespace mjr {
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::geomTfrmRevAff(std::vector<double> const& HAMatrix, 
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::geomTfrmRevAff(std::vector<double> const& HAMatrix,
                                                                             double Xo,
                                                                             double Yo,
                                                                             double oScale,
-                                                                            colorArgType errorColor, 
+                                                                            colorArgType errorColor,
                                                                             interpolationType interpMethod) {
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes> newRamCanvas(numPixX, numPixY);
     for(intCrdT y=0; y<numPixY; y++) {

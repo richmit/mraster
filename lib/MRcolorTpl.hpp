@@ -51,7 +51,7 @@
 #include <tuple>                                                         /* STL tuples              C++11    */
 #include <type_traits>                                                   /* C++ metaprogramming     C++11    */
 #include <utility>                                                       /* STL Misc Utilities      C++11    */
-#include <vector>                                                        /* STL vector              C++11    */ 
+#include <vector>                                                        /* STL vector              C++11    */
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /** Set to 1 to look for 128-bit integer types, and 0 to not look for them.
@@ -246,7 +246,7 @@ namespace mjr {
           These types are used for things like color space computations and sources for setting channels, etc...*/
       //@{
       typedef colorTpl<double,  3>       colConDbl3;     //!< Used for color space computations.  Type identical to colConRGBdbl, but might not be RGB.
-      typedef colorTpl<double,  3>       colConRGBdbl;   //!< RGB with double channels.  
+      typedef colorTpl<double,  3>       colConRGBdbl;   //!< RGB with double channels.
       typedef colorTpl<double,  4>       colConRGBAdbl;  //!< RGBA with double channels.
       typedef colorTpl<uint8_t, 3>       colConRGBbyte;  //!< RGB with uint8_t channels.
       typedef colorTpl<uint8_t, 4>       colConRGBAbyte; //!< RGBA with uint8_t channels.
@@ -642,7 +642,7 @@ namespace mjr {
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Initializer list.  Unspecified channels are set ot minChanVal, and extra channel values are ignored. */
-      colorTpl(std::initializer_list<clrChanT> cVals) { 
+      colorTpl(std::initializer_list<clrChanT> cVals) {
         int numChanGiven = static_cast<int>(cVals.size());
         auto p = cVals.begin();
         for(int i=0; i<std::min(numChanGiven, numChan); i++) {
@@ -862,7 +862,7 @@ namespace mjr {
           These are used when we wish to get the named channel index, but the current color might not have specified an approprate value. */
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /* Returns redChan if non-negative and 0 otherwise */
-      inline int bestRedChan() {                       
+      inline int bestRedChan() {
         if (redChan >= 0)
           return redChan;      // If we have an identical red, then return it.
         else
@@ -870,35 +870,35 @@ namespace mjr {
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /* Returns blueChan if it is non-negative.  If we only have one channel, then returns 0. If we have more than one channel, then returns 1. */
-      inline int bestGreenChan() {                       
+      inline int bestGreenChan() {
         if (greenChan >= 0)
           return greenChan;    // If we have an identified green, then return it.
-        else if (numChan == 1) 
+        else if (numChan == 1)
           return 0;            // for greyscale, return chan 0
         else
           return 1;            // If we have more than 1 channel, then return 1
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /* Returns blueChan if it is non-negative.  If we only have one channel, then returns 0.  If we have two channels, then returns -1.  Otherwise returns 2. */
-      inline int bestBlueChan() {                       
+      inline int bestBlueChan() {
         if (blueChan >= 0)
           return blueChan;     // If we have an identified blue, then return it.
-        else if (numChan == 1) 
+        else if (numChan == 1)
           return 0;            // for greyscale, return chan 0
-        else if (numChan == 2) 
+        else if (numChan == 2)
           return -1;           // No sensible value for blue channel with 2 channel images
         else
           return 2;            // If we have at least three channels, then return chan 2
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /* Returns alphaChan if it is non-negative.  If we only have four or more channels, then returns 3.  Otherwise returns -1. */
-      inline int bestAlphaChan() {                       
+      inline int bestAlphaChan() {
         if (alphaChan >= 0)
           return alphaChan;    // If we have an identified alpha, then return it.
-        else if (numChan >= 4) 
+        else if (numChan >= 4)
           return 3;            // If we have at least four channels, then return chan 3
         else
-          return -1;           // No sensible value for alpha channel 
+          return -1;           // No sensible value for alpha channel
       }
       //@}
 
@@ -1003,7 +1003,7 @@ namespace mjr {
       /** This function sets color channels from the data in a std::vector.
           @warning input vector must have at least #channelCount elements!  This is *not* checked!
 
-          @param chanValues A std::vector containing the color channels.  
+          @param chanValues A std::vector containing the color channels.
           @return Returns a reference to the current color object.*/
       inline colorTpl& setChans(clrChanVec& chanValues) {
         for(int i=0; i<numChan; i++)
@@ -2104,7 +2104,7 @@ namespace mjr {
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmDiv(colorArgType aCol) requires (std::floating_point<clrChanT>) {
         for(int i=0; i<numChan; i++)
-          if ( !(mjr::math::fc::near_zero(aCol.getChanNC(i), static_cast<clrChanT>(1.0e-8)))) 
+          if ( !(mjr::math::fc::near_zero(aCol.getChanNC(i), static_cast<clrChanT>(1.0e-8))))
             setChanNC(i, static_cast<clrChanT>(static_cast<channelArithSPType>(getChanNC(i)) / static_cast<channelArithSPType>(aCol.getChanNC(i))));
         return *this;
       }
@@ -2196,7 +2196,7 @@ namespace mjr {
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmAddDivClamp(colorArgType aCol, colorArgType dCol) requires (std::floating_point<clrChanT>) {
         for(int i=0; i<numChan; i++)
-          if ( !(mjr::math::fc::near_zero(dCol.getChanNC(i), static_cast<clrChanT>(1.0e-8)))) 
+          if ( !(mjr::math::fc::near_zero(dCol.getChanNC(i), static_cast<clrChanT>(1.0e-8))))
             setChanNC(i, clampTop((static_cast<channelArithSPType>(getChanNC(i)) + static_cast<channelArithSPType>(aCol.getChanNC(i))) /
                                   static_cast<channelArithSPType>(dCol.getChanNC(i))));
         return *this;
@@ -2225,7 +2225,7 @@ namespace mjr {
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmMod(colorArgType aCol) requires (std::floating_point<clrChanT>) {
         for(int i=0; i<numChan; i++)
-          if ( !(mjr::math::fc::near_zero(aCol.getChanNC(i), static_cast<clrChanT>(1.0e-8)))) 
+          if ( !(mjr::math::fc::near_zero(aCol.getChanNC(i), static_cast<clrChanT>(1.0e-8))))
             setChanNC(i, static_cast<clrChanT>(std::fmod(static_cast<double>(getChanNC(i)), static_cast<double>(aCol.getChanNC(i)))));
         return *this;
       }
@@ -2288,7 +2288,7 @@ namespace mjr {
           clrChanT cVal = getChanNC(i);
           if(cVal != 0)
             setChanNC(i, static_cast<clrChanT>(std::log(static_cast<double>(cVal)) * scale));
-        }          
+        }
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2299,7 +2299,7 @@ namespace mjr {
           clrChanT cVal = getChanNC(i);
           if (cVal > static_cast<clrChanT>(0.0))
             setChanNC(i, static_cast<clrChanT>(std::log(static_cast<double>(cVal)) * scale));
-        }          
+        }
         return *this;
       }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2672,13 +2672,13 @@ namespace mjr {
          @param z         The complex number
          @param cutDepth  Range: @f$[1, ~30]@f$ Smaller means more contrast on cuts.
          @param argCuts   Number of grey cuts for arg
-         @param absCuts   Number of grey cuts for abs 
+         @param absCuts   Number of grey cuts for abs
          @param logAbs    If true, then take the logorithm of abs for cuts. */
       inline colorTpl& tfrmComplexCut(std::complex<double> z, double cutDepth, double argCuts, double absCuts, bool logAbs = true) {
         double tau   = std::numbers::pi * 2;                   // 2*Pi
         double zArg  = std::arg(z);                            // Arg
         double pzArg = (zArg < 0.0 ? tau + zArg : zArg) / tau; // Arg mapped to [0, 1]
-        if (argCuts > 0) 
+        if (argCuts > 0)
           tfrmLinearGreyLevelScale(1.0 - std::fabs(int(pzArg*argCuts) - pzArg*argCuts)/cutDepth, 0);
         if (absCuts > 0) {
           double zAbs  = std::abs(z); // Abs
@@ -2737,13 +2737,13 @@ namespace mjr {
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Use the  R, G, & B channels to compute a floating point value representing a grey scale.
-          What is returned is the dot product of the given color and the three scalars: R*redWt+G*greenWt+B*blueWt.  
+          What is returned is the dot product of the given color and the three scalars: R*redWt+G*greenWt+B*blueWt.
           @param redWt The red weight
           @param greenWt The green weight
           @param blueWt The blue weight
           @return The integer representing grey value for the given color. */
       inline channelArithFltType rgb2GreyDotProd(channelArithFltType redWt   = RGBluminanceWeightR,
-                                                 channelArithFltType greenWt = RGBluminanceWeightG, 
+                                                 channelArithFltType greenWt = RGBluminanceWeightG,
                                                  channelArithFltType blueWt  = RGBluminanceWeightB) const {
         /* Requires: Inherits numChan>2 from getC2. */
         return (static_cast<channelArithFltType>(getRed())   * static_cast<channelArithFltType>(redWt)   +
@@ -3010,7 +3010,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Clamp a value to [minChanVal, infinity).
           @param arithValue The value to clamp */
-      template <typename iT>                   
+      template <typename iT>
       requires (std::same_as<iT, clrChanT> || std::same_as<iT, channelArithDType> || std::same_as<iT, channelArithSPType> || std::same_as<iT, channelArithSDPType> || std::same_as<iT, channelArithLogType>)
       inline clrChanT clampBot(iT arithValue) {
         if(arithValue < static_cast<iT>(minChanVal))
@@ -3646,7 +3646,7 @@ namespace mjr {
           @ingroup cs
           @extends csCC_tpl
              Provides (5 * mjr::colorTpl::chanStepMax + 1) colors. */
-      typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::RED, cornerColorEnum::YELLOW, 
+      typedef csCC_tpl<cornerColorEnum::BLACK, cornerColorEnum::RED, cornerColorEnum::YELLOW,
                        cornerColorEnum::BLUE, cornerColorEnum::CYAN, cornerColorEnum::WHITE>            csCCfractal0RYBCW;
       /** @class csCCfractalYR
           @ingroup cs
@@ -5029,9 +5029,9 @@ namespace mjr {
       //@{
 #if !(MISSING_P1907R1)
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Compute a color from Richardson's 2D complex number coloring scheme.  
+      /** Compute a color from Richardson's 2D complex number coloring scheme.
           See: Richardson (1991); Visualizing quantum scattering on the CM-2 supercomputer; Computer Physics Communications 63; pp 84-94"
-          This is a continuous, 2D color scheme! 
+          This is a continuous, 2D color scheme!
           @tparam cutDepth See: tfrmComplexCut()
           @tparam argCuts  See: tfrmComplexCut()
           @tparam absCuts  See: tfrmComplexCut()
@@ -5073,7 +5073,7 @@ namespace mjr {
       };
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute a color for a point in @f$\mathbb{R}^2@f$ using a discrete color scheme for the phase angle.
-          This is a continuous, 2D color scheme! 
+          This is a continuous, 2D color scheme!
           @tparam colorScheme Integer indexed color scheme to use for the argument.  csCColdeRainbow is a traditional choice.
           @tparam argWrap     Number of times to wrap around the color ramp for arg
           @tparam cutDepth    See: tfrmComplexCut()
@@ -5113,7 +5113,7 @@ namespace mjr {
       };
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Compute a color for a point in @f$\mathbb{R}^2@f$ using a continuous color scheme for the phase angle.
-          This is a continuous, 2D color scheme! 
+          This is a continuous, 2D color scheme!
           @tparam colorScheme Integer indexed color scheme to use for the argument.  csCColdeRainbow is a traditional choice.
           @tparam argWrap     Number of times to wrap around the color ramp for arg
           @tparam cutDepth    See: tfrmComplexCut()
@@ -5151,9 +5151,9 @@ namespace mjr {
           static inline colorTpl c(csCplxType csZ) { colorTpl tmp; return c(tmp, std::real(csZ), std::imag(csZ)); }
       };
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Compute a color from Bernd Thaller's 2D complex number coloring scheme with HSL.  
+      /** Compute a color from Bernd Thaller's 2D complex number coloring scheme with HSL.
           See: Bernd Thaller (2000); Visual Quantum Mechanics; pp 2-8
-          This is a continuous, 2D color scheme! 
+          This is a continuous, 2D color scheme!
           @tparam cutDepth See: tfrmComplexCut()
           @tparam argCuts  See: tfrmComplexCut()
           @tparam absCuts  See: tfrmComplexCut()
@@ -5161,9 +5161,9 @@ namespace mjr {
       template<double cutDepth, double argCuts, double absCuts, bool logAbs>
       using cs2dThallerHSL  = cs2dThaller_tpl<1, 0, cutDepth, argCuts, absCuts, logAbs>  ;
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Compute a color from Bernd Thaller's 2D complex number coloring scheme with HSV and maximum value.  
+      /** Compute a color from Bernd Thaller's 2D complex number coloring scheme with HSV and maximum value.
           See: Bernd Thaller (2000); Visual Quantum Mechanics; pp 2-8
-          This is a continuous, 2D color scheme! 
+          This is a continuous, 2D color scheme!
           @tparam cutDepth See: tfrmComplexCut()
           @tparam argCuts  See: tfrmComplexCut()
           @tparam absCuts  See: tfrmComplexCut()
@@ -5171,9 +5171,9 @@ namespace mjr {
       template<double cutDepth, double argCuts, double absCuts, bool logAbs>
       using cs2dThallerHSVm = cs2dThaller_tpl<0, 1, cutDepth, argCuts, absCuts, logAbs>  ;
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Compute a color from Bernd Thaller's 2D complex number coloring scheme with HSV and dynamic value.  
+      /** Compute a color from Bernd Thaller's 2D complex number coloring scheme with HSV and dynamic value.
           See: Bernd Thaller (2000); Visual Quantum Mechanics; pp 2-8
-          This is a continuous, 2D color scheme! 
+          This is a continuous, 2D color scheme!
           @tparam cutDepth See: tfrmComplexCut()
           @tparam argCuts  See: tfrmComplexCut()
           @tparam absCuts  See: tfrmComplexCut()
