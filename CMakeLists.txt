@@ -146,7 +146,7 @@ set(TARGETS_USE_OPENMP "mandelbrot_bm_cplx_openmp" "mandelbrot_precomp" "mandelb
                        "newton_max_back" "newton_min_angle" "mandelbrot_simple" "newton_min_angle_starfish" "newton_half" "newton_vs" "newton_z6"
                        "newton_modified" "newton_min_root" "newton_3updown" "newton_roter" "attracting_torus_shadowM" "laguerre_3updown"
                        "laguerre_simple" "kalisetJ" "kalisetM1" "kalisetM2" "phoenix" "phoenixI" "phoenixD" "phoenixM" "phoenixM2" "doublePendulum"
-                       "doublePendulumM" "wakOrb01" "wakOrb02" "wakOrb03" "brusselator")
+                       "doublePendulumM" "wakOrb01" "wakOrb02" "wakOrb03" "brusselator" "heartFrac" "duck")
 set(TARGETS_REQ_GTEST  "all_gtests"
                        "c_set_chan_dbl" "c_set_chan_byte" "c_set_chan_gen" "c_set_chan_const" "c_set_chan_hex" "c_set_rgba_pack" "c_set_rgb_tga"
                        "c_set_rgb_wavelengthCM" "c_set_rgb_wavelengthLA" "c_set_cs_csFPcircular12" "c_set_cs_csCBSpectral" "c_set_cs_csBin"
