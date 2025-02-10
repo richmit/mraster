@@ -38,6 +38,11 @@
 #include "hersheyFont.hpp"
 #include "MRpoint2d.hpp"
 
+#include "MRMathIVL.hpp"
+#include "MRMathFC.hpp"
+#include "MRMathODR.hpp"
+#include "MRMathBPLY.hpp"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #ifdef MRASTER_FOUND_TIFF
 #include <unistd.h>                                                      /* UNIX std stf            POSIX    */
@@ -3302,10 +3307,10 @@ namespace mjr {
       double xD21 = x2 - x1;
       double yD21 = y2 - y1;
       double wH = 1.0;
-      if (xD21 > eps)
+      if (mjr::math::fc::not_near_zero(xD21, eps))
         wH = (x  - x1) / xD21;
       double wV = 1.0;
-      if (yD21 > eps)
+      if (mjr::math::fc::not_near_zero(yD21, eps))
         wV = (y  - y1) / yD21;
 
       colorT c1;
@@ -4239,7 +4244,7 @@ namespace mjr {
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::computeConvolutionMatrixGausian(double *kernel, int kSize, double sd) {
     for(int yi=0, yis=-(kSize/2); yi<kSize; yi++, yis++)
       for(int xi=0,xis=-(kSize/2); xi<kSize; xi++, xis++)
-        kernel[kSize * yi + xi] = exp(-(xis*xis+yis*yis)/(2*sd*sd))/(sd*sd*6.283185307179586477);
+        kernel[kSize * yi + xi] = exp(-(xis*xis+yis*yis)/(2*sd*sd))/(sd*sd*2*std::numbers::pi);
     double divisor = 0;
     for(int i=0; i<(kSize*kSize); i++)
       divisor += kernel[i];
@@ -4264,7 +4269,7 @@ namespace mjr {
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::convolution(double *kernel, int kWide, int kTall, double divisor) {
     colorT *new_pixels = new colorT[numPixX * numPixY];
     // Divisor is invalid, so we compute one to use
-    if(std::abs(divisor) < 0.0001) {
+    if (mjr::math::fc::near_zero(divisor, 0.0001)) {
       divisor = 0.0;
       for(int i=0; i<(kWide*kTall); i++)
         divisor += kernel[i];

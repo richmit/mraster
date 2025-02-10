@@ -31,7 +31,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #ifndef MJR_INCLUDE_MRcolorTpl
 
-#include "MRMathCPP.hpp"
+#include "MRMathFC.hpp"
+#include "MRMathIVL.hpp"
+#include "MRMathLINM.hpp"
+#include "MRMathODR.hpp"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #include <algorithm>                                                     /* STL algorithm           C++11    */
@@ -2104,7 +2107,7 @@ namespace mjr {
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmDiv(colorArgType aCol) requires (std::floating_point<clrChanT>) {
         for(int i=0; i<numChan; i++)
-          if ( !(mjr::math::fc::near_zero(aCol.getChanNC(i), static_cast<clrChanT>(1.0e-8))))
+          if (mjr::math::fc::not_near_zero(aCol.getChanNC(i), static_cast<clrChanT>(1.0e-8)))
             setChanNC(i, static_cast<clrChanT>(static_cast<channelArithSPType>(getChanNC(i)) / static_cast<channelArithSPType>(aCol.getChanNC(i))));
         return *this;
       }
@@ -2196,7 +2199,7 @@ namespace mjr {
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmAddDivClamp(colorArgType aCol, colorArgType dCol) requires (std::floating_point<clrChanT>) {
         for(int i=0; i<numChan; i++)
-          if ( !(mjr::math::fc::near_zero(dCol.getChanNC(i), static_cast<clrChanT>(1.0e-8))))
+          if (mjr::math::fc::not_near_zero(dCol.getChanNC(i), static_cast<clrChanT>(1.0e-8)))
             setChanNC(i, clampTop((static_cast<channelArithSPType>(getChanNC(i)) + static_cast<channelArithSPType>(aCol.getChanNC(i))) /
                                   static_cast<channelArithSPType>(dCol.getChanNC(i))));
         return *this;
@@ -2225,7 +2228,7 @@ namespace mjr {
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmMod(colorArgType aCol) requires (std::floating_point<clrChanT>) {
         for(int i=0; i<numChan; i++)
-          if ( !(mjr::math::fc::near_zero(aCol.getChanNC(i), static_cast<clrChanT>(1.0e-8))))
+          if (mjr::math::fc::not_near_zero(aCol.getChanNC(i), static_cast<clrChanT>(1.0e-8)))
             setChanNC(i, static_cast<clrChanT>(std::fmod(static_cast<double>(getChanNC(i)), static_cast<double>(aCol.getChanNC(i)))));
         return *this;
       }
