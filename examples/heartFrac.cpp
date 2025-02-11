@@ -50,8 +50,8 @@ typedef mjr::ramCanvas3c8b rct;
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  int width  = 3440;
-  int height = 1400;
+  int width  = 3440*8;
+  int height = 1400*8;
   double ar  = static_cast<double>(width) / static_cast<double>(height);
   rct theRamCanvas(width, height, -1.2*ar, 1.2*ar, -1.2, 1.2);
   const int NUMITR = 50;
@@ -74,6 +74,10 @@ int main(void) {
         theRamCanvas.drawPoint(x, y, rct::colorType::csCCsumBRG::c(static_cast<rct::colorType::csIntType>(count*20))); //csCCfractal0RYBCW
     }
   }
+  theRamCanvas.scaleDownMean(9);
+  theRamCanvas.drawString("MWU. M", mjr::hershey::font::ROMAN_SL_SANSERIF, theRamCanvas.getNumPixX()-130, 200-30, "white",  1, 20); 
+  theRamCanvas.drawString("2025  ", mjr::hershey::font::ROMAN_SL_SANSERIF, theRamCanvas.getNumPixX()-130, 200-60, "white",  1, 20); 
+  theRamCanvas.drawString("    -m", mjr::hershey::font::ROMAN_SL_SANSERIF, theRamCanvas.getNumPixX()-130, 200-90, "white",  1, 20); 
   theRamCanvas.writeTIFFfile("heartFrac.tiff");
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
