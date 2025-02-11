@@ -42,27 +42,28 @@ double f(double x, double y) {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  int x, y;
-  double maxH = std::hypot(512, 512);
-  int width  = 3440;
-  int height = 1400;
-  double ar  = static_cast<double>(width) / static_cast<double>(height);
+  int width   = 3440;
+  int height  = 1400;
+  double maxH = std::hypot(width/5, height/5);
+  double ar   = static_cast<double>(width) / static_cast<double>(height);
   mjr::ramCanvas3c8b theRamCanvas(width, height, -2*ar, 2*ar, -2, 2);
 
-  for(y=0;y<theRamCanvas.getNumPixY();y++)  
-    for(x=0;x<theRamCanvas.getNumPixX();x++) {
+  for(decltype(theRamCanvas)::coordIntType y=0;y<theRamCanvas.getNumPixY();y++)  
+    for(decltype(theRamCanvas)::coordIntType x=0;x<theRamCanvas.getNumPixX();x++) {
       double fxy = f(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
-      if (fxy > 0)
-        //theRamCanvas.drawPoint(x, y, mjr::color3c8b::csCCwicR::c(1.0*std::abs(fxy))); // eclipse
-        //theRamCanvas.drawPoint(x, y, mjr::color3c8b::csFPcmoceanAmp::c(0.8*sqrt(1-std::abs(fxy)))); // brick
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b::csCCu0M::c(1-std::abs(fxy))); // purple
-      else 
-        theRamCanvas.drawPoint(x, y, mjr::color3c8b::csPLYquad::c(mjr::math::linm::gen_map(std::hypot(x-width/2, y-height/2), maxH, 0.0, 0.5, 1.0)));
+      if (fxy > 0) {
+        //theRamCanvas.drawPoint(x, y, decltype(theRamCanvas)::colorType::csCCwicR::c(1.0*std::abs(fxy))); // eclipse
+        theRamCanvas.drawPoint(x, y, decltype(theRamCanvas)::colorType::csFPcmoceanAmp::c(0.8*sqrt(1-std::abs(fxy)))); // brick
+        //theRamCanvas.drawPoint(x, y, decltype(theRamCanvas)::colorType::csCCu0M::c(1-std::abs(fxy))); // purple
+      } else {
+        auto d = std::hypot(x-theRamCanvas.getNumPixX()/2, y-theRamCanvas.getNumPixY()/2);
+        theRamCanvas.drawPoint(x, y, decltype(theRamCanvas)::colorType::csPLYquad::c(mjr::math::linm::gen_map(d, maxH, 0.0, 0.5, 1.0)));
+      }
     }
 
-  theRamCanvas.drawString("MWU. M", mjr::hershey::font::ROMAN_SL_SANSERIF, width-130, 200-30, "red",  1, 20); 
-  theRamCanvas.drawString("2025  ", mjr::hershey::font::ROMAN_SL_SANSERIF, width-130, 200-60, "red",  1, 20); 
-  theRamCanvas.drawString("    -m", mjr::hershey::font::ROMAN_SL_SANSERIF, width-130, 200-90, "red",  1, 20); 
+  theRamCanvas.drawString("MWU. M", mjr::hershey::font::ROMAN_SL_SANSERIF, theRamCanvas.getNumPixX()-130, 200-30, "red",  1, 20); 
+  theRamCanvas.drawString("2025  ", mjr::hershey::font::ROMAN_SL_SANSERIF, theRamCanvas.getNumPixX()-130, 200-60, "red",  1, 20); 
+  theRamCanvas.drawString("    -m", mjr::hershey::font::ROMAN_SL_SANSERIF, theRamCanvas.getNumPixX()-130, 200-90, "red",  1, 20); 
 
   theRamCanvas.writeTIFFfile("heart2025.tiff");
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
