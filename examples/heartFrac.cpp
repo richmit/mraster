@@ -3,11 +3,11 @@
 /**
  @file      heartFrac.cpp
  @author    Mitch Richling <https://www.mitchr.me>
- @brief     Draw a grayscale heart fractal.@EOL
- @std       C++20
+ @brief     Draw a heart fractal.@EOL
+ @std       C++23
  @copyright
   @parblock
-  Copyright (c) 1988-2015,2018 Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
+  Copyright (c) 2025 Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -28,16 +28,11 @@
   @endparblock
  @filedetails
 
-  Notes:
+  The recursion is as follows:
 
    \[ x_{n+1} = 2 x_n y_n + Re(c) 
       y_{n+1} = \vert y_n\vert - \vert x_n\vert + Im(c) \]
 
-  Notes:
-    - Uses a deep, greyscale image.
-    - Outputs a TIFF
-    - Optimization to avoid the main cardioid boundry and period 2 disk
-    - Uses an automatic histogram streach to expand the visual contract.   I leave this step off when using Fiji.
 */
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
@@ -72,6 +67,8 @@ int main(void) {
       }
       if(count < NUMITR)
         theRamCanvas.drawPoint(x, y, rct::colorType::csCCsumBRG::c(static_cast<rct::colorType::csIntType>(count*20))); //csCCfractal0RYBCW
+      else
+        theRamCanvas.drawPoint(x, y, "red");
     }
   }
   theRamCanvas.scaleDownMean(9);
