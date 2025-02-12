@@ -50,11 +50,11 @@ Alternatly, you could download the zip files:
   - [[https://github.com/richmit/mraster/archive/refs/heads/master.zip][MRaster]]
   - [[https://github.com/richmit/MRMathCPP/archive/refs/heads/MRMathCPP.zip][MRMathCPP]]
 
-Once you have it downloaded, make note of the "=lib=" folder within each repository containing all the headers.  Both libraries are "header only" meaning all
-you need to to to use them is include the headers.  If you are looking for the absolute simplest path forward, just copy the =*.hpp= files in *both* "=lib="
-directories into the directory with your code.  Alternately, if you are using an IDE, then you can simply "add" the include files to the project in your IDE.
-Alternately you can direct your build environment to add the "=lib=" directories to your compiler's "include path".  With an IDE that's usually a few clicks away.  
-On the command line, with GCC/Clang, you can add the directories with the =-I= option.
+Once you have them downloaded, make note of the "=lib=" folder within each repository containing all the headers.  Both libraries are "header only" meaning
+all you need to to to use them is include the headers.  If you are looking for the absolute simplest path forward, just copy the =*.hpp= files in *both*
+"=lib=" directories into the directory with your code.  Alternately, if you are using an IDE, then you can simply "add" the include files to the project in
+your IDE.  Alternately you can direct your build environment to add the "=lib=" directories to your compiler's "include path".  With an IDE that's usually a
+few clicks away.  On the command line, with GCC/Clang, you can add the directories with the =-I= option.
 
 Here is a very minimal example you can try.  Put in a file called "=hello.cpp=":
 
@@ -78,7 +78,7 @@ int main(void) {
 Now we can compile it with GCC like this:
 
 #+begin_src sh :exports source :eval never
-g++ -m64 -std=gnu++20 hello.cpp -o hello
+g++ -m64 -std=gnu++2b hello.cpp -o hello
 #+end_src
 
 Now you can run it, and take a look at the file it created ("=hello.tiff="):
@@ -97,7 +97,7 @@ That's it!  How easy was that?
 If you have =libtiff= installed in a standard location, then you can probably just add "=-DTIFF_FOUND" to the compile command like this:
 
 #+begin_src sh :exports source :eval never
-g++ -DTIFF_FOUND -m64 --std=gcc++20 hello.cpp -o hello
+g++ -DTIFF_FOUND -m64 -std=gnu++2b hello.cpp -o hello
 #+end_src
 
 Please note that advanced TIFF reader is only required to *read* TIFF files.  *=MRaster=* can save TIFF, TGA, and MRAW files without any external library support.
@@ -164,7 +164,7 @@ cmake -G 'MSYS Makefiles' -DCMAKE_CXX_COMPILER=clang++ ..
 :CUSTOM_ID: platform-notes-m2w11vs2022
 :END:
 
-This method works, but you won't get any external dependencies like =GLUT=, =SDL2=, =libTIFF=, =boost=, etc...  But, you will get enough to run many of the examples.
+This method works, but you won't get any external dependencies like =GLUT=, =SDL2=, =libTIFF=, =GTest=, etc...  But, you will get enough to run many of the examples.
 
 From the MSYS2 shell, we can run cmake like this:
 
@@ -180,7 +180,7 @@ Then open up the directory with explorer, and double click on one of the project
 :END:
 
 Everything works, but it's harder to get set up.  Simply fire up VS, and open the folder with the =CMakeLists.txt= file in it.  VS will detect a =cmake=
-project.  Next use [[https://vcpkg.io/en/index.html][vcpkg]] to install =GLUT=, =SDL2=, =libTIFF=, & =boost=.  Update =CMakeLists.txt= as described
+project.  Next use [[https://vcpkg.io/en/index.html][vcpkg]] to install =GLUT=, =SDL2=, =libTIFF=, & =GTest=.  Update =CMakeLists.txt= as described
 [[https://vcpkg.io/en/docs/users/buildsystems/cmake-integration.html][here]]. Refresh the =cmake=, and you should be able to build.
 
 ** Mac OS X Monterey 12.5.1 with Homebrew GCC 12.1.0
@@ -188,8 +188,7 @@ project.  Next use [[https://vcpkg.io/en/index.html][vcpkg]] to install =GLUT=, 
 :CUSTOM_ID: platform-notes-osx1151hbGCC12
 :END:
 
-I had trouble getting =boost= to work, but everything else seems OK.  Note the =-DGLUT_glut_LIBRARY= option -- this is required to direct =cmake= to use the
-Apple provided =GLUT= instead of =freeglut= from homebrew.
+Note the =-DGLUT_glut_LIBRARY= option -- this is required to direct =cmake= to use the Apple provided =GLUT= instead of =freeglut= from homebrew.
 
 Here is what I installed via Homebrew:
 
@@ -199,7 +198,7 @@ brew install cmake
 brew install sdl2
 brew install doxygen
 brew install libtiff
-brew install boost
+brew install googletest
 #+end_src
 
 And I used the following cmake:
@@ -220,8 +219,8 @@ This also means that examples using these features are not built:
  - =color_lut_cubehelix.cpp=
  - =heart2022.cpp=
 
-In addition, the Apple version of =clang= is missing the C++20 feature =bit_cast=.  Right now *=MRaster=* has conditional compilation sections removing those
-features when using this compiler.  Hopefully Apple will have better C++20 support soon.
+In addition, the Apple version of =clang= is missing the C++23 feature =bit_cast=.  Right now *=MRaster=* has conditional compilation sections removing those
+features when using this compiler.  Hopefully Apple will have better C++23 support soon.
 
 Lastly, note the =-DGLUT_glut_LIBRARY= option -- this is required to direct =cmake= to use the Apple provided =GLUT= instead of =freeglut= from homebrew.
 
@@ -241,7 +240,7 @@ You can install everything you might want for *=MRaster=* like so:
 #+begin_src sh :eval never :tangle no :exports code
 sudo apt update
 sudo apt upgrade
-sudo apt-get install build-essential libsdl2-dev libtiff-dev freeglut3-dev doxygen libboost-all-dev 
+sudo apt-get install build-essential libsdl2-dev libtiff-dev freeglut3-dev doxygen googletest
 sudo apt-get install povray ffmpeg imagemagick
 #+end_src
 
@@ -263,7 +262,7 @@ You can install everything you might want for *=MRaster=* like so:
 #+begin_src sh :eval never :tangle no :exports code
 sudo apt update
 sudo apt upgrade
-sudo apt-get install build-essential libsdl2-dev libtiff-dev freeglut3-dev doxygen libboost-all-dev 
+sudo apt-get install build-essential libsdl2-dev libtiff-dev freeglut3-dev doxygen googletest
 sudo apt-get install povray ffmpeg imagemagick
 sudo apt install cmake/bullseye-backports
 #+end_src
@@ -309,7 +308,7 @@ You can install everything with the following:
 #+begin_src sh :eval never :tangle no :exports code
 sudo apt update
 sudo apt upgrade
-sudo apt-get install build-essential libsdl2-dev libtiff-dev freeglut3-dev doxygen libboost-all-dev 
+sudo apt-get install build-essential libsdl2-dev libtiff-dev freeglut3-dev doxygen googletest
 sudo apt-get install povray ffmpeg imagemagick
 sudo apt install cmake/bullseye-backports
 sudo apt install -t testing g++-11 gcc-11
@@ -361,7 +360,7 @@ You can install everything with the following:
 #+begin_src sh :eval never :tangle no :exports code
 sudo apt update
 sudo apt upgrade
-sudo apt-get install build-essential libsdl2-dev libtiff-dev freeglut3-dev doxygen libboost-all-dev 
+sudo apt-get install build-essential libsdl2-dev libtiff-dev freeglut3-dev doxygen googletest
 sudo apt-get install povray ffmpeg imagemagick
 sudo apt install -t testing --install-suggests gcc-12 gfortran-12 cmake
 #+end_src
@@ -389,18 +388,18 @@ cmake -DCMAKE_CXX_COMPILER=g++-11 ..
 :CUSTOM_ID: gbl-faq
 :END:
 
-** Q1: What's up with "=-std=gcc++20=" instead of "=-std=c++20="?
+** Q1: What's up with "=-std=gnu++2b=" instead of "=-std=c++2b="?
 :PROPERTIES:
 :CUSTOM_ID: gbl-faq-q1
 :END:
 
 #+BEGIN_QUOTE
-*A:* *=MRaster=* works just fine with standard C++20 compilers.  The "=-std=gcc++20=" option enables specific features of GCC that make *=MRaster=* better.  In
+*A:* *=MRaster=* works just fine with standard C++23 compilers.  The "=-std=gnu++2b=" option enables specific features of GCC that make *=MRaster=* better.  In
 particular, it enables 128-bit integers on platforms that support it -- allowing, for example, a very high performance floating point RGBA image format.  If
-you want to turn off 128-bit integers, and use pure C++20 instead with GCC, then you can use a command line like this:
+you want to turn off 128-bit integers, and use pure C++23 instead with GCC, then you can use a command line like this:
 
 #+begin_src sh :exports source :eval never
-g++ -DMJR_LOOK_FOR_128_BIT_TYPES=0 -m64 --std=c++20 hello.cpp -o hello
+g++ -DMJR_LOOK_FOR_128_BIT_TYPES=0 -m64 --std=c++2b hello.cpp -o hello
 #+end_src
 #+END_QUOTE
 
@@ -424,44 +423,3 @@ echo file:../build/doc-lib/autodocs/html/$(xmlstarlet.exe sel -t -v "/tagfile/co
 
 #+RESULTS:
 file:../build/doc-lib/autodocs/html/classmjr_1_1colorTpl.html#details
-
-* Old Stuff                                                        :noexport:
-*** Q2: What's up with "=-std=gcc++20=" instead of "=-std=c++20="?
-:PROPERTIES:
-:CUSTOM_ID: qs-faq-q2
-:END:
-
-#+BEGIN_QUOTE
-*A:* *=MRaster=* works just fine with standard C++20 compilers.  The "=-std=gcc++20=" option enables specific features of GCC that make *=MRaster=* better.  In
-particular, it enables 128-bit integers on platforms that support it -- allowing, for example, a very high performance floating point RGBA image format.  If
-you want to turn off 128-bit integers, and use pure C++20 instead with GCC, then you can use a command line like this:
-
-#+begin_src sh :exports source :eval never
-g++ -DMJR_LOOK_FOR_128_BIT_TYPES=0 -m64 --std=c++20 hello.cpp -o hello
-#+end_src
-#+END_QUOTE
-
-*** Q3: I got some weird errors about =bit_cast=.  What's up?
-:PROPERTIES:
-:CUSTOM_ID: qs-faq-q3
-:END:
-
-Probably your compiler is too old to support that part of the C++ standard.  One of the advantages of using =cmake= is that it tries to detect this issue.  Without =cmake=, you need to add the following
-to your compile command (or get a better compiler):
-
-#+begin_src sh :exports source :eval never
--DMISSING_P0476R2=1
-#+end_src
-
-*** Q4: I got some weird errors about complex numbers and =std::pow=? What's up?
-:PROPERTIES:
-:CUSTOM_ID: qs-faq-q4
-:END:
-
-Probably your compiler is too old to support that part of the C++ standard.  One of the advantages of using =cmake= is that it tries to detect this issue.  Without =cmake=, you need to add the following
-to your compile command (or get a better compiler):
-
-#+begin_src sh :exports source :eval never
--DMISSING_P1907R1=1
-#+end_src
-

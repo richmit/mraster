@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-01-23 Thu 23:54 -->
+<!-- 2025-02-12 Wed 14:14 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster Quick Start</title>
@@ -256,7 +256,7 @@
 </li>
 <li><a href="#gbl-faq">4. FAQ</a>
 <ul>
-<li><a href="#gbl-faq-q1">4.1. Q1: What's up with "<code>-std=gcc++20</code>" instead of "<code>-std=c++20</code>"?</a></li>
+<li><a href="#gbl-faq-q1">4.1. Q1: What's up with "<code>-std=gnu++2b</code>" instead of "<code>-std=c++2b</code>"?</a></li>
 <li><a href="#gbl-faq-q2">4.2. Q2: The examples seem to be missing standard/system include files</a></li>
 </ul>
 </li>
@@ -275,7 +275,7 @@ If you are interested playing around with <b><code>MRaster</code></b> as quickly
 The first step is to download <b><code>MRaster</code></b> and <b><code>MRMathCPP</code></b>.  The easiest way is to clone them with git:
 </p>
 
-<pre class="example" id="org74ba58d">
+<pre class="example" id="orgfaf7cd7">
 git clone 'https://github.com/richmit/mraster.git'
 git clone 'https://github.com/richmit/MRMathCPP.git'
 </pre>
@@ -289,11 +289,11 @@ Alternatly, you could download the zip files:
 </ul>
 
 <p>
-Once you have it downloaded, make note of the "<code>lib</code>" folder within each repository containing all the headers.  Both libraries are "header only" meaning all
-you need to to to use them is include the headers.  If you are looking for the absolute simplest path forward, just copy the <code>*.hpp</code> files in <b>both</b> "<code>lib</code>"
-directories into the directory with your code.  Alternately, if you are using an IDE, then you can simply "add" the include files to the project in your IDE.
-Alternately you can direct your build environment to add the "<code>lib</code>" directories to your compiler's "include path".  With an IDE that's usually a few clicks away.  
-On the command line, with GCC/Clang, you can add the directories with the <code>-I</code> option.
+Once you have them downloaded, make note of the "<code>lib</code>" folder within each repository containing all the headers.  Both libraries are "header only" meaning
+all you need to to to use them is include the headers.  If you are looking for the absolute simplest path forward, just copy the <code>*.hpp</code> files in <b>both</b>
+"<code>lib</code>" directories into the directory with your code.  Alternately, if you are using an IDE, then you can simply "add" the include files to the project in
+your IDE.  Alternately you can direct your build environment to add the "<code>lib</code>" directories to your compiler's "include path".  With an IDE that's usually a
+few clicks away.  On the command line, with GCC/Clang, you can add the directories with the <code>-I</code> option.
 </p>
 
 <p>
@@ -318,7 +318,7 @@ Now we can compile it with GCC like this:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">g++ -m64 -std=gnu++20 hello.cpp -o hello
+<pre class="src src-sh">g++ -m64 -std=gnu++2b hello.cpp -o hello
 </pre>
 </div>
 
@@ -327,7 +327,7 @@ Now you can run it, and take a look at the file it created ("<code>hello.tiff</c
 </p>
 
 
-<div id="org6eff68f" class="figure">
+<div id="orga25e139" class="figure">
 <p><img src="./pics/quick/hello.png" alt="hello.png" width="800" align="center" />
 </p>
 </div>
@@ -346,7 +346,7 @@ If you have <code>libtiff</code> installed in a standard location, then you can 
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">g++ -DTIFF_FOUND -m64 --std=gcc++20 hello.cpp -o hello
+<pre class="src src-sh">g++ -DTIFF_FOUND -m64 -std=gnu++2b hello.cpp -o hello
 </pre>
 </div>
 
@@ -433,7 +433,7 @@ Everything works with the following cmake:
 <h3 id="platform-notes-m2w11vs2022"><span class="section-number-3">3.3.</span> Windows 11 with MSYS2 cmake and Visual Studio 2022 Community Edition</h3>
 <div class="outline-text-3" id="text-platform-notes-m2w11vs2022">
 <p>
-This method works, but you won't get any external dependencies like <code>GLUT</code>, <code>SDL2</code>, <code>libTIFF</code>, <code>boost</code>, etc&#x2026;  But, you will get enough to run many of the examples.
+This method works, but you won't get any external dependencies like <code>GLUT</code>, <code>SDL2</code>, <code>libTIFF</code>, <code>GTest</code>, etc&#x2026;  But, you will get enough to run many of the examples.
 </p>
 
 <p>
@@ -456,7 +456,7 @@ Then open up the directory with explorer, and double click on one of the project
 <div class="outline-text-3" id="text-platform-notes-w11vs2022">
 <p>
 Everything works, but it's harder to get set up.  Simply fire up VS, and open the folder with the <code>CMakeLists.txt</code> file in it.  VS will detect a <code>cmake</code>
-project.  Next use <a href="https://vcpkg.io/en/index.html">vcpkg</a> to install <code>GLUT</code>, <code>SDL2</code>, <code>libTIFF</code>, &amp; <code>boost</code>.  Update <code>CMakeLists.txt</code> as described
+project.  Next use <a href="https://vcpkg.io/en/index.html">vcpkg</a> to install <code>GLUT</code>, <code>SDL2</code>, <code>libTIFF</code>, &amp; <code>GTest</code>.  Update <code>CMakeLists.txt</code> as described
 <a href="https://vcpkg.io/en/docs/users/buildsystems/cmake-integration.html">here</a>. Refresh the <code>cmake</code>, and you should be able to build.
 </p>
 </div>
@@ -466,8 +466,7 @@ project.  Next use <a href="https://vcpkg.io/en/index.html">vcpkg</a> to install
 <h3 id="platform-notes-osx1151hbGCC12"><span class="section-number-3">3.5.</span> Mac OS X Monterey 12.5.1 with Homebrew GCC 12.1.0</h3>
 <div class="outline-text-3" id="text-platform-notes-osx1151hbGCC12">
 <p>
-I had trouble getting <code>boost</code> to work, but everything else seems OK.  Note the <code>-DGLUT_glut_LIBRARY</code> option &#x2013; this is required to direct <code>cmake</code> to use the
-Apple provided <code>GLUT</code> instead of <code>freeglut</code> from homebrew.
+Note the <code>-DGLUT_glut_LIBRARY</code> option &#x2013; this is required to direct <code>cmake</code> to use the Apple provided <code>GLUT</code> instead of <code>freeglut</code> from homebrew.
 </p>
 
 <p>
@@ -480,7 +479,7 @@ brew install cmake
 brew install sdl2
 brew install doxygen
 brew install libtiff
-brew install boost
+brew install googletest
 </pre>
 </div>
 
@@ -510,8 +509,8 @@ This also means that examples using these features are not built:
 </ul>
 
 <p>
-In addition, the Apple version of <code>clang</code> is missing the C++20 feature <code>bit_cast</code>.  Right now <b><code>MRaster</code></b> has conditional compilation sections removing those
-features when using this compiler.  Hopefully Apple will have better C++20 support soon.
+In addition, the Apple version of <code>clang</code> is missing the C++23 feature <code>bit_cast</code>.  Right now <b><code>MRaster</code></b> has conditional compilation sections removing those
+features when using this compiler.  Hopefully Apple will have better C++23 support soon.
 </p>
 
 <p>
@@ -539,7 +538,7 @@ You can install everything you might want for <b><code>MRaster</code></b> like s
 <div class="org-src-container">
 <pre class="src src-sh">sudo apt update
 sudo apt upgrade
-sudo apt-get install build-essential libsdl2-dev libtiff-dev freeglut3-dev doxygen libboost-all-dev 
+sudo apt-get install build-essential libsdl2-dev libtiff-dev freeglut3-dev doxygen googletest
 sudo apt-get install povray ffmpeg imagemagick
 </pre>
 </div>
@@ -569,7 +568,7 @@ You can install everything you might want for <b><code>MRaster</code></b> like s
 <div class="org-src-container">
 <pre class="src src-sh">sudo apt update
 sudo apt upgrade
-sudo apt-get install build-essential libsdl2-dev libtiff-dev freeglut3-dev doxygen libboost-all-dev 
+sudo apt-get install build-essential libsdl2-dev libtiff-dev freeglut3-dev doxygen googletest
 sudo apt-get install povray ffmpeg imagemagick
 sudo apt install cmake/bullseye-backports
 </pre>
@@ -631,7 +630,7 @@ You can install everything with the following:
 <div class="org-src-container">
 <pre class="src src-sh">sudo apt update
 sudo apt upgrade
-sudo apt-get install build-essential libsdl2-dev libtiff-dev freeglut3-dev doxygen libboost-all-dev 
+sudo apt-get install build-essential libsdl2-dev libtiff-dev freeglut3-dev doxygen googletest
 sudo apt-get install povray ffmpeg imagemagick
 sudo apt install cmake/bullseye-backports
 sudo apt install -t testing g++-11 gcc-11
@@ -699,7 +698,7 @@ You can install everything with the following:
 <div class="org-src-container">
 <pre class="src src-sh">sudo apt update
 sudo apt upgrade
-sudo apt-get install build-essential libsdl2-dev libtiff-dev freeglut3-dev doxygen libboost-all-dev 
+sudo apt-get install build-essential libsdl2-dev libtiff-dev freeglut3-dev doxygen googletest
 sudo apt-get install povray ffmpeg imagemagick
 sudo apt install -t testing --install-suggests gcc-12 gfortran-12 cmake
 </pre>
@@ -723,17 +722,17 @@ Now you can use the following <code>cmake</code> command:
 </div>
 
 <div id="outline-container-gbl-faq-q1" class="outline-3">
-<h3 id="gbl-faq-q1"><span class="section-number-3">4.1.</span> Q1: What's up with "<code>-std=gcc++20</code>" instead of "<code>-std=c++20</code>"?</h3>
+<h3 id="gbl-faq-q1"><span class="section-number-3">4.1.</span> Q1: What's up with "<code>-std=gnu++2b</code>" instead of "<code>-std=c++2b</code>"?</h3>
 <div class="outline-text-3" id="text-gbl-faq-q1">
 <blockquote>
 <p>
-<b>A:</b> <b><code>MRaster</code></b> works just fine with standard C++20 compilers.  The "<code>-std=gcc++20</code>" option enables specific features of GCC that make <b><code>MRaster</code></b> better.  In
+<b>A:</b> <b><code>MRaster</code></b> works just fine with standard C++23 compilers.  The "<code>-std=gnu++2b</code>" option enables specific features of GCC that make <b><code>MRaster</code></b> better.  In
 particular, it enables 128-bit integers on platforms that support it &#x2013; allowing, for example, a very high performance floating point RGBA image format.  If
-you want to turn off 128-bit integers, and use pure C++20 instead with GCC, then you can use a command line like this:
+you want to turn off 128-bit integers, and use pure C++23 instead with GCC, then you can use a command line like this:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sh">g++ -DMJR_LOOK_FOR_128_BIT_TYPES=0 -m64 --std=c++20 hello.cpp -o hello
+<pre class="src src-sh">g++ -DMJR_LOOK_FOR_128_BIT_TYPES=0 -m64 --std=c++2b hello.cpp -o hello
 </pre>
 </div>
 </blockquote>

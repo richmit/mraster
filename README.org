@@ -53,9 +53,8 @@ For more detail read the [[https://richmit.github.io/mraster/QuickStart.html][qu
 To use this code, *TWO* repositories must be cloned -- this one and a
 basic mathematical library.  The mathematical library should then be
 configured.  Finally you can build the examples in this repository.
-This all might be done on the command line on linux or MacOS (for windows, see the
-[[https://richmit.github.io/mraster/QuickStart.html][quick start guide]]) 
-a sequence of commands like the following:
+This all might be done on the command line with linux, MacOS, or
+windows (MSYS2 or WSL) with a sequence of commands like the following:
 
 #+begin_src sh :exports code :eval never
 git clone 'https://github.com/richmit/MRMathCPP.git'    # Download MRMathCPP
@@ -67,6 +66,10 @@ cd mraster/build                                        # Change directory to 'b
 cmake ..                                                # Configure the build system with cmake
 cmake --build . -t examples                             # Build all the examples
 #+end_src
+
+While I normally work on the command line, CMake is fully compatible
+with several IDEs including Microsoft Visual Studio.  For more on this
+topic, see the [[https://richmit.github.io/mraster/QuickStart.html][quick start guide]].
 
 * Versions
 

@@ -70,6 +70,7 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
     - Added mjr::ramCanvasTpl::getPxColorChanWrap()
   - Documentation
     - Added test coverage document
+    - Updated all the docs to reflect GTest & C++23 switch.
   - Examples
     - New
       - demo_corners.cpp
