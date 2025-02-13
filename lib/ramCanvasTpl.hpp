@@ -4184,14 +4184,13 @@ namespace mjr {
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
   void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleDown1pt(int xfactor) {
-    if (xfactor > 1) {
+    if ((xfactor > 1) && (xfactor <= numPixX) && (xfactor <= numPixY)) {
       intCrdT new_numPixX_p = numPixX/xfactor;
       intCrdT new_numPixY_p = numPixY/xfactor;
       colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
       for(intCrdT y=0, y1=0; y<new_numPixY_p; y++, y1+=xfactor)
         for(intCrdT x=0, x1=0; x<new_numPixX_p; x++, x1+=xfactor)
           new_pixels[new_numPixX_p * y + x] = getPxColor(x1, y1);
-
       rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
     }
   }
@@ -4201,7 +4200,7 @@ namespace mjr {
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
   void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleDownMean(int xfactor) {
-    if (xfactor > 1) {
+    if ((xfactor > 1) && (xfactor <= numPixX) && (xfactor <= numPixY)) {
       intCrdT new_numPixX_p = numPixX/xfactor;
       intCrdT new_numPixY_p = numPixY/xfactor;
       colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
@@ -4217,7 +4216,6 @@ namespace mjr {
             aColor.setChan(c, static_cast<colorChanType>(sums[c] / (xfactor*xfactor)));
           new_pixels[new_numPixX_p * y + x] = aColor;
         }
-
       rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
     }
   }
@@ -4227,11 +4225,10 @@ namespace mjr {
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
   void
   ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleDownMax(int xfactor) {
-    if (xfactor > 1) {
+    if ((xfactor > 1) && (xfactor <= numPixX) && (xfactor <= numPixY)) {
       intCrdT new_numPixX_p = numPixX/xfactor;
       intCrdT new_numPixY_p = numPixY/xfactor;
       colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
-
       for(intCrdT y=0, y1=0; y<new_numPixY_p; y++, y1+=xfactor)
         for(intCrdT x=0, x1=0; x<new_numPixX_p; x++, x1+=xfactor) {
           colorT maxColor = getPxColor(xfactor*x, xfactor*y);
@@ -4240,7 +4237,6 @@ namespace mjr {
               maxColor.tfrmMaxI(getPxColor(xfactor*x+xi, xfactor*y+yi));
           new_pixels[new_numPixX_p * y + x] = maxColor;
         }
-
       rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
     }
   }

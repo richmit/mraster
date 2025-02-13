@@ -42,6 +42,8 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
 :END:
   - Fixed Bugs
     - Removed all_gtests from cmake list.
+    - scaleUpProximal, scaleDown1pt, scaleDownMean, scaleDownMax: Now NOP if xfactor <= 1
+    - scaleDown1pt, scaleDownMean, scaleDownMax: Now NOP if xfactor > numPixX or numPixY
   - Known Issues
     - N/A
   - API breaking Changes
