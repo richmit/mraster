@@ -4154,87 +4154,95 @@ namespace mjr {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-    void
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleUpProximal(int xfactor) {
-    intCrdT new_numPixX_p = xfactor*numPixX;
-    intCrdT new_numPixY_p = xfactor*numPixY;
-    colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
-    for(intCrdT y=0, y1=0; y<numPixY; y++) {
-      for(intCrdT x=0, x1=0; x<numPixX; x++) {
-        for(int i=0; i<xfactor; i++) {
-          for(int j=0; j<xfactor; j++) {
-            new_pixels[new_numPixX_p * y1 + x1] = getPxColor(x, y);
-            x1++;
+  void
+  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleUpProximal(int xfactor) {
+    if (xfactor > 1) {
+      intCrdT new_numPixX_p = xfactor*numPixX;
+      intCrdT new_numPixY_p = xfactor*numPixY;
+      colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
+      for(intCrdT y=0, y1=0; y<numPixY; y++) {
+        for(intCrdT x=0, x1=0; x<numPixX; x++) {
+          for(int i=0; i<xfactor; i++) {
+            for(int j=0; j<xfactor; j++) {
+              new_pixels[new_numPixX_p * y1 + x1] = getPxColor(x, y);
+              x1++;
+            }
+            x1-=xfactor;
+            y1++;
           }
-          x1-=xfactor;
-          y1++;
+          x1+=xfactor;
+          y1-=xfactor;
         }
-        x1+=xfactor;
-        y1-=xfactor;
+        y1+=xfactor;
       }
-      y1+=xfactor;
+      rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
     }
-    rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-    void
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleDown1pt(int xfactor) {
-    intCrdT new_numPixX_p = numPixX/xfactor;
-    intCrdT new_numPixY_p = numPixY/xfactor;
-    colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
-    for(intCrdT y=0, y1=0; y<new_numPixY_p; y++, y1+=xfactor)
-      for(intCrdT x=0, x1=0; x<new_numPixX_p; x++, x1+=xfactor)
-        new_pixels[new_numPixX_p * y + x] = getPxColor(x1, y1);
+  void
+  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleDown1pt(int xfactor) {
+    if (xfactor > 1) {
+      intCrdT new_numPixX_p = numPixX/xfactor;
+      intCrdT new_numPixY_p = numPixY/xfactor;
+      colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
+      for(intCrdT y=0, y1=0; y<new_numPixY_p; y++, y1+=xfactor)
+        for(intCrdT x=0, x1=0; x<new_numPixX_p; x++, x1+=xfactor)
+          new_pixels[new_numPixX_p * y + x] = getPxColor(x1, y1);
 
-    rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
+      rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
+    }
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-    void
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleDownMean(int xfactor) {
-    intCrdT new_numPixX_p = numPixX/xfactor;
-    intCrdT new_numPixY_p = numPixY/xfactor;
-    colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
-    for(intCrdT y=0, y1=0; y<new_numPixY_p; y++, y1+=xfactor)
-      for(intCrdT x=0, x1=0; x<new_numPixX_p; x++, x1+=xfactor) {
-        std::vector<colorChanArithSDPType> sums(colorT::channelCount, static_cast<colorChanArithSDPType>(0));
-        for(int j=0; j<xfactor; j++)
-          for(int i=0; i<xfactor; i++)
-            for(int c=0; c<colorT::channelCount; c++)
-              sums[c] += getPxColor(x1+i, y1+j).getChan(c);
-        colorT aColor;
-        for(int c=0; c<colorT::channelCount; c++)
-          aColor.setChan(c, static_cast<colorChanType>(sums[c] / (xfactor*xfactor)));
-        new_pixels[new_numPixX_p * y + x] = aColor;
-      }
+  void
+  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleDownMean(int xfactor) {
+    if (xfactor > 1) {
+      intCrdT new_numPixX_p = numPixX/xfactor;
+      intCrdT new_numPixY_p = numPixY/xfactor;
+      colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
+      for(intCrdT y=0, y1=0; y<new_numPixY_p; y++, y1+=xfactor)
+        for(intCrdT x=0, x1=0; x<new_numPixX_p; x++, x1+=xfactor) {
+          std::vector<colorChanArithSDPType> sums(colorT::channelCount, static_cast<colorChanArithSDPType>(0));
+          for(int j=0; j<xfactor; j++)
+            for(int i=0; i<xfactor; i++)
+              for(int c=0; c<colorT::channelCount; c++)
+                sums[c] += getPxColor(x1+i, y1+j).getChan(c);
+          colorT aColor;
+          for(int c=0; c<colorT::channelCount; c++)
+            aColor.setChan(c, static_cast<colorChanType>(sums[c] / (xfactor*xfactor)));
+          new_pixels[new_numPixX_p * y + x] = aColor;
+        }
 
-    rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
+      rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
+    }
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
-    void
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleDownMax(int xfactor) {
-    intCrdT new_numPixX_p = numPixX/xfactor;
-    intCrdT new_numPixY_p = numPixY/xfactor;
-    colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
+  void
+  ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::scaleDownMax(int xfactor) {
+    if (xfactor > 1) {
+      intCrdT new_numPixX_p = numPixX/xfactor;
+      intCrdT new_numPixY_p = numPixY/xfactor;
+      colorT *new_pixels = new colorT[new_numPixX_p * new_numPixY_p];
 
-    for(intCrdT y=0, y1=0; y<new_numPixY_p; y++, y1+=xfactor)
-      for(intCrdT x=0, x1=0; x<new_numPixX_p; x++, x1+=xfactor) {
-        colorT maxColor = getPxColor(xfactor*x, xfactor*y);
-        for(int yi=0; yi<xfactor; yi++)
-          for(int xi=0; xi<xfactor; xi++)
-            maxColor.tfrmMaxI(getPxColor(xfactor*x+xi, xfactor*y+yi));
-        new_pixels[new_numPixX_p * y + x] = maxColor;
-      }
+      for(intCrdT y=0, y1=0; y<new_numPixY_p; y++, y1+=xfactor)
+        for(intCrdT x=0, x1=0; x<new_numPixX_p; x++, x1+=xfactor) {
+          colorT maxColor = getPxColor(xfactor*x, xfactor*y);
+          for(int yi=0; yi<xfactor; yi++)
+            for(int xi=0; xi<xfactor; xi++)
+              maxColor.tfrmMaxI(getPxColor(xfactor*x+xi, xfactor*y+yi));
+          new_pixels[new_numPixX_p * y + x] = maxColor;
+        }
 
-    rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
+      rePointPixels(new_pixels, new_numPixX_p, new_numPixY_p);
+    }
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
