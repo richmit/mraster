@@ -79,6 +79,9 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
       - heart2025.cpp
       - duck.cpp
       - heartFrac.cpp
+      - feather.cpp
+      - mandelbrot_meanOrbit.cpp
+      - simone_attractor.cpp
     - Updated
       - N/A
   - Miscellaneous

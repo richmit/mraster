@@ -97,4 +97,6 @@ TEST(r_p_scale, comprehensive) {
   eRamCanvas.writeRAWfile("ut-p_scale-e.mrw");
   eRamCanvas.scaleUpProximal(32);
   eRamCanvas.writeTIFFfile("ut-p_scale-e.tiff");
+
+//  MJR TODO NOTE TEST: Add tests for invalid scale factor (zero or negative).
 }
