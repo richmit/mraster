@@ -28,10 +28,33 @@
   @endparblock
  @filedetails
 
-  This code makes a movie of time steps of the solution the Lorenz system.  Each pixel is a complete simulation of the system with the pixel's color encoding
-  the system state (red for x, green for y, and blue for z).  The initial values for x range from -20 to 20, for z the are 20 to 50, and y is always zero.
+  This code makes a movie of time steps of the solution the Lorenz system.  Each pixel is a complete simulation of the Lorenz system with the pixel's color
+  encoding the system state (red for x, green for y, and blue for z).  The initial values for x range from -20 to 20, for z they range from 20 to 50, and y is
+  always zero.
 
-  Make Movies:
+  For reference the Lorenz system is defined by:
+  @f[ \begin{array}{lcl}
+        \frac{dx}{dt} & = & a(y-x)   \\
+        \frac{dy}{dt} & = & x(b-z)-y \\
+        \frac{dz}{dt} & = & xy-cz
+  \end{array} @f]
+
+  Traditional parameter values are:
+
+  @f[ \begin{array}{lcc}
+        a & = & 10   \\
+        b & = & 28 \\
+        c & = & \frac{8}{3}
+  \end{array} @f]
+
+  And the traditional initial conditions are:
+  @f[ \begin{array}{lcc}
+        x & = & \frac{1}{10}   \\
+        y & = & 0 \\
+        z & = & 0
+  \end{array} @f]
+
+  This program produces an image sequence which may be rendered into a movie with ffmpeg.  
 
              ffmpeg -y -framerate 15 -i lorenz_mM_%4d.tiff -vf "scale=trunc(iw/4)*2:trunc(ih/4)*2" -c:v libx264 -crf 30 -b:v 0 -preset veryslow lorenz_mM_100_crf30.mp4;
              ffmpeg -y -framerate 15 -i lorenz_mM_%4d.tiff -vf "scale=trunc(iw/4)*2:trunc(ih/4)*2" -c:v libx264 -crf 20 -b:v 0 -preset veryslow lorenz_mM_100_crf20.mp4;
@@ -97,7 +120,7 @@ int main(void) {
         pcolorCanvas.getPxColorRefNC(xi, yi).setChansRGB_dbl(r, g, b);
       }
     }
-    pcolorCanvas.writeTIFFfile("lorenz_mMf_" + mjr::math::str::fmt_int(frame, 4, '0') + ".tiff");
+    pcolorCanvas.writeTIFFfile("lorenz_mM_" + mjr::math::str::fmt_int(frame, 4, '0') + ".tiff");
 #   pragma omp critical
     std::cout << "FRAME(" << frame <<  "): " << "DONE" << std::endl;
   }
