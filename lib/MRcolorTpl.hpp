@@ -396,7 +396,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set all channels to minChanVal. */
       inline void setChansToMin() {
-        if(goodMask)
+        if constexpr (goodMask)
           setMaskNC(maskAllZero);
         else
           std::fill_n(theColor.thePartsA, numChan, minChanVal);
@@ -469,7 +469,7 @@ namespace mjr {
       inline uint8_t convertChanToByte(clrChanT cVal) const requires (std::integral<clrChanT>) {
         /* Performance: A good compiler *should* recgonize the case when bitsPerChan-8==0, and render this function an NOOP.  Some don't.  Hence the if-then
            below. */
-        if(chanIsByte)
+        if constexpr (chanIsByte)
           return static_cast<uint8_t>(cVal);  // Cast is unnessary because we only get uint8_t cVal in this branch, but some compilers issue a warning.
         else
           return static_cast<uint8_t>(static_cast<channelArithSPType>(cVal) * static_cast<channelArithSPType>(255) / static_cast<channelArithSPType>(maxChanVal));
@@ -478,7 +478,7 @@ namespace mjr {
       /** Convert a double to a clrChanT */
       inline clrChanT convertDoubleToChan(double cVal) const {
         /* Performance: Not all compilers recognize multiplication by 1.0 as a NOOP.  Hence the if-then below. */
-        if(chanIsInt)
+        if constexpr (chanIsInt)
           return static_cast<clrChanT>(cVal * maxChanVal);
         else
           return static_cast<clrChanT>(cVal);
@@ -486,7 +486,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Convert a clrChanT to a double */
       inline double convertChanToDouble(clrChanT cVal) const {
-        if(chanIsInt)
+        if constexpr (chanIsInt)
           return static_cast<double>(cVal) / static_cast<double>(maxChanVal);
         else
           return static_cast<double>(cVal);
@@ -638,7 +638,7 @@ namespace mjr {
       colorTpl(const colorType& aColor) {
         /* Saftey: Yep.  Sometimes the compiler might not be able to tell if we have initalized the color object -- some of the color set code is too complex.
            Sometimes we might even want to copy an unitilzied color -- sometimes it makes the code easier to write.*/
-        if(goodMask)
+        if constexpr (goodMask)
           setMaskNC(aColor.getMaskNC());
         else
           std::copy_n(aColor.theColor.thePartsA, numChan, theColor.thePartsA);
@@ -663,12 +663,12 @@ namespace mjr {
           These all use setChansRGB or setChansRGBA internally; however, these constructors will set any unspecified channels to min. */
       //@{
       colorTpl(clrChanT r, clrChanT g, clrChanT b, clrChanT a) {
-        if (numChan > 4)
+        if constexpr (numChan > 4)
           setChansToMin();
         setChansRGBA(r, g, b, a);
       }
       colorTpl(clrChanT r, clrChanT g, clrChanT b) {
-        if (numChan > 3)
+        if constexpr (numChan > 3)
           setChansToMin();
         setChansRGB(r, g, b);
       }
@@ -709,7 +709,7 @@ namespace mjr {
           When sizeof(colorTpl)<=sizeof(maskType), this function consists of a single assignment statement.  Otherwise it is O(numChan).
           @return Returns a reference to the current color object.*/
       inline colorTpl& copy(colorArgType aCol) {
-        if(goodMask)
+        if constexpr (goodMask)
           setMaskNC(aCol.getMaskNC());
         else
           for(int i=0; i<numChan; i++)
@@ -792,8 +792,6 @@ namespace mjr {
          - _byte versions work with uint8_t values scaled to [0, 255]
          - Numbered channel names are 0 indexed. */
       //@{
-      /* Performance: numChan is known at compile time, so the optimizer will produce an assignment or no code at all -- i.e. the test for numChan is done at
-           compile time only, and imposes zero overhead at runtime.  */
       /* Performance: The array assignment here gets optimized because the index is known at compile time.  It's just as fast as accessing a member of a union
            for example.  */
       /* Useablity: We could do this with a template, but that means we need ".template set" syntax in some cases.  That's just too uguly. */
@@ -866,7 +864,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /* Returns redChan if non-negative and 0 otherwise */
       inline int bestRedChan() {
-        if (redChan >= 0)
+        if constexpr (redChan >= 0)
           return redChan;      // If we have an identical red, then return it.
         else
           return 0;            // Otherwise return 0 -- we are guarnteed at least one channel.
@@ -874,9 +872,9 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /* Returns blueChan if it is non-negative.  If we only have one channel, then returns 0. If we have more than one channel, then returns 1. */
       inline int bestGreenChan() {
-        if (greenChan >= 0)
+        if constexpr (greenChan >= 0)
           return greenChan;    // If we have an identified green, then return it.
-        else if (numChan == 1)
+        else if constexpr (numChan == 1)
           return 0;            // for greyscale, return chan 0
         else
           return 1;            // If we have more than 1 channel, then return 1
@@ -884,11 +882,11 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /* Returns blueChan if it is non-negative.  If we only have one channel, then returns 0.  If we have two channels, then returns -1.  Otherwise returns 2. */
       inline int bestBlueChan() {
-        if (blueChan >= 0)
+        if constexpr (blueChan >= 0)
           return blueChan;     // If we have an identified blue, then return it.
-        else if (numChan == 1)
+        else if constexpr (numChan == 1)
           return 0;            // for greyscale, return chan 0
-        else if (numChan == 2)
+        else if constexpr (numChan == 2)
           return -1;           // No sensible value for blue channel with 2 channel images
         else
           return 2;            // If we have at least three channels, then return chan 2
@@ -896,9 +894,9 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /* Returns alphaChan if it is non-negative.  If we only have four or more channels, then returns 3.  Otherwise returns -1. */
       inline int bestAlphaChan() {
-        if (alphaChan >= 0)
+        if constexpr (alphaChan >= 0)
           return alphaChan;    // If we have an identified alpha, then return it.
-        else if (numChan >= 4)
+        else if constexpr (numChan >= 4)
           return 3;            // If we have at least four channels, then return chan 3
         else
           return -1;           // No sensible value for alpha channel
@@ -1703,7 +1701,7 @@ namespace mjr {
           } else {
             cVal = ( c1.getChan(j) > 0 ? chanStepMax : 0);
           }
-          if (chanIsFloat)
+          if constexpr (chanIsFloat)
             setChan(j, static_cast<clrChanT>(cVal) / static_cast<clrChanT>(chanStepMax));
           else
             setChan(j, static_cast<clrChanT>(cVal));
@@ -1896,7 +1894,7 @@ namespace mjr {
           @param aCol The color to use in the computation.
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmOr(colorArgType aCol) requires (std::integral<clrChanT>) {
-        if(goodMask)
+        if constexpr (goodMask)
           setMaskNC(getMaskNC() | aCol.getMaskNC());
         else
           for(int i=0; i<numChan; i++)
@@ -1908,7 +1906,7 @@ namespace mjr {
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmOr(colorArgType aCol) requires (std::floating_point<clrChanT>) {
         /* Performance: Yep.  Sometimes floating point colors get a goodMask. */
-        if(goodMask)
+        if constexpr (goodMask)
           setMaskNC(getMaskNC() | aCol.getMaskNC());
         else
           for(int i=0; i<numChan; i++)
@@ -1921,7 +1919,7 @@ namespace mjr {
           @param aCol The color to use in the computation.
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmNor(colorArgType aCol) requires (std::integral<clrChanT>) {
-        if(goodMask)
+        if constexpr (goodMask)
           setMaskNC(~(getMaskNC() | aCol.getMaskNC()));
         else
           for(int i=0; i<numChan; i++)
@@ -1932,7 +1930,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmNor(colorArgType aCol) requires (std::floating_point<clrChanT>) {
-        if(goodMask)
+        if constexpr (goodMask)
           setMaskNC(~(getMaskNC() | aCol.getMaskNC()));
         else
           for(int i=0; i<numChan; i++)
@@ -1945,7 +1943,7 @@ namespace mjr {
           @param aCol The color to use in the computation.
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmAnd(colorArgType aCol) requires (std::integral<clrChanT>) {
-        if(goodMask)
+        if constexpr (goodMask)
           setMaskNC(getMaskNC() & aCol.getMaskNC());
         else
           for(int i=0; i<numChan; i++)
@@ -1956,7 +1954,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmAnd(colorArgType aCol) requires (std::floating_point<clrChanT>) {
-        if(goodMask)
+        if constexpr (goodMask)
           setMaskNC(getMaskNC() & aCol.getMaskNC());
         else
           for(int i=0; i<numChan; i++)
@@ -1969,7 +1967,7 @@ namespace mjr {
           @param aCol The color to use in the computation.
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmNand(colorArgType aCol) requires (std::integral<clrChanT>) {
-        if(goodMask)
+        if constexpr (goodMask)
           setMaskNC(~(getMaskNC() & aCol.getMaskNC()));
         else
           for(int i=0; i<numChan; i++)
@@ -1980,7 +1978,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmNand(colorArgType aCol) requires (std::floating_point<clrChanT>) {
-        if(goodMask)
+        if constexpr (goodMask)
           setMaskNC(~(getMaskNC() & aCol.getMaskNC()));
         else
           for(int i=0; i<numChan; i++)
@@ -1993,7 +1991,7 @@ namespace mjr {
           @param aCol The color to use in the computation.
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmXor(colorArgType aCol) requires (std::integral<clrChanT>) {
-        if(goodMask)
+        if constexpr (goodMask)
           setMaskNC(getMaskNC() ^ aCol.getMaskNC());
         else
           for(int i=0; i<numChan; i++)
@@ -2004,7 +2002,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmXor(colorArgType aCol) requires (std::floating_point<clrChanT>) {
-        if(goodMask)
+        if constexpr (goodMask)
           setMaskNC(getMaskNC() ^ aCol.getMaskNC());
         else
           for(int i=0; i<numChan; i++)
@@ -2017,7 +2015,7 @@ namespace mjr {
           @param aCol The color to use in the computation.
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmNxor(colorArgType aCol) requires (std::integral<clrChanT>) {
-        if(goodMask)
+        if constexpr (goodMask)
           setMaskNC(~(getMaskNC() ^ aCol.getMaskNC()));
         else
           for(int i=0; i<numChan; i++)
@@ -2028,7 +2026,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmNxor(colorArgType aCol) requires (std::floating_point<clrChanT>) {
-        if(goodMask)
+        if constexpr (goodMask)
           setMaskNC(~(getMaskNC() ^ aCol.getMaskNC()));
         else
           for(int i=0; i<numChan; i++)
@@ -2040,7 +2038,7 @@ namespace mjr {
       /** Performs logical (bit-wise) negation of current object.
           @return Returns a reference to the current color object.*/
       inline colorTpl& tfrmNot(void) requires (std::integral<clrChanT>) {
-        if(goodMask)
+        if constexpr (goodMask)
           setMaskNC(~(getMaskNC()));
         else
           for(int i=0; i<numChan; i++)
@@ -2051,7 +2049,7 @@ namespace mjr {
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Template specialization member function differing from the above function only in supported template conditions. */
       inline colorTpl& tfrmNot(void) requires (std::floating_point<clrChanT>) {
-        if(goodMask)
+        if constexpr (goodMask)
           setMaskNC(~(getMaskNC()));
         else
           for(int i=0; i<numChan; i++)
@@ -2800,15 +2798,15 @@ namespace mjr {
         /* Performance: I'm manually unrolling the loop and using direct calls to max functions because some compilers can't figure out how to optimize this code.
            At some point I expect the C++ reduce or max algorithms to be able to handle this case in an optimal way.  Till then, we get this weird bit of
            code. */
-        if(numChan == 1) {                                         // 1 channel
+        if constexpr (numChan == 1) {                                         // 1 channel
           return getChanNC(0);
-        } else if(numChan == 2) {                                  // 2 channels
+        } else if constexpr (numChan == 2) {                                  // 2 channels
           return std::max(getChanNC(0),  getChanNC(1));
-        } else if(numChan == 3) {                                  // 3 channels
+        } else if constexpr (numChan == 3) {                                  // 3 channels
           return mjr::math::odr::max3(getChanNC(0), getChanNC(1), getChanNC(2));
-        } else if(numChan == 4) {                                  // 4 channels
+        } else if constexpr (numChan == 4) {                                  // 4 channels
           return mjr::math::odr::max4(getChanNC(0), getChanNC(1), getChanNC(2), getChanNC(3));
-        } else {                                                   // More than 3 channels
+        } else {                                                              // More than 3 channels
           clrChanT theMax = minChanVal;
           for(int i=0; i<numChan; i++)
             if(theMax < getChanNC(i))
@@ -2820,13 +2818,13 @@ namespace mjr {
       /** Returns the value of the smallest component.
           @return The value of the smallest color component currently stored.*/
       inline clrChanT getMinC() const {
-        if(numChan == 1) {                                         // 1 channel
+        if constexpr (numChan == 1) {                                         // 1 channel
           return getChanNC(0);
-        } else if(numChan == 2) {                                  // 2 channels
+        } else if constexpr (numChan == 2) {                                  // 2 channels
           return std::min(getChanNC(0), getChanNC(1));
-        } else if(numChan == 3) {                                  // 3 channels
+        } else if constexpr (numChan == 3) {                                  // 3 channels
           return mjr::math::odr::min3(getChanNC(0), getChanNC(1), getChanNC(2));
-        } else if(numChan == 4) {                                  // 4 channels
+        } else if constexpr (numChan == 4) {                                  // 4 channels
           return mjr::math::odr::min4(getChanNC(0), getChanNC(1), getChanNC(2), getChanNC(3));
         } else {
           clrChanT theMin = maxChanVal;
@@ -2955,7 +2953,7 @@ namespace mjr {
           Note the implications for floating point clrChanT.
           @return non-zero if the given color is logically the same as the current color*/
       inline bool isEqual(colorArgType aColor) const {
-        if(perfectMask)
+        if constexpr (perfectMask)
           return (getMaskNC() == aColor.getMaskNC());
         else
           for(int i=0; i<numChan; i++)
@@ -2981,7 +2979,7 @@ namespace mjr {
       /** Returns non-zero if the given color is black (all componnets are zero)
           @return non-zero if the given color is black (all componnets are zero) */
       inline bool isBlack() {
-        if(perfectMask)
+        if constexpr (perfectMask)
           return (getMaskNC() == maskAllZero);
         else
           for(int i=0; i<numChan; i++)

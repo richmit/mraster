@@ -1682,7 +1682,7 @@ namespace mjr {
       /** Set the current drawing mode
           NOOP if enableDrawModes is false.
           @param newDrawMode The drawing mode */
-      inline void         setDrawMode(drawModeType newDrawMode) { if (enableDrawModes) drawMode = newDrawMode; }
+      inline void         setDrawMode(drawModeType newDrawMode) { if constexpr (enableDrawModes) drawMode = newDrawMode; }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Set the default draw mode */
       inline void         setDefaultDrawMode()                  { setDrawMode(drawModeType::SET); }
@@ -4136,8 +4136,7 @@ namespace mjr {
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
     inline void
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::drawPointNC(intCrdT x, intCrdT y, colorArgType color) {
-    /* Performance: We are depending on the compiler to eliminate this if statement because enableDrawModes is a compile time constant. */
-    if (enableDrawModes)
+    if constexpr (enableDrawModes)
       switch(drawMode) {
         case drawModeType::SET:       getPxColorRefNC(x, y).copy(color);          break;
         case drawModeType::XOR:       getPxColorRefNC(x, y).tfrmXor(color);       break;
@@ -4517,9 +4516,7 @@ namespace mjr {
     for((yNat?y=0:y=(numPixY-1)); (yNat?y<numPixY:y>=0); (yNat?y++:y--)) {
       for((xNat?x=0:x=(numPixX-1)); (xNat?x<numPixX:x>=0); (xNat?x++:x--)) {
         for(int ci=0; ci<fileChans; ci++) {
-          /* performance: An if inside a triple nexted for loop!  Ouch.  But chanIsInt is a compile time constant, so this should be reduced to just the
-             branch of the if that is true.  Same wit the if statement inside the else clause of this if.*/
-          if (colorT::chanIsInt) {
+          if constexpr (colorT::chanIsInt) {
             colorChanArithLogType shft  = (reverseBits ? colorT::bitsPerChan-8 : 0);
             /* Note that colorChanArithLogType is always an unsigned integer type, and thus we avoid compiler errors when trying to use | on a float.
                When chanIsInt, colorChanArithLogType is the same as colorChanType when chanIsInt -- so a NOOP because this part of the if only gets
@@ -4537,7 +4534,6 @@ namespace mjr {
                 shft -= 8;
               else
                 shft += 8;
-
             }
             getPxColorRefNC(x, y).setChan(ci, static_cast<colorChanType>(pv));
           } else {

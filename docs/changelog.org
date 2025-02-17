@@ -88,7 +88,8 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
     - Broke utest_colorTpl.cpp up into different files
     - Added IncludeMRMathCPPLib.cmake code
     - Updated version of configure.sh
-    - Updated mrw2any.sh & 
+    - Updated mrw2any.sh &
+    - Uniform use of if constexpr.
 
 * 22.0.0.0: Feature & Refactor Release
 :PROPERTIES:
