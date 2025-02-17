@@ -1,7 +1,7 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      simone_attractor.cpp.cpp
+ @file      simone_attractor.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Draw fractals inspired by the book Symmetry in Chaos.@EOL
  @std       C++20
@@ -37,7 +37,7 @@
        y_{n+1} & = & \cos(2x_ny_n+b)       \\
   \end{eqnarray} @f]
 
-
+  Note: This example is experimental, and still in work...
 */
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */

@@ -33,7 +33,7 @@
   The idea is to iterate a function a fixed number of times for each point in the complex plane, and then color that point according to the magnitude of the
   mean of the orbit points.  In this case we iterate the log of the "iabs" function:
 
-  @f[ \log\left(\Re(z)+\vert\Im(z)\vert\right+c) @f]
+  @f[ \log\left(\Re(z)+\vert\Im(z)\vert+c\right) @f]
 
   Coloring by the magnitude of the final iterate is interesting; however, I think it's even more interesting to color by the final iterate *relative* to the
   initial condition.  Another interesting choice is to color by the relative argument.

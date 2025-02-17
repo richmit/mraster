@@ -29,9 +29,10 @@
  @filedetails
 
   The recursion is as follows:
-
-   \[ x_{n+1} = 2 x_n y_n + Re(c) 
-      y_{n+1} = \vert y_n\vert - \vert x_n\vert + Im(c) \]
+  @f[ \begin{array}{lcl}
+        x_{n+1} & = & 2 x_n y_n + \Re(c) \\                      
+        y_{n+1} & = & \vert y_n\vert - \vert x_n\vert + \Im(c) \\
+  \end{array} @f]
 
 */
 /*******************************************************************************************************************************************************.H.E.**/
