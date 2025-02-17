@@ -76,6 +76,7 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
   - Examples
     - New
       - demo_corners.cpp
+      - lorenz_mM.cpp
       - heart2025.cpp
       - duck.cpp
       - heartFrac.cpp
