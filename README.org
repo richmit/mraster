@@ -11,6 +11,8 @@ Some examples of what can be done with *MRaster*:
 
   -  [[https://www.mitchr.me/SS/mandelbrot/index.html][Mandelbrot Mountains]]
   -  [[https://www.mitchr.me/SS/newton/index.html][Newton Fractal]]
+  -  [[https://www.mitchr.me/SS/doublePendulum/index.html][Double Pendulum]]
+  -  [[https://www.mitchr.me/SS/brusselator/index.html][The Brusselator]]
   -  [[https://www.mitchr.me/SS/BurningShip/index.html][Burning Ship]]
   -  [[https://www.mitchr.me/SS/multibrot/index.html][Multibrot Fractals]]
   -  [[https://www.mitchr.me/SS/mandelbrotCount/index.html][Mandelbrot Iteration Movie]]
