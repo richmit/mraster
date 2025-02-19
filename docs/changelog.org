@@ -75,6 +75,7 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
     - Updated all the docs to reflect GTest & C++23 switch.
   - Examples
     - New
+      - peterdejongEAAO.cpp
       - demo_corners.cpp
       - lorenz_mM.cpp
       - heart2025.cpp
