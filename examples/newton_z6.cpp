@@ -44,12 +44,12 @@ int main(void) {
   constexpr rcT::coordIntType IMGSIZ = 7680;
   constexpr int               MAXITR = 155;
   constexpr rcT::coordFltType ZROEPS = 1.0e-5;
-  constexpr rcT::cplxFltType  r1( 1.0,  0.0);
-  constexpr rcT::cplxFltType  r2(-0.5,  std::sin(2.0*std::numbers::pi/3.0));
-  constexpr rcT::cplxFltType  r3(-0.5, -std::sin(2.0*std::numbers::pi/3.0));
-  constexpr rcT::cplxFltType  r4(-1.0,  0.0);
-  constexpr rcT::cplxFltType  r5( 0.5,  std::sin(2.0*std::numbers::pi/3.0));
-  constexpr rcT::cplxFltType  r6( 0.5, -std::sin(2.0*std::numbers::pi/3.0));
+  rcT::cplxFltType  r1( 1.0,  0.0);
+  rcT::cplxFltType  r2(-0.5,  std::sin(2.0*std::numbers::pi/3.0));
+  rcT::cplxFltType  r3(-0.5, -std::sin(2.0*std::numbers::pi/3.0));
+  rcT::cplxFltType  r4(-1.0,  0.0);
+  rcT::cplxFltType  r5( 0.5,  std::sin(2.0*std::numbers::pi/3.0));
+  rcT::cplxFltType  r6( 0.5, -std::sin(2.0*std::numbers::pi/3.0));
 
   rcT theRamCanvas(IMGSIZ, IMGSIZ, -1.20, 1.20, -1.20, 1.20);
 
