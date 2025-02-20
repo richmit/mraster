@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-02-19 Wed 14:09 -->
+<!-- 2025-02-20 Thu 16:06 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>Change Log</title>
@@ -230,12 +230,12 @@
 
 <tr>
 <td class="org-right"><b>Updated:</b></td>
-<td class="org-left"><i>2025-02-19 14:09:38</i></td>
+<td class="org-left"><i>2025-02-20 16:06:53</i></td>
 </tr>
 
 <tr>
 <td class="org-right"><b>Generated:</b></td>
-<td class="org-left"><i>2025-02-19 14:09:39</i></td>
+<td class="org-left"><i>2025-02-20 16:06:53</i></td>
 </tr>
 </tbody>
 </table>
@@ -295,6 +295,14 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 <ul class="org-ul">
 <li>mjr::ramCanvasTpl::readTIFFfile now has new exit codes (23 &amp; 24 &#x2013; see below).</li>
 <li>Bumped C++ standard up to 23 (from 20) for compatibility with MRMathCPP.</li>
+<li>New header: ramCanvasPixelFilters.hpp
+<ul class="org-ul">
+<li>ramCanvasPixelFilters.hpp is included by ramCanvasTpl.hpp</li>
+<li>rcConvertors were moved out of mjr::ramCanvasTpl</li>
+<li>ramCanvasPixelFilters are top level objects in namespace mjr::ramCanvasPixelFilter</li>
+<li>Previous rcConvertors classes have new names (not prefixed with rcConverter)</li>
+<li>Added mjr::ramCanvasPixelFilter::ScaleDownMean &#x2013; first non-homogenious filter.</li>
+</ul></li>
 </ul></li>
 <li>Deprecated functionality
 <ul class="org-ul">
@@ -326,6 +334,7 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 </ul></li>
 <li>Added mjr::ramCanvasTpl::getPxColorWrap()</li>
 <li>Added mjr::ramCanvasTpl::getPxColorChanWrap()</li>
+<li>markAlpha now defaults to true in mjr::ramCanvasTpl::writeTIFFfile()</li>
 </ul></li>
 <li>Documentation
 <ul class="org-ul">
@@ -348,7 +357,8 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 </ul></li>
 <li>Updated
 <ul class="org-ul">
-<li>N/A</li>
+<li>newton_z6.cpp: Fixed non-const trig functions for MSVC</li>
+<li>phoenix.cpp, phoenixD.cpp, phoenixI.cpp: Added OpenMP 2.0 support</li>
 </ul></li>
 </ul></li>
 <li>Miscellaneous

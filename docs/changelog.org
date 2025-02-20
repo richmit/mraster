@@ -49,6 +49,12 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
   - API breaking Changes
     - mjr::ramCanvasTpl::readTIFFfile now has new exit codes (23 & 24 -- see below).
     - Bumped C++ standard up to 23 (from 20) for compatibility with MRMathCPP.
+    - New header: ramCanvasPixelFilters.hpp
+      - ramCanvasPixelFilters.hpp is included by ramCanvasTpl.hpp
+      - rcConvertors were moved out of mjr::ramCanvasTpl
+      - ramCanvasPixelFilters are top level objects in namespace mjr::ramCanvasPixelFilter
+      - Previous rcConvertors classes have new names (not prefixed with rcConverter)
+      - Added mjr::ramCanvasPixelFilter::ScaleDownMean -- first non-homogenious filter.
   - Deprecated functionality
     - N/A
   - New functionality
@@ -70,6 +76,7 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
       - Example: demo_corners.cpp
     - Added mjr::ramCanvasTpl::getPxColorWrap()
     - Added mjr::ramCanvasTpl::getPxColorChanWrap()
+    - markAlpha now defaults to true in mjr::ramCanvasTpl::writeTIFFfile()
   - Documentation
     - Added test coverage document
     - Updated all the docs to reflect GTest & C++23 switch.
@@ -85,7 +92,8 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
       - mandelbrot_meanOrbit.cpp
       - simone_attractor.cpp
     - Updated
-      - N/A
+      - newton_z6.cpp: Fixed non-const trig functions for MSVC
+      - phoenix.cpp, phoenixD.cpp, phoenixI.cpp: Added OpenMP 2.0 support
   - Miscellaneous
     - Broke utest_colorTpl.cpp up into different files
     - Added IncludeMRMathCPPLib.cmake code

@@ -87,7 +87,7 @@ int main(void) {
   const double MAXZ   = 4.0;
 
 # pragma omp parallel for schedule(static,1)
-  for(decltype(params.size()) j=0; j<params.size(); ++j) {
+  for(int j=0; j<(int)params.size(); ++j) { // Not using decltype(params.size()) for j because of old OpenMP in MSVC
     const std::complex<double> c(params[j][0], params[j][1]);
     const std::complex<double> p(params[j][2], params[j][3]);
     mjr::ramCanvas3c8b theRamCanvas(WIDTH, HEIGHT, params[j][5], params[j][6], params[j][7], params[j][8]);
