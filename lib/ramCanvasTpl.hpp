@@ -37,6 +37,7 @@
 #include "MRcolor.hpp"
 #include "hersheyFont.hpp"
 #include "MRpoint2d.hpp"
+#include "ramCanvasPixelFilters.hpp"
 
 #include "MRMathIVL.hpp"
 #include "MRMathFC.hpp"
@@ -144,88 +145,6 @@ namespace mjr {
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
   class ramCanvasTpl {
     public:
-
-      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** @name Handy ramCanvasTpl converter classes. */
-      //@{
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** This class is an incomplete rcConverter (no getPxColorNC method) that provides a nice base for homogenious rcConverters. */
-      template<class inRamCanvasT>
-      class rcConverterHomoBase {
-        public:
-          inRamCanvasT& attachedRC;
-          rcConverterHomoBase(inRamCanvasT& aRC) : attachedRC(aRC) {  }
-          inline bool isIntAxOrientationNaturalX() { return attachedRC.isIntAxOrientationNaturalX(); }
-          inline bool isIntAxOrientationNaturalY() { return attachedRC.isIntAxOrientationNaturalY(); }
-          inline typename inRamCanvasT::coordIntType getNumPixX() { return attachedRC.getNumPixX(); }
-          inline typename inRamCanvasT::coordIntType getNumPixY() { return attachedRC.getNumPixY(); }
-      };
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      template<class inRamCanvasT>
-      class rcConverterIdentity : public rcConverterHomoBase<inRamCanvasT>  {
-        public:
-          rcConverterIdentity(inRamCanvasT& aRC) : rcConverterHomoBase<inRamCanvasT>(aRC) {  }
-          typedef typename inRamCanvasT::colorType colorType;
-          inline colorType getPxColorNC(typename inRamCanvasT::coordIntType x, typename inRamCanvasT::coordIntType y) { return rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y); }
-      };
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      template<class inRamCanvasT>
-      class rcConverterRGBbyte : public rcConverterHomoBase<inRamCanvasT>  {
-        public:
-          rcConverterRGBbyte(inRamCanvasT& aRC) : rcConverterHomoBase<inRamCanvasT>(aRC) {  }
-          typedef typename inRamCanvasT::colorType::colConRGBbyte colorType;
-          inline colorType getPxColorNC(typename inRamCanvasT::coordIntType x, typename inRamCanvasT::coordIntType y) { return rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).getColConRGB_byte(); }
-      };
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      template<class inRamCanvasT>
-      class rcConverterRGBAbyte {
-        public:
-          rcConverterRGBAbyte(inRamCanvasT& aRC) : rcConverterHomoBase<inRamCanvasT>(aRC) {  }
-          typedef typename inRamCanvasT::colorType::colConRGBAbyte colorType;
-          inline colorType getPxColorNC(typename inRamCanvasT::coordIntType x, typename inRamCanvasT::coordIntType y) { return rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).getColConRGBA_byte(); }
-      };
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      template<class inRamCanvasT>
-      class rcConverterRGBdbl {
-        public:
-          rcConverterRGBdbl(inRamCanvasT& aRC) : rcConverterHomoBase<inRamCanvasT>(aRC) {  }
-          typedef typename inRamCanvasT::colorType::colConRGBdbl colorType;
-          inline colorType getPxColorNC(typename inRamCanvasT::coordIntType x, typename inRamCanvasT::coordIntType y) { return rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).getColConRGB_dbl(); }
-      };
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      template<class inRamCanvasT>
-      class rcConverterRGBAdbl {
-        public:
-          rcConverterRGBAdbl(inRamCanvasT& aRC) : rcConverterHomoBase<inRamCanvasT>(aRC) {  }
-          typedef typename inRamCanvasT::colorType::colConRGBAdbl colorType;
-          inline colorType getPxColorNC(typename inRamCanvasT::coordIntType x, typename inRamCanvasT::coordIntType y) { return rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).getColConRGBA_dbl(); }
-      };
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Colorize a ramCanvasTpl with integer channels using a color scheme. */
-      template<class inRamCanvasT, class outColorT, class colorScheme, bool clamp, int factor, int chan>
-      class rcConverterColorScheme : public rcConverterHomoBase<inRamCanvasT>  {
-        public:
-          rcConverterColorScheme(inRamCanvasT& aRC) : rcConverterHomoBase<inRamCanvasT>(aRC) {  }
-          typedef outColorT colorType;
-          inline colorType getPxColorNC(typename inRamCanvasT::coordIntType x, typename inRamCanvasT::coordIntType y) {
-            typename outColorT::csIntType csi = static_cast<typename outColorT::csIntType>(rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).getChan(chan) * factor);
-            if (clamp)
-              csi = mjr::math::ivl::clamp(csi, colorScheme::numC-1);
-            return colorScheme::c(csi);
-          }
-      };
-      //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Convert a ramCanvasTpl to a greyscale image using colorT::intensity(). */
-      template<class inRamCanvasT, class outColorChanT>
-      class rcConverterMonoIntensity : public rcConverterHomoBase<inRamCanvasT>  {
-        public:
-          rcConverterMonoIntensity(inRamCanvasT& aRC) : rcConverterHomoBase<inRamCanvasT>(aRC) {  }
-          typedef colorTpl<outColorChanT, 1> colorType;
-          inline colorType getPxColorNC(typename inRamCanvasT::coordIntType x, typename inRamCanvasT::coordIntType y) {
-            return static_cast<outColorChanT>(rcConverterHomoBase<inRamCanvasT>::attachedRC.getPxColorNC(x, y).intensity());
-          }
-      };
-      //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Typedefs related to template parameters */
@@ -1397,7 +1316,7 @@ namespace mjr {
               - Channels must be uint8_t, uint16_t, uint32_t, uint64_t, float (32-bit), or double (64-bit)
 
           @param fileName The file name to write data to
-          @param rcConverter An rcConverter object instance
+          @param pxFilter An pxFilter object instance
           @param markAlpha   If an alpha channel is present, then mark it as such in the TIFF file.
           @return Status of I/O
           @retval  0 Everything seems to have worked
@@ -1411,7 +1330,7 @@ namespace mjr {
           @retval  9 Image has too few rows for TIFF format
           @retval 10 Image rows are too large (too much data) for TIFF format
           @retval 11 Image is too large (too much data)  for TIFF format */
-      template <class rcConT> int writeTIFFfile(std::string fileName, rcConT rcConverter, bool markAlpha);
+      template <class rcConT> int writeTIFFfile(std::string fileName, rcConT pxFilter, bool markAlpha = true);
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Simplified overload for writeTIFFfile() that only requires the filename. */
       int writeTIFFfile(std::string fileName, bool markAlpha = true);
@@ -1523,10 +1442,10 @@ namespace mjr {
                       0000000000000000256x0000000000000000128y000000000000000000000000003c00000000008bSGNsINTtLTLi
 
           @param fileName    The file name name to write data to
-          @param rcConverter An rcConverter object instance
+          @param pxFilter An pxFilter object instance
           @retval 0 The write was successful.
           @retval 1 Could not open file. */
-      template <class rcConT> int writeRAWfile(std::string fileName, rcConT rcConverter);
+      template <class rcConT> int writeRAWfile(std::string fileName, rcConT pxFilter);
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Simplified overload for writeRAWfile() that only requires the filename. */
       int writeRAWfile(std::string fileName);
@@ -2935,7 +2854,7 @@ namespace mjr {
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
     inline int
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeRAWfile(std::string fileName) {
-    auto tmp = rcConverterIdentity<ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>>(*this);
+    auto tmp = mjr::ramCanvasPixelFilter::Identity<ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>>(*this);
     return writeRAWfile(fileName, tmp);
   }
 
@@ -2944,7 +2863,7 @@ namespace mjr {
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
     template <class rcConT>
     inline int
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeRAWfile(std::string fileName, rcConT rcConverter) {
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeRAWfile(std::string fileName, rcConT pxFilter) {
 
     std::ofstream outStream;
     outStream.open(fileName, std::ios::out | std::ios::binary | std::ios::trunc);
@@ -2954,8 +2873,8 @@ namespace mjr {
       return 1;
 
     outStream << "MJRRAW\n";                                                                    //  7   7
-    outStream << std::setw(19) << std::setfill('0') << rcConverter.getNumPixX()         << "x"; // 20  27
-    outStream << std::setw(19) << std::setfill('0') << rcConverter.getNumPixY()         << "y"; // 20  47
+    outStream << std::setw(19) << std::setfill('0') << pxFilter.getNumPixX()         << "x"; // 20  27
+    outStream << std::setw(19) << std::setfill('0') << pxFilter.getNumPixY()         << "y"; // 20  47
     outStream << std::setw(27) << std::setfill('0') << rcConT::colorType::channelCount  << "c"; // 28  75
     outStream << std::setw(11) << std::setfill('0') << rcConT::colorType::bitsPerChan   << "b"; // 12  87
     outStream << (rcConT::colorType::chanIsUnsigned ? "UNS" : "SGN")                    << "s"; //  4  91
@@ -2965,12 +2884,12 @@ namespace mjr {
 
     intCrdT x, y;
     /* Normally I would not resort to such trickery; however, this is an exception.  The following for loop is equivalent to switching between the two forms
-       "for(y=(rcConverter.getNumPixY()-1); y>=0; y--)" and "for(y=0; y<rcConverter.getNumPixY(); y++)". */
-    bool yNat = !(rcConverter.isIntAxOrientationNaturalY());
-    bool xNat = rcConverter.isIntAxOrientationNaturalX();
-    for((yNat?y=0:y=(rcConverter.getNumPixY()-1)); (yNat?y<rcConverter.getNumPixY():y>=0); (yNat?y++:y--)) {
-      for((xNat?x=0:x=(rcConverter.getNumPixX()-1)); (xNat?x<rcConverter.getNumPixX():x>=0); (xNat?x++:x--)) {
-        typename rcConT::colorType aColor = rcConverter.getPxColorNC(x, y);
+       "for(y=(pxFilter.getNumPixY()-1); y>=0; y--)" and "for(y=0; y<pxFilter.getNumPixY(); y++)". */
+    bool yNat = !(pxFilter.isIntAxOrientationNaturalY());
+    bool xNat = pxFilter.isIntAxOrientationNaturalX();
+    for((yNat?y=0:y=(pxFilter.getNumPixY()-1)); (yNat?y<pxFilter.getNumPixY():y>=0); (yNat?y++:y--)) {
+      for((xNat?x=0:x=(pxFilter.getNumPixX()-1)); (xNat?x<pxFilter.getNumPixX():x>=0); (xNat?x++:x--)) {
+        typename rcConT::colorType aColor = pxFilter.getPxColorNC(x, y);
         for(int c=0; c<aColor.channelCount; c++) {
           typename rcConT::colorType::channelType aChanValue = aColor.getChan(c);
           outStream.write((const char *)&aChanValue, sizeof(colorChanType));
@@ -2985,7 +2904,7 @@ namespace mjr {
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
     inline int
     ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeTIFFfile(std::string fileName, bool markAlpha) {
-    rcConverterIdentity<ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>> tmp(*this);
+    mjr::ramCanvasPixelFilter::Identity<ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>> tmp(*this);
     return writeTIFFfile(fileName, tmp, markAlpha);
 }
 
@@ -2994,7 +2913,7 @@ namespace mjr {
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
     template <class rcConT>
     inline int
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeTIFFfile(std::string fileName, rcConT rcConverter, bool markAlpha) {
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::writeTIFFfile(std::string fileName, rcConT pxFilter, bool markAlpha) {
 
     if(rcConT::colorType::bitsPerChan < 8)                   // channels too thin
       return 2;
@@ -3004,18 +2923,18 @@ namespace mjr {
       return 4;
     if(rcConT::colorType::channelCount > 0xffff)             // too many channels
       return 5;
-    if(rcConverter.getNumPixX() < 1)                         // too skinny
+    if(pxFilter.getNumPixX() < 1)                         // too skinny
       return 6;
-    if(rcConverter.getNumPixX() > 0x7fffffff)                // too wide
+    if(pxFilter.getNumPixX() > 0x7fffffff)                // too wide
       return 7;
-    if(rcConverter.getNumPixY() < 1)                         // too short
+    if(pxFilter.getNumPixY() < 1)                         // too short
       return 8;
-    if(rcConverter.getNumPixY() > 0x7fffffff)                // too tall
+    if(pxFilter.getNumPixY() > 0x7fffffff)                // too tall
       return 9;
-    unsigned long bytesPerRow = rcConverter.getNumPixX() * rcConT::colorType::bitsPerChan / 8ul * rcConT::colorType::channelCount;
+    unsigned long bytesPerRow = pxFilter.getNumPixX() * rcConT::colorType::bitsPerChan / 8ul * rcConT::colorType::channelCount;
     if(bytesPerRow > 0xffffffff)                             // rows too big
       return 10;
-    if(bytesPerRow * rcConverter.getNumPixY() > 0xfffffffff) // image too big
+    if(bytesPerRow * pxFilter.getNumPixY() > 0xfffffffff) // image too big
       return 11;
 
     // //grep -E '^#define[[:space:]]+(TIFF_BIGENDIAN|TIFF_LITTLEENDIAN|PHOTOMETRIC_RGB|PHOTOMETRIC_MINISBLACK|PLANARCONFIG_CONTIG|ORIENTATION_TOPLEFT|RESUNIT_NONE|SAMPLEFORMAT_UINT|SAMPLEFORMAT_IEEEFP)' /mingw64/include/tiff.h
@@ -3049,8 +2968,8 @@ namespace mjr {
 
     endianType fe          = platformEndianness();                                                         // Endian Type
     uint16_t   endianNum   = (fe == endianType::LITTLE ? tcTIFF_LITTLEENDIAN : tcTIFF_BIGENDIAN);          // Endianness Magic Number
-    uint32_t   tifWidth    = (uint32_t)rcConverter.getNumPixX();                                           // ImageWidth
-    uint32_t   tifLength   = (uint32_t)rcConverter.getNumPixY();                                           // ImageLength & RowsPerStrip
+    uint32_t   tifWidth    = (uint32_t)pxFilter.getNumPixX();                                           // ImageWidth
+    uint32_t   tifLength   = (uint32_t)pxFilter.getNumPixY();                                           // ImageLength & RowsPerStrip
     uint32_t   tifSPP      = (uint32_t)rcConT::colorType::channelCount;                                    // SamplesPerPixel
     uint16_t   tifBPS      = (uint16_t)(rcConT::colorType::bitsPerChan);                                   // BitsPerSample
     uint32_t   bytePerSmp  = tifBPS / 8;                                                                   // Bytes per sample
@@ -3143,11 +3062,11 @@ namespace mjr {
         writeUIntToStream(outStream, fe, 4, 0);
                                                                                                                                     // Image data
     intCrdT x, y;
-    bool yNat = !(rcConverter.isIntAxOrientationNaturalY());
-    bool xNat = rcConverter.isIntAxOrientationNaturalX();
-    for((yNat?y=0:y=(rcConverter.getNumPixY()-1)); (yNat?y<rcConverter.getNumPixY():y>=0); (yNat?y++:y--)) {
-      for((xNat?x=0:x=(rcConverter.getNumPixX()-1)); (xNat?x<rcConverter.getNumPixX():x>=0); (xNat?x++:x--)) {
-        typename rcConT::colorType aColor = rcConverter.getPxColorNC(x, y);
+    bool yNat = !(pxFilter.isIntAxOrientationNaturalY());
+    bool xNat = pxFilter.isIntAxOrientationNaturalX();
+    for((yNat?y=0:y=(pxFilter.getNumPixY()-1)); (yNat?y<pxFilter.getNumPixY():y>=0); (yNat?y++:y--)) {
+      for((xNat?x=0:x=(pxFilter.getNumPixX()-1)); (xNat?x<pxFilter.getNumPixX():x>=0); (xNat?x++:x--)) {
+        typename rcConT::colorType aColor = pxFilter.getPxColorNC(x, y);
         for(int c=0; c<aColor.channelCount; c++) {
           typename rcConT::colorType::channelType aChanValue = aColor.getChan(c);
           if (rcConT::colorType::chanIsInt)

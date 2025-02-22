@@ -76,10 +76,9 @@ std::vector<std::array<mjr::ramCanvas1c16b::coordFltType, 12>> params {
 };
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// This is *identical* to what we did in pickoverPopcorn.cpp -- just way shorter.  It is longer still because we don't make
-// this a subclass of ramCanvasTpl::rcConverterHomoBase in order to illustrate how to implement a RC converter from scratch.
-// Also note we didn't need to DIY the color gradient with cmpRGBcornerDGradiant() as this gradient (0RYBCW) is available as
-// a pre-built color scheme: csCCfractal0RYBCW.
+// This is *identical* to what we did in pickoverPopcorn.cpp -- just way shorter.  It is longer still because we don't make this a subclass of
+// mjr::ramCanvasPixelFilter::HomoBase in order to illustrate how to implement a RC pixel filter from scratch.  Also note we didn't need to DIY the color
+// gradient with cmpRGBcornerDGradiant() as this gradient (0RYBCW) is available as a pre-built color scheme: csCCfractal0RYBCW.
 class g2rgb8 {
   private:
     mjr::ramCanvas1c16b& attachedRC;
@@ -171,8 +170,8 @@ int main(void) {
                cRamCanvas.writeTIFFfile("sicC_" + mjr::math::str::fmt_int(j, 2, '0') + ".tiff");
        We have a better way.  One that dosen't require the RAM to create a brand new canvas.  We can use
        the filter option of writeTIFFfile! */
-    g2rgb8 rcFilt(theRamCanvas, maxII);
-    theRamCanvas.writeTIFFfile("sicCC_" + mjr::math::str::fmt_int(j, 2, '0') + ".tiff", rcFilt, false);
+    g2rgb8 pxFilt(theRamCanvas, maxII);
+    theRamCanvas.writeTIFFfile("sicCC_" + mjr::math::str::fmt_int(j, 2, '0') + ".tiff", pxFilt, false);
   }
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;

@@ -5207,7 +5207,7 @@ namespace mjr {
                                   (redChanIdx   != alphaChanIdx) &&
                                   (greenChanIdx != blueChanIdx)  &&
                                   (greenChanIdx != alphaChanIdx) &&
-                                  (blueChanIdx  != alphaChanIdx))))                           // Chans can't be teh same if non-negative
+                                  (blueChanIdx  != alphaChanIdx))))                           // Chans can't be the same if non-negative
   inline std::ostream&
   operator<< (std::ostream &out, colorTpl<clrChanT, numChan> const& color) {
     //  MJR BUG NOTE operator<<: Will fail if 'char' is bigger than uint64_t -- I shudder to imagine a future that might bring such a condition..
@@ -5242,7 +5242,7 @@ namespace mjr {
                                   (redChanIdx   != alphaChanIdx) &&
                                   (greenChanIdx != blueChanIdx)  &&
                                   (greenChanIdx != alphaChanIdx) &&
-                                  (blueChanIdx  != alphaChanIdx))))                           // Chans can't be teh same if non-negative
+                                  (blueChanIdx  != alphaChanIdx))))                           // Chans can't be the same if non-negative
   inline bool
   operator!= (colorTpl<clrChanT, numChan> const& color1, colorTpl<clrChanT, numChan> const& color2) {
     return color1.isNotEqual(color2);

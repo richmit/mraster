@@ -40,13 +40,13 @@
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 // This is *identical* to what we did in sic.cpp -- just way shorter.
-typedef mjr::ramCanvas1c16b::rcConverterColorScheme<mjr::ramCanvas1c16b, mjr::color3c8b, mjr::color3c8b::csCCfractal0RYBCW, true, 10, 0> g2rgb8;
+typedef mjr::ramCanvasPixelFilter::ColorSchemeOnChan<mjr::ramCanvas1c16b, mjr::color3c8b, mjr::color3c8b::csCCfractal0RYBCW> g2rgb8;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const int    IMXSIZ = 7680/2;
-  const int    IMYSIZ = 4320/2;
+  const int    IMXSIZ = 7680/8;
+  const int    IMYSIZ = 4320/8;
   const int    NUMITR = 100;
   const int    spanx  = 1;
   const int    spany  = 1;
@@ -74,8 +74,11 @@ int main(void) {
     }
   }
   hstRamCanvas.writeTIFFfile("pickoverPopcornCNT.tiff");
-  g2rgb8 rcFilt(hstRamCanvas);
-  hstRamCanvas.writeTIFFfile("pickoverPopcornCOL.tiff", rcFilt, false);
+  g2rgb8 pxFilt(hstRamCanvas);
+  hstRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas1c16b::colorType::tfrmMultClamp, 10);
+  hstRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas1c16b::colorType::tfrmMin, mjr::color3c8b::csCCfractal0RYBCW::numC-1);
+  hstRamCanvas.autoHistStrech();
+  hstRamCanvas.writeTIFFfile("pickoverPopcornCOL.tiff", pxFilt);
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
   return 0;

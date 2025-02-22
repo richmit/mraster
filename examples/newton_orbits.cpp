@@ -35,14 +35,11 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-typedef mjr::ramCanvas1c16b::rcConverterMonoIntensity<mjr::ramCanvas3c16b, mjr::colChanI16> g2mono;
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   constexpr int MaxCount = 255;
   constexpr double Tol = .0001;
-  constexpr int IMGSIZ = 7680;
+  constexpr int IMGSIZ = 7680/4;
   std::complex<double> r1( 1.0,                        0.0);
   std::complex<double> r2(-0.5,  sin(2*std::numbers::pi/3));
   std::complex<double> r3(-0.5, -sin(2*std::numbers::pi/3));
@@ -59,15 +56,15 @@ int main(void) {
         count++;
       }
 
-      mjr::ramCanvas3c16b::colorType cDelta;
+      decltype(theRamCanvas)::colorType cDelta;
       if(abs(z-r1) <= Tol)
-        cDelta = mjr::ramCanvas3c16b::colorType(1, 0, 0);
+        cDelta = decltype(theRamCanvas)::colorType(1, 0, 0);
       else if(abs(z-r2) <= Tol)
-        cDelta = mjr::ramCanvas3c16b::colorType(0, 1, 0);
+        cDelta = decltype(theRamCanvas)::colorType(0, 1, 0);
       else if(abs(z-r3) <= Tol)
-        cDelta = mjr::ramCanvas3c16b::colorType(0, 0, 1);
+        cDelta = decltype(theRamCanvas)::colorType(0, 0, 1);
       else
-        cDelta = mjr::ramCanvas3c16b::colorType(0, 0, 0);
+        cDelta = decltype(theRamCanvas)::colorType(0, 0, 0);
 
       for(int i=0; i<count; i++) {
         int zri = theRamCanvas.real2intX(std::real(orbit[i]));
@@ -77,13 +74,13 @@ int main(void) {
       }
     }
   }
-  theRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas3c16b::colorType::tfrmLn, 11271.0);
+  theRamCanvas.applyHomoPixTfrm(&decltype(theRamCanvas)::colorType::tfrmLn, 11271.0);
   theRamCanvas.autoMaxHistStrechRGB();
   theRamCanvas.writeTIFFfile("newton_orbits_col.tiff");
 
-  theRamCanvas.rotate90CW();
-  g2mono rcFilt(theRamCanvas);
-  theRamCanvas.writeTIFFfile("newton_orbits_mon.tiff", rcFilt, false);
+  auto tf1 = mjr::ramCanvasPixelFilter::MonoIntensity<decltype(theRamCanvas), mjr::colChanI8>(theRamCanvas);
+  auto tf2 = mjr::ramCanvasPixelFilter::Rotate90CW<decltype(tf1)>(tf1);
+  theRamCanvas.writeTIFFfile("newton_orbits_mon.tiff", tf2);
 
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;

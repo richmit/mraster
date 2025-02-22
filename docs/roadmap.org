@@ -40,6 +40,7 @@ end up on this list.
 
 In no particular order:
 
+ - Use callables for pixel transforms
  - Homo transforms
    - +Complex abs/arg greyscale transform+ DONE.
  - +2D plane Color Schemes+ DONE

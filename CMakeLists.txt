@@ -108,6 +108,7 @@ set(MRASTER_INCLUDES "lib/MRcolor.hpp"
                      "lib/hersheyFont.hpp"
                      "lib/MRpoint2d.hpp"
                      "lib/ramCanvas.hpp"
+                     "lib/ramCanvasPixelFilters.hpp"
                      "lib/ramCanvasTpl.hpp")
 add_library(MRaster INTERFACE ${MRASTER_INCLUDES})
 target_include_directories(MRaster INTERFACE "${PROJECT_SOURCE_DIR}/lib")

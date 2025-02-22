@@ -47,16 +47,13 @@
 #include "MRMathSTR.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// typedef mjr::ramCanvas3c8b rct;
-// typedef rct::colorType ct;
-
-typedef mjr::ramCanvas1c16b::rcConverterColorScheme<mjr::ramCanvas1c16b, mjr::color3c8b, mjr::color3c8b::csCCfractal0RYBCW, true, 100, 0> g2rgb8;
+typedef mjr::ramCanvasPixelFilter::ColorSchemeOnChan<mjr::ramCanvas1c16b, mjr::color3c8b, mjr::color3c8b::csCCfractal0RYBCW> g2rgb8;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 std::vector<std::array<mjr::ramCanvas1c16b::coordFltType, 5>> params {
   /* a      b      x0         y0   maxitr */
   {  3.69,  4.511, 0.0,       0.0, 100000000}, // 0
-  {  3.64,  1.710, 0.0,       0.0, 100000000}, // 1
+  //{  3.64,  1.710, 0.0,       0.0, 100000000}, // 1
 };
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -89,9 +86,11 @@ int main(void) {
 
     theRamCanvas.autoHistStrech();
     theRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas1c16b::colorType::tfrmLn1);
-    g2rgb8 rcFilt(theRamCanvas);
+    //theRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas1c16b::colorType::tfrmPow, 0.8);
+    theRamCanvas.autoHistStrech();
+    g2rgb8 pxFilt(theRamCanvas);
     std::cout << "ITER(" << j <<  "): " << "TIFF" << std::endl;
-    theRamCanvas.writeTIFFfile("simone_attractor_" + mjr::math::str::fmt_int(j, 2, '0') + ".tiff", rcFilt, true);
+    theRamCanvas.writeTIFFfile("simone_attractor_" + mjr::math::str::fmt_int(j, 2, '0') + ".tiff", pxFilt);
   }
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;

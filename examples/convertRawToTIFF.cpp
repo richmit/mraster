@@ -53,16 +53,16 @@ int main(int argc, char *argv[]) {
 
   // We create a converter object for the *two* file write methods below.  This converter will transform the 32-bit floating point channels into 8-bit
   // unsigned integer channels.
-  mjr::ramCanvas3c32F::rcConverterRGBbyte<mjr::ramCanvas3c32F> rcConv(theRamCanvas);
+  mjr::ramCanvasPixelFilter::RGBbyte<mjr::ramCanvas3c32F> pxFilt(theRamCanvas);
 
-  ret = theRamCanvas.writeRAWfile("foo.mrw", rcConv);
+  ret = theRamCanvas.writeRAWfile("foo.mrw", pxFilt);
   if (ret != 0) {
     std::cout << "ERROR(writeRAWfile): " << ret << std::endl;
     return ret;
   }
 
   // Note: For the more complex writeTIFFfile() method, the markAlpha argument is not optional.
-  ret = theRamCanvas.writeTIFFfile("foo.tiff", rcConv, false);
+  ret = theRamCanvas.writeTIFFfile("foo.tiff", pxFilt);
   if (ret != 0) {
     std::cout << "ERROR(writeTIFFfile): " << ret << std::endl;
     return ret;

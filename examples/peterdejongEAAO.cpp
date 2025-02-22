@@ -51,8 +51,8 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const int    IMXSIZ = 7680/1;
-  const int    IMYSIZ = 7680/1;
+  const int    IMXSIZ = 7680/4;
+  const int    IMYSIZ = 7680/4;
 
   const int    n =  8;
   const double a =  1.4;
@@ -112,14 +112,10 @@ int main(void) {
       p4canvas.drawPoint(xi, yi, decltype(p1canvas)::colorType::csCColdeFireRamp::c(r*r));
     }
   }
-  p1canvas.scaleDownMean(4);
-  p2canvas.scaleDownMean(4);
-  p3canvas.scaleDownMean(4);
-  p4canvas.scaleDownMean(4);
-  p1canvas.writeTIFFfile("peterdejongEAAO_00_c1.tiff");
-  p2canvas.writeTIFFfile("peterdejongEAAO_00_c2.tiff");
-  p3canvas.writeTIFFfile("peterdejongEAAO_00_c3.tiff");
-  p4canvas.writeTIFFfile("peterdejongEAAO_00_c4.tiff");
+  p1canvas.writeTIFFfile("peterdejongEAAO_00_c1.tiff", mjr::ramCanvasPixelFilter::ScaleDownMean<decltype(p1canvas), 4>(p1canvas));
+  p2canvas.writeTIFFfile("peterdejongEAAO_00_c2.tiff", mjr::ramCanvasPixelFilter::ScaleDownMean<decltype(p2canvas), 4>(p2canvas));
+  p3canvas.writeTIFFfile("peterdejongEAAO_00_c3.tiff", mjr::ramCanvasPixelFilter::ScaleDownMean<decltype(p3canvas), 4>(p3canvas));
+  p4canvas.writeTIFFfile("peterdejongEAAO_00_c4.tiff", mjr::ramCanvasPixelFilter::ScaleDownMean<decltype(p4canvas), 4>(p4canvas));
 
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
