@@ -105,8 +105,15 @@ int main() {
   }
   std::cout << "|" << std::endl;
   std::cout << "apollony dump" << std::endl;
-  theRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmStdPow, 1/5.0);
+  // // One way to apply a homogenious pixel filter function
+  theRamCanvas.applyPixelRefFun([](auto inColor) { inColor.tfrmStdPow(1/5.0); });
   theRamCanvas.writeTIFFfile("apollony.tiff");
+  // // Another way...
+  // theRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas3c8b::colorType::tfrmStdPow, 1/5.0);
+  // theRamCanvas.writeTIFFfile("apollony.tiff");
+  // // The previous two lines could be replaced with a filter like so:
+  // theRamCanvas.writeTIFFfile("apollony.tiff", mjr::ramCanvasPixelFilter::FuncHomoTransform<decltype(theRamCanvas)>(theRamCanvas, 
+  //                                                                                                                  [](auto inColor) { return inColor.tfrmStdPow(1/5.0); }));
   std::cout << "apollony finish" << std::endl;
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;

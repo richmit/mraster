@@ -55,9 +55,20 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
       - ramCanvasPixelFilters are top level objects in namespace mjr::ramCanvasPixelFilter
       - Previous rcConvertors classes have new names (not prefixed with rcConverter)
       - Added mjr::ramCanvasPixelFilter::ScaleDownMean -- first non-homogenious filter.
+      - Added mjr::ramCanvasPixelFilter::FuncHomoTransform
   - Deprecated functionality
     - N/A
   - New functionality
+    - Function typedefs
+      - mjr::ramCanvasTpl::fltCrd2Col
+      - mjr::ramCanvasTpl::fltPnt2Col
+      - mjr::ramCanvasTpl::intCrd2Col
+      - mjr::ramCanvasTpl::intPnt2Col
+      - mjr::colorTpl::co2co_func_t
+      - mjr::colorTpl::cr2cr_func_t
+      - mjr::colorTpl::cr2co_func_t
+      - mjr::colorTpl::cr2void_func_t
+    - mjr::ramCanvasTpl::applyPixelRefFun
     - MSVC:
       - With the switch to GTest, the unit tests are simple to run against MSVC.
       - Removed "experimental" warning when configuring with MSVC.

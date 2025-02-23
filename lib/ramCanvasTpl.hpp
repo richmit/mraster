@@ -160,6 +160,15 @@ namespace mjr {
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name std::function typedefs for common calls.  */
+      //@{
+      typedef std::function<colorT (fltCrdT, fltCrdT)>  fltCrd2Col;  //!< std::function type floating point coordinates to a color
+      typedef std::function<colorT (pointFltType)>      fltPnt2Col;  //!< std::function type floating point point to a color
+      typedef std::function<colorT (intCrdT, intCrdT)>  intCrd2Col;  //!< std::function type int point coordinates to a color
+      typedef std::function<colorT (pointIntType)>      intPnt2Col;  //!< std::function type int point point to a color
+      //@}
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Typedefs related to colorT */
       //@{
       typedef typename colorT::channelType          colorChanType;           //!< colorT: Channel type
@@ -810,6 +819,14 @@ namespace mjr {
       void applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT, colorT),                  colorT, colorT);
       void applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT, colorT, colorT),          colorT, colorT, colorT);
       void applyHomoPixTfrm(colorT& (colorT::*HPT)(colorT, colorT, colorT, colorT),  colorT, colorT, colorT, colorT);
+      //@}
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Functional Homogeneous Pixel Transformations (point operators) */
+      //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Apply a a function to a each pixel via refrence. */
+      void applyPixelRefFun(colorT::cr2void_func_t f);
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2133,6 +2150,16 @@ namespace mjr {
       double bb = cmin.maxChanVal - 1.0*bc*cmax.getBlue();
       applyHomoPixTfrm(&colorT::tfrmLinearGreyLevelScaleRGB, rc, rb, gc, gb, bc, bb);
     }
+  }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
+  requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
+    inline void
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyPixelRefFun(colorT::cr2void_func_t f) {
+    for(intCrdT y=0; y<numPixY; y++)
+      for(intCrdT x=0; x<numPixX; x++)
+        f(getPxColorRefNC(x, y));
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

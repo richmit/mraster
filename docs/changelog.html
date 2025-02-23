@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-02-20 Thu 16:06 -->
+<!-- 2025-02-23 Sun 00:01 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>Change Log</title>
@@ -230,12 +230,12 @@
 
 <tr>
 <td class="org-right"><b>Updated:</b></td>
-<td class="org-left"><i>2025-02-20 16:06:53</i></td>
+<td class="org-left"><i>2025-02-22 23:56:03</i></td>
 </tr>
 
 <tr>
 <td class="org-right"><b>Generated:</b></td>
-<td class="org-left"><i>2025-02-20 16:06:53</i></td>
+<td class="org-left"><i>2025-02-23 00:01:36</i></td>
 </tr>
 </tbody>
 </table>
@@ -302,6 +302,7 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 <li>ramCanvasPixelFilters are top level objects in namespace mjr::ramCanvasPixelFilter</li>
 <li>Previous rcConvertors classes have new names (not prefixed with rcConverter)</li>
 <li>Added mjr::ramCanvasPixelFilter::ScaleDownMean &#x2013; first non-homogenious filter.</li>
+<li>Added mjr::ramCanvasPixelFilter::FuncHomoTransform</li>
 </ul></li>
 </ul></li>
 <li>Deprecated functionality
@@ -310,6 +311,18 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 </ul></li>
 <li>New functionality
 <ul class="org-ul">
+<li>Function typedefs
+<ul class="org-ul">
+<li>mjr::ramCanvasTpl::fltCrd2Col</li>
+<li>mjr::ramCanvasTpl::fltPnt2Col</li>
+<li>mjr::ramCanvasTpl::intCrd2Col</li>
+<li>mjr::ramCanvasTpl::intPnt2Col</li>
+<li>mjr::colorTpl::co2co_func_t</li>
+<li>mjr::colorTpl::cr2cr_func_t</li>
+<li>mjr::colorTpl::cr2co_func_t</li>
+<li>mjr::colorTpl::cr2void_func_t</li>
+</ul></li>
+<li>mjr::ramCanvasTpl::applyPixelRefFun</li>
 <li>MSVC:
 <ul class="org-ul">
 <li>With the switch to GTest, the unit tests are simple to run against MSVC.</li>

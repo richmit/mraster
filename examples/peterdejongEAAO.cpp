@@ -88,7 +88,6 @@ int main(void) {
     }
     std::cout << "ITR(" << itr <<  "): " << "DONE" << std::endl;
   }
-
   mjr::ramCanvas3c8b p1canvas(IMXSIZ, IMYSIZ);
   mjr::ramCanvas3c8b p2canvas(IMXSIZ, IMYSIZ);
   mjr::ramCanvas3c8b p3canvas(IMXSIZ, IMYSIZ);

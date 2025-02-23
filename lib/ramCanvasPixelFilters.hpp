@@ -101,6 +101,18 @@ namespace mjr {
         inline colorType getPxColorNC(coordIntType x, coordIntType y) { return FixGeomBase<sourceT>::attachedRC.getPxColorNC(x, y).getColConRGBA_dbl(); }
     };
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
+    /** Monochrome transformation using colorT::intensityScaled(). */
+    template<class sourceT, class outColorChanT>
+    class MonoIntensity : public FixGeomBase<sourceT>  {
+      public:
+        MonoIntensity(sourceT& aRC) : FixGeomBase<sourceT>(aRC) {  }
+        typedef colorTpl<outColorChanT, 1>     colorType;
+        typedef typename sourceT::coordIntType coordIntType;
+        inline colorType getPxColorNC(coordIntType x, coordIntType y) {
+          return static_cast<outColorChanT>(FixGeomBase<sourceT>::attachedRC.getPxColorNC(x, y).intensityScaled() * colorType::maxChanVal);
+        }
+    };
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------
     /** Colorize by applying a color scheme to a single channel automatically mapping max channel value to max color scheme index.
         \tparam outColorT Color type to return. 
         \tparam chan      Channel to use from the input image. */
@@ -124,16 +136,20 @@ namespace mjr {
         }
     };
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    /** Monochrome transformation using colorT::intensityScaled(). */
-    template<class sourceT, class outColorChanT>
-    class MonoIntensity : public FixGeomBase<sourceT>  {
+    /** Transform an image with a pixel function.
+        \tparam outColorT Color type to return. 
+        \tparam chan      Channel to use from the input image. */
+    template<class sourceT, class outColorT = sourceT::colorType>
+    class FuncHomoTransform : public FixGeomBase<sourceT>  {
       public:
-        MonoIntensity(sourceT& aRC) : FixGeomBase<sourceT>(aRC) {  }
-        typedef colorTpl<outColorChanT, 1>     colorType;
+        typedef std::function<outColorT(typename sourceT::colorType)> ctf_t;
+      private:
+        ctf_t ctf;
+      public:
+        FuncHomoTransform(sourceT& aRC, ctf_t colorTransformFunction) : FixGeomBase<sourceT>(aRC), ctf(colorTransformFunction) {  }
+        typedef outColorT colorType;
         typedef typename sourceT::coordIntType coordIntType;
-        inline colorType getPxColorNC(coordIntType x, coordIntType y) {
-          return static_cast<outColorChanT>(FixGeomBase<sourceT>::attachedRC.getPxColorNC(x, y).intensityScaled() * colorType::maxChanVal);
-        }
+        inline colorType getPxColorNC(coordIntType x, coordIntType y) { return ctf(FixGeomBase<sourceT>::attachedRC.getPxColorNC(x, y)); }
     };
     //--------------------------------------------------------------------------------------------------------------------------------------------------------
     /** Scale down a canvis using a method similar to ramCanvasTpl::scaleDownMean(). */
@@ -179,29 +195,6 @@ namespace mjr {
         inline coordIntType getNumPixY() { return attachedRC.getNumPixX(); }
         inline colorType getPxColorNC(coordIntType x, coordIntType y) { return attachedRC.getPxColorNC((attachedRC.getNumPixY()-1)-y, x); }
     };
-
-
-    // //--------------------------------------------------------------------------------------------------------------------------------------------------------
-    // /** Combine three monochrome images into one RGB image. */
-    // template<class sourceT>
-    // class CombineToRGB {
-    //   public:
-    //     sourceT& attachedRC1;
-    //     sourceT& attachedRC2;
-    //     sourceT& attachedRC3;
-    //     CombineToRGB(sourceT& aRC1, sourceT& aRC2, sourceT& aRC3) : attachedRC1(aRC1), attachedRC2(aRC2), attachedRC3(aRC3) {  }
-    //     typedef typename sourceT::colorType    colorType;
-    //     typedef typename sourceT::coordIntType coordIntType;
-    //     inline bool isIntAxOrientationNaturalX() { return attachedRC1.isIntAxOrientationNaturalX(); }
-    //     inline bool isIntAxOrientationNaturalY() { return attachedRC1.isIntAxOrientationNaturalY(); }
-    //     inline coordIntType getNumPixX() { return attachedRC1.getNumPixY(); }
-    //     inline coordIntType getNumPixY() { return attachedRC1.getNumPixX(); }
-    //     inline colorType getPxColorNC(coordIntType x, coordIntType y) { return attachedRC.getPxColorNC((attachedRC.getNumPixY()-1)-y, x); }
-    // };
-
-
-
-
     //@}
   }
 } // end namespace mjr

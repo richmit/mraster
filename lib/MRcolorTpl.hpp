@@ -45,6 +45,7 @@
 #include <complex>                                                       /* Complex Numbers         C++11    */
 #include <concepts>                                                      /* Concepts library        C++20    */
 #include <cstring>                                                       /* std:: C string.h        C++11    */
+#include <functional>                                                    /* STL funcs               C++98    */
 #include <iomanip>                                                       /* C++ stream formatting   C++11    */
 #include <iostream>                                                      /* C++ iostream            C++11    */
 #include <limits>                                                        /* C++ Numeric limits      C++11    */
@@ -54,7 +55,7 @@
 #include <tuple>                                                         /* STL tuples              C++11    */
 #include <type_traits>                                                   /* C++ metaprogramming     C++11    */
 #include <utility>                                                       /* STL Misc Utilities      C++11    */
-#include <vector>                                                        /* STL vector              C++11    */
+#include <vector>                                                        /* STL vector              C++11    */ 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /** Set to 1 to look for 128-bit integer types, and 0 to not look for them.
@@ -236,6 +237,15 @@ namespace mjr {
       typedef std::tuple<clrChanT>                               clrChanTup1;
 
       typedef std::vector<clrChanT>                              clrChanVec;
+      //@}
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Color transform function types. */
+      //@{
+      typedef std::function<colorTpl(colorTpl)>   co2co_func_t;       //!< color to color (transform)
+      typedef std::function<colorTpl&(colorTpl&)> cr2cr_func_t;       //!< color reference to color reference (transform)
+      typedef std::function<colorTpl(colorTpl&)>  cr2co_func_t;       //!< color reference to color (transform)
+      typedef std::function<void(colorTpl&)>      cr2void_func_t;     //!< color reference to void (transform)
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

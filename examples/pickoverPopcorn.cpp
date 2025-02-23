@@ -39,46 +39,47 @@
 #include "ramCanvas.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-// This is *identical* to what we did in sic.cpp -- just way shorter.
-typedef mjr::ramCanvasPixelFilter::ColorSchemeOnChan<mjr::ramCanvas1c16b, mjr::color3c8b, mjr::color3c8b::csCCfractal0RYBCW> g2rgb8;
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int    IMXSIZ = 7680/8;
   const int    IMYSIZ = 4320/8;
   const int    NUMITR = 100;
-  const int    spanx  = 1;
-  const int    spany  = 1;
-  const double h      = 0.05;
-  const double a      = 3.0;
-  const double b      = 3.0;
   mjr::ramCanvas1c16b hstRamCanvas(IMXSIZ, IMYSIZ, -4.0, 4.0, -2.25, 2.25);
 
-  for(int y=0;y<hstRamCanvas.getNumPixY();y+=spany) {
+  const decltype(hstRamCanvas)::coordIntType spanx  = 1;
+  const decltype(hstRamCanvas)::coordIntType spany  = 1;
+  const decltype(hstRamCanvas)::coordFltType h      = 0.05;
+  const decltype(hstRamCanvas)::coordFltType a      = 3.0;
+  const decltype(hstRamCanvas)::coordFltType b      = 3.0;
+
+  for(decltype(hstRamCanvas)::coordIntType y=0;y<hstRamCanvas.getNumPixY();y+=spany) {
     if ((y%100)==0)
       std::cout << y << std::endl;
-    for(int x=0;x<hstRamCanvas.getNumPixX();x+=spanx) {
-      double zx = hstRamCanvas.int2realX(x);
-      double zy = hstRamCanvas.int2realY(y);
+    for(decltype(hstRamCanvas)::coordIntType x=0;x<hstRamCanvas.getNumPixX();x+=spanx) {
+      decltype(hstRamCanvas)::coordFltType zx = hstRamCanvas.int2realX(x);
+      decltype(hstRamCanvas)::coordFltType zy = hstRamCanvas.int2realY(y);
       for(int i=0; i<NUMITR; i++) {
-        double tmpx = zx - h * std::sin(zy + std::tan(a * zy));
-        double tmpy = zy - h * std::sin(zx + std::tan(b * zx));
+        decltype(hstRamCanvas)::coordFltType tmpx = zx - h * std::sin(zy + std::tan(a * zy));
+        decltype(hstRamCanvas)::coordFltType tmpy = zy - h * std::sin(zx + std::tan(b * zx));
         zx = tmpx;
         zy = tmpy;
-        int ix = hstRamCanvas.real2intX(zx);
-        int iy = hstRamCanvas.real2intY(zy);
+        decltype(hstRamCanvas)::coordIntType ix = hstRamCanvas.real2intX(zx);
+        decltype(hstRamCanvas)::coordIntType iy = hstRamCanvas.real2intY(zy);
         if (hstRamCanvas.isOnCanvas(ix, iy))
           hstRamCanvas.getPxColorRefNC(ix, iy).tfrmAdd(1);
       }
     }
   }
   hstRamCanvas.writeTIFFfile("pickoverPopcornCNT.tiff");
-  g2rgb8 pxFilt(hstRamCanvas);
-  hstRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas1c16b::colorType::tfrmMultClamp, 10);
-  hstRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas1c16b::colorType::tfrmMin, mjr::color3c8b::csCCfractal0RYBCW::numC-1);
+
+  hstRamCanvas.applyHomoPixTfrm(&decltype(hstRamCanvas)::colorType::tfrmMultClamp, 10);
+  hstRamCanvas.applyHomoPixTfrm(&decltype(hstRamCanvas)::colorType::tfrmMin, mjr::color3c8b::csCCfractal0RYBCW::numC-1);
   hstRamCanvas.autoHistStrech();
-  hstRamCanvas.writeTIFFfile("pickoverPopcornCOL.tiff", pxFilt);
+
+  // This is *identical* to what we did in sic.cpp -- just way shorter.
+  hstRamCanvas.writeTIFFfile("pickoverPopcornCOL.tiff", 
+                             mjr::ramCanvasPixelFilter::ColorSchemeOnChan<decltype(hstRamCanvas), mjr::color3c8b, mjr::color3c8b::csCCfractal0RYBCW>(hstRamCanvas));
+
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
   return 0;

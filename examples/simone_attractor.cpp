@@ -47,12 +47,9 @@
 #include "MRMathSTR.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-typedef mjr::ramCanvasPixelFilter::ColorSchemeOnChan<mjr::ramCanvas1c16b, mjr::color3c8b, mjr::color3c8b::csCCfractal0RYBCW> g2rgb8;
-
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 std::vector<std::array<mjr::ramCanvas1c16b::coordFltType, 5>> params {
   /* a      b      x0         y0   maxitr */
-  {  3.69,  4.511, 0.0,       0.0, 100000000}, // 0
+    {  3.69,  4.511, 0.0,       0.0, 100000000}, // 0
   //{  3.64,  1.710, 0.0,       0.0, 100000000}, // 1
 };
 
@@ -63,21 +60,21 @@ int main(void) {
 
   for(decltype(params.size()) j=0; j<params.size(); ++j) {
     mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -1.0, 1.0, -1.0, 1.0);
-    typename mjr::ramCanvas1c16b::coordFltType a  = params[j][0];
-    typename mjr::ramCanvas1c16b::coordFltType b  = params[j][1];
-    typename mjr::ramCanvas1c16b::coordFltType x0 = params[j][2];
-    typename mjr::ramCanvas1c16b::coordFltType y0 = params[j][3];
+    decltype(theRamCanvas)::coordFltType a  = params[j][0];
+    decltype(theRamCanvas)::coordFltType b  = params[j][1];
+    decltype(theRamCanvas)::coordFltType x0 = params[j][2];
+    decltype(theRamCanvas)::coordFltType y0 = params[j][3];
     uint64_t maxitr = static_cast<uint64_t>(params[j][4]);
 
-    typename mjr::ramCanvas1c16b::coordFltType xn = x0;
-    typename mjr::ramCanvas1c16b::coordFltType yn = y0;
+    decltype(theRamCanvas)::coordFltType xn = x0;
+    decltype(theRamCanvas)::coordFltType yn = y0;
     for(uint64_t i=0;i<maxitr;i++) {
-      typename mjr::ramCanvas1c16b::coordFltType tmp = std::sin(xn*xn-yn*yn+a);
+      decltype(theRamCanvas)::coordFltType tmp = std::sin(xn*xn-yn*yn+a);
       yn = std::cos(2*xn*yn+b);
       xn = tmp;
       if(i>1000) {
-        int ix = theRamCanvas.real2intX(xn);
-        int iy = theRamCanvas.real2intY(yn);
+        decltype(theRamCanvas)::coordIntType ix = theRamCanvas.real2intX(xn);
+        decltype(theRamCanvas)::coordIntType iy = theRamCanvas.real2intY(yn);
         theRamCanvas.getPxColorRefNC(ix, iy).tfrmAdd(1);
       }
       if((i % 10000000) == 0)
@@ -85,12 +82,11 @@ int main(void) {
     }
 
     theRamCanvas.autoHistStrech();
-    theRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas1c16b::colorType::tfrmLn1);
-    //theRamCanvas.applyHomoPixTfrm(&mjr::ramCanvas1c16b::colorType::tfrmPow, 0.8);
+    theRamCanvas.applyHomoPixTfrm(&decltype(theRamCanvas)::colorType::tfrmLn1);
     theRamCanvas.autoHistStrech();
-    g2rgb8 pxFilt(theRamCanvas);
     std::cout << "ITER(" << j <<  "): " << "TIFF" << std::endl;
-    theRamCanvas.writeTIFFfile("simone_attractor_" + mjr::math::str::fmt_int(j, 2, '0') + ".tiff", pxFilt);
+    theRamCanvas.writeTIFFfile("simone_attractor_" + mjr::math::str::fmt_int(j, 2, '0') + ".tiff", 
+                               mjr::ramCanvasPixelFilter::ColorSchemeOnChan<decltype(theRamCanvas), mjr::color3c8b, mjr::color3c8b::csCCfractal0RYBCW>(theRamCanvas));
   }
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
