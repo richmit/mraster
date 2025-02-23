@@ -102,9 +102,11 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
       - feather.cpp
       - mandelbrot_meanOrbit.cpp
       - simone_attractor.cpp
+      - demo_data_and_filter.cpp
     - Updated
       - newton_z6.cpp: Fixed non-const trig functions for MSVC
       - phoenix.cpp, phoenixD.cpp, phoenixI.cpp: Added OpenMP 2.0 support
+      - renamed mandelbrot_real_cfun.cpp to demo_colorizer.cpp
   - Miscellaneous
     - Broke utest_colorTpl.cpp up into different files
     - Added IncludeMRMathCPPLib.cmake code
