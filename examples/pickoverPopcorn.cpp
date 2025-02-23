@@ -41,8 +41,8 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const int    IMXSIZ = 7680/8;
-  const int    IMYSIZ = 4320/8;
+  const int    IMXSIZ = 7680/2;
+  const int    IMYSIZ = 4320/2;
   const int    NUMITR = 100;
   mjr::ramCanvas1c16b hstRamCanvas(IMXSIZ, IMYSIZ, -4.0, 4.0, -2.25, 2.25);
 
