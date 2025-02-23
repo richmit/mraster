@@ -53,7 +53,7 @@ int main(void) {
   mjr::ramCanvas3c8b theRamCanvas(1024, 1024, -2.2, 0.8, -1.5, 1.5);
 
   theRamCanvas.colorizeFltCanvas(mandelbrot_esc_fun);
-  theRamCanvas.writeTIFFfile("mandelbrot_bm_real_cfun.tiff");
+  theRamCanvas.writeTIFFfile("mandelbrot_real_cfun.tiff");
 
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
