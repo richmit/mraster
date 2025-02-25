@@ -29,13 +29,8 @@
   @endparblock
  @filedetails
 
-  I came across the Simone Attractor on Paul Bourke's web site (http://www.paulbourke.net/fractals/simone_orbits/).  Apparently it's based on, or inspired by,
-  work done by Simone Conradi; however, the web page provides no references.  The governing iteration is as follows:
-
-  @f[ \begin{eqnarray}
-       x_{n+1} & = & \sin(x^2_n - y^2_n+a) \\
-       y_{n+1} & = & \cos(2 x_n y_n+b)     \\
-      \end{eqnarray} @f]
+  See simone_attractor.cpp for more about this attractor.  Here we use the same method, but animate by letting the @f$ a @f$ and @f$ b @f$ parameters vary.
+  The following commands are used to combine the results into movies.
 
                 ffmpeg -y -framerate 15 -i simone_attractor_bmovie_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf 10 -b:v 0 -preset veryslow simone_attractor_bmovie_100_crf10.mp4;
                 ffmpeg -y -framerate 15 -i simone_attractor_bmovie_%4d.tiff -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -c:v libx264 -crf  0 -b:v 0 -preset veryslow simone_attractor_bmovie_100_crf00.mp4;
