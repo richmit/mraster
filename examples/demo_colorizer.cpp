@@ -26,6 +26,12 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
+ @filedetails
+
+  Function visualization is one of the most popular applications for MRaster users -- especially fractals.  MRaster has a few tools to make this kind of thing
+  super simple.  This program demonstrates one of the colorize*Canvas functions.  These functions take a "color function" as an argument, and use that
+  function to fill a canvas.
+
 */
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
@@ -35,22 +41,21 @@
 #include "MRMathIVL.hpp"
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-mjr::ramCanvas3c8b::colorType mandelbrot_esc_fun(mjr::ramCanvas3c8b::coordFltType x, mjr::ramCanvas3c8b::coordFltType y) {
-  int count;
-  const int NUMITR = 256;
-  mjr::ramCanvas3c8b::coordFltType zx, zy, tempx;
-  for(zx=zy=0.0,count=0; (zx*zx+zy*zy<4)&&(count<=NUMITR); count++,tempx=zx*zx-zy*zy+x,zy=2*zx*zy+y,zx=tempx)
-    ;
-  if(count < NUMITR)
-    return mjr::ramCanvas3c8b::colorType::csCColdeFireRamp::c(mjr::math::ivl::wrapCC(static_cast<mjr::ramCanvas3c8b::csIntType>(count*20), 767));
-  else
-    return mjr::ramCanvas3c8b::colorType("black");
+typedef mjr::ramCanvas3c8b rct;
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+rct::colorType mandelbrot_esc_fun(rct::coordFltType x, rct::coordFltType y) {
+  std::complex<double> z(0.0, 0.0), c(x, y);
+  for(int count = 0; count<256; count++) 
+    if (std::abs(z = z * z + c) > 2)
+      return rct::colorType::csCColdeFireRamp::c(static_cast<rct::csIntType>(count*20));
+  return rct::colorType("black");
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  mjr::ramCanvas3c8b theRamCanvas(1024, 1024, -2.2, 0.8, -1.5, 1.5);
+  rct theRamCanvas(1024, 1024, -2.2, 0.8, -1.5, 1.5);
 
   theRamCanvas.colorizeFltCanvas(mandelbrot_esc_fun);
   theRamCanvas.writeTIFFfile("demo_colorizer.tiff");
