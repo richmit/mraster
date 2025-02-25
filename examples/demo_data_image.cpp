@@ -1,7 +1,7 @@
 // -*- Mode:C++; Coding:us-ascii-unix; fill-column:158 -*-
 /*******************************************************************************************************************************************************.H.S.**/
 /**
- @file      demo_data_and_filter.cpp
+ @file      demo_data_image.cpp
  @author    Mitch Richling <https://www.mitchr.me>
  @brief     Demonstrate "data images" and mjr::ramCanvasPixelFilter.@EOL
  @std       C++20
