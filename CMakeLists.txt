@@ -1,11 +1,42 @@
-######################################################################################################################################################
-######################################################################################################################################################
+# -*- Mode:cmake; Coding:us-ascii-unix; fill-column:158 -*-
+#########################################################################################################################################################.H.S.##
+##
+# @file      CMakeLists.txt
+# @author    Mitch Richling http://www.mitchr.me/
+# @brief     CMakeLists for MRaster prooject.@EOL
+# @keywords  cmake mraster mrmathcpp
+# @std       cmake
+# @see       https://github.com/richmit/mraster/
+# @copyright 
+#  @parblock
+#  Copyright (c) 2025, Mitchell Jay Richling <http://www.mitchr.me/> All rights reserved.
+#  
+#  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+#  
+#  1. Redistributions of source code must retain the above copyright notice, this list of conditions, and the following disclaimer.
+#  
+#  2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions, and the following disclaimer in the documentation
+#     and/or other materials provided with the distribution.
+#  
+#  3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software
+#     without specific prior written permission.
+#  
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+#  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+#  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+#  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+#  DAMAGE.
+#  @endparblock
+#########################################################################################################################################################.H.E.##
+
+################################################################################################################################################################
 cmake_minimum_required(VERSION 3.30.0 FATAL_ERROR)
 
 set(OpenGL_GL_PREFERENCE "GLVND") # Alternative
 set(CMAKE_CXX_EXTENSIONS ON)
 
-######################################################################################################################################################
+################################################################################################################################################################
 # Proejct meta data
 
 project(MRaster
@@ -17,11 +48,11 @@ project(MRaster
 set(MRASTER_VERSION_DATE  2025-01-25)
 mark_as_advanced(MRASTER_VERSION_DATE)
 
-######################################################################################################################################################
+################################################################################################################################################################
 # Include ctest
 include(CTest)
 
-######################################################################################################################################################
+################################################################################################################################################################
 # Here are the options we use to modify the build -- these options are passed to cmake like so: cmake -DO_OPENSSL=YES or -DO_OPENSSL=NO
 
 OPTION(O_DOXYGEN     "Doxygen support (documentation)"         ON  )
@@ -33,7 +64,7 @@ OPTION(O_SDL2        "SDL2 support"                            ON  )
 OPTION(O_128_INT     "128-bit integer support"                 ON  )
 OPTION(OWNLOAD_GTEST "Download latest Google Test from Github" OFF )
 
-######################################################################################################################################################
+################################################################################################################################################################
 # Find tools & libraries used to build primary/secondary/tertiary targets.  Set config include file variables for options.
 
 if(O_DOXYGEN)
@@ -100,7 +131,7 @@ else()
 endif()
 get_target_property(MRMathCPP_INCLUDE MRMathCPP INTERFACE_INCLUDE_DIRECTORIES)
 
-######################################################################################################################################################
+################################################################################################################################################################
 # Create interface target for the entire project
 
 set(MRASTER_INCLUDES "lib/MRcolor.hpp" 
@@ -122,12 +153,12 @@ if(TIFF_FOUND)
   target_link_libraries(MRaster INTERFACE ${TIFF_LIBRARIES})
 endif()
 
-######################################################################################################################################################
+################################################################################################################################################################
 # Export the library interface cmake file
 
 export(TARGETS MRaster FILE "${CMAKE_BINARY_DIR}/MRasterLib.cmake")
 
-######################################################################################################################################################
+################################################################################################################################################################
 
 set(TARGETS_REQ_NONE   "BurningShip" "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "biomorph2" "biomorphMorph" "bmark" "chaos_game"
                        "circles" "collatz" "color_all" "color_interp_hsl_vs_rgb" "color_lut_cubehelix" "color_lut_docs" "color_lut_indexed"
@@ -344,7 +375,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   target_compile_options(level_curves PRIVATE -Wno-maybe-uninitialized)
 endif()
 
-######################################################################################################################################################
+################################################################################################################################################################
 
 add_custom_target(clean-images
   COMMAND  rm -f *.tga *.tif *.tiff *.mrw *.bin
