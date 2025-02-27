@@ -27,7 +27,7 @@
   @endparblock
  @filedetails
 
-  The Brusselator is a reaction-diffusion model for an autocatalytic chemical reaction in space and time. This system was was proposed by Ilya Romanovich
+  The Brusselator is a reaction-diffusion model for an autocatalytic chemical reaction in space and time. This system was proposed by Ilya Romanovich
   Prigogine and Rene Lefever from Universite libre de Bruxelles -- hence the name.  The model is given by the following equations:
 
   @f[ \begin{eqnarray}
