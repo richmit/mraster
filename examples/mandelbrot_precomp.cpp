@@ -36,8 +36,8 @@
    - mandelbrot_precompNOE.tiff -- Points that didn't escape -- the mandelbrot set.  255
    - mandelbrot_precomp.tiff    -- A composite of the above with a few notable period regions labeled.
 
-  On my 2022 vintage Intel i7, this takes about 30min to run.  The runtime is directly proportional to the NUMITR, so lower that number if you want it to go
-  faster.  Lowering NUMITR will have cause more non-escaping points to not have a known period -- the green points in
+  On my 2022 vintage Intel i7, this takes about 30min to run.  The runtime is directly proportional to the MAXITR, so lower that number if you want it to go
+  faster.  Lowering MAXITR will result in more non-escaping points to not have a known period.
 
 */
 /*******************************************************************************************************************************************************.H.E.**/
