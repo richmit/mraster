@@ -68,26 +68,34 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
       - mjr::colorTpl::cr2cr_func_t
       - mjr::colorTpl::cr2co_func_t
       - mjr::colorTpl::cr2void_func_t
-    - mjr::ramCanvasTpl::applyPixelRefFun
+    - New Methods
+      - mjr::ramCanvasTpl::getPxColorWrap()
+      - mjr::ramCanvasTpl::getPxColorChanWrap()
+      - mjr::ramCanvasTpl::getPxColorChan()
+      - mjr::ramCanvasTpl::incPxChan()
+      - mjr::ramCanvasTpl::applyPixelRefFun()
+      - mjr::colorTpl::channelArithFlt2clrChan()
+      - mjr::colorTpl::tfrmChanIncr()
+    - Method changes
+      - mjr::ramCanvasTpl::writeTIFFfile(): markAlpha now defaults to true
+      - mjr::ramCanvasTpl::readTIFFfile(): Added error 23: Image is tiled.
+      - mjr::ramCanvasTpl::readTIFFfile(): Added error 24: Image has a palette.
+      - mjr::colorTpl::wMean: Added warning regarding the vulgarities of floating point arithmetic and casts
+    - Pixel Corners
+      - Moved from experimental to production
+      - Final Member Names: 
+        - mjr::ramCanvasTpl::int2realSideX
+        - mjr::ramCanvasTpl::int2realSideY
+        - mjr::ramCanvasTpl::int2realCorner
+      - Example: demo_corners.cpp
     - MSVC:
       - With the switch to GTest, the unit tests are simple to run against MSVC.
       - Removed "experimental" warning when configuring with MSVC.
       - Added hints for using MSVC
       - Updated wMean tests to avoid integer cases on cast.
-    - mjr::ramCanvasTpl::readTIFFfile: Added error 23: Image is tiled.
-    - mjr::ramCanvasTpl::readTIFFfile: Added error 24: Image has a palette.
-    - New method colorTpl::channelArithFlt2clrChan
-    - Added warning to wMean method regarding the vulgarities of floating point arithmetic and casts
     - Added more compilers to CMakeLists.txt
       - NVHPC
       - IntelLLVM
-    - Pixel Corners
-      - Moved from experimental to production
-      - Functions: int2realSideX, int2realSideY, int2realCorner
-      - Example: demo_corners.cpp
-    - Added mjr::ramCanvasTpl::getPxColorWrap()
-    - Added mjr::ramCanvasTpl::getPxColorChanWrap()
-    - markAlpha now defaults to true in mjr::ramCanvasTpl::writeTIFFfile()
   - Documentation
     - Added test coverage document
     - Updated all the docs to reflect GTest & C++23 switch.
@@ -96,7 +104,6 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
       - peterdejongEAAO.cpp
       - simone_attractor_bmovie.cpp
       - simone_attractor_search.cpp
-
       - demo_corners.cpp
       - lorenz_mM.cpp
       - heart2025.cpp

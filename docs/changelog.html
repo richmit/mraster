@@ -3,14 +3,14 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-02-25 Tue 16:42 -->
+<!-- 2025-03-04 Tue 13:42 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>Change Log</title>
 <meta name="author" content="Mitch Richling" />
 <meta name="keywords" content="release history changelog" />
 <meta name="generator" content="Org Mode" />
-<style>
+<style type="text/css">
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -230,12 +230,12 @@
 
 <tr>
 <td class="org-right"><b>Updated:</b></td>
-<td class="org-left"><i>2025-02-25 16:42:17</i></td>
+<td class="org-left"><i>2025-03-04 13:42:23</i></td>
 </tr>
 
 <tr>
 <td class="org-right"><b>Generated:</b></td>
-<td class="org-left"><i>2025-02-25 16:42:18</i></td>
+<td class="org-left"><i>2025-03-04 13:42:31</i></td>
 </tr>
 </tbody>
 </table>
@@ -276,7 +276,6 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 </ul>
 </div>
 </div>
-
 <div id="outline-container-latest" class="outline-2">
 <h2 id="latest"><span class="section-number-2">1.</span> Changes On HEAD Since Last Release</h2>
 <div class="outline-text-2" id="text-latest">
@@ -322,7 +321,34 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 <li>mjr::colorTpl::cr2co_func_t</li>
 <li>mjr::colorTpl::cr2void_func_t</li>
 </ul></li>
-<li>mjr::ramCanvasTpl::applyPixelRefFun</li>
+<li>New Methods
+<ul class="org-ul">
+<li>mjr::ramCanvasTpl::getPxColorWrap()</li>
+<li>mjr::ramCanvasTpl::getPxColorChanWrap()</li>
+<li>mjr::ramCanvasTpl::getPxColorChan()</li>
+<li>mjr::ramCanvasTpl::incPxChan()</li>
+<li>mjr::ramCanvasTpl::applyPixelRefFun()</li>
+<li>mjr::colorTpl::channelArithFlt2clrChan()</li>
+<li>mjr::colorTpl::tfrmChanIncr()</li>
+</ul></li>
+<li>Method changes
+<ul class="org-ul">
+<li>mjr::ramCanvasTpl::writeTIFFfile(): markAlpha now defaults to true</li>
+<li>mjr::ramCanvasTpl::readTIFFfile(): Added error 23: Image is tiled.</li>
+<li>mjr::ramCanvasTpl::readTIFFfile(): Added error 24: Image has a palette.</li>
+<li>mjr::colorTpl::wMean: Added warning regarding the vulgarities of floating point arithmetic and casts</li>
+</ul></li>
+<li>Pixel Corners
+<ul class="org-ul">
+<li>Moved from experimental to production</li>
+<li>Final Member Names: 
+<ul class="org-ul">
+<li>mjr::ramCanvasTpl::int2realSideX</li>
+<li>mjr::ramCanvasTpl::int2realSideY</li>
+<li>mjr::ramCanvasTpl::int2realCorner</li>
+</ul></li>
+<li>Example: demo_corners.cpp</li>
+</ul></li>
 <li>MSVC:
 <ul class="org-ul">
 <li>With the switch to GTest, the unit tests are simple to run against MSVC.</li>
@@ -330,24 +356,11 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 <li>Added hints for using MSVC</li>
 <li>Updated wMean tests to avoid integer cases on cast.</li>
 </ul></li>
-<li>mjr::ramCanvasTpl::readTIFFfile: Added error 23: Image is tiled.</li>
-<li>mjr::ramCanvasTpl::readTIFFfile: Added error 24: Image has a palette.</li>
-<li>New method colorTpl::channelArithFlt2clrChan</li>
-<li>Added warning to wMean method regarding the vulgarities of floating point arithmetic and casts</li>
 <li>Added more compilers to CMakeLists.txt
 <ul class="org-ul">
 <li>NVHPC</li>
 <li>IntelLLVM</li>
 </ul></li>
-<li>Pixel Corners
-<ul class="org-ul">
-<li>Moved from experimental to production</li>
-<li>Functions: int2realSideX, int2realSideY, int2realCorner</li>
-<li>Example: demo_corners.cpp</li>
-</ul></li>
-<li>Added mjr::ramCanvasTpl::getPxColorWrap()</li>
-<li>Added mjr::ramCanvasTpl::getPxColorChanWrap()</li>
-<li>markAlpha now defaults to true in mjr::ramCanvasTpl::writeTIFFfile()</li>
 </ul></li>
 <li>Documentation
 <ul class="org-ul">
@@ -361,7 +374,6 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 <li>peterdejongEAAO.cpp</li>
 <li>simone_attractor_bmovie.cpp</li>
 <li>simone_attractor_search.cpp</li>
-
 <li>demo_corners.cpp</li>
 <li>lorenz_mM.cpp</li>
 <li>heart2025.cpp</li>
@@ -390,7 +402,6 @@ Copyright &copy; 2025 Mitch Richling. All rights reserved.
 </ul>
 </div>
 </div>
-
 <div id="outline-container-v22.0.0.0" class="outline-2">
 <h2 id="v22.0.0.0"><span class="section-number-2">2.</span> 22.0.0.0: Feature &amp; Refactor Release</h2>
 <div class="outline-text-2" id="text-v22.0.0.0">

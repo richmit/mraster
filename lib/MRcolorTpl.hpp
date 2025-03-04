@@ -1897,6 +1897,19 @@ namespace mjr {
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Channel Transformations.*/
+      //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Adds the value to the give channel.  
+          @warning No bounds checking on the value of chan!!!
+          @param chan The channel number. Default: 0
+          @param v The value to add.  Default: 1
+          @return Returns a reference to the current color object.*/
+      // theColor.thePartsA[chan] += v; is faster, but not idiomatic.
+      inline colorTpl& tfrmChanIncr(int chan = 0, clrChanT v = 1) { setChanNC(chan, getChanNC(chan) + v); return *this; }
+      //@}
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Logical Operators */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------

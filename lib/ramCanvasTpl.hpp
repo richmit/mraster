@@ -946,6 +946,42 @@ namespace mjr {
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Incriment a channel value for a pixel.
+          These functions provide a direct way to increment a single channel for a particular pixel.  Frequently used to store 2D image histograms, and ODE
+          solutions.
+       */
+      //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Incriment the pixel at  the specified coordinates by the specified value.
+          Overloaded versions exist with various arguments.
+          @param x The x coordinate of the point
+          @param y The y coordinate of the point
+          @param v The incriment value */
+      template <int chanNum = 0>
+      requires((chanNum >= 0) && (chanNum < colorT::channelCount))
+      inline void incPxChan(intCrdT x, intCrdT y, colorChanType v = 1) { 
+        if(isOnCanvas(x, y))
+          getPxColorRefNC(x, y).tfrmChanIncr(chanNum, v);
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      template <int chanNum = 0>
+      requires((chanNum >= 0) && (chanNum < colorT::channelCount))
+      inline void incPxChan(fltCrdT x, fltCrdT y, colorChanType v = 1) { 
+        intCrdT xi = real2intX(x);
+        intCrdT yi = real2intY(y);
+        incPxChan<chanNum>(xi, yi, v);
+      }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      template <int chanNum = 0>
+      requires((chanNum >= 0) && (chanNum < colorT::channelCount))
+      inline void incPxChan(pointIntType thePoint, colorChanType v = 1) { incPxChan<chanNum>(thePoint.x, thePoint.y, v); }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      template <int chanNum = 0>
+      requires((chanNum >= 0) && (chanNum < colorT::channelCount))
+      inline void incPxChan(pointFltType thePoint, colorChanType v = 1) { incPxChan<chanNum>(thePoint.x, thePoint.y, v); }
+      //@}
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Line Drawing Methods */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1697,7 +1733,7 @@ namespace mjr {
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns a copy of the color at the given coordinates. */
-      colorT getPxColor(intCrdT x, intCrdT y) const;
+      inline colorT getPxColor(intCrdT x, intCrdT y) const;
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** @overload */
       inline colorT getPxColor(fltCrdT x, fltCrdT y)  const { return getPxColor(real2intX(x), real2intY(y)); }
@@ -1724,6 +1760,26 @@ namespace mjr {
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Pixel Channel Value Accessor Methods. */
       //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Returns a copy of the color channel value at the given coordinates */
+      template <int chanNum>
+      requires((chanNum >= 0) && (chanNum < colorT::channelCount))
+      inline colorT getPxColorChan(intCrdT x, intCrdT y) const  { return getPxColor(x, y).getChanNC(chanNum); }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @overload */
+      template <int chanNum>
+      requires((chanNum >= 0) && (chanNum < colorT::channelCount))
+      inline colorT getPxColorChan(fltCrdT x, fltCrdT y)  const { return getPxColor(x, y).getChanNC(chanNum); }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @overload */
+      template <int chanNum>
+      requires((chanNum >= 0) && (chanNum < colorT::channelCount))
+      inline colorT getPxColorChan(pointIntType thePoint) const { return getPxColor(thePoint).getChanNC(chanNum); }
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** @overload */
+      template <int chanNum>
+      requires((chanNum >= 0) && (chanNum < colorT::channelCount))
+      inline colorT getPxColorChan(pointFltType thePoint) const { return getPxColor(thePoint).getChanNC(chanNum); }
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Returns a copy of the color channel value at the given coordinates wrapping x & y if out of range. */
       template <int chanNum>
