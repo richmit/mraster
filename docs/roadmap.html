@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-02-22 Sat 13:10 -->
+<!-- 2025-03-05 Wed 14:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster Roadmap</title>
@@ -11,7 +11,7 @@
 <meta name="description" content="DESCRIPTION FIXME" />
 <meta name="keywords" content="KEYWORDS FIXME" />
 <meta name="generator" content="Org Mode" />
-<style>
+<style type="text/css">
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -278,9 +278,9 @@ In no particular order:
 </p>
 
 <ul class="org-ul">
-<li>Use callables for pixel transforms</li>
 <li>Homo transforms
 <ul class="org-ul">
+<li><del>Use callables for pixel transforms</del> DONE.</li>
 <li><del>Complex abs/arg greyscale transform</del> DONE.</li>
 </ul></li>
 <li><del>2D plane Color Schemes</del> DONE
@@ -311,8 +311,6 @@ In no particular order:
 <ul class="org-ul">
 <li><del>int2real(intCrdT x, intCrdT y)</del> DONE.</li>
 <li><del>real2int(intCrdT x, intCrdT y)</del> DONE.</li>
-<li>int2real(pointIntType thePoint)</li>
-<li>real2int(pointFltType thePoint)</li>
 </ul></li>
 <li>Precomputed Mandelbrot
 <ul class="org-ul">
@@ -332,14 +330,8 @@ In no particular order:
 <li>Maximum modulus of points in cycle</li>
 </ul></li>
 </ul></li>
-<li>Consider doing above, but with HDF5 file &#x2013; and store all the orbits &amp; cycles&#x2026;</li>
-<li>Add budabrot examples using pre-computed data
-<ul class="org-ul">
-<li>Budabrot for period 2 bulb.</li>
-<li>Budabrot for period 1 bulb.</li>
-<li>Budabrot for period 1 &amp; 2 bulbs with 1 red and 2 blue</li>
-<li>Budabrot with just the cyclic parts of the orbits for all orbits.  Odd period red, even blue.</li>
-</ul></li>
+<li><del>Consider doing above, but with HDF5 file &#x2013; and store all the orbits &amp; cycles&#x2026;</del> CANCELED</li>
+<li><del>Add budabrot examples using pre-computed data</del> CANCELED</li>
 </ul></li>
 <li><del>Add number formatting</del> DONE
 <ul class="org-ul">
@@ -412,10 +404,10 @@ A good sequences:
 <li>Functional approach to pixel drawing methods
 <ul class="org-ul">
 <li>Have a functor called by drawPixel instead of a switch statement</li>
-<li>Option to have a color tfrm* method argument to drawPixel</li>
+<li><del>Option to have a color tfrm* method argument to drawPixel</del> CANCELED</li>
 </ul></li>
-<li>A drawPixel-like method that increments a specified channel of the specified pixel by a given quantity  "addToPixel"</li>
-<li>More generic than above.  Take a colorTpl tfrm* style function to modify the specified pixel.</li>
+<li><del>A drawPixel-like method that increments a specified channel of the specified pixel by a given quantity  "addToPixel"</del> DONE 2025-03-05</li>
+<li><del>More generic than above.  Take a colorTpl tfrm* style function to modify the specified pixel.</del> CANCELED</li>
 </ul></li>
 <li>ramCanvas Converters
 <ul class="org-ul">

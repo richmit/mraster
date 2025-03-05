@@ -40,8 +40,8 @@ end up on this list.
 
 In no particular order:
 
- - Use callables for pixel transforms
  - Homo transforms
+   - +Use callables for pixel transforms+ DONE.
    - +Complex abs/arg greyscale transform+ DONE.
  - +2D plane Color Schemes+ DONE
    - +Richardson+ DONE
@@ -62,8 +62,6 @@ In no particular order:
  - coordinate conversion with point objects
    - +int2real(intCrdT x, intCrdT y)+ DONE.
    - +real2int(intCrdT x, intCrdT y)+ DONE.
-   - int2real(pointIntType thePoint)
-   - real2int(pointFltType thePoint)
  - Precomputed Mandelbrot
    - Add example that computes & saves convergence information in image files
      - Escape points
@@ -75,12 +73,8 @@ In no particular order:
        - +Time to first period+ DONE
        - Minimum modulus of points in cycle
        - Maximum modulus of points in cycle
-   - Consider doing above, but with HDF5 file -- and store all the orbits & cycles...
-   - Add budabrot examples using pre-computed data
-     - Budabrot for period 2 bulb.
-     - Budabrot for period 1 bulb.
-     - Budabrot for period 1 & 2 bulbs with 1 red and 2 blue
-     - Budabrot with just the cyclic parts of the orbits for all orbits.  Odd period red, even blue.
+   - +Consider doing above, but with HDF5 file -- and store all the orbits & cycles...+ CANCELED
+   - +Add budabrot examples using pre-computed data+ CANCELED
  - +Add number formatting+ DONE
    - +Padded integers -- like we use in image file names & MRW headers+ DONE
    - +Floating point numbers+ CANCELED
@@ -125,9 +119,9 @@ In no particular order:
  - Draw Pixel functionality
    - Functional approach to pixel drawing methods
      - Have a functor called by drawPixel instead of a switch statement
-     - Option to have a color tfrm* method argument to drawPixel
-   - A drawPixel-like method that increments a specified channel of the specified pixel by a given quantity  "addToPixel"
-   - More generic than above.  Take a colorTpl tfrm* style function to modify the specified pixel.
+     - +Option to have a color tfrm* method argument to drawPixel+ CANCELED
+   - +A drawPixel-like method that increments a specified channel of the specified pixel by a given quantity  "addToPixel"+ DONE 2025-03-05
+   - +More generic than above.  Take a colorTpl tfrm* style function to modify the specified pixel.+ CANCELED
  - ramCanvas Converters
    - Add C++20 concepts for converters & apply them to the methods that use converters
    - Add converter support to ramCanvas copy operation -- i.e. so we can "copy" data between canvases of a dissimilar types
