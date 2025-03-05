@@ -42,76 +42,50 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include "ramCanvas.hpp"
 
-//--------------------------------------------------------------------------------------------------------------------------------------------------------------
-/** Reasons iteration may stop */
-enum class whyStopMO { OUTSET,   //!< Not in set (|z|>2)
-                       MAXCOUNT  //!< Maximum iteration reached
-                     };
+typedef mjr::ramCanvas1c16b rcct;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const int CSIZE  = 1080*2;
   const int SCALE  = 4;
-  const int MAXITR = 2048;
-  mjr::ramCanvas1c16b inhRamCanvas (CSIZE*SCALE, CSIZE*SCALE,  -2.0, 1.0, -1.5, 1.5);
-  mjr::ramCanvas1c16b incRamCanvas (CSIZE*SCALE, CSIZE*SCALE,  -2.0, 1.0, -1.5, 1.5);
-  mjr::ramCanvas1c16b outhRamCanvas(CSIZE*SCALE, CSIZE*SCALE,  -2.0, 1.0, -1.5, 1.5);
-  mjr::ramCanvas1c8b  mRamCanvas   (CSIZE*SCALE, CSIZE*SCALE,  -2.0, 1.0, -1.5, 1.5);
-  std::complex<double>* theOrbit = new std::complex<double>[MAXITR+1];
+  const int CSIZE  = 1024*SCALE;
+  const int MAXITR = 256*4;
+  rcct inhRamCanvas (CSIZE*SCALE, CSIZE*SCALE,  -2.0, 1.0, -1.5, 1.5);
+  rcct outhRamCanvas(CSIZE*SCALE, CSIZE*SCALE,  -2.0, 1.0, -1.5, 1.5);
+  std::complex<double>* theOrbit = new std::complex<rcct::coordFltType>[MAXITR+1];
 
-  for(int y=0;y<inhRamCanvas.getNumPixY();y++) {
+  for(rcct::coordIntType y=0;y<inhRamCanvas.getNumPixY();y++) {
     if((y%((CSIZE*SCALE)/10))==0)
       std::cout << "LINE: " << y << "/" << (CSIZE*SCALE) << std::endl;
-    for(int x=0;x<inhRamCanvas.getNumPixX();x++) {
-      //std::cout << x << " " << y << std::endl;
-      whyStopMO why;
-      std::complex<double> z;
-      int count;
-      double cr = inhRamCanvas.int2realX(x);
-      double ci = inhRamCanvas.int2realY(y);
-      std::complex<double> c(cr, ci);
-      z=c;
-      for(count=0; ; count++) {
+    for(rcct::coordIntType x=0;x<inhRamCanvas.getNumPixX();x++) {
+      std::complex<rcct::coordFltType> c(inhRamCanvas.int2realX(x), inhRamCanvas.int2realY(y));
+      std::complex<rcct::coordFltType> z(c);
+      for(int count=0; ; count++) {
         z = z * z + c;
         theOrbit[count] = z;
-        if(count>=(MAXITR-1)) {
-          why = whyStopMO::MAXCOUNT;
-          break;
-        }
         if(std::abs(z)>2.0) {
-          why = whyStopMO::OUTSET;
+          for(int i=0; i<=count; i++)
+            outhRamCanvas.incPxChan(theOrbit[i]);
           break;
-        }
-      }
-
-      if(why == whyStopMO::MAXCOUNT) {
-        mRamCanvas.drawPoint(x, y, "white");
-        incRamCanvas.drawPoint(std::real(z), std::imag(z), "white");
-      }
-      for(int i=0; i<(count-1); i++) {
-        int cri = inhRamCanvas.real2intX(std::real(theOrbit[i]));
-        int cii = inhRamCanvas.real2intY(std::imag(theOrbit[i]));
-        if( !(inhRamCanvas.isCliped(cri, cii))) {
-          if(why == whyStopMO::OUTSET) {
-            outhRamCanvas.getPxColorRefNC(cri, cii).tfrmAdd(1);
-          } else {
-            inhRamCanvas.getPxColorRefNC(cri, cii).tfrmAdd(1);
-          }
+        } else if(count>=(MAXITR-1)) {
+          for(int i=0; i<=count; i++) 
+            inhRamCanvas.incPxChan(theOrbit[i]);
+          break;
         }
       }
     }
   }
+
   outhRamCanvas.scaleDownMean(SCALE);
   outhRamCanvas.autoHistStrech();
+  outhRamCanvas.applyHomoPixTfrm(&rcct::colorType::tfrmPow, 0.6);
+  outhRamCanvas.rotate90CW();
   outhRamCanvas.writeTIFFfile("mandelbrot_orbits_out_h.tiff");
   inhRamCanvas.scaleDownMean(SCALE);
   inhRamCanvas.autoHistStrech();
+  inhRamCanvas.applyHomoPixTfrm(&rcct::colorType::tfrmPow, 0.2);
+  inhRamCanvas.rotate90CW();
   inhRamCanvas.writeTIFFfile("mandelbrot_orbits_in_h.tiff");
-  mRamCanvas.scaleDownMax(SCALE);
-  mRamCanvas.writeTIFFfile("mandelbrot_orbits_m.tiff");
-  incRamCanvas.scaleDownMax(SCALE);
-  incRamCanvas.writeTIFFfile("mandelbrot_orbits_in_c.tiff");
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }

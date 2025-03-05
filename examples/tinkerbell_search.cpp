@@ -43,8 +43,6 @@ int main(void) {
   std::uniform_real_distribution<double> uniform_dist_double(-2.0, 2.0);
 
   mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -2, 2, -2, 2); // Just used for coordinate conversion. ;)
-  mjr::ramCanvas1c16b::colorType aColor;
-  aColor.setChans(1);
 
   for(int j=0; j<1000; j++) {
     std::map<uint64_t, uint64_t> ptcnt;
@@ -70,7 +68,7 @@ int main(void) {
       if (yNew < yMin) yMin = yNew;
       if ( !theRamCanvas.isCliped(x, y)) {
         inCnt++;
-        theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColor(x, y).tfrmAdd(aColor));
+        theRamCanvas.incPxChan(x, y);
         if(theRamCanvas.getPxColor(x, y).getC0() > maxII) {
           maxII = theRamCanvas.getPxColor(x, y).getC0();
           if(maxII > 16384) { // 1/4 of max possible intensity

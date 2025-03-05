@@ -63,10 +63,7 @@ int main(void) {
         decltype(hstRamCanvas)::coordFltType tmpy = zy - h * std::sin(zx + std::tan(b * zx));
         zx = tmpx;
         zy = tmpy;
-        decltype(hstRamCanvas)::coordIntType ix = hstRamCanvas.real2intX(zx);
-        decltype(hstRamCanvas)::coordIntType iy = hstRamCanvas.real2intY(zy);
-        if (hstRamCanvas.isOnCanvas(ix, iy))
-          hstRamCanvas.getPxColorRefNC(ix, iy).tfrmAdd(1);
+        hstRamCanvas.incPxChan(zx, zy);
       }
     }
   }

@@ -108,12 +108,8 @@ int main(void) {
       decltype(theRamCanvas)::coordFltType tmp = std::sin(xn*xn-yn*yn+a);
       yn = std::cos(2*xn*yn+b);
       xn = tmp;
-      if(i>1000) {
-        decltype(theRamCanvas)::coordIntType ix = theRamCanvas.real2intX(xn);
-        decltype(theRamCanvas)::coordIntType iy = theRamCanvas.real2intY(yn);
-        if (theRamCanvas.isOnCanvas(ix, iy))
-          theRamCanvas.getPxColorRefNC(ix, iy).tfrmAdd(1);
-      }
+      if(i>1000)
+        theRamCanvas.incPxChan(xn, yn);
       if((i % 10000000) == 0)
 #       pragma omp critical
         std::cout << "ITER(" << j <<  "): " << i << std::endl;

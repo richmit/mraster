@@ -66,12 +66,8 @@ int main(void) {
       decltype(theRamCanvas)::coordFltType tmp = std::sin(xn*xn-yn*yn+a);
       yn = std::cos(2*xn*yn+b);
       xn = tmp;
-      if(i>1000) {
-        decltype(theRamCanvas)::coordIntType ix = theRamCanvas.real2intX(xn);
-        decltype(theRamCanvas)::coordIntType iy = theRamCanvas.real2intY(yn);
-        if (theRamCanvas.isOnCanvas(ix, iy))
-          theRamCanvas.getPxColorRefNC(ix, iy).tfrmAdd(1);
-      }
+      if(i>1000)
+        theRamCanvas.incPxChan(xn, yn);
     }
     theRamCanvas.autoHistStrech();
     theRamCanvas.applyHomoPixTfrm(&decltype(theRamCanvas)::colorType::tfrmPow, 1/4.0);

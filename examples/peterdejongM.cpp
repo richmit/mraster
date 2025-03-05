@@ -58,9 +58,6 @@ int main(void) {
   const double            h         = -1.38227;
   const double            p         =  2.10;
 
-  mjr::ramCanvas1c16b::colorType aColor;
-  aColor.setChans(1);
-
 # pragma omp parallel for schedule(static,1)
   for(int frame=0; frame<numFrames; frame++) {
     mjr::ramCanvas1c16b theRamCanvas(imageSize, imageSize, -2, 2, -2, 2);
@@ -79,7 +76,7 @@ int main(void) {
       double dh = 0.12 * cos(frame * 2 * std::numbers::pi / numFrames);
       double xNew = sin((a + da)*y + e + de) - cos((b+db)*x + f + df);
       double yNew = sin((c + dc)*x + g + dg) - cos((d+dd)*y + h + dh);
-      theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColor(x, y).tfrmAdd(aColor));
+      theRamCanvas.incPxChan(x, y);
       if(theRamCanvas.getPxColor(x, y).getC0() > maxII) {
         maxII = theRamCanvas.getPxColor(x, y).getC0();
         if(maxII > 16384) { // 1/4 of max possible intensity

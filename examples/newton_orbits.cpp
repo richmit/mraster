@@ -39,7 +39,7 @@ int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   constexpr int MaxCount = 255;
   constexpr double Tol = .0001;
-  constexpr int IMGSIZ = 7680/4;
+  constexpr int IMGSIZ = 7680/1;
   std::complex<double> r1( 1.0,                        0.0);
   std::complex<double> r2(-0.5,  sin(2*std::numbers::pi/3));
   std::complex<double> r3(-0.5, -sin(2*std::numbers::pi/3));
@@ -55,23 +55,15 @@ int main(void) {
         orbit[count] = z;
         count++;
       }
-
-      decltype(theRamCanvas)::colorType cDelta;
       if(abs(z-r1) <= Tol)
-        cDelta = decltype(theRamCanvas)::colorType(1, 0, 0);
+        for(int i=0; i<count; i++)
+          theRamCanvas.incPxChan<0>(orbit[i]);
       else if(abs(z-r2) <= Tol)
-        cDelta = decltype(theRamCanvas)::colorType(0, 1, 0);
+        for(int i=0; i<count; i++)
+          theRamCanvas.incPxChan<1>(orbit[i]);
       else if(abs(z-r3) <= Tol)
-        cDelta = decltype(theRamCanvas)::colorType(0, 0, 1);
-      else
-        cDelta = decltype(theRamCanvas)::colorType(0, 0, 0);
-
-      for(int i=0; i<count; i++) {
-        int zri = theRamCanvas.real2intX(std::real(orbit[i]));
-        int zii = theRamCanvas.real2intY(std::imag(orbit[i]));
-        if( !(theRamCanvas.isCliped(zri, zii)))
-            theRamCanvas.getPxColorRefNC(zri, zii).tfrmAdd(cDelta);
-      }
+        for(int i=0; i<count; i++)
+          theRamCanvas.incPxChan<2>(orbit[i]);
     }
   }
   theRamCanvas.applyHomoPixTfrm(&decltype(theRamCanvas)::colorType::tfrmLn, 11271.0);

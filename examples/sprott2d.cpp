@@ -40,8 +40,6 @@
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int BSIZ = 7680/8;
-  mjr::ramCanvas1c16b::colorType aColor;
-  aColor.setChans(1);
   mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -1, 1, -1, 1);
   double x=0.0, y=0.0, xNew, yNew;
 
@@ -55,7 +53,7 @@ int main(void) {
 
       xNew = a[0] + a[1]*x + a[2]*x*x + a[3]*x*y + a[4]*y  + a[5]*y*y;
       yNew = a[6] + a[7]*x + a[8]*x*x + a[9]*x*y + a[10]*y + a[11]*y*y;
-      theRamCanvas.drawPoint(xNew, yNew, theRamCanvas.getPxColor(xNew, yNew).tfrmAdd(aColor));
+      theRamCanvas.incPxChan(xNew, yNew);
       if(theRamCanvas.getPxColor(xNew, yNew).getC0() > maxII) {
         maxII = theRamCanvas.getPxColor(xNew, yNew).getC0();
         if(maxII > 16384) { // 1/4 of max possible intensity

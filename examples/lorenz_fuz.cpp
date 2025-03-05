@@ -40,8 +40,6 @@ int main(void) {
   const int XSIZ = 7680/1;
   const int YSIZ = 4320/1;
   uint64_t maxII = 0;
-  mjr::ramCanvas1c16b::colorType aColor;
-  aColor.setChans(1);
   mjr::ramCanvas1c16b theRamCanvas(XSIZ, YSIZ, -19, 19, 3, 47);
 
   double distToGo = 80000.0;             /* How long should the curve be? */
@@ -124,7 +122,7 @@ int main(void) {
       x = x + Xdelta;
       y = y + Ydelta;
       z = z + Zdelta;
-      theRamCanvas.drawPoint(x, z, theRamCanvas.getPxColor(x, z).tfrmAdd(aColor));
+      theRamCanvas.incPxChan(x, z);
 
       if(theRamCanvas.getPxColor(x, z).getC0() > maxII)
         maxII = theRamCanvas.getPxColor(x, z).getC0();

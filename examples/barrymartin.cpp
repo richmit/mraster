@@ -112,8 +112,6 @@ std::vector<std::array<double, 14>> params {
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int BSIZ = 480*8;
-  mjr::ramCanvas1c16b::colorType aColor;
-  aColor.setChans(1);
 
   for(decltype(params.size()) j=0; j<params.size(); ++j) {
     mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, params[j][10], params[j][11], params[j][12], params[j][13]);
@@ -142,7 +140,7 @@ int main(void) {
       double yNew = a-x;
       if ( !theRamCanvas.isCliped(x, y)) {
         inCnt++;
-        theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColor(x, y).tfrmAdd(aColor));
+        theRamCanvas.incPxChan(x, y);
         if(theRamCanvas.getPxColor(x, y).getC0() > maxII) {
           maxII = theRamCanvas.getPxColor(x, y).getC0();
           if(maxII > 16384) { // 1/4 of max possible intensity

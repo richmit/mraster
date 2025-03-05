@@ -38,8 +38,6 @@ int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
   const int XSIZ = 7680/2;
   const int YSIZ = 4320/2;
-  mjr::ramCanvas1c16b::colorType aColor;
-  aColor.setChans(1);
   mjr::ramCanvas1c16b theRamCanvas(XSIZ, YSIZ, -19, 19, 3, 47);
   double x=5.10, y=3.1, z=10.1, xNew, yNew, zNew;
 
@@ -74,7 +72,7 @@ int main(void) {
       yNew = y + (x * (b - z) - y) * tDelta;
       zNew = z + (x * y - c * z) * tDelta;
       if(i>numPtsPerCurveToss) {
-        theRamCanvas.drawPoint(xNew, zNew, theRamCanvas.getPxColor(xNew, zNew).tfrmAdd(aColor));
+        theRamCanvas.incPxChan(xNew, zNew);
         if(theRamCanvas.getPxColor(xNew, zNew).getC0() > maxII) {
           maxII = theRamCanvas.getPxColor(xNew, zNew).getC0();
         }

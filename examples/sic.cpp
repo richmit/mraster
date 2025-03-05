@@ -124,7 +124,7 @@ int main(void) {
       z = (lambda + alpha*z*std::conj(z)+beta*std::pow(z, n).real() + w*cplxi)*z+gamma*std::pow(std::conj(z), n-1);
       typename mjr::ramCanvas1c16b::coordFltType x=z.real(), y=z.imag();
       if(i>1000)
-        theRamCanvas.drawPoint(x, y, theRamCanvas.getPxColor(x, y).tfrmAdd(aColor));
+        theRamCanvas.incPxChan(x, y);
       if(theRamCanvas.getPxColor(x, y).getC0() > maxII) {
         maxII = theRamCanvas.getPxColor(x, y).getC0();
         if(maxII > 16384) { // 1/4 of max possible intensity
