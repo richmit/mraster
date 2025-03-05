@@ -7,7 +7,7 @@
  @std       C++20
  @copyright
   @parblock
-  Copyright (c) 1988-2015, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
+  Copyright (c) 1988-2015,2025, Mitchell Jay Richling <https://www.mitchr.me> All rights reserved.
 
   Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -32,9 +32,10 @@
 
     * mandelbrot_orbits_out_h.tiff  Point histogram of exterior point orbits
     * mandelbrot_orbits_in_h.tiff   Point histogram of interior point orbits
-    * mandelbrot_orbits_m.tiff      The mandelbrot set
-    * mandelbrot_orbits_in_c.tiff   Where interior points converged
+    * mandelbrot_orbits_dist.tiff   Maximum iteration count for all oribts that hit the pixel
+    * mandelbrot_orbits_color       Colorized version using the above images as color channels after a power transform:
 
+                 magick \( mandelbrot_orbits_dst_h.tiff -evaluate Pow 0.8 \) \( mandelbrot_orbits_out_h.tiff -evaluate Pow 0.6 \) \( mandelbrot_orbits_in_h.tiff -evaluate Pow 0.8 \) -combine combined.jpg
 */
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
@@ -48,17 +49,17 @@ typedef mjr::ramCanvas3c8b  rcrt;
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const int SCALE  = 4;
-  const int CSIZE  = 1024*SCALE;
+  const int SCALE  = 8;
+  const int CSIZE  = 1024*2*SCALE;
   const int MAXITR = 256*4;
-  rcct inhRamCanvas (CSIZE*SCALE, CSIZE*SCALE,  -2.0, 1.0, -1.5, 1.5);
-  rcct outhRamCanvas(CSIZE*SCALE, CSIZE*SCALE,  -2.0, 1.0, -1.5, 1.5);
-  rcct distRamCanvas(CSIZE*SCALE, CSIZE*SCALE,  -2.0, 1.0, -1.5, 1.5);
+  rcct inhRamCanvas (CSIZE, CSIZE,  -2.0, 1.0, -1.5, 1.5);
+  rcct outhRamCanvas(CSIZE, CSIZE,  -2.0, 1.0, -1.5, 1.5);
+  rcct distRamCanvas(CSIZE, CSIZE,  -2.0, 1.0, -1.5, 1.5);
   std::complex<double>* theOrbit = new std::complex<rcct::coordFltType>[MAXITR+1];
 
   for(rcct::coordIntType y=0;y<inhRamCanvas.getNumPixY();y++) {
-    if((y%((CSIZE*SCALE)/10))==0)
-      std::cout << "LINE: " << y << "/" << (CSIZE*SCALE) << std::endl;
+    if((y%(inhRamCanvas.getNumPixY()/16))==0)
+      std::cout << "LINE: " << y << "/" << inhRamCanvas.getNumPixY() << std::endl;
     for(rcct::coordIntType x=0;x<inhRamCanvas.getNumPixX();x++) {
       std::complex<rcct::coordFltType> c(inhRamCanvas.int2realX(x), inhRamCanvas.int2realY(y));
       std::complex<rcct::coordFltType> z(c);
@@ -100,14 +101,9 @@ int main(void) {
                                                                                                                           static_cast<rcrt::colorChanType>(outhRamCanvas.getPxColor(x, y).tfrmPow(0.6).getChan(0)/256), 
                                                                                                                           static_cast<rcrt::colorChanType>( inhRamCanvas.getPxColor(x, y).tfrmPow(0.8).getChan(0)/256)); });
 
-
   theRamCanvas.writeTIFFfile("mandelbrot_orbits_color.tiff");
 
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
 /** @endcond */
-
-
-// magick \( mandelbrot_orbits_dst_h.tiff -evaluate Pow 0.6 \) \( mandelbrot_orbits_out_h.tiff -evaluate Pow 0.4 \) \( mandelbrot_orbits_in_h.tiff -evaluate Pow 0.7 \)  -combine combined.jpg; nomacs combined.jpg
-// magick \( mandelbrot_orbits_dst_h.tiff -evaluate Pow 0.8 \) \( mandelbrot_orbits_out_h.tiff -evaluate Pow 0.6 \) \( mandelbrot_orbits_in_h.tiff -evaluate Pow 0.8 \)  -combine combined.jpg; nomacs combined.jpg
