@@ -60,20 +60,21 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
     - N/A
   - New functionality
     - Function typedefs
-      - mjr::ramCanvasTpl::fltCrd2Col
-      - mjr::ramCanvasTpl::fltPnt2Col
-      - mjr::ramCanvasTpl::intCrd2Col
-      - mjr::ramCanvasTpl::intPnt2Col
-      - mjr::colorTpl::co2co_func_t
-      - mjr::colorTpl::cr2cr_func_t
-      - mjr::colorTpl::cr2co_func_t
-      - mjr::colorTpl::cr2void_func_t
+      - mjr::ramCanvasTpl::fltCrd2ColType
+      - mjr::ramCanvasTpl::fltPnt2ColType
+      - mjr::ramCanvasTpl::intCrd2ColType
+      - mjr::ramCanvasTpl::intPnt2ColType
+      - mjr::colorTpl::co2coType
+      - mjr::colorTpl::cr2crType
+      - mjr::colorTpl::cr2coType
+      - mjr::colorTpl::cr2voidType
     - New Methods
       - mjr::ramCanvasTpl::getPxColorWrap()
       - mjr::ramCanvasTpl::getPxColorChanWrap()
       - mjr::ramCanvasTpl::getPxColorChan()
       - mjr::ramCanvasTpl::incPxChan()
       - mjr::ramCanvasTpl::applyPixelRefFun()
+      - mjr::ramCanvasTpl::tformPoint()
       - mjr::colorTpl::channelArithFlt2clrChan()
       - mjr::colorTpl::tfrmChanIncr()
     - Method changes

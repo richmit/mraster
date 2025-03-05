@@ -162,10 +162,10 @@ namespace mjr {
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name std::function typedefs for common calls.  */
       //@{
-      typedef std::function<colorT (fltCrdT, fltCrdT)>  fltCrd2Col;  //!< std::function type floating point coordinates to a color
-      typedef std::function<colorT (pointFltType)>      fltPnt2Col;  //!< std::function type floating point point to a color
-      typedef std::function<colorT (intCrdT, intCrdT)>  intCrd2Col;  //!< std::function type int point coordinates to a color
-      typedef std::function<colorT (pointIntType)>      intPnt2Col;  //!< std::function type int point point to a color
+      typedef std::function<colorT (fltCrdT, fltCrdT)>  fltCrd2ColType;  //!< std::function type floating point coordinates to a color
+      typedef std::function<colorT (pointFltType)>      fltPnt2ColType;  //!< std::function type floating point point to a color
+      typedef std::function<colorT (intCrdT, intCrdT)>  intCrd2ColType;  //!< std::function type int point coordinates to a color
+      typedef std::function<colorT (pointIntType)>      intPnt2ColType;  //!< std::function type int point point to a color
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -826,7 +826,7 @@ namespace mjr {
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
       /** Apply a a function to a each pixel via refrence. */
-      void applyPixelRefFun(colorT::cr2void_func_t f);
+      void applyPixelRefFun(colorT::cr2voidType f);
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -946,13 +946,40 @@ namespace mjr {
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** @name Incriment a channel value for a pixel.
-          These functions provide a direct way to increment a single channel for a particular pixel.  Frequently used to store 2D image histograms, and ODE
-          solutions.
+      /** @name Single pixel transformation functions.
+          These functions provide a simple and direct way to modify a pixel by passing a frefrence to a callable (usually a lambda).  This can be used to 
+          mimic the functality of drawModeType by simply passing the approprate color transformation member
+          for 2D image histograms or the solutions to differential equations -- both applications being very common when working with fractals and dynamical
+          systems.  While the same result can be obtained with tformPixel() with a lambda like ~[i](auto& c) { c.tfrmAdd(i); }~, these routines can be
+          significantly faster for some compilers.
+
+ */
+      //@{
+      //--------------------------------------------------------------------------------------------------------------------------------------------------------
+      /** Transform the pixel at the specified coordinates.
+          Overloaded versions exist with various arguments.
+          @param x The x coordinate of the pixel
+          @param y The y coordinate of the pixel
+          @param transform The color to draw the pixel */
+      inline void tformPixel(intCrdT x, intCrdT y, colorType::cr2voidType tform) {
+        if(isOnCanvas(x, y))
+          tform(getPxColorRefNC(x, y));
+      }
+      inline void tformPixel(fltCrdT x, fltCrdT y, colorType::cr2voidType tform)   { tformPixel(real2intX(x), real2intY(y), tform); }
+      inline void tformPixel(pointIntType thePoint, colorType::cr2voidType tform)  { tformPixel(thePoint.x, thePoint.y, tform); }
+      inline void tformPixel(pointFltType thePoint, colorType::cr2voidType tform)  { tformPixel(real2intX(thePoint.x), real2intY(thePoint.y), tform); }
+      //@}
+
+      //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /** @name Increment a channel value for a pixel.
+          These functions provide a simple and direct way to increment a single channel for a particular pixel.  Typical use cases are to accumulate values
+          for 2D image histograms or the solutions to differential equations -- both applications being very common when working with fractals and dynamical
+          systems.  While the same result can be obtained with tformPixel() with a lambda like ~[i](auto& c) { c.tfrmAdd(i); }~, these routines can be
+          significantly faster for some compilers.
        */
       //@{
       //--------------------------------------------------------------------------------------------------------------------------------------------------------
-      /** Incriment the pixel at  the specified coordinates by the specified value.
+      /** Increment the specified color channel of the pixel at the given coordinates by the specified value.
           Overloaded versions exist with various arguments.
           @param x The x coordinate of the point
           @param y The y coordinate of the point
@@ -2212,7 +2239,7 @@ namespace mjr {
   template <class colorT, class intCrdT, class fltCrdT, bool enableDrawModes>
   requires (std::is_integral<intCrdT>::value && std::is_signed<intCrdT>::value && std::is_floating_point<fltCrdT>::value)
     inline void
-    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyPixelRefFun(colorT::cr2void_func_t f) {
+    ramCanvasTpl<colorT, intCrdT, fltCrdT, enableDrawModes>::applyPixelRefFun(colorT::cr2voidType f) {
     for(intCrdT y=0; y<numPixY; y++)
       for(intCrdT x=0; x<numPixX; x++)
         f(getPxColorRefNC(x, y));

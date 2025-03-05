@@ -43,7 +43,8 @@
 #include "ramCanvas.hpp"
 
 typedef mjr::ramCanvas1c16b rcct;
-
+typedef mjr::ramCanvas3c8b  rcrt;
+//typedef mjr::ramCanvas3c16b rcrt;
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
@@ -52,6 +53,7 @@ int main(void) {
   const int MAXITR = 256*4;
   rcct inhRamCanvas (CSIZE*SCALE, CSIZE*SCALE,  -2.0, 1.0, -1.5, 1.5);
   rcct outhRamCanvas(CSIZE*SCALE, CSIZE*SCALE,  -2.0, 1.0, -1.5, 1.5);
+  rcct distRamCanvas(CSIZE*SCALE, CSIZE*SCALE,  -2.0, 1.0, -1.5, 1.5);
   std::complex<double>* theOrbit = new std::complex<rcct::coordFltType>[MAXITR+1];
 
   for(rcct::coordIntType y=0;y<inhRamCanvas.getNumPixY();y++) {
@@ -60,15 +62,17 @@ int main(void) {
     for(rcct::coordIntType x=0;x<inhRamCanvas.getNumPixX();x++) {
       std::complex<rcct::coordFltType> c(inhRamCanvas.int2realX(x), inhRamCanvas.int2realY(y));
       std::complex<rcct::coordFltType> z(c);
-      for(int count=0; ; count++) {
+      for(rcct::colorChanType count=0; ; count++) {
         z = z * z + c;
         theOrbit[count] = z;
         if(std::abs(z)>2.0) {
-          for(int i=0; i<=count; i++)
+          for(rcct::colorChanType i=0; i<=count; i++) {
             outhRamCanvas.incPxChan(theOrbit[i]);
+            distRamCanvas.tformPixel(theOrbit[i], [i](auto& c) { c.tfrmMax(i); });
+          }
           break;
         } else if(count>=(MAXITR-1)) {
-          for(int i=0; i<=count; i++) 
+          for(rcct::colorChanType i=0; i<=count; i++) 
             inhRamCanvas.incPxChan(theOrbit[i]);
           break;
         }
@@ -76,17 +80,34 @@ int main(void) {
     }
   }
 
+  // Dump out our "data" images
+  distRamCanvas.scaleDownMean(SCALE);
+  distRamCanvas.autoHistStrech();
+  distRamCanvas.rotate90CW();
+  distRamCanvas.writeTIFFfile("mandelbrot_orbits_dst_h.tiff");
   outhRamCanvas.scaleDownMean(SCALE);
   outhRamCanvas.autoHistStrech();
-  outhRamCanvas.applyHomoPixTfrm(&rcct::colorType::tfrmPow, 0.6);
   outhRamCanvas.rotate90CW();
   outhRamCanvas.writeTIFFfile("mandelbrot_orbits_out_h.tiff");
   inhRamCanvas.scaleDownMean(SCALE);
   inhRamCanvas.autoHistStrech();
-  inhRamCanvas.applyHomoPixTfrm(&rcct::colorType::tfrmPow, 0.2);
   inhRamCanvas.rotate90CW();
   inhRamCanvas.writeTIFFfile("mandelbrot_orbits_in_h.tiff");
+
+  // Construct an 8-bit RGB image
+  rcrt theRamCanvas(distRamCanvas.getNumPixX(), distRamCanvas.getNumPixY());
+  theRamCanvas.colorizeIntCanvas([&distRamCanvas, &outhRamCanvas, &inhRamCanvas](auto x, auto y) { return rcrt::colorType(static_cast<rcrt::colorChanType>(distRamCanvas.getPxColor(x, y).tfrmPow(0.8).getChan(0)/256), 
+                                                                                                                          static_cast<rcrt::colorChanType>(outhRamCanvas.getPxColor(x, y).tfrmPow(0.6).getChan(0)/256), 
+                                                                                                                          static_cast<rcrt::colorChanType>( inhRamCanvas.getPxColor(x, y).tfrmPow(0.8).getChan(0)/256)); });
+
+
+  theRamCanvas.writeTIFFfile("mandelbrot_orbits_color.tiff");
+
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
 /** @endcond */
+
+
+// magick \( mandelbrot_orbits_dst_h.tiff -evaluate Pow 0.6 \) \( mandelbrot_orbits_out_h.tiff -evaluate Pow 0.4 \) \( mandelbrot_orbits_in_h.tiff -evaluate Pow 0.7 \)  -combine combined.jpg; nomacs combined.jpg
+// magick \( mandelbrot_orbits_dst_h.tiff -evaluate Pow 0.8 \) \( mandelbrot_orbits_out_h.tiff -evaluate Pow 0.6 \) \( mandelbrot_orbits_in_h.tiff -evaluate Pow 0.8 \)  -combine combined.jpg; nomacs combined.jpg

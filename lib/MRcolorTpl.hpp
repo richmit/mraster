@@ -242,10 +242,10 @@ namespace mjr {
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       /** @name Color transform function types. */
       //@{
-      typedef std::function<colorTpl(colorTpl)>   co2co_func_t;       //!< color to color (transform)
-      typedef std::function<colorTpl&(colorTpl&)> cr2cr_func_t;       //!< color reference to color reference (transform)
-      typedef std::function<colorTpl(colorTpl&)>  cr2co_func_t;       //!< color reference to color (transform)
-      typedef std::function<void(colorTpl&)>      cr2void_func_t;     //!< color reference to void (transform)
+      typedef std::function<colorTpl(colorTpl)>   co2coType;       //!< color to color (transform)
+      typedef std::function<colorTpl&(colorTpl&)> cr2crType;       //!< color reference to color reference (transform)
+      typedef std::function<colorTpl(colorTpl&)>  cr2coType;       //!< color reference to color (transform)
+      typedef std::function<void(colorTpl&)>      cr2voidType;     //!< color reference to void (transform)
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
