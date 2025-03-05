@@ -7,7 +7,7 @@
 #+DATE:        2024-08-30
 #+KEYWORDS:    release history changelog
 #+LANGUAGE:    en
-#+OPTIONS:     num:t toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t skip:nil d:nil todo:t pri:nil H:5 p:t author:t html-scripts:nil 
+#+OPTIONS:     num:t toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t skip:nil d:nil todo:t pri:nil H:5 p:t author:t html-scripts:nil
 #+SEQ_TODO:    TODO:NEW(t)                         TODO:WORK(w)    TODO:HOLD(h)    | TODO:FUTURE(f)   TODO:DONE(d)    TODO:CANCELED(c)
 #+PROPERTY: header-args :eval never-export
 #+HTML_HEAD: <style>body { width: 95%; margin: 2% auto; font-size: 18px; line-height: 1.4em; font-family: Georgia, serif; color: black; background-color: white; }</style>
@@ -83,7 +83,7 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
       - mjr::colorTpl::wMean: Added warning regarding the vulgarities of floating point arithmetic and casts
     - Pixel Corners
       - Moved from experimental to production
-      - Final Member Names: 
+      - Final Member Names:
         - mjr::ramCanvasTpl::int2realSideX
         - mjr::ramCanvasTpl::int2realSideY
         - mjr::ramCanvasTpl::int2realCorner
@@ -117,6 +117,21 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
       - newton_z6.cpp: Fixed non-const trig functions for MSVC
       - phoenix.cpp, phoenixD.cpp, phoenixI.cpp: Added OpenMP 2.0 support
       - renamed mandelbrot_real_cfun.cpp to demo_colorizer.cpp
+      - Switched to incPx:
+        - barrymartin.cpp
+        - lorenz_fuz.cpp
+        - lorenz_multi.cpp
+        - mandelbrot_orbits.cpp
+        - newton_orbits.cpp
+        - peterdejong.cpp
+        - peterdejongM.cpp
+        - pickoverPopcorn.cpp
+        - sic.cpp
+        - simone_attractor.cpp
+        - simone_attractor_bmovie.cpp
+        - sprott2d.cpp
+        - tinkerbell.cpp
+        - tinkerbell_search.cpp
   - Miscellaneous
     - Broke utest_colorTpl.cpp up into different files
     - Added IncludeMRMathCPPLib.cmake code
@@ -286,7 +301,7 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
       - juliaM.cpp
       - newton_modified.cpp
     - Renamed:
-  	- mandelbrot_cycles.cpp -> mandelbrot_1n2cycles.cpp
+        - mandelbrot_cycles.cpp -> mandelbrot_1n2cycles.cpp
     - New/updated web pages:
       - https://www.mitchr.me/SS/biomorphMorph/index.html
       - https://www.mitchr.me/SS/newton/index.html
@@ -508,9 +523,9 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
 :CUSTOM_ID: v20.8.1b
 :END:
   I'm still calling it a beta, but it's pretty solid right now.
-   
+
   Please test and report back!
-    
+
   - New predefined ramCanvas types:
     - ramCanvas4c64b
     - ramCanvas3c64b
@@ -559,9 +574,9 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
 :CUSTOM_ID: v20.8.0b
 :END:
   Still beta, but approaching production.
-    
+
   Please test and report back!
-    
+
   - ramCanvasTpl refactor
     - Data member naming consistency
     - Fixed get/set methods to use uniform naming
@@ -584,9 +599,9 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
 :CUSTOM_ID: v20.7.0b
 :END:
   Still beta, but approaching production.
-    
+
   Please test and report back!
-    
+
   - Many more unit tests
   - Bug Fixes (mostly related to getC# refactor)
     - setRGBfromUnitHSL
@@ -631,9 +646,9 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
 :CUSTOM_ID: v20.6.0b
 :END:
   Still beta.  Still a few API changes, but things are stabilizing.
-    
+
   Please test and report back!
-    
+
   - Tons of unit tests
   - Rearranged some code in colorTpl for better Doxygen results.
   - colorTpl::csFP_tpl now provides both discreet and continuous color
@@ -687,13 +702,13 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
 :END:
   Moving it from alpha to beta.  I hope this is the last of the API
   changes for a while.
-    
+
   Please test and report back!
-  
+
   The API changes are mostly member name changes in colorTpl.  These will
   impact some users, but the refactor should be a simple search-n-replace.
   Unit tests are fleshing out, and I've fixed a few bugs.
-    
+
   - Fixed a bugs:
     - colorTpl::isBlack()
     - colorTpl::rgbSumIntensity()
@@ -733,13 +748,13 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
 :CUSTOM_ID: v20.4.0a
 :END:
   Still alpha.  Still changing the API. :)
-    
+
   Please test and report back!
-    
+
   The API changes are mostly member name changes in colorTpl.  These will
   impact some users, but the refactor should be a simple search-n-replace.
   Unit tests are fleshing out, and I've cleaned up the doxygen output.
-    
+
   - Renamed "clp" tfrm methods to "clamp" to better align with C++ use.
     - colorTpl::tfrmMultClp    -> tfrmMultClamp
     - colorTpl::tfrmDiffClp    -> tfrmDiffClamp
@@ -771,11 +786,11 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
 :CUSTOM_ID: v20.3.0a
 :END:
   Still alpha.  Still changing the API. :)
-    
+
   The big API change is the addition of an argument to ramCanvasTpl,
   and the removal of ramConfig.hpp.  That will all be transparent to
   people using the color.hpp & ramCanvas.hpp typedefs...
-    
+
   - Added color types for common 8-bit channel RGBA orderings:
     - colorBGR8b  -> ramCanvasBGR8b
     - colorARGB8b -> ramCanvasARGB8b
@@ -814,9 +829,9 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
 :CUSTOM_ID: v20.2.0a
 :END:
   Several serious bugs, and two API changing refactors in this update.
-    
+
   This release is BETA quality!!!  Please test it, and report bugs.
-    
+
   - Fixed bug with set/clear_byte funcs with clrChanT integer
   - Added "color scheme" classes to colorTpl
     - They know how many colors they support
@@ -901,7 +916,7 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
   One might consider this a brand new library; however, I expect most
   users will need to make few changes -- and the changes made will be
   pretty simple search-n-replace type changes.
-    
+
   - This release ie PRE-ALPHA!!!
     Please test it, and report bugs.
   - C++20 is now the language
@@ -1032,7 +1047,7 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
   - The string drawing functions now take std::string instead of c-style strings
   - Added static_cast in several places we had automatic conversions to document that we really do want that cast.
   - More careful about using types from the classes instead of integers in the examples for things like image coordinates and color channels.  It's still a
-    bit uneven -- even sloppy in some of the examples.  
+    bit uneven -- even sloppy in some of the examples.
   - Experimental support for MSVC++ (tested with MSVS CC 2022).  I may well have introduced some bugs or different behavior -- especially in the examples.  So
     be on the lookout for oddness.
   - I have recently become interested in arbitrary geometric transformations, and just added a bilinear interpolation method. I expect to adding several
@@ -1040,7 +1055,7 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
     test_gtfrm_scale.cpp will eventually be used to demonstrate that transformation method -- right now it just demonstrates the interpolation bits...
     - White space cleanup across the code base.  So if you do diffs, make sure to tell them to ignore white space changes.
     - Removed all the extra template arg bits in the colorTpl template.  Not sure how they got in there -- probably a fit of cut-n-paste at some point?  They
-      were not errors, just unnecessary.    
+      were not errors, just unnecessary.
     - Hard coded the C++ version to 2011 just to make sure the compiler was using something at least that new.
 * v3.0.0: Major cleanup of old code.  Added cycles examples
 :PROPERTIES:
@@ -1074,7 +1089,7 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
   - A few cmake & build changes
   - A couple updates to the base library
 
-* Update next-tag.org                                              :noexport: 
+* Update next-tag.org                                              :noexport:
 
 Part of my release process is to create a git tag for each release with the
 git-make-release.rb script.  That script uses the contents of a file named
