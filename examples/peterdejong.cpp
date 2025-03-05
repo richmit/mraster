@@ -61,7 +61,7 @@ std::vector<std::array<double, 9>> params {
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const int BSIZ = 7680;
+  const int BSIZ = 7680/4;
   for(decltype(params.size()) j=0; j<params.size(); ++j) {
     mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -2, 2, -2, 2);
 
