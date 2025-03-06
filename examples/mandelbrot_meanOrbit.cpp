@@ -26,12 +26,9 @@
   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
   DAMAGE.
   @endparblock
+ @filedetails
 
-
-cmake --build . -t mandelbrot_meanOrbit && ./mandelbrot_meanOrbit.exe && magick mandelbrot_meanOrbit.tiff -pointsize 40 -draw "gravity northwest fill white text 3,11 'Color: Im'"  mandelbrot_meanOrbit_im.png
-cmake --build . -t mandelbrot_meanOrbit && ./mandelbrot_meanOrbit.exe && magick mandelbrot_meanOrbit.tiff -pointsize 40 -draw "gravity northwest fill white text 3,11 'Color: abs'" mandelbrot_meanOrbit_abs.png
-cmake --build . -t mandelbrot_meanOrbit && ./mandelbrot_meanOrbit.exe && magick mandelbrot_meanOrbit.tiff -pointsize 40 -draw "gravity northwest fill white text 3,11 'Color: Re'"  mandelbrot_meanOrbit_re.png
-cmake --build . -t mandelbrot_meanOrbit && ./mandelbrot_meanOrbit.exe && magick mandelbrot_meanOrbit.tiff -pointsize 40 -draw "gravity northwest fill white text 3,11 'Color: arg'" mandelbrot_meanOrbit_arg.png
+  We color this Mandelbrot set by characteristics (arg, abs, re, im) of the /mean orbit/ point for the first MAXITR iterations.
 
 */
 /*******************************************************************************************************************************************************.H.E.**/
@@ -49,17 +46,19 @@ int main(void) {
   const int DSCALE = 8;
   const int USCALE = 8;
   const int MAXITR = 256;
-  const int width  = 1024*USCALE;  
-  const int height = 1024*USCALE;
-  rcT theRamCanvas(width, height, -2.2, 0.8, -1.5, 1.5);
+  const int CSIZE  = 1024*USCALE;  
+  rcT argRamCanvas(CSIZE, CSIZE, -2.2, 0.8, -1.5, 1.5);
+  rcT absRamCanvas(CSIZE, CSIZE, -2.2, 0.8, -1.5, 1.5);
+  rcT imRamCanvas( CSIZE, CSIZE, -2.2, 0.8, -1.5, 1.5);
+  rcT reRamCanvas( CSIZE, CSIZE, -2.2, 0.8, -1.5, 1.5);
 
 # pragma omp parallel for schedule(static,1)
-  for(rcT::coordIntType y=0;y<theRamCanvas.getNumPixY();y++) {
-    for(rcT::coordIntType x=0;x<theRamCanvas.getNumPixX();x++) {
+  for(rcT::coordIntType y=0;y<argRamCanvas.getNumPixY();y++) {
+    for(rcT::coordIntType x=0;x<argRamCanvas.getNumPixX();x++) {
       int count;
-      std::complex<mjr::ramCanvas1c64F::coordFltType> z(0.0, 0.0);
-      std::complex<mjr::ramCanvas1c64F::coordFltType> c(theRamCanvas.int2realX(x), theRamCanvas.int2realY(y));
-      std::complex<mjr::ramCanvas1c64F::coordFltType> orbit_sum(0.0, 0.0);
+      std::complex<rcT::coordFltType> z(0.0, 0.0);
+      std::complex<rcT::coordFltType> c(argRamCanvas.int2realX(x), argRamCanvas.int2realY(y));
+      std::complex<rcT::coordFltType> orbit_sum(0.0, 0.0);
       for(count=0; count<MAXITR ; count++) {
         orbit_sum += z;
         z = z * z + c;
@@ -67,18 +66,36 @@ int main(void) {
           break;
       }
       if (count == MAXITR) {
-        double clr = (std::arg(orbit_sum / static_cast<double>(MAXITR)-c) + std::numbers::pi) / (2.0*std::numbers::pi);        
-        // double clr = std::abs(orbit_sum / static_cast<double>(MAXITR)-c);
-        // double clr = std::real(orbit_sum / static_cast<double>(MAXITR)-c);
-        // double clr = std::imag(orbit_sum / static_cast<double>(MAXITR)-c);
-        theRamCanvas.drawPoint(x, y, rcT::colorType::csCColdeColdToHot::c(mjr::math::ivl::wrapCC(clr, 1.0)));
+        std::complex<mjr::ramCanvas1c64F::coordFltType> relative_orbit_mean = orbit_sum / static_cast<double>(MAXITR)-c;
+        rcT::coordFltType clr_arg = (std::arg(relative_orbit_mean) + std::numbers::pi) / (2.0*std::numbers::pi);        
+        argRamCanvas.drawPoint(x, y, rcT::colorType::csCColdeColdToHot::c(mjr::math::ivl::wrapCC(clr_arg, 1.0)));
+        rcT::coordFltType clr_abs = std::abs(relative_orbit_mean);
+        absRamCanvas.drawPoint(x, y, rcT::colorType::csCColdeColdToHot::c(mjr::math::ivl::wrapCC(clr_abs, 1.0)));
+        rcT::coordFltType clr_re  = std::real(relative_orbit_mean);
+        reRamCanvas.drawPoint(x, y, rcT::colorType::csCColdeColdToHot::c(mjr::math::ivl::wrapCC(clr_re, 1.0)));
+        rcT::coordFltType clr_im  = std::imag(relative_orbit_mean);
+        imRamCanvas.drawPoint(x, y, rcT::colorType::csCColdeColdToHot::c(mjr::math::ivl::wrapCC(clr_im, 1.0)));
       }
     }
   }
 
-  if (DSCALE > 1)
-    theRamCanvas.scaleDownMax(DSCALE);
-  theRamCanvas.writeTIFFfile("mandelbrot_meanOrbit.tiff");
+  if (DSCALE > 1) {
+    argRamCanvas.scaleDownMax(DSCALE);
+    absRamCanvas.scaleDownMax(DSCALE);
+    reRamCanvas.scaleDownMax(DSCALE);
+    imRamCanvas.scaleDownMax(DSCALE);
+  }
+
+  argRamCanvas.drawString("arg", mjr::hershey::font::ROMAN_SL_SANSERIF, 90, 90, "white",  1, 20); 
+  absRamCanvas.drawString("abs", mjr::hershey::font::ROMAN_SL_SANSERIF, 90, 90, "white",  1, 20); 
+  reRamCanvas.drawString( "re",  mjr::hershey::font::ROMAN_SL_SANSERIF, 90, 90, "white",  1, 20); 
+  imRamCanvas.drawString( "im",  mjr::hershey::font::ROMAN_SL_SANSERIF, 90, 90, "white",  1, 20); 
+
+  argRamCanvas.writeTIFFfile("mandelbrot_meanOrbit_arg.tiff");
+  absRamCanvas.writeTIFFfile("mandelbrot_meanOrbit_abs.tiff");
+  reRamCanvas.writeTIFFfile( "mandelbrot_meanOrbit_re.tiff");
+  imRamCanvas.writeTIFFfile( "mandelbrot_meanOrbit_im.tiff");
+
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
 }
