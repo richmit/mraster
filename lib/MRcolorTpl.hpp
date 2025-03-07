@@ -669,7 +669,7 @@ namespace mjr {
       //@}
 
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      /** @name Constructors: RGB
+      /** @name Constructors: RGB with native mjr::colorTpl::clrChanT inputs.
           These all use setChansRGB or setChansRGBA internally; however, these constructors will set any unspecified channels to min. */
       //@{
       colorTpl(clrChanT r, clrChanT g, clrChanT b, clrChanT a) {
@@ -840,7 +840,7 @@ namespace mjr {
       inline colorTpl& setChansRGB(clrChanT r, clrChanT g, clrChanT b)              { setRed(r); setGreen(g); setBlue(b);              return *this; }
 
       inline colorTpl& setChansRGBA_dbl(double r, double g, double b, double a)     { return setChansRGBA(convertDoubleToChan(r), convertDoubleToChan(g), convertDoubleToChan(b), convertDoubleToChan(a)); }
-      inline colorTpl& setChansRGB_dbl(double r, double g, double b)                { return setChansRGB(convertDoubleToChan(r), convertDoubleToChan(g), convertDoubleToChan(b));                         }
+      inline colorTpl& setChansRGB_dbl (double r, double g, double b)               { return setChansRGB(convertDoubleToChan(r), convertDoubleToChan(g), convertDoubleToChan(b));                          }
 
       inline colorTpl& setChansRGBA_byte(uint8_t r, uint8_t g, uint8_t b, uint8_t a) { return setChansRGBA(convertByteToChan(r), convertByteToChan(g), convertByteToChan(b), convertByteToChan(a)); }
       inline colorTpl& setChansRGB_byte(uint8_t r, uint8_t g, uint8_t b)             { return setChansRGB(convertByteToChan(r), convertByteToChan(g), convertByteToChan(b));                       }

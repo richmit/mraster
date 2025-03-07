@@ -67,7 +67,7 @@ int main(void) {
       double r = mjr::math::ivl::wrapCO(atan2(px,py)+2*px, 1.0);
       double b = mjr::math::ivl::wrapCO(atan2(px,py)+py, 1.0);
       double g = mjr::math::ivl::wrapCO(pz/61, 1.0);
-      theRamCanvas.getPxColorRefNC(x, y).setChansRGB_dbl(r, g, b);
+      theRamCanvas.drawPoint(x, y, decltype(theRamCanvas)::colorType().setChansRGB_dbl(r, g, b));
     }
   }
   theRamCanvas.writeTIFFfile("wakOrb03.tiff");
