@@ -169,7 +169,7 @@ set(TARGETS_REQ_NONE   "BurningShip" "apollony" "apomorph" "bifurcation_diagram"
                        "attracting_torus_shadow" "mandelbrot_potential" "demo_colorizer" "mandelbrot_triangle" "multibrotMovie"
                        "multibrotSnaps" "peterdejong" "barrymartin" "tinkerbell" "tinkerbell_search" "pickoverPopcorn" "sic" "sic_search"
                        "sierpinski_triangle" "sprott2d" "test_draw_fonts" "test_images" "tippets" "tricorn" "tricornMovie" "types" "butterfly"
-                       "LevyCurve" "test_color_con" "demo_corners" "simone_attractor_search") 
+                       "LevyCurve" "test_color_con" "demo_corners" "simone_attractor_search" "mandeldragon_orbits") 
 set(TARGETS_REQ_OPENGL "glut_image")
 set(TARGETS_REQ_TIFF   "brownianDiffusion" "displayImageSDL2" "dlaBrownian" "dlaDrift" "img_process" "test_interp_scale" "geomTfrm_LensDistortion"
                        "geomTfrm_Arb"  "geomTfrm_Rotate" "mandelbrot_precomp_p1")
@@ -179,7 +179,7 @@ set(TARGETS_USE_OPENMP "mandelbrot_bm_cplx_openmp" "mandelbrot_precomp" "mandelb
                        "newton_modified" "newton_min_root" "newton_3updown" "newton_roter" "attracting_torus_shadowM" "laguerre_3updown"
                        "laguerre_simple" "kalisetJ" "kalisetM1" "kalisetM2" "phoenix" "phoenixI" "phoenixD" "phoenixM" "phoenixM2" "doublePendulum"
                        "doublePendulumM" "wakOrb01" "wakOrb02" "wakOrb03" "brusselator" "heartFrac" "duck" "mandelbrot_meanOrbit" "feather" 
-                       "simone_attractor" "lorenz_mM" "peterdejongEAAO" "demo_data_and_filter" "simone_attractor_bmovie"
+                       "simone_attractor" "lorenz_mM" "peterdejongEAAO" "demo_data_and_filter" "simone_attractor_bmovie" "mandeldragon"
                         "mandelbrot_minOrbit")
 set(TARGETS_REQ_GTEST  "all_gtests"
                        "c_set_chan_dbl" "c_set_chan_byte" "c_set_chan_gen" "c_set_chan_const" "c_set_chan_hex" "c_set_rgba_pack" "c_set_rgb_tga"
