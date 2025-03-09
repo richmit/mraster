@@ -114,6 +114,7 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
       - mandelbrot_meanOrbit.cpp
       - simone_attractor.cpp
       - demo_data_and_filter.cpp
+      - mandelbrot_minOrbit
     - Updated
       - newton_z6.cpp: Fixed non-const trig functions for MSVC
       - phoenix.cpp, phoenixD.cpp, phoenixI.cpp: Added OpenMP 2.0 support
