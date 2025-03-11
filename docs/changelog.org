@@ -103,6 +103,7 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
   - Examples
     - New
       - peterdejongEAAO.cpp
+      - tricorn_orbits.cpp
       - simone_attractor_bmovie.cpp
       - simone_attractor_search.cpp
       - demo_corners.cpp
