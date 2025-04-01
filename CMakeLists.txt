@@ -169,7 +169,7 @@ set(TARGETS_REQ_NONE   "BurningShip" "apollony" "apomorph" "bifurcation_diagram"
                        "attracting_torus_shadow" "mandelbrot_potential" "demo_colorizer" "mandelbrot_triangle" "multibrotMovie"
                        "multibrotSnaps" "peterdejong" "barrymartin" "tinkerbell" "tinkerbell_search" "pickoverPopcorn" "sic" "sic_search"
                        "sierpinski_triangle" "sprott2d" "test_draw_fonts" "test_images" "tippets" "tricorn" "tricornMovie" "types" "butterfly"
-                       "LevyCurve" "test_color_con" "demo_corners" "simone_attractor_search" "mandeldragon_orbits" "tricorn_orbits") 
+                       "LevyCurve" "test_color_con" "demo_corners" "simone_attractor_search" "mandeldragon_orbits" "tricorn_orbits" "ikeda_attractor") 
 set(TARGETS_REQ_OPENGL "glut_image")
 set(TARGETS_REQ_TIFF   "brownianDiffusion" "displayImageSDL2" "dlaBrownian" "dlaDrift" "img_process" "test_interp_scale" "geomTfrm_LensDistortion"
                        "geomTfrm_Arb"  "geomTfrm_Rotate" "mandelbrot_precomp_p1")
