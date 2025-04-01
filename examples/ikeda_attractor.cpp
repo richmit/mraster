@@ -38,6 +38,10 @@
   \end{eqnarray} @f]
 
   Where @f$ u \ge \frac{3}{5} @f$ is a parameter.
+
+  We compute SGSIZ^2 paths for the attractor.  The initial condition for each path is pulled from a SGWID wide grid centered at the origin.  We compute MXITR
+  steps for each path, and plot the steps after the DRTHS's iteration.
+
 */
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
