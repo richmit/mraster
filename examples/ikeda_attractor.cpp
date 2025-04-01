@@ -61,8 +61,8 @@ int main(void) {
 
   mjr::ramCanvas1c16b theRamCanvas(BSIZ, BSIZ, -6.0, 7.0, -2.0, 10.0);
   for(int xsi=0; xsi<SGSIZ; xsi++) {
-    decltype(theRamCanvas)::coordFltType xn = -SGWID/2 + xsi*SGWID/(SGSIZ-1);
     for(int ysi=0; ysi<SGSIZ; ysi++) {
+      decltype(theRamCanvas)::coordFltType xn = -SGWID/2 + xsi*SGWID/(SGSIZ-1);
       decltype(theRamCanvas)::coordFltType yn = -SGWID/2 + ysi*SGWID/(SGSIZ-1);
       for(uint64_t i=0;i<MXITR;i++) {
         decltype(theRamCanvas)::coordFltType tmp1 = 0.4 - 6.0 / (1.0+xn*xn+yn*yn);
