@@ -119,7 +119,9 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
       - mandeldragon.cpp 
       - mandeldragon_orbits.cpp 
       - ikeda_attractor.cpp
-      - lorenz_frac.cpp
+      - 3da_frac_lorenz.cpp
+      - 16bit_data_image_filter.cpp
+      - 3da_frac_langford.cpp
     - Updated
       - newton_z6.cpp: Fixed non-const trig functions for MSVC
       - phoenix.cpp, phoenixD.cpp, phoenixI.cpp: Added OpenMP 2.0 support

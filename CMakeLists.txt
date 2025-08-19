@@ -166,7 +166,7 @@ set(TARGETS_REQ_NONE   "BurningShip" "apollony" "apomorph" "bifurcation_diagram"
                        "color_web_rectangle" "color_web_triangle" "convertRawToTIFF" "cplxColor" "dlaSeed" "heart2022" "heart2025" "invertedMandelbrot" "julia"
                        "juliaM" "juliaM2" "level_curves" "lorenz_fuz" "lorenz_multi" "mandelbrot_binary" "mandelbrot_biomorph" "mandelbrot_bm_cplx"
                        "mandelbrot_bm_cplx_hyper" "mandelbrot_bm_real" "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits"
-                       "attracting_torus_shadow" "mandelbrot_potential" "demo_colorizer" "mandelbrot_triangle" "multibrotMovie" 
+                       "attracting_torus_shadow" "mandelbrot_potential" "demo_colorizer" "mandelbrot_triangle" "multibrotMovie" "16bit_data_image_filter"
                        "multibrotSnaps" "peterdejong" "barrymartin" "tinkerbell" "tinkerbell_search" "pickoverPopcorn" "sic" "sic_search"
                        "sierpinski_triangle" "sprott2d" "test_draw_fonts" "test_images" "tippets" "tricorn" "tricornMovie" "types" "butterfly"
                        "LevyCurve" "test_color_con" "demo_corners" "simone_attractor_search" "mandeldragon_orbits" "tricorn_orbits" "ikeda_attractor") 
@@ -180,7 +180,7 @@ set(TARGETS_USE_OPENMP "mandelbrot_bm_cplx_openmp" "mandelbrot_precomp" "mandelb
                        "laguerre_simple" "kalisetJ" "kalisetM1" "kalisetM2" "phoenix" "phoenixI" "phoenixD" "phoenixM" "phoenixM2" "doublePendulum"
                        "doublePendulumM" "wakOrb01" "wakOrb02" "wakOrb03" "brusselator" "heartFrac" "duck" "mandelbrot_meanOrbit" "feather" 
                        "simone_attractor" "lorenz_mM" "peterdejongEAAO" "demo_data_image" "simone_attractor_bmovie" "mandeldragon"
-                        "mandelbrot_minOrbit" "3da_frac_lorenz")
+                        "mandelbrot_minOrbit" "3da_frac_lorenz" "3da_frac_langford")
 set(TARGETS_REQ_GTEST  "all_gtests"
                        "c_set_chan_dbl" "c_set_chan_byte" "c_set_chan_gen" "c_set_chan_const" "c_set_chan_hex" "c_set_rgba_pack" "c_set_rgb_tga"
                        "c_set_rgb_wavelengthCM" "c_set_rgb_wavelengthLA" "c_set_cs_csFPcircular12" "c_set_cs_csCBSpectral" "c_set_cs_csBin"

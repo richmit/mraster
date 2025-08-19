@@ -43,10 +43,11 @@
   computed (sometimes at great cost).  For this group, the data image serves as samples of this underlying function.  Many of the MRaster example programs
   follow this paradigm:
 
-    - demo_data_and_filter.cpp: We use an integer image to hold values of the Mandelbrot escape time function.
+    - demo_data_image.cpp: We use an integer image to hold values of the Mandelbrot escape time function.
     - doublePendulumM.cpp: We use four floating point images to store the state of a differential equation solution
     - sic.cpp & peterdejong.cpp: We use integer images to store a 2D histogram
-
+    - 3da_frac_langford.cpp & 3da_frac_lorenz.cpp: Use integer images to store the time required for an IV to be captured by an attractor.
+    - 16bit_data_image_filter.cpp: Read a 16bit greyscale image, and colorizes it several diffrent ways.
 */
 /*******************************************************************************************************************************************************.H.E.**/
 /** @cond exj */
@@ -70,22 +71,7 @@ int main(void) {
   });
 
   // escDatRC contains Mandelbrot escape function data, but visually it appears as nothing but a black image -- the maximum grey value at 255 and a total
-  // dynamic range of 65536.  Our task now is to create a pseudo-color image to visualize this data.
-
-  // We use the hpf_t filter type to transform our data into pseudo-color images without modifying the original data.
-  typedef mjr::color3c8b oc_t;
-  typedef mjr::ramCanvasPixelFilter::FuncHomoTransform<decltype(escDatRC), oc_t> hpf_t;
-
-  //  For our first attempt, we simply use the values in escDatRC as the three components of a 24-bit RGB image.
-  escDatRC.writeTIFFfile("demo_data_and_filter_01.tiff", hpf_t(escDatRC,[](auto inColor) { return oc_t(static_cast<oc_t::channelType>(inColor.getC0())); }));
-
-  // Next we use the integers stored in escDatRC to index a color scheme (Note csCColdeFireRamp has more 256 colors).
-  escDatRC.writeTIFFfile("demo_data_and_filter_02.tiff", hpf_t(escDatRC,[](auto inColor) { return oc_t::csCColdeFireRamp::c(inColor.getC0()*oc_t::csCColdeFireRamp::numC/255); }));
-
-  // Like the previous line, but with a 30x multiplayer so the colors wrap around.  This is a pretty typical way to draw the escape function.
-  escDatRC.writeTIFFfile("demo_data_and_filter_03.tiff", hpf_t(escDatRC,[](auto inColor) { return oc_t::csCColdeFireRamp::c(30*inColor.getC0()); }));
-
-  // We have created three different images, and our original data remains untouched.  
+  // dynamic range of 65536.  See: 16bit_data_image_filter.cpp!
 
   std::chrono::duration<double> runTime = std::chrono::system_clock::now() - startTime;
   std::cout << "Total Runtime " << runTime.count() << " sec" << std::endl;
