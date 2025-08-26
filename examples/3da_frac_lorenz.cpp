@@ -75,8 +75,8 @@ std::array<drc_t::coordFltType, 3> eq(std::array<drc_t::coordFltType, 3> const& 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const int XSIZ = 7680/8;
-  const int YSIZ = 4320/8;
+  const int XSIZ = 7680/1;
+  const int YSIZ = 4320/1;
 
   drc_t theRamCanvas(XSIZ, YSIZ, -200, 200, 10, 40);
 
