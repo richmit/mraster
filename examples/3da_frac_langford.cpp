@@ -59,28 +59,35 @@
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
 #include <valarray>
 #include "ramCanvas.hpp"
-#include "MRMathSFUN.hpp"
+#include "MRMathODE.hpp"
 
 typedef mjr::ramCanvas1c16b drc_t;
 typedef mjr::color3c8b oc_t;
 typedef mjr::ramCanvasPixelFilter::FuncHomoTransform<drc_t, oc_t> hpf_t;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-int main(void) {
-  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const int XSIZ = 7680/1;
-  const int YSIZ = 7680/1;
-
-  drc_t theRamCanvas(XSIZ, YSIZ, -1.6, 1.6, -0.5, 3);
-
-  const drc_t::colorChanType maxPtsPerCurve = drc_t::colorType::maxChanVal;
-  const drc_t::coordFltType tDelta          = 0.001;
+std::array<drc_t::coordFltType, 3> eq(std::array<drc_t::coordFltType, 3> const& p) {
   const drc_t::coordFltType alpha           =  0.95;
   const drc_t::coordFltType beta            =  0.7;
   const drc_t::coordFltType lambda          =  0.6;
   const drc_t::coordFltType omega           =  3.5;
   const drc_t::coordFltType rho             =  0.25;
   const drc_t::coordFltType epsilon         =  0.1;
+  return { (p[2] - beta) * p[0] - omega * p[1],
+           omega * p[0] + (p[2] - beta) * p[1],
+           lambda + alpha * p[2] - (p[2]*p[2]*p[2] / 3) - (p[0]*p[0] + p[1]*p[1]) * (1 + rho * p[2]) + epsilon * p[2] * p[0]*p[0]*p[0] };
+}
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+int main(void) {
+  std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
+  const int XSIZ = 7680/8;
+  const int YSIZ = 7680/8;
+
+  drc_t theRamCanvas(XSIZ, YSIZ, -1.6, 1.6, -0.5, 3);
+
+  const drc_t::colorChanType maxPtsPerCurve = drc_t::colorType::maxChanVal;
+  const drc_t::coordFltType tDelta          = 0.005;
   const drc_t::coordFltType zOff            =  0.75;
   const drc_t::coordFltType inRad           =  0.50;
 
@@ -88,22 +95,14 @@ int main(void) {
   for(drc_t::coordIntType yi=0;yi<theRamCanvas.getNumPixY();yi++) {
     std::cout << "Line: " << yi << std::endl;
     for(drc_t::coordIntType xi=0;xi<theRamCanvas.getNumPixX();xi++) {
-      drc_t::coordFltType xNew, yNew, zNew;
-      drc_t::coordFltType x, y, z;
-      x = theRamCanvas.int2realX(xi);
-      y = 0;
-      z = theRamCanvas.int2realY(yi);
+      std::array<drc_t::coordFltType, 3> p {theRamCanvas.int2realX(xi), 0.0, theRamCanvas.int2realY(yi)};
       for(drc_t::colorChanType i=0;i<maxPtsPerCurve;i++) {
-        xNew = x + tDelta * ((z - beta) * x - omega * y);
-        yNew = y + tDelta * (omega * x + (z - beta) * y);
-        zNew = z + tDelta * (lambda + alpha * z - (z*z*z / 3) - (x*x + y*y) * (1 + rho * z) + epsilon * z * x*x*x);
-        if (xNew*xNew + yNew*yNew + (zNew-zOff)*(zNew-zOff) < inRad*inRad) {
+        std::array<drc_t::coordFltType, 3> p_new = mjr::math::vec::sum(p, mjr::math::ode::rk1<drc_t::coordFltType, 3>(p, eq, tDelta));
+        if (mjr::math::vec::dist2sqr(p_new, {0.0, 0.0, zOff}) < inRad*inRad) {
           theRamCanvas.drawPoint(xi, yi, i);
           break;
         }
-        x=xNew;
-        y=yNew;
-        z=zNew;
+        p = p_new;
       }
     }
   }

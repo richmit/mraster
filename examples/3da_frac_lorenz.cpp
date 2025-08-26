@@ -52,49 +52,50 @@
 /** @cond exj */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
-#include <valarray>
+#include <functional>                                                    /* STL funcs               C++98    */
+
 #include "ramCanvas.hpp"
 #include "MRMathSFUN.hpp"
+#include "MRMathODE.hpp"
 
 typedef mjr::ramCanvas1c16b drc_t;
 typedef mjr::color3c8b oc_t;
 typedef mjr::ramCanvasPixelFilter::FuncHomoTransform<drc_t, oc_t> hpf_t;
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------------
+std::array<drc_t::coordFltType, 3> eq(std::array<drc_t::coordFltType, 3> const& p) {
+  const drc_t::coordFltType a = 10.0;
+  const drc_t::coordFltType b = 28.0;
+  const drc_t::coordFltType c = 8.0 / 3;
+  return {a * (p[1] - p[0]),
+          p[0] * (b - p[2]) - p[1],
+          p[0] * p[1] - c * p[2]};
+}
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
 int main(void) {
   std::chrono::time_point<std::chrono::system_clock> startTime = std::chrono::system_clock::now();
-  const int XSIZ = 7680/1;
-  const int YSIZ = 4320/1;
+  const int XSIZ = 7680/8;
+  const int YSIZ = 4320/8;
 
   drc_t theRamCanvas(XSIZ, YSIZ, -200, 200, 10, 40);
 
   const drc_t::colorChanType maxPtsPerCurve = drc_t::colorType::maxChanVal;
-  const drc_t::coordFltType tDelta          = 0.001;
-  const drc_t::coordFltType a               = 10.0;
-  const drc_t::coordFltType b               = 28.0;
-  const drc_t::coordFltType c               = 8.0 / 3;
+  const drc_t::coordFltType tDelta          = 0.01;
 
 # pragma omp parallel for schedule(static,1)
   for(drc_t::coordIntType yi=0;yi<theRamCanvas.getNumPixY();yi++) {
     std::cout << "Line: " << yi << std::endl;
     for(drc_t::coordIntType xi=0;xi<theRamCanvas.getNumPixX();xi++) {
-      drc_t::coordFltType xNew, yNew, zNew;
-      drc_t::coordFltType x, y, z;
-      x = theRamCanvas.int2realX(xi);
-      y = 1.51;
-      z = theRamCanvas.int2realY(yi);
-      int s = mjr::math::sfun::sgn(x);
+    std::array<drc_t::coordFltType, 3> p {theRamCanvas.int2realX(xi), 1.51, theRamCanvas.int2realY(yi) };
+      int s = mjr::math::sfun::sgn(p[0]);
       for(drc_t::colorChanType i=0;i<maxPtsPerCurve;i++) {
-        xNew = x + a * (y - x) * tDelta;
-        yNew = y + (x * (b - z) - y) * tDelta;
-        zNew = z + (x * y - c * z) * tDelta;
-        if (mjr::math::sfun::sgn(xNew) != s) {
-          theRamCanvas.drawPoint(xi, yi, i);
+        std::array<drc_t::coordFltType, 3> p_new = mjr::math::vec::sum(p, mjr::math::ode::rk4<drc_t::coordFltType, 3>(p, eq, tDelta));
+        if (mjr::math::sfun::sgn(p[0]) != s) {
+          theRamCanvas.drawPoint(xi, yi, i*10);
           break;
         }
-        x=xNew;
-        y=yNew;
-        z=zNew;
+      p = p_new;
       }
     }
   }
