@@ -58,6 +58,7 @@ include(CTest)
 OPTION(O_DOXYGEN     "Doxygen support (documentation)"         ON  )
 OPTION(O_GTEST       "Include support for Google Test"         ON  )
 OPTION(O_TIFF        "libTIFF support (Advanced TIFF writer)"  ON  )
+OPTION(O_LAPACKE     "LAPACKE support"                         ON  )
 OPTION(O_OPENGL      "OpenGL & GLUT support"                   ON  )
 OPTION(O_OPENMP      "OpenMP support"                          ON  )
 OPTION(O_SDL2        "SDL2 support"                            ON  )
@@ -73,6 +74,10 @@ endif()
 
 if(O_TIFF)
   find_package(TIFF)
+endif()
+
+if(O_LAPACKE)
+  find_package(LAPACKE)
 endif()
 
 if(O_OPENGL)
@@ -160,42 +165,47 @@ export(TARGETS MRaster FILE "${CMAKE_BINARY_DIR}/MRasterLib.cmake")
 
 ################################################################################################################################################################
 
-set(TARGETS_REQ_NONE   "BurningShip" "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "biomorph2" "biomorphMorph" "bmark" "chaos_game"
-                       "circles" "collatz" "color_all" "color_interp_hsl_vs_rgb" "color_lut_cubehelix" "color_lut_docs" "color_lut_indexed"
-                       "color_lut_indexedC" "color_lut_poly" "color_lut_rainbows" "color_lut_ramp_cube" "color_lut_ramp_cubeC" "color_lut_ramp_misc"
-                       "color_web_rectangle" "color_web_triangle" "convertRawToTIFF" "cplxColor" "dlaSeed" "heart2022" "heart2025" "invertedMandelbrot" "julia"
-                       "juliaM" "juliaM2" "level_curves" "lorenz_fuz" "lorenz_multi" "mandelbrot_binary" "mandelbrot_biomorph" "mandelbrot_bm_cplx"
-                       "mandelbrot_bm_cplx_hyper" "mandelbrot_bm_real" "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits"
-                       "attracting_torus_shadow" "mandelbrot_potential" "demo_colorizer" "mandelbrot_triangle" "multibrotMovie" "16bit_data_image_filter"
-                       "multibrotSnaps" "peterdejong" "barrymartin" "tinkerbell" "tinkerbell_search" "pickoverPopcorn" "sic" "sic_search"
-                       "sierpinski_triangle" "sprott2d" "test_draw_fonts" "test_images" "tippets" "tricorn" "tricornMovie" "types" "butterfly"
-                       "LevyCurve" "test_color_con" "demo_corners" "simone_attractor_search" "mandeldragon_orbits" "tricorn_orbits" "ikeda_attractor") 
-set(TARGETS_REQ_OPENGL "glut_image")
-set(TARGETS_REQ_TIFF   "brownianDiffusion" "displayImageSDL2" "dlaBrownian" "dlaDrift" "img_process" "test_interp_scale" "geomTfrm_LensDistortion"
-                       "geomTfrm_Arb"  "geomTfrm_Rotate" "mandelbrot_precomp_p1")
-set(TARGETS_USE_OPENMP "mandelbrot_bm_cplx_openmp" "mandelbrot_precomp" "mandelbrot_precomp_p1" "mandelbrot_count_movie" "mandelbrot_distance"
-                       "mandelbrot_wave" "peterdejongM" "newton_orbits" "newton_simple" "newton_max_mod" "mandelbrot_pickover" "mandelbrot_ltrap"
-                       "newton_max_back" "newton_min_angle" "mandelbrot_simple" "newton_min_angle_starfish" "newton_half" "newton_vs" "newton_z6"
-                       "newton_modified" "newton_min_root" "newton_3updown" "newton_roter" "attracting_torus_shadowM" "laguerre_3updown"
-                       "laguerre_simple" "kalisetJ" "kalisetM1" "kalisetM2" "phoenix" "phoenixI" "phoenixD" "phoenixM" "phoenixM2" "doublePendulum"
-                       "doublePendulumM" "wakOrb01" "wakOrb02" "wakOrb03" "brusselator" "heartFrac" "duck" "mandelbrot_meanOrbit" "feather" 
-                       "simone_attractor" "lorenz_mM" "peterdejongEAAO" "demo_data_image" "simone_attractor_bmovie" "mandeldragon"
-                        "mandelbrot_minOrbit" "3da_frac_lorenz" "3da_frac_langford")
-set(TARGETS_REQ_GTEST  "all_gtests"
-                       "c_set_chan_dbl" "c_set_chan_byte" "c_set_chan_gen" "c_set_chan_const" "c_set_chan_hex" "c_set_rgba_pack" "c_set_rgb_tga"
-                       "c_set_rgb_wavelengthCM" "c_set_rgb_wavelengthLA" "c_set_cs_csFPcircular12" "c_set_cs_csCBSpectral" "c_set_cs_csBin"
-                       "c_set_cs_csHSLhX" "c_set_cs_csPLY" "c_set_cs_csCColdeRainbow" "c_comp_distDeltaE1976" "c_set_rgb_constant" "c_tfrm_logic"
-                       "c_tfrm_arith" "c_comp_distX" "c_set_cs_csCubeHelix" "c_tfrm_misc" "c_tfrm_websafe" "c_tfrm_PowPow" "c_bool_isBlack"
-                       "c_bool_isEqual" "c_comp_luminance" "c_set_rgb_unitHSx" "c_bool_isClose" "c_set_rgb_ColorSpace" "c_tfrm_GryLevScl"
-                       "c_comp_dotProd" "c_comp_MinMax" "c_comp_linearInterpolate" "c_comp_wMean" "c_comp_rgb2colorSpace" "c_comp_bestChan"
-                       "c_constructor" "c_int128_test" "r_draw_circles" "r_draw_point" "r_draw_primatives" "r_draw_lines" "r_draw_rectangles"
-                       "r_draw_rectangles_filled" "r_save_file" "r_draw_triangles" "r_draw_triangles_filled" "r_tfrm_geom" "r_adjoin" "r_p_scale"
-                       "r_draw_string" "r_draw_glyph")
+set(TARGETS_REQ_NONE    "BurningShip" "apollony" "apomorph" "bifurcation_diagram" "biomorph1" "biomorph2" "biomorphMorph" "bmark" "chaos_game"
+                        "circles" "collatz" "color_all" "color_interp_hsl_vs_rgb" "color_lut_cubehelix" "color_lut_docs" "color_lut_indexed"
+                        "color_lut_indexedC" "color_lut_poly" "color_lut_rainbows" "color_lut_ramp_cube" "color_lut_ramp_cubeC" "color_lut_ramp_misc"
+                        "color_web_rectangle" "color_web_triangle" "convertRawToTIFF" "cplxColor" "dlaSeed" "heart2022" "heart2025" "invertedMandelbrot" "julia"
+                        "juliaM" "juliaM2" "level_curves" "lorenz_fuz" "lorenz_multi" "mandelbrot_binary" "mandelbrot_biomorph" "mandelbrot_bm_cplx"
+                        "mandelbrot_bm_cplx_hyper" "mandelbrot_bm_real" "mandelbrot_emboss" "mandelbrot_grayscale" "mandelbrot_orbits"
+                        "attracting_torus_shadow" "mandelbrot_potential" "demo_colorizer" "mandelbrot_triangle" "multibrotMovie" "16bit_data_image_filter"
+                        "multibrotSnaps" "peterdejong" "barrymartin" "tinkerbell" "tinkerbell_search" "pickoverPopcorn" "sic" "sic_search"
+                        "sierpinski_triangle" "sprott2d" "test_draw_fonts" "test_images" "tippets" "tricorn" "tricornMovie" "types" "butterfly"
+                        "LevyCurve" "test_color_con" "demo_corners" "simone_attractor_search" "mandeldragon_orbits" "tricorn_orbits" "ikeda_attractor") 
+set(TARGETS_REQ_OPENGL  "glut_image")
+set(TARGETS_REQ_LAPACKE "poly_root_cloud")
+set(TARGETS_REQ_TIFF    "brownianDiffusion" "displayImageSDL2" "dlaBrownian" "dlaDrift" "img_process" "test_interp_scale" "geomTfrm_LensDistortion"
+                        "geomTfrm_Arb"  "geomTfrm_Rotate" "mandelbrot_precomp_p1")
+set(TARGETS_USE_OPENMP  "mandelbrot_bm_cplx_openmp" "mandelbrot_precomp" "mandelbrot_precomp_p1" "mandelbrot_count_movie" "mandelbrot_distance"
+                        "mandelbrot_wave" "peterdejongM" "newton_orbits" "newton_simple" "newton_max_mod" "mandelbrot_pickover" "mandelbrot_ltrap"
+                        "newton_max_back" "newton_min_angle" "mandelbrot_simple" "newton_min_angle_starfish" "newton_half" "newton_vs" "newton_z6"
+                        "newton_modified" "newton_min_root" "newton_3updown" "newton_roter" "attracting_torus_shadowM" "laguerre_3updown"
+                        "laguerre_simple" "kalisetJ" "kalisetM1" "kalisetM2" "phoenix" "phoenixI" "phoenixD" "phoenixM" "phoenixM2" "doublePendulum"
+                        "doublePendulumM" "wakOrb01" "wakOrb02" "wakOrb03" "brusselator" "heartFrac" "duck" "mandelbrot_meanOrbit" "feather" 
+                        "simone_attractor" "lorenz_mM" "peterdejongEAAO" "demo_data_image" "simone_attractor_bmovie" "mandeldragon"
+                         "mandelbrot_minOrbit" "3da_frac_lorenz" "3da_frac_langford" "poly_root_cloud")
+set(TARGETS_REQ_GTEST   "all_gtests"
+                        "c_set_chan_dbl" "c_set_chan_byte" "c_set_chan_gen" "c_set_chan_const" "c_set_chan_hex" "c_set_rgba_pack" "c_set_rgb_tga"
+                        "c_set_rgb_wavelengthCM" "c_set_rgb_wavelengthLA" "c_set_cs_csFPcircular12" "c_set_cs_csCBSpectral" "c_set_cs_csBin"
+                        "c_set_cs_csHSLhX" "c_set_cs_csPLY" "c_set_cs_csCColdeRainbow" "c_comp_distDeltaE1976" "c_set_rgb_constant" "c_tfrm_logic"
+                        "c_tfrm_arith" "c_comp_distX" "c_set_cs_csCubeHelix" "c_tfrm_misc" "c_tfrm_websafe" "c_tfrm_PowPow" "c_bool_isBlack"
+                        "c_bool_isEqual" "c_comp_luminance" "c_set_rgb_unitHSx" "c_bool_isClose" "c_set_rgb_ColorSpace" "c_tfrm_GryLevScl"
+                        "c_comp_dotProd" "c_comp_MinMax" "c_comp_linearInterpolate" "c_comp_wMean" "c_comp_rgb2colorSpace" "c_comp_bestChan"
+                        "c_constructor" "c_int128_test" "r_draw_circles" "r_draw_point" "r_draw_primatives" "r_draw_lines" "r_draw_rectangles"
+                        "r_draw_rectangles_filled" "r_save_file" "r_draw_triangles" "r_draw_triangles_filled" "r_tfrm_geom" "r_adjoin" "r_p_scale"
+                        "r_draw_string" "r_draw_glyph")
 set(TARGETS_REQ_SDL2   "displayImageSDL2")
 
 # Construct list of targets we can build
-set(COMBINED_TARGETS ${TARGETS_REQ_NONE} ${TARGETS_REQ_TIFF} ${TARGETS_USE_OPENMP} ${TARGETS_REQ_GTEST} ${TARGETS_REQ_OPENGL} ${TARGETS_REQ_SDL2})
+set(COMBINED_TARGETS ${TARGETS_REQ_NONE} ${TARGETS_REQ_TIFF} ${TARGETS_USE_OPENMP} ${TARGETS_REQ_GTEST} ${TARGETS_REQ_OPENGL} ${TARGETS_REQ_LAPACKE} ${TARGETS_REQ_SDL2})
 
+if((NOT LAPACKE_FOUND) AND TARGETS_REQ_LAPACKE)
+  list(REMOVE_ITEM COMBINED_TARGETS ${TARGETS_REQ_LAPACKE})
+  message(WARNING "Example programs requiring LAPACKE will NOT be built!")
+endif()
 if(((NOT OpenGL_FOUND) OR (NOT GLUT_FOUND)) AND TARGETS_REQ_OPENGL)
   list(REMOVE_ITEM COMBINED_TARGETS ${TARGETS_REQ_OPENGL})
   message(WARNING "Example programs requiring OpenGL/GLUT will NOT be built!")
@@ -354,6 +364,14 @@ foreach(CURTGT IN LISTS COMBINED_TARGETS)
     target_compile_definitions(${CURTGT} PUBLIC MRASTER_FOUND_TIFF=1)
     target_include_directories(${CURTGT} PRIVATE ${TIFF_INCLUDE_DIRS})
     target_link_libraries(${CURTGT} PRIVATE ${TIFF_LIBRARIES})
+  endif()
+
+  # Add build requirements for examples usingLAPACKE
+  list (FIND TARGETS_REQ_LAPACKE ${CURTGT} TMPR)
+  if(LAPACKE_FOUND AND (${TMPR} GREATER -1))
+    target_compile_definitions(${CURTGT} PUBLIC MRASTER_FOUND_LAPACKE=1)
+    target_include_directories(${CURTGT} PRIVATE ${LAPACKE_INCLUDE_DIRS})
+    target_link_libraries(${CURTGT} PRIVATE ${LAPACKE_LIBRARIES})
   endif()
 
   # Add build requirements for examples using SDL2
