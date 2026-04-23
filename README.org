@@ -60,13 +60,13 @@ windows (MSYS2 or WSL) with a sequence of commands like the following:
 
 #+begin_src sh :exports code :eval never
 git clone 'https://github.com/richmit/MRMathCPP.git'    # Download MRMathCPP
-cd MRMathCPP/build                                      # Change directory to 'build'
-cmake ..                                                # Configure the build system with cmake
-cd ../..                                                # Change directory back to where we started
+cd MRMathCPP                                            # Change directory into the newly cloned repo
+cmake -B build --fresh                                  # Configure the build system with cmake
+cd ..                                                   # Change directory back to where we started
 git clone 'https://github.com/richmit/mraster.git'      # Download MRaster
-cd mraster/build                                        # Change directory to 'build'
-cmake ..                                                # Configure the build system with cmake
-cmake --build . -t examples                             # Build all the examples
+cd mraster                                              # Change directory into the newly cloned repo
+cmake -B build --fresh                                  # Configure the build system with cmake
+cmake --build build -t examples                         # Build all the examples
 #+end_src
 
 While I normally work on the command line, CMake is fully compatible

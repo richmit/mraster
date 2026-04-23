@@ -146,6 +146,10 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
     - Broke utest_colorTpl.cpp up into different files
     - Added IncludeMRMathCPPLib.cmake code
     - Updated version of configure.sh
+      - Not runs in the root of the repository.
+      - Smarts about -B argument
+      - More intelligent about default options
+      - Better documentation
     - Updated mrw2any.sh &
     - Uniform use of if constexpr.
 
