@@ -40,12 +40,12 @@ set(CMAKE_CXX_EXTENSIONS ON)
 # Proejct meta data
 
 project(MRaster
-  VERSION 22.0.0.0
+  VERSION 23.0.0.0
   DESCRIPTION "Image Processing Library"
   HOMEPAGE_URL "https://github.com/richmit/mraster/"
   LANGUAGES CXX)
 
-set(MRASTER_VERSION_DATE  2025-01-25)
+set(MRASTER_VERSION_DATE  2026-04-23)
 mark_as_advanced(MRASTER_VERSION_DATE)
 
 ################################################################################################################################################################

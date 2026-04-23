@@ -38,7 +38,31 @@ Copyright \copy {{{time(%Y)}}} Mitch Richling. All rights reserved.
 
 * Changes On HEAD Since Last Release
 :PROPERTIES:
-:CUSTOM_ID: latest
+:CUSTOM_ID: latest_TEMPLATE
+:END:
+  - Fixed Bugs
+    - N/A
+  - Known Issues
+    - N/A
+  - API breaking Changes
+    - N/A
+  - Deprecated functionality
+    - N/A
+  - New functionality
+    - N/A
+  - Documentation
+    - N/A
+  - Examples
+    - New
+      - N/A
+    - Updated
+      - N/A
+  - Miscellaneous
+    - N/A
+
+* 23.0.0.0: Feature & Refactor Release
+:PROPERTIES:
+:CUSTOM_ID: v23.0.0.0
 :END:
   - Fixed Bugs
     - Removed all_gtests from cmake list.
