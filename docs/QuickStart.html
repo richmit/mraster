@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2025-02-12 Wed 14:14 -->
+<!-- 2026-04-23 Thu 14:52 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=1024, initial-scale=1" />
 <title>MRaster Quick Start</title>
@@ -11,7 +11,7 @@
 <meta name="description" content="Minimal tutorial for getting started with MRaster" />
 <meta name="keywords" content="KEYWORDS FIXME" />
 <meta name="generator" content="Org Mode" />
-<style>
+<style type="text/css">
   #content { max-width: 60em; margin: auto; }
   .title  { text-align: center;
              margin-bottom: .2em; }
@@ -225,7 +225,7 @@
 </colgroup>
 <tbody>
 <tr>
-<td class="org-left">Copyright &copy; 2025 Mitch Richling. All rights reserved.</td>
+<td class="org-left">Copyright &copy; 2026 Mitch Richling. All rights reserved.</td>
 </tr>
 </tbody>
 </table>
@@ -258,12 +258,12 @@
 <ul>
 <li><a href="#gbl-faq-q1">4.1. Q1: What's up with "<code>-std=gnu++2b</code>" instead of "<code>-std=c++2b</code>"?</a></li>
 <li><a href="#gbl-faq-q2">4.2. Q2: The examples seem to be missing standard/system include files</a></li>
+<li><a href="#gbl-faq-q3">4.3. Q3: The binaries are optimized &amp; stripped!  How do I use a debugger?</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-
 <div id="outline-container-qs-min" class="outline-2">
 <h2 id="qs-min"><span class="section-number-2">1.</span> Quick Start (The Absolute Minimum <b>WITHOUT</b> Cmake)</h2>
 <div class="outline-text-2" id="text-qs-min">
@@ -275,7 +275,7 @@ If you are interested playing around with <b><code>MRaster</code></b> as quickly
 The first step is to download <b><code>MRaster</code></b> and <b><code>MRMathCPP</code></b>.  The easiest way is to clone them with git:
 </p>
 
-<pre class="example" id="orgfaf7cd7">
+<pre class="example" id="orgfd001ff">
 git clone 'https://github.com/richmit/mraster.git'
 git clone 'https://github.com/richmit/MRMathCPP.git'
 </pre>
@@ -327,7 +327,7 @@ Now you can run it, and take a look at the file it created ("<code>hello.tiff</c
 </p>
 
 
-<div id="orga25e139" class="figure">
+<div id="orgd696f6b" class="figure">
 <p><img src="./pics/quick/hello.png" alt="hello.png" width="800" align="center" />
 </p>
 </div>
@@ -336,7 +336,6 @@ Now you can run it, and take a look at the file it created ("<code>hello.tiff</c
 That's it!  How easy was that?
 </p>
 </div>
-
 <div id="outline-container-qs-min-tiff" class="outline-3">
 <h3 id="qs-min-tiff"><span class="section-number-3">1.1.</span> How do I get advanced TIFF reader support without <code>cmake</code>?</h3>
 <div class="outline-text-3" id="text-qs-min-tiff">
@@ -357,7 +356,6 @@ Please note that advanced TIFF reader is only required to <b>read</b> TIFF files
 </div>
 </div>
 </div>
-
 <div id="outline-container-examples" class="outline-2">
 <h2 id="examples"><span class="section-number-2">2.</span> Playing With <b><code>MRaster</code></b>'s Example Programs</h2>
 <div class="outline-text-2" id="text-examples">
@@ -372,21 +370,20 @@ that I've broken the project into two git repositories (one for some generic mat
 
 <div class="org-src-container">
 <pre class="src src-sh">git clone <span style="color: #fa8072;">'https://github.com/richmit/MRMathCPP.git'</span>    <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Download MRMathCPP</span>
-<span style="color: #b0c4de;">cd</span> MRMathCPP/build                                      <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Change directory to 'build'</span>
-cmake ..                                                <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Configure the build system with cmake</span>
-<span style="color: #b0c4de;">cd</span> ../..                                                <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Change directory back to where we started</span>
+<span style="color: #b0c4de;">cd</span> MRMathCPP                                            <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Change directory into the newly cloned repo</span>
+cmake -B build --fresh                                  <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Configure the build system with cmake</span>
+<span style="color: #b0c4de;">cd</span> ..                                                   <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Change directory back to where we started</span>
 git clone <span style="color: #fa8072;">'https://github.com/richmit/mraster.git'</span>      <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Download MRaster</span>
-<span style="color: #b0c4de;">cd</span> mraster/build                                        <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Change directory to 'build'</span>
-cmake ..                                                <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Configure the build system with cmake</span>
-cmake --build . -t examples                             <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Build all the examples</span>
+<span style="color: #b0c4de;">cd</span> mraster                                              <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Change directory into the newly cloned repo</span>
+cmake -B build --fresh                                  <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Configure the build system with cmake</span>
+cmake --build build -t examples                         <span style="color: #ffa500;"># </span><span style="color: #ff7f24;">Build all the examples</span>
 </pre>
 </div>
 
 <dl class="org-dl">
 <dt>NOTE 1</dt><dd><ul class="org-ul">
-<li>I normally use the "<code>configure.sh</code>" script in the root directory instead of running <code>cmake</code> directly for the configuration step.  I don't suggest it
-above because it won't work for everybody because "<code>configure.sh</code>" is a <code>bash</code> script &#x2013; i.e.  it will only work if you have a working <code>bash</code> envoronmtn
-(i.e. linux, macOS, UNIX, Windows MSYS 2, Windows WSL, etc&#x2026;).</li>
+<li>I normally use the "<code>configure.sh</code>" script in the root directory instead of running <code>cmake</code> directly for the configuration step.  It is a <code>bash</code> script, 
+and thus only works if you have a working <code>bash</code> environment (i.e. linux, macOS, UNIX, Windows MSYS 2, Windows WSL, etc&#x2026;).</li>
 </ul></dd>
 <dt>NOTE 2</dt><dd><ul class="org-ul">
 <li>The command will install the <code>cmake</code> export package into the build directory within the git repository.  In particular, this step will <b>not</b> install
@@ -395,12 +392,10 @@ anything on your system!</li>
 </dl>
 </div>
 </div>
-
 <div id="outline-container-platform-notes" class="outline-2">
 <h2 id="platform-notes"><span class="section-number-2">3.</span> Platform Notes</h2>
 <div class="outline-text-2" id="text-platform-notes">
 </div>
-
 <div id="outline-container-platform-notes-m2w11gcc12" class="outline-3">
 <h3 id="platform-notes-m2w11gcc12"><span class="section-number-3">3.1.</span> Windows 11 with MSYS2 GCC 12.1.0 (and newer GCCs &#x2013; tested up to v14.1.0)</h3>
 <div class="outline-text-3" id="text-platform-notes-m2w11gcc12">
@@ -414,7 +409,6 @@ Everything works with the following cmake:
 </div>
 </div>
 </div>
-
 <div id="outline-container-platform-notes-m2w11clang14" class="outline-3">
 <h3 id="platform-notes-m2w11clang14"><span class="section-number-3">3.2.</span> Windows 11 with MSYS2 clang 14.0.6-18 (and newer clangs &#x2013; tested up to v18.1.6)</h3>
 <div class="outline-text-3" id="text-platform-notes-m2w11clang14">
@@ -428,7 +422,6 @@ Everything works with the following cmake:
 </div>
 </div>
 </div>
-
 <div id="outline-container-platform-notes-m2w11vs2022" class="outline-3">
 <h3 id="platform-notes-m2w11vs2022"><span class="section-number-3">3.3.</span> Windows 11 with MSYS2 cmake and Visual Studio 2022 Community Edition</h3>
 <div class="outline-text-3" id="text-platform-notes-m2w11vs2022">
@@ -450,7 +443,6 @@ Then open up the directory with explorer, and double click on one of the project
 </p>
 </div>
 </div>
-
 <div id="outline-container-platform-notes-w11vs2022" class="outline-3">
 <h3 id="platform-notes-w11vs2022"><span class="section-number-3">3.4.</span> Windows 11 with Visual Studio 2022 Community Edition</h3>
 <div class="outline-text-3" id="text-platform-notes-w11vs2022">
@@ -461,7 +453,6 @@ project.  Next use <a href="https://vcpkg.io/en/index.html">vcpkg</a> to install
 </p>
 </div>
 </div>
-
 <div id="outline-container-platform-notes-osx1151hbGCC12" class="outline-3">
 <h3 id="platform-notes-osx1151hbGCC12"><span class="section-number-3">3.5.</span> Mac OS X Monterey 12.5.1 with Homebrew GCC 12.1.0</h3>
 <div class="outline-text-3" id="text-platform-notes-osx1151hbGCC12">
@@ -493,7 +484,6 @@ And I used the following cmake:
 </div>
 </div>
 </div>
-
 <div id="outline-container-platform-notes-osx1151aclang1316" class="outline-3">
 <h3 id="platform-notes-osx1151aclang1316"><span class="section-number-3">3.6.</span> Mac OS X Monterey 12.5.1 with Apple clang 13.1.6</h3>
 <div class="outline-text-3" id="text-platform-notes-osx1151aclang1316">
@@ -523,7 +513,6 @@ Lastly, note the <code>-DGLUT_glut_LIBRARY</code> option &#x2013; this is requir
 </div>
 </div>
 </div>
-
 <div id="outline-container-platform-notes-lindeb126gcc133" class="outline-3">
 <h3 id="platform-notes-lindeb126gcc133"><span class="section-number-3">3.7.</span> Debian 12.6 bookworm with GCC 13.3.0 (or with the GCC-14 package &#x2013; tested with version 14.0.1)</h3>
 <div class="outline-text-3" id="text-platform-notes-lindeb126gcc133">
@@ -553,7 +542,6 @@ Now you can use the following <code>cmake</code> command:
 </div>
 </div>
 </div>
-
 <div id="outline-container-platform-notes-lindeb114gcc1021" class="outline-3">
 <h3 id="platform-notes-lindeb114gcc1021"><span class="section-number-3">3.8.</span> Debian bullseye 11.4 with GCC 10.2.1</h3>
 <div class="outline-text-3" id="text-platform-notes-lindeb114gcc1021">
@@ -584,7 +572,6 @@ Now you can use the following <code>cmake</code> command:
 </div>
 </div>
 </div>
-
 <div id="outline-container-platform-notes-lindeb114gcc113" class="outline-3">
 <h3 id="platform-notes-lindeb114gcc113"><span class="section-number-3">3.9.</span> Debian bullseye 11.4 with GCC 11.3</h3>
 <div class="outline-text-3" id="text-platform-notes-lindeb114gcc113">
@@ -647,7 +634,6 @@ Now you can use the following <code>cmake</code> command:
 </div>
 </div>
 </div>
-
 <div id="outline-container-platform-notes-lindeb116gcc122" class="outline-3">
 <h3 id="platform-notes-lindeb116gcc122"><span class="section-number-3">3.10.</span> Debian bullseye 11.6 with GCC 12.2</h3>
 <div class="outline-text-3" id="text-platform-notes-lindeb116gcc122">
@@ -715,12 +701,10 @@ Now you can use the following <code>cmake</code> command:
 </div>
 </div>
 </div>
-
 <div id="outline-container-gbl-faq" class="outline-2">
 <h2 id="gbl-faq"><span class="section-number-2">4.</span> FAQ</h2>
 <div class="outline-text-2" id="text-gbl-faq">
 </div>
-
 <div id="outline-container-gbl-faq-q1" class="outline-3">
 <h3 id="gbl-faq-q1"><span class="section-number-3">4.1.</span> Q1: What's up with "<code>-std=gnu++2b</code>" instead of "<code>-std=c++2b</code>"?</h3>
 <div class="outline-text-3" id="text-gbl-faq-q1">
@@ -738,7 +722,6 @@ you want to turn off 128-bit integers, and use pure C++23 instead with GCC, then
 </blockquote>
 </div>
 </div>
-
 <div id="outline-container-gbl-faq-q2" class="outline-3">
 <h3 id="gbl-faq-q2"><span class="section-number-3">4.2.</span> Q2: The examples seem to be missing standard/system include files</h3>
 <div class="outline-text-3" id="text-gbl-faq-q2">
@@ -747,6 +730,30 @@ you want to turn off 128-bit integers, and use pure C++23 instead with GCC, then
 <b>A:</b> It is good form to place necessary includes in each file that needs them; however, I have violated this sound practice in the examples shipped with
 <b><code>MRaster</code></b>.  In particular, because the <code>ramCanvasTpl.hpp</code> and <code>MRcolorTpl.hpp</code> files include just about everything the examples need I have tended to shorten
 up the examples and depend on the includes from these headers.
+</p>
+</blockquote>
+</div>
+</div>
+<div id="outline-container-gbl-faq-q3" class="outline-3">
+<h3 id="gbl-faq-q3"><span class="section-number-3">4.3.</span> Q3: The binaries are optimized &amp; stripped!  How do I use a debugger?</h3>
+<div class="outline-text-3" id="text-gbl-faq-q3">
+<blockquote>
+<p>
+<b>A:</b> By default the builds for most platforms are optimized (MSVC projects are an exception).  For these platforms you can set the <code>CMAKE_BUILD_TYPE</code> to
+"<code>Debug</code>" to get debug binaries.  For example, on Linux, we can build a debug version of the <code>apollony</code> example and load it up in <code>GDB</code> by running the
+following commands from the root of the repository:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">cmake -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build -t apollony
+gdb build/apollony
+</pre>
+</div>
+
+<p>
+Note that we build from the root of the repository and we run <code>gdb</code> from that same directory.  If we ran <code>gdb</code> from inside the <code>build/</code> directory, then <code>gdb</code>
+wouldn't be able to find the source code by default.
 </p>
 </blockquote>
 </div>

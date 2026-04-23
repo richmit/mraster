@@ -413,6 +413,27 @@ g++ -DMJR_LOOK_FOR_128_BIT_TYPES=0 -m64 --std=c++2b hello.cpp -o hello
 up the examples and depend on the includes from these headers.
 #+END_QUOTE
 
+** Q3: The binaries are optimized & stripped!  How do I use a debugger?
+:PROPERTIES:
+:CUSTOM_ID: gbl-faq-q3
+:END:
+
+#+BEGIN_QUOTE
+*A:* By default the builds for most platforms are optimized (MSVC projects are an exception).  For these platforms you can set the =CMAKE_BUILD_TYPE= to
+"=Debug=" to get debug binaries.  For example, on Linux, we can build a debug version of the =apollony= example and load it up in =GDB= by running the
+following commands from the root of the repository:
+
+#+begin_src sh
+cmake -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build -t apollony
+gdb build/apollony
+#+end_src
+
+Note that we build from the root of the repository and we run =gdb= from that same directory.  If we ran =gdb= from inside the =build/= directory, then =gdb=
+wouldn't be able to find the source code by default.
+#+END_QUOTE
+
+
 * Doxygen Links                                                    :noexport:
 
 #+begin_src sh :exports results :results verbatum raw
